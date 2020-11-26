@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201116150911_InitialModel")]
+    [Migration("20201126190324_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,18 +21,39 @@ namespace MyPortal.Database.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("MyPortal.Database.Models.AcademicYear", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AcademicTerm", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<DateTime>("FirstDate")
-                        .HasColumnType("date");
+                    b.Property<Guid>("AcademicYearId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("LastDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcademicYearId");
+
+                    b.ToTable("AcademicTerm");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AcademicYear", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<bool>("Locked")
                         .HasColumnType("bit");
@@ -47,7 +68,33 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AcademicYears");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Achievement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AccountTransaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<bool>("Credit")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("AccountTransactions");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Achievement", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -102,7 +149,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Achievements");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AchievementOutcome", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AchievementOutcome", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -125,7 +172,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AchievementOutcomes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AchievementType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AchievementType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -148,7 +195,106 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AchievementTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Address", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Activity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<DateTime?>("DateEnded")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateStarted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<int>("MaxMembers")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Activities");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ActivityEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("ActivityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityId");
+
+                    b.HasIndex("EventId")
+                        .IsUnique();
+
+                    b.ToTable("ActivityEvent");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ActivityMembership", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("ActivityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("ActivityMemberships");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ActivitySupervisor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("ActivityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SupervisorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityId");
+
+                    b.HasIndex("SupervisorId");
+
+                    b.ToTable("ActivitySupervisors");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Address", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -204,7 +350,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AddressPerson", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AddressPerson", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -226,7 +372,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AddressPeople");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Agency", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Agency", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -265,7 +411,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Agencies");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AgencyType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AgencyType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -285,7 +431,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AgencyTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Agent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Agent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -315,7 +461,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Agents");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AgentRelationshipType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AgentRelationshipType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -335,7 +481,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AgentRelationshipTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Aspect", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Aspect", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -384,7 +530,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Aspects");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AspectType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AspectType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -404,7 +550,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AspectTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AttendanceCode", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AttendanceCode", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -437,7 +583,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AttendanceCodes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AttendanceCodeMeaning", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AttendanceCodeMeaning", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -454,7 +600,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AttendanceCodeMeanings");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AttendanceMark", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AttendanceMark", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -493,7 +639,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AttendanceMarks");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AttendancePeriod", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AttendancePeriod", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -530,7 +676,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AttendancePeriods");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AttendanceWeek", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AttendanceWeek", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -553,7 +699,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AttendanceWeeks");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AttendanceWeekPattern", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AttendanceWeekPattern", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -578,7 +724,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AttendanceWeekPatterns");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.BasketItem", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BasketItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -600,7 +746,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("BasketItems");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.BehaviourOutcome", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BehaviourOutcome", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -623,7 +769,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("BehaviourOutcomes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.BehaviourStatus", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BehaviourStatus", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -646,7 +792,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("BehaviourStatus");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.BehaviourTarget", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BehaviourTarget", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -666,33 +812,24 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("BehaviourTargets");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Bill", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Bill", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<decimal>("AmountPaid")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Deleted")
+                    b.Property<bool?>("Dispatched")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("NetAmount")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("TaxAmount")
-                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 
@@ -701,7 +838,85 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Bills");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.BillItem", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillAccountTransaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("AccountTransactionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BillId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountTransactionId");
+
+                    b.HasIndex("BillId");
+
+                    b.ToTable("BillAccountTransactions");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillCharge", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("BillId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("NetAmount")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<bool>("Refunded")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("StudentChargeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BillId");
+
+                    b.HasIndex("StudentChargeId");
+
+                    b.ToTable("BillCharges");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillDiscount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<Guid>("BillId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DiscountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Percentage")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BillId");
+
+                    b.HasIndex("DiscountId");
+
+                    b.ToTable("BillDiscounts");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -714,11 +929,17 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("CustomerReceived")
                         .HasColumnType("bit");
 
+                    b.Property<decimal>("NetAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Refunded")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -729,7 +950,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("BillItems");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Bulletin", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Bulletin", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -773,7 +994,66 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Bulletins");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Class", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Charge", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(64)")
+                        .HasMaxLength(64);
+
+                    b.Property<int>("DefaultRecurrences")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.Property<bool>("Variable")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Charges");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ChargeDiscount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("ChargeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DiscountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChargeId");
+
+                    b.HasIndex("DiscountId");
+
+                    b.ToTable("ChargeDiscounts");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Class", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -810,7 +1090,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Classes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Comment", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Comment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -831,7 +1111,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CommentBank", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CommentBank", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -851,7 +1131,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("CommentBanks");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CommunicationLog", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CommunicationLog", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -883,7 +1163,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("CommunicationLogs");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CommunicationType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CommunicationType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -903,7 +1183,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("CommunicationTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Contact", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Contact", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -936,7 +1216,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Contacts");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ContactRelationshipType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ContactRelationshipType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -956,7 +1236,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ContactRelationshipTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Course", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Course", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -984,7 +1264,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Courses");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CoverArrangement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CoverArrangement", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1019,7 +1299,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("CoverArrangements");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CurriculumBand", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CurriculumBand", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1051,7 +1331,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("CurriculumBands");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CurriculumBandBlockAssignment", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CurriculumBandBlockAssignment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1073,7 +1353,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("CurriculumBandBlockAssignments");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CurriculumBandMembership", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CurriculumBandMembership", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1101,7 +1381,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("CurriculumBandMemberships");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CurriculumBlock", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CurriculumBlock", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1121,7 +1401,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("CurriculumBlocks");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CurriculumGroup", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CurriculumGroup", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1146,7 +1426,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("CurriculumGroups");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CurriculumGroupMembership", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CurriculumGroupMembership", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1174,7 +1454,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("CurriculumGroupMemberships");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CurriculumYearGroup", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CurriculumYearGroup", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1199,7 +1479,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("CurriculumYearGroups");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Detention", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Detention", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1227,7 +1507,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Detentions");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.DetentionType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.DetentionType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1253,7 +1533,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("DetentionTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.DiaryEvent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.DiaryEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1306,7 +1586,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("DiaryEvents");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.DiaryEventAttendee", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.DiaryEventAttendee", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1339,7 +1619,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("DiaryEventAttendees");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.DiaryEventAttendeeResponse", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.DiaryEventAttendeeResponse", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1359,7 +1639,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("DiaryEventAttendeeResponses");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.DiaryEventTemplate", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.DiaryEventTemplate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1393,7 +1673,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("DiaryEventTemplates");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.DiaryEventType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.DiaryEventType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1423,7 +1703,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("DiaryEventTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.DietaryRequirement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.DietaryRequirement", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1443,7 +1723,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("DietaryRequirements");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Directory", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Directory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1471,7 +1751,33 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Directories");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Document", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Discount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("Percentage")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Discounts");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Document", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1516,7 +1822,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Documents");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.DocumentType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.DocumentType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1551,7 +1857,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("DocumentTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.EmailAddress", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.EmailAddress", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1588,7 +1894,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("EmailAddresses");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.EmailAddressType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.EmailAddressType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1608,7 +1914,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("EmailAddressTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Ethnicity", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Ethnicity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1633,7 +1939,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Ethnicities");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamAssessment", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamAssessment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1659,7 +1965,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamAssessments");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamAssessmentAspect", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamAssessmentAspect", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1689,7 +1995,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamAssessmentAspects");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamAssessmentMode", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamAssessmentMode", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1712,7 +2018,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamAssessmentModes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamAward", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamAward", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1749,7 +2055,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamAwards");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamAwardElement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamAwardElement", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1771,7 +2077,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamAwardElements");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamAwardSeries", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamAwardSeries", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1791,7 +2097,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamAwardSeries");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamBaseComponent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamBaseComponent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1817,7 +2123,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamBaseComponents");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamBaseElement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamBaseElement", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1851,7 +2157,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamBaseElements");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamBoard", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamBoard", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1884,7 +2190,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamBoards");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamCandidate", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamCandidate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1923,7 +2229,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamCandidate");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamCandidateSeries", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamCandidateSeries", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1948,7 +2254,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamCandidateSeries");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamCandidateSpecialArrangement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamCandidateSpecialArrangement", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1970,7 +2276,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamCandidateSpecialArrangements");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamComponent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamComponent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2023,7 +2329,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamComponents");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamComponentSitting", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamComponentSitting", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2054,7 +2360,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamComponentSittings");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamElement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamElement", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2086,7 +2392,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamElements");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamElementComponent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamElementComponent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2108,7 +2414,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamElementComponents");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamEnrolment", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamEnrolment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2139,7 +2445,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamEnrolments");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamQualification", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamQualification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2162,7 +2468,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamQualifications");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamQualificationLevel", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamQualificationLevel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2196,7 +2502,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamQualificationLevels");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamResultEmbargo", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamResultEmbargo", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2219,7 +2525,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamResultEmbargoes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamRoom", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamRoom", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2243,7 +2549,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamRooms");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamRoomSeat", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamRoomSeat", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2269,7 +2575,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamRoomSeats");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamSeason", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamSeason", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2304,7 +2610,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamSeasons");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamSeatAllocation", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamSeatAllocation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2337,7 +2643,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamSeatAllocations");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamSeries", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamSeries", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2368,7 +2674,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamSeries");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamSession", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamSession", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2391,7 +2697,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamSessions");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamSpecialArrangement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamSpecialArrangement", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2409,7 +2715,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamSpecialArrangements");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExclusionReason", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExclusionReason", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2429,7 +2735,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExclusionReasons");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExclusionType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExclusionType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2449,7 +2755,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExclusionTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.File", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.File", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2479,7 +2785,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Files");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.GiftedTalented", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.GiftedTalented", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2505,7 +2811,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("GiftedTalentedStudents");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.GovernanceType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.GovernanceType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2530,7 +2836,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("GovernanceTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Grade", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Grade", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2559,7 +2865,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Grades");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.GradeSet", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.GradeSet", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2587,7 +2893,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("GradeSets");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.HomeworkItem", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.HomeworkItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2614,7 +2920,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("HomeworkItems");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.HomeworkSubmission", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.HomeworkSubmission", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2658,7 +2964,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("HomeworkSubmissions");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.House", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.House", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2684,7 +2990,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Houses");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Incident", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Incident", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2744,7 +3050,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Incidents");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.IncidentDetention", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.IncidentDetention", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2766,7 +3072,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("IncidentDetentions");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.IncidentType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.IncidentType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2789,7 +3095,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("IncidentTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.IntakeType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.IntakeType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2814,7 +3120,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("IntakeTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.LessonPlan", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.LessonPlan", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2859,7 +3165,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("LessonPlans");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.LessonPlanTemplate", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.LessonPlanTemplate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2880,7 +3186,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("LessonPlanTemplates");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.LocalAuthority", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.LocalAuthority", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2903,7 +3209,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("LocalAuthorities");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Location", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Location", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2923,7 +3229,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.LogNote", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.LogNote", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2973,7 +3279,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("LogNotes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.LogNoteType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.LogNoteType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3002,7 +3308,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("LogNoteTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.MarksheetColumn", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.MarksheetColumn", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3035,7 +3341,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("MarksheetColumns");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.MarksheetTemplate", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.MarksheetTemplate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3053,7 +3359,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("MarksheetTemplates");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.MarksheetTemplateGroup", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.MarksheetTemplateGroup", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3075,7 +3381,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("MarksheetTemplateGroups");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.MedicalCondition", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.MedicalCondition", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3095,7 +3401,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("MedicalConditions");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.MedicalEvent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.MedicalEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3124,7 +3430,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("MedicalEvents");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Observation", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Observation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3154,7 +3460,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Observations");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ObservationOutcome", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ObservationOutcome", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3178,7 +3484,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ObservationOutcomes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Permission", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Permission", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3201,7 +3507,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Permissions");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Person", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Person", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3274,7 +3580,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("People");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.PersonCondition", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.PersonCondition", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3303,7 +3609,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("PersonConditions");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.PersonDietaryRequirement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.PersonDietaryRequirement", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3325,7 +3631,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("PersonDietaryRequirements");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.PhoneNumber", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.PhoneNumber", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3358,7 +3664,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("PhoneNumbers");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.PhoneNumberType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.PhoneNumberType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3378,7 +3684,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("PhoneNumberTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Photo", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Photo", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3399,7 +3705,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Photos");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Product", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Product", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3443,7 +3749,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ProductType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ProductType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3466,7 +3772,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ProductTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.RefreshToken", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3489,7 +3795,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("UserRefreshTokens");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.RegGroup", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.RegGroup", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3516,7 +3822,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("RegGroups");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Report", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Report", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3546,7 +3852,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Reports");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ReportCard", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ReportCard", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3581,7 +3887,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ReportCards");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ReportCardSubmission", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ReportCardSubmission", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3620,7 +3926,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ReportCardSubmissions");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ReportCardTarget", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ReportCardTarget", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3642,7 +3948,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ReportCardTargets");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ReportCardTargetSubmission", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ReportCardTargetSubmission", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3667,7 +3973,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ReportCardTargetSubmissions");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Result", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Result", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3714,7 +4020,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Results");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ResultSet", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ResultSet", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3739,7 +4045,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ResultSets");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Role", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3773,7 +4079,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.RoleClaim", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.RoleClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3796,7 +4102,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AspNetRoleClaims");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.RolePermission", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.RolePermission", b =>
                 {
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uniqueidentifier");
@@ -3811,7 +4117,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AspNetRolePermissions");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Room", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Room", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3845,7 +4151,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Rooms");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.RoomClosure", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.RoomClosure", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3877,7 +4183,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("RoomClosures");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.RoomClosureReason", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.RoomClosureReason", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3903,7 +4209,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("RoomClosureReasons");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.School", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.School", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -3983,7 +4289,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Schools");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SchoolPhase", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SchoolPhase", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4008,7 +4314,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SchoolPhases");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SchoolType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SchoolType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4033,7 +4339,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SchoolTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SenEvent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SenEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4062,7 +4368,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SenEvents");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SenEventType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SenEventType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4082,7 +4388,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SenEventTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SenProvision", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SenProvision", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4114,7 +4420,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SenProvisions");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SenProvisionType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SenProvisionType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4134,7 +4440,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SenProvisionTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SenReview", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SenReview", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4167,7 +4473,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SenReviews");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SenReviewType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SenReviewType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4187,7 +4493,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SenReviewTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SenStatus", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SenStatus", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4214,7 +4520,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SenStatus");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Session", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Session", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4246,7 +4552,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Sessions");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.StaffAbsence", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StaffAbsence", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4288,7 +4594,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("StaffAbsences");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.StaffAbsenceType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StaffAbsenceType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4314,7 +4620,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("StaffAbsenceTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.StaffIllnessType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StaffIllnessType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4337,7 +4643,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("StaffIllnessTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.StaffMember", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StaffMember", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4379,15 +4685,12 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("StaffMembers");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Student", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Student", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<decimal>("AccountBalance")
-                        .HasColumnType("decimal(10,2)");
 
                     b.Property<int>("AdmissionNumber")
                         .HasColumnType("int");
@@ -4443,7 +4746,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.StudentAgentRelationship", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentAgentRelationship", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4470,7 +4773,38 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("StudentAgentRelationships");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.StudentContactRelationship", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentCharge", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<Guid>("ChargeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Recurrences")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChargeId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentCharges");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentContactRelationship", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4509,7 +4843,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("StudentContactRelationships");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.StudentGroup", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentGroup", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4527,7 +4861,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("StudentGroups");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.StudyTopic", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudyTopic", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4557,7 +4891,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("StudyTopics");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Subject", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Subject", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4587,7 +4921,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SubjectCode", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SubjectCode", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4615,7 +4949,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SubjectCodes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SubjectCodeSet", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SubjectCodeSet", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4635,7 +4969,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SubjectCodeSets");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SubjectStaffMember", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SubjectStaffMember", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4662,7 +4996,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SubjectStaffMembers");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SubjectStaffMemberRole", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SubjectStaffMemberRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4682,7 +5016,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SubjectStaffMemberRoles");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SystemArea", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SystemArea", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4704,7 +5038,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SystemAreas");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SystemSetting", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SystemSetting", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
@@ -4720,7 +5054,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SystemSettings");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Task", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Task", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4769,7 +5103,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.TaskType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.TaskType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4802,7 +5136,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("TaskTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.TrainingCertificate", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.TrainingCertificate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4829,7 +5163,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("TrainingCertificates");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.TrainingCertificateStatus", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.TrainingCertificateStatus", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4853,7 +5187,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("TrainingCertificateStatus");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.TrainingCourse", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.TrainingCourse", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4875,7 +5209,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("TrainingCourses");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.User", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -4958,7 +5292,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.UserClaim", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.UserClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -4981,7 +5315,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AspNetUserClaims");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.UserLogin", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.UserLogin", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -5002,7 +5336,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AspNetUserLogins");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.UserRole", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.UserRole", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -5017,7 +5351,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AspNetUserRoles");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.UserToken", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.UserToken", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -5036,7 +5370,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.VatRate", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.VatRate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -5059,7 +5393,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("VatRates");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.YearGroup", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.YearGroup", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -5086,1702 +5420,1840 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("YearGroups");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Achievement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AcademicTerm", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.AcademicYear", "AcademicYear")
+                    b.HasOne("MyPortal.Database.Models.Entity.AcademicYear", "AcademicYear")
+                        .WithMany("AcademicTerms")
+                        .HasForeignKey("AcademicYearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AccountTransaction", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
+                        .WithMany("AccountTransactions")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Achievement", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.AcademicYear", "AcademicYear")
                         .WithMany("Achievements")
                         .HasForeignKey("AcademicYearId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.AchievementType", "Type")
+                    b.HasOne("MyPortal.Database.Models.Entity.AchievementType", "Type")
                         .WithMany("Achievements")
                         .HasForeignKey("AchievementTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Location", "Location")
+                    b.HasOne("MyPortal.Database.Models.Entity.Location", "Location")
                         .WithMany("BehaviourAchievements")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.AchievementOutcome", "Outcome")
+                    b.HasOne("MyPortal.Database.Models.Entity.AchievementOutcome", "Outcome")
                         .WithMany("Achievements")
                         .HasForeignKey("OutcomeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.User", "RecordedBy")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "RecordedBy")
                         .WithMany("Achievements")
                         .HasForeignKey("RecordedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("Achievements")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AddressPerson", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ActivityEvent", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Address", "Address")
+                    b.HasOne("MyPortal.Database.Models.Entity.Activity", "Activity")
+                        .WithMany("Events")
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.DiaryEvent", "Event")
+                        .WithOne("Activity")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.ActivityEvent", "EventId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ActivityMembership", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.Activity", "Activity")
+                        .WithMany("Memberships")
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
+                        .WithMany("ActivityMemberships")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ActivitySupervisor", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.Activity", "Activity")
+                        .WithMany("Supervisors")
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffMember", "Supervisor")
+                        .WithMany("Activities")
+                        .HasForeignKey("SupervisorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AddressPerson", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.Address", "Address")
                         .WithMany("People")
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Person", "Person")
+                    b.HasOne("MyPortal.Database.Models.Entity.Person", "Person")
                         .WithMany("Addresses")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Agency", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Agency", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Address", "Address")
+                    b.HasOne("MyPortal.Database.Models.Entity.Address", "Address")
                         .WithMany("Agencies")
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MyPortal.Database.Models.Directory", "Directory")
+                    b.HasOne("MyPortal.Database.Models.Entity.Directory", "Directory")
                         .WithOne("Agency")
-                        .HasForeignKey("MyPortal.Database.Models.Agency", "DirectoryId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.Agency", "DirectoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.AgencyType", "AgencyType")
+                    b.HasOne("MyPortal.Database.Models.Entity.AgencyType", "AgencyType")
                         .WithMany("Agencies")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Agent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Agent", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Agency", "Agency")
+                    b.HasOne("MyPortal.Database.Models.Entity.Agency", "Agency")
                         .WithMany("Agents")
                         .HasForeignKey("AgencyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Person", "Person")
+                    b.HasOne("MyPortal.Database.Models.Entity.Person", "Person")
                         .WithOne("AgentDetails")
-                        .HasForeignKey("MyPortal.Database.Models.Agent", "PersonId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.Agent", "PersonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Aspect", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Aspect", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.GradeSet", "GradeSet")
+                    b.HasOne("MyPortal.Database.Models.Entity.GradeSet", "GradeSet")
                         .WithMany("Aspects")
                         .HasForeignKey("GradeSetId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MyPortal.Database.Models.AspectType", "Type")
+                    b.HasOne("MyPortal.Database.Models.Entity.AspectType", "Type")
                         .WithMany("Aspects")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AttendanceCode", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AttendanceCode", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.AttendanceCodeMeaning", "CodeMeaning")
+                    b.HasOne("MyPortal.Database.Models.Entity.AttendanceCodeMeaning", "CodeMeaning")
                         .WithMany("Codes")
                         .HasForeignKey("MeaningId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AttendanceMark", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AttendanceMark", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.AttendancePeriod", "AttendancePeriod")
+                    b.HasOne("MyPortal.Database.Models.Entity.AttendancePeriod", "AttendancePeriod")
                         .WithMany("AttendanceMarks")
                         .HasForeignKey("PeriodId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("AttendanceMarks")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.AttendanceWeek", "Week")
+                    b.HasOne("MyPortal.Database.Models.Entity.AttendanceWeek", "Week")
                         .WithMany("AttendanceMarks")
                         .HasForeignKey("WeekId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AttendancePeriod", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AttendancePeriod", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.AttendanceWeekPattern", "WeekPattern")
+                    b.HasOne("MyPortal.Database.Models.Entity.AttendanceWeekPattern", "WeekPattern")
                         .WithMany("Periods")
                         .HasForeignKey("WeekPatternId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AttendanceWeek", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AttendanceWeek", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.AttendanceWeekPattern", "WeekPattern")
+                    b.HasOne("MyPortal.Database.Models.Entity.AttendanceWeekPattern", "WeekPattern")
                         .WithMany("AttendanceWeeks")
                         .HasForeignKey("WeekPatternId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.AttendanceWeekPattern", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AttendanceWeekPattern", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.AcademicYear", "AcademicYear")
+                    b.HasOne("MyPortal.Database.Models.Entity.AcademicYear", "AcademicYear")
                         .WithMany("AttendanceWeekPatterns")
                         .HasForeignKey("AcademicYearId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.BasketItem", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BasketItem", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Product", "Product")
+                    b.HasOne("MyPortal.Database.Models.Entity.Product", "Product")
                         .WithMany("BasketItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("FinanceBasketItems")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Bill", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Bill", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("Bills")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.BillItem", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillAccountTransaction", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Bill", "Bill")
+                    b.HasOne("MyPortal.Database.Models.Entity.AccountTransaction", "AccountTransaction")
+                        .WithMany("BillAccountTransactions")
+                        .HasForeignKey("AccountTransactionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.Bill", "Bill")
+                        .WithMany("AccountTransactions")
+                        .HasForeignKey("BillId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillCharge", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.Bill", "Bill")
+                        .WithMany("BillCharges")
+                        .HasForeignKey("BillId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.StudentCharge", "StudentCharge")
+                        .WithMany("BillCharges")
+                        .HasForeignKey("StudentChargeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillDiscount", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.Bill", "Bill")
+                        .WithMany("BillDiscounts")
+                        .HasForeignKey("BillId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.Discount", "Discount")
+                        .WithMany("BillDiscounts")
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillItem", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.Bill", "Bill")
                         .WithMany("BillItems")
                         .HasForeignKey("BillId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Product", "Product")
+                    b.HasOne("MyPortal.Database.Models.Entity.Product", "Product")
                         .WithMany("BillItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Bulletin", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Bulletin", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.User", "Author")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "Author")
                         .WithMany("Bulletins")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Directory", "Directory")
+                    b.HasOne("MyPortal.Database.Models.Entity.Directory", "Directory")
                         .WithOne("Bulletin")
-                        .HasForeignKey("MyPortal.Database.Models.Bulletin", "DirectoryId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.Bulletin", "DirectoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Class", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ChargeDiscount", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.AcademicYear", null)
+                    b.HasOne("MyPortal.Database.Models.Entity.Charge", "Charge")
+                        .WithMany("ChargeDiscounts")
+                        .HasForeignKey("ChargeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.Discount", "Discount")
+                        .WithMany("ChargeDiscounts")
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Class", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.AcademicYear", null)
                         .WithMany("Classes")
                         .HasForeignKey("AcademicYearId");
 
-                    b.HasOne("MyPortal.Database.Models.Course", "Course")
+                    b.HasOne("MyPortal.Database.Models.Entity.Course", "Course")
                         .WithMany("Classes")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.CurriculumGroup", "Group")
+                    b.HasOne("MyPortal.Database.Models.Entity.CurriculumGroup", "Group")
                         .WithMany("Classes")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.YearGroup", null)
+                    b.HasOne("MyPortal.Database.Models.Entity.YearGroup", null)
                         .WithMany("Classes")
                         .HasForeignKey("YearGroupId");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Comment", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Comment", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.CommentBank", "CommentBank")
+                    b.HasOne("MyPortal.Database.Models.Entity.CommentBank", "CommentBank")
                         .WithMany("Comments")
                         .HasForeignKey("CommentBankId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CommunicationLog", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CommunicationLog", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.CommunicationType", "Type")
+                    b.HasOne("MyPortal.Database.Models.Entity.CommunicationType", "Type")
                         .WithMany("CommunicationLogs")
                         .HasForeignKey("CommunicationTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Contact", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Contact", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Person", "Person")
+                    b.HasOne("MyPortal.Database.Models.Entity.Person", "Person")
                         .WithOne("ContactDetails")
-                        .HasForeignKey("MyPortal.Database.Models.Contact", "PersonId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.Contact", "PersonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Course", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Course", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Subject", "Subject")
+                    b.HasOne("MyPortal.Database.Models.Entity.Subject", "Subject")
                         .WithMany("Courses")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CoverArrangement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CoverArrangement", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Room", "Room")
+                    b.HasOne("MyPortal.Database.Models.Entity.Room", "Room")
                         .WithMany("CoverArrangements")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MyPortal.Database.Models.Session", "Session")
+                    b.HasOne("MyPortal.Database.Models.Entity.Session", "Session")
                         .WithMany()
                         .HasForeignKey("SessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "Teacher")
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffMember", "Teacher")
                         .WithMany("CoverArrangements")
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MyPortal.Database.Models.AttendanceWeek", "Week")
+                    b.HasOne("MyPortal.Database.Models.Entity.AttendanceWeek", "Week")
                         .WithMany()
                         .HasForeignKey("WeekId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CurriculumBand", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CurriculumBand", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.AcademicYear", "AcademicYear")
+                    b.HasOne("MyPortal.Database.Models.Entity.AcademicYear", "AcademicYear")
                         .WithMany()
                         .HasForeignKey("AcademicYearId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.CurriculumYearGroup", "CurriculumYearGroup")
+                    b.HasOne("MyPortal.Database.Models.Entity.CurriculumYearGroup", "CurriculumYearGroup")
                         .WithMany("Bands")
                         .HasForeignKey("CurriculumYearGroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CurriculumBandBlockAssignment", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CurriculumBandBlockAssignment", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.CurriculumBand", "Band")
+                    b.HasOne("MyPortal.Database.Models.Entity.CurriculumBand", "Band")
                         .WithMany("AssignedBlocks")
                         .HasForeignKey("BandId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.CurriculumBlock", "Block")
+                    b.HasOne("MyPortal.Database.Models.Entity.CurriculumBlock", "Block")
                         .WithMany("BandAssignments")
                         .HasForeignKey("BlockId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CurriculumBandMembership", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CurriculumBandMembership", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.CurriculumBand", "Band")
+                    b.HasOne("MyPortal.Database.Models.Entity.CurriculumBand", "Band")
                         .WithMany("Enrolments")
                         .HasForeignKey("BandId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("Enrolments")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CurriculumGroup", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CurriculumGroup", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.CurriculumBlock", "Block")
+                    b.HasOne("MyPortal.Database.Models.Entity.CurriculumBlock", "Block")
                         .WithMany("Groups")
                         .HasForeignKey("BlockId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.CurriculumGroupMembership", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.CurriculumGroupMembership", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.CurriculumGroup", "CurriculumGroup")
+                    b.HasOne("MyPortal.Database.Models.Entity.CurriculumGroup", "CurriculumGroup")
                         .WithMany("Memberships")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("GroupMemberships")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Detention", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Detention", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.DetentionType", "Type")
+                    b.HasOne("MyPortal.Database.Models.Entity.DetentionType", "Type")
                         .WithMany("Detentions")
                         .HasForeignKey("DetentionTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.DiaryEvent", "Event")
+                    b.HasOne("MyPortal.Database.Models.Entity.DiaryEvent", "Event")
                         .WithOne("Detention")
-                        .HasForeignKey("MyPortal.Database.Models.Detention", "EventId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.Detention", "EventId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "Supervisor")
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffMember", "Supervisor")
                         .WithMany("SupervisedDetentions")
                         .HasForeignKey("SupervisorId");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.DiaryEvent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.DiaryEvent", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.DiaryEventType", "EventType")
+                    b.HasOne("MyPortal.Database.Models.Entity.DiaryEventType", "EventType")
                         .WithMany("DiaryEvents")
                         .HasForeignKey("EventTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Room", "Room")
+                    b.HasOne("MyPortal.Database.Models.Entity.Room", "Room")
                         .WithMany("DiaryEvents")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.DiaryEventAttendee", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.DiaryEventAttendee", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.DiaryEvent", "Event")
+                    b.HasOne("MyPortal.Database.Models.Entity.DiaryEvent", "Event")
                         .WithMany("Attendees")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Person", "Person")
+                    b.HasOne("MyPortal.Database.Models.Entity.Person", "Person")
                         .WithMany("DiaryEventInvitations")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.DiaryEventAttendeeResponse", "Response")
+                    b.HasOne("MyPortal.Database.Models.Entity.DiaryEventAttendeeResponse", "Response")
                         .WithMany("DiaryEventAttendees")
                         .HasForeignKey("ResponseId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.DiaryEventTemplate", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.DiaryEventTemplate", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.DiaryEventType", "DiaryEventType")
+                    b.HasOne("MyPortal.Database.Models.Entity.DiaryEventType", "DiaryEventType")
                         .WithMany("DiaryEventTemplates")
                         .HasForeignKey("EventTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Directory", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Directory", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Directory", "Parent")
+                    b.HasOne("MyPortal.Database.Models.Entity.Directory", "Parent")
                         .WithMany("Subdirectories")
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Document", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Document", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.User", "CreatedBy")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "CreatedBy")
                         .WithMany("Documents")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Directory", "Directory")
+                    b.HasOne("MyPortal.Database.Models.Entity.Directory", "Directory")
                         .WithMany("Documents")
                         .HasForeignKey("DirectoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.DocumentType", "Type")
+                    b.HasOne("MyPortal.Database.Models.Entity.DocumentType", "Type")
                         .WithMany("Documents")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.EmailAddress", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.EmailAddress", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Person", "Person")
+                    b.HasOne("MyPortal.Database.Models.Entity.Person", "Person")
                         .WithMany("EmailAddresses")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.EmailAddressType", "Type")
+                    b.HasOne("MyPortal.Database.Models.Entity.EmailAddressType", "Type")
                         .WithMany("EmailAddresses")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamAssessment", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamAssessment", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamBoard", "ExamBoard")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamBoard", "ExamBoard")
                         .WithMany("ExamAssessments")
                         .HasForeignKey("ExamBoardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamAssessmentAspect", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamAssessmentAspect", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Aspect", "Aspect")
+                    b.HasOne("MyPortal.Database.Models.Entity.Aspect", "Aspect")
                         .WithMany("AssessmentAspects")
                         .HasForeignKey("AspectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamAssessment", "Assessment")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamAssessment", "Assessment")
                         .WithMany("Aspects")
                         .HasForeignKey("AssessmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamSeries", "Series")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamSeries", "Series")
                         .WithMany("ExamAssessmentAspects")
                         .HasForeignKey("SeriesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamAward", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamAward", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamAssessment", "Assessment")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamAssessment", "Assessment")
                         .WithOne("ExamAward")
-                        .HasForeignKey("MyPortal.Database.Models.ExamAward", "AssessmentId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.ExamAward", "AssessmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Course", "Course")
+                    b.HasOne("MyPortal.Database.Models.Entity.Course", "Course")
                         .WithMany("Awards")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("MyPortal.Database.Models.ExamQualification", "Qualification")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamQualification", "Qualification")
                         .WithMany("Awards")
                         .HasForeignKey("QualificationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamAwardElement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamAwardElement", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamAward", "Award")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamAward", "Award")
                         .WithMany("ExamAwardElements")
                         .HasForeignKey("AwardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamElement", "Element")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamElement", "Element")
                         .WithMany("ExamAwardElements")
                         .HasForeignKey("ElementId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamAwardSeries", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamAwardSeries", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamAward", "Award")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamAward", "Award")
                         .WithMany("ExamAwardSeries")
                         .HasForeignKey("AwardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamSeries", "Series")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamSeries", "Series")
                         .WithMany("ExamAwardSeries")
                         .HasForeignKey("AwardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamBaseComponent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamBaseComponent", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamAssessmentMode", "AssessmentMode")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamAssessmentMode", "AssessmentMode")
                         .WithMany("ExamBaseComponents")
                         .HasForeignKey("AssessmentModeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamAssessment", "Assessment")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamAssessment", "Assessment")
                         .WithOne("ExamBaseComponent")
-                        .HasForeignKey("MyPortal.Database.Models.ExamBaseComponent", "ExamAssessmentId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.ExamBaseComponent", "ExamAssessmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamBaseElement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamBaseElement", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamAssessment", "Assessment")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamAssessment", "Assessment")
                         .WithOne("ExamBaseElement")
-                        .HasForeignKey("MyPortal.Database.Models.ExamBaseElement", "AssessmentId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.ExamBaseElement", "AssessmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamQualificationLevel", "Level")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamQualificationLevel", "Level")
                         .WithMany("ExamBaseElements")
                         .HasForeignKey("LevelId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.SubjectCode", "QcaCode")
+                    b.HasOne("MyPortal.Database.Models.Entity.SubjectCode", "QcaCode")
                         .WithMany("Elements")
                         .HasForeignKey("QcaCodeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamCandidate", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamCandidate", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithOne("Candidate")
-                        .HasForeignKey("MyPortal.Database.Models.ExamCandidate", "StudentId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.ExamCandidate", "StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamCandidateSeries", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamCandidateSeries", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamCandidate", "Candidate")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamCandidate", "Candidate")
                         .WithMany("LinkedSeries")
                         .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamSeries", "Series")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamSeries", "Series")
                         .WithMany("ExamCandidateSeries")
                         .HasForeignKey("SeriesId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamCandidateSpecialArrangement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamCandidateSpecialArrangement", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamCandidate", "Candidate")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamCandidate", "Candidate")
                         .WithMany("SpecialArrangements")
                         .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamSpecialArrangement", "SpecialArrangement")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamSpecialArrangement", "SpecialArrangement")
                         .WithMany("Candidates")
                         .HasForeignKey("SpecialArrangementId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamComponent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamComponent", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamAssessmentMode", "AssessmentMode")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamAssessmentMode", "AssessmentMode")
                         .WithMany("Components")
                         .HasForeignKey("AssessmentModeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamBaseComponent", "BaseComponent")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamBaseComponent", "BaseComponent")
                         .WithMany("ExamComponents")
                         .HasForeignKey("BaseComponentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamSeries", "Series")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamSeries", "Series")
                         .WithMany("ExamComponents")
                         .HasForeignKey("ExamSeriesId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamSession", "Session")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamSession", "Session")
                         .WithMany("Components")
                         .HasForeignKey("SessionId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamComponentSitting", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamComponentSitting", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamComponent", "Component")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamComponent", "Component")
                         .WithMany("Sittings")
                         .HasForeignKey("ComponentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamRoom", "Room")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamRoom", "Room")
                         .WithMany("ExamComponentSittings")
                         .HasForeignKey("ExamRoomId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamElement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamElement", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamBaseElement", "BaseElement")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamBaseElement", "BaseElement")
                         .WithMany("Elements")
                         .HasForeignKey("BaseElementId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamSeries", "Series")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamSeries", "Series")
                         .WithMany("ExamElements")
                         .HasForeignKey("SeriesId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamElementComponent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamElementComponent", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamComponent", "Component")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamComponent", "Component")
                         .WithMany("ExamElementComponents")
                         .HasForeignKey("ComponentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamElement", "Element")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamElement", "Element")
                         .WithMany("ExamElementComponents")
                         .HasForeignKey("ElementId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamEnrolment", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamEnrolment", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamAward", "Award")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamAward", "Award")
                         .WithMany("ExamEnrolments")
                         .HasForeignKey("AwardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamCandidate", "Candidate")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamCandidate", "Candidate")
                         .WithMany("ExamEnrolments")
                         .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamQualificationLevel", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamQualificationLevel", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.GradeSet", "DefaultGradeSet")
+                    b.HasOne("MyPortal.Database.Models.Entity.GradeSet", "DefaultGradeSet")
                         .WithMany("ExamQualificationLevels")
                         .HasForeignKey("DefaultGradeSetId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MyPortal.Database.Models.ExamQualification", "Qualification")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamQualification", "Qualification")
                         .WithMany("Levels")
                         .HasForeignKey("QualificationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamResultEmbargo", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamResultEmbargo", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ResultSet", "ResultSet")
+                    b.HasOne("MyPortal.Database.Models.Entity.ResultSet", "ResultSet")
                         .WithMany("ExamResultEmbargoes")
                         .HasForeignKey("ResultSetId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamRoom", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamRoom", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Room", "Room")
+                    b.HasOne("MyPortal.Database.Models.Entity.Room", "Room")
                         .WithOne("ExamRoom")
-                        .HasForeignKey("MyPortal.Database.Models.ExamRoom", "RoomId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.ExamRoom", "RoomId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamRoomSeat", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamRoomSeat", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamRoom", "ExamRoom")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamRoom", "ExamRoom")
                         .WithMany("Seats")
                         .HasForeignKey("ExamRoomId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamSeason", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamSeason", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ResultSet", "ResultSet")
+                    b.HasOne("MyPortal.Database.Models.Entity.ResultSet", "ResultSet")
                         .WithMany("ExamSeasons")
                         .HasForeignKey("ResultSetId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamSeatAllocation", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamSeatAllocation", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamCandidate", "Candidate")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamCandidate", "Candidate")
                         .WithMany("SeatAllocations")
                         .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamRoomSeat", "Seat")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamRoomSeat", "Seat")
                         .WithMany("SeatAllocations")
                         .HasForeignKey("SeatId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamComponentSitting", "Sitting")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamComponentSitting", "Sitting")
                         .WithMany("SeatAllocations")
                         .HasForeignKey("SittingId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamSeries", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExamSeries", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamBoard", "ExamBoard")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamBoard", "ExamBoard")
                         .WithMany("ExamSeries")
                         .HasForeignKey("ExamBoardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamSeason", "Season")
+                    b.HasOne("MyPortal.Database.Models.Entity.ExamSeason", "Season")
                         .WithMany("ExamSeries")
                         .HasForeignKey("ExamSeasonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.File", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.File", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Document", "Document")
+                    b.HasOne("MyPortal.Database.Models.Entity.Document", "Document")
                         .WithOne("Attachment")
-                        .HasForeignKey("MyPortal.Database.Models.File", "DocumentId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.File", "DocumentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.GiftedTalented", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.GiftedTalented", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("GiftedTalentedSubjects")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Subject", "Subject")
+                    b.HasOne("MyPortal.Database.Models.Entity.Subject", "Subject")
                         .WithMany("GiftedTalentedStudents")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Grade", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Grade", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.GradeSet", "GradeSet")
+                    b.HasOne("MyPortal.Database.Models.Entity.GradeSet", "GradeSet")
                         .WithMany("Grades")
                         .HasForeignKey("GradeSetId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.HomeworkItem", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.HomeworkItem", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Directory", "Directory")
+                    b.HasOne("MyPortal.Database.Models.Entity.Directory", "Directory")
                         .WithOne("HomeworkItem")
-                        .HasForeignKey("MyPortal.Database.Models.HomeworkItem", "DirectoryId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.HomeworkItem", "DirectoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.HomeworkSubmission", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.HomeworkSubmission", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Document", "SubmittedWork")
+                    b.HasOne("MyPortal.Database.Models.Entity.Document", "SubmittedWork")
                         .WithOne("HomeworkSubmission")
-                        .HasForeignKey("MyPortal.Database.Models.HomeworkSubmission", "DocumentId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.HomeworkSubmission", "DocumentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MyPortal.Database.Models.HomeworkItem", "HomeworkItem")
+                    b.HasOne("MyPortal.Database.Models.Entity.HomeworkItem", "HomeworkItem")
                         .WithMany("Submissions")
                         .HasForeignKey("HomeworkId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("HomeworkSubmissions")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Task", "Task")
+                    b.HasOne("MyPortal.Database.Models.Entity.Task", "Task")
                         .WithOne("HomeworkSubmission")
-                        .HasForeignKey("MyPortal.Database.Models.HomeworkSubmission", "TaskId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.HomeworkSubmission", "TaskId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.House", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.House", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "HeadOfHouse")
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffMember", "HeadOfHouse")
                         .WithMany("PastoralHouses")
                         .HasForeignKey("HeadId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Incident", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Incident", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.AcademicYear", "AcademicYear")
+                    b.HasOne("MyPortal.Database.Models.Entity.AcademicYear", "AcademicYear")
                         .WithMany("Incidents")
                         .HasForeignKey("AcademicYearId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.IncidentType", "Type")
+                    b.HasOne("MyPortal.Database.Models.Entity.IncidentType", "Type")
                         .WithMany("Incidents")
                         .HasForeignKey("BehaviourTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Location", "Location")
+                    b.HasOne("MyPortal.Database.Models.Entity.Location", "Location")
                         .WithMany("BehaviourIncidents")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.BehaviourOutcome", "Outcome")
+                    b.HasOne("MyPortal.Database.Models.Entity.BehaviourOutcome", "Outcome")
                         .WithMany("Incidents")
                         .HasForeignKey("OutcomeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.User", "RecordedBy")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "RecordedBy")
                         .WithMany("Incidents")
                         .HasForeignKey("RecordedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.BehaviourStatus", "Status")
+                    b.HasOne("MyPortal.Database.Models.Entity.BehaviourStatus", "Status")
                         .WithMany("Incidents")
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("Incidents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.IncidentDetention", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.IncidentDetention", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Detention", "Detention")
+                    b.HasOne("MyPortal.Database.Models.Entity.Detention", "Detention")
                         .WithMany("Incidents")
                         .HasForeignKey("DetentionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Incident", "Incident")
+                    b.HasOne("MyPortal.Database.Models.Entity.Incident", "Incident")
                         .WithMany("Detentions")
                         .HasForeignKey("IncidentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.LessonPlan", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.LessonPlan", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.User", "Author")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "Author")
                         .WithMany("LessonPlans")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Directory", "Directory")
+                    b.HasOne("MyPortal.Database.Models.Entity.Directory", "Directory")
                         .WithOne("LessonPlan")
-                        .HasForeignKey("MyPortal.Database.Models.LessonPlan", "DirectoryId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.LessonPlan", "DirectoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.StudyTopic", "StudyTopic")
+                    b.HasOne("MyPortal.Database.Models.Entity.StudyTopic", "StudyTopic")
                         .WithMany("LessonPlans")
                         .HasForeignKey("StudyTopicId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.LogNote", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.LogNote", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.AcademicYear", "AcademicYear")
+                    b.HasOne("MyPortal.Database.Models.Entity.AcademicYear", "AcademicYear")
                         .WithMany("LogNotes")
                         .HasForeignKey("AcademicYearId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.User", "CreatedBy")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "CreatedBy")
                         .WithMany("LogNotesCreated")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("ProfileLogs")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.LogNoteType", "LogNoteType")
+                    b.HasOne("MyPortal.Database.Models.Entity.LogNoteType", "LogNoteType")
                         .WithMany("LogNotes")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.User", "UpdatedBy")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "UpdatedBy")
                         .WithMany("LogNotesUpdated")
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.MarksheetColumn", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.MarksheetColumn", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Aspect", "Aspect")
+                    b.HasOne("MyPortal.Database.Models.Entity.Aspect", "Aspect")
                         .WithMany()
                         .HasForeignKey("AspectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ResultSet", "ResultSet")
+                    b.HasOne("MyPortal.Database.Models.Entity.ResultSet", "ResultSet")
                         .WithMany()
                         .HasForeignKey("ResultSetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.MarksheetTemplate", "Template")
+                    b.HasOne("MyPortal.Database.Models.Entity.MarksheetTemplate", "Template")
                         .WithMany("Columns")
                         .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.MarksheetTemplateGroup", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.MarksheetTemplateGroup", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.MarksheetTemplate", "Template")
+                    b.HasOne("MyPortal.Database.Models.Entity.MarksheetTemplate", "Template")
                         .WithMany("TemplateGroups")
                         .HasForeignKey("MarksheetTemplateId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.StudentGroup", "StudentGroup")
+                    b.HasOne("MyPortal.Database.Models.Entity.StudentGroup", "StudentGroup")
                         .WithMany("MarksheetTemplates")
                         .HasForeignKey("StudentGroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.MedicalEvent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.MedicalEvent", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.User", "RecordedBy")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "RecordedBy")
                         .WithMany("MedicalEvents")
                         .HasForeignKey("RecordedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("MedicalEvents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Observation", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Observation", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "Observee")
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffMember", "Observee")
                         .WithMany("PersonnelObservations")
                         .HasForeignKey("ObserveeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "Observer")
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffMember", "Observer")
                         .WithMany("PersonnelObservationsObserved")
                         .HasForeignKey("ObserverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ObservationOutcome", "Outcome")
+                    b.HasOne("MyPortal.Database.Models.Entity.ObservationOutcome", "Outcome")
                         .WithMany("Observations")
                         .HasForeignKey("OutcomeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Permission", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Permission", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.SystemArea", "SystemArea")
+                    b.HasOne("MyPortal.Database.Models.Entity.SystemArea", "SystemArea")
                         .WithMany("Permissions")
                         .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Person", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Person", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Directory", "Directory")
+                    b.HasOne("MyPortal.Database.Models.Entity.Directory", "Directory")
                         .WithOne("Person")
-                        .HasForeignKey("MyPortal.Database.Models.Person", "DirectoryId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.Person", "DirectoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Ethnicity", "Ethnicity")
+                    b.HasOne("MyPortal.Database.Models.Entity.Ethnicity", "Ethnicity")
                         .WithMany("People")
                         .HasForeignKey("EthnicityId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MyPortal.Database.Models.Photo", "Photo")
+                    b.HasOne("MyPortal.Database.Models.Entity.Photo", "Photo")
                         .WithMany("People")
                         .HasForeignKey("PhotoId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.PersonCondition", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.PersonCondition", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.MedicalCondition", "MedicalCondition")
+                    b.HasOne("MyPortal.Database.Models.Entity.MedicalCondition", "MedicalCondition")
                         .WithMany("PersonConditions")
                         .HasForeignKey("ConditionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Person", "Person")
+                    b.HasOne("MyPortal.Database.Models.Entity.Person", "Person")
                         .WithMany("MedicalConditions")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.PersonDietaryRequirement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.PersonDietaryRequirement", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.DietaryRequirement", "DietaryRequirement")
+                    b.HasOne("MyPortal.Database.Models.Entity.DietaryRequirement", "DietaryRequirement")
                         .WithMany("PersonDietaryRequirements")
                         .HasForeignKey("DietaryRequirementId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Person", "Person")
+                    b.HasOne("MyPortal.Database.Models.Entity.Person", "Person")
                         .WithMany("DietaryRequirements")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.PhoneNumber", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.PhoneNumber", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Person", "Person")
+                    b.HasOne("MyPortal.Database.Models.Entity.Person", "Person")
                         .WithMany("PhoneNumbers")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.PhoneNumberType", "Type")
+                    b.HasOne("MyPortal.Database.Models.Entity.PhoneNumberType", "Type")
                         .WithMany("PhoneNumbers")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Product", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Product", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ProductType", "Type")
+                    b.HasOne("MyPortal.Database.Models.Entity.ProductType", "Type")
                         .WithMany("Products")
                         .HasForeignKey("ProductTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.VatRate", "VatRate")
+                    b.HasOne("MyPortal.Database.Models.Entity.VatRate", "VatRate")
                         .WithMany("Products")
                         .HasForeignKey("VatRateId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.RefreshToken", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.RefreshToken", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.User", "User")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.RegGroup", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.RegGroup", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "Tutor")
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffMember", "Tutor")
                         .WithMany("PastoralRegGroups")
                         .HasForeignKey("TutorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.YearGroup", "YearGroup")
+                    b.HasOne("MyPortal.Database.Models.Entity.YearGroup", "YearGroup")
                         .WithMany("RegGroups")
                         .HasForeignKey("YearGroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Report", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Report", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.SystemArea", "SystemArea")
+                    b.HasOne("MyPortal.Database.Models.Entity.SystemArea", "SystemArea")
                         .WithMany("Reports")
                         .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ReportCard", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ReportCard", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.IncidentType", "BehaviourType")
+                    b.HasOne("MyPortal.Database.Models.Entity.IncidentType", "BehaviourType")
                         .WithMany("ReportCards")
                         .HasForeignKey("BehaviourTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("ReportCards")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ReportCardSubmission", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ReportCardSubmission", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.AttendanceWeek", "AttendanceWeek")
+                    b.HasOne("MyPortal.Database.Models.Entity.AttendanceWeek", "AttendanceWeek")
                         .WithMany("ReportCardSubmissions")
                         .HasForeignKey("AttendanceWeekId");
 
-                    b.HasOne("MyPortal.Database.Models.AttendancePeriod", "Period")
+                    b.HasOne("MyPortal.Database.Models.Entity.AttendancePeriod", "Period")
                         .WithMany("ReportCardSubmissions")
                         .HasForeignKey("PeriodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ReportCard", "ReportCard")
+                    b.HasOne("MyPortal.Database.Models.Entity.ReportCard", "ReportCard")
                         .WithMany("Submissions")
                         .HasForeignKey("ReportCardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.User", "SubmittedBy")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "SubmittedBy")
                         .WithMany("ReportCardSubmissions")
                         .HasForeignKey("SubmittedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ReportCardTarget", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ReportCardTarget", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ReportCard", "ReportCard")
+                    b.HasOne("MyPortal.Database.Models.Entity.ReportCard", "ReportCard")
                         .WithMany("Targets")
                         .HasForeignKey("ReportCardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.BehaviourTarget", "Target")
+                    b.HasOne("MyPortal.Database.Models.Entity.BehaviourTarget", "Target")
                         .WithMany("ReportCardLinks")
                         .HasForeignKey("TargetId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ReportCardTargetSubmission", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ReportCardTargetSubmission", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ReportCardSubmission", "Submission")
+                    b.HasOne("MyPortal.Database.Models.Entity.ReportCardSubmission", "Submission")
                         .WithMany("TargetSubmissions")
                         .HasForeignKey("SubmissionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ReportCardTarget", "Target")
+                    b.HasOne("MyPortal.Database.Models.Entity.ReportCardTarget", "Target")
                         .WithMany("Submissions")
                         .HasForeignKey("TargetId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Result", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Result", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Aspect", "Aspect")
+                    b.HasOne("MyPortal.Database.Models.Entity.Aspect", "Aspect")
                         .WithMany("Results")
                         .HasForeignKey("AspectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Grade", "Grade")
+                    b.HasOne("MyPortal.Database.Models.Entity.Grade", "Grade")
                         .WithMany("Results")
                         .HasForeignKey("GradeId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MyPortal.Database.Models.ResultSet", "ResultSet")
+                    b.HasOne("MyPortal.Database.Models.Entity.ResultSet", "ResultSet")
                         .WithMany("Results")
                         .HasForeignKey("ResultSetId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("Results")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.RoleClaim", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.RoleClaim", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Role", "Role")
+                    b.HasOne("MyPortal.Database.Models.Entity.Role", "Role")
                         .WithMany("RoleClaims")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.RolePermission", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.RolePermission", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Permission", "Permission")
+                    b.HasOne("MyPortal.Database.Models.Entity.Permission", "Permission")
                         .WithMany("RolePermissions")
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Role", "Role")
+                    b.HasOne("MyPortal.Database.Models.Entity.Role", "Role")
                         .WithMany("RolePermissions")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Room", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Room", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Location", "Location")
+                    b.HasOne("MyPortal.Database.Models.Entity.Location", "Location")
                         .WithMany("Rooms")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.RoomClosure", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.RoomClosure", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.RoomClosureReason", "Reason")
+                    b.HasOne("MyPortal.Database.Models.Entity.RoomClosureReason", "Reason")
                         .WithMany("Closures")
                         .HasForeignKey("ReasonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Room", "Room")
+                    b.HasOne("MyPortal.Database.Models.Entity.Room", "Room")
                         .WithMany("Closures")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.School", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.School", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.GovernanceType", "GovernanceType")
+                    b.HasOne("MyPortal.Database.Models.Entity.GovernanceType", "GovernanceType")
                         .WithMany("Schools")
                         .HasForeignKey("GovernanceTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Person", "HeadTeacher")
+                    b.HasOne("MyPortal.Database.Models.Entity.Person", "HeadTeacher")
                         .WithMany("HeadteacherOf")
                         .HasForeignKey("HeadTeacherId");
 
-                    b.HasOne("MyPortal.Database.Models.IntakeType", "IntakeType")
+                    b.HasOne("MyPortal.Database.Models.Entity.IntakeType", "IntakeType")
                         .WithMany("Schools")
                         .HasForeignKey("IntakeTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.LocalAuthority", "LocalAuthority")
+                    b.HasOne("MyPortal.Database.Models.Entity.LocalAuthority", "LocalAuthority")
                         .WithMany("Schools")
                         .HasForeignKey("LocalAuthorityId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.SchoolPhase", "SchoolPhase")
+                    b.HasOne("MyPortal.Database.Models.Entity.SchoolPhase", "SchoolPhase")
                         .WithMany("Schools")
                         .HasForeignKey("PhaseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.SchoolType", "Type")
+                    b.HasOne("MyPortal.Database.Models.Entity.SchoolType", "Type")
                         .WithMany("Schools")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SenEvent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SenEvent", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.SenEventType", "Type")
+                    b.HasOne("MyPortal.Database.Models.Entity.SenEventType", "Type")
                         .WithMany("Events")
                         .HasForeignKey("EventTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("SenEvents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SenProvision", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SenProvision", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.SenProvisionType", "Type")
+                    b.HasOne("MyPortal.Database.Models.Entity.SenProvisionType", "Type")
                         .WithMany("SenProvisions")
                         .HasForeignKey("ProvisionTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("SenProvisions")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SenReview", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SenReview", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.SenReviewType", "ReviewType")
+                    b.HasOne("MyPortal.Database.Models.Entity.SenReviewType", "ReviewType")
                         .WithMany("Reviews")
                         .HasForeignKey("ReviewTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Session", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Session", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Class", "Class")
+                    b.HasOne("MyPortal.Database.Models.Entity.Class", "Class")
                         .WithMany("Sessions")
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.AttendancePeriod", "AttendancePeriod")
+                    b.HasOne("MyPortal.Database.Models.Entity.AttendancePeriod", "AttendancePeriod")
                         .WithMany("Sessions")
                         .HasForeignKey("PeriodId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Room", "Room")
+                    b.HasOne("MyPortal.Database.Models.Entity.Room", "Room")
                         .WithMany("Sessions")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "Teacher")
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffMember", "Teacher")
                         .WithMany("Sessions")
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.StaffAbsence", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StaffAbsence", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.StaffAbsenceType", "AbsenceType")
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffAbsenceType", "AbsenceType")
                         .WithMany("Absences")
                         .HasForeignKey("AbsenceTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.StaffIllnessType", "IllnessType")
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffIllnessType", "IllnessType")
                         .WithMany("Absences")
                         .HasForeignKey("IllnessTypeId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "StaffMember")
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffMember", "StaffMember")
                         .WithMany("Absences")
                         .HasForeignKey("StaffMemberId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.StaffMember", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StaffMember", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "LineManager")
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffMember", "LineManager")
                         .WithMany("Subordinates")
                         .HasForeignKey("LineManagerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MyPortal.Database.Models.Person", "Person")
+                    b.HasOne("MyPortal.Database.Models.Entity.Person", "Person")
                         .WithOne("StaffMemberDetails")
-                        .HasForeignKey("MyPortal.Database.Models.StaffMember", "PersonId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.StaffMember", "PersonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Student", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Student", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.House", "House")
+                    b.HasOne("MyPortal.Database.Models.Entity.House", "House")
                         .WithMany("Students")
                         .HasForeignKey("HouseId");
 
-                    b.HasOne("MyPortal.Database.Models.Person", "Person")
+                    b.HasOne("MyPortal.Database.Models.Entity.Person", "Person")
                         .WithOne("StudentDetails")
-                        .HasForeignKey("MyPortal.Database.Models.Student", "PersonId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.Student", "PersonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.RegGroup", "RegGroup")
+                    b.HasOne("MyPortal.Database.Models.Entity.RegGroup", "RegGroup")
                         .WithMany("Students")
                         .HasForeignKey("RegGroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.SenStatus", "SenStatus")
+                    b.HasOne("MyPortal.Database.Models.Entity.SenStatus", "SenStatus")
                         .WithMany("Students")
                         .HasForeignKey("SenStatusId");
 
-                    b.HasOne("MyPortal.Database.Models.YearGroup", "YearGroup")
+                    b.HasOne("MyPortal.Database.Models.Entity.YearGroup", "YearGroup")
                         .WithMany("Students")
                         .HasForeignKey("YearGroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.StudentAgentRelationship", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentAgentRelationship", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Agent", "Agent")
+                    b.HasOne("MyPortal.Database.Models.Entity.Agent", "Agent")
                         .WithMany("LinkedStudents")
                         .HasForeignKey("AgentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.AgentRelationshipType", "RelationshipType")
+                    b.HasOne("MyPortal.Database.Models.Entity.AgentRelationshipType", "RelationshipType")
                         .WithMany("Relationships")
                         .HasForeignKey("RelationshipTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("AgentRelationships")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.StudentContactRelationship", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentCharge", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Contact", "Contact")
+                    b.HasOne("MyPortal.Database.Models.Entity.Charge", "Charge")
+                        .WithMany("StudentCharges")
+                        .HasForeignKey("ChargeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
+                        .WithMany("Charges")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentContactRelationship", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.Contact", "Contact")
                         .WithMany("LinkedStudents")
                         .HasForeignKey("ContactId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ContactRelationshipType", "RelationshipType")
+                    b.HasOne("MyPortal.Database.Models.Entity.ContactRelationshipType", "RelationshipType")
                         .WithMany("StudentContacts")
                         .HasForeignKey("RelationshipTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("StudentContacts")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.StudyTopic", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudyTopic", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Course", "Course")
+                    b.HasOne("MyPortal.Database.Models.Entity.Course", "Course")
                         .WithMany("StudyTopics")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Subject", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Subject", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.SubjectCode", "SubjectCode")
+                    b.HasOne("MyPortal.Database.Models.Entity.SubjectCode", "SubjectCode")
                         .WithMany()
                         .HasForeignKey("SubjectCodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SubjectCode", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SubjectCode", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.SubjectCodeSet", "SubjectCodeSet")
+                    b.HasOne("MyPortal.Database.Models.Entity.SubjectCodeSet", "SubjectCodeSet")
                         .WithMany("SubjectCodes")
                         .HasForeignKey("SubjectCodeSetId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SubjectStaffMember", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SubjectStaffMember", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.SubjectStaffMemberRole", "Role")
+                    b.HasOne("MyPortal.Database.Models.Entity.SubjectStaffMemberRole", "Role")
                         .WithMany("StaffMembers")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "StaffMember")
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffMember", "StaffMember")
                         .WithMany("Subjects")
                         .HasForeignKey("StaffMemberId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Subject", "Subject")
+                    b.HasOne("MyPortal.Database.Models.Entity.Subject", "Subject")
                         .WithMany("StaffMembers")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SystemArea", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SystemArea", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.SystemArea", "Parent")
+                    b.HasOne("MyPortal.Database.Models.Entity.SystemArea", "Parent")
                         .WithMany("SubAreas")
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Task", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Task", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.User", "AssignedBy")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "AssignedBy")
                         .WithMany("AssignedBy")
                         .HasForeignKey("AssignedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Person", "AssignedTo")
+                    b.HasOne("MyPortal.Database.Models.Entity.Person", "AssignedTo")
                         .WithMany("AssignedTo")
                         .HasForeignKey("AssignedToId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.TaskType", "Type")
+                    b.HasOne("MyPortal.Database.Models.Entity.TaskType", "Type")
                         .WithMany("Tasks")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.TrainingCertificate", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.TrainingCertificate", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.TrainingCourse", "TrainingCourse")
+                    b.HasOne("MyPortal.Database.Models.Entity.TrainingCourse", "TrainingCourse")
                         .WithMany("Certificates")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "StaffMember")
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffMember", "StaffMember")
                         .WithMany("PersonnelTrainingCertificates")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.TrainingCertificateStatus", "Status")
+                    b.HasOne("MyPortal.Database.Models.Entity.TrainingCertificateStatus", "Status")
                         .WithMany("Certificates")
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.User", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.User", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Person", "Person")
+                    b.HasOne("MyPortal.Database.Models.Entity.Person", "Person")
                         .WithOne("User")
-                        .HasForeignKey("MyPortal.Database.Models.User", "PersonId")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.User", "PersonId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.UserClaim", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.UserClaim", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.User", "User")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "User")
                         .WithMany("UserClaims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.UserLogin", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.UserLogin", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.User", "User")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "User")
                         .WithMany("UserLogins")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.UserRole", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.UserRole", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Role", "Role")
+                    b.HasOne("MyPortal.Database.Models.Entity.Role", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.User", "User")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.UserToken", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.UserToken", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.User", "User")
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "User")
                         .WithMany("UserTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.YearGroup", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.YearGroup", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.CurriculumYearGroup", "CurriculumYearGroup")
+                    b.HasOne("MyPortal.Database.Models.Entity.CurriculumYearGroup", "CurriculumYearGroup")
                         .WithMany("YearGroups")
                         .HasForeignKey("CurriculumYearGroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "HeadOfYear")
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffMember", "HeadOfYear")
                         .WithMany("PastoralYearGroups")
                         .HasForeignKey("HeadId")
                         .OnDelete(DeleteBehavior.Restrict);

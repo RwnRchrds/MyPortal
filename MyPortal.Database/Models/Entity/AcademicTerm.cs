@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MyPortal.Database.Models.Entity
 {
-    [Table("AcademicTerm")]
+    [Table("AcademicTerms")]
     public class AcademicTerm : BaseTypes.Entity
     {
         [Column(Order = 1)]
