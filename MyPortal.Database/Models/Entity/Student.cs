@@ -130,5 +130,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<ActivityMembership> ActivityMemberships { get; set; }
 
         public virtual ICollection<AccountTransaction> AccountTransactions { get; set; }
+
+        public virtual ICollection<StudentCharge> Charges { get; set; }
     }
 }

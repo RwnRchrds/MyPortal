@@ -50,10 +50,13 @@ namespace MyPortal.Database.Models
         public virtual DbSet<BehaviourStatus> BehaviourStatus { get; set; }
         public virtual DbSet<BehaviourTarget> BehaviourTargets { get; set; }
         public virtual DbSet<Bill> Bills { get; set; }
-        public virtual DbSet<BillingCycle> BillingCycles { get; set; }
+        public virtual DbSet<BillCharge> BillCharges { get; set; }
+        public virtual DbSet<BillDiscount> BillDiscounts { get; set; }
         public virtual DbSet<BillAccountTransaction> BillAccountTransactions { get; set; }
         public virtual DbSet<BillItem> BillItems { get; set; }
         public virtual DbSet<Bulletin> Bulletins { get; set; }
+        public virtual DbSet<Charge> Charges { get; set; }
+        public virtual DbSet<ChargeDiscount> ChargeDiscounts { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<CommentBank> CommentBanks { get; set; }
@@ -80,6 +83,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<DiaryEventType> DiaryEventTypes { get; set; }
         public virtual DbSet<DietaryRequirement> DietaryRequirements { get; set; }
         public virtual DbSet<Directory> Directories { get; set; }
+        public virtual DbSet<Discount> Discounts { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
         public virtual DbSet<EmailAddress> EmailAddresses { get; set; }
@@ -177,6 +181,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<StaffMember> StaffMembers { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<StudentAgentRelationship> StudentAgentRelationships { get; set; }
+        public virtual DbSet<StudentCharge> StudentCharges { get; set; }
         public virtual DbSet<StudentContactRelationship> StudentContactRelationships { get; set; }
         public virtual DbSet<StudentContactRelationship> StudentContacts { get; set; }
         public virtual DbSet<StudentGroup> StudentGroups { get; set; }
@@ -234,10 +239,13 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<BehaviourStatus>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<BehaviourTarget>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Bill>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<BillingCycle>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<BillAccountTransaction>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<BillCharge>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<BillDiscount>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<BillItem>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Bulletin>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<Charge>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<ChargeDiscount>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Class>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Comment>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<CommentBank>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -271,6 +279,7 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<DiaryEventType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<DietaryRequirement>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Directory>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<Discount>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Document>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<DocumentType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<EmailAddress>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -375,6 +384,7 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<Student>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<StudentAgentRelationship>().Property(e => e.Id)
                     .HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<StudentCharge>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<StudentContactRelationship>().Property(e => e.Id)
                     .HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<StudentContactRelationship>().Property(e => e.Id)
@@ -2026,6 +2036,62 @@ namespace MyPortal.Database.Models
                 .HasOne(e => e.AcademicYear)
                 .WithMany(e => e.AcademicTerms)
                 .HasForeignKey(e => e.AcademicYearId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BillCharge>()
+                .HasOne(e => e.Bill)
+                .WithMany(e => e.BillCharges)
+                .HasForeignKey(e => e.BillId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BillCharge>()
+                .HasOne(e => e.StudentCharge)
+                .WithMany(e => e.BillCharges)
+                .HasForeignKey(e => e.StudentChargeId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BillDiscount>()
+                .HasOne(e => e.Bill)
+                .WithMany(e => e.BillDiscounts)
+                .HasForeignKey(e => e.BillId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BillDiscount>()
+                .HasOne(e => e.Discount)
+                .WithMany(e => e.BillDiscounts)
+                .HasForeignKey(e => e.DiscountId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ChargeDiscount>()
+                .HasOne(e => e.Charge)
+                .WithMany(e => e.ChargeDiscounts)
+                .HasForeignKey(e => e.ChargeId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ChargeDiscount>()
+                .HasOne(e => e.Discount)
+                .WithMany(e => e.ChargeDiscounts)
+                .HasForeignKey(e => e.DiscountId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<StudentCharge>()
+                .HasOne(e => e.Charge)
+                .WithMany(e => e.StudentCharges)
+                .HasForeignKey(e => e.ChargeId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<StudentCharge>()
+                .HasOne(e => e.Student)
+                .WithMany(e => e.Charges)
+                .HasForeignKey(e => e.StudentId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
         }
