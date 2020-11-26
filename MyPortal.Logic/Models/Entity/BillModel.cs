@@ -10,17 +10,11 @@ namespace MyPortal.Logic.Models.Entity
     {
         public Guid StudentId { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime CreatedDate { get; set; }
 
-        public decimal NetAmount { get; set; }
+        public DateTime DueDate { get; set; }
 
-        public decimal DiscountAmount { get; set; }
-
-        public decimal TaxAmount { get; set; }
-
-        public bool Refunded { get; set; }
-
-        public bool Deleted { get; set; }
+        public bool? Dispatched  { get; set; }
 
         public virtual StudentModel Student { get; set; }
     }
