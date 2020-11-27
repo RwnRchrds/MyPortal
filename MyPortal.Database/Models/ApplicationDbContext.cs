@@ -51,7 +51,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<BehaviourTarget> BehaviourTargets { get; set; }
         public virtual DbSet<Bill> Bills { get; set; }
         public virtual DbSet<BillCharge> BillCharges { get; set; }
-        public virtual DbSet<BillDiscount> BillDiscounts { get; set; }
+        public virtual DbSet<StudentDiscount> BillDiscounts { get; set; }
         public virtual DbSet<BillAccountTransaction> BillAccountTransactions { get; set; }
         public virtual DbSet<BillItem> BillItems { get; set; }
         public virtual DbSet<Bulletin> Bulletins { get; set; }
@@ -241,7 +241,7 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<Bill>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<BillAccountTransaction>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<BillCharge>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<BillDiscount>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<StudentDiscount>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<BillItem>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Bulletin>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Charge>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -2047,22 +2047,22 @@ namespace MyPortal.Database.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<BillCharge>()
-                .HasOne(e => e.StudentCharge)
+                .HasOne(e => e.Charge)
                 .WithMany(e => e.BillCharges)
-                .HasForeignKey(e => e.StudentChargeId)
+                .HasForeignKey(e => e.ChargeId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<BillDiscount>()
-                .HasOne(e => e.Bill)
-                .WithMany(e => e.BillDiscounts)
-                .HasForeignKey(e => e.BillId)
+            modelBuilder.Entity<StudentDiscount>()
+                .HasOne(e => e.Student)
+                .WithMany(e => e.Discounts)
+                .HasForeignKey(e => e.StudentId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<BillDiscount>()
+            modelBuilder.Entity<StudentDiscount>()
                 .HasOne(e => e.Discount)
-                .WithMany(e => e.BillDiscounts)
+                .WithMany(e => e.StudentDiscounts)
                 .HasForeignKey(e => e.DiscountId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
@@ -2092,6 +2092,20 @@ namespace MyPortal.Database.Models
                 .HasOne(e => e.Student)
                 .WithMany(e => e.Charges)
                 .HasForeignKey(e => e.StudentId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BillDiscount>()
+                .HasOne(e => e.Discount)
+                .WithMany(e => e.BillDiscounts)
+                .HasForeignKey(e => e.DiscountId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BillDiscount>()
+                .HasOne(e => e.Bill)
+                .WithMany(e => e.BillDiscounts)
+                .HasForeignKey(e => e.BillId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
         }

@@ -8,8 +8,7 @@ import {
   HttpInterceptor, HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import {catchError, take, filter, switchMap, map, finalize} from 'rxjs/operators';
-import {Router} from '@angular/router';
+import {catchError, take, filter, switchMap} from 'rxjs/operators';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
@@ -19,27 +18,32 @@ export class JwtInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(this.injectToken(request)).pipe(
       catchError((error: HttpErrorResponse) => {
+
+      // Logout user if token refresh fails
       if (request.url.includes('refreshToken')) {
         this.authService.logout();
       }
 
+      // No need to attempt token refresh if login fails
       if (request.url.includes('login')) {
         return throwError(error);
       }
 
+      // No need to attempt token refresh if error is not 401: Unauthorised
       if (error.status !== 401) {
-        throwError(error);
+        return throwError(error);
       }
 
+      // If token refresh already in progress, wait for completion and get the result
       if (this.authService.refreshTokenInProgress) {
-        console.log('waiting...');
         return this.authService.currentUser$.pipe(
           filter(u => u !== null),
           take(1),
           switchMap(() => next.handle(this.injectToken(request))));
       }
+
+      // Refresh token from
       else {
-        this.authService.refreshTokenInProgress = true;
         return this.authService.refreshToken().pipe(switchMap(success => {
           return next.handle(this.injectToken(request));
         }));

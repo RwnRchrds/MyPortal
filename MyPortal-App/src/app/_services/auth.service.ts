@@ -39,7 +39,7 @@ export class AuthService extends BaseService {
   }
 
   refreshToken(): Observable<boolean> {
-    this.refreshTokenInProgress = false;
+    this.refreshTokenInProgress = true;
     let currentUser: User;
     this.currentUser$.pipe(take(1)).subscribe(user => currentUser = user);
     return this.http.post(this.baseUrl + 'refreshToken', currentUser).pipe(map((tokenResponse: TokenWrapper) => {
@@ -48,8 +48,10 @@ export class AuthService extends BaseService {
         console.log('refresh success');
         localStorage.setItem('tokenWrapper', JSON.stringify(tokenResponse));
         this.currentUserSource.next(userResponse);
+        this.refreshTokenInProgress = false;
         return true;
       }
+      this.refreshTokenInProgress = false;
       return false;
     }));
   }

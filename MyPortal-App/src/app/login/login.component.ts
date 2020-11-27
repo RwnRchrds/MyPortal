@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit {
 
   loginError = '';
 
-  schoolName = 'Harrods Community School';
+  schoolName = 'Rowan Community School';
   schoolMotto = 'Leap Into Learning';
 
   constructor(private scriptService: ScriptService, private authService: AuthService) {  }

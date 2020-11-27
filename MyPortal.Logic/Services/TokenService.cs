@@ -54,7 +54,7 @@ namespace MyPortal.Logic.Services
             claims.AddRange(rolePermissions.Select(rp =>
                 new Claim(ApplicationClaimTypes.Permission, rp.PermissionId.ToString("N"))));
 
-            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -86,7 +86,7 @@ namespace MyPortal.Logic.Services
                 {
                     UserId = userId,
                     Value = token,
-                    ExpirationDate = DateTime.Now.AddDays(60)
+                    ExpirationDate = DateTime.Now.AddDays(14)
                 });
 
                 await _refreshTokenRepository.SaveChanges();

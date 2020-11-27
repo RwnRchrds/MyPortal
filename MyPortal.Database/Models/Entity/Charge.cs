@@ -33,6 +33,7 @@ namespace MyPortal.Database.Models.Entity
         public int DefaultRecurrences { get; set; }
 
         public virtual ICollection<StudentCharge> StudentCharges { get; set; }
+        public virtual ICollection<BillCharge> BillCharges { get; set; }
         public virtual ICollection<ChargeDiscount> ChargeDiscounts { get; set; }
     }
 }
