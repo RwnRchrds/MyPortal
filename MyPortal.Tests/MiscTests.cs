@@ -32,9 +32,9 @@ namespace MyPortal.Tests
             var secret = @"64867486t";
             var salt = Encoding.ASCII.GetBytes(",./09&fd");
 
-            var encryptedText = Logic.Helpers.Encryption.EncryptString(plaintext, salt, secret);
+            var encryptedText = Encryption.EncryptString(plaintext, salt, secret);
 
-            var decryptedText = Logic.Helpers.Encryption.DecryptString(encryptedText, salt, secret);
+            var decryptedText = Encryption.DecryptString(encryptedText, salt, secret);
 
             Assert.That(decryptedText == plaintext);
         }

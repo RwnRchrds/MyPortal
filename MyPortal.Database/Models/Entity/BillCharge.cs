@@ -13,7 +13,7 @@ namespace MyPortal.Database.Models.Entity
         public Guid BillId { get; set; }
 
         [Column(Order = 2)]
-        public Guid StudentChargeId { get; set; }
+        public Guid ChargeId { get; set; }
 
         [Column(Order = 3, TypeName = "decimal(10,2)")]
         public decimal NetAmount { get; set; }
@@ -22,6 +22,6 @@ namespace MyPortal.Database.Models.Entity
         public bool Refunded { get; set; } 
 
         public virtual Bill Bill { get; set; }
-        public virtual StudentCharge StudentCharge { get; set; }
+        public virtual Charge Charge { get; set; }
     }
 }
