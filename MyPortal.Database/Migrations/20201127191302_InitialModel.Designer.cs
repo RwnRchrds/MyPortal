@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201126190324_InitialModel")]
+    [Migration("20201127191302_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,7 +45,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("AcademicYearId");
 
-                    b.ToTable("AcademicTerm");
+                    b.ToTable("AcademicTerms");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.AcademicYear", b =>
@@ -870,20 +870,20 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("BillId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("ChargeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<decimal>("NetAmount")
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<bool>("Refunded")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("StudentChargeId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BillId");
 
-                    b.HasIndex("StudentChargeId");
+                    b.HasIndex("ChargeId");
 
                     b.ToTable("BillCharges");
                 });
@@ -892,8 +892,7 @@ namespace MyPortal.Database.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(10,2)");
@@ -913,7 +912,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("DiscountId");
 
-                    b.ToTable("BillDiscounts");
+                    b.ToTable("BillDiscount");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.BillItem", b =>
@@ -1768,6 +1767,10 @@ namespace MyPortal.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<bool>("Percentage")
                         .HasColumnType("bit");
@@ -4780,9 +4783,6 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(10,2)");
-
                     b.Property<Guid>("ChargeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -4841,6 +4841,28 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("StudentContactRelationships");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentDiscount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("DiscountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiscountId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentDiscounts");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentGroup", b =>
@@ -5690,9 +5712,9 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Entity.StudentCharge", "StudentCharge")
+                    b.HasOne("MyPortal.Database.Models.Entity.Charge", "Charge")
                         .WithMany("BillCharges")
-                        .HasForeignKey("StudentChargeId")
+                        .HasForeignKey("ChargeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -7092,6 +7114,21 @@ namespace MyPortal.Database.Migrations
 
                     b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("StudentContacts")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentDiscount", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.Discount", "Discount")
+                        .WithMany("StudentDiscounts")
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
+                        .WithMany("Discounts")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

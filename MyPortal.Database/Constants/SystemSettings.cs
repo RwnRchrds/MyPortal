@@ -6,6 +6,6 @@ namespace MyPortal.Database.Constants
 {
     public class SystemSettings
     {
-        
+        public const string BillPaymentPeriodLength = "BllPymntPrdLngth";
     }
 }
