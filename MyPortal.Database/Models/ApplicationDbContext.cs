@@ -150,6 +150,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<PhoneNumber> PhoneNumbers { get; set; }
         public virtual DbSet<PhoneNumberType> PhoneNumberTypes { get; set; }
         public virtual DbSet<Photo> Photos { get; set; }
+        public virtual DbSet<ProductDiscount> ProductDiscounts { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductType> ProductTypes { get; set; }
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
@@ -352,6 +353,7 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<PhoneNumberType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Photo>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Product>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<ProductDiscount>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<ProductType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<RefreshToken>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<RegGroup>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -2106,6 +2108,20 @@ namespace MyPortal.Database.Models
                 .HasOne(e => e.Bill)
                 .WithMany(e => e.BillDiscounts)
                 .HasForeignKey(e => e.BillId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ProductDiscount>()
+                .HasOne(e => e.Product)
+                .WithMany(e => e.ProductDiscounts)
+                .HasForeignKey(e => e.ProductId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ProductDiscount>()
+                .HasOne(e => e.Discount)
+                .WithMany(e => e.ProductDiscounts)
+                .HasForeignKey(e => e.DiscountId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
         }

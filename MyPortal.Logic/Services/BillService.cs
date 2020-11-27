@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using Task = System.Threading.Tasks.Task;
 
@@ -23,14 +25,22 @@ namespace MyPortal.Logic.Services
         private readonly IDiscountRepository _discountRepository;
         private readonly IStudentChargeRepository _studentChargeRepository;
         private readonly IStudentDiscountRepository _studentDiscountRepository;
+        private readonly ISystemSettingRepository _settingRepository;
 
         public BillService(ApplicationDbContext context)
         {
             
         }
 
-        public async Task GenerateBillsForCharges()
+        public async Task GenerateChargeBills()
         {
+            var hasSetting = int.TryParse((await _settingRepository.Get(SystemSettings.BillPaymentPeriodLength)).Setting, out int paymentPeriodLength);
+
+            if (!hasSetting)
+            {
+                throw new LogicException("Bill payment period length not defined.");
+            }
+
             var billableStudents = (await _studentChargeRepository.GetOutstanding()).GroupBy(sc => sc.StudentId);
 
             foreach (var billableStudent in billableStudents)
@@ -39,7 +49,7 @@ namespace MyPortal.Logic.Services
                 {
                     CreatedDate = DateTime.Now,
                     StudentId = billableStudent.Key,
-                    DueDate = DateTime.Today.AddMonths(6)
+                    DueDate = DateTime.Today.AddMonths(paymentPeriodLength)
                 };
 
                 foreach (var charge in billableStudent)
@@ -49,6 +59,9 @@ namespace MyPortal.Logic.Services
                         ChargeId = charge.ChargeId,
                         NetAmount = charge.Charge.Amount
                     });
+
+                    var chargeInDb = await _studentChargeRepository.GetByIdWithTracking(charge.ChargeId);
+                    chargeInDb.Recurrences--;
                 }
 
                 var studentDiscounts = await _studentDiscountRepository.GetByStudent(billableStudent.Key);

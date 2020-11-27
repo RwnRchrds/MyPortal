@@ -20,8 +20,12 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 5)]
         public bool Percentage { get; set; }
 
+        [Column(Order = 6)]
+        public bool Global { get; set; }
+
         public virtual ICollection<BillDiscount> BillDiscounts { get; set; }
         public virtual ICollection<StudentDiscount> StudentDiscounts { get; set; }
         public virtual ICollection<ChargeDiscount> ChargeDiscounts { get; set; }
+        public virtual ICollection<ProductDiscount> ProductDiscounts { get; set; }
     }
 }
