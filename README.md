@@ -9,3 +9,56 @@ MyPortal is an open source web-based school information system for the entire sc
 MyPortal provides the tools to efficiently manage daily school life and drive improvement in learner outcomes.
 
 Find MyPortal on Twitter at https://twitter.com/MyPortalEDU
+
+# Features
+  ## Academic
+
+    ✅ Cover Manager
+
+    ✅ Exams Manager
+
+    ✅ Marksheets
+
+    ✅ School Reporting
+
+    ✅ Lesson Planning
+
+    ✅ Timetable Manager
+
+    ✅ Progress Tracking
+    
+    ✅ Curriculum Planning
+
+  ## Administration
+ 
+    ✅ Census Manager (Coming Soon)
+
+    ✅ Data Protection
+    
+    ✅ Staff Manager 
+    
+    ✅ Admissions Manager
+    
+   ## Communication
+   
+    ✅ Calendar
+    
+    ✅ Bulletins
+    
+    ✅ Parent Portal
+    
+    ✅ Student Portal
+    
+   ## Finance
+    ✅ Fee Billing
+    
+    ✅ Online Payments
+    
+   ## Pastoral
+    ✅ Activites Manager
+    
+    ✅ Behaviour & Achievements
+    
+    ✅ Medical Centre
+    
+    ✅ SEN Manager
