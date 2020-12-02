@@ -1,5 +1,7 @@
 # MyPortal
 
+![Banner](https://i.imgur.com/SM6GB8N.png)
+
 [![Build Status](https://dev.azure.com/Harrods-School/MyPortal/_apis/build/status/Build%20and%20Publish?branchName=master)](https://dev.azure.com/Harrods-School/MyPortal/_build/latest?definitionId=12&branchName=master)
 
 MyPortal is an open source web-based school information system for the entire school community that helps to bring all core student and staff data together, allowing schools to report on all key metrics from one system.
