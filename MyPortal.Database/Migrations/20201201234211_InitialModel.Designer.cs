@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201127191302_InitialModel")]
+    [Migration("20201201234211_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -892,7 +892,8 @@ namespace MyPortal.Database.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(10,2)");
@@ -1767,6 +1768,9 @@ namespace MyPortal.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<bool>("Global")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(128)")
@@ -3752,6 +3756,34 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ProductDiscount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("ApplyMany")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("DiscountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("MinRequired")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiscountId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductDiscounts");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Entity.ProductType", b =>
                 {
                     b.Property<Guid>("Id")
@@ -4079,7 +4111,7 @@ namespace MyPortal.Database.Migrations
                         .HasName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.RoleClaim", b =>
@@ -4102,7 +4134,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("RoleClaims");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.RolePermission", b =>
@@ -4117,7 +4149,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.ToTable("AspNetRolePermissions");
+                    b.ToTable("RolePermissions");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Room", b =>
@@ -5311,7 +5343,7 @@ namespace MyPortal.Database.Migrations
                         .IsUnique()
                         .HasFilter("[PersonId] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.UserClaim", b =>
@@ -5334,7 +5366,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("UserClaims");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.UserLogin", b =>
@@ -5355,7 +5387,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("UserLogins");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.UserRole", b =>
@@ -5370,7 +5402,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.UserToken", b =>
@@ -5389,7 +5421,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("UserTokens");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.VatRate", b =>
@@ -6711,6 +6743,21 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.Entity.VatRate", "VatRate")
                         .WithMany("Products")
                         .HasForeignKey("VatRateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ProductDiscount", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.Discount", "Discount")
+                        .WithMany("ProductDiscounts")
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.Product", "Product")
+                        .WithMany("ProductDiscounts")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

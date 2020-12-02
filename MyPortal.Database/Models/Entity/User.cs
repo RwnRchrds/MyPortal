@@ -7,7 +7,7 @@ using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
-    [Table("AspNetUsers")]
+    [Table("Users")]
     public class User : IdentityUser<Guid>, IEntity
     {
         public User()
