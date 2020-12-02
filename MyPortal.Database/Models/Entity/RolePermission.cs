@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models.Entity
 {
-    [Table("AspNetRolePermissions")]
+    [Table("RolePermissions")]
     public class RolePermission
     {
         [Key]

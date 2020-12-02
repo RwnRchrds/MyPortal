@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MyPortal.Database.Models.Entity
 {
-    [Table("AspNetRoleClaims")]
+    [Table("RoleClaims")]
     public class RoleClaim : IdentityRoleClaim<Guid>
     {
         public virtual Role Role { get; set; }

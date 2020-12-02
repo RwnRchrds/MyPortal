@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using MyPortal.Database.Models.Entity;
-using Task = MyPortal.Database.Models.Entity.Task;
 
 namespace MyPortal.Database.Models
 {
@@ -16,7 +10,6 @@ namespace MyPortal.Database.Models
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-
         }
 
         public bool Debug { get; set; }
@@ -208,1922 +201,2349 @@ namespace MyPortal.Database.Models
 
             if (!Debug)
             {
-                modelBuilder.Entity<AcademicTerm>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<AcademicYear>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<AccountTransaction>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Achievement>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<AchievementOutcome>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<AchievementType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Activity>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ActivityEvent>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ActivityMembership>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ActivitySupervisor>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Address>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<AddressPerson>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Agency>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<AgencyType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Agent>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<AgentRelationshipType>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Aspect>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<AspectType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<AttendanceCode>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<AttendanceCodeMeaning>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<AttendanceMark>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<AttendancePeriod>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<AttendanceWeek>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<AttendanceWeekPattern>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<BasketItem>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<BehaviourOutcome>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<BehaviourStatus>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<BehaviourTarget>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Bill>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<BillAccountTransaction>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<BillCharge>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<StudentDiscount>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<BillItem>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Bulletin>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Charge>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ChargeDiscount>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Class>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Comment>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<CommentBank>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<CommunicationLog>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<CommunicationType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Contact>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ContactRelationshipType>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ContactRelationshipType>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Course>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<CoverArrangement>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<CurriculumBand>().HasIndex(e => new {e.AcademicYearId, e.Code}).IsUnique();
-                modelBuilder.Entity<CurriculumBand>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<CurriculumBandBlockAssignment>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<CurriculumBandMembership>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<CurriculumBlock>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<CurriculumGroup>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<CurriculumGroupMembership>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<CurriculumYearGroup>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Detention>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<DetentionType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<DiaryEvent>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<DiaryEventAttendee>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<DiaryEventAttendeeResponse>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<DiaryEventTemplate>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<DiaryEventType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<DietaryRequirement>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Directory>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Discount>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Document>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<DocumentType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<EmailAddress>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<EmailAddressType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Ethnicity>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamAssessment>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamAssessmentAspect>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamAssessmentMode>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamAward>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamAwardElement>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamAwardSeries>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamBaseComponent>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamBaseElement>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamBoard>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamCandidate>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamCandidateSeries>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamCandidateSpecialArrangement>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamComponent>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamComponentSitting>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamElement>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamElementComponent>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamEnrolment>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamQualification>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamQualificationLevel>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamResultEmbargo>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamRoom>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamRoomSeat>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamSeason>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamSeatAllocation>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamSeries>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamSession>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExamSpecialArrangement>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExclusionReason>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ExclusionType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<File>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<GiftedTalented>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<GovernanceType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Grade>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<GradeSet>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<HomeworkItem>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<HomeworkSubmission>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<House>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Incident>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<IncidentDetention>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<IncidentType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<IntakeType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<LessonPlan>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<LessonPlanTemplate>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<LocalAuthority>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Location>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<LogNote>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<LogNoteType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<MarksheetColumn>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<MarksheetTemplate>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<MarksheetTemplateGroup>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<MedicalCondition>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<MedicalEvent>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Observation>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ObservationOutcome>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Permission>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Person>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<PersonCondition>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<PersonDietaryRequirement>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<PhoneNumber>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<PhoneNumberType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Photo>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Product>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ProductDiscount>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ProductType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<RefreshToken>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<RegGroup>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Report>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ReportCard>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ReportCardSubmission>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ReportCardTarget>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ReportCardTargetSubmission>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Result>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ResultSet>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Room>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<RoomClosure>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<RoomClosureReason>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<School>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<SchoolPhase>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<SchoolType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<SenEvent>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<SenEventType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<SenProvision>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<SenProvisionType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<SenReview>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<SenReviewType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<SenStatus>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Session>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<StaffAbsence>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<StaffAbsenceType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<StaffIllnessType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<StaffMember>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Student>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<StudentAgentRelationship>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<StudentCharge>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<StudentContactRelationship>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<StudentContactRelationship>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<StudentGroup>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<StudyTopic>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Subject>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<SubjectCode>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<SubjectCodeSet>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<SubjectStaffMember>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<SubjectStaffMemberRole>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<SystemArea>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Task>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<TaskType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<TrainingCertificate>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<TrainingCertificateStatus>().Property(e => e.Id)
-                    .HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<TrainingCourse>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<VatRate>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<YearGroup>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<AcademicTerm>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.AcademicYear)
+                        .WithMany(x => x.AcademicTerms)
+                        .HasForeignKey(x => x.AcademicYearId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<AcademicYear>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Achievements)
+                        .WithOne(x => x.AcademicYear)
+                        .HasForeignKey(x => x.AcademicYearId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.AttendanceWeekPatterns)
+                        .WithOne(x => x.AcademicYear)
+                        .HasForeignKey(x => x.AcademicYearId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Incidents)
+                        .WithOne(x => x.AcademicYear)
+                        .HasForeignKey(x => x.AcademicYearId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.LogNotes)
+                        .WithOne(x => x.AcademicYear)
+                        .HasForeignKey(x => x.AcademicYearId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<AccountTransaction>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Student)
+                        .WithMany(x => x.AccountTransactions)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Achievement>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<AchievementOutcome>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(ao => ao.Achievements)
+                        .WithOne(a => a.Outcome)
+                        .HasForeignKey(a => a.OutcomeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<AchievementType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Achievements)
+                        .WithOne(x => x.Type)
+                        .HasForeignKey(x => x.AchievementTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Activity>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Events)
+                        .WithOne(x => x.Activity)
+                        .HasForeignKey(x => x.ActivityId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Memberships)
+                        .WithOne(x => x.Activity)
+                        .HasForeignKey(x => x.ActivityId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Supervisors)
+                        .WithOne(x => x.Activity)
+                        .HasForeignKey(x => x.ActivityId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ActivityEvent>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Event)
+                        .WithOne(x => x.Activity)
+                        .HasForeignKey<ActivityEvent>(x => x.EventId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ActivityMembership>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Student)
+                        .WithMany(x => x.ActivityMemberships)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ActivitySupervisor>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Supervisor)
+                        .WithMany(x => x.Activities)
+                        .HasForeignKey(x => x.SupervisorId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Address>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.People)
+                        .WithOne(x => x.Address)
+                        .HasForeignKey(x => x.AddressId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<AddressPerson>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<Agency>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Agents)
+                        .WithOne(x => x.Agency)
+                        .HasForeignKey(x => x.AgencyId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Address)
+                        .WithMany(x => x.Agencies)
+                        .HasForeignKey(x => x.AddressId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.AgencyType)
+                        .WithMany(x => x.Agencies)
+                        .HasForeignKey(x => x.TypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Directory)
+                        .WithOne(x => x.Agency)
+                        .HasForeignKey<Agency>(x => x.DirectoryId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<AgencyType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<Agent>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Person)
+                        .WithOne(x => x.AgentDetails)
+                        .HasForeignKey<Agent>(x => x.PersonId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.LinkedStudents)
+                        .WithOne(x => x.Agent)
+                        .HasForeignKey(x => x.AgentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<AgentRelationshipType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Relationships)
+                        .WithOne(x => x.RelationshipType)
+                        .HasForeignKey(x => x.RelationshipTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Aspect>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(a => a.Results)
+                        .WithOne(r => r.Aspect)
+                        .HasForeignKey(r => r.AspectId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<AspectType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(at => at.Aspects)
+                        .WithOne(a => a.Type)
+                        .HasForeignKey(a => a.TypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<AttendanceCode>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<AttendanceCodeMeaning>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(acm => acm.Codes)
+                        .WithOne(ac => ac.CodeMeaning)
+                        .HasForeignKey(ac => ac.MeaningId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<AttendanceMark>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<AttendancePeriod>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(ap => ap.AttendanceMarks)
+                        .WithOne(am => am.AttendancePeriod)
+                        .HasForeignKey(am => am.PeriodId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(ap => ap.Sessions)
+                        .WithOne(s => s.AttendancePeriod)
+                        .HasForeignKey(s => s.PeriodId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<AttendanceWeek>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(aw => aw.AttendanceMarks)
+                        .WithOne(am => am.Week)
+                        .HasForeignKey(am => am.WeekId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<AttendanceWeekPattern>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(awp => awp.Periods)
+                        .WithOne(ap => ap.WeekPattern)
+                        .HasForeignKey(ap => ap.WeekPatternId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(awp => awp.AttendanceWeeks)
+                        .WithOne(aw => aw.WeekPattern)
+                        .HasForeignKey(aw => aw.WeekPatternId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<BasketItem>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<BehaviourOutcome>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Incidents)
+                        .WithOne(x => x.Outcome)
+                        .HasForeignKey(x => x.OutcomeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<BehaviourStatus>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Incidents)
+                        .WithOne(x => x.Status)
+                        .HasForeignKey(x => x.StatusId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<BehaviourTarget>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.ReportCardLinks)
+                        .WithOne(x => x.Target)
+                        .HasForeignKey(x => x.TargetId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Bill>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.BillItems)
+                        .WithOne(x => x.Bill)
+                        .HasForeignKey(x => x.BillId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<BillAccountTransaction>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Bill)
+                        .WithMany(x => x.AccountTransactions)
+                        .HasForeignKey(x => x.BillId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.AccountTransaction)
+                        .WithMany(x => x.BillAccountTransactions)
+                        .HasForeignKey(x => x.AccountTransactionId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<BillCharge>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Bill)
+                        .WithMany(x => x.BillCharges)
+                        .HasForeignKey(x => x.BillId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Charge)
+                        .WithMany(x => x.BillCharges)
+                        .HasForeignKey(x => x.ChargeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<BillDiscount>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Discount)
+                        .WithMany(x => x.BillDiscounts)
+                        .HasForeignKey(x => x.DiscountId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Bill)
+                        .WithMany(x => x.BillDiscounts)
+                        .HasForeignKey(x => x.BillId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<BillItem>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<Bulletin>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<Charge>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<ChargeDiscount>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Charge)
+                        .WithMany(x => x.ChargeDiscounts)
+                        .HasForeignKey(x => x.ChargeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Discount)
+                        .WithMany(x => x.ChargeDiscounts)
+                        .HasForeignKey(x => x.DiscountId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Class>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Sessions)
+                        .WithOne(x => x.Class)
+                        .HasForeignKey(x => x.ClassId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Comment>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<CommentBank>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Comments)
+                        .WithOne(x => x.CommentBank)
+                        .HasForeignKey(x => x.CommentBankId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<CommunicationLog>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<CommunicationType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.CommunicationLogs)
+                        .WithOne(x => x.Type)
+                        .HasForeignKey(x => x.CommunicationTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Contact>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.LinkedStudents)
+                        .WithOne(x => x.Contact)
+                        .HasForeignKey(x => x.ContactId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Person)
+                        .WithOne(x => x.ContactDetails)
+                        .HasForeignKey<Contact>(x => x.PersonId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ContactRelationshipType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.StudentContacts)
+                        .WithOne(x => x.RelationshipType)
+                        .HasForeignKey(x => x.RelationshipTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Course>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Classes)
+                        .WithOne(x => x.Course)
+                        .HasForeignKey(x => x.CourseId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Subject)
+                        .WithMany(x => x.Courses)
+                        .HasForeignKey(x => x.SubjectId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Awards)
+                        .WithOne(x => x.Course)
+                        .HasForeignKey(x => x.CourseId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<CoverArrangement>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<CurriculumBand>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasIndex(i => new {i.AcademicYearId, i.Code}).IsUnique();
+
+                    e.HasMany(x => x.Enrolments)
+                        .WithOne(x => x.Band)
+                        .HasForeignKey(x => x.BandId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.AssignedBlocks)
+                        .WithOne(x => x.Band)
+                        .HasForeignKey(x => x.BandId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<CurriculumBandBlockAssignment>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<CurriculumBandMembership>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<CurriculumBlock>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.BandAssignments)
+                        .WithOne(x => x.Block)
+                        .HasForeignKey(x => x.BlockId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Groups)
+                        .WithOne(x => x.Block)
+                        .HasForeignKey(x => x.BlockId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<CurriculumGroup>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Memberships)
+                        .WithOne(x => x.CurriculumGroup)
+                        .HasForeignKey(x => x.GroupId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Classes)
+                        .WithOne(x => x.Group)
+                        .HasForeignKey(x => x.GroupId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<CurriculumGroupMembership>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<CurriculumYearGroup>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.YearGroups)
+                        .WithOne(x => x.CurriculumYearGroup)
+                        .HasForeignKey(x => x.CurriculumYearGroupId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Bands)
+                        .WithOne(x => x.CurriculumYearGroup)
+                        .HasForeignKey(x => x.CurriculumYearGroupId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Detention>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Incidents)
+                        .WithOne(x => x.Detention)
+                        .HasForeignKey(x => x.DetentionId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<DetentionType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Detentions)
+                        .WithOne(x => x.Type)
+                        .HasForeignKey(x => x.DetentionTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<DiaryEvent>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Detention)
+                        .WithOne(x => x.Event)
+                        .HasForeignKey<Detention>(x => x.EventId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Attendees)
+                        .WithOne(x => x.Event)
+                        .HasForeignKey(x => x.EventId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<DiaryEventAttendee>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<DiaryEventAttendeeResponse>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.DiaryEventAttendees)
+                        .WithOne(x => x.Response)
+                        .HasForeignKey(x => x.ResponseId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<DiaryEventTemplate>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<DiaryEventType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.DiaryEventTemplates)
+                        .WithOne(x => x.DiaryEventType)
+                        .HasForeignKey(x => x.EventTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.DiaryEvents)
+                        .WithOne(x => x.EventType)
+                        .HasForeignKey(x => x.EventTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<DietaryRequirement>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.PersonDietaryRequirements)
+                        .WithOne(x => x.DietaryRequirement)
+                        .HasForeignKey(x => x.DietaryRequirementId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Directory>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(d => d.Bulletin)
+                        .WithOne(b => b.Directory)
+                        .HasForeignKey<Bulletin>(b => b.DirectoryId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(d => d.Person)
+                        .WithOne(p => p.Directory)
+                        .HasForeignKey<Person>(p => p.DirectoryId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(d => d.HomeworkItem)
+                        .WithOne(hi => hi.Directory)
+                        .HasForeignKey<HomeworkItem>(hi => hi.DirectoryId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(d => d.LessonPlan)
+                        .WithOne(lp => lp.Directory)
+                        .HasForeignKey<LessonPlan>(lp => lp.DirectoryId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(d => d.Subdirectories)
+                        .WithOne(d => d.Parent)
+                        .HasForeignKey(d => d.ParentId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(d => d.Documents)
+                        .WithOne(d => d.Directory)
+                        .HasForeignKey(d => d.DirectoryId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Discount>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<Document>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<DocumentType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Documents)
+                        .WithOne(x => x.Type)
+                        .HasForeignKey(x => x.TypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<EmailAddress>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<EmailAddressType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.EmailAddresses)
+                        .WithOne(x => x.Type)
+                        .HasForeignKey(x => x.TypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Ethnicity>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.People)
+                        .WithOne(x => x.Ethnicity)
+                        .HasForeignKey(x => x.EthnicityId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamAssessment>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Aspects)
+                        .WithOne(x => x.Assessment)
+                        .HasForeignKey(x => x.AssessmentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.ExamBoard)
+                        .WithMany(x => x.ExamAssessments)
+                        .HasForeignKey(x => x.ExamBoardId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.ExamAward)
+                        .WithOne(x => x.Assessment)
+                        .HasForeignKey<ExamAward>(x => x.AssessmentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.ExamBaseElement)
+                        .WithOne(x => x.Assessment)
+                        .HasForeignKey<ExamBaseElement>(x => x.AssessmentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.ExamBaseComponent)
+                        .WithOne(x => x.Assessment)
+                        .HasForeignKey<ExamBaseComponent>(x => x.ExamAssessmentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamAssessmentAspect>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Aspect)
+                        .WithMany(x => x.AssessmentAspects)
+                        .HasForeignKey(x => x.AspectId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamAssessmentMode>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Components)
+                        .WithOne(x => x.AssessmentMode)
+                        .HasForeignKey(x => x.AssessmentModeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.ExamBaseComponents)
+                        .WithOne(x => x.AssessmentMode)
+                        .HasForeignKey(x => x.AssessmentModeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamAward>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.ExamAwardElements)
+                        .WithOne(x => x.Award)
+                        .HasForeignKey(x => x.AwardId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.ExamAwardSeries)
+                        .WithOne(x => x.Award)
+                        .HasForeignKey(x => x.AwardId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.ExamEnrolments)
+                        .WithOne(x => x.Award)
+                        .HasForeignKey(x => x.AwardId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Qualification)
+                        .WithMany(x => x.Awards)
+                        .HasForeignKey(x => x.QualificationId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Course)
+                        .WithMany(x => x.Awards)
+                        .HasForeignKey(x => x.CourseId)
+                        .OnDelete(DeleteBehavior.SetNull);
+                });
+
+                modelBuilder.Entity<ExamAwardElement>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Element)
+                        .WithMany(x => x.ExamAwardElements)
+                        .HasForeignKey(x => x.ElementId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamAwardSeries>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Series)
+                        .WithMany(x => x.ExamAwardSeries)
+                        .HasForeignKey(x => x.AwardId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamBaseComponent>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.ExamComponents)
+                        .WithOne(x => x.BaseComponent)
+                        .HasForeignKey(x => x.BaseComponentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamBaseElement>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Elements)
+                        .WithOne(x => x.BaseElement)
+                        .HasForeignKey(x => x.BaseElementId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.QcaCode)
+                        .WithMany(x => x.Elements)
+                        .HasForeignKey(x => x.QcaCodeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Level)
+                        .WithMany(x => x.ExamBaseElements)
+                        .HasForeignKey(x => x.LevelId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamBoard>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.ExamSeries)
+                        .WithOne(x => x.ExamBoard)
+                        .HasForeignKey(x => x.ExamBoardId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamCandidate>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.LinkedSeries)
+                        .WithOne(x => x.Candidate)
+                        .HasForeignKey(x => x.CandidateId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.SeatAllocations)
+                        .WithOne(x => x.Candidate)
+                        .HasForeignKey(x => x.CandidateId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.SpecialArrangements)
+                        .WithOne(x => x.Candidate)
+                        .HasForeignKey(x => x.CandidateId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Student)
+                        .WithOne(x => x.Candidate)
+                        .HasForeignKey<ExamCandidate>(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.ExamEnrolments)
+                        .WithOne(x => x.Candidate)
+                        .HasForeignKey(x => x.CandidateId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamCandidateSeries>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Series)
+                        .WithMany(x => x.ExamCandidateSeries)
+                        .HasForeignKey(x => x.SeriesId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamCandidateSpecialArrangement>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.SpecialArrangement)
+                        .WithMany(x => x.Candidates)
+                        .HasForeignKey(x => x.SpecialArrangementId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamComponent>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Sittings)
+                        .WithOne(x => x.Component)
+                        .HasForeignKey(x => x.ComponentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.ExamElementComponents)
+                        .WithOne(x => x.Component)
+                        .HasForeignKey(x => x.ComponentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Series)
+                        .WithMany(x => x.ExamComponents)
+                        .HasForeignKey(x => x.ExamSeriesId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Session)
+                        .WithMany(x => x.Components)
+                        .HasForeignKey(x => x.SessionId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamComponentSitting>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Room)
+                        .WithMany(x => x.ExamComponentSittings)
+                        .HasForeignKey(x => x.ExamRoomId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.SeatAllocations)
+                        .WithOne(x => x.Sitting)
+                        .HasForeignKey(x => x.SittingId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamElement>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Series)
+                        .WithMany(x => x.ExamElements)
+                        .HasForeignKey(x => x.SeriesId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.ExamElementComponents)
+                        .WithOne(x => x.Element)
+                        .HasForeignKey(x => x.ElementId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamElementComponent>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<ExamEnrolment>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<ExamQualification>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Levels)
+                        .WithOne(x => x.Qualification)
+                        .HasForeignKey(x => x.QualificationId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamQualificationLevel>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.DefaultGradeSet)
+                        .WithMany(x => x.ExamQualificationLevels)
+                        .HasForeignKey(x => x.DefaultGradeSetId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamResultEmbargo>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.ResultSet)
+                        .WithMany(x => x.ExamResultEmbargoes)
+                        .HasForeignKey(x => x.ResultSetId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamRoom>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Room)
+                        .WithOne(x => x.ExamRoom)
+                        .HasForeignKey<ExamRoom>(x => x.RoomId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamRoomSeat>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.ExamRoom)
+                        .WithMany(x => x.Seats)
+                        .HasForeignKey(x => x.ExamRoomId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.SeatAllocations)
+                        .WithOne(x => x.Seat)
+                        .HasForeignKey(x => x.SeatId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamSeason>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.ResultSet)
+                        .WithMany(x => x.ExamSeasons)
+                        .HasForeignKey(x => x.ResultSetId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.ExamSeries)
+                        .WithOne(x => x.Season)
+                        .HasForeignKey(x => x.ExamSeasonId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamSeatAllocation>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<ExamSeries>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<ExamSession>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<ExamSpecialArrangement>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<ExclusionReason>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<ExclusionType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<File>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Document)
+                        .WithOne(x => x.Attachment)
+                        .HasForeignKey<File>(x => x.DocumentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<GiftedTalented>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<GovernanceType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Schools)
+                        .WithOne(x => x.GovernanceType)
+                        .HasForeignKey(x => x.GovernanceTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Grade>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(e => e.Results)
+                        .WithOne(e => e.Grade)
+                        .HasForeignKey(e => e.GradeId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<GradeSet>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(gs => gs.Aspects)
+                        .WithOne(a => a.GradeSet)
+                        .HasForeignKey(a => a.GradeSetId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(gs => gs.Grades)
+                        .WithOne(g => g.GradeSet)
+                        .HasForeignKey(g => g.GradeSetId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<HomeworkItem>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Submissions)
+                        .WithOne(x => x.HomeworkItem)
+                        .HasForeignKey(x => x.HomeworkId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<HomeworkSubmission>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Task)
+                        .WithOne(x => x.HomeworkSubmission)
+                        .HasForeignKey<HomeworkSubmission>(x => x.TaskId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Student)
+                        .WithMany(x => x.HomeworkSubmissions)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.SubmittedWork)
+                        .WithOne(x => x.HomeworkSubmission)
+                        .HasForeignKey<HomeworkSubmission>(x => x.DocumentId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<House>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Students)
+                        .WithOne(x => x.House)
+                        .HasForeignKey(x => x.HouseId);
+                });
+
+                modelBuilder.Entity<Incident>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Detentions)
+                        .WithOne(x => x.Incident)
+                        .HasForeignKey(x => x.IncidentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<IncidentDetention>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<IncidentType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Incidents)
+                        .WithOne(x => x.Type)
+                        .HasForeignKey(x => x.BehaviourTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<IntakeType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Schools)
+                        .WithOne(x => x.IntakeType)
+                        .HasForeignKey(x => x.IntakeTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<LessonPlan>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<LessonPlanTemplate>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<LocalAuthority>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Schools)
+                        .WithOne(x => x.LocalAuthority)
+                        .HasForeignKey(x => x.LocalAuthorityId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Location>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.BehaviourAchievements)
+                        .WithOne(x => x.Location)
+                        .HasForeignKey(x => x.LocationId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.BehaviourIncidents)
+                        .WithOne(e => e.Location)
+                        .HasForeignKey(x => x.LocationId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Rooms)
+                        .WithOne(x => x.Location)
+                        .HasForeignKey(x => x.LocationId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<LogNote>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<LogNoteType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.LogNotes)
+                        .WithOne(x => x.LogNoteType)
+                        .HasForeignKey(x => x.TypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<MarksheetColumn>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<MarksheetTemplate>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Columns)
+                        .WithOne(x => x.Template)
+                        .HasForeignKey(x => x.TemplateId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<MarksheetTemplateGroup>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Template)
+                        .WithMany(x => x.TemplateGroups)
+                        .HasForeignKey(x => x.MarksheetTemplateId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.StudentGroup)
+                        .WithMany(x => x.MarksheetTemplates)
+                        .HasForeignKey(x => x.StudentGroupId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<MedicalCondition>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.PersonConditions)
+                        .WithOne(x => x.MedicalCondition)
+                        .HasForeignKey(x => x.ConditionId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<MedicalEvent>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<Observation>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<ObservationOutcome>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Observations)
+                        .WithOne(x => x.Outcome)
+                        .HasForeignKey(x => x.OutcomeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Permission>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.SystemArea)
+                        .WithMany(x => x.Permissions)
+                        .HasForeignKey(x => x.AreaId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.RolePermissions)
+                        .WithOne(x => x.Permission)
+                        .HasForeignKey(x => x.PermissionId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Person>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(p => p.Addresses)
+                        .WithOne(a => a.Person)
+                        .HasForeignKey(a => a.PersonId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(p => p.EmailAddresses)
+                        .WithOne(ea => ea.Person)
+                        .HasForeignKey(ea => ea.PersonId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(p => p.MedicalConditions)
+                        .WithOne(pc => pc.Person)
+                        .HasForeignKey(pc => pc.PersonId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(p => p.PhoneNumbers)
+                        .WithOne(pn => pn.Person)
+                        .HasForeignKey(pn => pn.PersonId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.Property(p => p.Gender)
+                        .IsFixedLength()
+                        .IsUnicode(false);
+
+                    e.HasMany(x => x.DiaryEventInvitations)
+                        .WithOne(x => x.Person)
+                        .HasForeignKey(x => x.PersonId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.AssignedTo)
+                        .WithOne(x => x.AssignedTo)
+                        .HasForeignKey(x => x.AssignedToId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<PersonCondition>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<PersonDietaryRequirement>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<PhoneNumber>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<PhoneNumberType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.PhoneNumbers)
+                        .WithOne(x => x.Type)
+                        .HasForeignKey(x => x.TypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Photo>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.People)
+                        .WithOne(x => x.Photo)
+                        .HasForeignKey(x => x.PhotoId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Product>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.BasketItems)
+                        .WithOne(x => x.Product)
+                        .HasForeignKey(x => x.ProductId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.BillItems)
+                        .WithOne(x => x.Product)
+                        .HasForeignKey(x => x.ProductId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.VatRate)
+                        .WithMany(x => x.Products)
+                        .HasForeignKey(x => x.VatRateId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ProductDiscount>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Product)
+                        .WithMany(x => x.ProductDiscounts)
+                        .HasForeignKey(x => x.ProductId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Discount)
+                        .WithMany(x => x.ProductDiscounts)
+                        .HasForeignKey(x => x.DiscountId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ProductType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Products)
+                        .WithOne(x => x.Type)
+                        .HasForeignKey(x => x.ProductTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<RefreshToken>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<RegGroup>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Students)
+                        .WithOne(x => x.RegGroup)
+                        .HasForeignKey(x => x.RegGroupId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Report>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<ReportCard>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Targets)
+                        .WithOne(x => x.ReportCard)
+                        .HasForeignKey(x => x.ReportCardId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Student)
+                        .WithMany(x => x.ReportCards)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.BehaviourType)
+                        .WithMany(x => x.ReportCards)
+                        .HasForeignKey(x => x.BehaviourTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Submissions)
+                        .WithOne(x => x.ReportCard)
+                        .HasForeignKey(x => x.ReportCardId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ReportCardSubmission>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.TargetSubmissions)
+                        .WithOne(x => x.Submission)
+                        .HasForeignKey(x => x.SubmissionId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.SubmittedBy)
+                        .WithMany(x => x.ReportCardSubmissions)
+                        .HasForeignKey(x => x.SubmittedById)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ReportCardTarget>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Submissions)
+                        .WithOne(x => x.Target)
+                        .HasForeignKey(x => x.TargetId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ReportCardTargetSubmission>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<Result>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<ResultSet>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(rs => rs.Results)
+                        .WithOne(r => r.ResultSet)
+                        .HasForeignKey(r => r.ResultSetId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Role>(e =>
+                {
+                    e.ToTable("Roles");
+
+                    e.HasMany(x => x.UserRoles)
+                        .WithOne(x => x.Role)
+                        .HasForeignKey(x => x.RoleId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.RolePermissions)
+                        .WithOne(x => x.Role)
+                        .HasForeignKey(x => x.RoleId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.RoleClaims)
+                        .WithOne(x => x.Role)
+                        .HasForeignKey(x => x.RoleId)
+                        .IsRequired();
+                });
+
+                modelBuilder.Entity<RoleClaim>(e =>
+                {
+                    e.ToTable("RoleClaims");
+                });
+
+                modelBuilder.Entity<RolePermission>(e =>
+                {
+                    e.HasKey(x => new { x.RoleId, x.PermissionId });
+                });
+
+                modelBuilder.Entity<Room>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.CoverArrangements)
+                        .WithOne(x => x.Room)
+                        .HasForeignKey(x => x.RoomId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Sessions)
+                        .WithOne(x => x.Room)
+                        .HasForeignKey(x => x.RoomId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.DiaryEvents)
+                        .WithOne(x => x.Room)
+                        .HasForeignKey(x => x.RoomId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Closures)
+                        .WithOne(x => x.Room)
+                        .HasForeignKey(x => x.RoomId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<RoomClosure>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<RoomClosureReason>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Closures)
+                        .WithOne(x => x.Reason)
+                        .HasForeignKey(x => x.ReasonId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<School>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<SchoolPhase>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Schools)
+                        .WithOne(x => x.SchoolPhase)
+                        .HasForeignKey(x => x.PhaseId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<SchoolType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Schools)
+                        .WithOne(x => x.Type)
+                        .HasForeignKey(x => x.TypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<SenEvent>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<SenEventType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Events)
+                        .WithOne(x => x.Type)
+                        .HasForeignKey(x => x.EventTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<SenProvision>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<SenProvisionType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.SenProvisions)
+                        .WithOne(x => x.Type)
+                        .HasForeignKey(x => x.ProvisionTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<SenReview>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<SenReviewType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Reviews)
+                        .WithOne(x => x.ReviewType)
+                        .HasForeignKey(x => x.ReviewTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<SenStatus>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    
+                    e.HasMany(x => x.Students)
+                        .WithOne(x => x.SenStatus)
+                        .HasForeignKey(x => x.SenStatusId);
+
+                    e.Property(x => x.Code)
+                        .IsFixedLength()
+                        .IsUnicode(false);
+                });
+
+                modelBuilder.Entity<Session>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<StaffAbsence>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<StaffAbsenceType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Absences)
+                        .WithOne(x => x.AbsenceType)
+                        .HasForeignKey(x => x.AbsenceTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<StaffIllnessType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Absences)
+                        .WithOne(x => x.IllnessType)
+                        .HasForeignKey(x => x.IllnessTypeId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<StaffMember>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(sm => sm.Sessions)
+                        .WithOne(s => s.Teacher)
+                        .HasForeignKey(s => s.TeacherId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(sm => sm.Person)
+                        .WithOne(p => p.StaffMemberDetails)
+                        .HasForeignKey<StaffMember>(sm => sm.PersonId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(sm => sm.PastoralHouses)
+                        .WithOne(h => h.HeadOfHouse)
+                        .HasForeignKey(h => h.HeadId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(sm => sm.PastoralRegGroups)
+                        .WithOne(rg => rg.Tutor)
+                        .HasForeignKey(rg => rg.TutorId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(sm => sm.PastoralYearGroups)
+                        .WithOne(yg => yg.HeadOfYear)
+                        .HasForeignKey(yg => yg.HeadId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(sm => sm.PersonnelObservationsObserved)
+                        .WithOne(o => o.Observer)
+                        .HasForeignKey(o => o.ObserverId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(sm => sm.PersonnelObservations)
+                        .WithOne(o => o.Observee)
+                        .HasForeignKey(o => o.ObserveeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(sm => sm.PersonnelTrainingCertificates)
+                        .WithOne(tc => tc.StaffMember)
+                        .HasForeignKey(tc => tc.StaffId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(sm => sm.CoverArrangements)
+                        .WithOne(ca => ca.Teacher)
+                        .HasForeignKey(ca => ca.TeacherId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(sm => sm.Subordinates)
+                        .WithOne(sm => sm.LineManager)
+                        .HasForeignKey(sm => sm.LineManagerId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(sm => sm.Absences)
+                        .WithOne(sa => sa.StaffMember)
+                        .HasForeignKey(sm => sm.StaffMemberId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Subjects)
+                        .WithOne(x => x.StaffMember)
+                        .HasForeignKey(x => x.StaffMemberId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Student>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(s => s.Results)
+                        .WithOne(r => r.Student)
+                        .HasForeignKey(s => s.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.AttendanceMarks)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Achievements)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Incidents)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Enrolments)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.FinanceBasketItems)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Bills)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.StudentContacts)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.GiftedTalentedSubjects)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Person)
+                        .WithOne(x => x.StudentDetails)
+                        .HasForeignKey<Student>(x => x.PersonId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.MedicalEvents)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.ProfileLogs)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.SenEvents)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.SenProvisions)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.GroupMemberships)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.Property(x => x.Upn)
+                        .IsUnicode(false);
+                });
+
+                modelBuilder.Entity<StudentAgentRelationship>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Student)
+                        .WithMany(x => x.AgentRelationships)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<StudentCharge>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Charge)
+                        .WithMany(x => x.StudentCharges)
+                        .HasForeignKey(x => x.ChargeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Student)
+                        .WithMany(x => x.Charges)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<StudentContactRelationship>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Contact)
+                        .WithMany(x => x.LinkedStudents)
+                        .HasForeignKey(x => x.ContactId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Student)
+                        .WithMany(x => x.StudentContacts)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<StudentDiscount>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Student)
+                        .WithMany(x => x.Discounts)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Discount)
+                        .WithMany(x => x.StudentDiscounts)
+                        .HasForeignKey(x => x.DiscountId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<StudentGroup>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.MarksheetTemplates)
+                        .WithOne(x => x.StudentGroup)
+                        .HasForeignKey(x => x.StudentGroupId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<StudyTopic>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.LessonPlans)
+                        .WithOne(x => x.StudyTopic)
+                        .HasForeignKey(x => x.StudyTopicId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Course)
+                        .WithMany(x => x.StudyTopics)
+                        .HasForeignKey(x => x.CourseId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Subject>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Courses)
+                        .WithOne(x => x.Subject)
+                        .HasForeignKey(x => x.SubjectId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.StaffMembers)
+                        .WithOne(x => x.Subject)
+                        .HasForeignKey(x => x.SubjectId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.GiftedTalentedStudents)
+                        .WithOne(x => x.Subject)
+                        .HasForeignKey(x => x.SubjectId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<SubjectCode>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<SubjectCodeSet>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.SubjectCodes)
+                        .WithOne(x => x.SubjectCodeSet)
+                        .HasForeignKey(x => x.SubjectCodeSetId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<SubjectStaffMember>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<SubjectStaffMemberRole>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.StaffMembers)
+                        .WithOne(x => x.Role)
+                        .HasForeignKey(x => x.RoleId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<SystemArea>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Reports)
+                        .WithOne(x => x.SystemArea)
+                        .HasForeignKey(x => x.AreaId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.SubAreas)
+                        .WithOne(x => x.Parent)
+                        .HasForeignKey(x => x.ParentId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Task>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<TaskType>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Tasks)
+                        .WithOne(x => x.Type)
+                        .HasForeignKey(x => x.TypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<TrainingCertificate>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<TrainingCertificateStatus>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Certificates)
+                        .WithOne(x => x.Status)
+                        .HasForeignKey(x => x.StatusId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<TrainingCourse>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.Certificates)
+                        .WithOne(x => x.TrainingCourse)
+                        .HasForeignKey(x => x.CourseId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<User>(e =>
+                {
+                    e.ToTable("Users");
+
+                    e.HasOne(x => x.Person)
+                        .WithOne(x => x.User)
+                        .HasForeignKey<User>(x => x.PersonId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.UserRoles)
+                        .WithOne(x => x.User)
+                        .HasForeignKey(x => x.UserId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.LogNotesCreated)
+                        .WithOne(x => x.CreatedBy)
+                        .HasForeignKey(x => x.CreatedById)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.LogNotesUpdated)
+                        .WithOne(x => x.UpdatedBy)
+                        .HasForeignKey(x => x.UpdatedById)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Documents)
+                        .WithOne(x => x.CreatedBy)
+                        .HasForeignKey(x => x.CreatedById)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.MedicalEvents)
+                        .WithOne(x => x.RecordedBy)
+                        .HasForeignKey(x => x.RecordedById)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Incidents)
+                        .WithOne(x => x.RecordedBy)
+                        .HasForeignKey(x => x.RecordedById)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Achievements)
+                        .WithOne(x => x.RecordedBy)
+                        .HasForeignKey(x => x.RecordedById)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.LessonPlans)
+                        .WithOne(x => x.Author)
+                        .HasForeignKey(x => x.AuthorId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Bulletins)
+                        .WithOne(x => x.Author)
+                        .HasForeignKey(x => x.AuthorId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.AssignedBy)
+                        .WithOne(x => x.AssignedBy)
+                        .HasForeignKey(x => x.AssignedById)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.UserClaims)
+                        .WithOne(x => x.User)
+                        .HasForeignKey(x => x.UserId)
+                        .IsRequired();
+
+                    e.HasMany(x => x.UserLogins)
+                        .WithOne(x => x.User)
+                        .HasForeignKey(x => x.UserId)
+                        .IsRequired();
+
+                    e.HasMany(x => x.UserTokens)
+                        .WithOne(x => x.User)
+                        .HasForeignKey(x => x.UserId)
+                        .IsRequired();
+                });
+
+                modelBuilder.Entity<UserClaim>(e =>
+                {
+                    e.ToTable("UserClaims");
+                });
+
+                modelBuilder.Entity<UserLogin>(e =>
+                {
+                    e.ToTable("UserLogins");
+                });
+
+                modelBuilder.Entity<UserRole>(e =>
+                {
+                    e.ToTable("UserRoles");
+                });
+
+                modelBuilder.Entity<UserToken>(e =>
+                {
+                    e.ToTable("UserTokens");
+                });
+
+                modelBuilder.Entity<VatRate>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+
+                modelBuilder.Entity<YearGroup>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.RegGroups)
+                        .WithOne(x => x.YearGroup)
+                        .HasForeignKey(x => x.YearGroupId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Students)
+                        .WithOne(x => x.YearGroup)
+                        .HasForeignKey(x => x.YearGroupId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
             }
-
-            modelBuilder.Entity<Aspect>()
-                .HasMany(e => e.Results)
-                .WithOne(e => e.Aspect)
-                .HasForeignKey(e => e.AspectId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AspectType>()
-                .HasMany(e => e.Aspects)
-                .WithOne(e => e.Type)
-                .HasForeignKey(e => e.TypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<GradeSet>()
-                .HasMany(e => e.Aspects)
-                .WithOne(e => e.GradeSet)
-                .HasForeignKey(e => e.GradeSetId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<GradeSet>()
-                .HasMany(e => e.Grades)
-                .WithOne(e => e.GradeSet)
-                .HasForeignKey(e => e.GradeSetId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ResultSet>()
-                .HasMany(e => e.Results)
-                .WithOne(e => e.ResultSet)
-                .HasForeignKey(e => e.ResultSetId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AttendanceCodeMeaning>()
-                .HasMany(e => e.Codes)
-                .WithOne(e => e.CodeMeaning)
-                .HasForeignKey(e => e.MeaningId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AttendancePeriod>()
-                .HasMany(e => e.AttendanceMarks)
-                .WithOne(e => e.AttendancePeriod)
-                .HasForeignKey(e => e.PeriodId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AttendancePeriod>()
-                .HasMany(e => e.Sessions)
-                .WithOne(e => e.AttendancePeriod)
-                .HasForeignKey(e => e.PeriodId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AttendanceWeek>()
-                .HasMany(e => e.AttendanceMarks)
-                .WithOne(e => e.Week)
-                .HasForeignKey(e => e.WeekId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AttendanceWeekPattern>()
-                .HasMany(e => e.Periods)
-                .WithOne(e => e.WeekPattern)
-                .HasForeignKey(e => e.WeekPatternId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AttendanceWeekPattern>()
-                .HasMany(e => e.AttendanceWeeks)
-                .WithOne(e => e.WeekPattern)
-                .HasForeignKey(e => e.WeekPatternId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AchievementOutcome>()
-                .HasMany(e => e.Achievements)
-                .WithOne(e => e.Outcome)
-                .HasForeignKey(e => e.OutcomeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AchievementType>()
-                .HasMany(e => e.Achievements)
-                .WithOne(e => e.Type)
-                .HasForeignKey(e => e.AchievementTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<BehaviourOutcome>()
-                .HasMany(e => e.Incidents)
-                .WithOne(e => e.Outcome)
-                .HasForeignKey(e => e.OutcomeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<BehaviourStatus>()
-                .HasMany(e => e.Incidents)
-                .WithOne(e => e.Status)
-                .HasForeignKey(e => e.StatusId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<IncidentType>()
-                .HasMany(e => e.Incidents)
-                .WithOne(e => e.Type)
-                .HasForeignKey(e => e.BehaviourTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Address>()
-                .HasMany(e => e.People)
-                .WithOne(e => e.Address)
-                .HasForeignKey(e => e.AddressId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<EmailAddressType>()
-                .HasMany(e => e.EmailAddresses)
-                .WithOne(e => e.Type)
-                .HasForeignKey(e => e.TypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<PhoneNumberType>()
-                .HasMany(e => e.PhoneNumbers)
-                .WithOne(e => e.Type)
-                .HasForeignKey(e => e.TypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CommunicationType>()
-                .HasMany(e => e.CommunicationLogs)
-                .WithOne(e => e.Type)
-                .HasForeignKey(e => e.CommunicationTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Contact>()
-                .HasMany(e => e.LinkedStudents)
-                .WithOne(e => e.Contact)
-                .HasForeignKey(e => e.ContactId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Contact>()
-                .HasOne(e => e.Person)
-                .WithOne(e => e.ContactDetails)
-                .HasForeignKey<Contact>(e => e.PersonId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AcademicYear>()
-                .HasMany(e => e.Achievements)
-                .WithOne(e => e.AcademicYear)
-                .HasForeignKey(e => e.AcademicYearId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AcademicYear>()
-                .HasMany(e => e.AttendanceWeekPatterns)
-                .WithOne(e => e.AcademicYear)
-                .HasForeignKey(e => e.AcademicYearId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AcademicYear>()
-                .HasMany(e => e.Incidents)
-                .WithOne(e => e.AcademicYear)
-                .HasForeignKey(e => e.AcademicYearId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AcademicYear>()
-                .HasMany(e => e.LogNotes)
-                .WithOne(e => e.AcademicYear)
-                .HasForeignKey(e => e.AcademicYearId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Class>()
-                .HasMany(e => e.Sessions)
-                .WithOne(e => e.Class)
-                .HasForeignKey(e => e.ClassId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Detention>()
-                .HasMany(e => e.Incidents)
-                .WithOne(e => e.Detention)
-                .HasForeignKey(e => e.DetentionId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<DetentionType>()
-                .HasMany(e => e.Detentions)
-                .WithOne(e => e.Type)
-                .HasForeignKey(e => e.DetentionTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<DiaryEvent>()
-                .HasOne(e => e.Detention)
-                .WithOne(e => e.Event)
-                .HasForeignKey<Detention>(e => e.EventId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<DiaryEvent>()
-                .HasMany(e => e.Attendees)
-                .WithOne(e => e.Event)
-                .HasForeignKey(e => e.EventId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<DiaryEventType>()
-                .HasMany(e => e.DiaryEventTemplates)
-                .WithOne(e => e.DiaryEventType)
-                .HasForeignKey(e => e.EventTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<DiaryEventType>()
-                .HasMany(e => e.DiaryEvents)
-                .WithOne(e => e.EventType)
-                .HasForeignKey(e => e.EventTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<DiaryEventAttendeeResponse>()
-                .HasMany(e => e.DiaryEventAttendees)
-                .WithOne(e => e.Response)
-                .HasForeignKey(e => e.ResponseId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Incident>()
-                .HasMany(e => e.Detentions)
-                .WithOne(e => e.Incident)
-                .HasForeignKey(e => e.IncidentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StudyTopic>()
-                .HasMany(e => e.LessonPlans)
-                .WithOne(e => e.StudyTopic)
-                .HasForeignKey(e => e.StudyTopicId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StudyTopic>()
-                .HasOne(e => e.Course)
-                .WithMany(e => e.StudyTopics)
-                .HasForeignKey(e => e.CourseId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Subject>()
-                .HasMany(e => e.Courses)
-                .WithOne(e => e.Subject)
-                .HasForeignKey(e => e.SubjectId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Subject>()
-                .HasMany(e => e.StaffMembers)
-                .WithOne(e => e.Subject)
-                .HasForeignKey(e => e.SubjectId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Subject>()
-                .HasMany(e => e.GiftedTalentedStudents)
-                .WithOne(e => e.Subject)
-                .HasForeignKey(e => e.SubjectId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<SubjectCodeSet>()
-                .HasMany(e => e.SubjectCodes)
-                .WithOne(e => e.SubjectCodeSet)
-                .HasForeignKey(e => e.SubjectCodeSetId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<SubjectStaffMemberRole>()
-                .HasMany(e => e.StaffMembers)
-                .WithOne(e => e.Role)
-                .HasForeignKey(e => e.RoleId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Directory>()
-                .HasOne(e => e.Bulletin)
-                .WithOne(e => e.Directory)
-                .HasForeignKey<Bulletin>(e => e.DirectoryId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Directory>()
-                .HasOne(e => e.Person)
-                .WithOne(e => e.Directory)
-                .HasForeignKey<Person>(e => e.DirectoryId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Directory>()
-                .HasOne(e => e.HomeworkItem)
-                .WithOne(e => e.Directory)
-                .HasForeignKey<HomeworkItem>(e => e.DirectoryId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Directory>()
-                .HasOne(e => e.LessonPlan)
-                .WithOne(e => e.Directory)
-                .HasForeignKey<LessonPlan>(e => e.DirectoryId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Directory>()
-                .HasMany(e => e.Subdirectories)
-                .WithOne(e => e.Parent)
-                .HasForeignKey(e => e.ParentId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Directory>()
-                .HasMany(e => e.Documents)
-                .WithOne(e => e.Directory)
-                .HasForeignKey(e => e.DirectoryId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<DocumentType>()
-                .HasMany(e => e.Documents)
-                .WithOne(e => e.Type)
-                .HasForeignKey(e => e.TypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Product>()
-                .HasMany(e => e.BasketItems)
-                .WithOne(e => e.Product)
-                .HasForeignKey(e => e.ProductId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Product>()
-                .HasMany(e => e.BillItems)
-                .WithOne(e => e.Product)
-                .HasForeignKey(e => e.ProductId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-            
-            modelBuilder.Entity<Product>()
-                .HasOne(e => e.VatRate)
-                .WithMany(e => e.Products)
-                .HasForeignKey(e => e.VatRateId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ProductType>()
-                .HasMany(x => x.Products)
-                .WithOne(x => x.Type)
-                .HasForeignKey(x => x.ProductTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<LocalAuthority>()
-                .HasMany(e => e.Schools)
-                .WithOne(e => e.LocalAuthority)
-                .HasForeignKey(e => e.LocalAuthorityId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<MedicalCondition>()
-                .HasMany(e => e.PersonConditions)
-                .WithOne(e => e.MedicalCondition)
-                .HasForeignKey(e => e.ConditionId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<DietaryRequirement>()
-                .HasMany(e => e.PersonDietaryRequirements)
-                .WithOne(e => e.DietaryRequirement)
-                .HasForeignKey(e => e.DietaryRequirementId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<House>()
-                .HasMany(e => e.Students)
-                .WithOne(e => e.House)
-                .HasForeignKey(e => e.HouseId);
-
-            modelBuilder.Entity<RegGroup>()
-                .HasMany(e => e.Students)
-                .WithOne(e => e.RegGroup)
-                .HasForeignKey(e => e.RegGroupId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<YearGroup>()
-                .HasMany(e => e.RegGroups)
-                .WithOne(e => e.YearGroup)
-                .HasForeignKey(e => e.YearGroupId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<YearGroup>()
-                .HasMany(e => e.Students)
-                .WithOne(e => e.YearGroup)
-                .HasForeignKey(e => e.YearGroupId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Person>()
-                .HasMany(e => e.Addresses)
-                .WithOne(e => e.Person)
-                .HasForeignKey(e => e.PersonId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Person>()
-                .HasMany(e => e.EmailAddresses)
-                .WithOne(e => e.Person)
-                .HasForeignKey(e => e.PersonId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Person>()
-                .HasMany(e => e.MedicalConditions)
-                .WithOne(e => e.Person)
-                .HasForeignKey(e => e.PersonId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Person>()
-                .HasMany(e => e.PhoneNumbers)
-                .WithOne(e => e.Person)
-                .HasForeignKey(e => e.PersonId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Person>()
-                .Property(e => e.Gender)
-                .IsFixedLength()
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Room>()
-                .HasMany(e => e.CoverArrangements)
-                .WithOne(e => e.Room)
-                .HasForeignKey(e => e.RoomId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Room>()
-                .HasMany(e => e.Sessions)
-                .WithOne(e => e.Room)
-                .HasForeignKey(e => e.RoomId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Room>()
-                .HasMany(e => e.DiaryEvents)
-                .WithOne(e => e.Room)
-                .HasForeignKey(e => e.RoomId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Room>()
-                .HasMany(e => e.Closures)
-                .WithOne(e => e.Room)
-                .HasForeignKey(e => e.RoomId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<RoomClosureReason>()
-                .HasMany(e => e.Closures)
-                .WithOne(e => e.Reason)
-                .HasForeignKey(e => e.ReasonId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ObservationOutcome>()
-                .HasMany(e => e.Observations)
-                .WithOne(e => e.Outcome)
-                .HasForeignKey(e => e.OutcomeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<TrainingCertificateStatus>()
-                .HasMany(e => e.Certificates)
-                .WithOne(e => e.Status)
-                .HasForeignKey(e => e.StatusId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<TrainingCourse>()
-                .HasMany(e => e.Certificates)
-                .WithOne(e => e.TrainingCourse)
-                .HasForeignKey(e => e.CourseId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CommentBank>()
-                .HasMany(e => e.Comments)
-                .WithOne(e => e.CommentBank)
-                .HasForeignKey(e => e.CommentBankId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<LogNoteType>()
-                .HasMany(e => e.LogNotes)
-                .WithOne(e => e.LogNoteType)
-                .HasForeignKey(e => e.TypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<GovernanceType>()
-                .HasMany(e => e.Schools)
-                .WithOne(e => e.GovernanceType)
-                .HasForeignKey(e => e.GovernanceTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Grade>()
-                .HasMany(e => e.Results)
-                .WithOne(e => e.Grade)
-                .HasForeignKey(e => e.GradeId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<IntakeType>()
-                .HasMany(e => e.Schools)
-                .WithOne(e => e.IntakeType)
-                .HasForeignKey(e => e.IntakeTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Location>()
-                .HasMany(e => e.BehaviourAchievements)
-                .WithOne(e => e.Location)
-                .HasForeignKey(e => e.LocationId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Location>()
-                .HasMany(e => e.BehaviourIncidents)
-                .WithOne(e => e.Location)
-                .HasForeignKey(e => e.LocationId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Location>()
-                .HasMany(e => e.Rooms)
-                .WithOne(e => e.Location)
-                .HasForeignKey(e => e.LocationId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<MarksheetTemplate>()
-                .HasMany(e => e.Columns)
-                .WithOne(e => e.Template)
-                .HasForeignKey(e => e.TemplateId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<SchoolPhase>()
-                .HasMany(e => e.Schools)
-                .WithOne(e => e.SchoolPhase)
-                .HasForeignKey(e => e.PhaseId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<SchoolType>()
-                .HasMany(e => e.Schools)
-                .WithOne(e => e.Type)
-                .HasForeignKey(e => e.TypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<SenEventType>()
-                .HasMany(e => e.Events)
-                .WithOne(e => e.Type)
-                .HasForeignKey(e => e.EventTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<SenProvisionType>()
-                .HasMany(e => e.SenProvisions)
-                .WithOne(e => e.Type)
-                .HasForeignKey(e => e.ProvisionTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<SenReviewType>()
-                .HasMany(e => e.Reviews)
-                .WithOne(e => e.ReviewType)
-                .HasForeignKey(e => e.ReviewTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<SenStatus>()
-                .HasMany(x => x.Students)
-                .WithOne(x => x.SenStatus)
-                .HasForeignKey(x => x.SenStatusId);
-
-            modelBuilder.Entity<SenStatus>()
-                .Property(x => x.Code)
-                .IsFixedLength()
-                .IsUnicode(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.Sessions)
-                .WithOne(e => e.Teacher)
-                .HasForeignKey(e => e.TeacherId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasOne(e => e.Person)
-                .WithOne(e => e.StaffMemberDetails)
-                .HasForeignKey<StaffMember>(e => e.PersonId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.PastoralHouses)
-                .WithOne(e => e.HeadOfHouse)
-                .HasForeignKey(e => e.HeadId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.PastoralRegGroups)
-                .WithOne(e => e.Tutor)
-                .HasForeignKey(e => e.TutorId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.PastoralYearGroups)
-                .WithOne(e => e.HeadOfYear)
-                .HasForeignKey(e => e.HeadId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.PersonnelObservationsObserved)
-                .WithOne(e => e.Observer)
-                .HasForeignKey(e => e.ObserverId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.PersonnelObservations)
-                .WithOne(e => e.Observee)
-                .HasForeignKey(e => e.ObserveeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.PersonnelTrainingCertificates)
-                .WithOne(e => e.StaffMember)
-                .HasForeignKey(e => e.StaffId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.CoverArrangements)
-                .WithOne(e => e.Teacher)
-                .HasForeignKey(e => e.TeacherId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.Subordinates)
-                .WithOne(e => e.LineManager)
-                .HasForeignKey(e => e.LineManagerId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.Absences)
-                .WithOne(e => e.StaffMember)
-                .HasForeignKey(e => e.StaffMemberId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StaffAbsenceType>()
-                .HasMany(e => e.Absences)
-                .WithOne(e => e.AbsenceType)
-                .HasForeignKey(e => e.AbsenceTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StaffIllnessType>()
-                .HasMany(e => e.Absences)
-                .WithOne(e => e.IllnessType)
-                .HasForeignKey(e => e.IllnessTypeId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.Subjects)
-                .WithOne(e => e.StaffMember)
-                .HasForeignKey(e => e.StaffMemberId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.Results)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.AttendanceMarks)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.Achievements)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.Incidents)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.Enrolments)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.FinanceBasketItems)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.Bills)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.StudentContacts)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.GiftedTalentedSubjects)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasOne(e => e.Person)
-                .WithOne(e => e.StudentDetails)
-                .HasForeignKey<Student>(e => e.PersonId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.MedicalEvents)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.ProfileLogs)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.SenEvents)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.SenProvisions)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.GroupMemberships)
-                .WithOne(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Student>()
-                .Property(e => e.Upn)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<SystemArea>()
-                .HasMany(e => e.Reports)
-                .WithOne(e => e.SystemArea)
-                .HasForeignKey(e => e.AreaId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<SystemArea>()
-                .HasMany(e => e.SubAreas)
-                .WithOne(e => e.Parent)
-                .HasForeignKey(e => e.ParentId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ContactRelationshipType>()
-                .HasMany(e => e.StudentContacts)
-                .WithOne(e => e.RelationshipType)
-                .HasForeignKey(e => e.RelationshipTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Person>()
-                .HasMany(e => e.DiaryEventInvitations)
-                .WithOne(e => e.Person)
-                .HasForeignKey(e => e.PersonId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Person>()
-                .HasMany(e => e.AssignedTo)
-                .WithOne(e => e.AssignedTo)
-                .HasForeignKey(e => e.AssignedToId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<HomeworkItem>()
-                .HasMany(e => e.Submissions)
-                .WithOne(e => e.HomeworkItem)
-                .HasForeignKey(e => e.HomeworkId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<HomeworkSubmission>()
-                .HasOne(e => e.Task)
-                .WithOne(e => e.HomeworkSubmission)
-                .HasForeignKey<HomeworkSubmission>(e => e.TaskId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<HomeworkSubmission>()
-                .HasOne(e => e.Student)
-                .WithMany(e => e.HomeworkSubmissions)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<HomeworkSubmission>()
-                .HasOne(e => e.SubmittedWork)
-                .WithOne(e => e.HomeworkSubmission)
-                .HasForeignKey<HomeworkSubmission>(e => e.DocumentId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CurriculumBand>()
-                .HasMany(e => e.Enrolments)
-                .WithOne(e => e.Band)
-                .HasForeignKey(e => e.BandId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CurriculumBand>()
-                .HasMany(e => e.AssignedBlocks)
-                .WithOne(e => e.Band)
-                .HasForeignKey(e => e.BandId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CurriculumBlock>()
-                .HasMany(e => e.BandAssignments)
-                .WithOne(e => e.Block)
-                .HasForeignKey(e => e.BlockId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CurriculumBlock>()
-                .HasMany(e => e.Groups)
-                .WithOne(e => e.Block)
-                .HasForeignKey(e => e.BlockId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CurriculumGroup>()
-                .HasMany(e => e.Memberships)
-                .WithOne(e => e.CurriculumGroup)
-                .HasForeignKey(e => e.GroupId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CurriculumGroup>()
-                .HasMany(e => e.Classes)
-                .WithOne(e => e.Group)
-                .HasForeignKey(e => e.GroupId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CurriculumYearGroup>()
-                .HasMany(e => e.YearGroups)
-                .WithOne(e => e.CurriculumYearGroup)
-                .HasForeignKey(e => e.CurriculumYearGroupId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CurriculumYearGroup>()
-                .HasMany(e => e.Bands)
-                .WithOne(e => e.CurriculumYearGroup)
-                .HasForeignKey(e => e.CurriculumYearGroupId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<TaskType>()
-                .HasMany(e => e.Tasks)
-                .WithOne(e => e.Type)
-                .HasForeignKey(e => e.TypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Agency>()
-                .HasMany(e => e.Agents)
-                .WithOne(e => e.Agency)
-                .HasForeignKey(e => e.AgencyId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Agency>()
-                .HasOne(e => e.Address)
-                .WithMany(e => e.Agencies)
-                .HasForeignKey(e => e.AddressId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Agency>()
-                .HasOne(e => e.AgencyType)
-                .WithMany(e => e.Agencies)
-                .HasForeignKey(e => e.TypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Agency>()
-                .HasOne(e => e.Directory)
-                .WithOne(e => e.Agency)
-                .HasForeignKey<Agency>(e => e.DirectoryId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Agent>()
-                .HasOne(e => e.Person)
-                .WithOne(e => e.AgentDetails)
-                .HasForeignKey<Agent>(e => e.PersonId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Agent>()
-                .HasMany(e => e.LinkedStudents)
-                .WithOne(e => e.Agent)
-                .HasForeignKey(e => e.AgentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AgentRelationshipType>()
-                .HasMany(e => e.Relationships)
-                .WithOne(e => e.RelationshipType)
-                .HasForeignKey(e => e.RelationshipTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ContactRelationshipType>()
-                .HasMany(e => e.StudentContacts)
-                .WithOne(e => e.RelationshipType)
-                .HasForeignKey(e => e.RelationshipTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Course>()
-                .HasMany(e => e.Classes)
-                .WithOne(e => e.Course)
-                .HasForeignKey(e => e.CourseId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Course>()
-                .HasOne(e => e.Subject)
-                .WithMany(e => e.Courses)
-                .HasForeignKey(e => e.SubjectId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Course>()
-                .HasMany(e => e.Awards)
-                .WithOne(e => e.Course)
-                .HasForeignKey(e => e.CourseId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<MarksheetTemplateGroup>()
-                .HasOne(e => e.Template)
-                .WithMany(e => e.TemplateGroups)
-                .HasForeignKey(e => e.MarksheetTemplateId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<MarksheetTemplateGroup>()
-                .HasOne(e => e.StudentGroup)
-                .WithMany(e => e.MarksheetTemplates)
-                .HasForeignKey(e => e.StudentGroupId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StudentAgentRelationship>()
-                .HasOne(e => e.Student)
-                .WithMany(e => e.AgentRelationships)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StudentContactRelationship>()
-                .HasOne(e => e.Contact)
-                .WithMany(e => e.LinkedStudents)
-                .HasForeignKey(e => e.ContactId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StudentContactRelationship>()
-                .HasOne(e => e.Student)
-                .WithMany(e => e.StudentContacts)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StudentGroup>()
-                .HasMany(e => e.MarksheetTemplates)
-                .WithOne(e => e.StudentGroup)
-                .HasForeignKey(e => e.StudentGroupId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<BehaviourTarget>()
-                .HasMany(e => e.ReportCardLinks)
-                .WithOne(e => e.Target)
-                .HasForeignKey(e => e.TargetId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ReportCard>()
-                .HasMany(e => e.Targets)
-                .WithOne(e => e.ReportCard)
-                .HasForeignKey(e => e.ReportCardId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ReportCard>()
-                .HasOne(e => e.Student)
-                .WithMany(e => e.ReportCards)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ReportCard>()
-                .HasOne(e => e.BehaviourType)
-                .WithMany(e => e.ReportCards)
-                .HasForeignKey(e => e.BehaviourTypeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ReportCard>()
-                .HasMany(e => e.Submissions)
-                .WithOne(e => e.ReportCard)
-                .HasForeignKey(e => e.ReportCardId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ReportCardSubmission>()
-                .HasMany(e => e.TargetSubmissions)
-                .WithOne(e => e.Submission)
-                .HasForeignKey(e => e.SubmissionId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ReportCardSubmission>()
-                .HasOne(e => e.SubmittedBy)
-                .WithMany(e => e.ReportCardSubmissions)
-                .HasForeignKey(e => e.SubmittedById)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ReportCardTarget>()
-                .HasMany(e => e.Submissions)
-                .WithOne(e => e.Target)
-                .HasForeignKey(e => e.TargetId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Ethnicity>()
-                .HasMany(e => e.People)
-                .WithOne(e => e.Ethnicity)
-                .HasForeignKey(e => e.EthnicityId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Photo>()
-                .HasMany(e => e.People)
-                .WithOne(e => e.Photo)
-                .HasForeignKey(e => e.PhotoId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<File>()
-                .HasOne(e => e.Document)
-                .WithOne(e => e.Attachment)
-                .HasForeignKey<File>(e => e.DocumentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamAssessment>()
-                .HasMany(e => e.Aspects)
-                .WithOne(e => e.Assessment)
-                .HasForeignKey(e => e.AssessmentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamAssessment>()
-                .HasOne(e => e.ExamBoard)
-                .WithMany(e => e.ExamAssessments)
-                .HasForeignKey(e => e.ExamBoardId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamAssessment>()
-                .HasOne(e => e.ExamAward)
-                .WithOne(e => e.Assessment)
-                .HasForeignKey<ExamAward>(e => e.AssessmentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamAssessment>()
-                .HasOne(e => e.ExamBaseElement)
-                .WithOne(e => e.Assessment)
-                .HasForeignKey<ExamBaseElement>(e => e.AssessmentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamAssessment>()
-                .HasOne(e => e.ExamBaseComponent)
-                .WithOne(e => e.Assessment)
-                .HasForeignKey<ExamBaseComponent>(e => e.ExamAssessmentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamAssessmentAspect>()
-                .HasOne(e => e.Aspect)
-                .WithMany(e => e.AssessmentAspects)
-                .HasForeignKey(e => e.AspectId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamAssessmentMode>()
-                .HasMany(e => e.Components)
-                .WithOne(e => e.AssessmentMode)
-                .HasForeignKey(e => e.AssessmentModeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamAssessmentMode>()
-                .HasMany(e => e.ExamBaseComponents)
-                .WithOne(e => e.AssessmentMode)
-                .HasForeignKey(e => e.AssessmentModeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamAward>()
-                .HasMany(e => e.ExamAwardElements)
-                .WithOne(e => e.Award)
-                .HasForeignKey(e => e.AwardId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamAward>()
-                .HasMany(e => e.ExamAwardSeries)
-                .WithOne(e => e.Award)
-                .HasForeignKey(e => e.AwardId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamAward>()
-                .HasMany(e => e.ExamEnrolments)
-                .WithOne(e => e.Award)
-                .HasForeignKey(e => e.AwardId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamAward>()
-                .HasOne(e => e.Qualification)
-                .WithMany(e => e.Awards)
-                .HasForeignKey(e => e.QualificationId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamAward>()
-                .HasOne(e => e.Course)
-                .WithMany(e => e.Awards)
-                .HasForeignKey(e => e.CourseId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<ExamAwardElement>()
-                .HasOne(e => e.Element)
-                .WithMany(e => e.ExamAwardElements)
-                .HasForeignKey(e => e.ElementId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamAwardSeries>()
-                .HasOne(e => e.Series)
-                .WithMany(e => e.ExamAwardSeries)
-                .HasForeignKey(e => e.AwardId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamBaseComponent>()
-                .HasMany(e => e.ExamComponents)
-                .WithOne(e => e.BaseComponent)
-                .HasForeignKey(e => e.BaseComponentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamBaseElement>()
-                .HasMany(e => e.Elements)
-                .WithOne(e => e.BaseElement)
-                .HasForeignKey(e => e.BaseElementId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamBaseElement>()
-                .HasOne(e => e.QcaCode)
-                .WithMany(e => e.Elements)
-                .HasForeignKey(e => e.QcaCodeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamBaseElement>()
-                .HasOne(e => e.Level)
-                .WithMany(e => e.ExamBaseElements)
-                .HasForeignKey(e => e.LevelId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamBoard>()
-                .HasMany(e => e.ExamSeries)
-                .WithOne(e => e.ExamBoard)
-                .HasForeignKey(e => e.ExamBoardId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamCandidate>()
-                .HasMany(e => e.LinkedSeries)
-                .WithOne(e => e.Candidate)
-                .HasForeignKey(e => e.CandidateId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamCandidate>()
-                .HasMany(e => e.SeatAllocations)
-                .WithOne(e => e.Candidate)
-                .HasForeignKey(e => e.CandidateId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamCandidate>()
-                .HasMany(e => e.SpecialArrangements)
-                .WithOne(e => e.Candidate)
-                .HasForeignKey(e => e.CandidateId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamCandidate>()
-                .HasOne(e => e.Student)
-                .WithOne(e => e.Candidate)
-                .HasForeignKey<ExamCandidate>(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamCandidate>()
-                .HasMany(e => e.ExamEnrolments)
-                .WithOne(e => e.Candidate)
-                .HasForeignKey(e => e.CandidateId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamCandidateSeries>()
-                .HasOne(e => e.Series)
-                .WithMany(e => e.ExamCandidateSeries)
-                .HasForeignKey(e => e.SeriesId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamCandidateSpecialArrangement>()
-                .HasOne(e => e.SpecialArrangement)
-                .WithMany(e => e.Candidates)
-                .HasForeignKey(e => e.SpecialArrangementId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamComponent>()
-                .HasMany(e => e.Sittings)
-                .WithOne(e => e.Component)
-                .HasForeignKey(e => e.ComponentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamComponent>()
-                .HasMany(e => e.ExamElementComponents)
-                .WithOne(e => e.Component)
-                .HasForeignKey(e => e.ComponentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamComponent>()
-                .HasOne(e => e.Series)
-                .WithMany(e => e.ExamComponents)
-                .HasForeignKey(e => e.ExamSeriesId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamComponent>()
-                .HasOne(e => e.Session)
-                .WithMany(e => e.Components)
-                .HasForeignKey(e => e.SessionId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamComponentSitting>()
-                .HasOne(e => e.Room)
-                .WithMany(e => e.ExamComponentSittings)
-                .HasForeignKey(e => e.ExamRoomId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamComponentSitting>()
-                .HasMany(e => e.SeatAllocations)
-                .WithOne(e => e.Sitting)
-                .HasForeignKey(e => e.SittingId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamElement>()
-                .HasOne(e => e.Series)
-                .WithMany(e => e.ExamElements)
-                .HasForeignKey(e => e.SeriesId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamElement>()
-                .HasMany(e => e.ExamElementComponents)
-                .WithOne(e => e.Element)
-                .HasForeignKey(e => e.ElementId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamQualification>()
-                .HasMany(e => e.Levels)
-                .WithOne(e => e.Qualification)
-                .HasForeignKey(e => e.QualificationId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamQualificationLevel>()
-                .HasOne(e => e.DefaultGradeSet)
-                .WithMany(e => e.ExamQualificationLevels)
-                .HasForeignKey(e => e.DefaultGradeSetId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamResultEmbargo>()
-                .HasOne(e => e.ResultSet)
-                .WithMany(e => e.ExamResultEmbargoes)
-                .HasForeignKey(e => e.ResultSetId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamRoom>()
-                .HasOne(e => e.Room)
-                .WithOne(e => e.ExamRoom)
-                .HasForeignKey<ExamRoom>(e => e.RoomId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamRoomSeat>()
-                .HasOne(e => e.ExamRoom)
-                .WithMany(e => e.Seats)
-                .HasForeignKey(e => e.ExamRoomId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamRoomSeat>()
-                .HasMany(e => e.SeatAllocations)
-                .WithOne(e => e.Seat)
-                .HasForeignKey(e => e.SeatId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamSeason>()
-                .HasOne(e => e.ResultSet)
-                .WithMany(e => e.ExamSeasons)
-                .HasForeignKey(e => e.ResultSetId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ExamSeason>()
-                .HasMany(e => e.ExamSeries)
-                .WithOne(e => e.Season)
-                .HasForeignKey(e => e.ExamSeasonId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<User>()
-                .HasOne(e => e.Person)
-                .WithOne(e => e.User)
-                .HasForeignKey<User>(e => e.PersonId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.UserRoles)
-                .WithOne(e => e.User)
-                .HasForeignKey(e => e.UserId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.LogNotesCreated)
-                .WithOne(e => e.CreatedBy)
-                .HasForeignKey(e => e.CreatedById)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.LogNotesUpdated)
-                .WithOne(e => e.UpdatedBy)
-                .HasForeignKey(e => e.UpdatedById)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.Documents)
-                .WithOne(e => e.CreatedBy)
-                .HasForeignKey(e => e.CreatedById)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.MedicalEvents)
-                .WithOne(e => e.RecordedBy)
-                .HasForeignKey(e => e.RecordedById)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.Incidents)
-                .WithOne(e => e.RecordedBy)
-                .HasForeignKey(e => e.RecordedById)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.Achievements)
-                .WithOne(e => e.RecordedBy)
-                .HasForeignKey(e => e.RecordedById)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.LessonPlans)
-                .WithOne(e => e.Author)
-                .HasForeignKey(e => e.AuthorId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.Bulletins)
-                .WithOne(e => e.Author)
-                .HasForeignKey(e => e.AuthorId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.AssignedBy)
-                .WithOne(e => e.AssignedBy)
-                .HasForeignKey(e => e.AssignedById)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.UserClaims)
-                .WithOne(e => e.User)
-                .HasForeignKey(e => e.UserId)
-                .IsRequired();
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.UserLogins)
-                .WithOne(e => e.User)
-                .HasForeignKey(e => e.UserId)
-                .IsRequired();
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.UserTokens)
-                .WithOne(e => e.User)
-                .HasForeignKey(e => e.UserId)
-                .IsRequired();
-
-            modelBuilder.Entity<Role>()
-                .HasMany(e => e.UserRoles)
-                .WithOne(e => e.Role)
-                .HasForeignKey(e => e.RoleId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Role>()
-                .HasMany(e => e.RolePermissions)
-                .WithOne(e => e.Role)
-                .HasForeignKey(e => e.RoleId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Role>()
-                .HasMany(e => e.RoleClaims)
-                .WithOne(e => e.Role)
-                .HasForeignKey(e => e.RoleId)
-                .IsRequired();
-
-            modelBuilder.Entity<RolePermission>()
-                .HasKey(e => new {e.RoleId, e.PermissionId});
-
-            modelBuilder.Entity<Permission>()
-                .HasOne(e => e.SystemArea)
-                .WithMany(e => e.Permissions)
-                .HasForeignKey(e => e.AreaId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Permission>()
-                .HasMany(e => e.RolePermissions)
-                .WithOne(e => e.Permission)
-                .HasForeignKey(e => e.PermissionId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Bill>()
-                .HasMany(e => e.BillItems)
-                .WithOne(e => e.Bill)
-                .HasForeignKey(e => e.BillId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Activity>()
-                .HasMany(e => e.Events)
-                .WithOne(e => e.Activity)
-                .HasForeignKey(e => e.ActivityId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Activity>()
-                .HasMany(e => e.Memberships)
-                .WithOne(e => e.Activity)
-                .HasForeignKey(e => e.ActivityId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Activity>()
-                .HasMany(e => e.Supervisors)
-                .WithOne(e => e.Activity)
-                .HasForeignKey(e => e.ActivityId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ActivityEvent>()
-                .HasOne(e => e.Event)
-                .WithOne(e => e.Activity)
-                .HasForeignKey<ActivityEvent>(e => e.EventId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ActivityMembership>()
-                .HasOne(e => e.Student)
-                .WithMany(e => e.ActivityMemberships)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ActivitySupervisor>()
-                .HasOne(e => e.Supervisor)
-                .WithMany(e => e.Activities)
-                .HasForeignKey(e => e.SupervisorId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<BillAccountTransaction>()
-                .HasOne(e => e.Bill)
-                .WithMany(e => e.AccountTransactions)
-                .HasForeignKey(e => e.BillId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<BillAccountTransaction>()
-                .HasOne(e => e.AccountTransaction)
-                .WithMany(e => e.BillAccountTransactions)
-                .HasForeignKey(e => e.AccountTransactionId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AccountTransaction>()
-                .HasOne(e => e.Student)
-                .WithMany(e => e.AccountTransactions)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AcademicTerm>()
-                .HasOne(e => e.AcademicYear)
-                .WithMany(e => e.AcademicTerms)
-                .HasForeignKey(e => e.AcademicYearId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<BillCharge>()
-                .HasOne(e => e.Bill)
-                .WithMany(e => e.BillCharges)
-                .HasForeignKey(e => e.BillId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<BillCharge>()
-                .HasOne(e => e.Charge)
-                .WithMany(e => e.BillCharges)
-                .HasForeignKey(e => e.ChargeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StudentDiscount>()
-                .HasOne(e => e.Student)
-                .WithMany(e => e.Discounts)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StudentDiscount>()
-                .HasOne(e => e.Discount)
-                .WithMany(e => e.StudentDiscounts)
-                .HasForeignKey(e => e.DiscountId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ChargeDiscount>()
-                .HasOne(e => e.Charge)
-                .WithMany(e => e.ChargeDiscounts)
-                .HasForeignKey(e => e.ChargeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ChargeDiscount>()
-                .HasOne(e => e.Discount)
-                .WithMany(e => e.ChargeDiscounts)
-                .HasForeignKey(e => e.DiscountId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StudentCharge>()
-                .HasOne(e => e.Charge)
-                .WithMany(e => e.StudentCharges)
-                .HasForeignKey(e => e.ChargeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StudentCharge>()
-                .HasOne(e => e.Student)
-                .WithMany(e => e.Charges)
-                .HasForeignKey(e => e.StudentId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<BillDiscount>()
-                .HasOne(e => e.Discount)
-                .WithMany(e => e.BillDiscounts)
-                .HasForeignKey(e => e.DiscountId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<BillDiscount>()
-                .HasOne(e => e.Bill)
-                .WithMany(e => e.BillDiscounts)
-                .HasForeignKey(e => e.BillId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ProductDiscount>()
-                .HasOne(e => e.Product)
-                .WithMany(e => e.ProductDiscounts)
-                .HasForeignKey(e => e.ProductId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ProductDiscount>()
-                .HasOne(e => e.Discount)
-                .WithMany(e => e.ProductDiscounts)
-                .HasForeignKey(e => e.DiscountId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
