@@ -25,14 +25,14 @@ namespace MyPortal.Logic.Services
     public class UserService : BaseService, IUserService
     {
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly ITokenService _tokenService;
 
-        public UserService(UserManager<User> userManager, SignInManager<User> signInManager, ITokenService tokenService)
+        public UserService(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
             _signInManager = signInManager;
-            _tokenService = tokenService;
         }
 
         public override void Dispose()
@@ -64,6 +64,16 @@ namespace MyPortal.Logic.Services
                 {
                     throw new Exception(result.Errors.ToString());
                 }
+            }
+        }
+
+        public async Task DeleteUser(params Guid[] userIds)
+        {
+            foreach (var userId in userIds)
+            {
+                var user = await _userManager.FindByIdAsync(userId.ToString());
+
+                await _userManager.DeleteAsync(user);
             }
         }
 
@@ -108,12 +118,36 @@ namespace MyPortal.Logic.Services
             return result;
         }
 
+        public async Task AddToRoles(Guid userId, params Guid[] roleIds)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            foreach (var roleId in roleIds)
+            {
+                var role = await _roleManager.FindByIdAsync(roleId.ToString());
+
+                await _userManager.AddToRoleAsync(user, role.Name);
+            }
+        }
+
+        public async Task RemoveFromRoles(Guid userId, params Guid[] roleIds)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            foreach (var roleId in roleIds)
+            {
+                var role = await _roleManager.FindByIdAsync(roleId.ToString());
+
+                await _userManager.RemoveFromRoleAsync(user, role.Name);
+            }
+        }
+
         public async Task<bool> UserExists(string username)
         {
             return await _userManager.Users.AnyAsync(x => x.UserName == username.ToLower());
         }
 
-        public async Task<bool> EnableDisableUser(Guid userId)
+        public async Task SetUserEnabled(Guid userId, bool enabled)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
@@ -122,11 +156,9 @@ namespace MyPortal.Logic.Services
                 throw new NotFoundException("User not found.");
             }
 
-            user.Enabled = !user.Enabled;
+            user.Enabled = enabled;
 
             await _userManager.UpdateAsync(user);
-
-            return user.Enabled;
         }
 
         public async Task<UserModel> GetUserById(Guid userId)
@@ -153,13 +185,6 @@ namespace MyPortal.Logic.Services
             }
 
             return await GetUserById(userId);
-        }
-
-        public async Task<UserModel> GetUserByToken(string token)
-        {
-            var principal = _tokenService.GetPrincipalFromToken(token);
-
-            return await GetUserByPrincipal(principal);
         }
     }
 }

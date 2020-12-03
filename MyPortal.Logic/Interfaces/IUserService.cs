@@ -16,12 +16,14 @@ namespace MyPortal.Logic.Interfaces
     public interface IUserService : IService
     {
         Task CreateUser(params CreateUserRequest[] createUserRequests);
+        Task DeleteUser(params Guid[] userIds);
+        Task AddToRoles(Guid userId, params Guid[] roleIds);
+        Task RemoveFromRoles(Guid userId, params Guid[] roleIds);
         Task SetPassword(Guid userId, string newPassword);
         Task<LoginResult> Login(LoginModel login);
         Task<bool> UserExists(string username);
-        Task<bool> EnableDisableUser(Guid userId);
+        Task SetUserEnabled(Guid userId, bool enabled);
         Task<UserModel> GetUserById(Guid userId);
         Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal);
-        Task<UserModel> GetUserByToken(string token);
     }
 }

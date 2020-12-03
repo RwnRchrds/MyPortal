@@ -3,34 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.Constants;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories;
-using MyPortal.Logic.Constants;
-using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Requests.Admin;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class RolePermissionService : BaseService, IRolePermissionService
+    public class RoleService : BaseService, IRoleService
     {
+        private readonly RoleManager<Role> _roleManager;
         private readonly IRolePermissionRepository _rolePermissionRepository;
         private readonly IPermissionRepository _permissionRepository;
         private readonly ISystemAreaRepository _systemAreaRepository;
 
-        public RolePermissionService(ApplicationDbContext context)
+        public RoleService(ApplicationDbContext context, RoleManager<Role> roleManager)
         {
             var connection = context.Database.GetDbConnection();
 
             _rolePermissionRepository = new RolePermissionRepository(context);
             _permissionRepository = new PermissionRepository(connection);
             _systemAreaRepository = new SystemAreaRepository(connection);
+
+            _roleManager = roleManager;
         }
 
         public async Task<TreeNode> GetPermissionsTree(Guid roleId)
@@ -78,7 +81,7 @@ namespace MyPortal.Logic.Services
             return root;
         }
 
-        public async Task SetPermissions(Guid roleId, IEnumerable<Guid> permIds)
+        public async Task SetPermissions(Guid roleId, params Guid[] permIds)
         {
             // Add new permissions from list
             var existingPermissions = (await _rolePermissionRepository.GetByRole(roleId)).ToList();
@@ -101,6 +104,55 @@ namespace MyPortal.Logic.Services
             }
 
             await _rolePermissionRepository.SaveChanges();
+        }
+
+        public async Task CreateRoles(params CreateRoleRequest[] requests)
+        {
+            foreach (var request in requests)
+            {
+                var role = new Role
+                {
+                    Name = request.Name,
+                    Description = request.Description
+                };
+
+                await _roleManager.CreateAsync(role);
+
+                if (request.PermissionIds.Any())
+                {
+                    role = await _roleManager.FindByNameAsync(request.Name);
+
+                    await SetPermissions(role.Id, request.PermissionIds);
+                }
+            }
+        }
+
+        public async Task UpdateRoles(params UpdateRoleRequest[] requests)
+        {
+            foreach (var request in requests)
+            {
+                var roleInDb = await _roleManager.FindByIdAsync(request.Id.ToString());
+
+                if (roleInDb.System)
+                {
+                    throw new LogicException("Cannot modify system role.");
+                }
+
+                roleInDb.Name = request.Name;
+                roleInDb.Description = request.Description;
+
+                if (request.PermissionIds.Any())
+                {
+                    await SetPermissions(roleInDb.Id, request.PermissionIds);
+                }
+            }
+        }
+
+        public async Task<IEnumerable<RoleModel>> GetRoles()
+        {
+            var roles = await _roleManager.Roles.ToListAsync();
+
+            return roles.Select(BusinessMapper.Map<RoleModel>);
         }
 
         public override void Dispose()

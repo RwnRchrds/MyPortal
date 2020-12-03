@@ -44,7 +44,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                var user = await UserService.GetUserByToken(tokenModel.Token);
+                var principal = _tokenService.GetPrincipalFromToken(tokenModel.Token);
+
+                var user = await UserService.GetUserByPrincipal(principal);
 
                 var newTokenModel = await _tokenService.RefreshToken(user, tokenModel);
 
@@ -58,24 +60,14 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                var user = await UserService.GetUserByToken(tokenModel.Token);
+                var principal = _tokenService.GetPrincipalFromToken(tokenModel.Token);
+
+                var user = await UserService.GetUserByPrincipal(principal);
 
                 var result = await _tokenService.RevokeToken(user, tokenModel);
 
                 return Ok(result);
             });
-        }
-
-        [HttpPost]
-        [Route("Register")]
-        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest userRequest)
-        {
-            return await ProcessAsync(async () =>
-            {
-                await UserService.CreateUser(userRequest);
-
-                return Ok("User Created");
-            }, Permissions.System.Users.EditUsers);
         }
 
         public override void Dispose()

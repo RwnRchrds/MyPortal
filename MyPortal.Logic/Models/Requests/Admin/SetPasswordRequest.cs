@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyPortal.Logic.Models.Requests.Admin
 {
-    public class PasswordResetRequest
+    public class SetPasswordRequest
     {
         public Guid UserId { get; set; }
         
