@@ -1,0 +1,6 @@
+# Instructions for generating API code using swagger
+
+1) Start MyPortalWeb project in Visual Studio
+2) Run GenerateCode.ps1
+3) Replace ModuleWithProviders with ModuleWithProviders<ApiModule> in api.module.ts
+4) Build myportal-api
