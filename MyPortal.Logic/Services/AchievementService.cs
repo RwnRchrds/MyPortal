@@ -13,6 +13,7 @@ using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Requests.Behaviour;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -75,22 +76,22 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Create(params AchievementModel[] achievements)
+        public async Task Create(params AchievementModel[] requests)
         {
-            foreach (var achievement in achievements)
+            foreach (var request in requests)
             {
-                await AcademicYearModel.CheckLock(_academicYearRepository, achievement.AcademicYearId);
+                await AcademicYearModel.CheckLock(_academicYearRepository, request.AcademicYearId);
                 
                 var model = new Achievement
                 {
-                    AcademicYearId = achievement.AcademicYearId,
-                    AchievementTypeId = achievement.AchievementTypeId,
-                    LocationId = achievement.LocationId,
-                    StudentId = achievement.StudentId,
-                    Comments = achievement.Comments,
-                    OutcomeId = achievement.OutcomeId,
-                    Points = achievement.Points,
-                    RecordedById = achievement.RecordedById,
+                    AcademicYearId = request.AcademicYearId,
+                    AchievementTypeId = request.AchievementTypeId,
+                    LocationId = request.LocationId,
+                    StudentId = request.StudentId,
+                    Comments = request.Comments,
+                    OutcomeId = request.OutcomeId,
+                    Points = request.Points,
+                    RecordedById = request.RecordedById,
                     CreatedDate = DateTime.Now
                 };
 
@@ -100,24 +101,24 @@ namespace MyPortal.Logic.Services
             await _achievementRepository.SaveChanges();
         }
 
-        public async Task Update(params AchievementModel[] achievements)
+        public async Task Update(params AchievementModel[] requests)
         {
-            foreach (var achievement in achievements)
+            foreach (var request in requests)
             {
-                await AcademicYearModel.CheckLock(_academicYearRepository, achievement.AcademicYearId);
+                await AcademicYearModel.CheckLock(_academicYearRepository, request.AcademicYearId);
                 
-                var achievementInDb = await _achievementRepository.GetByIdWithTracking(achievement.Id);
+                var achievementInDb = await _achievementRepository.GetByIdWithTracking(request.Id);
 
                 if (achievementInDb == null)
                 {
                     throw new NotFoundException("Achievement not found.");
                 }
 
-                achievementInDb.AchievementTypeId = achievement.AchievementTypeId;
-                achievementInDb.LocationId = achievement.LocationId;
-                achievementInDb.OutcomeId = achievement.OutcomeId;
-                achievementInDb.Comments = achievement.Comments;
-                achievementInDb.Points = achievement.Points;
+                achievementInDb.AchievementTypeId = request.AchievementTypeId;
+                achievementInDb.LocationId = request.LocationId;
+                achievementInDb.OutcomeId = request.OutcomeId;
+                achievementInDb.Comments = request.Comments;
+                achievementInDb.Points = request.Points;
             }
 
             await _achievementRepository.SaveChanges();

@@ -17,17 +17,5 @@ namespace MyPortal.Logic.Models.Data
         {
 
         }
-
-        public IEnumerable<SelectListItem> ToSelectList(string selectedValue = null)
-        {
-            var items = this.Select(x => new SelectListItem(x.Key, x.Value.ToString())).ToList();
-
-            if (!string.IsNullOrWhiteSpace(selectedValue))
-            {
-                items.Add(new SelectListItem(selectedValue, null, true, true));
-            }
-
-            return items.OrderByDescending(x => x.Disabled).ThenBy(x => x.Text);
-        }
     }
 }

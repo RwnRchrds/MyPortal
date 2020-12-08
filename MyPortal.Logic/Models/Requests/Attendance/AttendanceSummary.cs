@@ -2,32 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using MyPortal.Database.Constants;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Reporting;
+using MyPortal.Logic.Models.Reporting;
 
 namespace MyPortal.Logic.Models.Requests.Attendance
 {
     public class AttendanceSummary
     {
-        public double Present { get; private set; }
-        public double Late { get; private set; }
-        public double AuthorisedAbsence { get; private set; }
-        public double ApprovedEdActivity { get; private set; }
-        public double UnauthorisedAbsence { get; private set; }
-        public double NotRequired { get; private set; }
-        public bool IsPercentage { get; private set; }
+        public int Present { get; private set; }
+        public int Late { get; private set; }
+        public int AuthorisedAbsence { get; private set; }
+        public int ApprovedEdActivity { get; private set; }
+        public int UnauthorisedAbsence { get; private set; }
+        public int NotRequired { get; private set; }
 
-
-        /// <summary>
-        /// Indicates whether there are any attendance marks for the attendance summary to be considered valid.
-        /// </summary>
-        public bool Valid
-        {
-            get
-            {
-                return GetTotalMarks() != 0;
-            }
-        }
+        public int TotalMarks => Convert.ToInt32(MathHelper.Sum(Present, Late, AuthorisedAbsence, ApprovedEdActivity,
+            UnauthorisedAbsence, NotRequired));
 
         /// <summary>
         /// A summary of a collection of attendance marks.
@@ -73,62 +64,31 @@ namespace MyPortal.Logic.Models.Requests.Attendance
         }
 
         /// <summary>
-        /// Gets the total number of marks represented by the attendance summary.
-        /// </summary>
-        /// <returns></returns>
-        private int GetTotalMarks()
-        {
-            if (!IsPercentage)
-            {
-                return (int)(Present + AuthorisedAbsence + ApprovedEdActivity + UnauthorisedAbsence + NotRequired + Late);
-            }
-
-            throw new Exception("Cannot get total marks from a percentage.");
-        }
-
-        /// <summary>
         /// Gets total marks (or percentage of marks) where the student was present, late or taking part in an approved educational activity.
         /// </summary>
-        public double GetPresentAndApproved()
+        public double GetPresentAndAea(bool asPercentage = false)
         {
+            if (asPercentage)
+            {
+                return MathHelper.Percent(Present, TotalMarks, 1) +
+                       MathHelper.Percent(ApprovedEdActivity, TotalMarks, 1) + MathHelper.Percent(Late, TotalMarks, 1);
+            }
+
             return Present + ApprovedEdActivity + Late;
         }
 
-        /// <summary>
-        /// Converts the attendance summary values to a percentage of total marks.
-        /// </summary>
-        public void ConvertToPercentage()
+        public ChartData<CategoricChartDataPoint> GetChartData(bool asPercentage = false)
         {
-            if (!IsPercentage)
-            {
-                var totalMarks = GetTotalMarks();
+            var data = new List<CategoricChartDataPoint>();
 
-                if (totalMarks > 0)
-                {
-                    Present = Math.Round((Present / totalMarks) * 100, 1);
-                    AuthorisedAbsence = Math.Round((AuthorisedAbsence / totalMarks) * 100, 1);
-                    ApprovedEdActivity = Math.Round((ApprovedEdActivity / totalMarks) * 100, 1);
-                    UnauthorisedAbsence = Math.Round((UnauthorisedAbsence / totalMarks) * 100, 1);
-                    NotRequired = Math.Round((NotRequired / totalMarks) * 100, 1);
-                    Late = Math.Round((Late / totalMarks) * 100, 1);
-
-                    IsPercentage = true;
-                }
-            }
-        }
-
-        public ChartData GetChartData()
-        {
-            var data = new List<ChartDataPoint>();
-
-            data.Add(new CategoricChartDataPoint("Present", Present));
-            data.Add(new CategoricChartDataPoint("Authorised Absence", AuthorisedAbsence));
+            data.Add(new CategoricChartDataPoint("Present", asPercentage ? MathHelper.Percent(Present, TotalMarks, 1) : Present));
+            data.Add(new CategoricChartDataPoint("Authorised Absence", asPercentage ? MathHelper.Percent(AuthorisedAbsence, TotalMarks, 1) : AuthorisedAbsence));
             data.Add(new CategoricChartDataPoint("Unauthorised Absence", UnauthorisedAbsence));
             data.Add(new CategoricChartDataPoint("Approved Educational Activity", ApprovedEdActivity));
             data.Add(new CategoricChartDataPoint("Attendance Not Required", NotRequired));
             data.Add(new CategoricChartDataPoint("Late", Late));
 
-            return new ChartData(data);
+            return new ChartData<CategoricChartDataPoint>(data);
         }
     }
 }

@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Entity;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class BillService : IBillService
+    public class BillService : BaseService, IBillService
     {
         private readonly IAccountTransactionRepository _accountTransactionRepository;
         private readonly IBillRepository _billRepository;
@@ -29,10 +32,10 @@ namespace MyPortal.Logic.Services
 
         public BillService(ApplicationDbContext context)
         {
-            
+            _billRepository = new BillRepository(context);
         }
 
-        public async Task GenerateChargeBills()
+        public async Task<IEnumerable<BillModel>> GenerateChargeBills()
         {
             var hasSetting = int.TryParse((await _settingRepository.Get(SystemSettings.BillPaymentPeriodLength)).Setting, out int paymentPeriodLength);
 
@@ -42,6 +45,8 @@ namespace MyPortal.Logic.Services
             }
 
             var billableStudents = (await _studentChargeRepository.GetOutstanding()).GroupBy(sc => sc.StudentId);
+
+            var generatedBills = new List<Bill>();
 
             foreach (var billableStudent in billableStudents)
             {
@@ -57,7 +62,7 @@ namespace MyPortal.Logic.Services
                     bill.BillCharges.Add(new BillCharge
                     {
                         ChargeId = charge.ChargeId,
-                        NetAmount = charge.Charge.Amount
+                        GrossAmount = charge.Charge.Amount
                     });
 
                     var chargeInDb = await _studentChargeRepository.GetByIdWithTracking(charge.ChargeId);
@@ -84,12 +89,15 @@ namespace MyPortal.Logic.Services
                 }
 
                 _billRepository.Create(bill);
+                generatedBills.Add(bill);
             }
 
             await _billRepository.SaveChanges();
+
+            return generatedBills.Select(BusinessMapper.Map<BillModel>);
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _accountTransactionRepository?.Dispose();
             _billRepository?.Dispose();

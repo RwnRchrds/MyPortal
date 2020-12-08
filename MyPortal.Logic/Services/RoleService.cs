@@ -14,6 +14,7 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin;
+using MyPortal.Logic.Models.Requests.Admin.Roles;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services

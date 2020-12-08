@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Requests.Behaviour;
 
 namespace MyPortal.Logic.Interfaces
 {

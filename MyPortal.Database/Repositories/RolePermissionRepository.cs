@@ -37,14 +37,14 @@ namespace MyPortal.Database.Repositories
 
         protected void JoinRelated(Query query)
         {
-            query.LeftJoin("AspNetRoles AS Role", "Role.Id", "RolePermissions.RoleId");
+            query.LeftJoin("Roles AS Role", "Role.Id", "RolePermissions.RoleId");
             query.LeftJoin("Permissions AS Permission", "Permission.Id",
                 "RolePermissions.PermissionId");
         }
 
         private Query GenerateQuery()
         {
-            var query = new Query("AspNetRolePermissions as RolePermissions").SelectAllColumns(typeof(RolePermission), "RolePermissions");
+            var query = new Query("RolePermissions as RolePermissions").SelectAllColumns(typeof(RolePermission), "RolePermissions");
             
             SelectAllRelated(query);
 
@@ -102,8 +102,8 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Join("AspNetUserRoles AS UserRole", "UserRole.RoleId", "Role.Id");
-            query.Join("AspNetUsers AS User", "User.Id", "UserRole.UserId");
+            query.Join("UserRoles AS UserRole", "UserRole.RoleId", "Role.Id");
+            query.Join("Users AS User", "User.Id", "UserRole.UserId");
 
             query.Where("User.Id", userId);
 

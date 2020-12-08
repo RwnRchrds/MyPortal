@@ -17,6 +17,6 @@ namespace MyPortal.Logic.Models.Entity
         public Guid CurriculumYearGroupId { get; set; }
 
         public virtual StaffMemberModel HeadOfYear { get; set; }
-        public virtual CurriculumYearGroup CurriculumYearGroup { get; set; }
+        public virtual CurriculumYearGroupModel CurriculumYearGroup { get; set; }
     }
 }

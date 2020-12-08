@@ -54,5 +54,15 @@ namespace MyPortal.Database.Repositories
 
             return await ExecuteQueryFirstOrDefault(query);
         }
+
+        public async Task<IEnumerable<AttendanceWeek>> GetByDateRange(DateTime startDate, DateTime endDate)
+        {
+            var query = GenerateQuery();
+
+            query.WhereDate("AttendanceWeek.Beginning", "<=", startDate);
+            query.WhereDate("DATEADD(DAY, 6, AttendanceWeek.Beginning)", ">=", endDate);
+
+            return await ExecuteQuery(query);
+        }
     }
 }

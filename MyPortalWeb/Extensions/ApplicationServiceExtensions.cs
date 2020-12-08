@@ -31,9 +31,10 @@ namespace MyPortalWeb.Extensions
             // MyPortal Business Services
             services.AddScoped<IAcademicYearService, AcademicYearService>();
             services.AddScoped<IAchievementService, AchievementService>();
-            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IAttendanceMarkService, AttendanceMarkService>();
             services.AddScoped<IAttendanceWeekService, AttendanceWeekService>();
+            services.AddScoped<IBillService, BillService>();
             services.AddScoped<IDirectoryService, DirectoryService>();
             services.AddScoped<IDocumentService, DocumentService>();
             services.AddScoped<IIncidentService, IncidentService>();
@@ -41,6 +42,7 @@ namespace MyPortalWeb.Extensions
             services.AddScoped<ILogNoteService, LogNoteService>();
             services.AddScoped<IPeriodService, AttendancePeriodService>();
             services.AddScoped<IPersonService, PersonService>();
+            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<ISchoolService, SchoolService>();
             services.AddScoped<IStaffMemberService, StaffMemberService>();
             services.AddScoped<IStudentService, StudentService>();

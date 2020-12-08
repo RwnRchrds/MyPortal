@@ -20,7 +20,8 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("Login")]
+        [Route("login")]
+        [Produces(typeof(TokenModel))]
         public async Task<IActionResult> Login([FromBody] LoginModel login)
         {
             return await ProcessAsync(async () =>
@@ -39,7 +40,8 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("RefreshToken")]
+        [Route("tokens/refresh")]
+        [Produces(typeof(TokenModel))]
         public async Task<IActionResult> RefreshToken([FromBody] TokenModel tokenModel)
         {
             return await ProcessAsync(async () =>
@@ -55,7 +57,8 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("RevokeToken")]
+        [Route("tokens/revoke")]
+        [Produces(typeof(bool))]
         public async Task<IActionResult> RevokeToken([FromBody] TokenModel tokenModel)
         {
             return await ProcessAsync(async () =>

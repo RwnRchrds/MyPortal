@@ -1,0 +1,164 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "myportal-api": {
+      "projectType": "library",
+      "root": "projects/myportal-api",
+      "sourceRoot": "projects/myportal-api/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/myportal-api/tsconfig.lib.json",
+            "project": "projects/myportal-api/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/myportal-api/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/myportal-api/src/test.ts",
+            "tsConfig": "projects/myportal-api/tsconfig.spec.json",
+            "karmaConfig": "projects/myportal-api/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/myportal-api/tsconfig.lib.json",
+              "projects/myportal-api/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "myportal-app": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/myportal-app",
+      "sourceRoot": "projects/myportal-app/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/myportal-app",
+            "index": "projects/myportal-app/src/index.html",
+            "main": "projects/myportal-app/src/main.ts",
+            "polyfills": "projects/myportal-app/src/polyfills.ts",
+            "tsConfig": "projects/myportal-app/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/myportal-app/src/favicon.ico",
+              "projects/myportal-app/src/assets"
+            ],
+            "styles": [
+              "projects/myportal-app/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/myportal-app/src/environments/environment.ts",
+                  "with": "projects/myportal-app/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "myportal-app:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "myportal-app:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "myportal-app:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/myportal-app/src/test.ts",
+            "polyfills": "projects/myportal-app/src/polyfills.ts",
+            "tsConfig": "projects/myportal-app/tsconfig.spec.json",
+            "karmaConfig": "projects/myportal-app/karma.conf.js",
+            "assets": [
+              "projects/myportal-app/src/favicon.ico",
+              "projects/myportal-app/src/assets"
+            ],
+            "styles": [
+              "projects/myportal-app/src/styles.css"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/myportal-app/tsconfig.app.json",
+              "projects/myportal-app/tsconfig.spec.json",
+              "projects/myportal-app/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/myportal-app/e2e/protractor.conf.js",
+            "devServerTarget": "myportal-app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "myportal-app:serve:production"
+            }
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "myportal-app"
+}

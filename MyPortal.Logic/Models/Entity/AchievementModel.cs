@@ -4,11 +4,36 @@ using MyPortal.Database.Models;
 using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.DataGrid;
+using MyPortal.Logic.Models.Requests.Behaviour;
+using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
 
 namespace MyPortal.Logic.Models.Entity
 {
     public class AchievementModel : BaseModel
     {
+        public AchievementModel()
+        {
+
+        }
+
+        public AchievementModel(CreateAchievementModel model, Guid userId)
+        {
+            if (model is UpdateAchievementModel updateModel)
+            {
+                Id = updateModel.Id;
+            }
+
+            AcademicYearId = model.AcademicYearId;
+            AchievementTypeId = model.AchievementTypeId;
+            StudentId = model.StudentId;
+            LocationId = model.LocationId;
+            RecordedById = userId;
+            OutcomeId = model.OutcomeId;
+            CreatedDate = DateTime.Now;
+            Comments = model.Comments;
+            Points = model.Points;
+        }
+
         public Guid AcademicYearId { get; set; }
 
         [Required(ErrorMessage = "Achievement Type is required.")]

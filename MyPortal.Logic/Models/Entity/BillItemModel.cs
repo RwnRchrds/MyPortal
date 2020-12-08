@@ -13,7 +13,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public int Quantity { get; set; }
 
-        public decimal NetAmount { get; set; }
+        public decimal GrossAmount { get; set; }
 
         public bool CustomerReceived { get; set; }
 

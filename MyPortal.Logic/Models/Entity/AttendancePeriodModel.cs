@@ -25,6 +25,6 @@ namespace MyPortal.Logic.Models.Entity
 
         public bool PmReg { get; set; }
 
-        public virtual AttendanceWeekPattern WeekPattern { get; set; }
+        public virtual AttendanceWeekPatternModel WeekPattern { get; set; }
     }
 }

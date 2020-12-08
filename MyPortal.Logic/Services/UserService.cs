@@ -17,6 +17,7 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin;
+using MyPortal.Logic.Models.Requests.Admin.Users;
 using MyPortal.Logic.Models.Requests.Auth;
 using Task = System.Threading.Tasks.Task;
 
@@ -40,7 +41,7 @@ namespace MyPortal.Logic.Services
             _userManager.Dispose();
         }
 
-        public async Task CreateUser(params CreateUserRequest[] createUserRequests)
+        public async Task CreateUser(params CreateUserModel[] createUserRequests)
         {
             foreach (var request in createUserRequests)
             {

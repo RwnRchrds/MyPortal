@@ -29,7 +29,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("AspNetUsers AS User", "User.Id", "RefreshToken.UserId");
+            query.LeftJoin("Users AS User", "User.Id", "RefreshToken.UserId");
         }
 
         protected override async Task<IEnumerable<RefreshToken>> ExecuteQuery(Query query)

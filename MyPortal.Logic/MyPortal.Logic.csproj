@@ -21,12 +21,11 @@
 
   <ItemGroup>
     <Compile Remove="Authorisation\Attributes\**" />
+    <Compile Remove="Models\Requests\Admissions\**" />
     <EmbeddedResource Remove="Authorisation\Attributes\**" />
+    <EmbeddedResource Remove="Models\Requests\Admissions\**" />
     <None Remove="Authorisation\Attributes\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Requests\Admissions\" />
+    <None Remove="Models\Requests\Admissions\**" />
   </ItemGroup>
 
 </Project>

@@ -8,6 +8,7 @@ using MyPortal.Database.Models;
 using MyPortal.Logic.Authentication;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin;
+using MyPortal.Logic.Models.Requests.Admin.Users;
 using MyPortal.Logic.Models.Requests.Auth;
 using Task = System.Threading.Tasks.Task;
 
@@ -15,7 +16,7 @@ namespace MyPortal.Logic.Interfaces
 {
     public interface IUserService : IService
     {
-        Task CreateUser(params CreateUserRequest[] createUserRequests);
+        Task CreateUser(params CreateUserModel[] createUserRequests);
         Task DeleteUser(params Guid[] userIds);
         Task AddToRoles(Guid userId, params Guid[] roleIds);
         Task RemoveFromRoles(Guid userId, params Guid[] roleIds);

@@ -16,7 +16,7 @@ namespace MyPortal.Database.Models.Entity
         public int Quantity { get; set; }
 
         [Column(Order = 4)]
-        public decimal NetAmount { get; set; }
+        public decimal GrossAmount { get; set; }
 
         [Column(Order = 4)]
         public bool CustomerReceived { get; set; }

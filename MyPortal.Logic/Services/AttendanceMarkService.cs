@@ -137,7 +137,7 @@ namespace MyPortal.Logic.Services
             await Save(attendanceMarks.ToArray());
         }
 
-        public async Task<AttendanceSummary> GetSummaryByStudent(Guid studentId, Guid academicYearId, bool asPercentage)
+        public async Task<AttendanceSummary> GetSummaryByStudent(Guid studentId, Guid academicYearId)
         {
             var codes = (await _attendanceCodeRepository.GetAll()).Select(BusinessMapper.Map<AttendanceCodeModel>)
                 .ToList();
@@ -147,11 +147,6 @@ namespace MyPortal.Logic.Services
                     .Map<AttendanceMarkModel>).ToList();
 
             var summary = new AttendanceSummary(codes, marks);
-
-            if (asPercentage)
-            {
-                summary.ConvertToPercentage();
-            }
 
             return summary;
         }

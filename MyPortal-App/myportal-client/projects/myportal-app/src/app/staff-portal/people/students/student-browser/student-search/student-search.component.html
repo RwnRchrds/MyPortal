@@ -1,0 +1,121 @@
+<div class="card card-custom">
+  <!--begin::Header-->
+  <div class="card-header flex-wrap border-0 pt-6 pb-0">
+      <h3 class="card-title align-items-start flex-column">
+          <span class="card-label font-weight-bolder text-dark">Browse Students</span>
+      </h3>
+      <div class="card-toolbar">
+          <div class="dropdown dropdown-inline">
+              <!--begin::Trigger Modal-->
+              <button class="btn btn-light-primary font-weight-bolder font-size-sm" aria-haspopup="true" aria-expanded="false" data-toggle="modal" data-target="#exampleModalCustomScrollable">
+                  <i class="fas fa-plus mr-1"></i>New Student
+              </button>
+              <!--end::Trigger Modal-->              
+          </div>
+      </div>
+  </div>
+  <!--end::Header-->
+  <!--begin::Body-->
+  <div class="card-body">
+      <!--begin: Search Form-->
+      <!--begin::Search Form-->
+      <div class="mb-10">
+          <form #searchForm="ngForm" (ngSubmit)="search()">
+          <div class="row align-items-center">
+              <div class="col-lg-9 col-xl-8">
+                  <div class="row align-items-center">
+                      <div class="col-md-3 my-2 my-md-0">
+                          <input type="text" class="form-control form-control-solid" placeholder="First Name" name="FirstName" [(ngModel)]="firstName">
+                      </div>
+                      <div class="col-md-3 my-2 my-md-0">
+                          <input type="text" class="form-control form-control-solid" placeholder="Last Name" name="LastName" [(ngModel)]="lastName">
+                      </div>
+                      <div class="col-md-3 my-2 my-md-0">
+                          <select class="form-control form-control-solid" name="Status" [(ngModel)]="studentStatus">
+                              <option value="0">Any</option>
+                              <option value="1">On Roll</option>
+                              <option value="2">Leavers</option>
+                              <option value="3">Future</option>
+                          </select>
+                      </div>
+                      <div class="col-md-3 my-2 my-md-0">
+                        <select class="form-control form-control-solid" name="Gender" [(ngModel)]="gender">
+                            <option value="null">Any</option>
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                            <option value="X">Other</option>
+                            <option value="U">Unknown</option>
+                        </select>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-lg-3 col-xl-4 mt-5 mt-lg-0">
+                  <button id="searchButton" class="btn btn-light-primary px-6 font-weight-bold" type="submit">
+                      <i class="fas fa-search mr-1"></i>Search
+                  </button>
+              </div>
+          </div>
+        </form>
+    </div>
+
+        <div class="kt-portlet__body d-none" id="searchResults">
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="student_search_results" class="table">
+                        <thead>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Gender
+                            </th>
+                            <th>
+                                Reg Group
+                            </th>
+                            <th>
+                                Year Group
+                            </th>
+                            <th>
+                                House
+                            </th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+      </div>
+      <!--end::Search Form-->
+      <!--end: Search Form-->
+      <!--begin: Datatable-->
+      <div class="kt-portlet__body d-none" id="searchResults">
+          <div class="row">
+              <div class="col-md-12">
+                  <table id="student_search" class="table">
+                      <thead>
+                      <tr>
+                          <th>
+                              Name
+                          </th>
+                          <th>
+                              Gender
+                          </th>
+                          <th>
+                              Reg Group
+                          </th>
+                          <th>
+                              Year Group
+                          </th>
+                          <th>
+                              House
+                          </th>
+                      </tr>
+                      </thead>
+                  </table>
+              </div>
+          </div>
+      </div>
+      <!--end: Datatable-->
+  <!--end::Body-->
+</div>

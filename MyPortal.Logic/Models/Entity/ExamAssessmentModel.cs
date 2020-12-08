@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Models.Entity
     {
         public Guid ExamBoardId { get; set; }
         
-        public ExamAssessmentType AssessmentType { get; set; }
+        public int AssessmentType { get; set; }
         
         public string InternalTitle { get; set; }
         

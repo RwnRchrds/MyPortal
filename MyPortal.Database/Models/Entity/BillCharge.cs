@@ -16,7 +16,7 @@ namespace MyPortal.Database.Models.Entity
         public Guid ChargeId { get; set; }
 
         [Column(Order = 3, TypeName = "decimal(10,2)")]
-        public decimal NetAmount { get; set; }
+        public decimal GrossAmount { get; set; }
 
         [Column(Order = 4)]
         public bool Refunded { get; set; } 

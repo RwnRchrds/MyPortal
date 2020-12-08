@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour;
+using MyPortal.Logic.Models.Requests.Behaviour.Detentions;
 
 namespace MyPortal.Logic.Interfaces
 {

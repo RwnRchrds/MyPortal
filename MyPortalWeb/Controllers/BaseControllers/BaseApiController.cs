@@ -10,6 +10,7 @@ using MyPortal.Logic.Interfaces;
 
 namespace MyPortalWeb.Controllers.BaseControllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public abstract class BaseApiController : ControllerBase, IDisposable

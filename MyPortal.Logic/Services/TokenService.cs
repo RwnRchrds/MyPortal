@@ -54,7 +54,7 @@ namespace MyPortal.Logic.Services
             claims.AddRange(rolePermissions.Select(rp =>
                 new Claim(ApplicationClaimTypes.Permission, rp.PermissionId.ToString("N"))));
 
-            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512);
+            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

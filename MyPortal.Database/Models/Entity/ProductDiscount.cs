@@ -16,9 +16,6 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 3)]
         public int MinRequired { get; set; }
 
-        [Column(Order = 4)]
-        public bool ApplyMany { get; set; }
-
         public virtual Product Product { get; set; }
         public virtual Discount Discount { get; set; }
     }
