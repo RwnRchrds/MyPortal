@@ -31,6 +31,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("children")]
+        [Produces(typeof(DirectoryChildListWrapper))]
         public async Task<IActionResult> GetChildren([FromQuery] Guid directoryId)
         {
             return await ProcessAsync(async () =>
@@ -140,6 +141,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("id")]
+        [Produces(typeof(DirectoryModel))]
         public async Task<IActionResult> GetById([FromQuery] Guid directoryId)
         {
             return await ProcessAsync(async () =>

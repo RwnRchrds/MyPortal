@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("id")]
+        [Produces(typeof(LogNoteModel))]
         public async Task<IActionResult> GetById([FromQuery] Guid logNoteId)
         {
             return await ProcessAsync(async () =>
@@ -41,6 +43,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("types")]
+        [Produces(typeof(LogNoteTypeModel))]
         public async Task<IActionResult> GetTypes()
         {
             return await ProcessAsync(async () =>
@@ -53,6 +56,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("student")]
+        [Produces(typeof(IEnumerable<LogNoteModel>))]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid academicYearId)
         {
             return await ProcessAsync(async () =>

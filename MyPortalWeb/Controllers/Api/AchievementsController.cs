@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour;
 using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
@@ -45,6 +46,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("student", Name = "ApiAchievementGetByStudent")]
+        [Produces(typeof(AchievementDataGridModel))]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             return await ProcessAsync(async () =>

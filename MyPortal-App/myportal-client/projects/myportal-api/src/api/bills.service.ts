@@ -17,6 +17,7 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs';
 
+import { BillModel } from '../model/billModel';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -60,15 +61,18 @@ export class BillsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public generateChargeBills(observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public generateChargeBills(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public generateChargeBills(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public generateChargeBills(observe?: 'body', reportProgress?: boolean): Observable<Array<BillModel>>;
+    public generateChargeBills(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<BillModel>>>;
+    public generateChargeBills(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<BillModel>>>;
     public generateChargeBills(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -79,7 +83,7 @@ export class BillsService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/bills/generate`,
+        return this.httpClient.request<Array<BillModel>>('get',`${this.basePath}/api/bills/generate`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

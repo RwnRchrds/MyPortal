@@ -12,6 +12,7 @@ using MyPortal.Logic.Constants;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DataGrid;
+using MyPortal.Logic.Models.Entity;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
@@ -46,6 +47,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("id")]
+        [Produces(typeof(IEnumerable<StudentModel>))]
         public async Task<IActionResult> GetById([FromQuery] Guid studentId)
         {
             return await ProcessAsync(async () =>

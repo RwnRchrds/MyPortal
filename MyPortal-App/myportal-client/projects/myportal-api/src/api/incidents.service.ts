@@ -18,6 +18,8 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { CreateIncidentModel } from '../model/createIncidentModel';
+import { IncidentListModel } from '../model/incidentListModel';
+import { IncidentModel } from '../model/incidentModel';
 import { UpdateIncidentModel } from '../model/updateIncidentModel';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -151,9 +153,9 @@ export class IncidentsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getById(incidentId?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getById(incidentId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getById(incidentId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getById(incidentId?: string, observe?: 'body', reportProgress?: boolean): Observable<IncidentModel>;
+    public getById(incidentId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<IncidentModel>>;
+    public getById(incidentId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<IncidentModel>>;
     public getById(incidentId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
@@ -166,6 +168,9 @@ export class IncidentsService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -176,7 +181,7 @@ export class IncidentsService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/behaviour/incidents/id`,
+        return this.httpClient.request<IncidentModel>('get',`${this.basePath}/api/behaviour/incidents/id`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -194,9 +199,9 @@ export class IncidentsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getByStudent(studentId?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getByStudent(studentId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getByStudent(studentId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getByStudent(studentId?: string, observe?: 'body', reportProgress?: boolean): Observable<Array<IncidentListModel>>;
+    public getByStudent(studentId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<IncidentListModel>>>;
+    public getByStudent(studentId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<IncidentListModel>>>;
     public getByStudent(studentId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
@@ -209,6 +214,9 @@ export class IncidentsService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -219,7 +227,7 @@ export class IncidentsService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/behaviour/incidents/student`,
+        return this.httpClient.request<Array<IncidentListModel>>('get',`${this.basePath}/api/behaviour/incidents/student`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,

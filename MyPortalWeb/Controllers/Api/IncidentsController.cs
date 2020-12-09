@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour;
 using MyPortal.Logic.Models.Requests.Behaviour.Incidents;
@@ -25,6 +27,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("id", Name = "ApiIncidentGetById")]
+        [Produces(typeof(IncidentModel))]
         public async Task<IActionResult> GetById(Guid incidentId)
         {
             return await ProcessAsync(async () =>
@@ -42,6 +45,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("student", Name = "ApiIncidentGetByStudent")]
+        [Produces(typeof(IEnumerable<IncidentListModel>))]
         public async Task<IActionResult> GetByStudent(Guid studentId)
         {
             return await ProcessAsync(async () =>

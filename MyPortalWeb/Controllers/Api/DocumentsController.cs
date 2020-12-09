@@ -26,6 +26,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("get")]
+        [Produces(typeof(DocumentModel))]
         public async Task<IActionResult> GetById([FromQuery] Guid documentId)
         {
             return await ProcessAsync(async () =>
@@ -107,6 +108,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("view")]
+        [Produces(typeof(string))]
         public async Task<IActionResult> GetWebViewLink([FromQuery] Guid documentId)
         {
             return await ProcessAsync(async () =>

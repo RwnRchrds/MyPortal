@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
@@ -29,6 +30,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("id")]
+        [Produces(typeof(TaskModel))]
         public async Task<IActionResult> GetById([FromQuery] Guid taskId)
         {
             return await ProcessAsync(async () =>
@@ -48,6 +50,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("types")]
+        [Produces(typeof(IEnumerable<TaskTypeModel>))]
         public async Task<IActionResult> GetTaskTypes([FromQuery] bool personal = false)
         {
             return await ProcessAsync(async () =>

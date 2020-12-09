@@ -17,6 +17,7 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs';
 
+import { AchievementDataGridModel } from '../model/achievementDataGridModel';
 import { AchievementModel } from '../model/achievementModel';
 import { CreateAchievementModel } from '../model/createAchievementModel';
 import { UpdateAchievementModel } from '../model/updateAchievementModel';
@@ -199,9 +200,9 @@ export class AchievementsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'body', reportProgress?: boolean): Observable<AchievementDataGridModel>;
+    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AchievementDataGridModel>>;
+    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AchievementDataGridModel>>;
     public getByStudent(studentId?: string, academicYearId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
@@ -218,6 +219,9 @@ export class AchievementsService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -228,7 +232,7 @@ export class AchievementsService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/behaviour/achievements/student`,
+        return this.httpClient.request<AchievementDataGridModel>('get',`${this.basePath}/api/behaviour/achievements/student`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,

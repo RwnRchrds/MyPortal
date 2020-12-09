@@ -18,6 +18,7 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { StudentDataGridModel } from '../model/studentDataGridModel';
+import { StudentModel } from '../model/studentModel';
 import { StudentStatus } from '../model/studentStatus';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -63,9 +64,9 @@ export class StudentsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getById(studentId?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getById(studentId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getById(studentId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getById(studentId?: string, observe?: 'body', reportProgress?: boolean): Observable<Array<StudentModel>>;
+    public getById(studentId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<StudentModel>>>;
+    public getById(studentId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<StudentModel>>>;
     public getById(studentId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
@@ -78,6 +79,9 @@ export class StudentsService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -88,7 +92,7 @@ export class StudentsService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/students/id`,
+        return this.httpClient.request<Array<StudentModel>>('get',`${this.basePath}/api/students/id`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,

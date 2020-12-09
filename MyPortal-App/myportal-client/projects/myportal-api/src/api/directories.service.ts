@@ -18,6 +18,8 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { CreateDirectoryModel } from '../model/createDirectoryModel';
+import { DirectoryChildListWrapper } from '../model/directoryChildListWrapper';
+import { DirectoryModel } from '../model/directoryModel';
 import { UpdateDirectoryModel } from '../model/updateDirectoryModel';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -151,9 +153,9 @@ export class DirectoriesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getById(directoryId?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getById(directoryId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getById(directoryId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getById(directoryId?: string, observe?: 'body', reportProgress?: boolean): Observable<DirectoryModel>;
+    public getById(directoryId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<DirectoryModel>>;
+    public getById(directoryId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<DirectoryModel>>;
     public getById(directoryId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
@@ -166,6 +168,9 @@ export class DirectoriesService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -176,7 +181,7 @@ export class DirectoriesService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/document/directories/id`,
+        return this.httpClient.request<DirectoryModel>('get',`${this.basePath}/api/document/directories/id`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -194,9 +199,9 @@ export class DirectoriesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getChildren(directoryId?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getChildren(directoryId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getChildren(directoryId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getChildren(directoryId?: string, observe?: 'body', reportProgress?: boolean): Observable<DirectoryChildListWrapper>;
+    public getChildren(directoryId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<DirectoryChildListWrapper>>;
+    public getChildren(directoryId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<DirectoryChildListWrapper>>;
     public getChildren(directoryId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
@@ -209,6 +214,9 @@ export class DirectoriesService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -219,7 +227,7 @@ export class DirectoriesService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/document/directories/children`,
+        return this.httpClient.request<DirectoryChildListWrapper>('get',`${this.basePath}/api/document/directories/children`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,

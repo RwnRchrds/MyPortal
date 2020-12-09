@@ -18,6 +18,8 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { CreateLogNoteModel } from '../model/createLogNoteModel';
+import { LogNoteModel } from '../model/logNoteModel';
+import { LogNoteTypeModel } from '../model/logNoteTypeModel';
 import { UpdateLogNoteModel } from '../model/updateLogNoteModel';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -151,9 +153,9 @@ export class LogNotesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getById(logNoteId?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getById(logNoteId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getById(logNoteId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getById(logNoteId?: string, observe?: 'body', reportProgress?: boolean): Observable<LogNoteModel>;
+    public getById(logNoteId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LogNoteModel>>;
+    public getById(logNoteId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LogNoteModel>>;
     public getById(logNoteId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
@@ -166,6 +168,9 @@ export class LogNotesService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -176,7 +181,7 @@ export class LogNotesService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/student/logNotes/id`,
+        return this.httpClient.request<LogNoteModel>('get',`${this.basePath}/api/student/logNotes/id`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -195,9 +200,9 @@ export class LogNotesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'body', reportProgress?: boolean): Observable<Array<LogNoteModel>>;
+    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<LogNoteModel>>>;
+    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<LogNoteModel>>>;
     public getByStudent(studentId?: string, academicYearId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
@@ -214,6 +219,9 @@ export class LogNotesService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -224,7 +232,7 @@ export class LogNotesService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/student/logNotes/student`,
+        return this.httpClient.request<Array<LogNoteModel>>('get',`${this.basePath}/api/student/logNotes/student`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -241,15 +249,18 @@ export class LogNotesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTypes(observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getTypes(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getTypes(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getTypes(observe?: 'body', reportProgress?: boolean): Observable<LogNoteTypeModel>;
+    public getTypes(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LogNoteTypeModel>>;
+    public getTypes(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LogNoteTypeModel>>;
     public getTypes(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -260,7 +271,7 @@ export class LogNotesService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/student/logNotes/types`,
+        return this.httpClient.request<LogNoteTypeModel>('get',`${this.basePath}/api/student/logNotes/types`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

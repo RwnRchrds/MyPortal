@@ -101,6 +101,9 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
+            "sslKey": "projects/myportal-app/ssl/server.key",
+            "sslCert": "projects/myportal-app/ssl/server.crt",
+            "ssl": true,
             "browserTarget": "myportal-app:build"
           },
           "configurations": {

@@ -59,7 +59,7 @@ namespace MyPortal.Logic.Services
             await _taskRepository.SaveChanges();
         }
 
-        public async Task<Lookup> GetTypes(bool personalOnly, bool activeOnly = true)
+        public async Task<IEnumerable<TaskTypeModel>> GetTypes(bool personalOnly, bool activeOnly = true)
         {
             var taskTypes = (await _taskTypeRepository.GetAll()).AsQueryable();
 
@@ -73,7 +73,7 @@ namespace MyPortal.Logic.Services
                 taskTypes = taskTypes.Where(x => x.Personal);
             }
 
-            return taskTypes.Where(t => !t.Reserved).ToLookup();
+            return taskTypes.Where(t => !t.Reserved).AsEnumerable().Select(BusinessMapper.Map<TaskTypeModel>);
         }
 
         public async Task<bool> IsTaskOwner(Guid taskId, Guid userId)

@@ -20,7 +20,7 @@ namespace MyPortal.Logic.Interfaces
 
         Task<bool> IsTaskOwner(Guid taskId, Guid userId);
 
-        Task<Lookup> GetTypes(bool personalOnly, bool activeOnly = true);
+        Task<IEnumerable<TaskTypeModel>> GetTypes(bool personalOnly, bool activeOnly = true);
 
         Task<TaskModel> GetById(Guid taskId);
 

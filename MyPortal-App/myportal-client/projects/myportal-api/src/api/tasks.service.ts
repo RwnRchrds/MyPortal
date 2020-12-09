@@ -17,6 +17,8 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs';
 
+import { TaskModel } from '../model/taskModel';
+import { TaskTypeModel } from '../model/taskTypeModel';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -178,9 +180,9 @@ export class TasksService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getById(taskId?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getById(taskId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getById(taskId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getById(taskId?: string, observe?: 'body', reportProgress?: boolean): Observable<TaskModel>;
+    public getById(taskId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TaskModel>>;
+    public getById(taskId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TaskModel>>;
     public getById(taskId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
@@ -193,6 +195,9 @@ export class TasksService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -203,7 +208,7 @@ export class TasksService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/tasks/id`,
+        return this.httpClient.request<TaskModel>('get',`${this.basePath}/api/tasks/id`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -221,9 +226,9 @@ export class TasksService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTaskTypes(personal?: boolean, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getTaskTypes(personal?: boolean, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getTaskTypes(personal?: boolean, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getTaskTypes(personal?: boolean, observe?: 'body', reportProgress?: boolean): Observable<Array<TaskTypeModel>>;
+    public getTaskTypes(personal?: boolean, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<TaskTypeModel>>>;
+    public getTaskTypes(personal?: boolean, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<TaskTypeModel>>>;
     public getTaskTypes(personal?: boolean, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
@@ -236,6 +241,9 @@ export class TasksService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -246,7 +254,7 @@ export class TasksService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/tasks/types`,
+        return this.httpClient.request<Array<TaskTypeModel>>('get',`${this.basePath}/api/tasks/types`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,

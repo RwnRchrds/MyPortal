@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Entity;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
@@ -20,6 +21,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("generate")]
+        [Produces(typeof(IEnumerable<BillModel>))]
         public async Task<IActionResult> GenerateChargeBills()
         {
             return await ProcessAsync(async () =>
