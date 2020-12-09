@@ -10,8 +10,8 @@ import {StudentDataGridModel, StudentsService, StudentStatus} from 'myportal-api
 })
 export class StudentSearchComponent implements OnInit {
 
-  studentStatus: StudentStatus;
-  gender: string;
+  studentStatus: StudentStatus = 1;
+  gender: string = "";
   firstName: string;
   lastName: string;
 
@@ -24,16 +24,22 @@ export class StudentSearchComponent implements OnInit {
    }
 
    search(): void {
+     //@ts-ignore
+     KTApp.block('#student_search');
     this.studentService.searchStudents(this.studentStatus, null,
       null, null, null, null, this.firstName, this.lastName, this.gender).subscribe(next => {
       this.searchResults = next;
 
       if (!this.tableLoaded)
       {
-        this.loadTable();      
+        this.loadTable();
+        //@ts-ignore
+    KTApp.unblock('#student_search');      
       }
       else {
         this.refreshTable();
+        //@ts-ignore
+    KTApp.unblock('#student_search');
       }
     }, error => {
       this.alertService.error(error);

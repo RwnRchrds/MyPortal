@@ -7,13 +7,18 @@
         {
             "type": "firefox",
             "request": "launch",
+            "reAttach": true,
             "name": "Launch Firefox",
             "url": "https://localhost:4200",
-            "webRoot": "${workspaceFolder}/projects/myportal-app",
+            "webRoot": "${workspaceFolder}",
             "pathMappings": [
                 {
                     "url": "webpack:///projects/myportal-app/src",
-                    "path": "${workspaceFolder}/projects/myportal-app/src"
+                    "path": "${workspaceFolder}/src"
+                },
+                {
+                    "url": "webpack:///projects/myportal-app/src",
+                    "path": "${workspaceFolder}/src"
                 }
             ]
         }

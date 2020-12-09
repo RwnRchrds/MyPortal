@@ -1,4 +1,4 @@
-<div class="card card-custom">
+<div class="card card-custom" id="student_search">
   <!--begin::Header-->
   <div class="card-header flex-wrap border-0 pt-6 pb-0">
       <h3 class="card-title align-items-start flex-column">
@@ -40,7 +40,7 @@
                       </div>
                       <div class="col-md-3 my-2 my-md-0">
                         <select class="form-control form-control-solid" name="Gender" [(ngModel)]="gender">
-                            <option value="null">Any</option>
+                            <option value="">Any</option>
                             <option value="M">Male</option>
                             <option value="F">Female</option>
                             <option value="X">Other</option>
@@ -88,34 +88,5 @@
       </div>
       <!--end::Search Form-->
       <!--end: Search Form-->
-      <!--begin: Datatable-->
-      <div class="kt-portlet__body d-none" id="searchResults">
-          <div class="row">
-              <div class="col-md-12">
-                  <table id="student_search" class="table">
-                      <thead>
-                      <tr>
-                          <th>
-                              Name
-                          </th>
-                          <th>
-                              Gender
-                          </th>
-                          <th>
-                              Reg Group
-                          </th>
-                          <th>
-                              Year Group
-                          </th>
-                          <th>
-                              House
-                          </th>
-                      </tr>
-                      </thead>
-                  </table>
-              </div>
-          </div>
-      </div>
-      <!--end: Datatable-->
   <!--end::Body-->
 </div>
