@@ -3,6 +3,7 @@ using AutoMapper;
  using MyPortal.Logic.Exceptions;
  using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
+ using MyPortal.Logic.Interfaces.Services;
 
  namespace MyPortal.Logic.Services
 {
@@ -17,7 +18,6 @@ using MyPortal.Logic.Interfaces;
         }
 
         public abstract void Dispose();
-
 
 
         protected Exception GetInnerException(Exception ex)

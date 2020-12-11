@@ -10,6 +10,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using Task = System.Threading.Tasks.Task;
 
@@ -19,9 +20,9 @@ namespace MyPortal.Logic.Services
     {
         private readonly IAcademicYearRepository _academicYearRepository;
 
-        public AcademicYearService(ApplicationDbContext context)
+        public AcademicYearService(IAcademicYearRepository academicYearRepository)
         {
-            _academicYearRepository = new AcademicYearRepository(context);
+            _academicYearRepository = academicYearRepository;
         }
 
         public async Task<AcademicYearModel> GetCurrent()

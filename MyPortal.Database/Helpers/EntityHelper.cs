@@ -27,6 +27,11 @@ namespace MyPortal.Database.Helpers
                 return GetUserPropertyNames(alias);
             }
 
+            if (t == typeof(UserRole))
+            {
+                return GetUserRolePropertyNames(alias);
+            }
+
             string tblAlias;
             GetTableName(t, out tblAlias, alias);
             var props = GetProperties(t);
@@ -41,7 +46,7 @@ namespace MyPortal.Database.Helpers
 
         internal static string[] GetRolePropertyNames(string alias = null)
         {
-            string tblAlias = string.IsNullOrWhiteSpace(alias) ? "AspNetRoles" : alias;
+            string tblAlias = string.IsNullOrWhiteSpace(alias) ? "Roles" : alias;
 
             var propNames = new List<string>
             {
@@ -58,7 +63,7 @@ namespace MyPortal.Database.Helpers
 
         internal static string[] GetUserPropertyNames(string alias = null)
         {
-            string tblAlias = string.IsNullOrWhiteSpace(alias) ? "AspNetUsers" : alias;
+            string tblAlias = string.IsNullOrWhiteSpace(alias) ? "Users" : alias;
 
             var propNames = new List<string>
             {
@@ -81,6 +86,19 @@ namespace MyPortal.Database.Helpers
                 $"{tblAlias}.PersonId",
                 $"{tblAlias}.UserType",
                 $"{tblAlias}.Enabled"
+            };
+
+            return propNames.ToArray();
+        }
+
+        internal static string[] GetUserRolePropertyNames(string alias = null)
+        {
+            string tblAlias = string.IsNullOrWhiteSpace(alias) ? "UserRoles" : alias;
+
+            var propNames = new List<string>
+            {
+                $"{tblAlias}.UserId",
+                $"{tblAlias}.RoleId"
             };
 
             return propNames.ToArray();

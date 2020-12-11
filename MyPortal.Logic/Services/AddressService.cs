@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 
 namespace MyPortal.Logic.Services
 {

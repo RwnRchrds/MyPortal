@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Permissions;
+using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
@@ -22,8 +24,9 @@ namespace MyPortalWeb.Controllers.Api
         private readonly IDocumentService _documentService;
 
         public DirectoriesController(IUserService userService, IAcademicYearService academicYearService,
-            IDirectoryService directoryService, IDocumentService documentService) : base(userService,
-            academicYearService)
+            IDirectoryService directoryService, IDocumentService documentService,
+            IRolePermissionsCache rolePermissionsCache) : base(userService,
+            academicYearService, rolePermissionsCache)
         {
             _directoryService = directoryService;
             _documentService = documentService;

@@ -11,6 +11,7 @@ using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour;
@@ -25,12 +26,14 @@ namespace MyPortal.Logic.Services
         private readonly IAchievementTypeRepository _achievementTypeRepository;
         private readonly IAchievementOutcomeRepository _achievementOutcomeRepository;
 
-        public AchievementService(ApplicationDbContext context)
+        public AchievementService(IAcademicYearRepository academicYearRepository,
+            IAchievementRepository achievementRepository, IAchievementTypeRepository achievementTypeRepository,
+            IAchievementOutcomeRepository achievementOutcomeRepository)
         {
-            _achievementRepository = new AchievementRepository(context);
-            _achievementTypeRepository = new AchievementTypeRepository(context);
-            _achievementOutcomeRepository = new AchievementOutcomeRepository(context);
-            _academicYearRepository = new AcademicYearRepository(context);
+            _academicYearRepository = academicYearRepository;
+            _achievementRepository = achievementRepository;
+            _achievementTypeRepository = achievementTypeRepository;
+            _achievementOutcomeRepository = achievementOutcomeRepository;
         }
 
         public override void Dispose()

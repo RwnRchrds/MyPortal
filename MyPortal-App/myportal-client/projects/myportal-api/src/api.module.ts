@@ -7,11 +7,15 @@ import { AchievementsService } from './api/achievements.service';
 import { AuthenticationService } from './api/authentication.service';
 import { BillsService } from './api/bills.service';
 import { DirectoriesService } from './api/directories.service';
+import { DocumentsService } from './api/documents.service';
+import { HousesService } from './api/houses.service';
 import { IncidentsService } from './api/incidents.service';
 import { LogNotesService } from './api/logNotes.service';
+import { RegGroupsService } from './api/regGroups.service';
 import { StudentsService } from './api/students.service';
 import { TasksService } from './api/tasks.service';
 import { UsersService } from './api/users.service';
+import { YearGroupsService } from './api/yearGroups.service';
 
 @NgModule({
   imports:      [],
@@ -22,11 +26,15 @@ import { UsersService } from './api/users.service';
     AuthenticationService,
     BillsService,
     DirectoriesService,
+    DocumentsService,
+    HousesService,
     IncidentsService,
     LogNotesService,
+    RegGroupsService,
     StudentsService,
     TasksService,
-    UsersService ]
+    UsersService,
+    YearGroupsService ]
 })
 export class ApiModule {
     public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders<ApiModule> {

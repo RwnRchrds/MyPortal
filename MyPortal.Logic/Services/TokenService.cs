@@ -6,15 +6,13 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Server.Kestrel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Repositories;
-using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Auth;
 
@@ -23,19 +21,19 @@ namespace MyPortal.Logic.Services
     public class TokenService : BaseService, ITokenService
     {
         private readonly SymmetricSecurityKey _key;
-        private readonly IRolePermissionRepository _rolePermissionRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public TokenService(IConfiguration config, ApplicationDbContext context)
+        public TokenService(IConfiguration config, IUserRoleRepository userRoleRepository, IRefreshTokenRepository refreshTokenRepository)
         {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["MyPortal:TokenKey"]));
-            _rolePermissionRepository = new RolePermissionRepository(context);
-            _refreshTokenRepository = new RefreshTokenRepository(context);
+            _userRoleRepository = userRoleRepository;
+            _refreshTokenRepository = refreshTokenRepository;
         }
 
         public override void Dispose()
         {
-            _rolePermissionRepository.Dispose();
+            _userRoleRepository.Dispose();
             _refreshTokenRepository.Dispose();
         }
 
@@ -49,10 +47,10 @@ namespace MyPortal.Logic.Services
                 new Claim(ApplicationClaimTypes.DisplayName, userModel.GetDisplayName(userModel.UserType == UserTypes.Staff))
             };
 
-            var rolePermissions = await _rolePermissionRepository.GetByUser(userModel.Id);
+            var roles = await _userRoleRepository.GetByUser(userModel.Id);
 
-            claims.AddRange(rolePermissions.Select(rp =>
-                new Claim(ApplicationClaimTypes.Permission, rp.PermissionId.ToString("N"))));
+            claims.AddRange(roles.Select(r =>
+                new Claim(ClaimTypes.Role, r.RoleId.ToString("N"))));
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 

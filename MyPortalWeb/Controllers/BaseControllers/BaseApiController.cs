@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using MyPortal.Database.Constants;
+using MyPortal.Logic.Caching;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
-using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 
 namespace MyPortalWeb.Controllers.BaseControllers
 {
@@ -17,11 +20,13 @@ namespace MyPortalWeb.Controllers.BaseControllers
     {
         protected readonly IUserService UserService;
         protected readonly IAcademicYearService AcademicYearService;
+        private readonly IRolePermissionsCache _rolePermissionsCache;
 
-        public BaseApiController(IUserService userService, IAcademicYearService academicYearService)
+        public BaseApiController(IUserService userService, IAcademicYearService academicYearService, IRolePermissionsCache rolePermissionsCache)
         {
             UserService = userService;
             AcademicYearService = academicYearService;
+            _rolePermissionsCache = rolePermissionsCache;
         }
 
         public virtual void Dispose()
@@ -32,7 +37,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
 
         protected async Task<IActionResult> ProcessAsync(Func<Task<IActionResult>> method, params Guid[] permissionsRequired)
         {
-            if (User.HasPermission(permissionsRequired))
+            if (await HasPermission(permissionsRequired))
             {
                 try
                 {
@@ -45,6 +50,31 @@ namespace MyPortalWeb.Controllers.BaseControllers
             }
 
             return Forbid();
+        }
+
+        protected async Task<bool> HasPermission(params Guid[] permissionIds)
+        {
+            if (!permissionIds.Any())
+            {
+                return true;
+            }
+
+            var roleClaims = User.FindAll(c => c.Type == ClaimTypes.Role);
+
+            foreach (var roleClaim in roleClaims)
+            {
+                if (Guid.TryParse(roleClaim.Value, out Guid roleId))
+                {
+                    var rolePermissions = await _rolePermissionsCache.GetPermissions(roleId);
+
+                    if (permissionIds.Any(rolePermissions.Contains))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
         
         protected async Task<Guid> GetCurrentAcademicYearId()

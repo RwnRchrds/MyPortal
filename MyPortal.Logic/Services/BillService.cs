@@ -10,6 +10,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using Task = System.Threading.Tasks.Task;
 
@@ -30,9 +31,26 @@ namespace MyPortal.Logic.Services
         private readonly IStudentDiscountRepository _studentDiscountRepository;
         private readonly ISystemSettingRepository _settingRepository;
 
-        public BillService(ApplicationDbContext context)
+        public BillService(IAccountTransactionRepository accountTransactionRepository, IBillRepository billRepository,
+            IBillAccountTransactionRepository billAccountTransactionRepository,
+            IBillChargeRepository billChargeRepository, IBillDiscountRepository billDiscountRepository,
+            IBillItemRepository billItemRepository, IChargeRepository chargeRepository,
+            IChargeDiscountRepository chargeDiscountRepository, IDiscountRepository discountRepository,
+            IStudentChargeRepository studentChargeRepository, IStudentDiscountRepository studentDiscountRepository,
+            ISystemSettingRepository settingRepository)
         {
-            _billRepository = new BillRepository(context);
+            _accountTransactionRepository = accountTransactionRepository;
+            _billRepository = billRepository;
+            _billAccountTransactionRepository = billAccountTransactionRepository;
+            _billChargeRepository = billChargeRepository;
+            _billDiscountRepository = billDiscountRepository;
+            _billItemRepository = billItemRepository;
+            _chargeRepository = chargeRepository;
+            _chargeDiscountRepository = chargeDiscountRepository;
+            _discountRepository = discountRepository;
+            _studentChargeRepository = studentChargeRepository;
+            _studentDiscountRepository = studentDiscountRepository;
+            _settingRepository = settingRepository;
         }
 
         public async Task<IEnumerable<BillModel>> GenerateChargeBills()
@@ -97,6 +115,7 @@ namespace MyPortal.Logic.Services
             return generatedBills.Select(BusinessMapper.Map<BillModel>);
         }
 
+
         public override void Dispose()
         {
             _accountTransactionRepository?.Dispose();
@@ -107,6 +126,10 @@ namespace MyPortal.Logic.Services
             _billItemRepository?.Dispose();
             _chargeRepository?.Dispose();
             _chargeDiscountRepository?.Dispose();
+            _discountRepository?.Dispose();
+            _studentChargeRepository?.Dispose();
+            _studentDiscountRepository?.Dispose();
+            _settingRepository?.Dispose();
         }
     }
 }

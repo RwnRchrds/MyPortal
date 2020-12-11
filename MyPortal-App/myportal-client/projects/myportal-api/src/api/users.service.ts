@@ -58,7 +58,7 @@ export class UsersService {
 
 
     /**
-     * Create a new user.
+     * 
      * 
      * @param body 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -103,7 +103,7 @@ export class UsersService {
     }
 
     /**
-     * Delete a user.
+     * 
      * 
      * @param userId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -146,7 +146,7 @@ export class UsersService {
     }
 
     /**
-     * Set whether a user is enabled/disabled.
+     * 
      * 
      * @param body 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -191,7 +191,7 @@ export class UsersService {
     }
 
     /**
-     * Set a user&#x27;s password.
+     * 
      * 
      * @param body 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.

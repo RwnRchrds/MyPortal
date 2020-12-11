@@ -10,7 +10,7 @@
               <button class="btn btn-light-primary font-weight-bolder font-size-sm" aria-haspopup="true" aria-expanded="false" data-toggle="modal" data-target="#exampleModalCustomScrollable">
                   <i class="fas fa-plus mr-1"></i>New Student
               </button>
-              <!--end::Trigger Modal-->              
+              <!--end::Trigger Modal-->
           </div>
       </div>
   </div>
@@ -20,31 +20,28 @@
       <!--begin: Search Form-->
       <!--begin::Search Form-->
       <div class="mb-10">
-          <form #searchForm="ngForm" (ngSubmit)="search()">
-          <div class="row align-items-center">
+          <form [formGroup]="searchForm" (ngSubmit)="search()">
+          <div class="row align-items-center mb-5">
               <div class="col-lg-9 col-xl-8">
                   <div class="row align-items-center">
+                    <div class="col-md-3 my-2 my-md-0">
+                      <input formControlName="lastName" type="text" class="form-control form-control-solid" placeholder="Last Name">
+                  </div>
                       <div class="col-md-3 my-2 my-md-0">
-                          <input type="text" class="form-control form-control-solid" placeholder="First Name" name="FirstName" [(ngModel)]="firstName">
+                          <input formControlName="firstName" type="text" class="form-control form-control-solid" placeholder="First Name">
                       </div>
                       <div class="col-md-3 my-2 my-md-0">
-                          <input type="text" class="form-control form-control-solid" placeholder="Last Name" name="LastName" [(ngModel)]="lastName">
-                      </div>
-                      <div class="col-md-3 my-2 my-md-0">
-                          <select class="form-control form-control-solid" name="Status" [(ngModel)]="studentStatus">
-                              <option value="0">Any</option>
+                          <select formControlName="studentStatus" class="form-control form-control-solid">
+                              <option value="0">Any Status</option>
                               <option value="1">On Roll</option>
                               <option value="2">Leavers</option>
                               <option value="3">Future</option>
                           </select>
                       </div>
                       <div class="col-md-3 my-2 my-md-0">
-                        <select class="form-control form-control-solid" name="Gender" [(ngModel)]="gender">
-                            <option value="">Any</option>
-                            <option value="M">Male</option>
-                            <option value="F">Female</option>
-                            <option value="X">Other</option>
-                            <option value="U">Unknown</option>
+                        <select formControlName="yearGroupId" class="form-control form-control-solid">
+                          <option value="">Any Year Group</option>
+                          <option *ngFor="let yearGroup of yearGroups" [value]="yearGroup.id">{{yearGroup.name}}</option>
                         </select>
                       </div>
                   </div>
@@ -54,6 +51,25 @@
                       <i class="fas fa-search mr-1"></i>Search
                   </button>
               </div>
+          </div>
+          <div class="row align-items-center">
+            <div class="col-lg-9 col-xl-8">
+              <div class="row align-items-center">
+                  <div class="col-md-3 my-2 my-md-0">
+                    <select formControlName="regGroupId" class="form-control form-control-solid">
+                      <option value="">Any Reg Group</option>
+                      <option *ngFor="let regGroup of regGroups" [value]="regGroup.id">{{regGroup.name}}</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-3 my-2 my-md-0">
+                    <select formControlName="houseId" class="form-control form-control-solid">
+                      <option value="">Any House</option>
+                      <option *ngFor="let house of houses" [value]="house.id">{{house.name}}</option>
+                    </select>
+                  </div>
+              </div>
+          </div>
           </div>
         </form>
     </div>

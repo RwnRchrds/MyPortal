@@ -72,12 +72,12 @@ namespace MyPortal.Database.Repositories
 
             if (!string.IsNullOrWhiteSpace(search.FirstName))
             {
-                query.WhereStarts( "StudentPerson.FirstName", search.FirstName);
+                query.WhereStarts( "StudentPerson.FirstName", search.FirstName.Trim());
             }
 
             if (!string.IsNullOrWhiteSpace(search.LastName))
             {
-                query.WhereStarts("StudentPerson.LastName", search.LastName);
+                query.WhereStarts("StudentPerson.LastName", search.LastName.Trim());
             }
 
             if (!string.IsNullOrWhiteSpace(search.Gender))

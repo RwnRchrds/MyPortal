@@ -9,6 +9,7 @@ using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -17,9 +18,9 @@ namespace MyPortal.Logic.Services
     {
         private ISystemSettingRepository _systemSettingRepository;
 
-        public SystemSettingService(ApplicationDbContext context)
+        public SystemSettingService(ISystemSettingRepository systemSettingRepository)
         {
-            _systemSettingRepository = new SystemSettingRepository(context);
+            _systemSettingRepository = systemSettingRepository;
         }
 
         public override void Dispose()

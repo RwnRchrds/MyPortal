@@ -14,6 +14,7 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using Task = System.Threading.Tasks.Task;
@@ -26,13 +27,12 @@ namespace MyPortal.Logic.Services
         private readonly ILogNoteRepository _logNoteRepository;
         private readonly ILogNoteTypeRepository _logNoteTypeRepository;
 
-        public LogNoteService(ApplicationDbContext context)
+        public LogNoteService(IAcademicYearRepository academicYearRepository, ILogNoteRepository logNoteRepository,
+            ILogNoteTypeRepository logNoteTypeRepository)
         {
-            var connection = context.Database.GetDbConnection();
-
-            _academicYearRepository = new AcademicYearRepository(context);
-            _logNoteRepository = new LogNoteRepository(context);
-            _logNoteTypeRepository = new LogNoteTypeRepository(connection);
+            _academicYearRepository = academicYearRepository;
+            _logNoteRepository = logNoteRepository;
+            _logNoteTypeRepository = logNoteTypeRepository;
         }
 
         public async Task<LogNoteModel> GetById(Guid logNoteId)

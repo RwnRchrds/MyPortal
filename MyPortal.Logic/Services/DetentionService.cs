@@ -11,6 +11,7 @@ using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour;
 using MyPortal.Logic.Models.Requests.Behaviour.Detentions;
@@ -25,12 +26,13 @@ namespace MyPortal.Logic.Services
         private readonly IIncidentDetentionRepository _incidentDetentionRepository;
         private readonly IStudentRepository _studentRepository;
 
-        public DetentionService(ApplicationDbContext context)
+        public DetentionService(IDetentionRepository detentionRepository, IIncidentRepository incidentRepository,
+            IIncidentDetentionRepository incidentDetentionRepository, IStudentRepository studentRepository)
         {
-            _detentionRepository = new DetentionRepository(context);
-            _incidentRepository = new IncidentRepository(context);
-            _incidentDetentionRepository = new IncidentDetentionRepository(context);
-            _studentRepository = new StudentRepository(context);
+            _detentionRepository = detentionRepository;
+            _incidentRepository = incidentRepository;
+            _incidentDetentionRepository = incidentDetentionRepository;
+            _studentRepository = studentRepository;
         }
 
         public async Task<IEnumerable<DetentionModel>> Get(DetentionSearchOptions searchOptions)

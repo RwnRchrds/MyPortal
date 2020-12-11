@@ -1,0 +1,19 @@
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AppService {
+
+  constructor() { }
+
+  blockComponent(uiComponent: string) : void {
+    //@ts-ignore
+    KTApp.block(uiComponent);
+  }
+
+  unblockComponent(uiComponent: string) : void {
+    //@ts-ignore
+    KTApp.unblock(uiComponent);
+  }
+}

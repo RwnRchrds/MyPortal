@@ -7,6 +7,7 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 
@@ -17,13 +18,13 @@ namespace MyPortal.Logic.Services
         private readonly IDiaryEventRepository _diaryEventRepository;
         private readonly IDiaryEventTypeRepository _diaryEventTypeRepository;
         private readonly IDetentionRepository _detentionRepository;
-        
-        
-        public DiaryEventService(ApplicationDbContext context)
+
+        public DiaryEventService(IDiaryEventRepository diaryEventRepository,
+            IDiaryEventTypeRepository diaryEventTypeRepository, IDetentionRepository detentionRepository)
         {
-            _diaryEventRepository = new DiaryEventRepository(context);
-            _detentionRepository = new DetentionRepository(context);
-            _diaryEventTypeRepository = new DiaryEventTypeRepository(context);
+            _diaryEventRepository = diaryEventRepository;
+            _diaryEventTypeRepository = diaryEventTypeRepository;
+            _detentionRepository = detentionRepository;
         }
 
         public async Task<IEnumerable<DiaryEventTypeModel>> GetEventTypes(bool includeReserved = false)

@@ -11,6 +11,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Attendance;
@@ -26,15 +27,15 @@ namespace MyPortal.Logic.Services
         private readonly IAttendanceWeekRepository _attendanceWeekRepository;
         private readonly IAttendancePeriodRepository _periodRepository;
 
-        public AttendanceMarkService(ApplicationDbContext context)
+        public AttendanceMarkService(IAttendanceMarkRepository attendanceMarkRepository,
+            IAttendanceCodeRepository attendanceCodeRepository, IStudentRepository studentRepository,
+            IAttendanceWeekRepository attendanceWeekRepository, IAttendancePeriodRepository periodRepository)
         {
-            var connection = context.Database.GetDbConnection();
-
-            _attendanceMarkRepository = new AttendanceMarkRepository(context);
-            _attendanceCodeRepository = new AttendanceCodeRepository(connection);
-            _studentRepository = new StudentRepository(context);
-            _attendanceWeekRepository = new AttendanceWeekRepository(context);
-            _periodRepository = new AttendancePeriodRepository(context);
+            _attendanceMarkRepository = attendanceMarkRepository;
+            _attendanceCodeRepository = attendanceCodeRepository;
+            _studentRepository = studentRepository;
+            _attendanceWeekRepository = attendanceWeekRepository;
+            _periodRepository = periodRepository;
         }
 
         public override void Dispose()

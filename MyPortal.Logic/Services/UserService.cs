@@ -15,6 +15,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Authentication;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin;
 using MyPortal.Logic.Models.Requests.Admin.Users;
@@ -29,7 +30,8 @@ namespace MyPortal.Logic.Services
         private readonly RoleManager<Role> _roleManager;
         private readonly SignInManager<User> _signInManager;
 
-        public UserService(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager)
+        public UserService(UserManager<User> userManager, RoleManager<Role> roleManager,
+            SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -39,6 +41,7 @@ namespace MyPortal.Logic.Services
         public override void Dispose()
         {
             _userManager.Dispose();
+            _roleManager.Dispose();
         }
 
         public async Task CreateUser(params CreateUserModel[] createUserRequests)

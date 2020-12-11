@@ -1,7 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using MyPortal.Database.Models;
 using MyPortal.Database.Permissions;
+using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Requests.Admin;
 using MyPortal.Logic.Models.Requests.Auth;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -14,7 +18,8 @@ namespace MyPortalWeb.Controllers.Api
         private readonly ITokenService _tokenService;
 
         public AuthenticationController(IUserService userService, IAcademicYearService academicYearService,
-            ITokenService tokenService) : base(userService, academicYearService)
+            IRolePermissionsCache rolePermissionsCache, ITokenService tokenService) : base(userService,
+            academicYearService, rolePermissionsCache)
         {
             _tokenService = tokenService;
         }

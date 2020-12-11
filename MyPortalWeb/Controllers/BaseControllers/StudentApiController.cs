@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Logic.Caching;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 
 namespace MyPortalWeb.Controllers.BaseControllers
 {
@@ -10,7 +12,9 @@ namespace MyPortalWeb.Controllers.BaseControllers
     {
         protected readonly IStudentService StudentService;
 
-        public StudentApiController(IUserService userService, IAcademicYearService academicYearService, IStudentService studentService) : base(userService, academicYearService)
+        protected StudentApiController(IUserService userService, IAcademicYearService academicYearService,
+            IRolePermissionsCache rolePermissionsCache, IStudentService studentService) : base(userService,
+            academicYearService, rolePermissionsCache)
         {
             StudentService = studentService;
         }

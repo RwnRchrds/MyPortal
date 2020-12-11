@@ -1,7 +1,10 @@
 import { Router } from '@angular/router';
 import { AlertService } from './../../../../../_services/alert.service';
+import { AppService } from '../../../../../_services/app.service';
 import { Component, OnInit } from '@angular/core';
-import {StudentDataGridModel, StudentsService, StudentStatus} from 'myportal-api';
+import {StudentDataGridModel, StudentsService, YearGroupsService,
+  YearGroupModel, RegGroupModel, RegGroupsService, HouseModel, HousesService} from 'myportal-api';
+import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-student-search',
@@ -10,36 +13,67 @@ import {StudentDataGridModel, StudentsService, StudentStatus} from 'myportal-api
 })
 export class StudentSearchComponent implements OnInit {
 
-  studentStatus: StudentStatus = 1;
-  gender: string = "";
-  firstName: string;
-  lastName: string;
+  yearGroups: YearGroupModel[];
+  regGroups: RegGroupModel[];
+  houses: HouseModel[];
 
-  tableLoaded: boolean;
+  searchForm = new FormGroup({
+    studentStatus: new FormControl(1),
+    yearGroupId: new FormControl(''),
+    regGroupId: new FormControl(''),
+    houseId: new FormControl(''),
+    firstName: new FormControl(''),
+    lastName: new FormControl('')
+  });
+
+  get studentStatus(): AbstractControl {
+    return this.searchForm.get('studentStatus');
+  }
+
+  get yearGroupId(): AbstractControl {
+    return this.searchForm.get('yearGroupId');
+  }
+
+  get regGroupId(): AbstractControl {
+    return this.searchForm.get('regGroupId');
+  }
+
+  get houseId(): AbstractControl {
+    return this.searchForm.get('houseId');
+  }
+
+  get firstName(): AbstractControl {
+    return this.searchForm.get('firstName');
+  }
+
+  get lastName(): AbstractControl {
+    return this.searchForm.get('lastName');
+  }
+
+  tableLoaded = false;
 
   searchResults: StudentDataGridModel[];
 
-  constructor(private studentService: StudentsService, private alertService: AlertService, private router: Router) {
-    this.tableLoaded = false;
+  constructor(private studentService: StudentsService, private alertService: AlertService,
+              private appService: AppService, private yearGroupService: YearGroupsService,
+              private regGroupService: RegGroupsService, private houseService: HousesService,
+              private router: Router) {
    }
 
    search(): void {
-     //@ts-ignore
-     KTApp.block('#student_search');
-    this.studentService.searchStudents(this.studentStatus, null,
-      null, null, null, null, this.firstName, this.lastName, this.gender).subscribe(next => {
+    this.appService.blockComponent('#student_search');
+    this.studentService.searchStudents(this.studentStatus.value, null, this.regGroupId.value,
+       this.yearGroupId.value, this.houseId.value, null, this.firstName.value, this.lastName.value).subscribe(next => {
       this.searchResults = next;
 
       if (!this.tableLoaded)
       {
         this.loadTable();
-        //@ts-ignore
-    KTApp.unblock('#student_search');      
+        this.appService.unblockComponent('#student_search');
       }
       else {
         this.refreshTable();
-        //@ts-ignore
-    KTApp.unblock('#student_search');
+        this.appService.unblockComponent('#student_search');
       }
     }, error => {
       this.alertService.error(error);
@@ -109,6 +143,17 @@ export class StudentSearchComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.yearGroupService.getYearGroups().subscribe(next => {
+      this.yearGroups = next;
+    });
+
+    this.regGroupService.getRegGroups().subscribe(next => {
+      this.regGroups = next;
+    });
+
+    this.houseService.getHouses().subscribe(next => {
+      this.houses = next;
+    });
   }
 
 }

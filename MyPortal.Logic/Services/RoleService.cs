@@ -11,6 +11,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin;
@@ -26,15 +27,13 @@ namespace MyPortal.Logic.Services
         private readonly IPermissionRepository _permissionRepository;
         private readonly ISystemAreaRepository _systemAreaRepository;
 
-        public RoleService(ApplicationDbContext context, RoleManager<Role> roleManager)
+        public RoleService(RoleManager<Role> roleManager, IRolePermissionRepository rolePermissionRepository,
+            IPermissionRepository permissionRepository, ISystemAreaRepository systemAreaRepository)
         {
-            var connection = context.Database.GetDbConnection();
-
-            _rolePermissionRepository = new RolePermissionRepository(context);
-            _permissionRepository = new PermissionRepository(connection);
-            _systemAreaRepository = new SystemAreaRepository(connection);
-
             _roleManager = roleManager;
+            _rolePermissionRepository = rolePermissionRepository;
+            _permissionRepository = permissionRepository;
+            _systemAreaRepository = systemAreaRepository;
         }
 
         public async Task<TreeNode> GetPermissionsTree(Guid roleId)

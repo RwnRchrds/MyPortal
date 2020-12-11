@@ -4,6 +4,7 @@ using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 
 namespace MyPortal.Logic.Services
 {
@@ -11,11 +12,11 @@ namespace MyPortal.Logic.Services
     {
         private readonly ISchoolRepository _schoolRepository;
 
-        public SchoolService(ApplicationDbContext context)
+        public SchoolService(ISchoolRepository schoolRepository)
         {
-            _schoolRepository = new SchoolRepository(context);
+            _schoolRepository = schoolRepository;
         }
-        
+
         public async Task<string> GetLocalSchoolName()
         {
             return await _schoolRepository.GetLocalSchoolName();

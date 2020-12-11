@@ -7,6 +7,7 @@ using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Curriculum;
 using Task = System.Threading.Tasks.Task;
@@ -22,16 +23,19 @@ namespace MyPortal.Logic.Services
         private readonly ICurriculumGroupMembershipRepository _groupMembershipRepository;
         private readonly ICurriculumBandMembershipRepository _bandMembershipRepository;
 
-        public CurriculumService(ApplicationDbContext context)
+        public CurriculumService(ICurriculumBandRepository bandRepository, ICurriculumBlockRepository blockRepository,
+            ICurriculumGroupRepository groupRepository, ICurriculumBandBlockAssignmentRepository assignmentRepository,
+            ICurriculumGroupMembershipRepository groupMembershipRepository,
+            ICurriculumBandMembershipRepository bandMembershipRepository)
         {
-            _bandRepository = new CurriculumBandRepository(context);
-            _blockRepository = new CurriculumBlockRepository(context);
-            _groupRepository = new CurriculumGroupRepository(context);
-            _assignmentRepository = new CurriculumBandBlockAssignmentRepository(context);
-            _groupMembershipRepository = new CurriculumGroupMembershipRepository(context);
-            _bandMembershipRepository = new CurriculumBandMembershipRepository(context);
+            _bandRepository = bandRepository;
+            _blockRepository = blockRepository;
+            _groupRepository = groupRepository;
+            _assignmentRepository = assignmentRepository;
+            _groupMembershipRepository = groupMembershipRepository;
+            _bandMembershipRepository = bandMembershipRepository;
         }
-        
+
         public override void Dispose()
         {
             _bandRepository.Dispose();

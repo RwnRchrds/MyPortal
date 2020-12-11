@@ -1,38 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Drive.v3;
-using Google.Apis.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using MyPortal.Database.Constants;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Filters;
-using MyPortal.Database.Repositories;
-using MyPortal.Logic.Constants;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Extensions;
 using MyPortal.Logic.FileProviders;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DocumentProvision;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
-using File = Google.Apis.Drive.v3.Data.File;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -45,25 +25,14 @@ namespace MyPortal.Logic.Services
         private readonly IFileProvider _fileProvider;
         private readonly IFileRepository _fileRepository;
 
-        public DocumentService(IConfiguration config, ApplicationDbContext context)
+        public DocumentService(IDocumentRepository documentRepository, IDocumentTypeRepository documentTypeRepository,
+            IDirectoryService directoryService, IFileProvider fileProvider, IFileRepository fileRepository)
         {
-            var connection = context.Database.GetDbConnection();
-            _documentRepository = new DocumentRepository(context);
-            _directoryService = new DirectoryService(context);
-            _documentTypeRepository = new DocumentTypeRepository(connection);
-            _fileRepository = new FileRepository(context);
-
-            var documentSetting = config.GetValue<string>("DocumentService:Provider");
-
-            switch (documentSetting.ToLower())
-            {
-                case "google":
-                    _fileProvider = new GoogleFileProvider(config);
-                    break;
-                default:
-                    _fileProvider = new LocalFileProvider(config);
-                    break;
-            }
+            _documentRepository = documentRepository;
+            _documentTypeRepository = documentTypeRepository;
+            _directoryService = directoryService;
+            _fileProvider = fileProvider;
+            _fileRepository = fileRepository;
         }
 
         public async Task Create(params DocumentModel[] documents)

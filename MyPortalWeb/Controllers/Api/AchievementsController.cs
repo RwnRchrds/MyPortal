@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Permissions;
+using MyPortal.Logic.Caching;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour;
@@ -21,7 +23,10 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly IAchievementService _achievementService;
 
-        public AchievementsController(IUserService userService, IAcademicYearService academicYearService, IStudentService studentService, IAchievementService achievementService) : base(userService, academicYearService, studentService)
+        public AchievementsController(IUserService userService, IAcademicYearService academicYearService,
+            IRolePermissionsCache rolePermissionsCache, IStudentService studentService,
+            IAchievementService achievementService) : base(userService, academicYearService, rolePermissionsCache,
+            studentService)
         {
             _achievementService = achievementService;
         }

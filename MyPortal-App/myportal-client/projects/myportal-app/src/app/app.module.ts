@@ -12,7 +12,7 @@ import { ParentPortalModule } from './parent-portal/parent-portal.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ApiModule, BASE_PATH } from 'myportal-api';
 import { environment } from '../environments/environment';
@@ -27,6 +27,7 @@ import { environment } from '../environments/environment';
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
     StaffPortalModule,
     StudentPortalModule,

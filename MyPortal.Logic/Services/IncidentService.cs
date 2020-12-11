@@ -9,6 +9,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour;
@@ -24,14 +25,13 @@ namespace MyPortal.Logic.Services
         private readonly IBehaviourStatusRepository _statusRepository;
         private readonly IIncidentTypeRepository _incidentTypeRepository;
 
-        public IncidentService(ApplicationDbContext context)
+        public IncidentService(IIncidentRepository incidentRepository, IBehaviourOutcomeRepository outcomeRepository,
+            IBehaviourStatusRepository statusRepository, IIncidentTypeRepository incidentTypeRepository)
         {
-            var connection = context.Database.GetDbConnection();
-
-            _incidentRepository = new IncidentRepository(context);
-            _outcomeRepository = new BehaviourOutcomeRepository(context);
-            _statusRepository = new BehaviourStatusRepository(connection);
-            _incidentTypeRepository = new IncidentTypeRepository(context);
+            _incidentRepository = incidentRepository;
+            _outcomeRepository = outcomeRepository;
+            _statusRepository = statusRepository;
+            _incidentTypeRepository = incidentTypeRepository;
         }
 
         public override void Dispose()

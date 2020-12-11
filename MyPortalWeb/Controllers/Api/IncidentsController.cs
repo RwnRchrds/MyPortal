@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Permissions;
+using MyPortal.Logic.Caching;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour;
@@ -20,7 +22,10 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly IIncidentService _incidentService;
 
-        public IncidentsController(IUserService userService, IAcademicYearService academicYearService, IStudentService studentService, IIncidentService incidentService) : base(userService, academicYearService, studentService)
+        public IncidentsController(IUserService userService, IAcademicYearService academicYearService,
+            IRolePermissionsCache rolePermissionsCache, IStudentService studentService,
+            IIncidentService incidentService) : base(userService, academicYearService, rolePermissionsCache,
+            studentService)
         {
             _incidentService = incidentService;
         }

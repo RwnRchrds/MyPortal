@@ -7,6 +7,7 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Services
@@ -15,9 +16,9 @@ namespace MyPortal.Logic.Services
     {
         private readonly IStaffMemberRepository _staffMemberRepository;
 
-        public StaffMemberService(ApplicationDbContext context)
+        public StaffMemberService(IStaffMemberRepository staffMemberRepository)
         {
-            _staffMemberRepository = new StaffMemberRepository(context);
+            _staffMemberRepository = staffMemberRepository;
         }
 
         public override void Dispose()

@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Permissions;
+using MyPortal.Logic.Caching;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Student.LogNotes;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -18,7 +20,9 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly ILogNoteService _logNoteService;
 
-        public LogNotesController(IUserService userService, IAcademicYearService academicYearService, IStudentService studentService, ILogNoteService logNoteService) : base(userService, academicYearService, studentService)
+        public LogNotesController(IUserService userService, IAcademicYearService academicYearService,
+            IRolePermissionsCache rolePermissionsCache, IStudentService studentService, ILogNoteService logNoteService)
+            : base(userService, academicYearService, rolePermissionsCache, studentService)
         {
             _logNoteService = logNoteService;
         }

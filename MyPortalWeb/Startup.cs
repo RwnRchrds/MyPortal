@@ -22,6 +22,9 @@ namespace MyPortalWeb
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
+            // Enable memory caching
+            services.AddMemoryCache();
+
             services.AddApplicationServices(Configuration);
 
             services.AddControllers();
@@ -39,8 +42,8 @@ namespace MyPortalWeb
                     Title = "MyPortal"
                 });
 
-                var filePath = Path.Combine("MyPortalWeb.xml");
-                c.IncludeXmlComments(filePath);
+                //var filePath = Path.Combine("MyPortalWeb.xml");
+                //c.IncludeXmlComments(filePath);
             });
         }
 

@@ -13,6 +13,7 @@ using MyPortal.Database.Repositories;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
 using Task = System.Threading.Tasks.Task;
@@ -24,10 +25,10 @@ namespace MyPortal.Logic.Services
         private readonly IDirectoryRepository _directoryRepository;
         private readonly IDocumentRepository _documentRepository;
 
-        public DirectoryService(ApplicationDbContext context)
+        public DirectoryService(IDirectoryRepository directoryRepository, IDocumentRepository documentRepository)
         {
-            _directoryRepository = new DirectoryRepository(context);
-            _documentRepository = new DocumentRepository(context);
+            _directoryRepository = directoryRepository;
+            _documentRepository = documentRepository;
         }
 
         public async Task<DirectoryModel> GetById(Guid directoryId)

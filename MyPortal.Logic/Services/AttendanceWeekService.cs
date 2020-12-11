@@ -9,6 +9,7 @@ using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Services
@@ -17,9 +18,9 @@ namespace MyPortal.Logic.Services
     {
         private readonly IAttendanceWeekRepository _attendanceWeekRepository;
 
-        public AttendanceWeekService(ApplicationDbContext context)
+        public AttendanceWeekService(IAttendanceWeekRepository attendanceWeekRepository)
         {
-            _attendanceWeekRepository = new AttendanceWeekRepository(context);
+            _attendanceWeekRepository = attendanceWeekRepository;
         }
 
         public async Task<AttendanceWeekModel> GetById(Guid attendanceWeekId)

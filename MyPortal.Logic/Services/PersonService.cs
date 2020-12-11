@@ -11,6 +11,7 @@ using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using Task = System.Threading.Tasks.Task;
 
@@ -33,9 +34,9 @@ namespace MyPortal.Logic.Services
             return person;
         }
 
-        public PersonService(ApplicationDbContext context)
+        public PersonService(IPersonRepository personRepository)
         {
-            _personRepository = new PersonRepository(context);
+            _personRepository = personRepository;
         }
 
         public async Task<PersonModel> GetById(Guid personId)

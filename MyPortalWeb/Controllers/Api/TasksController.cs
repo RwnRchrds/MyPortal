@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Permissions;
+using MyPortal.Logic.Caching;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Person.Tasks;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -20,8 +22,9 @@ namespace MyPortalWeb.Controllers.Api
         private readonly IStaffMemberService _staffMemberService;
 
         public TasksController(IUserService userService, IAcademicYearService academicYearService,
-            IStudentService studentService, ITaskService taskService, IPersonService personService,
-            IStaffMemberService staffMemberService) : base(userService, academicYearService, studentService)
+            IRolePermissionsCache rolePermissionsCache, IStudentService studentService, ITaskService taskService,
+            IPersonService personService, IStaffMemberService staffMemberService) : base(userService,
+            academicYearService, rolePermissionsCache, studentService)
         {
             _taskService = taskService;
             _personService = personService;
@@ -186,7 +189,7 @@ namespace MyPortalWeb.Controllers.Api
 
             else if (taskPersonTypes.Employee)
             {
-                if (User.HasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
+                if (await HasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
                 {
                     return true;
                 }
@@ -201,7 +204,7 @@ namespace MyPortalWeb.Controllers.Api
                         return true;
                     }
 
-                    return User.HasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
+                    return await HasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
                            await _staffMemberService.IsLineManager(taskStaffMember.Id, userStaffMember.Id);
                 }
             }
@@ -230,7 +233,7 @@ namespace MyPortalWeb.Controllers.Api
 
             if (taskPersonTypes.Employee)
             {
-                if (User.HasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
+                if (await HasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
                 {
                     return true;
                 }
@@ -240,7 +243,7 @@ namespace MyPortalWeb.Controllers.Api
                 var userStaffMember = await _staffMemberService.GetByUserId(userId, false);
 
                 if (userStaffMember != null && taskStaffMember != null &&
-                    User.HasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
+                    await HasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
                     await _staffMemberService.IsLineManager(taskStaffMember.Id, userStaffMember.Id))
                 {
                     return true;

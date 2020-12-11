@@ -14,6 +14,7 @@ using MyPortal.Logic.Constants;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Person.Tasks;
@@ -29,12 +30,13 @@ namespace MyPortal.Logic.Services
         private readonly IPersonRepository _personRepository;
         private readonly IStaffMemberRepository _staffMemberRepository;
 
-        public TaskService(ApplicationDbContext context)
+        public TaskService(ITaskRepository taskRepository, ITaskTypeRepository taskTypeRepository,
+            IPersonRepository personRepository, IStaffMemberRepository staffMemberRepository)
         {
-            _taskRepository = new TaskRepository(context);
-            _taskTypeRepository = new TaskTypeRepository(context);
-            _personRepository = new PersonRepository(context);
-            _staffMemberRepository = new StaffMemberRepository(context);
+            _taskRepository = taskRepository;
+            _taskTypeRepository = taskTypeRepository;
+            _personRepository = personRepository;
+            _staffMemberRepository = staffMemberRepository;
         }
 
         public async Task Create(params TaskModel[] tasks)

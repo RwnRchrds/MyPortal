@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DocumentProvision;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
@@ -14,12 +16,13 @@ namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
     [Route("api/documents")]
-    [ApiExplorerSettings(IgnoreApi = true)]
     public class DocumentsController : BaseApiController
     {
         private readonly IDocumentService _documentService;
 
-        public DocumentsController(IUserService userService, IAcademicYearService academicYearService, IDocumentService documentService) : base(userService, academicYearService)
+        public DocumentsController(IUserService userService, IAcademicYearService academicYearService,
+            IDocumentService documentService, IRolePermissionsCache rolePermissionsCache) : base(userService,
+            academicYearService, rolePermissionsCache)
         {
             _documentService = documentService;
         }

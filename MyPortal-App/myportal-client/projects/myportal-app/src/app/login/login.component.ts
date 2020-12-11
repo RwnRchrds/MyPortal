@@ -18,11 +18,11 @@ export class LoginComponent implements OnInit {
 
   constructor(private scriptService: ScriptService, private authService: AuthService) {  }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.scriptService.loadStyleSheet('../../assets/lib/css/pages/login/login-2.css');
   }
 
-  login() {
+  login(): void {
     this.authService.login(this.loginModel).subscribe(next => {
       location.reload();
     }, error => {

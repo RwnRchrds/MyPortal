@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Permissions;
+using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Requests.Admin;
 using MyPortal.Logic.Models.Requests.Admin.Users;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -18,9 +20,9 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/user")]
     public class UsersController : BaseApiController
     {
-        public UsersController(IUserService userService, IAcademicYearService academicYearService) : base(userService, academicYearService)
+        public UsersController(IUserService userService, IAcademicYearService academicYearService,
+            IRolePermissionsCache rolePermissionsCache) : base(userService, academicYearService, rolePermissionsCache)
         {
-
         }
 
         /// <summary>

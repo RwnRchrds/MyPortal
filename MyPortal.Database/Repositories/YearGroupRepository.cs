@@ -23,13 +23,15 @@ namespace MyPortal.Database.Repositories
             query.SelectAllColumns(typeof(StaffMember), "StaffMember");
             query.SelectAllColumns(typeof(Person), "Person");
             query.SelectAllColumns(typeof(CurriculumYearGroup), "CYG");
+
+            JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
             query.LeftJoin("StaffMembers as StaffMember", "StaffMember.Id", "YearGroup.HeadId");
             query.LeftJoin("People as Person", "Person.Id", "StaffMember.PersonId");
-            query.LeftJoin("CurriculumYearGroup as CYG", "CYG.Id", "YearGroup.Id");
+            query.LeftJoin("CurriculumYearGroups as CYG", "CYG.Id", "YearGroup.Id");
         }
 
         protected override async Task<IEnumerable<YearGroup>> ExecuteQuery(Query query)
@@ -39,7 +41,11 @@ namespace MyPortal.Database.Repositories
             return await Connection.QueryAsync<YearGroup, StaffMember, Person, CurriculumYearGroup, YearGroup>(sql.Sql, (yearGroup, head, person, curriculumGroup) =>
             {
                 yearGroup.HeadOfYear = head;
-                yearGroup.HeadOfYear.Person = person;
+
+                if (yearGroup.HeadOfYear != null)
+                {
+                    yearGroup.HeadOfYear.Person = person;
+                }
 
                 yearGroup.CurriculumYearGroup = curriculumGroup;
 

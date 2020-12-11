@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -14,7 +16,9 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly IBillService _billService;
 
-        public BillsController(IUserService userService, IAcademicYearService academicYearService, IBillService billService) : base(userService, academicYearService)
+        public BillsController(IUserService userService, IAcademicYearService academicYearService,
+            IBillService billService, IRolePermissionsCache rolePermissionsCache) : base(userService,
+            academicYearService, rolePermissionsCache)
         {
             _billService = billService;
         }

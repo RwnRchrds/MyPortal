@@ -13,6 +13,7 @@ using MyPortal.Database.Repositories;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using Task = System.Threading.Tasks.Task;
@@ -23,9 +24,9 @@ namespace MyPortal.Logic.Services
     {
         private IStudentRepository _studentRepository;
 
-        public StudentService(ApplicationDbContext context)
+        public StudentService(IStudentRepository studentRepository)
         {
-            _studentRepository = new StudentRepository(context);
+            _studentRepository = studentRepository;
         }
 
         public async Task<StudentModel> GetById(Guid studentId)

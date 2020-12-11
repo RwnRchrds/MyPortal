@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Models.Search;
 using MyPortal.Database.Permissions;
+using MyPortal.Logic.Caching;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -21,9 +23,10 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/students")]
     public class StudentsController : StudentApiController
     {
-        public StudentsController(IUserService userService, IAcademicYearService academicYearService, IStudentService studentService) : base(userService, academicYearService, studentService)
+        public StudentsController(IUserService userService, IAcademicYearService academicYearService,
+            IRolePermissionsCache rolePermissionsCache, IStudentService studentService) : base(userService,
+            academicYearService, rolePermissionsCache, studentService)
         {
-
         }
 
         [HttpGet]
