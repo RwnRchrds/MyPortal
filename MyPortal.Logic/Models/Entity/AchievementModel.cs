@@ -36,8 +36,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public Guid StudentId { get; set; }
 
-        [Required(ErrorMessage = "Location is required.")]
-        public Guid LocationId { get; set; }
+        public Guid? LocationId { get; set; }
         
         public Guid RecordedById { get; set; }
 
@@ -47,7 +46,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public string Comments { get; set; }
 
-        [Required(ErrorMessage = "Points is Required")]
+        [Required(ErrorMessage = "Points is required.")]
         [Range(0, int.MaxValue, ErrorMessage = "Points cannot be negative.")]
         public int Points { get; set; }
 
