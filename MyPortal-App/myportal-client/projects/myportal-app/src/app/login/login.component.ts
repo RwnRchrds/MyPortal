@@ -1,6 +1,7 @@
 import { AuthService } from './../_services/auth.service';
 import { ScriptService } from './../_services/script.service';
 import { Component, OnInit } from '@angular/core';
+import { SchoolsService } from 'myportal-api';
 
 @Component({
   selector: 'app-login',
@@ -13,13 +14,16 @@ export class LoginComponent implements OnInit {
 
   loginError = '';
 
-  schoolName = 'Rowan Community School';
+  schoolName = '';
   schoolMotto = 'Leap Into Learning';
 
-  constructor(private scriptService: ScriptService, private authService: AuthService) {  }
+  constructor(private scriptService: ScriptService, private authService: AuthService, private schoolService: SchoolsService) {  }
 
   ngOnInit(): void {
     this.scriptService.loadStyleSheet('../../assets/lib/css/pages/login/login-2.css');
+    this.schoolService.getLocalSchoolName().subscribe(next => {
+      this.schoolName = next;
+    });
   }
 
   login(): void {
