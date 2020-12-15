@@ -17,7 +17,7 @@ namespace MyPortal.Logic.Models.Entity
         public Guid StudentId { get; set; }
         
         [Required(ErrorMessage = "Location is required.")]
-        public Guid LocationId { get; set; }
+        public Guid? LocationId { get; set; }
         
         public Guid RecordedById { get; set; }
         
@@ -25,7 +25,7 @@ namespace MyPortal.Logic.Models.Entity
         
         [Required(ErrorMessage = "Status is required.")]
         public Guid StatusId { get; set; }
-        
+
         public DateTime CreatedDate { get; set; }
         
         public string Comments { get; set; }

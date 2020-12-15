@@ -1532,13 +1532,11 @@ namespace MyPortal.Database.Models
                     e.HasMany(x => x.BehaviourAchievements)
                         .WithOne(x => x.Location)
                         .HasForeignKey(x => x.LocationId)
-                        .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.BehaviourIncidents)
                         .WithOne(e => e.Location)
                         .HasForeignKey(x => x.LocationId)
-                        .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.Rooms)

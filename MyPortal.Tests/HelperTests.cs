@@ -5,19 +5,14 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using MyPortal.Database.Attributes;
-using MyPortal.Database.Constants;
-using MyPortal.Database.Models;
-using MyPortal.Logic.Authentication;
-using MyPortal.Logic.Constants;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Models.Entity;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace MyPortal.Tests
 {
     [TestFixture]
-    public class MiscTests
+    public class HelperTests
     {
         [Test]
         public void Mapping_BusinessConfigurationIsValid()
@@ -36,7 +31,7 @@ namespace MyPortal.Tests
 
             var decryptedText = Encryption.DecryptString(encryptedText, salt, secret);
 
-            Assert.That(decryptedText == plaintext);
+            Assert.That(decryptedText.Equals(plaintext, StringComparison.InvariantCulture));
         }
 
         [Test]
@@ -48,11 +43,27 @@ namespace MyPortal.Tests
         }
 
         [Test]
+        public void ValidateNhsNumber_WhenInvalid()
+        {
+            var isValid = ValidationHelper.ValidateNhsNumber("643 792 7187");
+
+            Assert.IsFalse(isValid);
+        }
+
+        [Test]
         public void ValidateUpn_WhenValid()
         {
             var isValid = ValidationHelper.ValidateUpn("H801200001001");
             
             Assert.IsTrue(isValid);
+        }
+
+        [Test]
+        public void ValidateUpn_WhenInvalid()
+        {
+            var isValid = ValidationHelper.ValidateUpn("G801200001001");
+
+            Assert.IsFalse(isValid);
         }
 
         [Test]

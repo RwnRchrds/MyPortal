@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201201234211_InitialModel")]
+    [Migration("20201215233540_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -116,7 +116,7 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("LocationId")
+                    b.Property<Guid?>("LocationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("OutcomeId")
@@ -873,7 +873,7 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("ChargeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("NetAmount")
+                    b.Property<decimal>("GrossAmount")
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<bool>("Refunded")
@@ -929,7 +929,7 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("CustomerReceived")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("NetAmount")
+                    b.Property<decimal>("GrossAmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("ProductId")
@@ -3019,7 +3019,7 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("LocationId")
+                    b.Property<Guid?>("LocationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("OutcomeId")
@@ -3762,9 +3762,6 @@ namespace MyPortal.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<bool>("ApplyMany")
-                        .HasColumnType("bit");
 
                     b.Property<Guid>("DiscountId")
                         .HasColumnType("uniqueidentifier");
@@ -5509,8 +5506,7 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.Entity.Location", "Location")
                         .WithMany("BehaviourAchievements")
                         .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("MyPortal.Database.Models.Entity.AchievementOutcome", "Outcome")
                         .WithMany("Achievements")
@@ -6490,8 +6486,7 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.Entity.Location", "Location")
                         .WithMany("BehaviourIncidents")
                         .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("MyPortal.Database.Models.Entity.BehaviourOutcome", "Outcome")
                         .WithMany("Incidents")

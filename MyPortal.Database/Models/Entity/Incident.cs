@@ -22,7 +22,7 @@ namespace MyPortal.Database.Models.Entity
         public Guid StudentId { get; set; }
 
         [Column(Order = 4)]
-        public Guid LocationId { get; set; }
+        public Guid? LocationId { get; set; }
 
         [Column(Order = 5)]
         public Guid RecordedById { get; set; }

@@ -2219,8 +2219,7 @@ namespace MyPortal.Database.Migrations
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     ProductId = table.Column<Guid>(nullable: false),
                     DiscountId = table.Column<Guid>(nullable: false),
-                    MinRequired = table.Column<int>(nullable: false),
-                    ApplyMany = table.Column<bool>(nullable: false)
+                    MinRequired = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -3298,7 +3297,7 @@ namespace MyPortal.Database.Migrations
                     AcademicYearId = table.Column<Guid>(nullable: false),
                     AchievementTypeId = table.Column<Guid>(nullable: false),
                     StudentId = table.Column<Guid>(nullable: false),
-                    LocationId = table.Column<Guid>(nullable: false),
+                    LocationId = table.Column<Guid>(nullable: true),
                     RecordedById = table.Column<Guid>(nullable: false),
                     OutcomeId = table.Column<Guid>(nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
@@ -3607,7 +3606,7 @@ namespace MyPortal.Database.Migrations
                     AcademicYearId = table.Column<Guid>(nullable: false),
                     BehaviourTypeId = table.Column<Guid>(nullable: false),
                     StudentId = table.Column<Guid>(nullable: false),
-                    LocationId = table.Column<Guid>(nullable: false),
+                    LocationId = table.Column<Guid>(nullable: true),
                     RecordedById = table.Column<Guid>(nullable: false),
                     OutcomeId = table.Column<Guid>(nullable: false),
                     StatusId = table.Column<Guid>(nullable: false),
@@ -4088,7 +4087,7 @@ namespace MyPortal.Database.Migrations
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     BillId = table.Column<Guid>(nullable: false),
                     ChargeId = table.Column<Guid>(nullable: false),
-                    NetAmount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    GrossAmount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Refunded = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -4143,7 +4142,7 @@ namespace MyPortal.Database.Migrations
                     BillId = table.Column<Guid>(nullable: false),
                     ProductId = table.Column<Guid>(nullable: false),
                     Quantity = table.Column<int>(nullable: false),
-                    NetAmount = table.Column<decimal>(nullable: false),
+                    GrossAmount = table.Column<decimal>(nullable: false),
                     CustomerReceived = table.Column<bool>(nullable: false),
                     Refunded = table.Column<bool>(nullable: false)
                 },
