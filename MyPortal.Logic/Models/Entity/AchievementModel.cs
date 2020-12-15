@@ -18,11 +18,6 @@ namespace MyPortal.Logic.Models.Entity
 
         public AchievementModel(CreateAchievementModel model, Guid userId)
         {
-            if (model is UpdateAchievementModel updateModel)
-            {
-                Id = updateModel.Id;
-            }
-
             AcademicYearId = model.AcademicYearId;
             AchievementTypeId = model.AchievementTypeId;
             StudentId = model.StudentId;

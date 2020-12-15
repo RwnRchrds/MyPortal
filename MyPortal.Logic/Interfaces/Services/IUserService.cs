@@ -17,7 +17,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task RemoveFromRoles(Guid userId, params Guid[] roleIds);
         Task SetPassword(Guid userId, string newPassword);
         Task<LoginResult> Login(LoginModel login);
-        Task<bool> UserExists(string username);
+        Task<bool> UsernameExists(string username);
         Task SetUserEnabled(Guid userId, bool enabled);
         Task<UserModel> GetUserById(Guid userId);
         Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal);

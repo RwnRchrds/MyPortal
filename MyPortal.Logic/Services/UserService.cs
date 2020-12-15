@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,7 +49,7 @@ namespace MyPortal.Logic.Services
         {
             foreach (var request in createUserRequests)
             {
-                if (await UserExists(request.Username))
+                if (await UsernameExists(request.Username))
                 {
                     throw new LogicException("Username is already in use.");
                 }
@@ -68,6 +69,39 @@ namespace MyPortal.Logic.Services
                 {
                     throw new Exception(result.Errors.ToString());
                 }
+            }
+        }
+
+        public async Task UpdateUser(params UpdateUserModel[] updateUserRequests)
+        {
+            foreach (var updateUserRequest in updateUserRequests)
+            {
+                var user = await _userManager.FindByIdAsync(updateUserRequest.Id.ToString());
+
+                if (user == null)
+                {
+                    throw new NotFoundException("User not found.");
+                }
+
+                user.PersonId = updateUserRequest.PersonId;
+
+                await _userManager.UpdateAsync(user);
+
+                var selectedRoles = new List<Role>();
+
+                var existingRoleNames = await _userManager.GetRolesAsync(user);
+
+                foreach (var roleId in updateUserRequest.RoleIds)
+                {
+                    selectedRoles.Add(await _roleManager.FindByIdAsync(roleId.ToString()));
+                }
+
+                var rolesToRemove = existingRoleNames.Where(r => selectedRoles.All(s => s.Name != r));
+
+                var rolesToAdd = selectedRoles.Where(s => existingRoleNames.All(r => r != s.Name)).Select(x => x.Name);
+
+                await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+                await _userManager.AddToRolesAsync(user, rolesToAdd);
             }
         }
 
@@ -146,7 +180,25 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<bool> UserExists(string username)
+        public async Task<IEnumerable<RoleModel>> GetUserRoles(Guid userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            var roleNames = await _userManager.GetRolesAsync(user);
+
+            var roles = new List<RoleModel>();
+
+            foreach (var roleName in roleNames)
+            {
+                var role = await _roleManager.FindByNameAsync(roleName);
+                
+                roles.Add(BusinessMapper.Map<RoleModel>(role));
+            }
+
+            return roles;
+        }
+
+        public async Task<bool> UsernameExists(string username)
         {
             return await _userManager.Users.AnyAsync(x => x.UserName == username.ToLower());
         }

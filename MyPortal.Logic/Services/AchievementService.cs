@@ -15,6 +15,7 @@ using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour;
+using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -104,18 +105,18 @@ namespace MyPortal.Logic.Services
             await _achievementRepository.SaveChanges();
         }
 
-        public async Task Update(params AchievementModel[] requests)
+        public async Task Update(params UpdateAchievementModel[] requests)
         {
             foreach (var request in requests)
             {
-                await AcademicYearModel.CheckLock(_academicYearRepository, request.AcademicYearId);
-                
                 var achievementInDb = await _achievementRepository.GetByIdWithTracking(request.Id);
 
                 if (achievementInDb == null)
                 {
                     throw new NotFoundException("Achievement not found.");
                 }
+
+                await AcademicYearModel.CheckLock(_academicYearRepository, achievementInDb.AcademicYearId);
 
                 achievementInDb.AchievementTypeId = request.AchievementTypeId;
                 achievementInDb.LocationId = request.LocationId;

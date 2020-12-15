@@ -93,11 +93,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                var user = await UserService.GetUserByPrincipal(User);
-
-                var request = new AchievementModel(model, user.Id);
-
-                await _achievementService.Update(request);
+                await _achievementService.Update(model);
 
                 return Ok("Achievement updated.");
             }, Permissions.Behaviour.Achievements.EditAchievements);
