@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>MyPortalDb</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{1341b5f9-d401-498c-aa58-feab1446b228}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql110DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>MyPortalDb</RootNamespace>
+    <AssemblyName>MyPortalDb</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Scripts" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Script.SeedSystemData.sql" />
+    <PostDeploy Include="Scripts\Script.PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\RoomClosures.sql" />
+    <Build Include="dbo\Tables\AttendanceCodes.sql" />
+    <Build Include="dbo\Tables\Ethnicities.sql" />
+    <Build Include="dbo\Tables\BillCharges.sql" />
+    <Build Include="dbo\Tables\Documents.sql" />
+    <Build Include="dbo\Tables\Comments.sql" />
+    <Build Include="dbo\Tables\ExamAssessmentModes.sql" />
+    <Build Include="dbo\Tables\AddressPeople.sql" />
+    <Build Include="dbo\Tables\ActivityMemberships.sql" />
+    <Build Include="dbo\Tables\BillDiscount.sql" />
+    <Build Include="dbo\Tables\ExamBoards.sql" />
+    <Build Include="dbo\Tables\CommunicationLogs.sql" />
+    <Build Include="dbo\Tables\Tasks.sql" />
+    <Build Include="dbo\Tables\Agents.sql" />
+    <Build Include="dbo\Tables\ExamQualifications.sql" />
+    <Build Include="dbo\Tables\AttendanceMarks.sql" />
+    <Build Include="dbo\Tables\CurriculumGroups.sql" />
+    <Build Include="dbo\Tables\BillItems.sql" />
+    <Build Include="dbo\Tables\ExamSessions.sql" />
+    <Build Include="dbo\Tables\Contacts.sql" />
+    <Build Include="dbo\Tables\UserClaims.sql" />
+    <Build Include="dbo\Tables\CurriculumBands.sql" />
+    <Build Include="dbo\Tables\ExamSpecialArrangements.sql" />
+    <Build Include="dbo\Tables\ExamCandidateSeries.sql" />
+    <Build Include="dbo\Tables\BasketItems.sql" />
+    <Build Include="dbo\Tables\UserLogins.sql" />
+    <Build Include="dbo\Tables\EmailAddresses.sql" />
+    <Build Include="dbo\Tables\ExclusionReasons.sql" />
+    <Build Include="dbo\Tables\DiaryEventTemplates.sql" />
+    <Build Include="dbo\Tables\UserRefreshTokens.sql" />
+    <Build Include="dbo\Tables\ExamCandidateSpecialArrangements.sql" />
+    <Build Include="dbo\Tables\ExclusionTypes.sql" />
+    <Build Include="dbo\Tables\Bills.sql" />
+    <Build Include="dbo\Tables\PersonConditions.sql" />
+    <Build Include="dbo\Tables\Agencies.sql" />
+    <Build Include="dbo\Tables\GovernanceTypes.sql" />
+    <Build Include="dbo\Tables\UserRoles.sql" />
+    <Build Include="dbo\Tables\CurriculumBandMemberships.sql" />
+    <Build Include="dbo\Tables\ExamEnrolments.sql" />
+    <Build Include="dbo\Tables\GradeSets.sql" />
+    <Build Include="dbo\Tables\PersonDietaryRequirements.sql" />
+    <Build Include="dbo\Tables\UserTokens.sql" />
+    <Build Include="dbo\Tables\HomeworkItems.sql" />
+    <Build Include="dbo\Tables\IncidentTypes.sql" />
+    <Build Include="dbo\Tables\CurriculumGroupMemberships.sql" />
+    <Build Include="dbo\Tables\ExamSeatAllocations.sql" />
+    <Build Include="dbo\Tables\ExamAssessmentAspects.sql" />
+    <Build Include="dbo\Tables\PhoneNumbers.sql" />
+    <Build Include="dbo\Tables\IntakeTypes.sql" />
+    <Build Include="dbo\Tables\ChargeDiscounts.sql" />
+    <Build Include="dbo\Tables\ExamCandidate.sql" />
+    <Build Include="dbo\Tables\LessonPlanTemplates.sql" />
+    <Build Include="dbo\Tables\IncidentDetentions.sql" />
+    <Build Include="dbo\Tables\ExamComponents.sql" />
+    <Build Include="dbo\Tables\Schools.sql" />
+    <Build Include="dbo\Tables\ExamAssessments.sql" />
+    <Build Include="dbo\Tables\LocalAuthorities.sql" />
+    <Build Include="dbo\Tables\GiftedTalentedStudents.sql" />
+    <Build Include="dbo\Tables\ReportCardSubmissions.sql" />
+    <Build Include="dbo\Tables\Locations.sql" />
+    <Build Include="dbo\Tables\Aspects.sql" />
+    <Build Include="dbo\Tables\HomeworkSubmissions.sql" />
+    <Build Include="dbo\Tables\ExamElements.sql" />
+    <Build Include="dbo\Tables\LogNoteTypes.sql" />
+    <Build Include="dbo\Tables\StaffMembers.sql" />
+    <Build Include="dbo\Tables\ExamQualificationLevels.sql" />
+    <Build Include="dbo\Tables\MarksheetTemplates.sql" />
+    <Build Include="dbo\Tables\ReportCardTargets.sql" />
+    <Build Include="dbo\Tables\Courses.sql" />
+    <Build Include="dbo\Tables\MedicalConditions.sql" />
+    <Build Include="dbo\Tables\Incidents.sql" />
+    <Build Include="dbo\Tables\Users.sql" />
+    <Build Include="dbo\Tables\Grades.sql" />
+    <Build Include="dbo\Tables\__EFMigrationsHistory.sql" />
+    <Build Include="dbo\Tables\SubjectStaffMembers.sql" />
+    <Build Include="dbo\Tables\ReportCardTargetSubmissions.sql" />
+    <Build Include="dbo\Tables\ObservationOutcomes.sql" />
+    <Build Include="dbo\Tables\ExamSeries.sql" />
+    <Build Include="dbo\Tables\AcademicYears.sql" />
+    <Build Include="dbo\Tables\Rooms.sql" />
+    <Build Include="dbo\Tables\PhoneNumberTypes.sql" />
+    <Build Include="dbo\Tables\AchievementOutcomes.sql" />
+    <Build Include="dbo\Tables\RegGroups.sql" />
+    <Build Include="dbo\Tables\ExamBaseElements.sql" />
+    <Build Include="dbo\Tables\Photos.sql" />
+    <Build Include="dbo\Tables\People.sql" />
+    <Build Include="dbo\Tables\LogNotes.sql" />
+    <Build Include="dbo\Tables\AchievementTypes.sql" />
+    <Build Include="dbo\Tables\ProductTypes.sql" />
+    <Build Include="dbo\Tables\Activities.sql" />
+    <Build Include="dbo\Tables\Files.sql" />
+    <Build Include="dbo\Tables\Subjects.sql" />
+    <Build Include="dbo\Tables\ResultSets.sql" />
+    <Build Include="dbo\Tables\ExamResultEmbargoes.sql" />
+    <Build Include="dbo\Tables\Addresses.sql" />
+    <Build Include="dbo\Tables\ExamComponentSittings.sql" />
+    <Build Include="dbo\Tables\Roles.sql" />
+    <Build Include="dbo\Tables\MedicalEvents.sql" />
+    <Build Include="dbo\Tables\RolePermissions.sql" />
+    <Build Include="dbo\Tables\AgencyTypes.sql" />
+    <Build Include="dbo\Tables\ExamSeasons.sql" />
+    <Build Include="dbo\Tables\RoomClosureReasons.sql" />
+    <Build Include="dbo\Tables\AgentRelationshipTypes.sql" />
+    <Build Include="dbo\Tables\ExamElementComponents.sql" />
+    <Build Include="dbo\Tables\ProductDiscounts.sql" />
+    <Build Include="dbo\Tables\SchoolPhases.sql" />
+    <Build Include="dbo\Tables\ReportCards.sql" />
+    <Build Include="dbo\Tables\RoleClaims.sql" />
+    <Build Include="dbo\Tables\AspectTypes.sql" />
+    <Build Include="dbo\Tables\SchoolTypes.sql" />
+    <Build Include="dbo\Tables\MarksheetTemplateGroups.sql" />
+    <Build Include="dbo\Tables\Classes.sql" />
+    <Build Include="dbo\Tables\ActivityEvent.sql" />
+    <Build Include="dbo\Tables\Results.sql" />
+    <Build Include="dbo\Tables\AttendanceCodeMeanings.sql" />
+    <Build Include="dbo\Tables\SenEventTypes.sql" />
+    <Build Include="dbo\Tables\BehaviourOutcomes.sql" />
+    <Build Include="dbo\Tables\SubjectCodes.sql" />
+    <Build Include="dbo\Tables\SenProvisionTypes.sql" />
+    <Build Include="dbo\Tables\DiaryEventAttendees.sql" />
+    <Build Include="dbo\Tables\BehaviourStatus.sql" />
+    <Build Include="dbo\Tables\ExamAwards.sql" />
+    <Build Include="dbo\Tables\SenReviewTypes.sql" />
+    <Build Include="dbo\Tables\SenEvents.sql" />
+    <Build Include="dbo\Tables\Permissions.sql" />
+    <Build Include="dbo\Tables\BehaviourTargets.sql" />
+    <Build Include="dbo\Tables\SenStatus.sql" />
+    <Build Include="dbo\Tables\ExamRoomSeats.sql" />
+    <Build Include="dbo\Tables\Reports.sql" />
+    <Build Include="dbo\Tables\SenProvisions.sql" />
+    <Build Include="dbo\Tables\Charges.sql" />
+    <Build Include="dbo\Tables\StudyTopics.sql" />
+    <Build Include="dbo\Tables\StaffAbsenceTypes.sql" />
+    <Build Include="dbo\Tables\ActivitySupervisors.sql" />
+    <Build Include="dbo\Tables\CommentBanks.sql" />
+    <Build Include="dbo\Tables\Products.sql" />
+    <Build Include="dbo\Tables\StaffIllnessTypes.sql" />
+    <Build Include="dbo\Tables\Students.sql" />
+    <Build Include="dbo\Tables\SenReviews.sql" />
+    <Build Include="dbo\Tables\CommunicationTypes.sql" />
+    <Build Include="dbo\Tables\StudentGroups.sql" />
+    <Build Include="dbo\Tables\Detentions.sql" />
+    <Build Include="dbo\Tables\AttendancePeriods.sql" />
+    <Build Include="dbo\Tables\ContactRelationshipTypes.sql" />
+    <Build Include="dbo\Tables\SubjectCodeSets.sql" />
+    <Build Include="dbo\Tables\StudentAgentRelationships.sql" />
+    <Build Include="dbo\Tables\CurriculumBlocks.sql" />
+    <Build Include="dbo\Tables\Sessions.sql" />
+    <Build Include="dbo\Tables\AttendanceWeeks.sql" />
+    <Build Include="dbo\Tables\SubjectStaffMemberRoles.sql" />
+    <Build Include="dbo\Tables\Houses.sql" />
+    <Build Include="dbo\Tables\CurriculumYearGroups.sql" />
+    <Build Include="dbo\Tables\SystemAreas.sql" />
+    <Build Include="dbo\Tables\StudentCharges.sql" />
+    <Build Include="dbo\Tables\CurriculumBandBlockAssignments.sql" />
+    <Build Include="dbo\Tables\Observations.sql" />
+    <Build Include="dbo\Tables\DetentionTypes.sql" />
+    <Build Include="dbo\Tables\ExamAwardElements.sql" />
+    <Build Include="dbo\Tables\SystemSettings.sql" />
+    <Build Include="dbo\Tables\StudentContactRelationships.sql" />
+    <Build Include="dbo\Tables\DiaryEventAttendeeResponses.sql" />
+    <Build Include="dbo\Tables\ExamBaseComponents.sql" />
+    <Build Include="dbo\Tables\TaskTypes.sql" />
+    <Build Include="dbo\Tables\StaffAbsences.sql" />
+    <Build Include="dbo\Tables\DiaryEventTypes.sql" />
+    <Build Include="dbo\Tables\ExamAwardSeries.sql" />
+    <Build Include="dbo\Tables\TrainingCertificateStatus.sql" />
+    <Build Include="dbo\Tables\MarksheetColumns.sql" />
+    <Build Include="dbo\Tables\StudentDiscounts.sql" />
+    <Build Include="dbo\Tables\DietaryRequirements.sql" />
+    <Build Include="dbo\Tables\TrainingCourses.sql" />
+    <Build Include="dbo\Tables\LessonPlans.sql" />
+    <Build Include="dbo\Tables\TrainingCertificates.sql" />
+    <Build Include="dbo\Tables\Directories.sql" />
+    <Build Include="dbo\Tables\VatRates.sql" />
+    <Build Include="dbo\Tables\CoverArrangements.sql" />
+    <Build Include="dbo\Tables\DiaryEvents.sql" />
+    <Build Include="dbo\Tables\AcademicTerms.sql" />
+    <Build Include="dbo\Tables\Discounts.sql" />
+    <Build Include="dbo\Tables\AccountTransactions.sql" />
+    <Build Include="dbo\Tables\YearGroups.sql" />
+    <Build Include="dbo\Tables\DocumentTypes.sql" />
+    <Build Include="dbo\Tables\ExamRooms.sql" />
+    <Build Include="dbo\Tables\AttendanceWeekPatterns.sql" />
+    <Build Include="dbo\Tables\BillAccountTransactions.sql" />
+    <Build Include="dbo\Tables\Achievements.sql" />
+    <Build Include="dbo\Tables\EmailAddressTypes.sql" />
+    <Build Include="dbo\Tables\Bulletins.sql" />
+  </ItemGroup>
+</Project>
