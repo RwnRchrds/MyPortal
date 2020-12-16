@@ -52,7 +52,7 @@ export class AuthService {
     }));
   }
 
-  private getDecodedToken(token: string | undefined): any {
+  private getDecodedToken(token: string): any {
     if (!!token)
     {
       return JSON.parse(atob(token.split('.')[1]));

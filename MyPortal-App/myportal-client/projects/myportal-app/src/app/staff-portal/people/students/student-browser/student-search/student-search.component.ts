@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { AlertService } from './../../../../../_services/alert.service';
+import { AlertService } from '../../../../../_services/alert.service';
 import { AppService } from '../../../../../_services/app.service';
 import { Component, OnInit } from '@angular/core';
 import {StudentDataGridModel, StudentsService, YearGroupsService,
