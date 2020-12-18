@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Requests.Admin;
 using MyPortal.Logic.Models.Requests.Admin.Users;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -25,15 +19,18 @@ namespace MyPortalWeb.Controllers.Api
         {
         }
 
-        /// <summary>
-        /// Create a new user.
-        /// </summary>
-        /// <response code="200">The user was created successfully.</response>
-        /// <response code="401">The current user is not authenticated.</response>
-        /// <response code="403">The current user does not have permission to edit users.</response>
+        private async Task<bool> AuthoriseUser(Guid requestedUserId, bool requireEdit = false)
+        {
+            // Users do not require extra permission to access resources related to themselves
+            return await UserHasPermission(requireEdit
+                       ? Permissions.System.Users.EditUsers
+                       : Permissions.System.Users.ViewUsers) ||
+                   (await GetLoggedInUser()).Id == requestedUserId;
+        }
+
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> CreateUser(CreateUserModel model)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserModel model)
         {
             return await ProcessAsync(async () =>
             {
@@ -43,15 +40,67 @@ namespace MyPortalWeb.Controllers.Api
             }, Permissions.System.Users.EditUsers);
         }
 
-        /// <summary>
-        /// Delete a user.
-        /// </summary>
-        /// <response code="200">The user was deleted successfully.</response>
-        /// <response code="401">The current user is not authenticated.</response>
-        /// <response code="403">The current user does not have permission to edit users.</response>
+        [HttpGet]
+        [Route("get")]
+        public async Task<IActionResult> GetUsers([FromQuery] string username)
+        {
+            return await ProcessAsync(async () =>
+            {
+                var users = await UserService.GetUsers(username);
+
+                return Ok(users);
+            }, Permissions.System.Users.ViewUsers);
+        }
+
+        [HttpGet]
+        [Route("get/id/{userId}")]
+        public async Task<IActionResult> GetUserById([FromRoute] Guid userId)
+        {
+            return await ProcessAsync(async () =>
+            {
+                if (await AuthoriseUser(userId))
+                {
+                    var user = await UserService.GetUserById(userId);
+
+                    return Ok(user);
+                }
+
+                return Forbid();
+            });
+        }
+
+        [HttpGet]
+        [Route("roles/get/{userId}")]
+        public async Task<IActionResult> GetUserRoles([FromRoute] Guid userId)
+        {
+            return await ProcessAsync(async () =>
+            {
+                if (await AuthoriseUser(userId))
+                {
+                    var roles = await UserService.GetUserRoles(userId);
+
+                    return Ok(roles);
+                }
+
+                return Forbid();
+            });
+        }
+
+        [HttpPut]
+        [Route("update")]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserModel model)
+        {
+            return await ProcessAsync(async () =>
+            {
+                await UserService.UpdateUser(model);
+
+                return Ok("User updated.");
+            }, Permissions.System.Users.EditUsers);
+        }
+
         [HttpDelete]
-        [Route("delete")]
-        public async Task<IActionResult> DeleteUser(Guid userId)
+        [Route("delete/{userId}")]
+        public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
         {
             return await ProcessAsync(async () =>
             {
@@ -61,30 +110,23 @@ namespace MyPortalWeb.Controllers.Api
             }, Permissions.System.Users.EditUsers);
         }
 
-        /// <summary>
-        /// Set a user's password.
-        /// </summary>
-        /// <response code="200">The user's password was updated successfully.</response>
-        /// <response code="401">The current user is not authenticated.</response>
-        /// <response code="403">The current user does not have permission to edit users.</response>
         [HttpPut]
         [Route("setPassword")]
         public async Task<IActionResult> SetPassword(SetPasswordModel request)
         {
             return await ProcessAsync(async () =>
             {
-                await UserService.SetPassword(request.UserId, request.NewPassword);
+                if (await AuthoriseUser(request.UserId, true))
+                {
+                    await UserService.SetPassword(request.UserId, request.NewPassword);
 
-                return Ok("Password updated.");
-            }, Permissions.System.Users.EditUsers);
+                    return Ok("Password updated.");
+                }
+
+                return Forbid();
+            });
         }
 
-        /// <summary>
-        /// Set whether a user is enabled/disabled.
-        /// </summary>
-        /// <response code="200">The user was enabled/disabled successfully.</response>
-        /// <response code="401">The current user is not authenticated.</response>
-        /// <response code="403">The current user does not have permission to edit users.</response>
         [HttpPut]
         [Route("setEnabled")]
         public async Task<IActionResult> SetEnabled(SetUserEnabledModel model)

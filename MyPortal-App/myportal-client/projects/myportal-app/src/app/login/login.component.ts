@@ -1,7 +1,7 @@
 import { AuthService } from '../_services/auth.service';
 import { ScriptService } from '../_services/script.service';
 import { Component, OnInit } from '@angular/core';
-import { SchoolsService } from 'myportal-api';
+import {LoginModel, SchoolsService} from 'myportal-api';
 import {AppService} from '../_services/app.service';
 
 @Component({
@@ -11,7 +11,7 @@ import {AppService} from '../_services/app.service';
 })
 export class LoginComponent implements OnInit {
 
-  loginModel: any = {};
+  loginModel: LoginModel;
 
   loginError = '';
 

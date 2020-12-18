@@ -40,7 +40,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var achievement = await _achievementService.GetById(achievementId);
 
-                if (await AuthenticateStudent(achievement.StudentId))
+                if (await AuthoriseStudent(achievement.StudentId))
                 {
                     return Ok(achievement);
                 }
@@ -56,7 +56,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                if (await AuthenticateStudent(studentId))
+                if (await AuthoriseStudent(studentId))
                 {
                     var fromAcademicYearId = academicYearId ?? await GetCurrentAcademicYearId();
 

@@ -94,7 +94,7 @@ namespace MyPortal.Logic.Services
             await _incidentRepository.SaveChanges();
         }
 
-        public async Task Update(params IncidentModel[] incidents)
+        public async Task Update(params UpdateIncidentModel[] incidents)
         {
             foreach (var incidentModel in incidents)
             {

@@ -36,7 +36,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var logNote = await _logNoteService.GetById(logNoteId);
 
-                if (await AuthenticateStudent(logNote.StudentId))
+                if (await AuthoriseStudent(logNote.StudentId))
                 {
                     return Ok(logNote);
                 }
@@ -65,7 +65,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                if (await AuthenticateStudent(studentId))
+                if (await AuthoriseStudent(studentId))
                 {
                     var logNotes = await _logNoteService.GetByStudent(studentId, academicYearId);
 

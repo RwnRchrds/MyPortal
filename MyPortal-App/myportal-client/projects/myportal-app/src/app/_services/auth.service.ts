@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from './../_models/user';
 import {Observable, ReplaySubject} from 'rxjs';
 import {map, take} from 'rxjs/operators';
-import { AuthenticationService, TokenModel } from 'myportal-api';
+import { AuthenticationService, TokenModel, UsersService } from 'myportal-api';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class AuthService {
 
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private authService: AuthenticationService) {
+  constructor(private authService: AuthenticationService, private userService: UsersService) {
   }
 
   login(model: any): any {

@@ -21,7 +21,7 @@ export interface AchievementModel {
     academicYearId?: string;
     achievementTypeId: string;
     studentId?: string;
-    locationId: string;
+    locationId?: string;
     recordedById?: string;
     outcomeId?: string;
     createdDate?: Date;

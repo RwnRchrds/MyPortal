@@ -39,7 +39,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var incident = await _incidentService.GetById(incidentId);
 
-                if (await AuthenticateStudent(incident.StudentId))
+                if (await AuthoriseStudent(incident.StudentId))
                 {
                     return Ok(incident);
                 }
@@ -55,7 +55,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                if (await AuthenticateStudent(studentId))
+                if (await AuthoriseStudent(studentId))
                 {
                     var academicYearId = await GetCurrentAcademicYearId();
 
@@ -106,19 +106,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var user = await UserService.GetUserByPrincipal(User);
 
-                var incident = new IncidentModel
-                {
-                    AcademicYearId = model.AcademicYearId,
-                    StudentId = model.StudentId,
-                    BehaviourTypeId = model.BehaviourTypeId,
-                    Comments = model.Comments,
-                    LocationId = model.LocationId,
-                    OutcomeId = model.OutcomeId,
-                    Points = model.Points,
-                    StatusId = model.StatusId
-                };
-
-                await _incidentService.Update(incident);
+                await _incidentService.Update(model);
 
                 return Ok("Incident updated.");
             }, Permissions.Behaviour.Incidents.EditIncidents);

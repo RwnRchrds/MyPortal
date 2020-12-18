@@ -178,7 +178,7 @@ namespace MyPortalWeb.Controllers.Api
                 {
                     var student = await StudentService.GetByPersonId(personId);
 
-                    return await AuthenticateStudent(student.Id);
+                    return await AuthoriseStudent(student.Id);
                 }
 
                 if (User.IsType(UserTypes.Staff))
@@ -189,7 +189,7 @@ namespace MyPortalWeb.Controllers.Api
 
             else if (taskPersonTypes.Employee)
             {
-                if (await HasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
+                if (await UserHasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
                 {
                     return true;
                 }
@@ -204,7 +204,7 @@ namespace MyPortalWeb.Controllers.Api
                         return true;
                     }
 
-                    return await HasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
+                    return await UserHasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
                            await _staffMemberService.IsLineManager(taskStaffMember.Id, userStaffMember.Id);
                 }
             }
@@ -233,7 +233,7 @@ namespace MyPortalWeb.Controllers.Api
 
             if (taskPersonTypes.Employee)
             {
-                if (await HasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
+                if (await UserHasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
                 {
                     return true;
                 }
@@ -243,7 +243,7 @@ namespace MyPortalWeb.Controllers.Api
                 var userStaffMember = await _staffMemberService.GetByUserId(userId, false);
 
                 if (userStaffMember != null && taskStaffMember != null &&
-                    await HasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
+                    await UserHasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
                     await _staffMemberService.IsLineManager(taskStaffMember.Id, userStaffMember.Id))
                 {
                     return true;

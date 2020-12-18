@@ -45,6 +45,20 @@ namespace MyPortal.Logic.Services
             _roleManager.Dispose();
         }
 
+        public async Task<IEnumerable<UserModel>> GetUsers(string usernameSearch)
+        {
+            var query = _userManager.Users;
+
+            if (!string.IsNullOrWhiteSpace(usernameSearch))
+            {
+                query = query.Where(u => u.UserName.StartsWith(usernameSearch, StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            var users = await query.ToListAsync();
+
+            return users.Select(BusinessMapper.Map<UserModel>);
+        }
+
         public async Task CreateUser(params CreateUserModel[] createUserRequests)
         {
             foreach (var request in createUserRequests)
@@ -70,6 +84,34 @@ namespace MyPortal.Logic.Services
                     throw new Exception(result.Errors.ToString());
                 }
             }
+        }
+
+        public async Task LinkPerson(Guid userId, Guid personId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null)
+            {
+                throw new NotFoundException("User not found.");
+            }
+
+            user.PersonId = personId;
+
+            await _userManager.UpdateAsync(user);
+        }
+
+        public async Task UnlinkPerson(Guid userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null)
+            {
+                throw new NotFoundException("User not found.");
+            }
+
+            user.PersonId = null;
+
+            await _userManager.UpdateAsync(user);
         }
 
         public async Task UpdateUser(params UpdateUserModel[] updateUserRequests)

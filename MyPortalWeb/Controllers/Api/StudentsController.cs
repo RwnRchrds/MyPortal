@@ -55,7 +55,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                if (await AuthenticateStudent(studentId))
+                if (await AuthoriseStudent(studentId))
                 {
                     var student = await StudentService.GetById(studentId);
 

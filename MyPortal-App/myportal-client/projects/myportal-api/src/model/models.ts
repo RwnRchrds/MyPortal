@@ -61,5 +61,6 @@ export * from './updateDirectoryModel';
 export * from './updateDocumentModel';
 export * from './updateIncidentModel';
 export * from './updateLogNoteModel';
+export * from './updateUserModel';
 export * from './userModel';
 export * from './yearGroupModel';

@@ -10,11 +10,8 @@
  * Do not edit the class manually.
  */
 
-export interface UpdateAchievementModel { 
+export interface UpdateUserModel { 
     id?: string;
-    achievementTypeId?: string;
-    locationId?: string;
-    outcomeId?: string;
-    comments?: string;
-    points?: number;
+    personId?: string;
+    roleIds?: Array<string>;
 }

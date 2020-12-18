@@ -10,6 +10,7 @@ using MyPortal.Logic.Caching;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Entity;
 
 namespace MyPortalWeb.Controllers.BaseControllers
 {
@@ -37,7 +38,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
 
         protected async Task<IActionResult> ProcessAsync(Func<Task<IActionResult>> method, params Guid[] permissionsRequired)
         {
-            if (await HasPermission(permissionsRequired))
+            if (await UserHasPermission(permissionsRequired))
             {
                 try
                 {
@@ -52,7 +53,12 @@ namespace MyPortalWeb.Controllers.BaseControllers
             return Forbid();
         }
 
-        protected async Task<bool> HasPermission(params Guid[] permissionIds)
+        protected async Task<UserModel> GetLoggedInUser()
+        {
+            return await UserService.GetUserByPrincipal(User);
+        }
+
+        protected async Task<bool> UserHasPermission(params Guid[] permissionIds)
         {
             if (!permissionIds.Any())
             {
