@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Admin;
 using MyPortal.Logic.Models.Requests.Admin.Roles;
 using Task = System.Threading.Tasks.Task;
 
@@ -81,7 +76,7 @@ namespace MyPortal.Logic.Services
             return root;
         }
 
-        public async Task SetPermissions(Guid roleId, params Guid[] permIds)
+        private async Task SetPermissions(Guid roleId, params Guid[] permIds)
         {
             // Add new permissions from list
             var existingPermissions = (await _rolePermissionRepository.GetByRole(roleId)).ToList();
@@ -106,7 +101,7 @@ namespace MyPortal.Logic.Services
             await _rolePermissionRepository.SaveChanges();
         }
 
-        public async Task CreateRoles(params CreateRoleRequest[] requests)
+        public async Task Create(params CreateRoleModel[] requests)
         {
             foreach (var request in requests)
             {
@@ -127,7 +122,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task UpdateRoles(params UpdateRoleRequest[] requests)
+        public async Task Update(params UpdateRoleModel[] requests)
         {
             foreach (var request in requests)
             {
@@ -148,11 +143,45 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<IEnumerable<RoleModel>> GetRoles()
+        public async Task Delete(params Guid[] roleIds)
         {
-            var roles = await _roleManager.Roles.ToListAsync();
+            foreach (var roleId in roleIds)
+            {
+                var roleInDb = await _roleManager.FindByIdAsync(roleId.ToString());
+
+                if (roleInDb.System)
+                {
+                    throw new LogicException("Cannot delete a system role.");
+                }
+
+                await _roleManager.DeleteAsync(roleInDb);
+            }
+        }
+
+        public async Task<IEnumerable<RoleModel>> GetRoles(string roleName)
+        {
+            var query = _roleManager.Roles;
+
+            if (!string.IsNullOrWhiteSpace(roleName))
+            {
+                query = query.Where(r => r.Description.StartsWith(roleName));
+            }
+
+            var roles = await query.ToListAsync();
 
             return roles.Select(BusinessMapper.Map<RoleModel>);
+        }
+
+        public async Task<RoleModel> GetRoleById(Guid roleId)
+        {
+            var role = await _roleManager.FindByIdAsync(roleId.ToString());
+
+            if (role == null)
+            {
+                throw new NotFoundException("Role not found.");
+            }
+
+            return BusinessMapper.Map<RoleModel>(role);
         }
 
         public override void Dispose()

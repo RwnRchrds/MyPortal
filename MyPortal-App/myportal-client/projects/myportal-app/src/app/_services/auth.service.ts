@@ -15,7 +15,7 @@ export class AuthService {
 
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private authService: AuthenticationService, private userService: UsersService) {
+  constructor(private authService: AuthenticationService) {
   }
 
   login(model: any): any {

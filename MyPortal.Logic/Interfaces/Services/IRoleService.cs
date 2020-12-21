@@ -1,15 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Requests.Admin.Roles;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
     public interface IRoleService : IService
     {
+        Task Create(params CreateRoleModel[] model);
+        Task Update(params UpdateRoleModel[] model);
+        Task Delete(params Guid[] roleIds);
         Task<TreeNode> GetPermissionsTree(Guid roleId);
-        Task SetPermissions(Guid roleId, params Guid[] permIds);
-        Task<IEnumerable<RoleModel>> GetRoles();
+        Task<IEnumerable<RoleModel>> GetRoles(string roleName);
+        Task<RoleModel> GetRoleById(Guid roleId);
     }
 }

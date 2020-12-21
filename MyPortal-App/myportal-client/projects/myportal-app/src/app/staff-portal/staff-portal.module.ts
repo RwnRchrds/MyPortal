@@ -13,6 +13,8 @@ import { StaffHomepageComponent } from './staff-homepage/staff-homepage.componen
 import { StaffPortalComponent } from './staff-portal.component';
 import { StaffSidebarComponent } from './staff-sidebar/staff-sidebar.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { UserBrowserComponent } from './settings/users/user-browser/user-browser.component';
+import { UserSearchComponent } from './settings/users/user-browser/user-search/user-search.component';
 
 @NgModule({
   imports: [
@@ -28,7 +30,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     StaffSidebarComponent,
     StaffHomepageComponent,
     StudentBrowserComponent,
-    StudentSearchComponent
+    StudentSearchComponent,
+    UserBrowserComponent,
+    UserSearchComponent
   ],
   exports: [
     StaffPortalComponent,

@@ -8,15 +8,11 @@ import { Component, OnInit, Renderer2, ElementRef, OnDestroy } from '@angular/co
 })
 export class StudentBrowserComponent extends PortalViewComponent implements OnInit, OnDestroy {
 
-  constructor(renderer: Renderer2, hostElement: ElementRef) {
+  constructor(protected renderer: Renderer2, protected hostElement: ElementRef) {
     super(renderer, hostElement);
    }
 
   ngOnInit(): void {
-    
-  }
 
-  ngOnDestroy(): void {
-    super.removeStyles();
   }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Models;
@@ -139,6 +140,7 @@ namespace MyPortal.Logic.Helpers
             {typeof(ReportCardTargetSubmission), typeof(ReportCardTargetSubmissionModel)},
             {typeof(Result), typeof(ResultModel)},
             {typeof(ResultSet), typeof(ResultSetModel)},
+            {typeof(Role), typeof(RoleModel)},
             {typeof(Room), typeof(RoomModel)},
             {typeof(RoomClosure), typeof(RoomClosureModel)},
             {typeof(RoomClosureReason), typeof(RoomClosureReasonModel)},
