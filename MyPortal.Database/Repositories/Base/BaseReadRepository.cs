@@ -2,21 +2,17 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using SqlKata;
 using SqlKata.Compilers;
-using Task = System.Threading.Tasks.Task;
 
-namespace MyPortal.Database.Repositories
+namespace MyPortal.Database.Repositories.Base
 {
     public abstract class BaseReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : class, IEntity
     {

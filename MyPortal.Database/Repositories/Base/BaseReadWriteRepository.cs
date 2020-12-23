@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.BaseTypes;
-using MyPortal.Database.Constants;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using Task = System.Threading.Tasks.Task;
 
-namespace MyPortal.Database.Repositories
+namespace MyPortal.Database.Repositories.Base
 {
     public abstract class BaseReadWriteRepository<TEntity> : BaseReadRepository<TEntity>, IReadWriteRepository<TEntity> where TEntity : class, IEntity
     {
@@ -53,7 +47,7 @@ namespace MyPortal.Database.Repositories
             switch (entity)
             {
                 case ISystemEntity systemObject when systemObject.System:
-                    throw new SystemEntityException("This item is protected from deletion.");
+                    throw new SystemEntityException("System entities cannot be deleted.");
                 case ISoftDeleteEntity softDeleteObject:
                     softDeleteObject.Deleted = true;
                     break;
