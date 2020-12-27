@@ -10,7 +10,7 @@ Author: R. Richards
 
 EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all"
 
-MERGE INTO [SystemAreas] AS Target
+MERGE INTO [dbo].[SystemAreas] AS Target
 USING (VALUES
 --Base Areas
 ('3426F5C5-FF48-EA11-AEC3-10604B88AE00', 'Admissions', NULL),
@@ -129,7 +129,7 @@ INSERT (Name, Type, Setting)
 VALUES (Name, Type, Setting);
 
 --[AspNetPermissions]
-MERGE INTO Permissions AS Target
+MERGE INTO [dbo].[Permissions] AS Target
 USING (VALUES
 --Admissions -> Applications
 ('F9F0F415-B47C-4C53-B897-D5964FBC6300', '3426F5C5-FF48-EA11-AEC3-10604B88AE0C', 'View', 'View Applications'),
@@ -373,7 +373,7 @@ DELETE;
 
 --[AspNetRoles]
 
-MERGE INTO Roles AS Target
+MERGE INTO [dbo].[Roles] AS Target
 USING (VALUES
 
 ('719FAA21-AA56-4924-9DB6-3B1344E1E1A6','admast', 'ADMAST', 'Administration Assistant'),
@@ -427,7 +427,7 @@ VALUES (Id, Name, NormalizedName, Description, 1);
 
 --[AspNetRolePermissions]
 
-MERGE INTO RolePermissions AS Target
+MERGE INTO [dbo].[RolePermissions] AS Target
 USING (VALUES
 
 ('719FAA21-AA56-4924-9DB6-3B1344E1E1AC', 'F9F0F415-B47C-4C53-B897-D5964FBC6300'),
@@ -564,7 +564,7 @@ VALUES (RoleId, PermissionId)
 WHEN NOT MATCHED BY SOURCE THEN 
 DELETE;
 
-MERGE INTO [Users] AS Target
+MERGE INTO [dbo].[Users] AS Target
 USING (VALUES
 ('0E22EE12-2269-4297-F666-08D861890F99', 'system', 'SYSTEM', 0, 'AQAAAAEAACcQAAAAECpmszIMBeEAuZU6NPzlW2pVODCv+5K93wUxBvCg406S1PnMH5kqK6Ij4H4yIfcXng==', '7TSHWVR5LEO5O4BBDK7GXTT7I3BVYNRX', '51418c4d-c883-4bdc-a5f4-6ae30be0edb3', 0, 0, 1, 0, GETDATE(), 0, 1)
 )
@@ -575,7 +575,7 @@ WHEN NOT MATCHED THEN
 INSERT (Id, UserName, NormalizedUserName, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, CreatedDate, UserType, Enabled)
 VALUES (Id, UserName, NormalizedUserName, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, CreatedDate, UserType, Enabled);
 
-MERGE INTO [UserRoles] AS Target
+MERGE INTO [dbo].[UserRoles] AS Target
 USING (VALUES
 ('0E22EE12-2269-4297-F666-08D861890F99', '719FAA21-AA56-4924-9DB6-3B1344E1E1AC')
 )
@@ -1637,7 +1637,7 @@ WHEN NOT MATCHED THEN
 INSERT (Id, GradeSetId, Code, Value, Description)
 VALUES (Id, GradeSetId, Code, Value, Description);
 
-MERGE INTO ExamQualifications AS Target
+MERGE INTO [dbo].[ExamQualifications] AS Target
 USING (VALUES
 ('49969747-E1AF-47B2-9577-E1D63E7F3572', 'GCE', 'General Certificate of Education', 1),
 ('49969747-E1AF-47B2-9577-E1D63E7F3573', 'GCEL', 'General Certificate of Education (Legacy)', 1),
@@ -1721,7 +1721,7 @@ WHEN NOT MATCHED THEN
 INSERT (Id, Description, Active, JcQualificationCode)
 VALUES (Id, Description, Active, JcQualificationCode);
 
-MERGE INTO ExamQualificationLevels AS Target
+MERGE INTO [dbo].[ExamQualificationLevels] AS Target
 USING (VALUES
 ('33b8b836-8e6a-4900-a03b-92e92813c942', '49969747-E1AF-47B2-9577-E1D63E7F3572', '11A469CD-FEC7-4A28-85FD-086F2B8982DB', 'A', 'GCE Advanced'),
 ('d5185603-d82d-4c08-8710-fd9bebdc1db5', '49969747-E1AF-47B2-9577-E1D63E7F3572', '11A467CD-FEC7-4A28-85FD-086F2B8982BE', 'ASB', 'GCE Advanced Subsidiary'),
@@ -3024,7 +3024,7 @@ VALUES (Id, Description, Active, Personal, ColourCode, System, Reserved)
 WHEN MATCHED THEN
 UPDATE SET Description = Source.Description, Active = Source.Active, Personal = Source.Personal, ColourCode = Source.ColourCode, System = Source.System, Reserved = Source.Reserved;
 
-MERGE INTO [Ethnicities] AS Target
+MERGE INTO [dbo].[Ethnicities] AS Target
 USING (VALUES
 ('A70481B2-8AD3-4927-863A-E03882CF0307', 'White, British', 'WBRI'),
 ('A70481B2-8AD3-4927-863A-E03882CF0308', 'White, Irish', 'WIRI'),
@@ -3053,7 +3053,7 @@ WHEN NOT MATCHED THEN
 INSERT (Id, Description, Code, Active)
 VALUES (Id, Description, Code, 1);
 
-MERGE INTO [VatRates] AS Target
+MERGE INTO [dbo].[VatRates] AS Target
 USING (VALUES
 ('DBFB7DE3-216E-421F-97FB-B0A802AE9CCB', 'Standard Rate', 1, 20),
 ('DBFB7DE3-216E-421F-97FB-B0A802AE9CCC', 'Reduced Rate', 1, 5),
@@ -3065,7 +3065,7 @@ WHEN NOT MATCHED THEN
 INSERT (Id, Description, Active, Value)
 VALUES (Id, Description, Active, Value);
 
-MERGE INTO SubjectCodeSets AS Target
+MERGE INTO [dbo].[SubjectCodeSets] AS Target
 USING (VALUES
 ('3A5F93CA-E082-4EAA-96D7-C538F723502B','DfE',1),
 ('3A5F93CA-E082-4EAA-96D7-C538F723502C','QCA',1)
@@ -3076,7 +3076,7 @@ WHEN NOT MATCHED THEN
 INSERT (Id, Description, Active)
 VALUES (Id, Description, Active);
 
-MERGE INTO SubjectCodes AS Target
+MERGE INTO [dbo].[SubjectCodes] AS Target
 USING (VALUES
 ('0D17BB9E-BFC4-4B66-B35E-ADCEA7580950', '3A5F93CA-E082-4EAA-96D7-C538F723502B', 'Accountancy', 1, 'ACC'),
 ('0D17BB9E-BFC4-4B66-B35E-ADCEA7580951', '3A5F93CA-E082-4EAA-96D7-C538F723502B', 'Any new GCSE in a vocational subject', 1, 'VNW'),
