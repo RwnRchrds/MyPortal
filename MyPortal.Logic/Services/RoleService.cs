@@ -31,6 +31,13 @@ namespace MyPortal.Logic.Services
             _systemAreaRepository = systemAreaRepository;
         }
 
+        public async Task<IEnumerable<PermissionModel>> GetPermissions(Guid roleId)
+        {
+            var permissions = await _rolePermissionRepository.GetByRole(roleId);
+
+            return permissions.Select(p => BusinessMapper.Map<PermissionModel>(p.Permission));
+        }
+
         public async Task<TreeNode> GetPermissionsTree(Guid roleId)
         {
             var systemAreas = (await _systemAreaRepository.GetAll()).ToList();

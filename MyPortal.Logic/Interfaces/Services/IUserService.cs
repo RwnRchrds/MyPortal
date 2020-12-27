@@ -27,5 +27,6 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal);
         Task<IEnumerable<RoleModel>> GetUserRoles(Guid userId);
         Task<IEnumerable<UserModel>> GetUsers(string usernameSearch);
+        Task<IEnumerable<PermissionModel>> GetPermissions(Guid userId);
     }
 }

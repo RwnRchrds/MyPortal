@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Authentication;
@@ -30,19 +31,28 @@ namespace MyPortal.Logic.Services
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IRolePermissionRepository _rolePermissionRepository;
 
         public UserService(UserManager<User> userManager, RoleManager<Role> roleManager,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager, IRolePermissionRepository rolePermissionRepository)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
+            _rolePermissionRepository = rolePermissionRepository;
         }
 
         public override void Dispose()
         {
             _userManager.Dispose();
             _roleManager.Dispose();
+        }
+
+        public async Task<IEnumerable<PermissionModel>> GetPermissions(Guid userId)
+        {
+            var permissions = await _rolePermissionRepository.GetByUser(userId);
+
+            return permissions.Select(p => BusinessMapper.Map<PermissionModel>(p.Permission));
         }
 
         public async Task<IEnumerable<UserModel>> GetUsers(string usernameSearch)

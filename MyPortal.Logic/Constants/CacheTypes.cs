@@ -6,6 +6,6 @@ namespace MyPortal.Logic.Constants
 {
     public static class CacheTypes
     {
-        public const string RolePermission = "rolePerm";
+        public const string RolePermission = "system.role.permission";
     }
 }

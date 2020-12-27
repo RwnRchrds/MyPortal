@@ -1,12 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using MyPortal.Database.Models;
-using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Requests.Admin;
 using MyPortal.Logic.Models.Requests.Auth;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -41,6 +40,22 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Unauthorized(loginResult.ErrorMessage);
+            });
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("permissions")]
+        [Produces(typeof(IEnumerable<Guid>))]
+        public async Task<IActionResult> GetEffectivePermissions()
+        {
+            return await ProcessAsync(async () =>
+            {
+                var user = await GetLoggedInUser();
+
+                var permissions = await UserService.GetPermissions(user.Id);
+
+                return Ok(permissions.Select(p => p.Id));
             });
         }
 
