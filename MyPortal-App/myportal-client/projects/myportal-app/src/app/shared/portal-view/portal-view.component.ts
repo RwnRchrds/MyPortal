@@ -1,6 +1,9 @@
-import {ElementRef, OnDestroy, Renderer2} from '@angular/core';
+import {Directive, ElementRef, OnDestroy, Renderer2} from '@angular/core';
 
-export abstract class PortalViewComponent implements OnDestroy {
+@Directive({
+
+})
+export abstract class PortalViewDirective implements OnDestroy {
 
   constructor(protected renderer: Renderer2, protected hostElement: ElementRef) {
     this.addStyles();

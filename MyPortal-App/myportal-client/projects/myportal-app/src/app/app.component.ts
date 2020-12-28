@@ -18,11 +18,12 @@ ngOnInit(): void {
 
 setCurrentUser(): void {
   const tokenWrapper: TokenModel = JSON.parse(localStorage.getItem('token'));
+  const permissions: string[] = JSON.parse(localStorage.getItem('perms'));
 
   if (!!tokenWrapper)
   {
     const user = this.authService.getUser(tokenWrapper);
-    this.authService.setCurrentUser(user);
+    this.authService.setCurrentUser(user, permissions);
   }
   else
   {

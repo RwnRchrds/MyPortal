@@ -124,6 +124,7 @@ namespace MyPortal.Logic.Helpers
             {typeof(MedicalEvent), typeof(MedicalEventModel)},
             {typeof(Observation), typeof(ObservationModel)},
             {typeof(ObservationOutcome), typeof(ObservationOutcomeModel)},
+            {typeof(Permission), typeof(PermissionModel)},
             {typeof(Person), typeof(PersonModel)},
             {typeof(PersonCondition), typeof(PersonConditionModel)},
             {typeof(PersonDietaryRequirement), typeof(PersonDietaryRequirementModel)},

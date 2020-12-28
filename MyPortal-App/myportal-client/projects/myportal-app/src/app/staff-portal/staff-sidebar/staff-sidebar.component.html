@@ -42,11 +42,40 @@
           <h4 class="menu-text">{{sidebarTitle}}</h4>
           <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
       </li>
+      <li *ngIf="(menuItems | menuItemFilter:'admissions').length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+        <a href="#" class="menu-link menu-toggle">
+            <span class="svg-icon menu-icon">
+                <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/Design/Bucket.svg-->
+                <i class="fad fa-fw fa-clipboard-check"></i>
+                <!--end::Svg Icon-->
+            </span>
+            <span class="menu-text">Admissions</span>
+            <i class="menu-arrow"></i>
+        </a>
+        <div class="menu-submenu">
+            <i class="menu-arrow"></i>
+            <ul class="menu-subnav">
+              <li class="menu-item menu-item-parent" aria-haspopup="true">
+                  <span class="menu-link">
+                      <span class="menu-text">Admissions</span>
+                  </span>
+              </li>
+              <li *ngFor="let menuItem of (menuItems | menuItemFilter:'admissions')" class="menu-item" aria-haspopup="true">
+                  <a routerLink='{{menuItem.route}}' class="menu-link">
+                      <i class="menu-bullet menu-bullet-dot">
+                          <span></span>
+                      </i>
+                      <span class="menu-text">{{menuItem.label}}</span>
+                  </a>
+              </li>
+            </ul>
+        </div>
+    </li>
       <li *ngIf="(menuItems | menuItemFilter:'assessment').length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
           <a href="#" class="menu-link menu-toggle">
               <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/Design/Bucket.svg-->
-                  <i class="fad fa-fw fa-clipboard-check"></i>
+                  <i class="fad fa-fw fa-tasks"></i>
                   <!--end::Svg Icon-->
               </span>
               <span class="menu-text">Assessment</span>
@@ -65,7 +94,7 @@
                         <i class="menu-bullet menu-bullet-dot">
                             <span></span>
                         </i>
-                        <span class="menu-text">{{menuItem.text}}</span>
+                        <span class="menu-text">{{menuItem.label}}</span>
                     </a>
                 </li>
               </ul>
@@ -94,7 +123,7 @@
                         <i class="menu-bullet menu-bullet-dot">
                             <span></span>
                         </i>
-                        <span class="menu-text">{{menuItem.text}}</span>
+                        <span class="menu-text">{{menuItem.label}}</span>
                     </a>
                 </li>
               </ul>
@@ -123,7 +152,7 @@
                         <i class="menu-bullet menu-bullet-dot">
                             <span></span>
                         </i>
-                        <span class="menu-text">{{menuItem.text}}</span>
+                        <span class="menu-text">{{menuItem.label}}</span>
                     </a>
                 </li>
               </ul>
@@ -152,7 +181,7 @@
                         <i class="menu-bullet menu-bullet-dot">
                             <span></span>
                         </i>
-                        <span class="menu-text">{{menuItem.text}}</span>
+                        <span class="menu-text">{{menuItem.label}}</span>
                     </a>
                 </li>
               </ul>
@@ -181,7 +210,7 @@
                         <i class="menu-bullet menu-bullet-dot">
                             <span></span>
                         </i>
-                        <span class="menu-text">{{menuItem.text}}</span>
+                        <span class="menu-text">{{menuItem.label}}</span>
                     </a>
                 </li>
               </ul>
@@ -210,7 +239,7 @@
                         <i class="menu-bullet menu-bullet-dot">
                             <span></span>
                         </i>
-                        <span class="menu-text">{{menuItem.text}}</span>
+                        <span class="menu-text">{{menuItem.label}}</span>
                     </a>
                 </li>
               </ul>
@@ -239,7 +268,7 @@
                         <i class="menu-bullet menu-bullet-dot">
                             <span></span>
                         </i>
-                        <span class="menu-text">{{menuItem.text}}</span>
+                        <span class="menu-text">{{menuItem.label}}</span>
                     </a>
                 </li>
               </ul>
@@ -268,7 +297,7 @@
                         <i class="menu-bullet menu-bullet-dot">
                             <span></span>
                         </i>
-                        <span class="menu-text">{{menuItem.text}}</span>
+                        <span class="menu-text">{{menuItem.label}}</span>
                     </a>
                 </li>
               </ul>
@@ -297,7 +326,7 @@
                           <i class="menu-bullet menu-bullet-dot">
                               <span></span>
                           </i>
-                          <span class="menu-text">{{menuItem.text}}</span>
+                          <span class="menu-text">{{menuItem.label}}</span>
                       </a>
                   </li>
               </ul>
@@ -326,7 +355,7 @@
                         <i class="menu-bullet menu-bullet-dot">
                             <span></span>
                         </i>
-                        <span class="menu-text">{{menuItem.text}}</span>
+                        <span class="menu-text">{{menuItem.label}}</span>
                     </a>
                 </li>
               </ul>
@@ -355,7 +384,7 @@
                         <i class="menu-bullet menu-bullet-dot">
                             <span></span>
                         </i>
-                        <span class="menu-text">{{menuItem.text}}</span>
+                        <span class="menu-text">{{menuItem.label}}</span>
                     </a>
                 </li>
               </ul>
@@ -384,7 +413,7 @@
                     <i class="menu-bullet menu-bullet-dot">
                         <span></span>
                     </i>
-                    <span class="menu-text">{{menuItem.text}}</span>
+                    <span class="menu-text">{{menuItem.label}}</span>
                 </a>
             </li>
           </ul>
@@ -413,7 +442,7 @@
                     <i class="menu-bullet menu-bullet-dot">
                         <span></span>
                     </i>
-                    <span class="menu-text">{{menuItem.text}}</span>
+                    <span class="menu-text">{{menuItem.label}}</span>
                 </a>
             </li>
           </ul>

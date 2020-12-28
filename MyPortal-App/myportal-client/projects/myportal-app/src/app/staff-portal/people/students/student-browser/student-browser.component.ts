@@ -1,4 +1,4 @@
-import { PortalViewComponent } from './../../../../shared/portal-view/portal-view.component';
+import { PortalViewDirective } from './../../../../shared/portal-view/portal-view.component';
 import { Component, OnInit, Renderer2, ElementRef, OnDestroy } from '@angular/core';
 
 @Component({
@@ -6,7 +6,7 @@ import { Component, OnInit, Renderer2, ElementRef, OnDestroy } from '@angular/co
   templateUrl: './student-browser.component.html',
   styleUrls: ['./student-browser.component.css']
 })
-export class StudentBrowserComponent extends PortalViewComponent implements OnInit, OnDestroy {
+export class StudentBrowserComponent extends PortalViewDirective implements OnInit, OnDestroy {
 
   constructor(protected renderer: Renderer2, protected hostElement: ElementRef) {
     super(renderer, hostElement);

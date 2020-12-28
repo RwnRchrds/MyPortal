@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from './../_models/user';
 import {Observable, ReplaySubject} from 'rxjs';
 import {map, take} from 'rxjs/operators';
-import { AuthenticationService, TokenModel, UsersService } from 'myportal-api';
+import { AuthenticationService, LoginModel, TokenModel } from 'myportal-api';
 
 @Injectable({
   providedIn: 'root'
@@ -12,26 +12,36 @@ export class AuthService {
   refreshTokenInProgress = false;
 
   private currentUserSource = new ReplaySubject<User>(1);
+  private permissionSource = new ReplaySubject<string[]>(1);
 
   currentUser$ = this.currentUserSource.asObservable();
+  effectivePermissions$ = this.permissionSource.asObservable();
 
   constructor(private authService: AuthenticationService) {
   }
 
-  login(model: any): any {
+  login(model: LoginModel): Observable<void> {
     return this.authService.login(model).pipe(
       map((response: TokenModel) => {
         const loginResponse = response;
-
         const user = this.getUser(loginResponse);
-
         if (user) {
-          console.log(user);
           localStorage.setItem('token', JSON.stringify(loginResponse));
           this.currentUserSource.next(user);
         }
-      })
-    );
+      }));
+  }
+
+  updatePermissions(): Observable<void> {
+    return this.authService.getEffectivePermissions().pipe(
+      map((response: string[]) => {
+      const latestPermissions = response;
+
+      if (latestPermissions) {
+        localStorage.setItem('perms', JSON.stringify(latestPermissions));
+        this.permissionSource.next(latestPermissions);
+      }
+    }));
   }
 
   refreshToken(): Observable<boolean> {
@@ -52,6 +62,22 @@ export class AuthService {
     }));
   }
 
+  hasPermission(requiredPermissions: string[]): boolean {
+    if (!requiredPermissions || requiredPermissions.length < 1) {
+      return true;
+    }
+    else {
+      let userPermissions: string[];
+      this.effectivePermissions$.pipe(take(1)).subscribe(permissions => userPermissions = permissions);
+      for (const perm of requiredPermissions) {
+        if (userPermissions.includes(perm.toLowerCase())) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   private getDecodedToken(token: string): any {
     if (!!token)
     {
@@ -60,9 +86,7 @@ export class AuthService {
   }
 
   getUser(tokenModel: TokenModel): User {
-
     const decodedToken = this.getDecodedToken(tokenModel.token);
-
     const user = {
       displayName: decodedToken.displayName,
       userType: decodedToken.type,
@@ -70,16 +94,18 @@ export class AuthService {
       token: tokenModel.token,
       refreshToken: tokenModel.refreshToken
     } as User;
-
     return user;
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    this.effectivePermissions$.pipe(take(1)).subscribe(data => console.log(data));
+    localStorage.clear();
     this.currentUserSource.next(null);
+    this.permissionSource.next(null);
   }
 
-  setCurrentUser(user: User): void {
+  setCurrentUser(user: User, permissions: string[] = null): void {
     this.currentUserSource.next(user);
+    this.permissionSource.next(permissions);
   }
 }

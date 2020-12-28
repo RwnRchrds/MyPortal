@@ -1,6 +1,6 @@
 export interface SidebarMenuItem {
     section: string;
-    text: string;
+    label: string;
     route: string;
-    requiredPermission?: string[];
+    requiredPermissions?: string[];
 }

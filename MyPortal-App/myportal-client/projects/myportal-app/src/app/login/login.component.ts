@@ -3,6 +3,7 @@ import { ScriptService } from '../_services/script.service';
 import { Component, OnInit } from '@angular/core';
 import {LoginModel, SchoolsService} from 'myportal-api';
 import {AppService} from '../_services/app.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -23,6 +24,11 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loginModel = {
+      username: '',
+      password: ''
+    };
+
     this.scriptService.loadStyleSheet('../../assets/lib/css/pages/login/login-2.css');
     this.schoolService.getLocalSchoolName().subscribe(next => {
       this.schoolName = next;
@@ -31,7 +37,7 @@ export class LoginComponent implements OnInit {
 
   login(): void {
     this.appService.blockPage();
-    this.authService.login(this.loginModel).subscribe(next => {
+    this.authService.login(this.loginModel).pipe(switchMap(() => this.authService.updatePermissions())).subscribe(next => {
       this.appService.unblockPage();
       location.reload();
     }, error => {
