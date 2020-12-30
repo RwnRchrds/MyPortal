@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Caching;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
@@ -21,6 +22,7 @@ namespace MyPortal.Logic.Services
         private readonly IRolePermissionRepository _rolePermissionRepository;
         private readonly IPermissionRepository _permissionRepository;
         private readonly ISystemAreaRepository _systemAreaRepository;
+        private readonly IRolePermissionsCache _rolePermissionsCache;
 
         public RoleService(RoleManager<Role> roleManager, IRolePermissionRepository rolePermissionRepository,
             IPermissionRepository permissionRepository, ISystemAreaRepository systemAreaRepository)
@@ -105,6 +107,8 @@ namespace MyPortal.Logic.Services
                 await _rolePermissionRepository.Delete(perm.RoleId, perm.PermissionId);
             }
 
+            _rolePermissionsCache.Purge(roleId);
+
             await _rolePermissionRepository.SaveChanges();
         }
 
@@ -142,6 +146,8 @@ namespace MyPortal.Logic.Services
 
                 roleInDb.Name = request.Name;
                 roleInDb.Description = request.Description;
+
+                await _roleManager.UpdateAsync(roleInDb);
 
                 if (request.PermissionIds.Any())
                 {

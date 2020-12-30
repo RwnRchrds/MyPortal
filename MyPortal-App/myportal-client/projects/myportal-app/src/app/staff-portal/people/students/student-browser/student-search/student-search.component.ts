@@ -13,6 +13,8 @@ import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 })
 export class StudentSearchComponent implements OnInit {
 
+  componentName = '#student_search';
+
   yearGroups: YearGroupModel[];
   regGroups: RegGroupModel[];
   houses: HouseModel[];
@@ -61,7 +63,7 @@ export class StudentSearchComponent implements OnInit {
    }
 
    search(): void {
-    this.appService.blockComponent('#student_search');
+    this.appService.blockComponent(this.componentName);
     this.studentService.searchStudents(this.studentStatus.value, null, this.regGroupId.value,
        this.yearGroupId.value, this.houseId.value, null, this.firstName.value, this.lastName.value).subscribe(next => {
       this.searchResults = next;
@@ -69,14 +71,15 @@ export class StudentSearchComponent implements OnInit {
       if (!this.tableLoaded)
       {
         this.loadTable();
-        this.appService.unblockComponent('#student_search');
+        this.appService.unblockComponent(this.componentName);
       }
       else {
         this.refreshTable();
-        this.appService.unblockComponent('#student_search');
+        this.appService.unblockComponent(this.componentName);
       }
     }, error => {
       this.alertService.error(error);
+      this.appService.unblockComponent(this.componentName);
     });
    }
 

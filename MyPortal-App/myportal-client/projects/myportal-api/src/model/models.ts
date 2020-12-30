@@ -43,6 +43,7 @@ export * from './loginModel';
 export * from './personModel';
 export * from './photoModel';
 export * from './regGroupModel';
+export * from './roleModel';
 export * from './senStatusModel';
 export * from './setPasswordModel';
 export * from './setUserEnabledModel';

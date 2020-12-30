@@ -19,20 +19,36 @@ namespace MyPortal.Logic.Caching
             _rolePermissionRepository = rolePermissionRepository;
         }
 
-        public async Task<Guid[]> GetPermissions(Guid roleId)
+        public async Task<Guid[]> GetPermissions(params Guid[] roleIds)
         {
-            var key = new KeyValuePair<string, Guid>(CacheTypes.RolePermission, roleId);
+            var permissionIds = new List<Guid>();
 
-            if (_cache.TryGetValue(key, out var cachedPermissions))
+            foreach (var roleId in roleIds)
             {
-                return cachedPermissions as Guid[];
+                var key = new KeyValuePair<string, Guid>(CacheTypes.RolePermission, roleId);
+
+                if (_cache.TryGetValue(key, out var cachedPermissions))
+                {
+                    permissionIds.AddRange(cachedPermissions as IEnumerable<Guid> ?? Array.Empty<Guid>());
+                }
+                else
+                {
+                    permissionIds.AddRange((await _rolePermissionRepository.GetByRole(roleId)).Select(x => x.PermissionId));
+                    _cache.Set(key, permissionIds, TimeSpan.FromHours(1));
+                }
             }
 
-            var permissionIds = (await _rolePermissionRepository.GetByRole(roleId)).Select(x => x.PermissionId).ToArray();
+            return permissionIds.ToArray();
+        }
 
-            _cache.Set(key, permissionIds, TimeSpan.FromHours(1));
+        public void Purge(params Guid[] roleIds)
+        {
+            foreach (var roleId in roleIds)
+            {
+                var key = new KeyValuePair<string, Guid>(CacheTypes.RolePermission, roleId);
 
-            return permissionIds;
+                _cache.Remove(key);
+            }
         }
     }
 }

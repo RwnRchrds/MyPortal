@@ -28,5 +28,6 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IEnumerable<RoleModel>> GetUserRoles(Guid userId);
         Task<IEnumerable<UserModel>> GetUsers(string usernameSearch);
         Task<IEnumerable<PermissionModel>> GetPermissions(Guid userId);
+        Task<IEnumerable<Guid>> GetEffectivePermissions(Guid userId);
     }
 }

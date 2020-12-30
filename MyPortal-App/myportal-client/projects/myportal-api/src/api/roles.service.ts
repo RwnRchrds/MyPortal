@@ -18,6 +18,7 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { CreateRoleModel } from '../model/createRoleModel';
+import { RoleModel } from '../model/roleModel';
 import { UpdateRoleModel } from '../model/updateRoleModel';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -63,9 +64,9 @@ export class RolesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createRole(body?: CreateRoleModel, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public createRole(body?: CreateRoleModel, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public createRole(body?: CreateRoleModel, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public createRole(body?: CreateRoleModel, observe?: 'body', reportProgress?: boolean): Observable<string>;
+    public createRole(body?: CreateRoleModel, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<string>>;
+    public createRole(body?: CreateRoleModel, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<string>>;
     public createRole(body?: CreateRoleModel, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
@@ -73,6 +74,9 @@ export class RolesService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -90,7 +94,7 @@ export class RolesService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.request<any>('post',`${this.basePath}/api/roles/create`,
+        return this.httpClient.request<string>('post',`${this.basePath}/api/roles/create`,
             {
                 body: body,
                 withCredentials: this.configuration.withCredentials,
@@ -108,9 +112,9 @@ export class RolesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteRole(roleId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public deleteRole(roleId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public deleteRole(roleId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public deleteRole(roleId: string, observe?: 'body', reportProgress?: boolean): Observable<string>;
+    public deleteRole(roleId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<string>>;
+    public deleteRole(roleId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<string>>;
     public deleteRole(roleId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (roleId === null || roleId === undefined) {
@@ -121,6 +125,9 @@ export class RolesService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -131,7 +138,7 @@ export class RolesService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('delete',`${this.basePath}/api/roles/delete/${encodeURIComponent(String(roleId))}`,
+        return this.httpClient.request<string>('delete',`${this.basePath}/api/roles/delete/${encodeURIComponent(String(roleId))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -148,9 +155,9 @@ export class RolesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getPermissionsTree(roleId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getPermissionsTree(roleId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getPermissionsTree(roleId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getPermissionsTree(roleId: string, observe?: 'body', reportProgress?: boolean): Observable<Array<string>>;
+    public getPermissionsTree(roleId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<string>>>;
+    public getPermissionsTree(roleId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<string>>>;
     public getPermissionsTree(roleId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (roleId === null || roleId === undefined) {
@@ -161,6 +168,9 @@ export class RolesService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -171,7 +181,7 @@ export class RolesService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/roles/permissions/role/${encodeURIComponent(String(roleId))}`,
+        return this.httpClient.request<Array<string>>('get',`${this.basePath}/api/roles/permissions/role/${encodeURIComponent(String(roleId))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -188,9 +198,9 @@ export class RolesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getRoleById(roleId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getRoleById(roleId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getRoleById(roleId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getRoleById(roleId: string, observe?: 'body', reportProgress?: boolean): Observable<RoleModel>;
+    public getRoleById(roleId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<RoleModel>>;
+    public getRoleById(roleId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<RoleModel>>;
     public getRoleById(roleId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (roleId === null || roleId === undefined) {
@@ -201,6 +211,9 @@ export class RolesService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -211,7 +224,7 @@ export class RolesService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/roles/get/id/${encodeURIComponent(String(roleId))}`,
+        return this.httpClient.request<RoleModel>('get',`${this.basePath}/api/roles/get/id/${encodeURIComponent(String(roleId))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -228,9 +241,9 @@ export class RolesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getRoles(roleName?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getRoles(roleName?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getRoles(roleName?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getRoles(roleName?: string, observe?: 'body', reportProgress?: boolean): Observable<Array<RoleModel>>;
+    public getRoles(roleName?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<RoleModel>>>;
+    public getRoles(roleName?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<RoleModel>>>;
     public getRoles(roleName?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
@@ -243,6 +256,9 @@ export class RolesService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -253,7 +269,7 @@ export class RolesService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/roles/get`,
+        return this.httpClient.request<Array<RoleModel>>('get',`${this.basePath}/api/roles/get`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -271,9 +287,9 @@ export class RolesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateRole(body?: UpdateRoleModel, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public updateRole(body?: UpdateRoleModel, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public updateRole(body?: UpdateRoleModel, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public updateRole(body?: UpdateRoleModel, observe?: 'body', reportProgress?: boolean): Observable<string>;
+    public updateRole(body?: UpdateRoleModel, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<string>>;
+    public updateRole(body?: UpdateRoleModel, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<string>>;
     public updateRole(body?: UpdateRoleModel, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
@@ -281,6 +297,9 @@ export class RolesService {
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected != undefined) {
@@ -298,7 +317,7 @@ export class RolesService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.request<any>('put',`${this.basePath}/api/roles/update`,
+        return this.httpClient.request<string>('put',`${this.basePath}/api/roles/update`,
             {
                 body: body,
                 withCredentials: this.configuration.withCredentials,

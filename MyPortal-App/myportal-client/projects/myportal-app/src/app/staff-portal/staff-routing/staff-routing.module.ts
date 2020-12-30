@@ -7,6 +7,7 @@ import { StaffHomepageComponent } from './../staff-homepage/staff-homepage.compo
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AppPermissions } from '../../_guards/app-permissions';
+import {RoleBrowserComponent} from '../settings/roles/role-browser/role-browser.component';
 
 const staffRoutes: Routes = [
   {
@@ -30,6 +31,12 @@ const staffRoutes: Routes = [
         component: StudentViewComponent,
         canActivate: [PermissionGuard],
         data: {requiredPermissions: [AppPermissions.students_studentDetails_view]}
+      },
+      {
+        path: 'settings/roles',
+        component: RoleBrowserComponent,
+        canActivate: [PermissionGuard],
+        data: {requiredPermissions: [AppPermissions.system_users_view]}
       },
       {
         path: '',

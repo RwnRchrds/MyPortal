@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserSearchComponent } from './user-search.component';
+import { RoleBrowserComponent } from './role-browser.component';
 
-describe('UserSearchComponent', () => {
-  let component: UserSearchComponent;
-  let fixture: ComponentFixture<UserSearchComponent>;
+describe('RoleBrowserComponent', () => {
+  let component: RoleBrowserComponent;
+  let fixture: ComponentFixture<RoleBrowserComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UserSearchComponent ]
+      declarations: [ RoleBrowserComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserSearchComponent);
+    fixture = TestBed.createComponent(RoleBrowserComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

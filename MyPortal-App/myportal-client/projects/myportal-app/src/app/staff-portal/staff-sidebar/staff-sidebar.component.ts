@@ -51,7 +51,7 @@ export class StaffSidebarComponent extends PortalSidebarComponent implements OnI
       // {section: 'settings', label: 'Users', route: '/settings/users', requiredPermission: [
       //   AppPermissions.system_users_view
       // ]},
-      {section: 'settings', label: 'Roles', route: '/settings/roles', requiredPermissions: [
+      {section: 'settings', label: 'Roles', route: '/staff/settings/roles', requiredPermissions: [
         AppPermissions.system_users_view
       ]}
     ];

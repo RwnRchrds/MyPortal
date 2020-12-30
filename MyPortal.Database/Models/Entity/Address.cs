@@ -7,7 +7,6 @@ namespace MyPortal.Database.Models.Entity
     [Table("Addresses")]
     public class Address : BaseTypes.Entity
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Address()
         {
             People = new HashSet<AddressPerson>();

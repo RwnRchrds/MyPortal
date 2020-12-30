@@ -15,6 +15,7 @@ using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Authentication;
+using MyPortal.Logic.Caching;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -31,14 +32,18 @@ namespace MyPortal.Logic.Services
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IUserRoleRepository _userRoleRepository;
         private readonly IRolePermissionRepository _rolePermissionRepository;
+        private readonly IRolePermissionsCache _rolePermissionsCache;
 
         public UserService(UserManager<User> userManager, RoleManager<Role> roleManager,
-            SignInManager<User> signInManager, IRolePermissionRepository rolePermissionRepository)
+            SignInManager<User> signInManager, IRolePermissionsCache rolePermissionsCache, IUserRoleRepository userRoleRepository, IRolePermissionRepository rolePermissionRepository)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
+            _rolePermissionsCache = rolePermissionsCache;
+            _userRoleRepository = userRoleRepository;
             _rolePermissionRepository = rolePermissionRepository;
         }
 
@@ -53,6 +58,13 @@ namespace MyPortal.Logic.Services
             var permissions = await _rolePermissionRepository.GetByUser(userId);
 
             return permissions.Select(p => BusinessMapper.Map<PermissionModel>(p.Permission));
+        }
+
+        public async Task<IEnumerable<Guid>> GetEffectivePermissions(Guid userId)
+        {
+            var roleIds = (await _userRoleRepository.GetByUser(userId)).Select(ur => ur.RoleId).ToArray();
+
+            return await _rolePermissionsCache.GetPermissions(roleIds);
         }
 
         public async Task<IEnumerable<UserModel>> GetUsers(string usernameSearch)

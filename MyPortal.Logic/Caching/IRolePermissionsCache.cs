@@ -8,6 +8,7 @@ namespace MyPortal.Logic.Caching
 {
     public interface IRolePermissionsCache
     {
-        Task<Guid[]> GetPermissions(Guid roleId);
+        Task<Guid[]> GetPermissions(params Guid[] roleIds);
+        void Purge(params Guid[] roleIds);
     }
 }
