@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
-import { RoleModel, RolesService } from 'myportal-api';
-import { AlertService } from 'projects/myportal-app/src/app/_services/alert.service';
+import {RoleBrowserService} from '../role-browser.service';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {RoleModel, RolesService} from 'myportal-api';
 import {AppService} from '../../../../../_services/app.service';
+import {Router} from '@angular/router';
+import {AlertService} from '../../../../../_services/alert.service';
 
 @Component({
   selector: 'app-role-search',
@@ -26,8 +27,15 @@ export class RoleSearchComponent implements OnInit {
 
   searchResults: RoleModel[];
 
-  constructor(private appService: AppService, private roleService: RolesService, private router: Router,
-              private alertService: AlertService) { }
+  viewService: RoleBrowserService;
+
+  constructor(roleBrowserService: RoleBrowserService, private appService: AppService, private roleService: RolesService, private router: Router,
+              private alertService: AlertService) {
+    this.viewService = roleBrowserService;
+  }
+
+  ngOnInit(): void {
+  }
 
   search(): void {
     this.appService.blockComponent(this.componentName);
@@ -63,32 +71,28 @@ export class RoleSearchComponent implements OnInit {
 
     // @ts-ignore
     $('#search_results').DataTable({
-       responsive: true,
-       paging: true,
-       data: this.searchResults,
-       dom: 'rtilp',
-       columns: [
+      responsive: true,
+      paging: true,
+      data: this.searchResults,
+      dom: 'rtilp',
+      columns: [
         {
-            data: 'description',
-            render(data, type, role) {
-              const overviewUrl = tempOverviewUrl.replace('tempid', role.id);
-              return `<div class="d-flex align-items-center"><div class="symbol symbol-40 symbol-light-primary"><div class="symbol-label font-size-h5"><i class="fas fa-fw fa-users text-primary"></i></div></div><div class="ml-3"><div class="text-dark-75 font-weight-bold line-height-sm d-block"><a href="${
-                  overviewUrl}">${role.description}</a></div></div></div>`;
+          data: 'description',
+          render(data, type, role) {
+            const overviewUrl = tempOverviewUrl.replace('tempid', role.id);
+            return `<div class="d-flex align-items-center"><div class="symbol symbol-40 symbol-light-primary"><div class="symbol-label font-size-h5"><i class="fas fa-fw fa-users text-primary"></i></div></div><div class="ml-3"><div class="text-dark-75 font-weight-bold line-height-sm d-block"><a href="${
+              overviewUrl}">${role.description}</a></div></div></div>`;
           }
         }
-    ],
-    language:
-    {
-        emptyTable: 'No students'
-    }
-     });
+      ],
+      language:
+        {
+          emptyTable: 'No students'
+        }
+    });
 
-     // @ts-ignore
+    // @ts-ignore
     $('#searchResults').removeClass('d-none');
     this.tableLoaded = true;
-   }
-
-  ngOnInit(): void {
   }
-
 }

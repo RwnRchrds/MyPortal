@@ -8,6 +8,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AppPermissions } from '../../_guards/app-permissions';
 import {RoleBrowserComponent} from '../settings/roles/role-browser/role-browser.component';
+import {RoleViewComponent} from '../settings/roles/role-view/role-view.component';
 
 const staffRoutes: Routes = [
   {
@@ -37,6 +38,10 @@ const staffRoutes: Routes = [
         component: RoleBrowserComponent,
         canActivate: [PermissionGuard],
         data: {requiredPermissions: [AppPermissions.system_users_view]}
+      },
+      {
+        path: 'settings/roles/:id',
+        component: RoleViewComponent
       },
       {
         path: '',

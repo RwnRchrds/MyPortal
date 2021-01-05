@@ -1,0 +1,99 @@
+<div class="card card-custom">
+  <!--begin::Card header-->
+  <div class="card-header card-header-tabs-line nav-tabs-line-3x">
+    <!--begin::Toolbar-->
+    <div class="card-toolbar">
+      <ul class="nav nav-tabs nav-bold nav-tabs-line nav-tabs-line-3x">
+        <!--begin::Item-->
+        <li class="nav-item mr-3">
+          <a class="nav-link active" data-toggle="tab" href="#role_tab_details">
+            <span class="nav-text font-size-lg"><i class="fad fa-layer-group fa-fw mr-2"></i>Overview</span>
+          </a>
+        </li>
+        <!--end::Item-->
+        <!--begin::Item-->
+        <li class="nav-item mr-3">
+          <a class="nav-link" data-toggle="tab" href="#role_tab_permissions">
+            <span class="nav-text font-size-lg"><i class="fad fa-user fa-fw mr-2"></i>Permissions</span>
+          </a>
+        </li>
+        <!--end::Item-->
+      </ul>
+    </div>
+    <!--end::Toolbar-->
+  </div>
+  <!--end::Card header-->
+  <!--begin::Card body-->
+  <div class="card-body">
+    <form [formGroup]="viewService.detailsForm" class="form">
+      <div class="tab-content">
+        <!--begin::Tab-->
+        <div class="tab-pane show active px-7" id="role_tab_details" role="tabpanel">
+          <!--begin::Row-->
+          <div class="row">
+            <div class="col-xl-2"></div>
+            <div class="col-xl-7 my-2">
+              <!--begin::Row-->
+              <div class="row">
+                <label class="col-3"></label>
+                <div class="col-9">
+                  <h6 class="text-dark font-weight-bold mb-10">Role Details:</h6>
+                </div>
+              </div>
+              <!--end::Row-->
+              <!--begin::Group-->
+              <div class="form-group row">
+                <label class="col-form-label col-3 text-lg-right text-left">Code</label>
+                <div class="col-4">
+                  <input class="form-control form-control-lg form-control-solid" formControlName="code" type="text"/>
+                </div>
+              </div>
+              <!--end::Group-->
+              <!--begin::Group-->
+              <div class="form-group row">
+                <label class="col-form-label col-3 text-lg-right text-left">Name</label>
+                <div class="col-6">
+                  <input class="form-control form-control-lg form-control-solid" formControlName="name" type="text"/>
+                </div>
+              </div>
+              <!--end::Group-->
+            </div>
+          </div>
+          <!--end::Row-->
+        </div>
+        <!--end::Tab-->
+        <!--begin::Tab-->
+        <div class="tab-pane px-7" id="role_tab_permissions" role="tabpanel">
+          <!--begin::Row-->
+          <div class="row">
+            <div class="col-xl-2"></div>
+            <div class="col-xl-7">
+              <div class="my-2">
+                <!--begin::Row-->
+                <div class="row">
+                  <label class="col-form-label col-3 text-lg-right text-left"></label>
+                  <div class="col-9">
+                    <h6 class="text-dark font-weight-bold mb-10">Permissions:</h6>
+                  </div>
+                </div>
+                <!--end::Row-->
+                <!--begin::Row-->
+                <div class="row">
+                  <label class="col-form-label col-3 text-lg-right text-left"></label>
+                  <div class="col-9">
+                    <div id="perm_tree"></div>
+                  </div>
+                </div>
+                <!--end::Row-->
+              </div>
+            </div>
+          </div>
+          <!--end::Row-->
+          <div class="separator separator-dashed my-10"></div>
+        </div>
+        <!--end::Tab-->
+      </div>
+    </form>
+  </div>
+  <!--begin::Card body-->
+</div>

@@ -12,7 +12,7 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface IRoleService : IService
     {
-        Task Create(params CreateRoleModel[] model);
+        Task<IEnumerable<Guid>> Create(params CreateRoleModel[] model);
         Task Update(params UpdateRoleModel[] model);
         Task Delete(params Guid[] roleIds);
         Task<TreeNode> GetPermissionsTree(Guid roleId);

@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import {LoginModel, SchoolsService} from 'myportal-api';
 import {AppService} from '../_services/app.service';
 import { switchMap } from 'rxjs/operators';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,10 @@ import { switchMap } from 'rxjs/operators';
 })
 export class LoginComponent implements OnInit {
 
-  loginModel: LoginModel;
+  loginForm = new FormGroup({
+    username: new FormControl(''),
+    password: new FormControl('')
+  });
 
   loginError = '';
 
@@ -24,20 +28,24 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loginModel = {
-      username: '',
-      password: ''
-    };
-
     this.scriptService.loadStyleSheet('../../assets/lib/css/pages/login/login-2.css');
     this.schoolService.getLocalSchoolName().subscribe(next => {
       this.schoolName = next;
     });
   }
 
+  get username(): AbstractControl {
+    return this.loginForm.get('username');
+  }
+
+  get password(): AbstractControl {
+    return this.loginForm.get('password');
+  }
+
   login(): void {
     this.appService.blockPage();
-    this.authService.login(this.loginModel).pipe(switchMap(() => this.authService.updatePermissions())).subscribe(next => {
+    this.authService.login({username: this.username.value, password: this.password.value})
+      .pipe(switchMap(() => this.authService.updatePermissions())).subscribe(next => {
       this.appService.unblockPage();
       location.reload();
     }, error => {

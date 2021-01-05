@@ -26,4 +26,14 @@ export class AppService {
     // @ts-ignore
     KTApp.unblockPage();
   }
+
+  parseGuid(str: string): string {
+    const parts = [];
+    parts.push(str.slice(0, 8));
+    parts.push(str.slice(8, 12));
+    parts.push(str.slice(12, 16));
+    parts.push(str.slice(16, 20));
+    parts.push(str.slice(20, 32));
+    return parts.join('-');
+}
 }

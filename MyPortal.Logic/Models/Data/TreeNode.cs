@@ -31,5 +31,15 @@ namespace MyPortal.Logic.Models.Data
                 }
             };
         }
+
+        public void SetEnabled(bool enabled)
+        {
+            State.Disabled = !enabled;
+
+            foreach (var treeNode in Children)
+            {
+                treeNode.SetEnabled(enabled);
+            }
+        }
     }
 }

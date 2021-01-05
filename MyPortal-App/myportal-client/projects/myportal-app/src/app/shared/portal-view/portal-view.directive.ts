@@ -1,13 +1,13 @@
 import {Directive, ElementRef, OnDestroy, Renderer2} from '@angular/core';
 
 @Directive({
-
+  selector: '[appPortalView]'
 })
 export abstract class PortalViewDirective implements OnDestroy {
 
-  constructor(protected renderer: Renderer2, protected hostElement: ElementRef) {
+  protected constructor(protected renderer: Renderer2, protected hostElement: ElementRef) {
     this.addStyles();
-   }
+  }
 
   addStyles(): void
   {

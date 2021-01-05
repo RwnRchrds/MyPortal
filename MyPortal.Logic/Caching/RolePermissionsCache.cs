@@ -47,7 +47,10 @@ namespace MyPortal.Logic.Caching
             {
                 var key = new KeyValuePair<string, Guid>(CacheTypes.RolePermission, roleId);
 
-                _cache.Remove(key);
+                if (_cache.TryGetValue(key, out _))
+                {
+                    _cache.Remove(key);
+                }
             }
         }
     }

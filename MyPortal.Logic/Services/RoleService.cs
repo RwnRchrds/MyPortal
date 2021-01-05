@@ -25,12 +25,13 @@ namespace MyPortal.Logic.Services
         private readonly IRolePermissionsCache _rolePermissionsCache;
 
         public RoleService(RoleManager<Role> roleManager, IRolePermissionRepository rolePermissionRepository,
-            IPermissionRepository permissionRepository, ISystemAreaRepository systemAreaRepository)
+            IPermissionRepository permissionRepository, ISystemAreaRepository systemAreaRepository, IRolePermissionsCache rolePermissionsCache)
         {
             _roleManager = roleManager;
             _rolePermissionRepository = rolePermissionRepository;
             _permissionRepository = permissionRepository;
             _systemAreaRepository = systemAreaRepository;
+            _rolePermissionsCache = rolePermissionsCache;
         }
 
         public async Task<IEnumerable<PermissionModel>> GetPermissions(Guid roleId)
@@ -42,6 +43,8 @@ namespace MyPortal.Logic.Services
 
         public async Task<TreeNode> GetPermissionsTree(Guid roleId)
         {
+            var role = await _roleManager.FindByIdAsync(roleId.ToString());
+
             var systemAreas = (await _systemAreaRepository.GetAll()).ToList();
 
             var permissions = (await _permissionRepository.GetAll()).ToList();
@@ -82,6 +85,8 @@ namespace MyPortal.Logic.Services
                 });
             }
 
+            root.SetEnabled(!role.System);
+
             return root;
         }
 
@@ -112,8 +117,10 @@ namespace MyPortal.Logic.Services
             await _rolePermissionRepository.SaveChanges();
         }
 
-        public async Task Create(params CreateRoleModel[] requests)
+        public async Task<IEnumerable<Guid>> Create(params CreateRoleModel[] requests)
         {
+            var newIds = new List<Guid>();
+
             foreach (var request in requests)
             {
                 var role = new Role
@@ -122,15 +129,25 @@ namespace MyPortal.Logic.Services
                     Description = request.Description
                 };
 
-                await _roleManager.CreateAsync(role);
+                var result = await _roleManager.CreateAsync(role);
 
-                if (request.PermissionIds.Any())
+                if (!result.Succeeded)
+                {
+                    var message = result.Errors.FirstOrDefault()?.Description;
+                    throw new Exception(message);
+                }
+
+                if (request.PermissionIds != null && request.PermissionIds.Any())
                 {
                     role = await _roleManager.FindByNameAsync(request.Name);
 
                     await SetPermissions(role.Id, request.PermissionIds);
                 }
+
+                newIds.Add(role.Id);
             }
+
+            return newIds;
         }
 
         public async Task Update(params UpdateRoleModel[] requests)

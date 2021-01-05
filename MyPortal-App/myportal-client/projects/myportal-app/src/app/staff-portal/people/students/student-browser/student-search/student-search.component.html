@@ -1,4 +1,4 @@
-<div class="card card-custom" id="student_search">
+<div *ngIf="viewService.showSearchComponent" class="card card-custom" id="student_search">
   <!--begin::Header-->
   <div class="card-header flex-wrap border-0 pt-6 pb-0">
       <h3 class="card-title align-items-start flex-column">
@@ -7,7 +7,7 @@
       <div class="card-toolbar">
           <div class="dropdown dropdown-inline">
               <!--begin::Trigger Modal-->
-              <button class="btn btn-light-primary font-weight-bolder font-size-sm" aria-haspopup="true" aria-expanded="false" data-toggle="modal" data-target="#exampleModalCustomScrollable">
+              <button class="btn btn-light-primary font-weight-bolder font-size-sm" aria-haspopup="true" aria-expanded="false">
                   <i class="fas fa-plus mr-1"></i>New Student
               </button>
               <!--end::Trigger Modal-->

@@ -392,9 +392,11 @@
   background: #e7f4f9; }
 
 .jstree-default .jstree-wholerow-clicked {
-  background: #beebff;
-  background: -webkit-gradient(linear, left top, left bottom, from(#beebff), to(#a8e4ff));
-  background: linear-gradient(to bottom, #beebff 0%, #a8e4ff 100%); }
+  background: transparent;
+  /*background: #beebff;*/
+  /*background: -webkit-gradient(linear, left top, left bottom, from(#beebff), to(#a8e4ff));*/
+  /*background: linear-gradient(to bottom, #beebff 0%, #a8e4ff 100%); */
+}
 
 .jstree-default .jstree-node {
   min-height: 24px;

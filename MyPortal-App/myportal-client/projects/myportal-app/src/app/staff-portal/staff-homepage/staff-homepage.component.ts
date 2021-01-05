@@ -1,4 +1,4 @@
-import { PortalViewDirective } from './../../shared/portal-view/portal-view.component';
+import { PortalViewDirective } from '../../shared/portal-view/portal-view.directive';
 import { Component, OnInit, Renderer2, ElementRef, OnDestroy } from '@angular/core';
 
 @Component({
