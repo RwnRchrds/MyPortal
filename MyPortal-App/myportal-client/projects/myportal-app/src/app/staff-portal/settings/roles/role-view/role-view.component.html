@@ -22,7 +22,9 @@
         <!--begin::BackButton-->
         <button routerLink="/staff/settings/roles" class="btn btn-default font-weight-bold btn-sm px-3 font-size-base">Back</button>
         <!--end::BackButton-->
-        <button type="button" (click)="viewService.save()" class="btn btn-primary font-weight-bold btn-sm px-3 ml-2 font-size-base" [attr.disabled]="viewService.role.system ? true : null">Save</button>
+        <button type="button" (click)="viewService.save()" class="btn btn-primary font-weight-bold btn-sm px-3 ml-2 font-size-base" [attr.disabled]="viewService.role.system ? true : null">
+          <i class="fas fa-cloud-upload mr-1"></i> Save
+        </button>
       </div>
       <!--end::Toolbar-->
     </div>

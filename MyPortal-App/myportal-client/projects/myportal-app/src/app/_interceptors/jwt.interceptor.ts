@@ -19,35 +19,35 @@ export class JwtInterceptor implements HttpInterceptor {
     return next.handle(this.injectToken(request)).pipe(
       catchError((error: HttpErrorResponse) => {
 
-      // Logout user if token refresh fails
-      if (request.url.includes('refreshToken')) {
-        this.authService.logout();
-      }
+        // No need to attempt token refresh if error is not 401: Unauthorised
+        if (error.status !== 401) {
+          return throwError(error);
+        }
 
-      // No need to attempt token refresh if login fails
-      if (request.url.includes('login')) {
-        return throwError(error);
-      }
+        // Logout user if token refresh fails
+        if (request.url.includes('refreshToken')) {
+          this.authService.logout();
+        }
 
-      // No need to attempt token refresh if error is not 401: Unauthorised
-      if (error.status !== 401) {
-        return throwError(error);
-      }
+        // No need to attempt token refresh if login fails
+        if (request.url.includes('login')) {
+          return throwError(error);
+        }
 
-      // If token refresh already in progress, wait for completion and get the result
-      if (this.authService.refreshTokenInProgress) {
-        return this.authService.currentUser$.pipe(
-          filter(u => u !== null),
-          take(1),
-          switchMap(() => next.handle(this.injectToken(request))));
-      }
+        // If token refresh already in progress, wait for completion and get the result
+        if (this.authService.refreshTokenInProgress) {
+          return this.authService.currentUser$.pipe(
+            filter(u => u !== null),
+            take(1),
+            switchMap(() => next.handle(this.injectToken(request))));
+        }
 
-      // Refresh token from
-      else {
-        return this.authService.refreshToken().pipe(switchMap(success => {
-          return next.handle(this.injectToken(request));
-        }));
-      }
+        // Refresh token from
+        else {
+          return this.authService.refreshToken().pipe(switchMap(success => {
+            return next.handle(this.injectToken(request));
+          }));
+        }
     })
     );
   }

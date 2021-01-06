@@ -2,7 +2,7 @@
 <!--begin::Header Mobile-->
 <div id="kt_header_mobile" class="header-mobile align-items-center header-mobile-fixed">
   <!--begin::Logo-->
-  <img alt="Logo" src="assets/media/logos/transparent.png" class="max-h-60px"/>
+  <img alt="Logo" src="assets/media/logos/transparent.png" class="max-h-50px"/>
   <!--end::Logo-->
   <!--begin::Toolbar-->
   <div class="d-flex align-items-center">
@@ -11,11 +11,6 @@
       <span></span>
     </button>
     <!--end::Aside Mobile Toggle-->
-    <!--begin::Header Menu Mobile Toggle-->
-    <button class="btn p-0 burger-icon ml-4" id="kt_header_mobile_toggle">
-      <span></span>
-    </button>
-    <!--end::Header Menu Mobile Toggle-->
     <!--begin::Topbar Mobile Toggle-->
     <button class="btn btn-hover-text-primary p-0 ml-2" id="kt_header_mobile_topbar_toggle">
 					<span class="svg-icon svg-icon-xl">
@@ -56,7 +51,7 @@
             <div class="dropdown">
               <!--begin::Toggle-->
               <div class="topbar-item" data-toggle="dropdown" data-offset="0px,0px" aria-expanded="false">
-                <div class="btn btn-icon w-auto btn-clean d-flex align-items-center btn-lg px-2">                
+                <div class="btn btn-icon w-auto btn-clean d-flex align-items-center btn-lg px-2">
                   <span class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">{{(authService.currentUser$ | async)?.displayName}}</span>
                   <span class="symbol symbol-35 symbol-light-success">
                     <span class="symbol-label font-size-h5 font-weight-bold">{{(authService.currentUser$ | async)?.displayName?.charAt(0)}}</span>

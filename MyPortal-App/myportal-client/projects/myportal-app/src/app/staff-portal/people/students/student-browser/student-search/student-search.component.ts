@@ -13,6 +13,9 @@ import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {AlertService} from '../../../../../_services/alert.service';
 import {AppService} from '../../../../../_services/app.service';
 import {Router} from '@angular/router';
+import {catchError, map} from 'rxjs/operators';
+import {HttpErrorResponse} from '@angular/common/http';
+import {throwError} from 'rxjs';
 
 @Component({
   selector: 'app-student-search',
@@ -80,8 +83,9 @@ export class StudentSearchComponent implements OnInit {
   search(): void {
     this.appService.blockComponent(this.searchComponentName);
     this.studentService.searchStudents(this.studentStatus.value, null, this.regGroupId.value,
-      this.yearGroupId.value, this.houseId.value, null, this.firstName.value, this.lastName.value).subscribe(next => {
-      this.searchResults = next;
+      this.yearGroupId.value, this.houseId.value, null,
+      this.firstName.value, this.lastName.value).pipe(map((searchResults: StudentDataGridModel[]) => {
+      this.searchResults = searchResults;
 
       if (!this.tableLoaded)
       {
@@ -92,10 +96,10 @@ export class StudentSearchComponent implements OnInit {
         this.refreshSearchResults();
         this.appService.unblockComponent(this.searchComponentName);
       }
-    }, error => {
-      this.alertService.error(error);
-      this.appService.unblockComponent(this.searchComponentName);
-    });
+    }), catchError((err: HttpErrorResponse) => {
+      this.alertService.error(err.error);
+      return throwError(err);
+    })).subscribe();
   }
 
   refreshSearchResults(): void {

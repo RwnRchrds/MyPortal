@@ -9,14 +9,14 @@ import {ScriptService} from '../../../../_services/script.service';
   templateUrl: './role-view.component.html',
   styleUrls: ['./role-view.component.css']
 })
-export class RoleViewComponent extends PortalViewDirective implements OnInit, OnDestroy {
+export class RoleViewComponent extends PortalViewDirective implements OnInit {
 
   viewService: RoleViewService;
 
   constructor(protected route: ActivatedRoute, renderer: Renderer2,
               hostElement: ElementRef, roleViewService: RoleViewService,
               private scriptService: ScriptService) {
-    super(renderer, hostElement);
+    super(renderer, hostElement, roleViewService);
     this.viewService = roleViewService;
   }
 
@@ -25,10 +25,5 @@ export class RoleViewComponent extends PortalViewDirective implements OnInit, On
     this.scriptService.loadStyleSheet('../../../../../assets/lib/plugins/custom/jstree/jstree.bundle.css');
     const roleId = this.route.snapshot.paramMap.get('id');
     this.viewService.loadModel(roleId);
-  }
-
-  ngOnDestroy(): void {
-    this.viewService.reset();
-    super.ngOnDestroy();
   }
 }

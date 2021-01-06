@@ -1,17 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {RoleBrowserService} from '../role-browser.service';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {RoleModel, RolesService} from 'myportal-api';
 import {AppService} from '../../../../../_services/app.service';
 import {Router} from '@angular/router';
 import {AlertService} from '../../../../../_services/alert.service';
+import {catchError, map} from 'rxjs/operators';
+import {HttpErrorResponse} from '@angular/common/http';
+import {throwError} from 'rxjs';
 
 @Component({
   selector: 'app-role-search',
   templateUrl: './role-search.component.html',
   styleUrls: ['./role-search.component.css']
 })
-export class RoleSearchComponent implements OnInit {
+export class RoleSearchComponent implements OnInit, OnDestroy {
 
   componentName = '#role_search';
 
@@ -23,13 +26,19 @@ export class RoleSearchComponent implements OnInit {
     return this.searchForm.get('roleDesc');
   }
 
+  get table(): any {
+    // @ts-ignore
+    return $('#search_results').DataTable();
+  }
+
   tableLoaded = false;
 
   searchResults: RoleModel[];
 
   viewService: RoleBrowserService;
 
-  constructor(roleBrowserService: RoleBrowserService, private appService: AppService, private roleService: RolesService, private router: Router,
+  constructor(roleBrowserService: RoleBrowserService, private appService: AppService,
+              private roleService: RolesService, private router: Router,
               private alertService: AlertService) {
     this.viewService = roleBrowserService;
   }
@@ -37,29 +46,43 @@ export class RoleSearchComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngOnDestroy(): void {
+    this.unloadTable();
+  }
+
+  unloadTable(): void {
+    if (this.tableLoaded) {
+      this.table.destroy();
+      this.tableLoaded = false;
+    }
+  }
+
+  newRole(): void {
+    this.unloadTable();
+    this.viewService.showCreate();
+  }
+
   search(): void {
     this.appService.blockComponent(this.componentName);
-    this.roleService.getRoles(this.roleDesc.value).subscribe(next => {
-      this.searchResults = next;
+    this.roleService.getRoles(this.roleDesc.value).pipe(map((searchResults => {
+      this.searchResults = searchResults;
 
-      if (!this.tableLoaded)
-      {
+      if (!this.tableLoaded) {
         this.loadTable();
         this.appService.unblockComponent(this.componentName);
-      }
-      else {
+      } else {
         this.refreshTable();
         this.appService.unblockComponent(this.componentName);
       }
-    }, error => {
-      this.alertService.error(error);
-      this.appService.unblockComponent(this.componentName);
-    });
+    })), catchError((err: HttpErrorResponse) => {
+      this.alertService.error(err.error);
+      return throwError(err);
+    })).subscribe();
   }
 
+
   refreshTable(): void {
-    // @ts-ignore
-    const table = $('#search_results').DataTable();
+    const table = this.table;
 
     table.clear();
     table.rows.add(this.searchResults);

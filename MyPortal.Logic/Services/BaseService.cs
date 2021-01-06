@@ -19,7 +19,6 @@ using MyPortal.Logic.Interfaces;
 
         public abstract void Dispose();
 
-
         protected Exception GetInnerException(Exception ex)
         {
             var exceptionMessage = ExceptionHelper.GetRootExceptionMessage(ex);

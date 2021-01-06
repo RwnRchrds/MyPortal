@@ -2,20 +2,25 @@ import {Injectable} from '@angular/core';
 import {RoleModel, RolesService, TreeNode} from 'myportal-api';
 import {Router} from '@angular/router';
 import {AppService} from '../../../../_services/app.service';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
-import {AlertService} from '../../../../_services/alert.service';
+import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import { AlertService } from 'projects/myportal-app/src/app/_services/alert.service';
+import {PortalViewServiceDirective} from '../../../../shared/portal-view/portal-view-service.directive';
+import {AuthService} from '../../../../_services/auth.service';
+import {catchError, map} from 'rxjs/operators';
+import {HttpErrorResponse} from '@angular/common/http';
+import {throwError} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RoleViewService {
+export class RoleViewService extends PortalViewServiceDirective {
 
   role: RoleModel;
   permissionTree: TreeNode;
 
   detailsForm = new FormGroup({
-    code: new FormControl(''),
-    name: new FormControl('')
+    code: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required])
   });
 
   get code(): AbstractControl {
@@ -34,20 +39,32 @@ export class RoleViewService {
 
   loadModel(roleId: string): void {
     this.appService.blockPage();
-    this.roleService.getRoleById(roleId).subscribe(next => {
-      this.role = next;
-      this.appService.unblockPage();
-      this.code.setValue(this.role.name);
-      this.name.setValue(this.role.description);
+    try {
+      this.roleService.getRoleById(roleId).pipe(map((role: RoleModel) => {
+        this.role = role;
+        this.code.setValue(this.role.name);
+        this.name.setValue(this.role.description);
 
-      if (this.role.system) {
-        this.code.disable();
-        this.name.disable();
-      }
-    }, error => {
-      this.router.navigate(['']);
-    });
-    this.roleService.getPermissionsTree(roleId).subscribe(tree => {
+        if (this.role.system) {
+          this.code.disable();
+          this.name.disable();
+        }
+      }), catchError((err: HttpErrorResponse) => {
+        this.alertService.error(err.error);
+        return throwError(err);
+      })).subscribe();
+    }
+    finally {
+      this.appService.unblockPage();
+    }
+  }
+
+  loadPermissionsTree(): void {
+    if (this.role == null)
+    {
+      return;
+    }
+    this.roleService.getPermissionsTree(this.role.id).pipe(map((tree: TreeNode) => {
       this.permissionTree = tree;
       // @ts-ignore
       $('#perm_tree').jstree({
@@ -56,27 +73,58 @@ export class RoleViewService {
           themes: {
             responsive: false
           },
+          expand_selected_onload: false,
           data: [this.permissionTree]
         }
       });
-    });
+    }), catchError((err: HttpErrorResponse) => {
+      this.alertService.error(err.error);
+      return throwError(err);
+    })).subscribe();
   }
 
   save(): void {
+    this.detailsForm.markAllAsTouched();
     this.appService.blockPage();
-    // @ts-ignore
-    const selectedNodes = $('#perm_tree').jstree('get_selected', true).filter(n => n.children.length === 0);
-    console.log(selectedNodes);
-    const selectedPermissionIds = selectedNodes.map(n => this.appService.parseGuid(n.id));
-    this.roleService.updateRole({id: this.role.id, name: this.code.value,
-      description: this.name.value, permissionIds: selectedPermissionIds}).subscribe(result => {
+    try {
+      if (this.detailsForm.invalid) {
+        this.alertService.error('Please review the errors and try again.');
+        return;
+      }
+      // @ts-ignore
+      const selectedNodes = $('#perm_tree').jstree('get_selected', true).filter(n => n.children.length === 0);
+      console.log(selectedNodes);
+      const selectedPermissionIds = selectedNodes.map(n => this.appService.parseGuid(n.id));
+      this.roleService.updateRole({id: this.role.id, name: this.code.value,
+        description: this.name.value, permissionIds: selectedPermissionIds}).pipe(map(result => {
+        this.loadModel(this.role.id);
+      }), catchError((err: HttpErrorResponse) => {
+        this.alertService.error(err.error);
+        return throwError(err);
+      })).subscribe();
+    }
+    finally {
       this.appService.unblockPage();
-    }, error => {
-        this.alertService.error(error);
-        this.appService.unblockPage();
+    }
+  }
+
+  delete(): void {
+    this.alertService.areYouSure(`Are you sure you want to delete '${this.role.description}'?`).then(userResponse => {
+      if (userResponse.isConfirmed) {
+        this.appService.blockPage();
+        this.roleService.deleteRole(this.role.id).pipe(map(result => {
+          this.router.navigate(['/staff/settings/roles']);
+          this.appService.unblockPage();
+        }), catchError((err: HttpErrorResponse) => {
+          this.alertService.error(err.error);
+          return throwError(err);
+        })).subscribe();
+      }
     });
   }
 
-  constructor(protected appService: AppService,
-              protected router: Router, private roleService: RolesService, private alertService: AlertService) { }
+  constructor(authService: AuthService, protected appService: AppService,
+              protected router: Router, private roleService: RolesService, private alertService: AlertService) {
+    super(authService);
+  }
 }

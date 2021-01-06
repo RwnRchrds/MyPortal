@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {SweetAlertResult} from '../_models/sweetAlertResult';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,19 @@ info(message: string): void {
     title: 'Information',
     text: message,
     icon: 'info'
+  });
+}
+
+areYouSure(message: string): Promise<SweetAlertResult> {
+  // @ts-ignore -- using SweetAlert
+  return Swal.fire({
+    title: 'Are you sure?',
+    text: message,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes',
+    cancelButtonText: 'No',
+    reverseButtons: true
   });
 }
 }

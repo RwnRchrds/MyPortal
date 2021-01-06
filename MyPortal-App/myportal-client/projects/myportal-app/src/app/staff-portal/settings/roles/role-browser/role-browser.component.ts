@@ -7,20 +7,15 @@ import {RoleBrowserService} from './role-browser.service';
   templateUrl: './role-browser.component.html',
   styleUrls: ['./role-browser.component.css']
 })
-export class RoleBrowserComponent extends PortalViewDirective implements OnInit, OnDestroy {
+export class RoleBrowserComponent extends PortalViewDirective implements OnInit {
 
   viewService: RoleBrowserService;
 
   constructor(protected renderer: Renderer2, protected hostElement: ElementRef, roleBrowserService: RoleBrowserService) {
-    super(renderer, hostElement);
+    super(renderer, hostElement, roleBrowserService);
     this.viewService = roleBrowserService;
   }
 
   ngOnInit(): void {
-  }
-
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
-    this.viewService.reset();
   }
 }

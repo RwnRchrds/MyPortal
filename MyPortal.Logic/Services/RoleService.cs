@@ -166,7 +166,7 @@ namespace MyPortal.Logic.Services
 
                 await _roleManager.UpdateAsync(roleInDb);
 
-                if (request.PermissionIds.Any())
+                if (request.PermissionIds != null)
                 {
                     await SetPermissions(roleInDb.Id, request.PermissionIds);
                 }
@@ -177,6 +177,8 @@ namespace MyPortal.Logic.Services
         {
             foreach (var roleId in roleIds)
             {
+                await _rolePermissionRepository.DeleteAllPermissions(roleId);
+
                 var roleInDb = await _roleManager.FindByIdAsync(roleId.ToString());
 
                 if (roleInDb.System)

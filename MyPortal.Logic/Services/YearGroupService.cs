@@ -30,7 +30,7 @@ namespace MyPortal.Logic.Services
         {
             var yearGroups = await _yearGroupRepository.GetAll();
 
-            return yearGroups.Select(BusinessMapper.Map<YearGroupModel>);
+            return yearGroups.OrderBy(y => y.Name).Select(BusinessMapper.Map<YearGroupModel>);
         }
     }
 }

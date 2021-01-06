@@ -30,7 +30,7 @@ namespace MyPortal.Logic.Services
         {
             var regGroups = await _regGroupRepository.GetAll();
 
-            return regGroups.Select(BusinessMapper.Map<RegGroupModel>);
+            return regGroups.OrderBy(r => r.Name).Select(BusinessMapper.Map<RegGroupModel>);
         }
     }
 }

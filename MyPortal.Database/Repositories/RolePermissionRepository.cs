@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
@@ -91,6 +92,13 @@ namespace MyPortal.Database.Repositories
             {
                 _context.RolePermissions.Remove(permission);
             }
+        }
+
+        public async Task DeleteAllPermissions(Guid roleId)
+        {
+            var permissions = await _context.RolePermissions.Where(x => x.RoleId == roleId).ToListAsync();
+
+            _context.RolePermissions.RemoveRange(permissions);
         }
 
         public async Task SaveChanges()

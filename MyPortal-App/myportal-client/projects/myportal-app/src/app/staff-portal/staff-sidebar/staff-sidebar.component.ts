@@ -43,7 +43,7 @@ export class StaffSidebarComponent extends PortalSidebarComponent implements OnI
       // {section: 'people', label: 'Contacts', route: ''},
       // {section: 'people', label: 'Staff', route: ''},
       {section: 'people', label: 'Students', route: '/staff/students', requiredPermissions: [
-        AppPermissions.students_studentDetails_view
+        AppPermissions.STUDENTS_DETAILS_VIEW
       ]},
       // {section: 'personnel', label: 'Training Courses', route: ''},
       // {section: 'reports', label: 'Run Report', route: ''},
@@ -52,7 +52,7 @@ export class StaffSidebarComponent extends PortalSidebarComponent implements OnI
       //   AppPermissions.system_users_view
       // ]},
       {section: 'settings', label: 'Roles', route: '/staff/settings/roles', requiredPermissions: [
-        AppPermissions.system_users_view
+        AppPermissions.SYSTEM_USERS_VIEW
       ]}
     ];
    }

@@ -13,6 +13,7 @@ namespace MyPortal.Database.Interfaces.Repositories
         Task<IEnumerable<RolePermission>> GetByUser(Guid userId);
         void Create(RolePermission rolePermission);
         Task Delete(Guid roleId, Guid permissionId);
+        Task DeleteAllPermissions(Guid roleId);
         Task SaveChanges();
     }
 }

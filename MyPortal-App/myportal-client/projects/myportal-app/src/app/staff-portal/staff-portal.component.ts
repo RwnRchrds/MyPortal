@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { AuthService } from './../_services/auth.service';
-import { PortalRootComponent } from './../shared/portal-root/portal-root.component';
+import { PortalRootDirective } from '../shared/portal-root/portal-root.directive';
 import {Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 
 @Component({
@@ -8,7 +8,7 @@ import {Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
   templateUrl: './staff-portal.component.html',
   styleUrls: ['./staff-portal.component.css']
 })
-export class StaffPortalComponent extends PortalRootComponent implements OnInit, OnDestroy {
+export class StaffPortalComponent extends PortalRootDirective implements OnInit, OnDestroy {
 
   constructor(renderer: Renderer2, authService: AuthService, router: Router) {
     super(renderer, authService, router);

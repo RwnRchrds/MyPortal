@@ -1,4 +1,4 @@
-import { SidebarMenuItem } from './../../_models/sidebar/sidebar-menu-item';
+import { SidebarMenuItem } from '../../_models/sidebar/sidebar-menu-item';
 
 export abstract class PortalSidebarComponent {
 

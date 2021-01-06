@@ -31,7 +31,7 @@ namespace MyPortal.Logic.Services
         {
             var houses = await _houseRepository.GetAll();
 
-            return houses.Select(BusinessMapper.Map<HouseModel>);
+            return houses.OrderBy(h => h.Name).Select(BusinessMapper.Map<HouseModel>);
         }
     }
 }

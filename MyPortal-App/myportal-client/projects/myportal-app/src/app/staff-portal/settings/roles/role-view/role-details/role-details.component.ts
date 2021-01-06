@@ -15,7 +15,7 @@ export class RoleDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.viewService.role.description);
+    this.viewService.loadPermissionsTree();
   }
 
 }

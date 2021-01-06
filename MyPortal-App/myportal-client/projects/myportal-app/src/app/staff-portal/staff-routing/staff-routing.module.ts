@@ -1,4 +1,3 @@
-import { StudentViewComponent } from './../people/students/student-view/student-view.component';
 import { StudentBrowserComponent } from './../people/students/student-browser/student-browser.component';
 import { StaffAuthGuard } from './../../_guards/staff-auth.guard';
 import { PermissionGuard } from '../../_guards/permission.guard';
@@ -25,19 +24,13 @@ const staffRoutes: Routes = [
         path: 'students',
         component: StudentBrowserComponent,
         canActivate: [PermissionGuard],
-        data: {requiredPermissions: [AppPermissions.students_studentDetails_view]}
-      },
-      {
-        path: 'students/:id',
-        component: StudentViewComponent,
-        canActivate: [PermissionGuard],
-        data: {requiredPermissions: [AppPermissions.students_studentDetails_view]}
+        data: {requiredPermissions: [AppPermissions.STUDENTS_DETAILS_VIEW]}
       },
       {
         path: 'settings/roles',
         component: RoleBrowserComponent,
         canActivate: [PermissionGuard],
-        data: {requiredPermissions: [AppPermissions.system_users_view]}
+        data: {requiredPermissions: [AppPermissions.SYSTEM_USERS_VIEW]}
       },
       {
         path: 'settings/roles/:id',

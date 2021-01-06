@@ -25,24 +25,36 @@
               <div class="col-lg-9 col-xl-8">
                   <div class="row align-items-center">
                     <div class="col-md-3 my-2 my-md-0">
-                      <input formControlName="lastName" type="text" class="form-control form-control-solid" placeholder="Last Name">
+                      <div class="form-group">
+                        <label>Last Name</label>
+                        <input formControlName="lastName" type="text" class="form-control form-control-solid">
+                      </div>
                   </div>
                       <div class="col-md-3 my-2 my-md-0">
-                          <input formControlName="firstName" type="text" class="form-control form-control-solid" placeholder="First Name">
+                          <div class="form-group">
+                            <label>First Name</label>
+                            <input formControlName="firstName" type="text" class="form-control form-control-solid">
+                          </div>
                       </div>
                       <div class="col-md-3 my-2 my-md-0">
-                          <select formControlName="studentStatus" class="form-control form-control-solid">
-                              <option value="0">Any Status</option>
+                          <div class="form-group">
+                            <label>Status</label>
+                            <select formControlName="studentStatus" class="form-control form-control-solid">
+                              <option value="0">Any</option>
                               <option value="1">On Roll</option>
                               <option value="2">Leavers</option>
                               <option value="3">Future</option>
-                          </select>
+                            </select>
+                          </div>
                       </div>
                       <div class="col-md-3 my-2 my-md-0">
-                        <select formControlName="yearGroupId" class="form-control form-control-solid">
-                          <option value="">Any Year Group</option>
-                          <option *ngFor="let yearGroup of yearGroups" [value]="yearGroup.id">{{yearGroup.name}}</option>
-                        </select>
+                        <div class="form-group">
+                          <label>Year Group</label>
+                          <select formControlName="yearGroupId" class="form-control form-control-solid">
+                            <option value="">Any</option>
+                            <option *ngFor="let yearGroup of yearGroups" [value]="yearGroup.id">{{yearGroup.name}}</option>
+                          </select>
+                        </div>
                       </div>
                   </div>
               </div>
@@ -56,17 +68,23 @@
             <div class="col-lg-9 col-xl-8">
               <div class="row align-items-center">
                   <div class="col-md-3 my-2 my-md-0">
-                    <select formControlName="regGroupId" class="form-control form-control-solid">
-                      <option value="">Any Reg Group</option>
-                      <option *ngFor="let regGroup of regGroups" [value]="regGroup.id">{{regGroup.name}}</option>
-                    </select>
+                    <div class="form-group">
+                      <label>Reg Group</label>
+                      <select formControlName="regGroupId" class="form-control form-control-solid">
+                        <option value="">Any</option>
+                        <option *ngFor="let regGroup of regGroups" [value]="regGroup.id">{{regGroup.name}}</option>
+                      </select>
+                    </div>
                   </div>
 
                   <div class="col-md-3 my-2 my-md-0">
-                    <select formControlName="houseId" class="form-control form-control-solid">
-                      <option value="">Any House</option>
-                      <option *ngFor="let house of houses" [value]="house.id">{{house.name}}</option>
-                    </select>
+                    <div class="form-group">
+                      <label>House</label>
+                      <select formControlName="houseId" class="form-control form-control-solid">
+                        <option value="">Any</option>
+                        <option *ngFor="let house of houses" [value]="house.id">{{house.name}}</option>
+                      </select>
+                    </div>
                   </div>
               </div>
           </div>

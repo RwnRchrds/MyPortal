@@ -1,8 +1,11 @@
 import { Router } from '@angular/router';
-import { AuthService } from './../../_services/auth.service';
-import { Renderer2 } from '@angular/core';
+import { AuthService } from '../../_services/auth.service';
+import {Directive, Renderer2} from '@angular/core';
 
-export abstract class PortalRootComponent {
+@Directive({
+  selector: '[appPortalRoot]'
+})
+export abstract class PortalRootDirective {
 
   constructor(protected renderer: Renderer2, public authService: AuthService, protected router: Router) { }
 
