@@ -1,11 +1,11 @@
 <div *ngIf="viewService.showCreateComponent" class="card card-custom" id="role_search">
-  <div class="card-header flex-wrap border-0 pt-6 pb-0">
-    <h3 class="card-title align-items-start flex-column">
+  <div class="card-header">
+    <h3 class="card-title">
       <span class="card-label font-weight-bolder text-dark">New Role</span>
     </h3>
     <div class="card-toolbar">
-      <button class="btn btn-default font-weight-bolder mr-2" (click)="goBack()">
-        Back
+      <button class="btn btn-light-primary font-weight-bolder mr-2" (click)="goBack()">
+        <i class="fas fa-arrow-left mr-1"></i>Back
       </button>
       <button class="btn btn-primary font-weight-bolder" (click)="save()">
         <i class="fas fa-cloud-upload mr-1"></i>Save

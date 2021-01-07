@@ -1,7 +1,7 @@
-<div *ngIf="viewService.showSearchComponent" class="card card-custom" id="student_search">
+<div *ngIf="service.showComponent" class="card card-custom" id="student_search">
   <!--begin::Header-->
-  <div class="card-header flex-wrap border-0 pt-6 pb-0">
-      <h3 class="card-title align-items-start flex-column">
+  <div class="card-header">
+      <h3 class="card-title">
           <span class="card-label font-weight-bolder text-dark">Browse Students</span>
       </h3>
       <div class="card-toolbar">
@@ -20,8 +20,8 @@
       <!--begin: Search Form-->
       <!--begin::Search Form-->
       <div class="mb-10">
-          <form [formGroup]="searchForm" (ngSubmit)="search()">
-          <div class="row align-items-center mb-5">
+          <form [formGroup]="service.searchForm" (ngSubmit)="service.search()">
+          <div class="row align-items-center">
               <div class="col-lg-9 col-xl-8">
                   <div class="row align-items-center">
                     <div class="col-md-3 my-2 my-md-0">
@@ -52,7 +52,7 @@
                           <label>Year Group</label>
                           <select formControlName="yearGroupId" class="form-control form-control-solid">
                             <option value="">Any</option>
-                            <option *ngFor="let yearGroup of yearGroups" [value]="yearGroup.id">{{yearGroup.name}}</option>
+                            <option *ngFor="let yearGroup of service.yearGroups" [value]="yearGroup.id">{{yearGroup.name}}</option>
                           </select>
                         </div>
                       </div>
@@ -72,17 +72,16 @@
                       <label>Reg Group</label>
                       <select formControlName="regGroupId" class="form-control form-control-solid">
                         <option value="">Any</option>
-                        <option *ngFor="let regGroup of regGroups" [value]="regGroup.id">{{regGroup.name}}</option>
+                        <option *ngFor="let regGroup of service.regGroups" [value]="regGroup.id">{{regGroup.name}}</option>
                       </select>
                     </div>
                   </div>
-
                   <div class="col-md-3 my-2 my-md-0">
                     <div class="form-group">
                       <label>House</label>
                       <select formControlName="houseId" class="form-control form-control-solid">
                         <option value="">Any</option>
-                        <option *ngFor="let house of houses" [value]="house.id">{{house.name}}</option>
+                        <option *ngFor="let house of service.houses" [value]="house.id">{{house.name}}</option>
                       </select>
                     </div>
                   </div>
@@ -91,7 +90,6 @@
           </div>
         </form>
     </div>
-
         <div class="kt-portlet__body d-none" id="searchResults">
             <div class="row">
                 <div class="col-md-12">
