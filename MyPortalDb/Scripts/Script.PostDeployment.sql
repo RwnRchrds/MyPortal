@@ -21,7 +21,7 @@ GO
 
 ALTER TABLE [dbo].[People_Persons]
 ADD CONSTRAINT [FK_Person_User]
-FOREIGN KEY (UserId) REFERENCES [dbo].[AspNetUsers](Id)
+FOREIGN KEY (UserId) REFERENCES [dbo].[Users](Id)
 ON DELETE SET NULL
 ON UPDATE CASCADE
 

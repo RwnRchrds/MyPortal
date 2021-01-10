@@ -33,7 +33,7 @@ namespace MyPortal.Database.Repositories
         protected override void JoinRelated(Query query)
         {
             query.LeftJoin("People as AssignedTo", "AssignedTo.Id", "Task.AssignedToId");
-            query.LeftJoin("AspNetUsers as AssignedBy", "AssignedBy.Id", "Task.AssignedById");
+            query.LeftJoin("Users as AssignedBy", "AssignedBy.Id", "Task.AssignedById");
             query.LeftJoin("People as AssignedByPerson", "AssignedByPerson.UserId", "AssignedBy.Id");
             query.LeftJoin("TaskTypes as Type", "Type.Id", "Task.TypeId");
         }

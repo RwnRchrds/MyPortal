@@ -36,7 +36,7 @@ namespace MyPortal.Database.Repositories
         protected override void JoinRelated(Query query)
         {
             query.LeftJoin("LogNoteTypes as LogNoteType", "LogNoteType.Id", "LogNote.TypeId");
-            query.LeftJoin("AspNetUsers as User", "User.Id", "LogNote.CreatedById");
+            query.LeftJoin("Users as User", "User.Id", "LogNote.CreatedById");
             query.LeftJoin("People as AuthorPerson", "AuthorPerson.UserId", "User.Id");
             query.LeftJoin("Students as Student", "Student.Id", "LogNote.StudentId");
             query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");

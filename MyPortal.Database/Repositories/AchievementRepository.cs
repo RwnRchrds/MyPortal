@@ -46,7 +46,7 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin($"Students as Student", "Student.Id", "Achievement.StudentId");
             query.LeftJoin($"People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
             query.LeftJoin($"Locations as Location", "Location.Id", "Achievement.LocationId");
-            query.LeftJoin($"AspNetUsers as RecordedBy", "RecordedBy.Id", "Achievement.RecordedById");
+            query.LeftJoin($"Users as RecordedBy", "RecordedBy.Id", "Achievement.RecordedById");
             query.LeftJoin($"People as RecordedByPerson", "RecordedByPerson.UserId", "RecordedBy.Id");
         }
 

@@ -170,9 +170,9 @@ namespace MyPortalWeb.Controllers.Api
 
         private async Task<bool> AuthoriseCreate(Guid personId, Guid userId)
         {
-            var taskPersonTypes = await _personService.GetPersonTypes(personId);
+            var personInDb = await _personService.GetPersonWithTypes(personId);
 
-            if (taskPersonTypes.Student)
+            if (personInDb.PersonTypes.IsStudent)
             {
                 if (User.IsType(UserTypes.Student))
                 {
@@ -187,7 +187,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
             }
 
-            else if (taskPersonTypes.Employee)
+            else if (personInDb.PersonTypes.IsStaff)
             {
                 if (await UserHasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
                 {
@@ -224,14 +224,14 @@ namespace MyPortalWeb.Controllers.Api
                 return true;
             }
 
-            var taskPersonTypes = await _personService.GetPersonTypes(model.AssignedToId);
+            var personInDb = await _personService.GetPersonWithTypes(model.AssignedToId);
 
-            if (taskPersonTypes.Student)
+            if (personInDb.PersonTypes.IsStudent)
             {
                 return User.IsType(UserTypes.Staff);
             }
 
-            if (taskPersonTypes.Employee)
+            if (personInDb.PersonTypes.IsStaff)
             {
                 if (await UserHasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
                 {

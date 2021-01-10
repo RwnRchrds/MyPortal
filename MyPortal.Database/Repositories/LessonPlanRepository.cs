@@ -31,7 +31,7 @@ namespace MyPortal.Database.Repositories
         protected override void JoinRelated(Query query)
         {
             query.LeftJoin("StudyTopics as StudyTopic", "StudyTopic.Id", "LessonPlan.StudyTopicId");
-            query.LeftJoin("AspNetUsers as User", "User.Id", "LessonPlan.AuthorId");
+            query.LeftJoin("Users as User", "User.Id", "LessonPlan.AuthorId");
             query.LeftJoin("People as Person", "Person.UserId", "User.Id");
         }
 

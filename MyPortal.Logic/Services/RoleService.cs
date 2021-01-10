@@ -201,7 +201,7 @@ namespace MyPortal.Logic.Services
 
             var roles = await query.ToListAsync();
 
-            return roles.Select(BusinessMapper.Map<RoleModel>);
+            return roles.OrderBy(r => r.Description).Select(BusinessMapper.Map<RoleModel>);
         }
 
         public async Task<RoleModel> GetRoleById(Guid roleId)

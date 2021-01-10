@@ -1,0 +1,44 @@
+<div *ngIf="viewService.user" class="content d-flex flex-column flex-column-fluid" id="kt_content">
+  <!--begin::Subheader-->
+  <div class="subheader py-2 py-lg-4 subheader-solid">
+    <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+      <!--begin::Details-->
+      <div class="d-flex align-items-center flex-wrap mr-2">
+        <!--begin::Title-->
+        <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">User Details</h5>
+        <!--end::Title-->
+        <!--begin::Separator-->
+        <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-5 bg-gray-200"></div>
+        <!--end::Separator-->
+        <!--begin::Role Name-->
+        <div class="d-flex align-items-center" id="kt_subheader_search">
+          <span class="text-dark-50 font-weight-bold" id="kt_subheader_total">{{viewService.user.userName}}</span>
+        </div>
+        <!--end::Role Name-->
+      </div>
+      <!--end::Details-->
+      <!--begin::Toolbar-->
+      <div class="d-flex align-items-center">
+        <!--begin::BackButton-->
+        <button routerLink="/staff/settings/users" class="btn btn-light-primary font-weight-bold btn-sm px-3 font-size-base">
+          <i class="fas fa-arrow-left mr-1"></i>Back
+        </button>
+        <!--end::BackButton-->
+        <button type="button" (click)="viewService.save()" class="btn btn-primary font-weight-bold btn-sm px-3 ml-2 font-size-base">
+          <i class="fas fa-cloud-upload mr-1"></i>Save
+        </button>
+      </div>
+      <!--end::Toolbar-->
+    </div>
+  </div>
+  <!--end::Subheader-->
+  <!--begin::Entry-->
+  <div class="d-flex flex-column-fluid">
+    <div class="container">
+      <app-user-details *ngIf="viewService.showDetailsComponent"></app-user-details>
+      <app-user-link-person *ngIf="viewService.showLinkPersonComponent"></app-user-link-person>
+      <app-user-reset-password *ngIf="viewService.showResetPasswordComponent"></app-user-reset-password>
+    </div>
+  </div>
+  <!--end::Entry-->
+</div>

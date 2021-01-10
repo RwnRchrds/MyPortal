@@ -33,13 +33,14 @@ export class AuthService {
   }
 
   updatePermissions(): Observable<void> {
+    console.log('Updating permissions...');
     return this.authService.getEffectivePermissions().pipe(
       map((response: string[]) => {
       const latestPermissions = response;
-
       if (latestPermissions) {
         localStorage.setItem('perms', JSON.stringify(latestPermissions));
         this.permissionSource.next(latestPermissions);
+        console.log('Permissions updated.');
       }
     }));
   }
@@ -98,7 +99,7 @@ export class AuthService {
   }
 
   logout(): void {
-    this.effectivePermissions$.pipe(take(1)).subscribe(data => console.log(data));
+    this.effectivePermissions$.pipe(take(1)).subscribe();
     localStorage.clear();
     this.currentUserSource.next(null);
     this.permissionSource.next(null);

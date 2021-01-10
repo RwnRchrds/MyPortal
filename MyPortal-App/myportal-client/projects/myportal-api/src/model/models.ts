@@ -42,6 +42,8 @@ export * from './logNoteTypeModel';
 export * from './loginModel';
 export * from './newEntityResponse';
 export * from './personModel';
+export * from './personSearchResultModel';
+export * from './personTypeIndicator';
 export * from './photoModel';
 export * from './regGroupModel';
 export * from './roleModel';

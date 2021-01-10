@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using Dapper;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.Query;
+using MyPortal.Database.Models.Query.Person;
 using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -43,68 +41,74 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("AspNetUsers as User", "User.Id", "Person.UserId");
+            query.LeftJoin("Users as User", "User.PersonId", "Person.Id");
         }
 
-        private static void ApplySearch(Query query, PersonSearchOptions search)
+        private static void ApplySearch(Query query, PersonSearchOptions search, bool includePersonTypes)
         {
-            if (!string.IsNullOrWhiteSpace(search.FirstName))
+            if (search != null)
             {
-                query.WhereStarts("Person.FirstName", search.FirstName);
+                if (!string.IsNullOrWhiteSpace(search.FirstName))
+                {
+                    query.WhereStarts("Person.FirstName", search.FirstName);
+                }
+
+                if (!string.IsNullOrWhiteSpace(search.LastName))
+                {
+                    query.WhereStarts("Person.LastName", search.LastName);
+                }
+
+                if (!string.IsNullOrWhiteSpace(search.Gender))
+                {
+                    query.Where("Person.Gender", search.Gender);
+                }
+
+                if (search.Dob != null)
+                {
+                    query.WhereDate("Person.Dob", search.Dob);
+                }
             }
 
-            if (!string.IsNullOrWhiteSpace(search.LastName))
+            if (includePersonTypes)
             {
-                query.WhereStarts("Person.LastName", search.LastName);
-            }
+                query.SelectRaw("CASE WHEN [User].[Id] IS NULL THEN 0 ELSE 1 END AS IsUser");
+                query.SelectRaw("CASE WHEN [Student].[Id] IS NULL THEN 0 ELSE 1 END AS IsStudent");
+                query.SelectRaw("CASE WHEN [StaffMember].[Id] IS NULL THEN 0 ELSE 1 END AS IsStaff");
+                query.SelectRaw("CASE WHEN [Contact].[Id] IS NULL THEN 0 ELSE 1 END AS IsContact");
 
-            if (!string.IsNullOrWhiteSpace(search.Gender))
-            {
-                query.Where("Person.Gender", search.Gender);
-            }
-
-            if (search.Dob != null)
-            {
-                query.WhereDate("Person.Dob", search.Dob);
+                query.LeftJoin("dbo.Students AS Student", "Student.PersonId", "Person.Id");
+                query.LeftJoin("dbo.StaffMembers AS StaffMember", "StaffMember.PersonId", "Person.Id");
+                query.LeftJoin("dbo.Contacts AS Contact", "Contact.PersonId", "Person.Id");
             }
         }
 
-        public async Task<PersonTypeIndicator> GetPersonTypeIndicatorById(Guid personId)
+        public async Task<PersonSearchResult> GetPersonWithTypesById(Guid personId)
         {
-            var indicator = new PersonTypeIndicator();
+            var query = GenerateQuery();
 
-            var userQuery = GenerateEmptyQuery(typeof(Person), "Person").Where(q => q.WhereNotNull("Person.UserId").Where("Person.Id", personId)).AsCount();
-            var studentQuery = GenerateEmptyQuery(typeof(Student), "Student").Where("Student.PersonId", personId).AsCount();
-            var employeeQuery = GenerateEmptyQuery(typeof(StaffMember), "StaffMember").Where("StaffMember.PersonId", personId).AsCount();
-            var contactQuery = GenerateEmptyQuery(typeof(Contact), "Contact").Where("Contact.PersonId", personId).AsCount();
+            query.Where("Person.Id", personId);
 
-            // TODO: Agent and applicant queries when available
+            ApplySearch(query, null, true);
 
-            var userSql = Compiler.Compile(userQuery);
-            var studentSql = Compiler.Compile(studentQuery);
-            var employeeSql = Compiler.Compile(employeeQuery);
-            var contactSql = Compiler.Compile(contactQuery);
-
-            using (var multi =
-                await Connection.QueryMultipleAsync($"{userSql.Sql};{studentSql.Sql};{employeeSql.Sql};{contactSql}",
-                    userSql.NamedBindings))
-            {
-                indicator.User = await multi.ReadFirstAsync<int>() > 0;
-                indicator.Student = await multi.ReadFirstAsync<int>() > 0;
-                indicator.Employee = await multi.ReadFirstAsync<int>() > 0;
-                indicator.Contact = await multi.ReadFirstAsync<int>() > 0;
-            }
-
-            return indicator;
+            return (await ExecuteQueryWithTypes(query)).FirstOrDefault();
         }
 
         public async Task<IEnumerable<Person>> GetAll(PersonSearchOptions searchParams)
         {
             var query = GenerateQuery();
             
-            ApplySearch(query, searchParams);
+            ApplySearch(query, searchParams, false);
 
             return await ExecuteQuery(query);
+        }
+
+        public async Task<IEnumerable<PersonSearchResult>> GetAllWithTypes(PersonSearchOptions searchParams)
+        {
+            var query = GenerateQuery();
+
+            ApplySearch(query, searchParams, true);
+
+            return await ExecuteQueryWithTypes(query);
         }
 
         protected override async Task<IEnumerable<Person>> ExecuteQuery(Query query)
@@ -117,6 +121,22 @@ namespace MyPortal.Database.Repositories
 
                 return person;
             }, sql.NamedBindings);
+        }
+
+        protected async Task<IEnumerable<PersonSearchResult>> ExecuteQueryWithTypes(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<Person, User, PersonTypeIndicator, PersonSearchResult>(sql.Sql,
+                (person, user, types) =>
+                {
+                    var result = new PersonSearchResult();
+                    person.User = user;
+                    result.Person = person;
+                    result.PersonTypes = types;
+
+                    return result;
+                }, sql.NamedBindings, splitOn:"Id, IsUser");
         }
     }
 }

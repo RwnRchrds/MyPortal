@@ -3,18 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using MyPortal.Database.Constants;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
-using MyPortal.Database.Repositories;
-using MyPortal.Logic.Constants;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using Task = System.Threading.Tasks.Task;
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyPortal.Database.Constants;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Query;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
@@ -13,6 +13,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<PersonModel> GetByUserId(Guid userId, bool throwIfNotFound = true);
         Task<PersonModel> GetById(Guid personId);
         Dictionary<string, string> GetGenderOptions();
-        Task<PersonTypeIndicator> GetPersonTypes(Guid personId);
+        Task<PersonSearchResultModel> GetPersonWithTypes(Guid personId);
+        Task<IEnumerable<PersonSearchResultModel>> GetWithTypes(PersonSearchOptions searchModel);
     }
 }

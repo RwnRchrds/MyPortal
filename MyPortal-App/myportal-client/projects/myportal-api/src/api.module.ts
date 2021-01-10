@@ -11,6 +11,7 @@ import { DocumentsService } from './api/documents.service';
 import { HousesService } from './api/houses.service';
 import { IncidentsService } from './api/incidents.service';
 import { LogNotesService } from './api/logNotes.service';
+import { PersonService } from './api/person.service';
 import { RegGroupsService } from './api/regGroups.service';
 import { RolesService } from './api/roles.service';
 import { SchoolsService } from './api/schools.service';
@@ -32,6 +33,7 @@ import { YearGroupsService } from './api/yearGroups.service';
     HousesService,
     IncidentsService,
     LogNotesService,
+    PersonService,
     RegGroupsService,
     RolesService,
     SchoolsService,

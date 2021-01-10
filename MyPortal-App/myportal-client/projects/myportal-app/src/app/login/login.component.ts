@@ -3,8 +3,11 @@ import { ScriptService } from '../_services/script.service';
 import { Component, OnInit } from '@angular/core';
 import {LoginModel, SchoolsService} from 'myportal-api';
 import {AppService} from '../_services/app.service';
-import { switchMap } from 'rxjs/operators';
+import {catchError, flatMap, map, switchMap} from 'rxjs/operators';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {HttpErrorResponse} from '@angular/common/http';
+import {throwError} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +27,8 @@ export class LoginComponent implements OnInit {
   schoolMotto = 'Leap Into Learning';
 
   constructor(private scriptService: ScriptService, private appService: AppService,
-              private authService: AuthService, private schoolService: SchoolsService) {
+              private authService: AuthService, private schoolService: SchoolsService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -44,15 +48,21 @@ export class LoginComponent implements OnInit {
 
   login(): void {
     this.appService.blockPage();
-    this.authService.login({username: this.username.value, password: this.password.value})
-      .pipe(switchMap(() => this.authService.updatePermissions())).subscribe(next => {
+    try {
+      this.authService.login({username: this.username.value, password: this.password.value}).pipe(map(result => {
+        console.log('Login successful.');
+        this.authService.updatePermissions().subscribe(perms => {
+          console.log('Loading application...');
+          location.reload();
+        });
+      }), catchError((err: HttpErrorResponse) => {
+        this.loginError = err.error;
+        return throwError(err);
+      })).subscribe();
+    }
+    finally {
       this.appService.unblockPage();
-      location.reload();
-    }, error => {
-      console.log(error);
-      this.loginError = error.error;
-      this.appService.unblockPage();
-    });
+    }
   }
 
 }
