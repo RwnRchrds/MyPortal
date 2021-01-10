@@ -2,37 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyPortal.Database.Constants;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
-using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
-using Task = System.Threading.Tasks.Task;
+using MyPortal.Logic.Models.Query;
 
 namespace MyPortal.Logic.Services
 {
     public class PersonService : BaseService, IPersonService
     {
         private readonly IPersonRepository _personRepository;
-
-        private PersonSearchOptions GenerateSearchObject(PersonSearchOptions searchModel)
-        {
-            var person = new PersonSearchOptions();
-
-            person.FirstName = searchModel.FirstName;
-            //person.MiddleName = searchModel.MiddleName;
-            person.LastName = searchModel.LastName;
-            person.Gender = searchModel.Gender;
-            person.Dob = searchModel.Dob;
-
-            return person;
-        }
 
         public PersonService(IPersonRepository personRepository)
         {
@@ -60,20 +42,23 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<PersonModel>> Get(PersonSearchOptions searchModel)
         {
-            var searchObject = GenerateSearchObject(searchModel);
-
-            IEnumerable<Person> people;
-
-            people = await _personRepository.GetAll(searchObject);
+            var people = await _personRepository.GetAll(searchModel);
 
             return people.Select(BusinessMapper.Map<PersonModel>).ToList();
         }
 
-        public async Task<PersonTypeIndicator> GetPersonTypes(Guid personId)
+        public async Task<IEnumerable<PersonSearchResultModel>> GetWithTypes(PersonSearchOptions searchModel)
         {
-            var types = await _personRepository.GetPersonTypeIndicatorById(personId);
+            var results = await _personRepository.GetAllWithTypes(searchModel);
 
-            return types;
+            return results.Select(BusinessMapper.Map<PersonSearchResultModel>);
+        }
+
+        public async Task<PersonSearchResultModel> GetPersonWithTypes(Guid personId)
+        {
+            var result = await _personRepository.GetPersonWithTypesById(personId);
+
+            return BusinessMapper.Map<PersonSearchResultModel>(result);
         }
 
         public async Task<PersonModel> GetByUserId(Guid userId, bool throwIfNotFound = true)

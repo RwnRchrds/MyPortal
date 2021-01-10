@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +15,7 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly ITokenService _tokenService;
 
-        public AuthenticationController(IUserService userService, IAcademicYearService academicYearService,
-            IRolePermissionsCache rolePermissionsCache, ITokenService tokenService) : base(userService,
-            academicYearService, rolePermissionsCache)
+        public AuthenticationController(IUserService userService, IAcademicYearService academicYearService, IRolePermissionsCache rolePermissionsCache, ITokenService tokenService) : base(userService, academicYearService, rolePermissionsCache)
         {
             _tokenService = tokenService;
         }

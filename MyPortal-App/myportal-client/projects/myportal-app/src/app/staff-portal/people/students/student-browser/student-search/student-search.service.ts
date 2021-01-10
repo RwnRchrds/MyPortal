@@ -108,8 +108,6 @@ export class StudentSearchService {
   }
 
   loadSearchResults(): void {
-    const tempOverviewUrl = this.router.createUrlTree([`staff/students/tempid`]).toString();
-
     // @ts-ignore
     $('#student_search_results').DataTable({
       responsive: true,
@@ -120,9 +118,16 @@ export class StudentSearchService {
         {
           data: 'displayName',
           render(data, type, student) {
-            const overviewUrl = tempOverviewUrl.replace('tempid', student.id);
-            return `<div class="d-flex align-items-center"><div class="symbol symbol-40 symbol-light-primary"><div class="symbol-label font-size-h5"><i class="fas fa-fw fa-user-graduate text-primary"></i></div></div><div class="ml-3"><div class="text-dark-75 font-weight-bold line-height-sm d-block"><a href="${
-              overviewUrl}">${student.displayName}</a></div></div></div>`;
+            return `<div class="d-flex align-items-center">
+<div class="symbol symbol-40 symbol-light-primary">
+<div class="symbol-label font-size-h5">
+<i class="fas fa-fw fa-user-graduate text-primary"></i>
+</div>
+</div>
+<div class="ml-3">
+<div class="text-dark-75 font-weight-bold line-height-sm d-block">${student.displayName}</div>
+</div>
+</div>`;
           }
         },
         {

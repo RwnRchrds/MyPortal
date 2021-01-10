@@ -89,9 +89,11 @@ export class RoleSearchComponent implements OnInit, OnDestroy {
     table.draw();
   }
 
-  loadTable(): void {
-    const tempOverviewUrl = this.router.createUrlTree([`staff/settings/roles/tempid`]).toString();
+  rowClickHandler(data: any): void {
+    this.router.navigate(['staff/settings/roles/' + data.id]);
+  }
 
+  loadTable(): void {
     // @ts-ignore
     $('#search_results').DataTable({
       responsive: true,
@@ -102,15 +104,33 @@ export class RoleSearchComponent implements OnInit, OnDestroy {
         {
           data: 'description',
           render(data, type, role) {
-            const overviewUrl = tempOverviewUrl.replace('tempid', role.id);
-            return `<div class="d-flex align-items-center"><div class="symbol symbol-40 symbol-light-primary"><div class="symbol-label font-size-h5"><i class="fas fa-fw fa-users text-primary"></i></div></div><div class="ml-3"><div class="text-dark-75 font-weight-bold line-height-sm d-block"><a href="${
-              overviewUrl}">${role.description}</a></div></div></div>`;
+            return `<div class="d-flex align-items-center">
+<div class="symbol symbol-40 symbol-light-primary">
+<div class="symbol-label font-size-h5">
+<i class="fas fa-fw fa-users text-primary"></i>
+</div>
+</div>
+<div class="ml-3">
+<div class="text-dark-75 font-weight-bold line-height-sm d-block">${role.description}</div>
+</div>
+</div>`;
           }
         }
       ],
+      rowCallback: (row, data, index) => {
+        const self = this;
+        // @ts-ignore
+        $('td', row).unbind('dblclick');
+        // @ts-ignore
+        $('td', row).bind('dblclick', () => {
+          self.rowClickHandler(data);
+        });
+
+        return row;
+      },
       language:
         {
-          emptyTable: 'No students'
+          emptyTable: 'No roles'
         }
     });
 

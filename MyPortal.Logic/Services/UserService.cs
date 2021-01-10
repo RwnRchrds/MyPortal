@@ -35,9 +35,12 @@ namespace MyPortal.Logic.Services
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IRolePermissionRepository _rolePermissionRepository;
         private readonly IRolePermissionsCache _rolePermissionsCache;
+        private readonly IPersonRepository _personRepository;
 
         public UserService(UserManager<User> userManager, RoleManager<Role> roleManager,
-            SignInManager<User> signInManager, IRolePermissionsCache rolePermissionsCache, IUserRoleRepository userRoleRepository, IRolePermissionRepository rolePermissionRepository)
+            SignInManager<User> signInManager, IRolePermissionsCache rolePermissionsCache,
+            IUserRoleRepository userRoleRepository, IRolePermissionRepository rolePermissionRepository,
+            IPersonRepository personRepository)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -45,6 +48,7 @@ namespace MyPortal.Logic.Services
             _rolePermissionsCache = rolePermissionsCache;
             _userRoleRepository = userRoleRepository;
             _rolePermissionRepository = rolePermissionRepository;
+            _personRepository = personRepository;
         }
 
         public override void Dispose()
@@ -81,8 +85,9 @@ namespace MyPortal.Logic.Services
             return users.Select(BusinessMapper.Map<UserModel>);
         }
 
-        public async Task CreateUser(params CreateUserModel[] createUserRequests)
+        public async Task<IEnumerable<Guid>> CreateUser(params CreateUserModel[] createUserRequests)
         {
+            var newIds = new List<Guid>();
             foreach (var request in createUserRequests)
             {
                 if (await UsernameExists(request.Username))
@@ -103,9 +108,13 @@ namespace MyPortal.Logic.Services
 
                 if (!result.Succeeded)
                 {
-                    throw new Exception(result.Errors.ToString());
+                    throw new Exception(result.Errors.Aggregate("", (a, b) => $"{a}{Environment.NewLine}{b.Description}"));
                 }
+
+                newIds.Add(user.Id);
             }
+
+            return newIds.ToArray();
         }
 
         public async Task LinkPerson(Guid userId, Guid personId)
@@ -284,6 +293,11 @@ namespace MyPortal.Logic.Services
         public async Task<UserModel> GetUserById(Guid userId)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+
+            if (user.PersonId.HasValue)
+            {
+                user.Person = await _personRepository.GetById(user.PersonId.Value);
+            }
 
             return BusinessMapper.Map<UserModel>(user);
         }

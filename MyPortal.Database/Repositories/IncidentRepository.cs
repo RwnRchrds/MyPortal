@@ -43,7 +43,7 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("BehaviourOutcomes as BehaviourOutcome", "BehaviourOutcome.Id", "Incident.OutcomeId");
             query.LeftJoin("BehaviourStatus", "BehaviourStatus.Id", "Incident.StatusId");
             query.LeftJoin("Locations as Location", "Location.Id", "Incident.LocationId");
-            query.LeftJoin("AspNetUsers as User", "User.Id", "Incident.RecordedById");
+            query.LeftJoin("Users as User", "User.Id", "Incident.RecordedById");
             query.LeftJoin("People as RecordedByPerson", "RecordedByPerson.UserId", "User.Id");
         }
 

@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin.Users;
 using MyPortalWeb.Controllers.BaseControllers;
+using MyPortalWeb.Models;
 
 namespace MyPortalWeb.Controllers.Api
 { 
@@ -30,18 +35,20 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPost]
         [Route("create")]
+        [Produces(typeof(NewEntityResponse))]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserModel model)
         {
             return await ProcessAsync(async () =>
             {
-                await UserService.CreateUser(model);
+                var userId = (await UserService.CreateUser(model)).FirstOrDefault();
 
-                return Ok("User created.");
+                return Ok(new NewEntityResponse {Id = userId});
             }, Permissions.System.Users.EditUsers);
         }
 
         [HttpGet]
         [Route("get")]
+        [Produces(typeof(IEnumerable<UserModel>))]
         public async Task<IActionResult> GetUsers([FromQuery] string username)
         {
             return await ProcessAsync(async () =>
@@ -54,6 +61,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("get/id/{userId}")]
+        [Produces(typeof(UserModel))]
         public async Task<IActionResult> GetUserById([FromRoute] Guid userId)
         {
             return await ProcessAsync(async () =>
@@ -71,6 +79,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("roles/get/{userId}")]
+        [Produces(typeof(IEnumerable<RoleModel>))]
         public async Task<IActionResult> GetUserRoles([FromRoute] Guid userId)
         {
             return await ProcessAsync(async () =>
@@ -88,6 +97,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPut]
         [Route("update")]
+        [Produces(typeof(string))]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserModel model)
         {
             return await ProcessAsync(async () =>
@@ -100,6 +110,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpDelete]
         [Route("delete/{userId}")]
+        [Produces(typeof(string))]
         public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
         {
             return await ProcessAsync(async () =>
@@ -112,6 +123,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPut]
         [Route("setPassword")]
+        [Produces(typeof(string))]
         public async Task<IActionResult> SetPassword(SetPasswordModel request)
         {
             return await ProcessAsync(async () =>
@@ -129,15 +141,14 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPut]
         [Route("setEnabled")]
+        [Produces(typeof(bool))]
         public async Task<IActionResult> SetEnabled(SetUserEnabledModel model)
         {
             return await ProcessAsync(async () =>
             {
                 await UserService.SetUserEnabled(model.UserId, model.Enabled);
 
-                string responseMessage = model.Enabled ? "User enabled." : "User disabled.";
-
-                return Ok(responseMessage);
+                return Ok(model.Enabled);
             }, Permissions.System.Users.EditUsers);
         }
     }

@@ -6,8 +6,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.Query.Person;
 using MyPortal.Logic.Models;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Query;
 
 namespace MyPortal.Logic.Helpers
 {
@@ -128,6 +130,7 @@ namespace MyPortal.Logic.Helpers
             {typeof(Person), typeof(PersonModel)},
             {typeof(PersonCondition), typeof(PersonConditionModel)},
             {typeof(PersonDietaryRequirement), typeof(PersonDietaryRequirementModel)},
+            {typeof(PersonSearchResult), typeof(PersonSearchResultModel)},
             {typeof(PhoneNumber), typeof(PhoneNumberModel)},
             {typeof(PhoneNumberType), typeof(PhoneNumberTypeModel)},
             {typeof(Photo), typeof(PhotoModel)},

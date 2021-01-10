@@ -12,7 +12,7 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface IUserService : IService
     {
-        Task CreateUser(params CreateUserModel[] createUserRequests);
+        Task<IEnumerable<Guid>> CreateUser(params CreateUserModel[] createUserRequests);
         Task LinkPerson(Guid userId, Guid personId);
         Task UnlinkPerson(Guid userId);
         Task UpdateUser(params UpdateUserModel[] updateUserRequests);

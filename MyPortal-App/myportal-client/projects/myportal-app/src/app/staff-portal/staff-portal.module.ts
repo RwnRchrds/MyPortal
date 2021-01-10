@@ -14,6 +14,13 @@ import { RoleSearchComponent } from './settings/roles/role-browser/role-search/r
 import { RoleViewComponent } from './settings/roles/role-view/role-view.component';
 import { RoleDetailsComponent } from './settings/roles/role-view/role-details/role-details.component';
 import { CreateRoleComponent } from './settings/roles/role-browser/create-role/create-role.component';
+import { UserBrowserComponent } from './settings/users/user-browser/user-browser.component';
+import { UserSearchComponent } from './settings/users/user-browser/user-search/user-search.component';
+import { UserViewComponent } from './settings/users/user-view/user-view.component';
+import { UserDetailsComponent } from './settings/users/user-view/user-details/user-details.component';
+import { UserLinkPersonComponent } from './settings/users/user-view/user-link-person/user-link-person.component';
+import { UserResetPasswordComponent } from './settings/users/user-view/user-reset-password/user-reset-password.component';
+import { CreateUserComponent } from './settings/users/create-user/create-user.component';
 
 @NgModule({
   imports: [
@@ -34,7 +41,14 @@ import { CreateRoleComponent } from './settings/roles/role-browser/create-role/c
     RoleSearchComponent,
     RoleViewComponent,
     RoleDetailsComponent,
-    CreateRoleComponent
+    CreateRoleComponent,
+    UserBrowserComponent,
+    UserSearchComponent,
+    UserViewComponent,
+    UserDetailsComponent,
+    UserLinkPersonComponent,
+    UserResetPasswordComponent,
+    CreateUserComponent
   ],
   exports: [
     StaffPortalComponent,

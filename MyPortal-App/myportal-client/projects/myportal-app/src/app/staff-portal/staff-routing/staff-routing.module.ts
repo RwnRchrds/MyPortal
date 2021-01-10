@@ -8,6 +8,8 @@ import { NgModule } from '@angular/core';
 import { AppPermissions } from '../../_guards/app-permissions';
 import {RoleBrowserComponent} from '../settings/roles/role-browser/role-browser.component';
 import {RoleViewComponent} from '../settings/roles/role-view/role-view.component';
+import {UserBrowserComponent} from '../settings/users/user-browser/user-browser.component';
+import {UserViewComponent} from '../settings/users/user-view/user-view.component';
 
 const staffRoutes: Routes = [
   {
@@ -35,6 +37,18 @@ const staffRoutes: Routes = [
       {
         path: 'settings/roles/:id',
         component: RoleViewComponent
+      },
+      {
+        path: 'settings/users',
+        component: UserBrowserComponent,
+        canActivate: [PermissionGuard],
+        data: {requiredPermissions: [AppPermissions.SYSTEM_USERS_VIEW]}
+      },
+      {
+        path: 'settings/users/:id',
+        component: UserViewComponent,
+        canActivate: [PermissionGuard],
+        data: {requiredPermissions: [AppPermissions.SYSTEM_USERS_VIEW]}
       },
       {
         path: '',
