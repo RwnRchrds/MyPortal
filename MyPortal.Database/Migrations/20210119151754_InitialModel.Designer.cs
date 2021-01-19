@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201215233540_InitialModel")]
+    [Migration("20210119151754_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1557,9 +1557,6 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsStudentVisible")
                         .HasColumnType("bit");
 
                     b.Property<string>("Location")
