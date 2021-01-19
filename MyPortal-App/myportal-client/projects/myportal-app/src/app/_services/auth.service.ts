@@ -24,7 +24,7 @@ export class AuthService {
     return this.authService.login(model).pipe(
       map((response: TokenModel) => {
         const loginResponse = response;
-        const user = this.getUser(loginResponse);
+        const user = this.getCurrentUser(loginResponse);
         if (user) {
           localStorage.setItem('token', JSON.stringify(loginResponse));
           this.currentUserSource.next(user);
@@ -50,7 +50,7 @@ export class AuthService {
     let currentUser: User;
     this.currentUser$.pipe(take(1)).subscribe(user => currentUser = user);
     return this.authService.refreshToken(currentUser).pipe(map((tokenResponse: TokenModel) => {
-      const userResponse = this.getUser(tokenResponse);
+      const userResponse = this.getCurrentUser(tokenResponse);
       if (userResponse) {
         console.log('refresh success');
         localStorage.setItem('token', JSON.stringify(tokenResponse));
@@ -86,12 +86,11 @@ export class AuthService {
     }
   }
 
-  getUser(tokenModel: TokenModel): User {
+  getCurrentUser(tokenModel: TokenModel): User {
     const decodedToken = this.getDecodedToken(tokenModel.token);
     const user = {
       displayName: decodedToken.displayName,
       userType: decodedToken.type,
-      permissions: decodedToken.perm,
       token: tokenModel.token,
       refreshToken: tokenModel.refreshToken
     } as User;

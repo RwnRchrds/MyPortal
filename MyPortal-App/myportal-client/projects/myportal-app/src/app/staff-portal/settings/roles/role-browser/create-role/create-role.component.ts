@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {RoleBrowserService} from '../role-browser.service';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NewEntityResponse, RolesService} from 'myportal-api';
 import {Router} from '@angular/router';
@@ -15,8 +14,6 @@ import {throwError} from 'rxjs';
 })
 export class CreateRoleComponent implements OnInit {
 
-  viewService: RoleBrowserService;
-
   newRoleForm = new FormGroup({
     code: new FormControl('', [Validators.required]),
     name: new FormControl('', [Validators.required])
@@ -30,9 +27,8 @@ export class CreateRoleComponent implements OnInit {
     return this.newRoleForm.get('name');
   }
 
-  constructor(roleBrowserService: RoleBrowserService, private roleService: RolesService,
+  constructor(private roleService: RolesService,
               private router: Router, private alertService: AlertService) {
-    this.viewService = roleBrowserService;
   }
 
   ngOnInit(): void {
@@ -40,7 +36,7 @@ export class CreateRoleComponent implements OnInit {
 
   goBack(): void {
     this.newRoleForm.reset();
-    this.viewService.showSearch();
+    this.router.navigate(['/staff/settings/roles']);
   }
 
   save(): void {

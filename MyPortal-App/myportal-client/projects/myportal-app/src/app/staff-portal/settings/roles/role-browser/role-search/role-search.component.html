@@ -1,11 +1,11 @@
-<div *ngIf="viewService.showSearchComponent" class="card card-custom" id="role_search">
+<div class="card card-custom" id="role_search">
   <!--begin::Header-->
   <div class="card-header">
     <h3 class="card-title">
       <span class="card-label font-weight-bolder text-dark">Browse Roles</span>
     </h3>
     <div class="card-toolbar">
-      <button *ngIf="viewService.allowEditRoles" class="btn btn-light-primary font-weight-bolder" (click)="newRole()">
+      <button *ngIf="allowEditRoles" class="btn btn-light-primary font-weight-bolder" (click)="newRole()">
         <i class="fas fa-plus mr-1"></i>New Role
       </button>
     </div>

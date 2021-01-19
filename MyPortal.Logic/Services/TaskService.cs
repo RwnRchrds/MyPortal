@@ -63,19 +63,9 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<TaskTypeModel>> GetTypes(bool personalOnly, bool activeOnly = true)
         {
-            var taskTypes = (await _taskTypeRepository.GetAll()).AsQueryable();
+            var taskTypes = await _taskTypeRepository.GetAll(personalOnly, activeOnly, false);
 
-            if (activeOnly)
-            {
-                taskTypes = taskTypes.Where(x => x.Active);
-            }
-
-            if (personalOnly)
-            {
-                taskTypes = taskTypes.Where(x => x.Personal);
-            }
-
-            return taskTypes.Where(t => !t.Reserved).AsEnumerable().Select(BusinessMapper.Map<TaskTypeModel>);
+            return taskTypes.Select(BusinessMapper.Map<TaskTypeModel>);
         }
 
         public async Task<bool> IsTaskOwner(Guid taskId, Guid userId)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
@@ -10,6 +11,7 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using SqlKata;
 using SqlKata.Compilers;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -73,6 +75,20 @@ namespace MyPortal.Database.Repositories
             query.Where("User.Id", userId);
 
             return await ExecuteQuery(query);
+        }
+
+        public async Task DeleteAllByRole(Guid roleId)
+        {
+            var roles = await _context.UserRoles.Where(x => x.RoleId == roleId).ToListAsync();
+
+            _context.UserRoles.RemoveRange(roles);
+        }
+
+        public async Task DeleteAllByUser(Guid userId)
+        {
+            var roles = await _context.UserRoles.Where(x => x.UserId == userId).ToListAsync();
+
+            _context.UserRoles.RemoveRange(roles);
         }
     }
 }

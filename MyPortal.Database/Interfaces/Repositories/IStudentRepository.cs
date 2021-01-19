@@ -13,5 +13,6 @@ namespace MyPortal.Database.Interfaces.Repositories
         Task<Student> GetByPersonId(Guid personId);
         Task<IEnumerable<Student>> GetAll(StudentSearchOptions searchParams);
         Task<IEnumerable<Student>> GetGiftedTalented();
+        Task<IEnumerable<Student>> GetByContact(Guid contactId, bool reportableOnly);
     }
 }

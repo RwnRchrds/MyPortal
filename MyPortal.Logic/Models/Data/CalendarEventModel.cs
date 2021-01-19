@@ -3,9 +3,9 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.Data
 {
-    public class CalendarDisplayModel
+    public class CalendarEventModel
     {
-        public CalendarDisplayModel(DiaryEventModel eventModel)
+        public CalendarEventModel(DiaryEventModel eventModel)
         {
             Id = eventModel.Id.ToString("N");
             AllDay = eventModel.IsAllDay;
@@ -27,7 +27,7 @@ namespace MyPortal.Logic.Models.Data
         public bool Editable { get; set; }
         public string Display { get; set; }
         public string Color { get; set; }
-        public object ExtendedProps { get; set; }
+        public CalendarEventExtendedPropertiesModel ExtendedProps { get; set; }
     }
 
     public static class CalendarDisplayModes

@@ -127,7 +127,7 @@ namespace MyPortalWeb.Extensions
             services.AddScoped<ISessionRepository, SessionRepository>();
             services.AddScoped<IStaffMemberRepository, StaffMemberRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
-            services.AddScoped<IStudentContactRepository, StudentContactRepository>();
+            services.AddScoped<IStudentContactRelationshipRepository, StudentContactRelationshipRepository>();
             services.AddScoped<ISubjectRepository, SubjectRepository>();
             services.AddScoped<ISubjectStaffMemberRepository, SubjectStaffMemberRepository>();
             services.AddScoped<ISubjectStaffMemberRoleRepository, SubjectStaffMemberRoleRepository>();

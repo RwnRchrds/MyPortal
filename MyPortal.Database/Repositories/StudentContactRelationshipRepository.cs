@@ -12,9 +12,9 @@ using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class StudentContactRepository : BaseReadWriteRepository<StudentContactRelationship>, IStudentContactRepository
+    public class StudentContactRelationshipRepository : BaseReadWriteRepository<StudentContactRelationship>, IStudentContactRelationshipRepository
     {
-        public StudentContactRepository(ApplicationDbContext context) : base(context, "StudentContact")
+        public StudentContactRelationshipRepository(ApplicationDbContext context) : base(context, "StudentContact")
         {
 
         }

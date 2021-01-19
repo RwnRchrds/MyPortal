@@ -2,25 +2,18 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
-using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Authentication;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Admin;
 using MyPortal.Logic.Models.Requests.Admin.Users;
 using MyPortal.Logic.Models.Requests.Auth;
 using Task = System.Threading.Tasks.Task;
@@ -77,12 +70,12 @@ namespace MyPortal.Logic.Services
 
             if (!string.IsNullOrWhiteSpace(usernameSearch))
             {
-                query = query.Where(u => u.UserName.StartsWith(usernameSearch, StringComparison.InvariantCultureIgnoreCase));
+                query = query.Where(u => u.UserName.StartsWith(usernameSearch));
             }
 
             var users = await query.ToListAsync();
 
-            return users.Select(BusinessMapper.Map<UserModel>);
+            return users.OrderBy(u => u.UserName).Select(BusinessMapper.Map<UserModel>);
         }
 
         public async Task<IEnumerable<Guid>> CreateUser(params CreateUserModel[] createUserRequests)
@@ -182,6 +175,10 @@ namespace MyPortal.Logic.Services
         {
             foreach (var userId in userIds)
             {
+                var userRoles = await _userRoleRepository.GetByUser(userId);
+
+                await RemoveFromRoles(userId, userRoles.Select(ur => ur.RoleId).ToArray());
+
                 var user = await _userManager.FindByIdAsync(userId.ToString());
 
                 await _userManager.DeleteAsync(user);
@@ -192,9 +189,37 @@ namespace MyPortal.Logic.Services
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
+            List<IdentityError> errors = new List<IdentityError>();
+
+            foreach (var passwordValidator in _userManager.PasswordValidators)
+            {
+                var passwordValidationResult = await passwordValidator.ValidateAsync(_userManager, user, newPassword);
+                if (!passwordValidationResult.Succeeded)
+                {
+                    errors.AddRange(passwordValidationResult.Errors);
+                }
+            }
+
+            if (errors.Any())
+            {
+                var message = errors.Aggregate("", (a, b) => $"{a}{Environment.NewLine}{b.Description}");
+                throw new Exception(message);
+            }
+
             await _userManager.RemovePasswordAsync(user);
 
-            await _userManager.AddPasswordAsync(user, newPassword);
+            var setPasswordResult = await _userManager.AddPasswordAsync(user, newPassword);
+
+            if (!setPasswordResult.Succeeded)
+            {
+                errors.AddRange(setPasswordResult.Errors);
+            }
+
+            if (errors.Any())
+            {
+                var message = errors.Aggregate("", (a, b) => $"{a}{Environment.NewLine}{b.Description}");
+                throw new Exception(message);
+            }
         }
 
         public async Task<LoginResult> Login(LoginModel login)

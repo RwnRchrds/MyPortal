@@ -1,6 +1,5 @@
 import {Component, ElementRef, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {PortalViewDirective} from '../../../../shared/portal-view/portal-view.directive';
-import {RoleBrowserService} from './role-browser.service';
 
 @Component({
   selector: 'app-role-browser',
@@ -9,11 +8,8 @@ import {RoleBrowserService} from './role-browser.service';
 })
 export class RoleBrowserComponent extends PortalViewDirective implements OnInit {
 
-  viewService: RoleBrowserService;
-
-  constructor(protected renderer: Renderer2, protected hostElement: ElementRef, roleBrowserService: RoleBrowserService) {
-    super(renderer, hostElement, roleBrowserService);
-    this.viewService = roleBrowserService;
+  constructor(protected renderer: Renderer2, protected hostElement: ElementRef) {
+    super(renderer, hostElement);
   }
 
   ngOnInit(): void {

@@ -1,13 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {UserModel, UsersService} from 'myportal-api';
-import {UserBrowserService} from '../user-browser.service';
 import {AppService} from '../../../../../_services/app.service';
 import {Router} from '@angular/router';
 import {AlertService} from '../../../../../_services/alert.service';
 import {catchError, map} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {throwError} from 'rxjs';
+import {AuthService} from '../../../../../_services/auth.service';
+import {AppPermissions} from '../../../../../_guards/app-permissions';
 
 @Component({
   selector: 'app-user-search',
@@ -31,16 +32,16 @@ export class UserSearchComponent implements OnInit, OnDestroy {
     return $('#search_results').DataTable();
   }
 
+  get allowEditUsers(): boolean {
+    return this.authService.hasPermission([AppPermissions.SYSTEM_USERS_EDIT]);
+  }
+
   tableLoaded = false;
 
   searchResults: UserModel[];
 
-  viewService: UserBrowserService;
-
-  constructor(userBrowserService: UserBrowserService, private appService: AppService,
-              private userService: UsersService, private router: Router,
-              private alertService: AlertService) {
-    this.viewService = userBrowserService;
+  constructor(private appService: AppService, private userService: UsersService, private router: Router,
+              private alertService: AlertService, private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -59,7 +60,7 @@ export class UserSearchComponent implements OnInit, OnDestroy {
 
   newUser(): void {
     this.unloadTable();
-    this.viewService.showCreate();
+    this.router.navigate(['/staff/settings/users/new-user']);
   }
 
   search(): void {

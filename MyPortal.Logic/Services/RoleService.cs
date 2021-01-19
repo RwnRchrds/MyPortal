@@ -23,22 +23,17 @@ namespace MyPortal.Logic.Services
         private readonly IPermissionRepository _permissionRepository;
         private readonly ISystemAreaRepository _systemAreaRepository;
         private readonly IRolePermissionsCache _rolePermissionsCache;
+        private readonly IUserRoleRepository _userRoleRepository;
 
         public RoleService(RoleManager<Role> roleManager, IRolePermissionRepository rolePermissionRepository,
-            IPermissionRepository permissionRepository, ISystemAreaRepository systemAreaRepository, IRolePermissionsCache rolePermissionsCache)
+            IPermissionRepository permissionRepository, ISystemAreaRepository systemAreaRepository, IRolePermissionsCache rolePermissionsCache, IUserRoleRepository userRoleRepository)
         {
             _roleManager = roleManager;
             _rolePermissionRepository = rolePermissionRepository;
             _permissionRepository = permissionRepository;
             _systemAreaRepository = systemAreaRepository;
             _rolePermissionsCache = rolePermissionsCache;
-        }
-
-        public async Task<IEnumerable<PermissionModel>> GetPermissions(Guid roleId)
-        {
-            var permissions = await _rolePermissionRepository.GetByRole(roleId);
-
-            return permissions.Select(p => BusinessMapper.Map<PermissionModel>(p.Permission));
+            _userRoleRepository = userRoleRepository;
         }
 
         public async Task<TreeNode> GetPermissionsTree(Guid roleId)
@@ -178,6 +173,9 @@ namespace MyPortal.Logic.Services
             foreach (var roleId in roleIds)
             {
                 await _rolePermissionRepository.DeleteAllPermissions(roleId);
+                await _userRoleRepository.DeleteAllByRole(roleId);
+
+                await _rolePermissionRepository.SaveChanges();
 
                 var roleInDb = await _roleManager.FindByIdAsync(roleId.ToString());
 

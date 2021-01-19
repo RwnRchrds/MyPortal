@@ -19,7 +19,15 @@ namespace MyPortalWeb.Extensions
         {
             services.AddIdentityCore<User>(opt =>
                 {
-
+                    opt.Password = new PasswordOptions
+                    {
+                        RequireDigit = true,
+                        RequireLowercase = true,
+                        RequireNonAlphanumeric = true,
+                        RequireUppercase = true,
+                        RequiredLength = 6,
+                        RequiredUniqueChars = 1
+                    };
                 })
                 .AddRoles<Role>()
                 .AddRoleManager<RoleManager<Role>>()

@@ -146,6 +146,22 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
+        public async Task<IEnumerable<Student>> GetByContact(Guid contactId, bool reportableOnly)
+        {
+            var query = GenerateQuery();
+
+            query.LeftJoin("StudentContactRelationships as SCR", "SCR.StudentId", "Student.Id");
+
+            query.Where("SCR.ContactId", contactId);
+
+            if (reportableOnly)
+            {
+                query.Where("SCR.PupilReport", true);
+            }
+
+            return await ExecuteQuery(query);
+        }
+
         public async Task<IEnumerable<Student>> GetGiftedTalented()
         {
             var query = GenerateQuery();
