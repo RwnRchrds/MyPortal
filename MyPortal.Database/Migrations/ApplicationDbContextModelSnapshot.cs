@@ -1557,9 +1557,6 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsStudentVisible")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);

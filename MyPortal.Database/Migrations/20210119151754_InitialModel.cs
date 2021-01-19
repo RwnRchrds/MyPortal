@@ -1727,8 +1727,7 @@ namespace MyPortal.Database.Migrations
                     EndTime = table.Column<DateTime>(nullable: false),
                     IsAllDay = table.Column<bool>(nullable: false),
                     IsBlock = table.Column<bool>(nullable: false),
-                    IsPublic = table.Column<bool>(nullable: false),
-                    IsStudentVisible = table.Column<bool>(nullable: false)
+                    IsPublic = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

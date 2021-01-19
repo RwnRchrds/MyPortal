@@ -140,7 +140,6 @@
     <Build Include="dbo\Tables\Incidents.sql" />
     <Build Include="dbo\Tables\Users.sql" />
     <Build Include="dbo\Tables\Grades.sql" />
-    <Build Include="dbo\Tables\__EFMigrationsHistory.sql" />
     <Build Include="dbo\Tables\SubjectStaffMembers.sql" />
     <Build Include="dbo\Tables\ReportCardTargetSubmissions.sql" />
     <Build Include="dbo\Tables\ObservationOutcomes.sql" />
