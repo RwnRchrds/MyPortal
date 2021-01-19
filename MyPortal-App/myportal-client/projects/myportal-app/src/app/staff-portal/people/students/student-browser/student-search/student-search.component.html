@@ -1,4 +1,4 @@
-<div *ngIf="service.showComponent" class="card card-custom" id="student_search">
+<div class="card card-custom" id="student_search">
   <!--begin::Header-->
   <div class="card-header">
       <h3 class="card-title">
@@ -20,7 +20,7 @@
       <!--begin: Search Form-->
       <!--begin::Search Form-->
       <div class="mb-10">
-          <form [formGroup]="service.searchForm" (ngSubmit)="service.search()">
+          <form [formGroup]="searchForm" (ngSubmit)="search()">
           <div class="row align-items-center">
               <div class="col-lg-9 col-xl-8">
                   <div class="row align-items-center">
@@ -52,7 +52,7 @@
                           <label>Year Group</label>
                           <select formControlName="yearGroupId" class="form-control form-control-solid">
                             <option value="">Any</option>
-                            <option *ngFor="let yearGroup of service.yearGroups" [value]="yearGroup.id">{{yearGroup.name}}</option>
+                            <option *ngFor="let yearGroup of yearGroups" [value]="yearGroup.id">{{yearGroup.name}}</option>
                           </select>
                         </div>
                       </div>
@@ -72,7 +72,7 @@
                       <label>Reg Group</label>
                       <select formControlName="regGroupId" class="form-control form-control-solid">
                         <option value="">Any</option>
-                        <option *ngFor="let regGroup of service.regGroups" [value]="regGroup.id">{{regGroup.name}}</option>
+                        <option *ngFor="let regGroup of regGroups" [value]="regGroup.id">{{regGroup.name}}</option>
                       </select>
                     </div>
                   </div>
@@ -81,7 +81,7 @@
                       <label>House</label>
                       <select formControlName="houseId" class="form-control form-control-solid">
                         <option value="">Any</option>
-                        <option *ngFor="let house of service.houses" [value]="house.id">{{house.name}}</option>
+                        <option *ngFor="let house of houses" [value]="house.id">{{house.name}}</option>
                       </select>
                     </div>
                   </div>

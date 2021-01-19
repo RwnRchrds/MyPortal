@@ -9,10 +9,8 @@ import {StaffHomepageService} from './staff-homepage.service';
 })
 export class StaffHomepageComponent extends PortalViewDirective implements OnInit, OnDestroy {
 
-  viewService: StaffHomepageService;
-
-  constructor(renderer: Renderer2, hostElement: ElementRef, staffHomepageService: StaffHomepageService) {
-    super(renderer, hostElement, staffHomepageService);
+  constructor(renderer: Renderer2, hostElement: ElementRef, private viewService: StaffHomepageService) {
+    super(renderer, hostElement);
   }
 
   ngOnInit(): void {

@@ -31,8 +31,6 @@ namespace MyPortal.Logic.Models.Entity
         
         public bool IsPublic { get; set; }
 
-        public bool IsStudentVisible { get; set; }
-
         public virtual DiaryEventTypeModel EventType { get; set; }
         public virtual RoomModel Room { get; set; }
     }

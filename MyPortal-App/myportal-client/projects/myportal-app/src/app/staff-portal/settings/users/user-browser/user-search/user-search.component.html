@@ -4,7 +4,7 @@
       <span class="card-label font-weight-bolder text-dark">Browse Users</span>
     </h3>
     <div class="card-toolbar">
-      <button *ngIf="viewService.allowEditUsers" class="btn btn-light-primary font-weight-bolder" (click)="newUser()">
+      <button *ngIf="allowEditUsers" class="btn btn-light-primary font-weight-bolder" (click)="newUser()">
         <i class="fas fa-plus mr-1"></i>New User
       </button>
     </div>

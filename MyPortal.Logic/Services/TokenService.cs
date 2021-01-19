@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Auth;

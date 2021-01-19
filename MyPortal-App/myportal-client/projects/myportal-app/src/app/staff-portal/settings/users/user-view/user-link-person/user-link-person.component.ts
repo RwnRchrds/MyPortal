@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
-import {PersonSearchResultModel, PersonService} from 'myportal-api';
+import {PersonModel, PersonSearchResultModel, PersonService, UserModel} from 'myportal-api';
 import {UserViewService} from '../user-view.service';
 import {AppService} from '../../../../../_services/app.service';
 import {AlertService} from '../../../../../_services/alert.service';
@@ -39,11 +39,8 @@ export class UserLinkPersonComponent implements OnInit, OnDestroy {
 
   searchResults: PersonSearchResultModel[];
 
-  viewService: UserViewService;
-
-  constructor(userViewService: UserViewService, private appService: AppService, private personService: PersonService,
+  constructor(private viewService: UserViewService, private appService: AppService, private personService: PersonService,
               private alertService: AlertService) {
-    this.viewService = userViewService;
   }
 
   ngOnInit(): void {
@@ -51,6 +48,17 @@ export class UserLinkPersonComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.unloadTable();
+    this.searchForm.reset();
+  }
+
+  setLinkedPerson(person: PersonModel): void {
+    const subscription = this.viewService.currentUser.pipe(map((user: UserModel) => {
+      user.personId = person.id;
+      user.person = person;
+      this.viewService.updateUser(user);
+    })).subscribe();
+
+    subscription.unsubscribe();
   }
 
   goBack(): void {
@@ -96,14 +104,14 @@ export class UserLinkPersonComponent implements OnInit, OnDestroy {
 
   rowClickHandler(data: any): void {
     console.log('Event triggered.');
-    this.alertService.areYouSure(`Are you sure you wish to link user '${this.viewService.user.userName}' to '${data.person.lastName}, ${data.person.firstName}'?`)
+    this.alertService.areYouSure(`Are you sure you wish to link user to '${data.person.lastName}, ${data.person.firstName}'?`)
       .then(result => {
         if (result.isConfirmed) {
           if (data.personTypes.isUser) {
             this.alertService.error('This person is already linked to a user.');
             return;
           }
-          this.viewService.setLinkedPerson(data.person);
+          this.setLinkedPerson(data.person);
           this.goBack();
         }
       });

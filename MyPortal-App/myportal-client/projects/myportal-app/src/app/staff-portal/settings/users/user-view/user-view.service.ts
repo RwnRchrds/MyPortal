@@ -1,65 +1,47 @@
 import { Injectable } from '@angular/core';
 import {PortalViewServiceDirective} from '../../../../shared/portal-view/portal-view-service.directive';
 import {AuthService} from '../../../../_services/auth.service';
-import {PersonModel, RoleModel, RolesService, UserModel, UsersService} from 'myportal-api';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {RoleModel, RolesService, UserModel, UsersService} from 'myportal-api';
 import {AppService} from '../../../../_services/app.service';
 import {catchError, map} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {AlertService} from '../../../../_services/alert.service';
-import {throwError} from 'rxjs';
+import {BehaviorSubject, throwError} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserViewService extends PortalViewServiceDirective {
 
-  showDetailsComponent = true;
-  showLinkPersonComponent = false;
-  showResetPasswordComponent = false;
-
-  user: UserModel;
-  roles: RoleModel[];
-
-  detailsForm = new FormGroup({
-    username: new FormControl({value: '', disabled: true}, [Validators.required]),
-    userType: new FormControl({value: '', disabled: true}, [Validators.required]),
-    roles: new FormControl(''),
-    personName: new FormControl({value: '', disabled: true})
-  });
+  private showDetailsSource: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  private showLinkPersonSource: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private showResetPasswordSource: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private userSource: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>(null);
+  private rolesSource: BehaviorSubject<RoleModel[]> = new BehaviorSubject<RoleModel[]>(null);
+  private userRolesSource: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(null);
+  currentShowDetails = this.showDetailsSource.asObservable();
+  currentLinkPerson = this.showLinkPersonSource.asObservable();
+  currentShowResetPassword = this.showResetPasswordSource.asObservable();
+  currentUser = this.userSource.asObservable();
+  currentRoles = this.rolesSource.asObservable();
+  currentUserRoles = this.userRolesSource.asObservable();
 
   showLinkPerson(): void {
-    this.showDetailsComponent = false;
-    this.showResetPasswordComponent = false;
-    this.showLinkPersonComponent = true;
+    this.showDetailsSource.next(false);
+    this.showResetPasswordSource.next(false);
+    this.showLinkPersonSource.next(true);
   }
 
   showResetPassword(): void {
-    this.showDetailsComponent = false;
-    this.showLinkPersonComponent = false;
-    this.showResetPasswordComponent = true;
+    this.showDetailsSource.next(false);
+    this.showLinkPersonSource.next(false);
+    this.showResetPasswordSource.next(true);
   }
 
   showDetails(): void {
-    this.showLinkPersonComponent = false;
-    this.showResetPasswordComponent = false;
-    this.showDetailsComponent = true;
-  }
-
-  get username(): AbstractControl {
-    return this.detailsForm.get('username');
-  }
-
-  get userType(): AbstractControl {
-    return this.detailsForm.get('userType');
-  }
-
-  get userRoles(): AbstractControl {
-    return this.detailsForm.get('roles');
-  }
-
-  get personName(): AbstractControl {
-    return this.detailsForm.get('personName');
+    this.showLinkPersonSource.next(false);
+    this.showResetPasswordSource.next(false);
+    this.showDetailsSource.next(true);
   }
 
   constructor(authService: AuthService, private appService: AppService, private userService: UsersService,
@@ -68,55 +50,24 @@ export class UserViewService extends PortalViewServiceDirective {
   }
 
   reset(): void {
-    this.user = null;
-    this.roles = null;
-    this.detailsForm.reset();
-
+    this.userSource.next(null);
+    this.rolesSource.next(null);
+    this.userRolesSource.next(null);
     this.showDetails();
   }
 
-  setLinkedPerson(person: PersonModel): void {
-    this.user.person = person;
-    this.user.personId = person.id;
-    this.personName.setValue(`${person.lastName}, ${person.firstName}`);
+  updateUser(user: UserModel): void {
+    this.userSource.next(user);
   }
 
-  removeLinkedPerson(): void {
-    this.user.person = null;
-    this.user.personId = null;
-    this.personName.setValue('');
-  }
-
-  loadModel(userId: string): void {
-    this.appService.blockPage();
-    try {
-      this.userService.getUserById(userId).pipe(map((user: UserModel) => {
-        this.user = user;
-        this.username.setValue(this.user.userName);
-        this.userType.setValue(this.user.userType.toString());
-        if (this.user.person != null)
-        {
-          this.personName.setValue(`${this.user.person.lastName}, ${this.user.person.firstName}`);
-        }
-      }), catchError((err: HttpErrorResponse) => {
-        this.alertService.error(err.error);
-        return throwError(err);
+  init(userId: string): void {
+    this.userService.getUserById(userId).pipe(map((user: UserModel) => {
+      this.userSource.next(user);
+      this.roleService.getRoles().pipe(map((roles: RoleModel[]) => {
+        this.rolesSource.next(roles);
       })).subscribe();
-    }
-    finally {
-      this.appService.unblockPage();
-    }
-  }
-
-  loadRoles(): void {
-    if (this.user == null) {
-      return;
-    }
-
-    this.roleService.getRoles().pipe(map((roles: RoleModel[]) => {
-      this.roles = roles;
-      this.userService.getUserRoles(this.user.id).pipe(map((userRoles: RoleModel[]) => {
-        this.userRoles.setValue(userRoles.map(u => u.id));
+      this.userService.getUserRoles(user.id).pipe(map((userRoles: RoleModel[]) => {
+        this.userRolesSource.next(userRoles.map(ur => ur.id));
       })).subscribe();
     }), catchError((err: HttpErrorResponse) => {
       this.alertService.error(err.error);
@@ -124,24 +75,13 @@ export class UserViewService extends PortalViewServiceDirective {
     })).subscribe();
   }
 
-  save(): void {
-    this.detailsForm.markAllAsTouched();
-    this.appService.blockPage();
-    try {
-      if (this.detailsForm.invalid) {
-        this.alertService.error('Please review the errors and try again.');
+  reload(): void {
+    const sub = this.userSource.pipe(map((user: UserModel) => {
+      if (user == null) {
         return;
       }
-
-      this.userService.updateUser({id: this.user.id, personId: this.user.personId, roleIds: this.userRoles.value}).pipe(map(result => {
-        this.loadModel(this.user.id);
-      }), catchError((err: HttpErrorResponse) => {
-        this.alertService.error(err.error);
-        return throwError(err);
-      })).subscribe();
-    }
-    finally {
-      this.appService.unblockPage();
-    }
+      this.init(user.id);
+    })).subscribe();
+    sub.unsubscribe();
   }
 }

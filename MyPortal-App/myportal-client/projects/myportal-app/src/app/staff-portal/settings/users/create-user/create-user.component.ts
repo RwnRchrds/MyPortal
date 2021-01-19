@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {UserBrowserService} from '../user-browser/user-browser.service';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AlertService} from '../../../../_services/alert.service';
 import {NewEntityResponse, UsersService} from 'myportal-api';
@@ -14,8 +13,6 @@ import {throwError} from 'rxjs';
   styleUrls: ['./create-user.component.css']
 })
 export class CreateUserComponent implements OnInit {
-
-  viewService: UserBrowserService;
 
   newUserForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
@@ -40,9 +37,8 @@ export class CreateUserComponent implements OnInit {
     return this.newUserForm.get('confirmPassword');
   }
 
-  constructor(userBrowserService: UserBrowserService, private alertService: AlertService, private userService: UsersService,
+  constructor(private alertService: AlertService, private userService: UsersService,
               private router: Router) {
-    this.viewService = userBrowserService;
   }
 
   ngOnInit(): void {
@@ -50,7 +46,7 @@ export class CreateUserComponent implements OnInit {
 
   goBack(): void {
     this.newUserForm.reset();
-    this.viewService.showSearch();
+    this.router.navigate(['/staff/settings/users']);
   }
 
   save(): void {

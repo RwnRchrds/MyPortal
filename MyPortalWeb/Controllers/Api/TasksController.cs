@@ -187,7 +187,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
             }
 
-            else if (personInDb.PersonTypes.IsStaff)
+            if (personInDb.PersonTypes.IsStaff)
             {
                 if (await UserHasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
                 {

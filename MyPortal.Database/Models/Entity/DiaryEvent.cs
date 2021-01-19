@@ -48,9 +48,6 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 10)]
         public bool IsPublic { get; set; }
 
-        [Column(Order = 11)]
-        public bool IsStudentVisible { get; set; }
-
         [EntityOnly]
         public virtual Detention Detention { get; set; }
 

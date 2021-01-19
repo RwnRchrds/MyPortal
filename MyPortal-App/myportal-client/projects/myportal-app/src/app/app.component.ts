@@ -22,7 +22,7 @@ setCurrentUser(): void {
 
   if (!!tokenWrapper)
   {
-    const user = this.authService.getUser(tokenWrapper);
+    const user = this.authService.getCurrentUser(tokenWrapper);
     this.authService.setCurrentUser(user, permissions);
   }
   else

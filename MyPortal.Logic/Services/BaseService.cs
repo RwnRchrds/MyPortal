@@ -10,7 +10,6 @@ using MyPortal.Logic.Interfaces;
     public abstract class BaseService : IService
     {
         protected readonly IMapper BusinessMapper;
-        protected Guid UserId;
 
         public BaseService()
         {
@@ -18,14 +17,5 @@ using MyPortal.Logic.Interfaces;
         }
 
         public abstract void Dispose();
-
-        protected Exception GetInnerException(Exception ex)
-        {
-            var exceptionMessage = ExceptionHelper.GetRootExceptionMessage(ex);
-
-            var exception = new Exception(exceptionMessage ?? "An error occurred.");
-
-            return exception;
-        }
     }
 }

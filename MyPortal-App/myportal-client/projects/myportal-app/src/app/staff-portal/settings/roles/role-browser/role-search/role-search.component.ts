@@ -1,5 +1,4 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {RoleBrowserService} from '../role-browser.service';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {RoleModel, RolesService} from 'myportal-api';
 import {AppService} from '../../../../../_services/app.service';
@@ -8,6 +7,8 @@ import {AlertService} from '../../../../../_services/alert.service';
 import {catchError, map} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {throwError} from 'rxjs';
+import {AuthService} from '../../../../../_services/auth.service';
+import {AppPermissions} from '../../../../../_guards/app-permissions';
 
 @Component({
   selector: 'app-role-search',
@@ -31,16 +32,16 @@ export class RoleSearchComponent implements OnInit, OnDestroy {
     return $('#search_results').DataTable();
   }
 
+  get allowEditRoles(): boolean {
+    return this.authService.hasPermission([AppPermissions.SYSTEM_GROUPS_EDIT]);
+  }
+
   tableLoaded = false;
 
   searchResults: RoleModel[];
 
-  viewService: RoleBrowserService;
-
-  constructor(roleBrowserService: RoleBrowserService, private appService: AppService,
-              private roleService: RolesService, private router: Router,
-              private alertService: AlertService) {
-    this.viewService = roleBrowserService;
+  constructor(private appService: AppService, private roleService: RolesService, private router: Router,
+              private alertService: AlertService, private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -59,7 +60,7 @@ export class RoleSearchComponent implements OnInit, OnDestroy {
 
   newRole(): void {
     this.unloadTable();
-    this.viewService.showCreate();
+    this.router.navigate(['/staff/settings/roles/new-role']);
   }
 
   search(): void {

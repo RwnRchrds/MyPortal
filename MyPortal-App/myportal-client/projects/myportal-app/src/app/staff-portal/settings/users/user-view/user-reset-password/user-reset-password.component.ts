@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserViewService} from '../user-view.service';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {UsersService} from 'myportal-api';
+import {UserModel, UsersService} from 'myportal-api';
 import {catchError, map} from 'rxjs/operators';
 import {AlertService} from '../../../../../_services/alert.service';
 import {HttpErrorResponse} from '@angular/common/http';
@@ -12,9 +12,7 @@ import {throwError} from 'rxjs';
   templateUrl: './user-reset-password.component.html',
   styleUrls: ['./user-reset-password.component.css']
 })
-export class UserResetPasswordComponent implements OnInit {
-
-  viewService: UserViewService;
+export class UserResetPasswordComponent implements OnInit, OnDestroy {
 
   resetPasswordForm = new FormGroup({
     password: new FormControl('', [Validators.required]),
@@ -29,8 +27,7 @@ export class UserResetPasswordComponent implements OnInit {
     return this.resetPasswordForm.get('confirmPassword');
   }
 
-  constructor(userViewService: UserViewService, private userService: UsersService, private alertService: AlertService) {
-    this.viewService = userViewService;
+  constructor(private viewService: UserViewService, private userService: UsersService, private alertService: AlertService) {
   }
 
   resetPassword(): void {
@@ -39,20 +36,22 @@ export class UserResetPasswordComponent implements OnInit {
       this.alertService.error('Please review the errors and try again.');
       return;
     }
-
     if (this.password.value !== this.confirmPassword.value) {
       this.alertService.error('The passwords you entered do not match.');
       return;
     }
-    this.userService.setPassword({userId: this.viewService.user.id, newPassword: this.password.value}).pipe(map((result: string) => {
-      this.alertService.success('Password reset successful.');
-      this.goBack();
-    }), catchError((err: HttpErrorResponse) => {
-      console.log('Error detected');
-      console.log(err);
-      this.alertService.error(err.error);
-      return throwError(err);
+    const sub = this.viewService.currentUser.pipe(map((user: UserModel) => {
+      this.userService.setPassword({userId: user.id, newPassword: this.password.value}).pipe(map((result: string) => {
+        this.alertService.success('Password reset successful.');
+        this.goBack();
+      }), catchError((err: HttpErrorResponse) => {
+        console.log('Error detected');
+        console.log(err);
+        this.alertService.error(err.error);
+        return throwError(err);
+      })).subscribe();
     })).subscribe();
+    sub.unsubscribe();
   }
 
   goBack(): void {
@@ -63,4 +62,7 @@ export class UserResetPasswordComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngOnDestroy(): void {
+    this.resetPasswordForm.reset();
+  }
 }

@@ -1,5 +1,4 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {UserBrowserService} from './user-browser.service';
 import {PortalViewDirective} from '../../../../shared/portal-view/portal-view.directive';
 
 @Component({
@@ -9,11 +8,8 @@ import {PortalViewDirective} from '../../../../shared/portal-view/portal-view.di
 })
 export class UserBrowserComponent extends PortalViewDirective implements OnInit {
 
-  viewService: UserBrowserService;
-
-  constructor(renderer: Renderer2, hostElement: ElementRef, userBrowserService: UserBrowserService) {
-    super(renderer, hostElement, userBrowserService);
-    this.viewService = userBrowserService;
+  constructor(renderer: Renderer2, hostElement: ElementRef) {
+    super(renderer, hostElement);
   }
 
   ngOnInit(): void {
