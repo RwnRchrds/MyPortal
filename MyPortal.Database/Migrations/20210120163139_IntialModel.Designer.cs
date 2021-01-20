@@ -10,8 +10,8 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210119151754_InitialModel")]
-    partial class InitialModel
+    [Migration("20210120163139_IntialModel")]
+    partial class IntialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -2719,6 +2719,76 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamSpecialArrangements");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Exclusion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<DateTime?>("AppealDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("AppealResultDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("AppealResultId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ExclusionReasonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ExclusionTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppealResultId");
+
+                    b.HasIndex("ExclusionReasonId");
+
+                    b.HasIndex("ExclusionTypeId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Exclusions");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ExclusionAppealResult", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ExclusionAppealResults");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Entity.ExclusionReason", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2733,6 +2803,9 @@ namespace MyPortal.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<bool>("System")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -2753,6 +2826,9 @@ namespace MyPortal.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<bool>("System")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -6386,6 +6462,32 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.Entity.ExamSeason", "Season")
                         .WithMany("ExamSeries")
                         .HasForeignKey("ExamSeasonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Exclusion", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.ExclusionAppealResult", "AppealResult")
+                        .WithMany("Exclusions")
+                        .HasForeignKey("AppealResultId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MyPortal.Database.Models.Entity.ExclusionReason", "ExclusionReason")
+                        .WithMany("Exclusions")
+                        .HasForeignKey("ExclusionReasonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.ExclusionType", "ExclusionType")
+                        .WithMany("Exclusions")
+                        .HasForeignKey("ExclusionTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
+                        .WithMany("Exclusions")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

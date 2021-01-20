@@ -64,7 +64,7 @@ namespace MyPortal.Logic.Services
                 }
                 catch (Exception e)
                 {
-                    throw GetInnerException(e);
+                    throw e.GetBaseException();
                 }
             }
 

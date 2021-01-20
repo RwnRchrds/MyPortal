@@ -109,6 +109,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<ExamSeries> ExamSeries { get; set; }
         public virtual DbSet<ExamSession> ExamSessions { get; set; }
         public virtual DbSet<ExamSpecialArrangement> ExamSpecialArrangements { get; set; }
+        public virtual DbSet<Exclusion> Exclusions { get; set; }
+        public virtual DbSet<ExclusionAppealResult> ExclusionAppealResults { get; set; }
         public virtual DbSet<ExclusionReason> ExclusionReasons { get; set; }
         public virtual DbSet<ExclusionType> ExclusionTypes { get; set; }
         public virtual DbSet<File> Files { get; set; }
@@ -1357,6 +1359,39 @@ namespace MyPortal.Database.Models
                 });
 
                 modelBuilder.Entity<ExamSpecialArrangement>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                });
+
+                modelBuilder.Entity<Exclusion>(e =>
+                {
+                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasOne(x => x.Student)
+                        .WithMany(x => x.Exclusions)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.ExclusionType)
+                        .WithMany(x => x.Exclusions)
+                        .HasForeignKey(x => x.ExclusionTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.ExclusionReason)
+                        .WithMany(x => x.Exclusions)
+                        .HasForeignKey(x => x.ExclusionReasonId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(e => e.AppealResult)
+                        .WithMany(e => e.Exclusions)
+                        .HasForeignKey(e => e.AppealResultId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExclusionAppealResult>(e =>
                 {
                     e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 });

@@ -134,5 +134,6 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<StudentCharge> Charges { get; set; }
 
         public virtual ICollection<StudentDiscount> Discounts { get; set; }
+        public virtual ICollection<Exclusion> Exclusions { get; set; }
     }
 }

@@ -3676,4 +3676,39 @@ WHEN NOT MATCHED THEN
 INSERT (Id, SubjectCodeSetId, Description, Active, Code)
 VALUES (Id, SubjectCodeSetId, Description, Active, Code);
 
+MERGE INTO [dbo].[ExclusionTypes] AS Target
+USING (VALUES
+('8BE7A245-E1BB-44DC-B427-0247D9CEA9AB', 'Fixed Term', 1, 1),
+('8BE7A245-E1BB-44DC-B427-0247D9CEA9AC', 'Permanent', 1, 1)
+)
+AS Source (Id, Description, Active, System)
+ON Target.Id = Source.Id
+
+WHEN NOT MATCHED THEN
+INSERT (Id, Description, Active, System)
+VALUES (Id, Description, Active, System);
+
+MERGE INTO [dbo].[ExclusionReasons] AS Target
+USING (VALUES
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35000', 'Physical Threat or Assault on Pupil', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35001', 'Physical Threat or Assault on Staff', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35002', 'Substance Abuse', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35003', 'Verbal Abuse of Pupil', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35004', 'Verbal Abuse of Staff', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35005', 'Bullying', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35006', 'Racist Abuse', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35007', 'Sexual Misconduct', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35008', 'Drug and Alcohol Related', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35009', 'Damage - Property', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C3500A', 'Theft', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C3500B', 'Persistent Disruptive Behaviour', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C3500C', 'Other', 1, 1)
+)
+AS Source (Id, Description, Active, System)
+ON Target.Id = Source.Id
+
+WHEN NOT MATCHED THEN
+INSERT (Id, Description, Active, System)
+VALUES (Id, Description, Active, System);
+
 EXEC sp_MSforeachtable @command1="print '?'", @command2="ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all"
