@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MyPortal.Database.Migrations
 {
-    public partial class InitialModel : Migration
+    public partial class IntialModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -475,12 +475,26 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ExclusionReasons",
+                name: "ExclusionAppealResults",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
                     Active = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExclusionAppealResults", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExclusionReasons",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    System = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -493,7 +507,8 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
-                    Active = table.Column<bool>(nullable: false)
+                    Active = table.Column<bool>(nullable: false),
+                    System = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -3530,6 +3545,51 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Exclusions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    ExclusionTypeId = table.Column<Guid>(nullable: false),
+                    ExclusionReasonId = table.Column<Guid>(nullable: false),
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    EndDate = table.Column<DateTime>(nullable: true),
+                    Comments = table.Column<string>(nullable: true),
+                    Deleted = table.Column<bool>(nullable: false),
+                    AppealDate = table.Column<DateTime>(nullable: true),
+                    AppealResultDate = table.Column<DateTime>(nullable: true),
+                    AppealResultId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Exclusions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Exclusions_ExclusionAppealResults_AppealResultId",
+                        column: x => x.AppealResultId,
+                        principalTable: "ExclusionAppealResults",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Exclusions_ExclusionReasons_ExclusionReasonId",
+                        column: x => x.ExclusionReasonId,
+                        principalTable: "ExclusionReasons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Exclusions_ExclusionTypes_ExclusionTypeId",
+                        column: x => x.ExclusionTypeId,
+                        principalTable: "ExclusionTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Exclusions_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GiftedTalentedStudents",
                 columns: table => new
                 {
@@ -5025,6 +5085,26 @@ namespace MyPortal.Database.Migrations
                 column: "ExamSeasonId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Exclusions_AppealResultId",
+                table: "Exclusions",
+                column: "AppealResultId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Exclusions_ExclusionReasonId",
+                table: "Exclusions",
+                column: "ExclusionReasonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Exclusions_ExclusionTypeId",
+                table: "Exclusions",
+                column: "ExclusionTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Exclusions_StudentId",
+                table: "Exclusions",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Files_DocumentId",
                 table: "Files",
                 column: "DocumentId",
@@ -5802,10 +5882,7 @@ namespace MyPortal.Database.Migrations
                 name: "ExamSeatAllocations");
 
             migrationBuilder.DropTable(
-                name: "ExclusionReasons");
-
-            migrationBuilder.DropTable(
-                name: "ExclusionTypes");
+                name: "Exclusions");
 
             migrationBuilder.DropTable(
                 name: "Files");
@@ -5974,6 +6051,15 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "ExamComponentSittings");
+
+            migrationBuilder.DropTable(
+                name: "ExclusionAppealResults");
+
+            migrationBuilder.DropTable(
+                name: "ExclusionReasons");
+
+            migrationBuilder.DropTable(
+                name: "ExclusionTypes");
 
             migrationBuilder.DropTable(
                 name: "Documents");
