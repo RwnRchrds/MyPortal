@@ -12,6 +12,7 @@ using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Response.Students;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
@@ -57,6 +58,24 @@ namespace MyPortalWeb.Controllers.Api
                     var student = await StudentService.GetById(studentId);
 
                     return Ok(student);
+                }
+
+                return Forbid();
+            }, Permissions.Student.StudentDetails.ViewStudentDetails);
+        }
+
+        [HttpGet]
+        [Route("stats")]
+        [Produces(typeof(StudentStatsModel))]
+        public async Task<IActionResult> GetStatsById([FromQuery] Guid studentId, [FromQuery] Guid academicYearId)
+        {
+            return await ProcessAsync(async () =>
+            {
+                if (await AuthoriseStudent(studentId))
+                {
+                    var studentStats = await StudentService.GetStatsById(studentId, academicYearId);
+
+                    return Ok(studentStats);
                 }
 
                 return Forbid();

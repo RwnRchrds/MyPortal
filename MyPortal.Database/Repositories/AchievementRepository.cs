@@ -19,7 +19,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AchievementRepository : BaseReadWriteRepository<Achievement>, IAchievementRepository
     {
-        public AchievementRepository(ApplicationDbContext context) : base(context, "Achievement")
+        public AchievementRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Achievement")
         {
            
         }
@@ -47,7 +47,7 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin($"People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
             query.LeftJoin($"Locations as Location", "Location.Id", "Achievement.LocationId");
             query.LeftJoin($"Users as RecordedBy", "RecordedBy.Id", "Achievement.RecordedById");
-            query.LeftJoin($"People as RecordedByPerson", "RecordedByPerson.UserId", "RecordedBy.Id");
+            query.LeftJoin($"People as RecordedByPerson", "RecordedByPerson.Id", "RecordedBy.PersonId");
         }
 
         public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
@@ -63,9 +63,8 @@ namespace MyPortal.Database.Repositories
         public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
         {
             var sql = new Query(TblName).AsSum("Achievement.Points");
-
-            sql.Where("Achievement.StudentId", "=", studentId);
-            sql.Where("Achievement.AcademicYearId", "=", academicYearId);
+            sql.Where("Achievement.StudentId", studentId);
+            sql.Where("Achievement.AcademicYearId", academicYearId);
 
             return await ExecuteQueryIntResult(sql) ?? 0;
         }

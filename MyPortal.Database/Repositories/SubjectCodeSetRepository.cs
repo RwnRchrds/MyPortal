@@ -14,9 +14,5 @@ namespace MyPortal.Database.Repositories
         public SubjectCodeSetRepository(IDbConnection connection) : base(connection, "SubjectCodeSet")
         {
         }
-
-        public SubjectCodeSetRepository(ApplicationDbContext context) : base(context, "SubjectCodeSet")
-        {
-        }
     }
 }

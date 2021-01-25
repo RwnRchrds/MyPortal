@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class HomeworkRepository : BaseReadWriteRepository<HomeworkItem>, IHomeworkRepository
     {
-        public HomeworkRepository(ApplicationDbContext context) : base(context, "HomeworkItem")
+        public HomeworkRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "HomeworkItem")
         {
         }
 

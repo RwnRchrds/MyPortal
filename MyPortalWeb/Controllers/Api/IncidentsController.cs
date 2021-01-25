@@ -7,11 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Constants;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Behaviour;
 using MyPortal.Logic.Models.Requests.Behaviour.Incidents;
 using MyPortalWeb.Controllers.BaseControllers;
 

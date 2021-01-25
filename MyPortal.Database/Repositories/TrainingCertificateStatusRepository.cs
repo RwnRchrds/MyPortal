@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class TrainingCertificateStatusRepository : BaseReadWriteRepository<TrainingCertificateStatus>, ITrainingCertificateStatusRepository
     {
-        public TrainingCertificateStatusRepository(ApplicationDbContext context) : base(context)
+        public TrainingCertificateStatusRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection)
         {
         }
     }

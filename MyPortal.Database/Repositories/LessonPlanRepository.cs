@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class LessonPlanRepository : BaseReadWriteRepository<LessonPlan>, ILessonPlanRepository
     {
-        public LessonPlanRepository(ApplicationDbContext context) : base(context, "LessonPlan")
+        public LessonPlanRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "LessonPlan")
         {
            
         }

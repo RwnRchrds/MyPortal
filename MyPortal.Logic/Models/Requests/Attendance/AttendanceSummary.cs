@@ -66,10 +66,15 @@ namespace MyPortal.Logic.Models.Requests.Attendance
         /// <summary>
         /// Gets total marks (or percentage of marks) where the student was present, late or taking part in an approved educational activity.
         /// </summary>
-        public double GetPresentAndAea(bool asPercentage = false)
+        public double? GetPresentAndAea(bool asPercentage = false)
         {
             if (asPercentage)
             {
+                if (TotalMarks == 0)
+                {
+                    return null;
+                }
+
                 return MathHelper.Percent(Present, TotalMarks, 1) +
                        MathHelper.Percent(ApprovedEdActivity, TotalMarks, 1) + MathHelper.Percent(Late, TotalMarks, 1);
             }

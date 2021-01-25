@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SubjectStaffMemberRoleRepository : BaseReadWriteRepository<SubjectStaffMemberRole>, ISubjectStaffMemberRoleRepository
     {
-        public SubjectStaffMemberRoleRepository(ApplicationDbContext context) : base(context)
+        public SubjectStaffMemberRoleRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection)
         {
         }
     }

@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class IncidentRepository : BaseReadWriteRepository<Incident>, IIncidentRepository
     {
-        public IncidentRepository(ApplicationDbContext context) : base(context, "Incident")
+        public IncidentRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Incident")
         {
             
         }
@@ -91,18 +91,18 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery().AsCount();
 
-            query.Where("Student.Id", studentId);
-            query.Where("AcademicYear.Id", academicYearId);
+            query.Where("Incident.StudentId", studentId);
+            query.Where("Incident.AcademicYearId", academicYearId);
 
             return await ExecuteQueryIntResult(query) ?? 0;
         }
 
         public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
         {
-            var query = GenerateQuery().AsSum("Incident.Points");
+            var query = new Query(TblName).AsSum("Incident.Points");
 
-            query.Where("Student.Id", studentId);
-            query.Where("AcademicYear.Id", academicYearId);
+            query.Where("Incident.StudentId", studentId);
+            query.Where("Incident.AcademicYearId", academicYearId);
 
             return await ExecuteQueryIntResult(query) ?? 0;
         }

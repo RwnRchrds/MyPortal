@@ -17,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SchoolRepository : BaseReadWriteRepository<School>, ISchoolRepository
     {
-        public SchoolRepository(ApplicationDbContext context) : base(context, "School")
+        public SchoolRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "School")
         {
 
         }

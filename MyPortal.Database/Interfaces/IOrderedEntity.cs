@@ -4,8 +4,8 @@ using System.Text;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface ICensusEntity
+    public interface IOrderedEntity
     {
-        public string Code { get; set; }
+        public int Order { get; set; }
     }
 }

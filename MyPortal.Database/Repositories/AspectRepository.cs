@@ -16,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AspectRepository : BaseReadWriteRepository<Aspect>, IAspectRepository
     {
-        public AspectRepository(ApplicationDbContext context) : base(context, "Aspect")
+        public AspectRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Aspect")
         {
 
         }

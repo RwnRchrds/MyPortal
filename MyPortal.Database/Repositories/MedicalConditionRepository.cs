@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class MedicalConditionRepository : BaseReadWriteRepository<MedicalCondition>, IMedicalConditionRepository
     {
-        public MedicalConditionRepository(ApplicationDbContext context) : base(context)
+        public MedicalConditionRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection)
         {
         }
     }

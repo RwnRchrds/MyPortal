@@ -16,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class BulletinRepository : BaseReadWriteRepository<Bulletin>, IBulletinRepository
     {
-        public BulletinRepository(ApplicationDbContext context) : base(context, "Bulletin")
+        public BulletinRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Bulletin")
         {
        
         }

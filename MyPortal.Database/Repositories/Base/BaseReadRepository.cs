@@ -24,11 +24,6 @@ namespace MyPortal.Database.Repositories.Base
             Connection = connection;
         }
 
-        public BaseReadRepository(ApplicationDbContext context, string tblAlias = null) : this(tblAlias)
-        {
-            Connection = context.Database.GetDbConnection();
-        }
-
         private BaseReadRepository(string tblAlias = null)
         {
             Compiler = new SqlServerCompiler();
@@ -81,7 +76,6 @@ namespace MyPortal.Database.Repositories.Base
             var sql = Compiler.Compile(query);
 
             var result = await Connection.QueryFirstOrDefaultAsync<int?>(sql.Sql, sql.NamedBindings);
-
             return result;
         }
 
@@ -134,7 +128,7 @@ namespace MyPortal.Database.Repositories.Base
 
         public void Dispose()
         {
-            Connection.Dispose();
+            //Connection.Dispose();
         }
     }
 }

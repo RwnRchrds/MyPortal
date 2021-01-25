@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
@@ -13,7 +14,7 @@ namespace MyPortal.Database.Repositories.Base
     {
         protected readonly ApplicationDbContext Context;
 
-        protected BaseReadWriteRepository(ApplicationDbContext context, string tblAlias = null) : base(context, tblAlias)
+        protected BaseReadWriteRepository(ApplicationDbContext context, IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
             Context = context;
         }
@@ -59,8 +60,8 @@ namespace MyPortal.Database.Repositories.Base
 
         public new void Dispose()
         {
-            Context.Dispose();
-            Connection.Dispose();
+            //Context.Dispose();
+            //Connection.Dispose();
         }
     }
 }

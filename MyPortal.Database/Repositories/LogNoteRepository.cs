@@ -16,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class LogNoteRepository : BaseReadWriteRepository<LogNote>, ILogNoteRepository
     {
-        public LogNoteRepository(ApplicationDbContext context) : base(context, "LogNote")
+        public LogNoteRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "LogNote")
         {
            
         }

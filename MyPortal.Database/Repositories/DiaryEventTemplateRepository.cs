@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class DiaryEventTemplateRepository : BaseReadWriteRepository<DiaryEventTemplate>, IDiaryEventTemplateRepository
     {
-        public DiaryEventTemplateRepository(ApplicationDbContext context) : base(context, "DiaryEventTemplate")
+        public DiaryEventTemplateRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "DiaryEventTemplate")
         {
             
         }

@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class HouseRepository : BaseReadWriteRepository<House>, IHouseRepository
     {
-        public HouseRepository(ApplicationDbContext context) : base(context, "House")
+        public HouseRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "House")
         {
            
         }

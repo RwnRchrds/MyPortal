@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SubjectRepository : BaseReadWriteRepository<Subject>, ISubjectRepository
     {
-        public SubjectRepository(ApplicationDbContext context) : base(context)
+        public SubjectRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection)
         {
         }
     }

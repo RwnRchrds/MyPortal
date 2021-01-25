@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonDietaryRequirementRepository : BaseReadWriteRepository<PersonDietaryRequirement>, IPersonDietaryRequirementRepository
     {
-        public PersonDietaryRequirementRepository(ApplicationDbContext context) : base(context, "PDR")
+        public PersonDietaryRequirementRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "PDR")
         {
 
         }

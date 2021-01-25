@@ -7,7 +7,7 @@ using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Query;
+using MyPortal.Logic.Models.Response.People;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
@@ -18,7 +18,9 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly IPersonService _personService;
 
-        public PersonController(IUserService userService, IAcademicYearService academicYearService, IRolePermissionsCache rolePermissionsCache, IPersonService personService) : base(userService, academicYearService, rolePermissionsCache)
+        public PersonController(IUserService userService, IAcademicYearService academicYearService,
+            IRolePermissionsCache rolePermissionsCache, IPersonService personService) : base(userService,
+            academicYearService, rolePermissionsCache)
         {
             _personService = personService;
         }

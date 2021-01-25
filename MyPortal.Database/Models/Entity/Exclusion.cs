@@ -4,6 +4,7 @@ using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
+    [Table("Exclusions")]
     public class Exclusion : BaseTypes.Entity, ISoftDeleteEntity
     {
         [Column(Order = 1)]
