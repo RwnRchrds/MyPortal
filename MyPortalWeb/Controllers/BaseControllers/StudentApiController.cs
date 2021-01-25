@@ -22,7 +22,6 @@ namespace MyPortalWeb.Controllers.BaseControllers
 
         protected async Task<bool> AuthoriseStudent(Guid requestedStudentId)
         {
-            return true;
             if (User.IsType(UserTypes.Student))
             {
                 // Students can only access resources involving themselves

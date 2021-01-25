@@ -60,8 +60,8 @@ namespace MyPortal.Database.Repositories.Base
 
         public new void Dispose()
         {
-            //Context.Dispose();
-            //Connection.Dispose();
+            Context.Dispose();
+            Connection.Dispose();
         }
     }
 }

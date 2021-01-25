@@ -128,7 +128,7 @@ namespace MyPortal.Database.Repositories.Base
 
         public void Dispose()
         {
-            //Connection.Dispose();
+            Connection.Dispose();
         }
     }
 }
