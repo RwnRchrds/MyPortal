@@ -129,12 +129,12 @@ namespace MyPortal.Logic.Services
 
         public override void Dispose()
         {
-            //_studentRepository.Dispose();
-            //_achievementRepository.Dispose();
-            //_incidentRepository.Dispose();
-            //_attendanceMarkRepository.Dispose();
-            //_exclusionRepository.Dispose();
-            //_attendanceCodeRepository.Dispose();
+            _studentRepository.Dispose();
+            _achievementRepository.Dispose();
+            _incidentRepository.Dispose();
+            _attendanceMarkRepository.Dispose();
+            _exclusionRepository.Dispose();
+            _attendanceCodeRepository.Dispose();
         }
     }
 }
