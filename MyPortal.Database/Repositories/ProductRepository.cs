@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ProductRepository : BaseReadWriteRepository<Product>, IProductRepository
     {
-        public ProductRepository(ApplicationDbContext context) : base(context, "Product")
+        public ProductRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Product")
         {
 
         }

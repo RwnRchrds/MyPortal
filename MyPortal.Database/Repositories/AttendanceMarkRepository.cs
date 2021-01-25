@@ -18,7 +18,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceMarkRepository : BaseReadWriteRepository<AttendanceMark>, IAttendanceMarkRepository
     {
-        public AttendanceMarkRepository(ApplicationDbContext context) : base(context, "AttendanceMark")
+        public AttendanceMarkRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "AttendanceMark")
         {
        
         }

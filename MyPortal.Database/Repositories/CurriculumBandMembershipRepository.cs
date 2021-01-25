@@ -15,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumBandMembershipRepository : BaseReadWriteRepository<CurriculumBandMembership>, ICurriculumBandMembershipRepository
     {
-        public CurriculumBandMembershipRepository(ApplicationDbContext context) : base(context, "CurriculumBandMembership")
+        public CurriculumBandMembershipRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "CurriculumBandMembership")
         {
            
         }

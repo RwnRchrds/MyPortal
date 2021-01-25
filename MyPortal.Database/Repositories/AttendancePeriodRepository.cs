@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendancePeriodRepository : BaseReadWriteRepository<AttendancePeriod>, IAttendancePeriodRepository
     {
-        public AttendancePeriodRepository(ApplicationDbContext context) : base(context, "AttendancePeriod")
+        public AttendancePeriodRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "AttendancePeriod")
         {
         }
 

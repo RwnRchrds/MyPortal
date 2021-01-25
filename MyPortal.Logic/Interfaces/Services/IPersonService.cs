@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Query;
+using MyPortal.Logic.Models.Response.People;
 
 namespace MyPortal.Logic.Interfaces.Services
 {

@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class StudyTopicRepository : BaseReadWriteRepository<StudyTopic>, IStudyTopicRepository
     {
-        public StudyTopicRepository(ApplicationDbContext context) : base(context, "StudyTopic")
+        public StudyTopicRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "StudyTopic")
         {
 
         }

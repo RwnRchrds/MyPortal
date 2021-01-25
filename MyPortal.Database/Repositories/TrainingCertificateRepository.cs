@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class TrainingCertificateRepository : BaseReadWriteRepository<TrainingCertificate>, ITrainingCertificateRepository
     {
-        public TrainingCertificateRepository(ApplicationDbContext context) : base(context, "TrainingCertificate")
+        public TrainingCertificateRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "TrainingCertificate")
         {
             
         }

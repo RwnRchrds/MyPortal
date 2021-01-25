@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -18,7 +19,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonRepository : BaseReadWriteRepository<Person>, IPersonRepository
     {
-        public PersonRepository(ApplicationDbContext context) : base(context, "Person")
+        public PersonRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Person")
         {
      
         }

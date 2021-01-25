@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class GiftedTalentedRepository : BaseReadWriteRepository<GiftedTalented>, IGiftedTalentedRepository
     {
-        public GiftedTalentedRepository(ApplicationDbContext context) : base(context, "GiftedTalented")
+        public GiftedTalentedRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "GiftedTalented")
         {
 
         }

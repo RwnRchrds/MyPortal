@@ -9,7 +9,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Query.Person;
 using MyPortal.Logic.Models;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Query;
+using MyPortal.Logic.Models.Response.People;
 
 namespace MyPortal.Logic.Helpers
 {

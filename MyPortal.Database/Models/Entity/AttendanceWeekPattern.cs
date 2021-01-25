@@ -12,20 +12,15 @@ namespace MyPortal.Database.Models.Entity
         {
             AttendanceWeeks = new HashSet<AttendanceWeek>();
             Periods = new HashSet<AttendancePeriod>();
+            AcademicYearWeekPatterns = new HashSet<AcademicYearWeekPattern>();
         }
-
-        [Column(Order = 1)]
-        public Guid AcademicYearId { get; set; }
-
-        [Column(Order = 1)] 
-        public int Order { get; set; }
 
         [Column(Order = 2)] 
         [Required]
         [StringLength(128)]
         public string Description { get; set; }
-        
-        public virtual AcademicYear AcademicYear { get; set; }
+
+        public virtual ICollection<AcademicYearWeekPattern> AcademicYearWeekPatterns { get; set; }
         public virtual ICollection<AttendanceWeek> AttendanceWeeks { get; set; }
         public virtual ICollection<AttendancePeriod> Periods { get; set; }
     }

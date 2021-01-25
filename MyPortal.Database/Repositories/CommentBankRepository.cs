@@ -16,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CommentBankRepository : BaseReadWriteRepository<CommentBank>, ICommentBankRepository
     {
-        public CommentBankRepository(ApplicationDbContext context) : base(context)
+        public CommentBankRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection)
         {
 
         }

@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SenEventRepository : BaseReadWriteRepository<SenEvent>, ISenEventRepository
     {
-        public SenEventRepository(ApplicationDbContext context) : base(context, "SenEvent")
+        public SenEventRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "SenEvent")
         {
            
         }

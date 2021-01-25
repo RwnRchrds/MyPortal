@@ -14,10 +14,10 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentContactRelationshipRepository : BaseReadWriteRepository<StudentContactRelationship>, IStudentContactRelationshipRepository
     {
-        public StudentContactRelationshipRepository(ApplicationDbContext context) : base(context, "StudentContact")
+        public StudentContactRelationshipRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "StudentContact")
         {
 
-        }
+        }   
 
         protected override void SelectAllRelated(Query query)
         {

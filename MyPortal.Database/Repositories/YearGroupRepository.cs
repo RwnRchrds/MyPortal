@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class YearGroupRepository : BaseReadWriteRepository<YearGroup>, IYearGroupRepository
     {
-        public YearGroupRepository(ApplicationDbContext context) : base(context, "YearGroup")
+        public YearGroupRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "YearGroup")
         {
             
         }

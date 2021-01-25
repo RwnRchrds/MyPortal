@@ -4,12 +4,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Response.Students;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
     public interface IStudentService : IService
     {
         Task<IEnumerable<StudentModel>> Get(StudentSearchOptions searchModel);
+
+        Task<StudentStatsModel> GetStatsById(Guid studentId, Guid academicYearId);
 
         Task<StudentModel> GetById(Guid studentId);
 

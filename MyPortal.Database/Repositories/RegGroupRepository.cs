@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class RegGroupRepository : BaseReadWriteRepository<RegGroup>, IRegGroupRepository
     {
-        public RegGroupRepository(ApplicationDbContext context) : base(context, "RegGroup")
+        public RegGroupRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "RegGroup")
         {
             
         }

@@ -76,6 +76,7 @@ namespace MyPortalWeb.Extensions
             services.AddScoped<IDocumentTypeRepository, DocumentTypeRepository>();
             services.AddScoped<IEmailAddressRepository, EmailAddressRepository>();
             services.AddScoped<IEmailAddressTypeRepository, EmailAddressTypeRepository>();
+            services.AddScoped<IExclusionRepository, ExclusionRepository>();
             services.AddScoped<IFileRepository, FileRepository>();
             services.AddScoped<IGiftedTalentedRepository, GiftedTalentedRepository>();
             services.AddScoped<IGovernanceTypeRepository, GovernanceTypeRepository>();

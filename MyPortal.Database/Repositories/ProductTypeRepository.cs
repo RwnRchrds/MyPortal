@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ProductTypeRepository : BaseReadWriteRepository<ProductType>, IProductTypeRepository
     {
-        public ProductTypeRepository(ApplicationDbContext context) : base(context)
+        public ProductTypeRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection)
         {
         }
     }

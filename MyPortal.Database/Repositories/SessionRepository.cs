@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SessionRepository : BaseReadWriteRepository<Session>, ISessionRepository
     {
-        public SessionRepository(ApplicationDbContext context) : base(context, "Session")
+        public SessionRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Session")
         {
             
         }

@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SenReviewRepository : BaseReadWriteRepository<SenReview>, ISenReviewRepository
     {
-        public SenReviewRepository(ApplicationDbContext context) : base(context, "SenReview")
+        public SenReviewRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "SenReview")
         {
             
         }

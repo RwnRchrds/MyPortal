@@ -9,6 +9,8 @@ using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Requests.Attendance;
+using MyPortal.Logic.Models.Response.Students;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -16,10 +18,22 @@ namespace MyPortal.Logic.Services
     public class StudentService : BaseService, IStudentService
     {
         private IStudentRepository _studentRepository;
+        private IAchievementRepository _achievementRepository;
+        private IIncidentRepository _incidentRepository;
+        private IAttendanceMarkRepository _attendanceMarkRepository;
+        private IAttendanceCodeRepository _attendanceCodeRepository;
+        private IExclusionRepository _exclusionRepository;
 
-        public StudentService(IStudentRepository studentRepository)
+        public StudentService(IStudentRepository studentRepository, IAchievementRepository achievementRepository,
+            IIncidentRepository incidentRepository, IAttendanceMarkRepository attendanceMarkRepository,
+            IExclusionRepository exclusionRepository, IAttendanceCodeRepository attendanceCodeRepository)
         {
             _studentRepository = studentRepository;
+            _achievementRepository = achievementRepository;
+            _incidentRepository = incidentRepository;
+            _attendanceMarkRepository = attendanceMarkRepository;
+            _exclusionRepository = exclusionRepository;
+            _attendanceCodeRepository = attendanceCodeRepository;
         }
 
         public async Task<StudentModel> GetById(Guid studentId)
@@ -31,6 +45,29 @@ namespace MyPortal.Logic.Services
             }
 
             return BusinessMapper.Map<StudentModel>(student);
+        }
+
+        public async Task<StudentStatsModel> GetStatsById(Guid studentId, Guid academicYearId)
+        {
+            var stats = new StudentStatsModel();
+
+            var achievements = await _achievementRepository.GetPointsByStudent(studentId, academicYearId);
+            var incidents = await _incidentRepository.GetPointsByStudent(studentId, academicYearId);
+            var attendanceMarks = await _attendanceMarkRepository.GetByStudent(studentId, academicYearId);
+            var exclusions = await _exclusionRepository.GetCountByStudent(studentId);
+            var attendanceCodes = await _attendanceCodeRepository.GetAll();
+
+            var attendanceSummary =
+                new AttendanceSummary(attendanceCodes.Select(BusinessMapper.Map<AttendanceCodeModel>).ToList(),
+                    attendanceMarks.Select(BusinessMapper.Map<AttendanceMarkModel>).ToList());
+
+            stats.StudentId = studentId;
+            stats.AchievementPoints = achievements;
+            stats.BehaviourPoints = incidents;
+            stats.PercentageAttendance = attendanceSummary.GetPresentAndAea(true);
+            stats.Exclusions = exclusions;
+
+            return stats;
         }
 
         public async Task<StudentModel> GetByUserId(Guid userId, bool throwNotFound = true)
@@ -92,7 +129,12 @@ namespace MyPortal.Logic.Services
 
         public override void Dispose()
         {
-            _studentRepository.Dispose();
+            //_studentRepository.Dispose();
+            //_achievementRepository.Dispose();
+            //_incidentRepository.Dispose();
+            //_attendanceMarkRepository.Dispose();
+            //_exclusionRepository.Dispose();
+            //_attendanceCodeRepository.Dispose();
         }
     }
 }

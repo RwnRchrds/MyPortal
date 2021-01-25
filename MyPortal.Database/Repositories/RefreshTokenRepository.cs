@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
@@ -16,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class RefreshTokenRepository : BaseReadWriteRepository<RefreshToken>, IRefreshTokenRepository
     {
-        public RefreshTokenRepository(ApplicationDbContext context) : base(context, "RefreshToken")
+        public RefreshTokenRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "RefreshToken")
         {
 
         }
