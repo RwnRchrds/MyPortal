@@ -9,10 +9,10 @@ namespace MyPortal.Logic.Extensions
 {
     public static class UserExtensions
     {
-        public static string GetDisplayName(this ClaimsPrincipal user)
-        {
-            return user.FindFirst(ApplicationClaimTypes.DisplayName)?.Value ?? user.Identity.Name;
-        }
+        //public static string GetDisplayName(this ClaimsPrincipal user)
+        //{
+        //    return user.FindFirst(ApplicationClaimTypes.DisplayName)?.Value ?? user.Identity.Name;
+        //}
 
         //public static bool HasPermission(this ClaimsPrincipal principal, params Guid[] permissions)
         //{

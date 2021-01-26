@@ -1,12 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Google.Apis.Drive.v3;
-using Google.Apis.Drive.v3.Data;
-using Google.Apis.Upload;
 using Microsoft.Extensions.Configuration;
 using MyPortal.Logic.Helpers;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DocumentProvision;
 using MyPortal.Logic.Models.Requests.Documents;
 using File = Google.Apis.Drive.v3.Data.File;

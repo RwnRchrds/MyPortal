@@ -1,4 +1,5 @@
 ﻿using System;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.DataGrid
@@ -18,7 +19,7 @@ namespace MyPortal.Logic.Models.DataGrid
             Id = model.Id;
             TypeName = model.Type.Description;
             Location = model.Location.Description;
-            RecordedBy = model.RecordedBy.GetDisplayName(true);
+            RecordedBy = model.RecordedBy.GetDisplayName(NameFormat.FullNameAbbreviated);
             CreatedDate = model.CreatedDate;
             Comments = model.Comments;
             Points = model.Points;

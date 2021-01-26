@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
@@ -34,9 +35,9 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual PersonModel Person { get; set; }
 
-        public string GetDisplayName(bool salutationFormat = false)
+        public string GetDisplayName(NameFormat format = NameFormat.Default, bool useLegalName = true)
         {
-            return Person != null ? Person.GetDisplayName(salutationFormat) : UserName;
+            return Person != null ? Person.GetDisplayName(format, useLegalName) : UserName;
         }
     }
 }

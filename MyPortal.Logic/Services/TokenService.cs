@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
@@ -45,7 +46,7 @@ namespace MyPortal.Logic.Services
                 new Claim(JwtRegisteredClaimNames.NameId, userModel.Id.ToString("N")),
                 new Claim(JwtRegisteredClaimNames.UniqueName, userModel.UserName),
                 new Claim(ApplicationClaimTypes.UserType, userModel.UserType.ToString()),
-                new Claim(ApplicationClaimTypes.DisplayName, userModel.GetDisplayName(userModel.UserType == UserTypes.Staff))
+                new Claim(ApplicationClaimTypes.DisplayName, userModel.GetDisplayName(NameFormat.FullNameAbbreviated))
             };
 
             var roles = await _userRoleRepository.GetByUser(userModel.Id);

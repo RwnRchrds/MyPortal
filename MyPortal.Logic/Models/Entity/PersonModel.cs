@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using MyPortal.Logic.Attributes;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
@@ -51,9 +52,31 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual EthnicityModel Ethnicity { get; set; }
 
-        public string GetDisplayName(bool salutationFormat = false)
+        public string GetDisplayName(NameFormat format = NameFormat.Default, bool useLegalName = true)
         {
-            return salutationFormat ? $"{Title} {FirstName.Substring(0, 1)} {LastName}" : $"{LastName}, {FirstName}";
+            string name;
+            switch (format)
+            {
+                case NameFormat.FullName:
+                    name = $"{Title} {(useLegalName ? FirstName : ChosenFirstName)} {MiddleName} {LastName}";
+                    break;
+                case NameFormat.FullNameAbbreviated:
+                    name =
+                        $"{Title} {(useLegalName ? FirstName : ChosenFirstName).Substring(0, 1)} {MiddleName.Substring(0, 1)} {LastName}";
+                    break;
+                case NameFormat.FullNameNoTitle:
+                    name = $"{(useLegalName ? FirstName : ChosenFirstName)} {MiddleName} {LastName}";
+                    break;
+                case NameFormat.Initials:
+                    name =
+                        $"{(useLegalName ? FirstName : ChosenFirstName).Substring(0, 1)}{MiddleName.Substring(0, 1)}{LastName.Substring(0, 1)}";
+                    break;
+                default:
+                    name = $"{LastName}, {(useLegalName ? FirstName : ChosenFirstName)} {MiddleName}";
+                    break;
+            }
+
+            return name.Replace("  ", " ").Trim();
         }
     }
 }
