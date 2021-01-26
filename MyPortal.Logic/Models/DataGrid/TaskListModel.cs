@@ -1,4 +1,5 @@
 ﻿using System;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.DataGrid
@@ -18,7 +19,7 @@ namespace MyPortal.Logic.Models.DataGrid
         {
             Id = model.Id;
             DueDate = model.DueDate;
-            AssignedByName = model.AssignedBy.GetDisplayName(true);
+            AssignedByName = model.AssignedBy.GetDisplayName(NameFormat.FullNameAbbreviated);
             TaskTypeName = model.Type?.Description;
             TaskTypeColourCode = model.Type?.ColourCode;
             Title = model.Title;

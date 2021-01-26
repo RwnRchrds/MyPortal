@@ -95,7 +95,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
         {
             HttpStatusCode statusCode;
 
-            var message = ExceptionHelper.GetRootExceptionMessage(ex);
+            var message = ex.GetBaseException().Message;
 
             switch (ex)
             {

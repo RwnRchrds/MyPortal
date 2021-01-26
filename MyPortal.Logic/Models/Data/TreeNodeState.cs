@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MyPortal.Logic.Models.Data
+﻿namespace MyPortal.Logic.Models.Data
 {
     public class TreeNodeState
     {

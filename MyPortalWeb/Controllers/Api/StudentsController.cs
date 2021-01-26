@@ -37,10 +37,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 IEnumerable<StudentDataGridModel> students;
 
-                using (new ProcessTimer("Fetch students"))
-                {
-                    students = (await StudentService.Get(searchModel)).Select(x => x.GetDataGridModel());
-                }
+                students = (await StudentService.Get(searchModel)).Select(x => x.GetDataGridModel());
 
                 return Ok(students);
             }, Permissions.Student.StudentDetails.ViewStudentDetails);
