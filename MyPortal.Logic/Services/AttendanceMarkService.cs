@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Repositories;
-using MyPortal.Logic.Constants;
-using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
@@ -56,11 +50,11 @@ namespace MyPortal.Logic.Services
                 WeekId = attendanceWeekId,
                 PeriodId = periodId,
                 MinutesLate = 0,
-                Mark = "-"
+                CodeId = Guid.Empty
             };
         }
 
-        public async Task<AttendanceMarkModel> Get(Guid studentId, Guid attendanceWeekId, Guid periodId)
+        public async Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
             var attendanceMark = await _attendanceMarkRepository.Get(studentId, attendanceWeekId, periodId);
 
@@ -76,18 +70,23 @@ namespace MyPortal.Logic.Services
         {
             foreach (var model in marks)
             {
-                var markInDb = await Get(model.StudentId, model.WeekId, model.PeriodId);
+                if (model.CodeId == Guid.Empty)
+                {
+                    throw new AttendanceCodeException("Cannot insert blank attendance codes.");
+                }
+
+                var markInDb = await GetAttendanceMark(model.StudentId, model.WeekId, model.PeriodId);
 
                 if (markInDb.Id != Guid.Empty)
                 {
-                    markInDb.Mark = model.Mark;
+                    markInDb.CodeId = model.CodeId;
                     markInDb.MinutesLate = model.MinutesLate ?? 0;
                     markInDb.Comments = model.Comments;
 
                     var updatedMark = new AttendanceMark
                     {
                         Id = markInDb.Id,
-                        Mark = markInDb.Mark,
+                        CodeId = markInDb.CodeId,
                         StudentId = markInDb.StudentId,
                         WeekId = markInDb.WeekId,
                         PeriodId = markInDb.PeriodId,
@@ -95,7 +94,7 @@ namespace MyPortal.Logic.Services
                         Comments = markInDb.Comments
                     };
 
-                    await _attendanceMarkRepository.Update(updatedMark);
+                    _attendanceMarkRepository.Update(updatedMark);
                 }
                 else
                 {
@@ -104,7 +103,7 @@ namespace MyPortal.Logic.Services
                         StudentId = model.StudentId,
                         WeekId = model.WeekId,
                         PeriodId = model.PeriodId,
-                        Mark = model.Mark,
+                        CodeId = model.CodeId,
                         MinutesLate = model.MinutesLate ?? 0,
                         Comments = model.Comments
                     };

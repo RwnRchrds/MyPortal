@@ -83,13 +83,6 @@ namespace MyPortalWeb.Controllers.BaseControllers
 
             return false;
         }
-        
-        protected async Task<Guid> GetCurrentAcademicYearId()
-        {
-            var currentYear = await AcademicYearService.GetCurrent();
-
-            return currentYear.Id;
-        }
 
         private IActionResult HandleException(Exception ex)
         {

@@ -61,13 +61,18 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Route("student")]
         [Produces(typeof(IEnumerable<LogNoteModel>))]
-        public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid academicYearId)
+        public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             return await ProcessAsync(async () =>
             {
                 if (await AuthoriseStudent(studentId))
                 {
-                    var logNotes = await _logNoteService.GetByStudent(studentId, academicYearId);
+                    if (academicYearId == null || academicYearId == Guid.Empty)
+                    {
+                        academicYearId = (await AcademicYearService.GetCurrent()).Id;
+                    }
+
+                    var logNotes = await _logNoteService.GetByStudent(studentId, academicYearId.Value);
 
                     var result = logNotes;
 
@@ -87,7 +92,8 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var logNote = new LogNoteModel
                 {
-                    StudentId = model.StudentId,
+                    AcademicYearId = (await AcademicYearService.GetCurrent()).Id,
+                        StudentId = model.StudentId,
                     TypeId = model.TypeId,
                     Message = model.Message
                 };

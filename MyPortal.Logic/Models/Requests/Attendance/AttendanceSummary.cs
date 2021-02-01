@@ -29,11 +29,11 @@ namespace MyPortal.Logic.Models.Requests.Attendance
         {
             foreach (var mark in marks)
             {
-                var code = codes.FirstOrDefault(x => x.Code == mark.Mark);
+                var code = codes.FirstOrDefault(x => x.Id == mark.CodeId);
 
                 if (code == null)
                 {
-                    throw new Exception($"Code not found for attendance mark '{mark.Mark}'.");
+                    throw new Exception($"Code not found for attendance code ID '{mark.CodeId}'.");
                 }
 
                 if (code.Id == AttendanceMeanings.Present)

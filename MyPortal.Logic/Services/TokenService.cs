@@ -72,7 +72,7 @@ namespace MyPortal.Logic.Services
 
         private async Task<string> GenerateRefreshToken(Guid userId)
         {
-            await _refreshTokenRepository.DeleteExpired(userId);
+            _refreshTokenRepository.DeleteExpired(userId);
 
             var randomNumber = new byte[256];
 

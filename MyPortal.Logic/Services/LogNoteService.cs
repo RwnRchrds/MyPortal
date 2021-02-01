@@ -63,8 +63,6 @@ namespace MyPortal.Logic.Services
 
         public async Task Create(params LogNoteModel[] logNoteObjects)
         {
-            Guid? academicYearId = null;
-            
             foreach (var logNoteObject in logNoteObjects)
             {
                 await AcademicYearModel.CheckLock(_academicYearRepository, logNoteObject.AcademicYearId);
@@ -93,6 +91,8 @@ namespace MyPortal.Logic.Services
         {
             foreach (var logNoteObject in logNoteObjects)
             {
+                await AcademicYearModel.CheckLock(_academicYearRepository, logNoteObject.AcademicYearId);
+
                 var updateDate = DateTime.Now;
 
                 var logNote = await _logNoteRepository.GetByIdWithTracking(logNoteObject.Id);

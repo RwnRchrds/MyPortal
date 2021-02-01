@@ -17,9 +17,7 @@ namespace MyPortal.Database.Models.Entity
         public Guid PeriodId { get; set; }
 
         [Column(Order = 4)]
-        [Required]
-        [StringLength(1)]
-        public string Mark { get; set; }
+        public Guid CodeId { get; set; }
 
         [Column(Order = 5)]
         [StringLength(256)]
@@ -27,6 +25,8 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 6)]
         public int MinutesLate { get; set; }
+
+        public virtual AttendanceCode AttendanceCode { get; set; }
 
         public virtual AttendancePeriod AttendancePeriod { get; set; }
 

@@ -13,17 +13,22 @@ export class PermissionGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const requiredPermissions = route.data.requiredPermissions as string[];
 
+    // If route has no required permissions, allow the user to proceed
     if (!requiredPermissions) {
       return of(true);
     }
     else {
       if (this.authService.hasPermission(requiredPermissions)) {
+        // The user has the required permissions - allow them to proceed
         return of(true);
       }
       else {
+        // The user does not have the required permissions - redirect to root
         this.router.navigate(['']);
         return of(false);
       }
     }
   }
 }
+
+

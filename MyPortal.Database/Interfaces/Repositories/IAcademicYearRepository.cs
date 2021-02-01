@@ -9,6 +9,7 @@ namespace MyPortal.Database.Interfaces.Repositories
     public interface IAcademicYearRepository : IReadWriteRepository<AcademicYear>
     {
         Task<AcademicYear> GetCurrent();
+        Task<AcademicYear> GetLatest();
         Task<IEnumerable<AcademicYear>> GetAllToDate();
         Task<bool> IsLocked(Guid academicYearId);
     }

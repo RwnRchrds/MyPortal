@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {StudentViewService} from '../student-view.service';
 
 @Component({
   selector: 'app-student-overview',
@@ -7,9 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StudentOverviewComponent implements OnInit {
 
-  constructor() { }
+  constructor(private viewService: StudentViewService, private cdRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }
-
 }

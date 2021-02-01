@@ -14,9 +14,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public Guid PeriodId { get; set; }
 
-        [Required]
-        [StringLength(1)]
-        public string Mark { get; set; }
+        public Guid CodeId { get; set; }
 
         [StringLength(256)]
         public string Comments { get; set; }
@@ -24,6 +22,8 @@ namespace MyPortal.Logic.Models.Entity
         public int MinutesLate { get; set; }
 
         public virtual AttendancePeriodModel AttendancePeriod { get; set; }
+
+        public virtual AttendanceCodeModel AttendanceCode { get; set; }
 
         public virtual StudentModel Student { get; set; }
 
@@ -37,7 +37,7 @@ namespace MyPortal.Logic.Models.Entity
                 StudentId = StudentId,
                 WeekId = WeekId,
                 PeriodId = PeriodId,
-                Mark = Mark,
+                CodeId = CodeId,
                 MinutesLate = MinutesLate,
                 Comments = Comments
             };

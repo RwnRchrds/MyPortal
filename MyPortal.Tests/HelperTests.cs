@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using MyPortal.Database.Attributes;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Requests.Curriculum;
+using MyPortal.Logic.Services;
 using NUnit.Framework;
 
 namespace MyPortal.Tests
@@ -24,12 +27,14 @@ namespace MyPortal.Tests
         public void Encryption_Asymmetric()
         {
             var plaintext = @"*Test\pl41nt3xt*";
-            var secret = @"64867486t";
-            var salt = Encoding.ASCII.GetBytes(",./09&fd");
+            var secret = @"4t7w!z%C&F)J@NcRfUjXn2r5u8x/A?D(";
+            var iv = Guid.NewGuid();
 
-            var encryptedText = Encryption.EncryptString(plaintext, salt, secret);
+            var encryptedText = Encryption.Encrypt(Encoding.UTF8.GetBytes(plaintext), Encoding.UTF8.GetBytes(secret),
+                iv.ToByteArray());
 
-            var decryptedText = Encryption.DecryptString(encryptedText, salt, secret);
+            var decryptedText = Convert.ToBase64String(Encryption.Decrypt(encryptedText, Encoding.UTF8.GetBytes(secret),
+                iv.ToByteArray()));
 
             Assert.That(decryptedText.Equals(plaintext, StringComparison.InvariantCulture));
         }

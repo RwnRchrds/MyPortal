@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using MyPortal.Logic.Extensions;
 
 namespace MyPortal.Logic.Models.Data
 {
@@ -21,6 +23,11 @@ namespace MyPortal.Logic.Models.Data
         public void Extend(int? days, int? hours = null, int? minutes = null)
         {
             End.AddDays(days ?? 0).AddHours(hours ?? 0).AddMinutes(minutes ?? 0);
+        }
+
+        public IEnumerable<DateTime> GetAllDates()
+        {
+            return DateTimeExtensions.GetAllDates(Start, End);
         }
 
         public Tuple<DateTime, DateTime> ToTuple()

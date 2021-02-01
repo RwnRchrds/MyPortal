@@ -55,7 +55,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 if (await AuthoriseStudent(studentId))
                 {
-                    var academicYearId = await GetCurrentAcademicYearId();
+                    var academicYearId = (await AcademicYearService.GetCurrent()).Id;
 
                     var incidents = await _incidentService.GetByStudent(studentId, academicYearId);
 
