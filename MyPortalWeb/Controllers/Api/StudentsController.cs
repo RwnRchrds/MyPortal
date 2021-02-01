@@ -8,7 +8,6 @@ using MyPortal.Database.Models.Search;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Constants;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
@@ -45,7 +44,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("id")]
-        [Produces(typeof(IEnumerable<StudentModel>))]
+        [Produces(typeof(StudentModel))]
         public async Task<IActionResult> GetById([FromQuery] Guid studentId)
         {
             return await ProcessAsync(async () =>
@@ -64,13 +63,18 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Route("stats")]
         [Produces(typeof(StudentStatsModel))]
-        public async Task<IActionResult> GetStatsById([FromQuery] Guid studentId, [FromQuery] Guid academicYearId)
+        public async Task<IActionResult> GetStatsById([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             return await ProcessAsync(async () =>
             {
                 if (await AuthoriseStudent(studentId))
                 {
-                    var studentStats = await StudentService.GetStatsById(studentId, academicYearId);
+                    if (academicYearId == null || academicYearId == Guid.Empty)
+                    {
+                        academicYearId = (await AcademicYearService.GetCurrent()).Id;
+                    }
+
+                    var studentStats = await StudentService.GetStatsById(studentId, academicYearId.Value);
 
                     return Ok(studentStats);
                 }

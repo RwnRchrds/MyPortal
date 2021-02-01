@@ -445,6 +445,12 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<AttendanceCode>(e =>
                 {
                     e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    e.HasMany(x => x.AttendanceMarks)
+                        .WithOne(x => x.AttendanceCode)
+                        .HasForeignKey(x => x.CodeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<AttendanceCodeMeaning>(e =>

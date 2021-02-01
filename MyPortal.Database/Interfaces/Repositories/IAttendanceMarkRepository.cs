@@ -11,6 +11,6 @@ namespace MyPortal.Database.Interfaces.Repositories
     {
         Task<IEnumerable<AttendanceMark>> GetByStudent(Guid studentId, Guid academicYearId);
         Task<AttendanceMark> Get(Guid studentId, Guid attendanceWeekId, Guid periodId);
-        Task Update(AttendanceMark mark);
+        void Update(AttendanceMark mark);
     }
 }

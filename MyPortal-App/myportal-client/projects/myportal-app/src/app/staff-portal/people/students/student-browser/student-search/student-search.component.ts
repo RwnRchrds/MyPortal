@@ -14,6 +14,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {throwError} from 'rxjs';
 import {AlertService} from '../../../../../_services/alert.service';
 import {AppService} from '../../../../../_services/app.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-student-search',
@@ -70,6 +71,10 @@ export class StudentSearchComponent implements OnInit {
   reset(): void {
     this.showComponent = true;
     this.tableLoaded = false;
+  }
+
+  rowClickHandler(data: any): void {
+    this.router.navigate(['staff/students/' + data.id]);
   }
 
   search(): void {
@@ -150,6 +155,17 @@ export class StudentSearchComponent implements OnInit {
           data: 'houseName'
         }
       ],
+      rowCallback: (row, data, index) => {
+        const self = this;
+        // @ts-ignore
+        $('td', row).unbind('dblclick');
+        // @ts-ignore
+        $('td', row).bind('dblclick', () => {
+          self.rowClickHandler(data);
+        });
+
+        return row;
+      },
       language:
         {
           emptyTable: 'No students'
@@ -177,7 +193,8 @@ export class StudentSearchComponent implements OnInit {
 
   constructor(private studentService: StudentsService, private alertService: AlertService,
               private appService: AppService, private yearGroupService: YearGroupsService,
-              private regGroupService: RegGroupsService, private houseService: HousesService) {
+              private regGroupService: RegGroupsService, private houseService: HousesService,
+              private router: Router) {
    }
 
   ngOnInit(): void {

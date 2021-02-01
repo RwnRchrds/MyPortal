@@ -1,1 +1,182 @@
-<p>student-view works!</p>
+<div *ngIf="student" class="content d-flex flex-column flex-column-fluid" id="kt_content">
+  <!--begin::Subheader-->
+  <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
+    <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+      <!--begin::Info-->
+      <div class="d-flex align-items-center flex-wrap mr-2">
+        <button class="burger-icon burger-icon-left mr-4 d-inline-block d-lg-none" id="kt_subheader_mobile_toggle">
+          <span></span>
+        </button>
+        <!--begin::Page Title-->
+        <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5"><i class="fas fa-user-graduate mr-2"></i>Student</h5>
+        <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-5 bg-gray-200"></div>
+        <!--end::Separator-->
+        <!--begin::Student Name-->
+        <div class="d-flex align-items-center" id="kt_subheader_search">
+          <span class="text-dark-50 font-weight-bold">{{student.person | nameFormat}}</span>
+        </div>
+        <!--end::Page Title-->
+      </div>
+      <!--end::Info-->
+      <!--begin::Toolbar-->
+      <div class="d-flex align-items-center">
+
+      </div>
+      <!--end::Toolbar-->
+    </div>
+  </div>
+  <!--end::Subheader-->
+  <!--begin::Entry-->
+  <div class="d-flex flex-column-fluid">
+    <!--begin::Container-->
+    <div class="container h-100">
+      <!--begin::Dashboard-->
+      <!--begin::Row-->
+      <div class="d-flex flex-row">
+        <!--Begin::Aside-->
+        <div class="flex-row-auto offcanvas-mobile w-300px w-xl-350px" id="kt_profile_aside">
+          <!--begin::Profile Card-->
+          <div class="card card-custom card-stretch">
+            <!--begin::Body-->
+            <div class="card-body pt-4">
+              <!--begin::Toolbar-->
+              <div class="d-flex justify-content-end">
+
+              </div>
+              <!--end::Toolbar-->
+              <!--begin::User-->
+              <div class="d-flex align-items-center mt-5">
+                <div class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">
+                  <div class="symbol-label" style="background-image:url('assets/lib/media/users/default.jpg')"></div>
+                </div>
+                <div>
+                  <a href="#" class="font-weight-bolder font-size-h5 text-dark-75 text-hover-primary">{{student.person.lastName}}, {{student.person.firstName}}</a>
+                  <div class="text-muted">{{student.yearGroup.name}} ({{student.regGroup.name}})</div>
+                  <div class="mt-2">
+                  </div>
+                </div>
+              </div>
+              <!--end::User-->
+              <!--begin::Contact-->
+              <div class="py-9">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="font-weight-bold mr-2">Reg Tutor:</span>
+                  <span class="text-muted text-hover-primary">{{student.regGroup.tutor?.person | nameFormat: 2}}</span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="font-weight-bold mr-2">Head of Year:</span>
+                  <span class="text-muted">{{student.yearGroup.headOfYear?.person | nameFormat: 2}}</span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="font-weight-bold mr-2">Head of House:</span>
+                  <span class="text-muted">{{student.house.headOfHouse?.person | nameFormat: 2}}</span>
+                </div>
+              </div>
+              <!--end::Contact-->
+              <!--begin::Nav-->
+              <div class="navi navi-bold navi-hover navi-active navi-link-rounded">
+                <div class="navi-item mb-2">
+                  <a routerLink="overview" routerLinkActive="active" class="navi-link py-4">
+															<span class="navi-icon mr-2">
+																<i class="fad fa-layer-group fa-fw"></i>
+															</span>
+                    <span class="navi-text font-size-lg">Student Overview</span>
+                  </a>
+                </div>
+                <div class="navi-item mb-2">
+                  <a routerLink="details" routerLinkActive="active" class="navi-link py-4">
+															<span class="navi-icon mr-2">
+																<i class="fad fa-user-graduate fa-fw"></i>
+															</span>
+                    <span class="navi-text font-size-lg">Student Details</span>
+                  </a>
+                </div>
+                <div class="navi-item mb-2">
+                  <a routerLink="assessment" routerLinkActive="active" class="navi-link py-4">
+															<span class="navi-icon mr-2">
+																<span class="svg-icon">
+																	<i class="fad fa-tasks fa-fw"></i>
+																</span>
+															</span>
+                    <span class="navi-text font-size-lg">Assessment</span>
+                  </a>
+                </div>
+                <div class="navi-item mb-2">
+                  <a routerLink="attendance" routerLinkActive="active" class="navi-link py-4">
+															<span class="navi-icon mr-2">
+																<span class="svg-icon">
+																	<i class="fad fa-stopwatch fa-fw"></i>
+																</span>
+															</span>
+                    <span class="navi-text font-size-lg">Attendance</span>
+                  </a>
+                </div>
+                <div class="navi-item mb-2">
+                  <a routerLink="behaviour" routerLinkActive="active" class="navi-link py-4">
+															<span class="navi-icon mr-2">
+																<span class="svg-icon">
+																	<i class="fad fa-star fa-fw"></i>
+																</span>
+															</span>
+                    <span class="navi-text font-size-lg">Behaviour Management</span>
+                  </a>
+                </div>
+                <div class="navi-item mb-2">
+                  <a routerLink="communication" routerLinkActive="active" class="navi-link py-4">
+															<span class="navi-icon mr-2">
+																<span class="svg-icon">
+																	<i class="fad fa-envelope fa-fw"></i>
+																</span>
+															</span>
+                    <span class="navi-text font-size-lg">Communication</span>
+                  </a>
+                </div>
+                <div class="navi-item mb-2">
+                  <a routerLink="curriculum" routerLinkActive="active" class="navi-link py-4">
+															<span class="navi-icon mr-2">
+																<span class="svg-icon">
+																	<i class="fad fa-graduation-cap fa-fw"></i>
+																</span>
+															</span>
+                    <span class="navi-text font-size-lg">Curriculum Management</span>
+                  </a>
+                </div>
+                <div class="navi-item mb-2">
+                  <a routerLink="documents" routerLinkActive="active" class="navi-link py-4">
+															<span class="navi-icon mr-2">
+																<span class="svg-icon">
+																	<i class="fad fa-file-alt fa-fw"></i>
+																</span>
+															</span>
+                    <span class="navi-text">Documents</span>
+                  </a>
+                </div>
+                <div class="navi-item mb-2">
+                  <a routerLink="send" routerLinkActive="active" class="navi-link py-4">
+															<span class="navi-icon mr-2">
+																<span class="svg-icon">
+																	<i class="fad fa-traffic-cone fa-fw"></i>
+																</span>
+															</span>
+                    <span class="navi-text">SEND</span>
+                  </a>
+                </div>
+              </div>
+              <!--end::Nav-->
+            </div>
+            <!--end::Body-->
+          </div>
+          <!--end::Profile Card-->
+        </div>
+        <div class="flex-row-fluid ml-lg-8">
+          <router-outlet></router-outlet>
+        </div>
+        <!--End::Aside-->
+      </div>
+      <!--end::Row-->
+      <!--end::Dashboard-->
+    </div>
+    <!--end::Container-->
+  </div>
+  <!--end::Entry-->
+</div>

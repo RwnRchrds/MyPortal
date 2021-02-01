@@ -8,7 +8,7 @@ import {catchError, map} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {throwError} from 'rxjs';
 import {AuthService} from '../../../../../_services/auth.service';
-import {AppPermissions} from '../../../../../_guards/app-permissions';
+import {AppPermissions} from '../../../../../_constants/app-permissions';
 
 @Component({
   selector: 'app-user-search',

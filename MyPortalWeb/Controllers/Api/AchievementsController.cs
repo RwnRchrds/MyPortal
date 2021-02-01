@@ -58,7 +58,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 if (await AuthoriseStudent(studentId))
                 {
-                    var fromAcademicYearId = academicYearId ?? await GetCurrentAcademicYearId();
+                    var fromAcademicYearId = academicYearId ?? (await AcademicYearService.GetCurrent()).Id;
 
                     var achievements = await _achievementService.GetByStudent(studentId, fromAcademicYearId);
 

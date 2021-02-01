@@ -12,8 +12,8 @@ namespace MyPortal.Logic.Models.DataGrid
         public Guid WeekId { get; set; }
 
         public Guid PeriodId { get; set; }
-        
-        public string Mark { get; set; }
+
+        public Guid CodeId { get; set; }
 
         public string Comments { get; set; }
 

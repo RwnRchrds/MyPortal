@@ -55,7 +55,7 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
-        public async Task DeleteExpired(Guid userId)
+        public void DeleteExpired(Guid userId)
         {
             var query = GenerateEmptyQuery(typeof(RefreshToken));
 
@@ -64,7 +64,7 @@ namespace MyPortal.Database.Repositories
 
             query.AsDelete();
 
-            await ExecuteNonQuery(query);
+            PendingQueries.Add(query);
         }
     }
 }

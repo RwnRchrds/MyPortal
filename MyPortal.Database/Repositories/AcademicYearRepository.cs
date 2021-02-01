@@ -34,6 +34,16 @@ namespace MyPortal.Database.Repositories
             return (await ExecuteQuery(sql)).First();
         }
 
+        public async Task<AcademicYear> GetLatest()
+        {
+            var sql = GenerateQuery();
+
+            sql.OrderByDesc("AcademicYear.FirstDate");
+            sql.Limit(1);
+
+            return await ExecuteQueryFirstOrDefault(sql);
+        }
+
         public async Task<IEnumerable<AcademicYear>> GetAllToDate()
         {
             var sql = GenerateQuery();

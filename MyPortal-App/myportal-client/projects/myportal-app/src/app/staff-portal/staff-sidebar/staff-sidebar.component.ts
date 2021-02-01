@@ -1,6 +1,6 @@
 import {PortalSidebarComponent} from '../../shared/portal-sidebar/portal-sidebar.component';
 import { Component, OnInit } from '@angular/core';
-import { AppPermissions } from '../../_guards/app-permissions';
+import { AppPermissions } from '../../_constants/app-permissions';
 
 @Component({
   selector: 'app-staff-sidebar',

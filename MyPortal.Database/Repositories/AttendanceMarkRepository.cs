@@ -84,15 +84,15 @@ namespace MyPortal.Database.Repositories
             return (await ExecuteQuery(query)).SingleOrDefault();
         }
 
-        public async Task Update(AttendanceMark mark)
+        public void Update(AttendanceMark mark)
         {
-            var columns = new List<string> {"Mark", "MinutesLate", "Comments"};
+            var columns = new List<string> { "CodeId", "MinutesLate", "Comments" };
 
-            var values = new List<object> {mark.Mark, mark.MinutesLate, mark.Comments};
+            var values = new List<object> { mark.CodeId, mark.MinutesLate, mark.Comments };
 
             var query = new Query(TblName).Where("AttendanceMark.Id", "=", mark.Id).AsUpdate(columns, values);
 
-            await ExecuteNonQuery(query);
+            PendingQueries.Add(query);
         }
     }
 }

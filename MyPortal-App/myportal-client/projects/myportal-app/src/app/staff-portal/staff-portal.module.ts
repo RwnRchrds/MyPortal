@@ -21,6 +21,18 @@ import { UserDetailsComponent } from './settings/users/user-view/user-details/us
 import { UserLinkPersonComponent } from './settings/users/user-view/user-link-person/user-link-person.component';
 import { UserResetPasswordComponent } from './settings/users/user-view/user-reset-password/user-reset-password.component';
 import { CreateUserComponent } from './settings/users/create-user/create-user.component';
+import { StudentViewComponent } from './people/students/student-view/student-view.component';
+import { StudentOverviewComponent } from './people/students/student-view/student-overview/student-overview.component';
+import { StudentDetailsComponent } from './people/students/student-view/student-details/student-details.component';
+import { StudentAssessmentComponent } from './people/students/student-view/student-assessment/student-assessment.component';
+import { StudentAttendanceComponent } from './people/students/student-view/student-attendance/student-attendance.component';
+import { StudentBehaviourComponent } from './people/students/student-view/student-behaviour/student-behaviour.component';
+import { StudentCommunicationComponent } from './people/students/student-view/student-communication/student-communication.component';
+import { StudentCurriculumComponent } from './people/students/student-view/student-curriculum/student-curriculum.component';
+import { StudentDocumentsComponent } from './people/students/student-view/student-documents/student-documents.component';
+import { StudentSendComponent } from './people/students/student-view/student-send/student-send.component';
+import { StudentStatsComponent } from './people/students/student-view/student-overview/student-stats/student-stats.component';
+import { StudentLogNotesComponent } from './people/students/student-view/student-overview/student-log-notes/student-log-notes.component';
 
 @NgModule({
   imports: [
@@ -48,7 +60,19 @@ import { CreateUserComponent } from './settings/users/create-user/create-user.co
     UserDetailsComponent,
     UserLinkPersonComponent,
     UserResetPasswordComponent,
-    CreateUserComponent
+    CreateUserComponent,
+    StudentViewComponent,
+    StudentOverviewComponent,
+    StudentDetailsComponent,
+    StudentAssessmentComponent,
+    StudentAttendanceComponent,
+    StudentBehaviourComponent,
+    StudentCommunicationComponent,
+    StudentCurriculumComponent,
+    StudentDocumentsComponent,
+    StudentSendComponent,
+    StudentStatsComponent,
+    StudentLogNotesComponent
   ],
   exports: [
     StaffPortalComponent,

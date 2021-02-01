@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -27,5 +28,7 @@ namespace MyPortal.Database.Models.Entity
         public bool Restricted { get; set; }
 
         public virtual AttendanceCodeMeaning CodeMeaning { get; set; }
+
+        public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }
     }
 }

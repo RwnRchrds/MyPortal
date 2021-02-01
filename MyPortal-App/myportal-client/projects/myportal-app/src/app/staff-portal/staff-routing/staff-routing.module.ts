@@ -5,7 +5,7 @@ import { StaffPortalComponent } from './../staff-portal.component';
 import { StaffHomepageComponent } from './../staff-homepage/staff-homepage.component';
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { AppPermissions } from '../../_guards/app-permissions';
+import { AppPermissions } from '../../_constants/app-permissions';
 import {RoleBrowserComponent} from '../settings/roles/role-browser/role-browser.component';
 import {RoleViewComponent} from '../settings/roles/role-view/role-view.component';
 import {UserBrowserComponent} from '../settings/users/user-browser/user-browser.component';
@@ -15,6 +15,16 @@ import {RoleSearchComponent} from '../settings/roles/role-browser/role-search/ro
 import {CreateRoleComponent} from '../settings/roles/role-browser/create-role/create-role.component';
 import {UserSearchComponent} from '../settings/users/user-browser/user-search/user-search.component';
 import {CreateUserComponent} from '../settings/users/create-user/create-user.component';
+import {StudentViewComponent} from '../people/students/student-view/student-view.component';
+import {StudentOverviewComponent} from '../people/students/student-view/student-overview/student-overview.component';
+import {StudentDetailsComponent} from '../people/students/student-view/student-details/student-details.component';
+import {StudentAssessmentComponent} from '../people/students/student-view/student-assessment/student-assessment.component';
+import {StudentAttendanceComponent} from '../people/students/student-view/student-attendance/student-attendance.component';
+import {StudentBehaviourComponent} from '../people/students/student-view/student-behaviour/student-behaviour.component';
+import {StudentCommunicationComponent} from '../people/students/student-view/student-communication/student-communication.component';
+import {StudentCurriculumComponent} from '../people/students/student-view/student-curriculum/student-curriculum.component';
+import {StudentDocumentsComponent} from '../people/students/student-view/student-documents/student-documents.component';
+import {StudentSendComponent} from '../people/students/student-view/student-send/student-send.component';
 
 const staffRoutes: Routes = [
   {
@@ -36,6 +46,55 @@ const staffRoutes: Routes = [
           {
             path: '',
             component: StudentSearchComponent
+          }
+        ]
+      },
+      {
+        path: 'students/:id',
+        component: StudentViewComponent,
+        canActivate: [PermissionGuard],
+        data: {requiredPermissions: [AppPermissions.STUDENTS_DETAILS_VIEW]},
+        children: [
+          {
+            path: 'overview',
+            component: StudentOverviewComponent
+          },
+          {
+            path: 'details',
+            component: StudentDetailsComponent
+          },
+          {
+            path: 'assessment',
+            component: StudentAssessmentComponent
+          },
+          {
+            path: 'attendance',
+            component: StudentAttendanceComponent
+          },
+          {
+            path: 'behaviour',
+            component: StudentBehaviourComponent
+          },
+          {
+            path: 'communication',
+            component: StudentCommunicationComponent
+          },
+          {
+            path: 'curriculum',
+            component: StudentCurriculumComponent
+          },
+          {
+            path: 'documents',
+            component: StudentDocumentsComponent
+          },
+          {
+            path: 'send',
+            component: StudentSendComponent
+          },
+          {
+            path: '',
+            redirectTo: 'overview',
+            pathMatch: 'full'
           }
         ]
       },

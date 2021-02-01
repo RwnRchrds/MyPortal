@@ -42,7 +42,7 @@ export class JwtInterceptor implements HttpInterceptor {
             switchMap(() => next.handle(this.injectToken(request))));
         }
 
-        // Refresh token from
+        // Refresh token from API
         else {
           return this.authService.refreshToken().pipe(switchMap(success => {
             return next.handle(this.injectToken(request));
