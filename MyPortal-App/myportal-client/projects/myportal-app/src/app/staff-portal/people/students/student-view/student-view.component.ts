@@ -6,6 +6,8 @@ import {StudentViewService} from './student-view.service';
 import {map} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ScriptService} from '../../../../_services/script.service';
+import {AuthService} from '../../../../_services/auth.service';
+import {AppPermissions} from '../../../../_constants/app-permissions';
 
 @Component({
   selector: 'app-student-view',
@@ -18,7 +20,7 @@ export class StudentViewComponent extends PortalViewDirective implements OnInit,
   studentSubscription: Subscription;
 
   constructor(protected renderer: Renderer2, protected hostElement: ElementRef, private viewService: StudentViewService,
-              private route: ActivatedRoute, private scriptService: ScriptService) {
+              private route: ActivatedRoute, private scriptService: ScriptService, private authService: AuthService) {
     super(renderer, hostElement);
   }
 

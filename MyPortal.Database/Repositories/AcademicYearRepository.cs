@@ -26,10 +26,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = GenerateQuery();
 
+            sql.LeftJoin("AcademicTerms AS AcademicTerm", "AcademicYear.Id", "AcademicTerm.AcademicYearId");
+
             var dateToday = DateTime.Today;
 
-            sql.Where("AcademicYear.FirstDate", "<=", dateToday);
-            sql.Where("AcademicYear.LastDate", ">=", dateToday);
+            sql.Where("AcademicTerm.StartDate", "<=", dateToday);
+            sql.Where("AcademicTerm.EndDate", ">=", dateToday);
+
+            sql.GroupByAllColumns(typeof(AcademicYear), "AcademicYear");
 
             return (await ExecuteQuery(sql)).First();
         }

@@ -42,7 +42,7 @@ export class UserResetPasswordComponent implements OnInit, OnDestroy {
     }
     const sub = this.viewService.currentUser.pipe(map((user: UserModel) => {
       this.userService.setPassword({userId: user.id, newPassword: this.password.value}).pipe(map((result: string) => {
-        this.alertService.success('Password reset successful.');
+        this.alertService.toastSuccess('Password reset');
         this.goBack();
       }), catchError((err: HttpErrorResponse) => {
         console.log('Error detected');

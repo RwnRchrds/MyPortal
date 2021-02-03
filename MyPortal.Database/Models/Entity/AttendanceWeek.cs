@@ -16,11 +16,16 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 2)]
         public Guid WeekPatternId { get; set; }
 
+        [Column(Order = 3)] 
+        public Guid AcademicTermId { get; set; }
+
         [Column(Order = 3, TypeName = "date")]
         public DateTime Beginning { get; set; }
 
         [Column(Order = 4)]
         public bool IsNonTimetable { get; set; }
+
+        public virtual AcademicTerm AcademicTerm { get; set; }  
 
         public virtual AttendanceWeekPattern WeekPattern { get; set; }
         

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Response.Students;

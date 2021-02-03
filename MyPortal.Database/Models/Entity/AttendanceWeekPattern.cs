@@ -12,7 +12,6 @@ namespace MyPortal.Database.Models.Entity
         {
             AttendanceWeeks = new HashSet<AttendanceWeek>();
             Periods = new HashSet<AttendancePeriod>();
-            AcademicYearWeekPatterns = new HashSet<AcademicYearWeekPattern>();
         }
 
         [Column(Order = 2)] 
@@ -20,7 +19,6 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(128)]
         public string Description { get; set; }
 
-        public virtual ICollection<AcademicYearWeekPattern> AcademicYearWeekPatterns { get; set; }
         public virtual ICollection<AttendanceWeek> AttendanceWeeks { get; set; }
         public virtual ICollection<AttendancePeriod> Periods { get; set; }
     }

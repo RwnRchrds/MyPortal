@@ -39,6 +39,8 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("Students as Student", "Student.Id", "AttendanceMark.StudentId");
             query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
             query.LeftJoin("AttendanceWeeks as AttendanceWeek", "AttendanceWeek.Id", "AttendanceMark.WeekId");
+            query.LeftJoin("AcademicTerms as AT", "AT.Id", "AttendanceWeek.AcademicTermId");
+            query.LeftJoin("AcademicYears as AY", "AY.Id", "AT.AcademicYearId");
             query.LeftJoin("AttendanceWeekPatterns as AttendanceWeekPattern", "AttendanceWeekPattern.Id", "AttendanceWeek.WeekPatternId");
             query.LeftJoin("AttendancePeriods AS Period", "Period.Id", "AttendanceMark.PeriodId");
         }
@@ -66,7 +68,7 @@ namespace MyPortal.Database.Repositories
             var query = GenerateQuery();
 
             query.Where("Student.Id", "=", studentId);
-            query.Where("AttendanceWeekPattern.AcademicYearId", "=", academicYearId);
+            query.Where("AY.Id", "=", academicYearId);
 
             return await ExecuteQuery(query);
         }

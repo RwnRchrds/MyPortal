@@ -16,7 +16,6 @@ namespace MyPortal.Database.Models
 
         public virtual DbSet<AcademicTerm> AcademicTerms { get; set; }
         public virtual DbSet<AcademicYear> AcademicYears { get; set; }
-        public virtual DbSet<AcademicYearWeekPattern> AcademicYearWeekPatterns { get; set; }
         public virtual DbSet<AccountTransaction> AccountTransactions { get; set; }
         public virtual DbSet<Achievement> Achievements { get; set; }
         public virtual DbSet<AchievementOutcome> AchievementOutcomes { get; set; }
@@ -213,6 +212,12 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.AcademicYearId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.AttendanceWeeks)
+                        .WithOne(x => x.AcademicTerm)
+                        .HasForeignKey(x => x.AcademicTermId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<AcademicYear>(e =>
@@ -220,12 +225,6 @@ namespace MyPortal.Database.Models
                     e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     e.HasMany(x => x.Achievements)
-                        .WithOne(x => x.AcademicYear)
-                        .HasForeignKey(x => x.AcademicYearId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasMany(x => x.AcademicYearWeekPatterns)
                         .WithOne(x => x.AcademicYear)
                         .HasForeignKey(x => x.AcademicYearId)
                         .IsRequired()
@@ -242,11 +241,6 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.AcademicYearId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-                modelBuilder.Entity<AcademicYearWeekPattern>(e =>
-                {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 });
 
                 modelBuilder.Entity<AccountTransaction>(e =>
@@ -510,12 +504,6 @@ namespace MyPortal.Database.Models
                     e.HasMany(awp => awp.AttendanceWeeks)
                         .WithOne(aw => aw.WeekPattern)
                         .HasForeignKey(aw => aw.WeekPatternId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasMany(x => x.AcademicYearWeekPatterns)
-                        .WithOne(e => e.AttendanceWeekPattern)
-                        .HasForeignKey(x => x.WeekPatternId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });

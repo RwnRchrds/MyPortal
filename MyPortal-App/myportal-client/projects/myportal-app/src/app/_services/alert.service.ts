@@ -26,6 +26,11 @@ success(message: string): void {
   });
 }
 
+toastSuccess(message: string): void {
+  // @ts-ignore -- Using Toastr
+  toastr.success(message, 'Success');
+}
+
 warning(message: string): void {
   // @ts-ignore -- using SweetAlert
   Swal.fire({

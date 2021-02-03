@@ -14,6 +14,8 @@ namespace MyPortal.Logic.Models.Requests.Curriculum
 
         public DateTime EndDate { get; set; }
 
+        public CreateAttendanceWeekModel[] AttendanceWeeks { get; set; }
+        public DateTime[] Holidays { get; set; }
         public CreateTermWeekPatternModel[] WeekPatterns { get; set; }
     }
 }

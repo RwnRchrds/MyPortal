@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MyPortal.Database.Migrations
 {
-    public partial class IntialModel : Migration
+    public partial class InitialModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -135,6 +135,18 @@ namespace MyPortal.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AttendanceCodeMeanings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AttendanceWeekPatterns",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AttendanceWeekPatterns", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -1014,26 +1026,6 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AttendanceWeekPatterns",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    AcademicYearId = table.Column<Guid>(nullable: false),
-                    Order = table.Column<int>(nullable: false),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AttendanceWeekPatterns", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AttendanceWeekPatterns_AcademicYears_AcademicYearId",
-                        column: x => x.AcademicYearId,
-                        principalTable: "AcademicYears",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AttendanceCodes",
                 columns: table => new
                 {
@@ -1051,6 +1043,30 @@ namespace MyPortal.Database.Migrations
                         name: "FK_AttendanceCodes_AttendanceCodeMeanings_MeaningId",
                         column: x => x.MeaningId,
                         principalTable: "AttendanceCodeMeanings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AttendancePeriods",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    WeekPatternId = table.Column<Guid>(nullable: false),
+                    Weekday = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    StartTime = table.Column<TimeSpan>(type: "time(2)", nullable: false),
+                    EndTime = table.Column<TimeSpan>(type: "time(2)", nullable: false),
+                    AmReg = table.Column<bool>(nullable: false),
+                    PmReg = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AttendancePeriods", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AttendancePeriods_AttendanceWeekPatterns_WeekPatternId",
+                        column: x => x.WeekPatternId,
+                        principalTable: "AttendanceWeekPatterns",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1600,41 +1616,24 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AttendancePeriods",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    WeekPatternId = table.Column<Guid>(nullable: false),
-                    Weekday = table.Column<int>(nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
-                    StartTime = table.Column<TimeSpan>(type: "time(2)", nullable: false),
-                    EndTime = table.Column<TimeSpan>(type: "time(2)", nullable: false),
-                    AmReg = table.Column<bool>(nullable: false),
-                    PmReg = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AttendancePeriods", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AttendancePeriods_AttendanceWeekPatterns_WeekPatternId",
-                        column: x => x.WeekPatternId,
-                        principalTable: "AttendanceWeekPatterns",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AttendanceWeeks",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     WeekPatternId = table.Column<Guid>(nullable: false),
+                    AcademicTermId = table.Column<Guid>(nullable: false),
                     Beginning = table.Column<DateTime>(type: "date", nullable: false),
                     IsNonTimetable = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AttendanceWeeks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AttendanceWeeks_AcademicTerms_AcademicTermId",
+                        column: x => x.AcademicTermId,
+                        principalTable: "AcademicTerms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AttendanceWeeks_AttendanceWeekPatterns_WeekPatternId",
                         column: x => x.WeekPatternId,
@@ -3393,13 +3392,19 @@ namespace MyPortal.Database.Migrations
                     StudentId = table.Column<Guid>(nullable: false),
                     WeekId = table.Column<Guid>(nullable: false),
                     PeriodId = table.Column<Guid>(nullable: false),
-                    Mark = table.Column<string>(maxLength: 1, nullable: false),
+                    CodeId = table.Column<Guid>(nullable: false),
                     Comments = table.Column<string>(maxLength: 256, nullable: true),
                     MinutesLate = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AttendanceMarks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AttendanceMarks_AttendanceCodes_CodeId",
+                        column: x => x.CodeId,
+                        principalTable: "AttendanceCodes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AttendanceMarks_AttendancePeriods_PeriodId",
                         column: x => x.PeriodId,
@@ -4576,6 +4581,11 @@ namespace MyPortal.Database.Migrations
                 column: "MeaningId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AttendanceMarks_CodeId",
+                table: "AttendanceMarks",
+                column: "CodeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AttendanceMarks_PeriodId",
                 table: "AttendanceMarks",
                 column: "PeriodId");
@@ -4596,9 +4606,9 @@ namespace MyPortal.Database.Migrations
                 column: "WeekPatternId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AttendanceWeekPatterns_AcademicYearId",
-                table: "AttendanceWeekPatterns",
-                column: "AcademicYearId");
+                name: "IX_AttendanceWeeks_AcademicTermId",
+                table: "AttendanceWeeks",
+                column: "AcademicTermId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AttendanceWeeks_WeekPatternId",
@@ -5783,9 +5793,6 @@ namespace MyPortal.Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AcademicTerms");
-
-            migrationBuilder.DropTable(
                 name: "Achievements");
 
             migrationBuilder.DropTable(
@@ -5799,9 +5806,6 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "AddressPeople");
-
-            migrationBuilder.DropTable(
-                name: "AttendanceCodes");
 
             migrationBuilder.DropTable(
                 name: "AttendanceMarks");
@@ -6008,7 +6012,7 @@ namespace MyPortal.Database.Migrations
                 name: "Activities");
 
             migrationBuilder.DropTable(
-                name: "AttendanceCodeMeanings");
+                name: "AttendanceCodes");
 
             migrationBuilder.DropTable(
                 name: "AccountTransactions");
@@ -6182,6 +6186,9 @@ namespace MyPortal.Database.Migrations
                 name: "Roles");
 
             migrationBuilder.DropTable(
+                name: "AttendanceCodeMeanings");
+
+            migrationBuilder.DropTable(
                 name: "Classes");
 
             migrationBuilder.DropTable(
@@ -6264,6 +6271,9 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "Rooms");
+
+            migrationBuilder.DropTable(
+                name: "AcademicTerms");
 
             migrationBuilder.DropTable(
                 name: "AttendanceWeekPatterns");
