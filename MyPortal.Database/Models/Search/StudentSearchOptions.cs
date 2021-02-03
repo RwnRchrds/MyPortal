@@ -1,15 +1,8 @@
 ﻿using System;
+using MyPortal.Database.Enums;
 
 namespace MyPortal.Database.Models.Search
 {
-    public enum StudentStatus
-    {
-        Any,
-        OnRoll,
-        Leavers,
-        Future
-    }
-
     public class StudentSearchOptions : PersonSearchOptions
     {
         public StudentSearchOptions()

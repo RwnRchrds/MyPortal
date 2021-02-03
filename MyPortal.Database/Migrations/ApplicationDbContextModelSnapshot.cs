@@ -605,14 +605,12 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<Guid>("CodeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Comments")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
-
-                    b.Property<string>("Mark")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)")
-                        .HasMaxLength(1);
 
                     b.Property<int>("MinutesLate")
                         .HasColumnType("int");
@@ -627,6 +625,8 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CodeId");
 
                     b.HasIndex("PeriodId");
 
@@ -681,6 +681,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<Guid>("AcademicTermId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("Beginning")
                         .HasColumnType("date");
 
@@ -691,6 +694,8 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AcademicTermId");
 
                     b.HasIndex("WeekPatternId");
 
@@ -704,20 +709,12 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<Guid>("AcademicYearId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("AcademicYearId");
 
                     b.ToTable("AttendanceWeekPatterns");
                 });
@@ -5718,6 +5715,12 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.AttendanceMark", b =>
                 {
+                    b.HasOne("MyPortal.Database.Models.Entity.AttendanceCode", "AttendanceCode")
+                        .WithMany("AttendanceMarks")
+                        .HasForeignKey("CodeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("MyPortal.Database.Models.Entity.AttendancePeriod", "AttendancePeriod")
                         .WithMany("AttendanceMarks")
                         .HasForeignKey("PeriodId")
@@ -5748,18 +5751,15 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.AttendanceWeek", b =>
                 {
+                    b.HasOne("MyPortal.Database.Models.Entity.AcademicTerm", "AcademicTerm")
+                        .WithMany("AttendanceWeeks")
+                        .HasForeignKey("AcademicTermId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("MyPortal.Database.Models.Entity.AttendanceWeekPattern", "WeekPattern")
                         .WithMany("AttendanceWeeks")
                         .HasForeignKey("WeekPatternId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.AttendanceWeekPattern", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Entity.AcademicYear", "AcademicYear")
-                        .WithMany("AttendanceWeekPatterns")
-                        .HasForeignKey("AcademicYearId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

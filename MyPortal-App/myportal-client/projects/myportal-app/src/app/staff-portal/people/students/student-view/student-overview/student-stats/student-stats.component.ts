@@ -21,14 +21,17 @@ export class StudentStatsComponent implements OnInit {
               private alertService: AlertService, private appService: AppService) { }
 
   ngOnInit(): void {
+    this.appService.blockPage();
     this.studentStatsSubscription = this.viewService.currentStudent.pipe(map((student: StudentModel) => {
       if (student == null) {
         return;
       }
       this.studentService.getStatsById(student.id).pipe(map((stats: StudentStatsModel) => {
         this.statsModel = stats;
+        this.appService.unblockPage();
       })).subscribe();
     }), catchError((err: HttpErrorResponse) => {
+      this.appService.unblockPage();
       this.alertService.error(err.error);
       return throwError(err);
     })).subscribe();

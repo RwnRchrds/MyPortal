@@ -15,5 +15,14 @@ namespace MyPortal.Database.Helpers
 
             return query;
         }
+
+        public static Query GroupByAllColumns(this Query query, Type type, string alias = null)
+        {
+            var columnNames = EntityHelper.GetPropertyNames(type, alias);
+
+            query.GroupBy(columnNames);
+
+            return query;
+        }
     }
 }

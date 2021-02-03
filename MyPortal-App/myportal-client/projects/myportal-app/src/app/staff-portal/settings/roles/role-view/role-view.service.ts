@@ -4,6 +4,7 @@ import {RoleModel, RolesService, TreeNode} from 'myportal-api';
 import {catchError, map} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {AlertService} from '../../../../_services/alert.service';
+import {AppService} from '../../../../_services/app.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,15 +16,18 @@ export class RoleViewService {
   currentRole = this.roleSource.asObservable();
   currentRolePermissions = this.permissionsSource.asObservable();
 
-  constructor(private roleService: RolesService, private alertService: AlertService) { }
+  constructor(private roleService: RolesService, private alertService: AlertService, private appService: AppService) { }
 
   init(roleId: string): void {
+    this.appService.blockPage();
     this.roleService.getRoleById(roleId).pipe(map((roleModel: RoleModel) => {
       this.roleSource.next(roleModel);
       this.roleService.getPermissionsTree(roleModel.id).pipe(map((permissionsTree: TreeNode) => {
+        this.appService.unblockPage();
         this.permissionsSource.next(permissionsTree);
       })).subscribe();
     }), catchError((err: HttpErrorResponse) => {
+      this.appService.unblockPage();
       this.alertService.error(err.error);
       return throwError(err);
     })).subscribe();

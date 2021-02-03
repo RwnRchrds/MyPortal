@@ -111,6 +111,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     this.alertService.areYouSure(`Are you sure you want to delete user ${this.user.userName}?`).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
         this.userService.deleteUser(this.user.id).pipe(map(deleteResult => {
+          this.alertService.toastSuccess('User deleted');
           this.router.navigate(['/staff/settings/users']);
         }), catchError((err: HttpErrorResponse) => {
           this.alertService.error(err.error);
@@ -129,8 +130,8 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     }
     this.userService.updateUser({id: this.user.id, personId: this.user.personId, roleIds: this.userRoles.value})
       .pipe(map(result => {
+        this.alertService.toastSuccess('User saved');
         this.viewService.reload();
-        this.appService.unblockPage();
       }), catchError((err: HttpErrorResponse) => {
         this.appService.unblockPage();
         this.alertService.error(err.error);

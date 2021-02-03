@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,5 +22,6 @@ namespace MyPortal.Database.Models.Entity
         public DateTime EndDate { get; set; }
 
         public virtual AcademicYear AcademicYear { get; set; }
+        public virtual ICollection<AttendanceWeek> AttendanceWeeks { get; set; }
     }
 }

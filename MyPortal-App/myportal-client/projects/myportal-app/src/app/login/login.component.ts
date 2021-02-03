@@ -48,21 +48,16 @@ export class LoginComponent implements OnInit {
 
   login(): void {
     this.appService.blockPage();
-    try {
-      this.authService.login({username: this.username.value, password: this.password.value}).pipe(map(result => {
-        console.log('Login successful.');
-        this.authService.updatePermissions().subscribe(perms => {
-          console.log('Loading application...');
-          location.reload();
-        });
-      }), catchError((err: HttpErrorResponse) => {
-        this.loginError = err.error;
-        return throwError(err);
-      })).subscribe();
-    }
-    finally {
+    this.authService.login({username: this.username.value, password: this.password.value}).pipe(map(result => {
+      this.authService.updatePermissions().subscribe(perms => {
+        this.appService.unblockPage();
+        location.reload();
+      });
+    }), catchError((err: HttpErrorResponse) => {
       this.appService.unblockPage();
-    }
+      this.loginError = err.error;
+      return throwError(err);
+    })).subscribe();
   }
 
 }

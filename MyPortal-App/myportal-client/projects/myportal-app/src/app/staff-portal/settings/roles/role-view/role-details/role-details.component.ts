@@ -96,26 +96,26 @@ export class RoleDetailsComponent implements OnInit, OnDestroy {
   save(): void {
     this.detailsForm.markAllAsTouched();
     this.appService.blockPage();
-    try {
-      if (this.detailsForm.invalid) {
-        this.alertService.error('Please review the errors and try again.');
-        return;
-      }
-      // @ts-ignore
-      const selectedNodes = $('#perm_tree').jstree('get_selected', true).filter(n => n.children.length === 0);
-      console.log(selectedNodes);
-      const selectedPermissionIds = selectedNodes.map(n => this.appService.parseGuid(n.id));
-      this.roleService.updateRole({id: this.role.id, name: this.code.value,
-        description: this.name.value, permissionIds: selectedPermissionIds}).pipe(map(result => {
-        this.viewService.reload();
-      }), catchError((err: HttpErrorResponse) => {
-        this.alertService.error(err.error);
-        return throwError(err);
-      })).subscribe();
-    }
-    finally {
+    if (this.detailsForm.invalid) {
       this.appService.unblockPage();
+      this.alertService.error('Please review the errors and try again.');
+      return;
     }
+    // @ts-ignore
+    const selectedNodes = $('#perm_tree').jstree('get_selected', true).filter(n => n.children.length === 0);
+    console.log(selectedNodes);
+    const selectedPermissionIds = selectedNodes.map(n => this.appService.parseGuid(n.id));
+    this.roleService.updateRole({
+      id: this.role.id, name: this.code.value,
+      description: this.name.value, permissionIds: selectedPermissionIds
+    }).pipe(map(result => {
+      this.alertService.toastSuccess('Role updated');
+      this.viewService.reload();
+    }), catchError((err: HttpErrorResponse) => {
+      this.appService.unblockPage();
+      this.alertService.error(err.error);
+      return throwError(err);
+    })).subscribe();
   }
 
   delete(): void {
@@ -123,6 +123,7 @@ export class RoleDetailsComponent implements OnInit, OnDestroy {
       if (userResponse.isConfirmed) {
         this.appService.blockPage();
         this.roleService.deleteRole(this.role.id).pipe(map(result => {
+          this.alertService.toastSuccess('Role deleted');
           this.router.navigate(['/staff/settings/roles']);
           this.appService.unblockPage();
         }), catchError((err: HttpErrorResponse) => {

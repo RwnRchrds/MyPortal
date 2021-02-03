@@ -10,6 +10,5 @@ namespace MyPortal.Logic.Models.Requests.Curriculum
         public string Name { get; set; }
 
         public CreateAcademicTermModel[] AcademicTerms { get; set; }
-        public CreateAttendancePlanModel AttendancePlan { get; set; }
     }
 }

@@ -18,15 +18,13 @@ namespace MyPortal.Logic.Services
     public class AcademicYearService : BaseService, IAcademicYearService
     {
         private readonly IAcademicYearRepository _academicYearRepository;
-        private readonly IAcademicTermRepository _academicTermRepository;
         private readonly IAttendanceWeekRepository _attendanceWeekRepository;
         private readonly IDiaryEventRepository _diaryEventRepository;
 
         public AcademicYearService(IAcademicYearRepository academicYearRepository,
-            IAcademicTermRepository academicTermRepository, IAttendanceWeekRepository attendanceWeekRepository, IDiaryEventRepository diaryEventRepository)
+            IAttendanceWeekRepository attendanceWeekRepository, IDiaryEventRepository diaryEventRepository)
         {
             _academicYearRepository = academicYearRepository;
-            _academicTermRepository = academicTermRepository;
             _attendanceWeekRepository = attendanceWeekRepository;
             _diaryEventRepository = diaryEventRepository;
         }
@@ -89,49 +87,51 @@ namespace MyPortal.Logic.Services
 
                 foreach (var termModel in model.AcademicTerms)
                 {
-                    academicYear.AcademicTerms.Add(new AcademicTerm
+                    var term = new AcademicTerm
                     {
                         Name = termModel.Name,
                         StartDate = termModel.StartDate,
                         EndDate = termModel.EndDate
-                    });
+                    };
+
+                    foreach (var attendanceWeek in termModel.AttendanceWeeks)
+                    {
+                        term.AttendanceWeeks.Add(new AttendanceWeek
+                        {
+                            Beginning = attendanceWeek.WeekBeginning,
+                            WeekPatternId = attendanceWeek.WeekPatternId,
+                            IsNonTimetable = attendanceWeek.NonTimetable
+                        });
+                    }
+
+                    foreach (var schoolHoliday in termModel.Holidays)
+                    {
+                        _diaryEventRepository.Create(new DiaryEvent
+                        {
+                            Description = "School Holiday",
+                            EventTypeId = EventTypes.SchoolHoliday,
+                            IsAllDay = true,
+                            StartTime = schoolHoliday.Date,
+                            EndTime = schoolHoliday.Date
+                        });
+                    }
+
+                    academicYear.AcademicTerms.Add(term);
                 }
 
                 _academicYearRepository.Create(academicYear);
 
                 await _academicYearRepository.SaveChanges();
-
-                foreach (var attendanceWeek in model.AttendancePlan.AttendanceWeeks)
-                {
-                    _attendanceWeekRepository.Create(new AttendanceWeek
-                    {
-                        Beginning = attendanceWeek.WeekBeginning,
-                        WeekPatternId = attendanceWeek.WeekPatternId,
-                        IsNonTimetable = attendanceWeek.NonTimetable
-                    });
-                }
-
-                foreach (var schoolHoliday in model.AttendancePlan.Holidays)
-                {
-                    _diaryEventRepository.Create(new DiaryEvent
-                    {
-                        Description = "School Holiday",
-                        EventTypeId = EventTypes.SchoolHoliday,
-                        IsAllDay = true,
-                        StartTime = schoolHoliday.Date,
-                        EndTime = schoolHoliday.Date
-                    });
-                }
+                await _diaryEventRepository.SaveChanges();
             }
         }
 
-        public CreateAttendancePlanModel GenerateAttendancePlan(CreateAcademicTermModel[] termModel)
+        public CreateAcademicTermModel[] GenerateAttendanceWeeks(CreateAcademicTermModel[] termModel)
         {
-            var attendanceWeeks = new List<CreateAttendanceWeekModel>();
-            var schoolHolidays = new List<DateTime>();
-
             foreach (var model in termModel)
             {
+                var attendanceWeeks = new List<CreateAttendanceWeekModel>();
+                var schoolHolidays = new List<DateTime>();
                 var weekPatterns = model.WeekPatterns.OrderBy(p => p.Order).ToArray();
                 int patternIndex = 0;
                 DateTime currentWeekBeginning = model.StartDate.GetDayOfWeek(DayOfWeek.Monday);
@@ -174,13 +174,12 @@ namespace MyPortal.Logic.Services
 
                     currentWeekBeginning = currentWeekBeginning.AddDays(7);
                 }
+
+                model.AttendanceWeeks = attendanceWeeks.ToArray();
+                model.Holidays = schoolHolidays.ToArray();
             }
 
-            return new CreateAttendancePlanModel
-            {
-                AttendanceWeeks = attendanceWeeks.ToArray(),
-                Holidays = schoolHolidays.ToArray()
-            };
+            return termModel;
         }
 
         public async Task Update(params AcademicYearModel[] academicYearModels)

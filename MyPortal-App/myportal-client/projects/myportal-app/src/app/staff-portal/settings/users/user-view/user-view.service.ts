@@ -61,15 +61,18 @@ export class UserViewService extends PortalViewServiceDirective {
   }
 
   init(userId: string): void {
+    this.appService.blockPage();
     this.userService.getUserById(userId).pipe(map((user: UserModel) => {
       this.userSource.next(user);
       this.roleService.getRoles().pipe(map((roles: RoleModel[]) => {
         this.rolesSource.next(roles);
       })).subscribe();
       this.userService.getUserRoles(user.id).pipe(map((userRoles: RoleModel[]) => {
+        this.appService.unblockPage();
         this.userRolesSource.next(userRoles.map(ur => ur.id));
       })).subscribe();
     }), catchError((err: HttpErrorResponse) => {
+      this.appService.unblockPage();
       this.alertService.error(err.error);
       return throwError(err);
     })).subscribe();
