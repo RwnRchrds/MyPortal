@@ -3,7 +3,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
@@ -11,9 +10,9 @@ using MyPortal.Database.Repositories;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.FileProviders;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Services;
-using IFileProvider = MyPortal.Logic.Interfaces.IFileProvider;
 
 namespace MyPortalWeb.Extensions
 {
@@ -32,6 +31,22 @@ namespace MyPortalWeb.Extensions
                 new SqlConnection(config.GetConnectionString("MyPortal")));
 
             // MyPortal Database Repositories
+            services.AddRepositories();
+
+            // MyPortal Business Services
+            services.AddBusinessServices();
+
+            // MyPortal File Provider
+            services.AddFileProvider(config);
+
+            // MyPortal Cache
+            services.AddScoped<IRolePermissionsCache, RolePermissionsCache>();
+
+            return services;
+        }
+
+        private static void AddRepositories(this IServiceCollection services)
+        {
             services.AddScoped<IAcademicYearRepository, AcademicYearRepository>();
             services.AddScoped<IAchievementOutcomeRepository, AchievementOutcomeRepository>();
             services.AddScoped<IAchievementRepository, AchievementRepository>();
@@ -142,8 +157,10 @@ namespace MyPortalWeb.Extensions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             services.AddScoped<IYearGroupRepository, YearGroupRepository>();
+        }
 
-            // MyPortal Business Services
+        private static void AddBusinessServices(this IServiceCollection services)
+        {
             services.AddScoped<IAcademicYearService, AcademicYearService>();
             services.AddScoped<IAchievementService, AchievementService>();
             //services.AddScoped<IActivityService, ActivityService>();
@@ -168,14 +185,23 @@ namespace MyPortalWeb.Extensions
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IYearGroupService, YearGroupService>();
+        }
 
-            // MyPortal File Provider
-            services.AddScoped<IFileProvider, LocalFileProvider>();
+        private static void AddFileProvider(this IServiceCollection services, IConfiguration config)
+        {
+            string provider = config["FileProvider:ProviderName"];
 
-            // MyPortal Cache
-            services.AddScoped<IRolePermissionsCache, RolePermissionsCache>();
-
-            return services;
+            switch (provider)
+            {
+                case "Google":
+                    services.AddScoped<IHostedFileProvider, GoogleFileProvider>();
+                    services.AddScoped<IFileService, HostedFileService>();
+                    break;
+                default:
+                    services.AddScoped<ILocalFileProvider, LocalFileProvider>();
+                    services.AddScoped<IFileService, LocalFileService>();
+                    break;
+            }
         }
     }
 }

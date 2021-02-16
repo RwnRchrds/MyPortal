@@ -25,6 +25,7 @@ import {StudentCommunicationComponent} from '../people/students/student-view/stu
 import {StudentCurriculumComponent} from '../people/students/student-view/student-curriculum/student-curriculum.component';
 import {StudentDocumentsComponent} from '../people/students/student-view/student-documents/student-documents.component';
 import {StudentSendComponent} from '../people/students/student-view/student-send/student-send.component';
+import {LogNoteFormComponent} from '../people/students/student-view/student-overview/log-note-form/log-note-form.component';
 
 const staffRoutes: Routes = [
   {
@@ -50,7 +51,7 @@ const staffRoutes: Routes = [
         ]
       },
       {
-        path: 'students/:id',
+        path: 'students/:studentId',
         component: StudentViewComponent,
         canActivate: [PermissionGuard],
         data: {requiredPermissions: [AppPermissions.STUDENTS_DETAILS_VIEW]},
@@ -58,6 +59,18 @@ const staffRoutes: Routes = [
           {
             path: 'overview',
             component: StudentOverviewComponent
+          },
+          {
+            path: 'overview/logNotes/new',
+            component: LogNoteFormComponent,
+            canActivate: [PermissionGuard],
+            data: {requiredPermissions: [AppPermissions.STUDENTS_LOGNOTES_EDIT]}
+          },
+          {
+            path: 'overview/logNotes/:logNoteId',
+            component: LogNoteFormComponent,
+            canActivate: [PermissionGuard],
+            data: {requiredPermissions: [AppPermissions.STUDENTS_LOGNOTES_EDIT]}
           },
           {
             path: 'details',

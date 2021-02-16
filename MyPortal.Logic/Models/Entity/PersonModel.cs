@@ -62,7 +62,7 @@ namespace MyPortal.Logic.Models.Entity
                     break;
                 case NameFormat.FullNameAbbreviated:
                     name =
-                        $"{Title} {(useLegalName ? FirstName : ChosenFirstName).Substring(0, 1)} {MiddleName.Substring(0, 1)} {LastName}";
+                        $"{Title} {(useLegalName ? FirstName : ChosenFirstName).Substring(0, 1)} {MiddleName?.Substring(0, 1)} {LastName}";
                     break;
                 case NameFormat.FullNameNoTitle:
                     name = $"{(useLegalName ? FirstName : ChosenFirstName)} {MiddleName} {LastName}";

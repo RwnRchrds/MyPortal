@@ -55,7 +55,7 @@ namespace MyPortal.Database.Repositories
                 }, sql.NamedBindings);
         }
 
-        public async Task<IEnumerable<Detention>> GetByStudent(Guid studentId, Tuple<DateTime, DateTime> dateRange)
+        public async Task<IEnumerable<Detention>> GetByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo)
         {
             var query = GenerateQuery();
 
@@ -64,12 +64,9 @@ namespace MyPortal.Database.Repositories
 
             query.Where("Incident.StudentId", studentId);
 
-            if (dateRange != null)
-            {
-                query.Where(q =>
-                    q.WhereDate("DiaryEvent.StartTime", ">=", dateRange.Item1)
-                        .WhereDate("DiaryEvent.EndTime", "<=", dateRange.Item2));
-            }
+            query.Where(q =>
+                q.WhereDate("DiaryEvent.StartTime", ">=", dateFrom)
+                    .WhereDate("DiaryEvent.EndTime", "<=", dateTo));
 
             return await ExecuteQuery(query);
         }

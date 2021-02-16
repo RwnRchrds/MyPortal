@@ -1,7 +1,8 @@
-﻿CREATE TABLE [dbo].[ContactRelationshipTypes] (
+﻿CREATE TABLE [dbo].[SenTypes] (
     [Id]          UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
     [Description] NVARCHAR (256)   NOT NULL,
     [Active]      BIT              NOT NULL,
-    CONSTRAINT [PK_ContactRelationshipTypes] PRIMARY KEY CLUSTERED ([Id] ASC)
+    [Code]        NVARCHAR (MAX)   NULL,
+    CONSTRAINT [PK_SenTypes] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

@@ -37,7 +37,7 @@ namespace MyPortal.Database.Repositories
         {
             query.LeftJoin("LogNoteTypes as LogNoteType", "LogNoteType.Id", "LogNote.TypeId");
             query.LeftJoin("Users as User", "User.Id", "LogNote.CreatedById");
-            query.LeftJoin("People as AuthorPerson", "AuthorPerson.UserId", "User.Id");
+            query.LeftJoin("People as AuthorPerson", "AuthorPerson.Id", "User.PersonId");
             query.LeftJoin("Students as Student", "Student.Id", "LogNote.StudentId");
             query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
             query.LeftJoin("AcademicYears as AcademicYear", "AcademicYear.Id", "LogNote.AcademicYearId");

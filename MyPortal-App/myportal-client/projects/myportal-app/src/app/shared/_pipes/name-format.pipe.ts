@@ -11,10 +11,10 @@ export class NameFormatPipe implements PipeTransform {
     if (value == null) {
       return '';
     }
-    let name = '';
+    let name: string;
     switch (format) {
       case NameFormats.FullNameAbbreviated:
-        name = `${value.title} ${value.firstName.substr(0, 1)} ${value.lastName}`;
+        name = `${value.title} ${value.firstName.substr(0, 1)} ${value.middleName != null ? value.middleName.substr(0, 1) : ''} ${value.lastName}`;
         break;
       case NameFormats.FullName:
         name = `${value.title} ${value.firstName} ${value.middleName} ${value.lastName}`;

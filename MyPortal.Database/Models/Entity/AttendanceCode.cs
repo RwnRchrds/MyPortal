@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("AttendanceCodes")]
-    public partial class AttendanceCode : BaseTypes.Entity
+    public partial class AttendanceCode : BaseTypes.Entity, ICensusEntity
     {
         [Column(Order = 1)]
         [Required]

@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Models
@@ -29,7 +31,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Agency> Agencies { get; set; }
         public virtual DbSet<AgencyType> AgencyTypes { get; set; }
         public virtual DbSet<Agent> Agents { get; set; }
-        public virtual DbSet<AgentRelationshipType> AgentRelationshipTypes { get; set; }
+        public virtual DbSet<AgentType> AgentTypes { get; set; }
         public virtual DbSet<Aspect> Aspects { get; set; }
         public virtual DbSet<AspectType> AspectTypes { get; set; }
         public virtual DbSet<AttendanceCode> AttendanceCodes { get; set; }
@@ -47,6 +49,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<StudentDiscount> BillDiscounts { get; set; }
         public virtual DbSet<BillAccountTransaction> BillAccountTransactions { get; set; }
         public virtual DbSet<BillItem> BillItems { get; set; }
+        public virtual DbSet<BoarderStatus> BoarderStatuses { get; set; }
         public virtual DbSet<Bulletin> Bulletins { get; set; }
         public virtual DbSet<Charge> Charges { get; set; }
         public virtual DbSet<ChargeDiscount> ChargeDiscounts { get; set; }
@@ -56,8 +59,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<CommunicationLog> CommunicationLogs { get; set; }
         public virtual DbSet<CommunicationType> CommunicationTypes { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
-        public virtual DbSet<ContactRelationshipType> ContactRelationshipTypes { get; set; }
-        public virtual DbSet<ContactRelationshipType> RelationshipTypes { get; set; }
+        public virtual DbSet<RelationshipType> ContactRelationshipTypes { get; set; }
+        public virtual DbSet<RelationshipType> RelationshipTypes { get; set; }
         public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<CoverArrangement> CoverArrangements { get; set; }
         public virtual DbSet<CurriculumBand> CurriculumBands { get; set; }
@@ -81,6 +84,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
         public virtual DbSet<EmailAddress> EmailAddresses { get; set; }
         public virtual DbSet<EmailAddressType> EmailAddressTypes { get; set; }
+        public virtual DbSet<EnrolmentStatus> EnrolmentStatuses { get; set; }
         public virtual DbSet<Ethnicity> Ethnicities { get; set; }
         public virtual DbSet<ExamAssessment> ExamAssessments { get; set; }
         public virtual DbSet<ExamAssessmentAspect> ExamAssessmentAspects { get; set; }
@@ -125,6 +129,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<IncidentDetention> IncidentDetentions { get; set; }
         public virtual DbSet<IncidentType> IncidentTypes { get; set; }
         public virtual DbSet<IntakeType> IntakeTypes { get; set; }
+        public virtual DbSet<Language> Languages { get; set; }
         public virtual DbSet<LessonPlan> LessonPlans { get; set; }
         public virtual DbSet<LessonPlanTemplate> LessonPlanTemplates { get; set; }
         public virtual DbSet<LocalAuthority> LocalAuthorities { get; set; }
@@ -148,6 +153,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<ProductDiscount> ProductDiscounts { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductType> ProductTypes { get; set; }
+        public virtual DbSet<ProductTypeDiscount> ProductTypeDiscounts { get; set; }
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public virtual DbSet<RegGroup> RegGroups { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
@@ -162,7 +168,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<RoomClosure> RoomClosures { get; set; }
         public virtual DbSet<RoomClosureReason> RoomClosureReasons { get; set; }
         public virtual DbSet<School> Schools { get; set; }
-        public virtual DbSet<SchoolPhase> Phases { get; set; }
+        public virtual DbSet<SchoolPhase> SchoolPhases { get; set; }
         public virtual DbSet<SchoolType> SchoolTypes { get; set; }
         public virtual DbSet<SenEvent> SenEvents { get; set; }
         public virtual DbSet<SenProvision> SenProvisions { get; set; }
@@ -170,17 +176,18 @@ namespace MyPortal.Database.Models
         public virtual DbSet<SenReview> SenReviews { get; set; }
         public virtual DbSet<SenReviewType> SenReviewTypes { get; set; }
         public virtual DbSet<SenStatus> SenStatuses { get; set; }
+        public virtual DbSet<SenType> SenTypes { get; set; }
         public virtual DbSet<Session> Sessions { get; set; }
         public virtual DbSet<StaffAbsence> StaffAbsences { get; set; }
         public virtual DbSet<StaffAbsenceType> StaffAbsenceTypes { get; set; }
         public virtual DbSet<StaffIllnessType> StaffIllnessTypes { get; set; }
         public virtual DbSet<StaffMember> StaffMembers { get; set; }
+        public virtual DbSet<StoreDiscount> StoreDiscounts { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<StudentAgentRelationship> StudentAgentRelationships { get; set; }
         public virtual DbSet<StudentCharge> StudentCharges { get; set; }
         public virtual DbSet<StudentContactRelationship> StudentContactRelationships { get; set; }
         public virtual DbSet<StudentContactRelationship> StudentContacts { get; set; }
-        public virtual DbSet<StudentGroup> StudentGroups { get; set; }
         public virtual DbSet<StudyTopic> StudyTopics { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<SubjectCode> SubjectCodes { get; set; }
@@ -205,7 +212,7 @@ namespace MyPortal.Database.Models
             {
                 modelBuilder.Entity<AcademicTerm>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.AcademicYear)
                         .WithMany(x => x.AcademicTerms)
@@ -222,7 +229,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AcademicYear>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Achievements)
                         .WithOne(x => x.AcademicYear)
@@ -245,7 +252,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AccountTransaction>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Student)
                         .WithMany(x => x.AccountTransactions)
@@ -256,12 +263,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Achievement>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<AchievementOutcome>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(ao => ao.Achievements)
                         .WithOne(a => a.Outcome)
@@ -272,7 +279,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AchievementType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Achievements)
                         .WithOne(x => x.Type)
@@ -283,7 +290,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Activity>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Events)
                         .WithOne(x => x.Activity)
@@ -306,7 +313,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ActivityEvent>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Event)
                         .WithOne(x => x.Activity)
@@ -317,7 +324,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ActivityMembership>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Student)
                         .WithMany(x => x.ActivityMemberships)
@@ -328,7 +335,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ActivitySupervisor>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Supervisor)
                         .WithMany(x => x.Activities)
@@ -339,7 +346,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Address>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.People)
                         .WithOne(x => x.Address)
@@ -350,12 +357,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AddressPerson>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<Agency>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Agents)
                         .WithOne(x => x.Agency)
@@ -383,12 +390,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AgencyType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<Agent>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Person)
                         .WithOne(x => x.AgentDetails)
@@ -403,20 +410,20 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<AgentRelationshipType>(e =>
+                modelBuilder.Entity<AgentType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
-                    e.HasMany(x => x.Relationships)
-                        .WithOne(x => x.RelationshipType)
-                        .HasForeignKey(x => x.RelationshipTypeId)
+                    e.HasMany(x => x.Agents)
+                        .WithOne(x => x.AgentType)
+                        .HasForeignKey(x => x.AgentTypeId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<Aspect>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(a => a.Results)
                         .WithOne(r => r.Aspect)
@@ -427,7 +434,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AspectType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(at => at.Aspects)
                         .WithOne(a => a.Type)
@@ -438,7 +445,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AttendanceCode>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.AttendanceMarks)
                         .WithOne(x => x.AttendanceCode)
@@ -449,7 +456,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AttendanceCodeMeaning>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(acm => acm.Codes)
                         .WithOne(ac => ac.CodeMeaning)
@@ -460,12 +467,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AttendanceMark>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<AttendancePeriod>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(ap => ap.AttendanceMarks)
                         .WithOne(am => am.AttendancePeriod)
@@ -482,7 +489,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AttendanceWeek>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(aw => aw.AttendanceMarks)
                         .WithOne(am => am.Week)
@@ -493,7 +500,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AttendanceWeekPattern>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(awp => awp.Periods)
                         .WithOne(ap => ap.WeekPattern)
@@ -510,12 +517,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<BasketItem>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<BehaviourOutcome>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Incidents)
                         .WithOne(x => x.Outcome)
@@ -526,7 +533,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<BehaviourStatus>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Incidents)
                         .WithOne(x => x.Status)
@@ -537,7 +544,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<BehaviourTarget>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.ReportCardLinks)
                         .WithOne(x => x.Target)
@@ -548,7 +555,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Bill>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.BillItems)
                         .WithOne(x => x.Bill)
@@ -559,7 +566,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<BillAccountTransaction>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Bill)
                         .WithMany(x => x.AccountTransactions)
@@ -576,7 +583,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<BillCharge>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Bill)
                         .WithMany(x => x.BillCharges)
@@ -593,7 +600,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<BillDiscount>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Discount)
                         .WithMany(x => x.BillDiscounts)
@@ -608,15 +615,25 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<BillItem>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                modelBuilder.Entity<BillItem>(e => { SetIdDefaultValue(e); });
 
-                modelBuilder.Entity<Bulletin>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                modelBuilder.Entity<BoarderStatus>(e =>
+                {
+                    SetIdDefaultValue(e);
 
-                modelBuilder.Entity<Charge>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                    e.HasMany(x => x.Students)
+                        .WithOne(x => x.BoarderStatus)
+                        .HasForeignKey(x => x.BoarderStatusId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Bulletin>(e => { SetIdDefaultValue(e); });
+
+                modelBuilder.Entity<Charge>(e => { SetIdDefaultValue(e); });
 
                 modelBuilder.Entity<ChargeDiscount>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Charge)
                         .WithMany(x => x.ChargeDiscounts)
@@ -633,7 +650,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Class>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Sessions)
                         .WithOne(x => x.Class)
@@ -642,11 +659,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Comment>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                modelBuilder.Entity<Comment>(e => { SetIdDefaultValue(e); });
 
                 modelBuilder.Entity<CommentBank>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Comments)
                         .WithOne(x => x.CommentBank)
@@ -657,12 +674,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<CommunicationLog>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<CommunicationType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.CommunicationLogs)
                         .WithOne(x => x.Type)
@@ -673,7 +690,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Contact>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.LinkedStudents)
                         .WithOne(x => x.Contact)
@@ -688,20 +705,9 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<ContactRelationshipType>(e =>
-                {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    e.HasMany(x => x.StudentContacts)
-                        .WithOne(x => x.RelationshipType)
-                        .HasForeignKey(x => x.RelationshipTypeId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
                 modelBuilder.Entity<Course>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Classes)
                         .WithOne(x => x.Course)
@@ -723,12 +729,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<CoverArrangement>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<CurriculumBand>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasIndex(i => new {i.AcademicYearId, i.Code}).IsUnique();
 
@@ -747,17 +753,17 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<CurriculumBandBlockAssignment>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<CurriculumBandMembership>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<CurriculumBlock>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.BandAssignments)
                         .WithOne(x => x.Block)
@@ -774,7 +780,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<CurriculumGroup>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Memberships)
                         .WithOne(x => x.CurriculumGroup)
@@ -791,12 +797,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<CurriculumGroupMembership>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<CurriculumYearGroup>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.YearGroups)
                         .WithOne(x => x.CurriculumYearGroup)
@@ -813,7 +819,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Detention>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Incidents)
                         .WithOne(x => x.Detention)
@@ -824,7 +830,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<DetentionType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Detentions)
                         .WithOne(x => x.Type)
@@ -835,7 +841,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<DiaryEvent>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Detention)
                         .WithOne(x => x.Event)
@@ -852,12 +858,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<DiaryEventAttendee>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<DiaryEventAttendeeResponse>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.DiaryEventAttendees)
                         .WithOne(x => x.Response)
@@ -867,12 +873,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<DiaryEventTemplate>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<DiaryEventType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.DiaryEventTemplates)
                         .WithOne(x => x.DiaryEventType)
@@ -889,7 +895,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<DietaryRequirement>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.PersonDietaryRequirements)
                         .WithOne(x => x.DietaryRequirement)
@@ -900,7 +906,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Directory>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(d => d.Bulletin)
                         .WithOne(b => b.Directory)
@@ -938,13 +944,13 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Discount>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                modelBuilder.Entity<Discount>(e => { SetIdDefaultValue(e); });
 
-                modelBuilder.Entity<Document>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                modelBuilder.Entity<Document>(e => { SetIdDefaultValue(e); });
 
                 modelBuilder.Entity<DocumentType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Documents)
                         .WithOne(x => x.Type)
@@ -955,12 +961,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<EmailAddress>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<EmailAddressType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.EmailAddresses)
                         .WithOne(x => x.Type)
@@ -969,9 +975,19 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+                modelBuilder.Entity<EnrolmentStatus>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(x => x.Students)
+                        .WithOne(x => x.EnrolmentStatus)
+                        .HasForeignKey(x => x.EnrolmentStatusId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
                 modelBuilder.Entity<Ethnicity>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.People)
                         .WithOne(x => x.Ethnicity)
@@ -981,7 +997,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamAssessment>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Aspects)
                         .WithOne(x => x.Assessment)
@@ -1016,7 +1032,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamAssessmentAspect>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Aspect)
                         .WithMany(x => x.AssessmentAspects)
@@ -1027,7 +1043,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamAssessmentMode>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Components)
                         .WithOne(x => x.AssessmentMode)
@@ -1044,7 +1060,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamAward>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.ExamAwardElements)
                         .WithOne(x => x.Award)
@@ -1078,7 +1094,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamAwardElement>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Element)
                         .WithMany(x => x.ExamAwardElements)
@@ -1089,7 +1105,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamAwardSeries>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Series)
                         .WithMany(x => x.ExamAwardSeries)
@@ -1100,7 +1116,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamBaseComponent>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.ExamComponents)
                         .WithOne(x => x.BaseComponent)
@@ -1111,7 +1127,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamBaseElement>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Elements)
                         .WithOne(x => x.BaseElement)
@@ -1134,7 +1150,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamBoard>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.ExamSeries)
                         .WithOne(x => x.ExamBoard)
@@ -1145,7 +1161,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamCandidate>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.LinkedSeries)
                         .WithOne(x => x.Candidate)
@@ -1180,7 +1196,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamCandidateSeries>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Series)
                         .WithMany(x => x.ExamCandidateSeries)
@@ -1191,7 +1207,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamCandidateSpecialArrangement>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.SpecialArrangement)
                         .WithMany(x => x.Candidates)
@@ -1202,7 +1218,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamComponent>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Sittings)
                         .WithOne(x => x.Component)
@@ -1230,7 +1246,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamComponentSitting>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Room)
                         .WithMany(x => x.ExamComponentSittings)
@@ -1247,7 +1263,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamElement>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Series)
                         .WithMany(x => x.ExamElements)
@@ -1264,17 +1280,17 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamElementComponent>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<ExamEnrolment>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<ExamQualification>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Levels)
                         .WithOne(x => x.Qualification)
@@ -1285,7 +1301,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamQualificationLevel>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.DefaultGradeSet)
                         .WithMany(x => x.ExamQualificationLevels)
@@ -1295,7 +1311,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamResultEmbargo>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.ResultSet)
                         .WithMany(x => x.ExamResultEmbargoes)
@@ -1306,7 +1322,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamRoom>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Room)
                         .WithOne(x => x.ExamRoom)
@@ -1317,7 +1333,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamRoomSeat>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.ExamRoom)
                         .WithMany(x => x.Seats)
@@ -1334,7 +1350,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamSeason>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.ResultSet)
                         .WithMany(x => x.ExamSeasons)
@@ -1351,27 +1367,27 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamSeatAllocation>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<ExamSeries>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<ExamSession>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<ExamSpecialArrangement>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<Exclusion>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Student)
                         .WithMany(x => x.Exclusions)
@@ -1399,22 +1415,22 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExclusionAppealResult>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<ExclusionReason>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<ExclusionType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<File>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Document)
                         .WithOne(x => x.Attachment)
@@ -1425,12 +1441,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<GiftedTalented>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<GovernanceType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Schools)
                         .WithOne(x => x.GovernanceType)
@@ -1441,7 +1457,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Grade>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(e => e.Results)
                         .WithOne(e => e.Grade)
@@ -1451,7 +1467,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<GradeSet>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(gs => gs.Aspects)
                         .WithOne(a => a.GradeSet)
@@ -1467,7 +1483,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<HomeworkItem>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Submissions)
                         .WithOne(x => x.HomeworkItem)
@@ -1478,7 +1494,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<HomeworkSubmission>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Task)
                         .WithOne(x => x.HomeworkSubmission)
@@ -1500,7 +1516,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<House>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Students)
                         .WithOne(x => x.House)
@@ -1509,7 +1525,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Incident>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Detentions)
                         .WithOne(x => x.Incident)
@@ -1520,12 +1536,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<IncidentDetention>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<IncidentType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Incidents)
                         .WithOne(x => x.Type)
@@ -1536,7 +1552,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<IntakeType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Schools)
                         .WithOne(x => x.IntakeType)
@@ -1545,19 +1561,24 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+                modelBuilder.Entity<Language>(e =>
+                {
+                    SetIdDefaultValue(e);
+                });
+
                 modelBuilder.Entity<LessonPlan>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<LessonPlanTemplate>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<LocalAuthority>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Schools)
                         .WithOne(x => x.LocalAuthority)
@@ -1568,7 +1589,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Location>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.BehaviourAchievements)
                         .WithOne(x => x.Location)
@@ -1586,11 +1607,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<LogNote>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                modelBuilder.Entity<LogNote>(e => { SetIdDefaultValue(e); });
 
                 modelBuilder.Entity<LogNoteType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.LogNotes)
                         .WithOne(x => x.LogNoteType)
@@ -1601,12 +1622,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<MarksheetColumn>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<MarksheetTemplate>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Columns)
                         .WithOne(x => x.Template)
@@ -1617,24 +1638,18 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<MarksheetTemplateGroup>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Template)
                         .WithMany(x => x.TemplateGroups)
                         .HasForeignKey(x => x.MarksheetTemplateId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasOne(x => x.StudentGroup)
-                        .WithMany(x => x.MarksheetTemplates)
-                        .HasForeignKey(x => x.StudentGroupId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<MedicalCondition>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.PersonConditions)
                         .WithOne(x => x.MedicalCondition)
@@ -1645,17 +1660,17 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<MedicalEvent>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<Observation>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<ObservationOutcome>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Observations)
                         .WithOne(x => x.Outcome)
@@ -1666,7 +1681,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Permission>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.SystemArea)
                         .WithMany(x => x.Permissions)
@@ -1683,7 +1698,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Person>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(p => p.Addresses)
                         .WithOne(a => a.Person)
@@ -1728,22 +1743,22 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<PersonCondition>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<PersonDietaryRequirement>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<PhoneNumber>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<PhoneNumberType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.PhoneNumbers)
                         .WithOne(x => x.Type)
@@ -1754,7 +1769,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Photo>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.People)
                         .WithOne(x => x.Photo)
@@ -1764,7 +1779,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Product>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.BasketItems)
                         .WithOne(x => x.Product)
@@ -1787,40 +1802,45 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ProductDiscount>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Product)
                         .WithMany(x => x.ProductDiscounts)
                         .HasForeignKey(x => x.ProductId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasOne(x => x.Discount)
-                        .WithMany(x => x.ProductDiscounts)
-                        .HasForeignKey(x => x.DiscountId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<ProductType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Products)
                         .WithOne(x => x.Type)
                         .HasForeignKey(x => x.ProductTypeId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.ProductTypeDiscounts)
+                        .WithOne(x => x.ProductType)
+                        .HasForeignKey(x => x.ProductTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ProductTypeDiscount>(e =>
+                {
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<RefreshToken>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<RegGroup>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Students)
                         .WithOne(x => x.RegGroup)
@@ -1829,11 +1849,28 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Report>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                modelBuilder.Entity<RelationshipType>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(x => x.StudentContacts)
+                        .WithOne(x => x.RelationshipType)
+                        .HasForeignKey(x => x.RelationshipTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.StudentAgents)
+                        .WithOne(x => x.RelationshipType)
+                        .HasForeignKey(x => x.RelationshipTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Report>(e => { SetIdDefaultValue(e); });
 
                 modelBuilder.Entity<ReportCard>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Targets)
                         .WithOne(x => x.ReportCard)
@@ -1862,7 +1899,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ReportCardSubmission>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.TargetSubmissions)
                         .WithOne(x => x.Submission)
@@ -1879,7 +1916,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ReportCardTarget>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Submissions)
                         .WithOne(x => x.Target)
@@ -1890,14 +1927,14 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ReportCardTargetSubmission>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
-                modelBuilder.Entity<Result>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                modelBuilder.Entity<Result>(e => { SetIdDefaultValue(e); });
 
                 modelBuilder.Entity<ResultSet>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(rs => rs.Results)
                         .WithOne(r => r.ResultSet)
@@ -1940,7 +1977,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Room>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.CoverArrangements)
                         .WithOne(x => x.Room)
@@ -1966,12 +2003,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<RoomClosure>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<RoomClosureReason>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Closures)
                         .WithOne(x => x.Reason)
@@ -1980,11 +2017,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<School>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                modelBuilder.Entity<School>(e => { SetIdDefaultValue(e); });
 
                 modelBuilder.Entity<SchoolPhase>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Schools)
                         .WithOne(x => x.SchoolPhase)
@@ -1995,7 +2032,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<SchoolType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Schools)
                         .WithOne(x => x.Type)
@@ -2004,11 +2041,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<SenEvent>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                modelBuilder.Entity<SenEvent>(e => { SetIdDefaultValue(e); });
 
                 modelBuilder.Entity<SenEventType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Events)
                         .WithOne(x => x.Type)
@@ -2019,12 +2056,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<SenProvision>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<SenProvisionType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.SenProvisions)
                         .WithOne(x => x.Type)
@@ -2033,11 +2070,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<SenReview>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                modelBuilder.Entity<SenReview>(e => { SetIdDefaultValue(e); });
 
                 modelBuilder.Entity<SenReviewType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Reviews)
                         .WithOne(x => x.ReviewType)
@@ -2048,27 +2085,38 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<SenStatus>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                     
                     e.HasMany(x => x.Students)
                         .WithOne(x => x.SenStatus)
-                        .HasForeignKey(x => x.SenStatusId);
+                        .HasForeignKey(x => x.SenStatusId)
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     e.Property(x => x.Code)
                         .IsFixedLength()
                         .IsUnicode(false);
                 });
 
-                modelBuilder.Entity<Session>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                modelBuilder.Entity<SenType>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(x => x.Students)
+                        .WithOne(x => x.SenType)
+                        .HasForeignKey(x => x.SenTypeId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<Session>(e => { SetIdDefaultValue(e); });
 
                 modelBuilder.Entity<StaffAbsence>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<StaffAbsenceType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Absences)
                         .WithOne(x => x.AbsenceType)
@@ -2079,7 +2127,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StaffIllnessType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Absences)
                         .WithOne(x => x.IllnessType)
@@ -2089,7 +2137,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StaffMember>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(sm => sm.Sessions)
                         .WithOne(s => s.Teacher)
@@ -2160,9 +2208,26 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+                modelBuilder.Entity<StoreDiscount>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(d => d.ProductDiscounts)
+                        .WithOne(d => d.StoreDiscount)
+                        .HasForeignKey(d => d.StoreDiscountId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(d => d.ProductTypeDiscounts)
+                        .WithOne(d => d.StoreDiscount)
+                        .HasForeignKey(d => d.StoreDiscountId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
                 modelBuilder.Entity<Student>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(s => s.Results)
                         .WithOne(r => r.Student)
@@ -2260,7 +2325,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StudentAgentRelationship>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Student)
                         .WithMany(x => x.AgentRelationships)
@@ -2271,7 +2336,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StudentCharge>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Charge)
                         .WithMany(x => x.StudentCharges)
@@ -2288,7 +2353,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StudentContactRelationship>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Contact)
                         .WithMany(x => x.LinkedStudents)
@@ -2305,7 +2370,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StudentDiscount>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Student)
                         .WithMany(x => x.Discounts)
@@ -2320,20 +2385,9 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<StudentGroup>(e =>
-                {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    e.HasMany(x => x.MarksheetTemplates)
-                        .WithOne(x => x.StudentGroup)
-                        .HasForeignKey(x => x.StudentGroupId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
                 modelBuilder.Entity<StudyTopic>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.LessonPlans)
                         .WithOne(x => x.StudyTopic)
@@ -2350,7 +2404,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Subject>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Courses)
                         .WithOne(x => x.Subject)
@@ -2373,12 +2427,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<SubjectCode>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<SubjectCodeSet>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.SubjectCodes)
                         .WithOne(x => x.SubjectCodeSet)
@@ -2389,12 +2443,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<SubjectStaffMember>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<SubjectStaffMemberRole>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.StaffMembers)
                         .WithOne(x => x.Role)
@@ -2405,7 +2459,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<SystemArea>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Reports)
                         .WithOne(x => x.SystemArea)
@@ -2419,11 +2473,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Task>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                modelBuilder.Entity<Task>(e => { SetIdDefaultValue(e); });
 
                 modelBuilder.Entity<TaskType>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Tasks)
                         .WithOne(x => x.Type)
@@ -2434,12 +2488,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<TrainingCertificate>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<TrainingCertificateStatus>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Certificates)
                         .WithOne(x => x.Status)
@@ -2450,7 +2504,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<TrainingCourse>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.Certificates)
                         .WithOne(x => x.TrainingCourse)
@@ -2564,11 +2618,16 @@ namespace MyPortal.Database.Models
                     e.ToTable("UserTokens");
                 });
 
-                modelBuilder.Entity<VatRate>(e => { e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()"); });
+                modelBuilder.Entity<VatRate>(e =>
+                {
+                    SetIdDefaultValue(e);
+                });
 
                 modelBuilder.Entity<YearGroup>(e =>
                 {
-                    e.Property(p => p.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                    SetIdDefaultValue(e);
+
+                    SetIdDefaultValue(e);
 
                     e.HasMany(x => x.RegGroups)
                         .WithOne(x => x.YearGroup)
@@ -2583,6 +2642,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
             }
+        }
+
+        private void SetIdDefaultValue(EntityTypeBuilder builder)
+        {
+            builder.Property("Id").HasDefaultValueSql("NEWSEQUENTIALID()");
         }
     }
 }

@@ -2,7 +2,7 @@
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
 
-namespace MyPortal.Logic.Models.Requests.Documents
+namespace MyPortal.Logic.Models.Response.Documents
 {
     public class DirectoryChildListWrapper
     {

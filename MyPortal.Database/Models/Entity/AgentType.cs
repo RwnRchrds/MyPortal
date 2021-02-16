@@ -4,9 +4,9 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models.Entity
 {
-    [Table("AgentRelationshipTypes")]
-    public class AgentRelationshipType : LookupItem
+    [Table("AgentTypes")]
+    public class AgentType : LookupItem
     {
-        public virtual ICollection<StudentAgentRelationship> Relationships { get; set; }
+        public virtual ICollection<Agent> Agents { get; set; }
     }
 }

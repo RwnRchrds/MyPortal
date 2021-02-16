@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models.Entity
 {
-    [Table("ActivityEvent")]
+    [Table("ActivityEvents")]
     public class ActivityEvent : BaseTypes.Entity
     {
         [Column(Order = 1)]

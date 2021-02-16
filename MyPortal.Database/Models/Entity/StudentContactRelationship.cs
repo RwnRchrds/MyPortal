@@ -27,7 +27,7 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 7)]
         public bool CourtOrder { get; set; }
 
-        public virtual ContactRelationshipType RelationshipType { get; set; }
+        public virtual RelationshipType RelationshipType { get; set; }
         public virtual Student Student { get; set; }
         public virtual Contact Contact { get; set; }
     }

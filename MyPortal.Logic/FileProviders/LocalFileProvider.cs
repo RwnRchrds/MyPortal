@@ -1,14 +1,15 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.DocumentProvision;
 using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortal.Logic.FileProviders
 {
-    public class LocalFileProvider : IFileProvider
+    public class LocalFileProvider : ILocalFileProvider
     {
         private readonly string _fileStoragePath;
 
@@ -21,26 +22,30 @@ namespace MyPortal.Logic.FileProviders
             Directory.CreateDirectory(_fileStoragePath);
         }
 
-        public void Dispose()
-        {
-
-        }
-
         public async Task<string> UploadFile(UploadAttachmentModel upload)
         {
-            var fileName = Path.GetRandomFileName();
+            var fileName = Guid.NewGuid().ToString("N");
 
             var path = Path.Combine(_fileStoragePath, fileName);
 
+            byte[] encryptedData;
+
+            using (var ms = new MemoryStream())
+            {
+                await upload.File.CopyToAsync(ms);
+                var sourceData = ms.ToArray();
+                encryptedData = Encryption.Encrypt(sourceData, fileName);
+            }
+
             using (var stream = new FileStream(path, FileMode.Create))
             {
-                await upload.File.CopyToAsync(stream);
+                await stream.WriteAsync(encryptedData);
             }
 
             return fileName;
         }
 
-        public async Task DeleteFile(string fileId)
+        public void DeleteFile(string fileId)
         {
             var filePath = Path.Combine(_fileStoragePath, fileId);
 
@@ -53,11 +58,15 @@ namespace MyPortal.Logic.FileProviders
 
             if (File.Exists(path))
             {
-                var stream = File.Open(path, FileMode.Open);
+                var encryptedData = await File.ReadAllBytesAsync(path);
 
-                stream.Position = 0;
+                var decryptedData = Encryption.Decrypt(encryptedData, fileId);
 
-                return stream;
+                var ms = new MemoryStream();
+
+                await ms.WriteAsync(decryptedData);
+
+                return ms;
             }
 
             throw new NotFoundException("File not found.");

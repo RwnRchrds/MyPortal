@@ -28,8 +28,8 @@ export class RoleViewComponent extends PortalViewDirective implements OnInit, On
     this.subscription = this.viewService.currentRole.pipe(map((role: RoleModel) => {
       this.role = role;
     })).subscribe();
-    this.scriptService.loadScript('../../../../../assets/lib/plugins/custom/jstree/jstree.bundle.js');
-    this.scriptService.loadStyleSheet('../../../../../assets/lib/plugins/custom/jstree/jstree.bundle.css');
+    this.scriptService.loadScript('/assets/lib/plugins/custom/jstree/jstree.bundle.js');
+    this.scriptService.loadStyleSheet('/assets/lib/plugins/custom/jstree/jstree.bundle.css');
   }
 
   ngOnDestroy(): void {

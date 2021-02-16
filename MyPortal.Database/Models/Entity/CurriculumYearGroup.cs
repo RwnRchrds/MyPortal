@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("CurriculumYearGroups")]
-    public class CurriculumYearGroup : BaseTypes.Entity
+    public class CurriculumYearGroup : BaseTypes.Entity, ICensusEntity
     {
         [Column(Order = 1)]
         [Required]

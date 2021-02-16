@@ -56,14 +56,23 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 10)]
         public Guid? SenStatusId { get; set; }
 
-        [Column(Order = 11)]
-        public bool PupilPremium { get; set; }
+        [Column(Order = 11)] 
+        public Guid? SenTypeId { get; set; }
 
         [Column(Order = 12)]
+        public Guid? EnrolmentStatusId { get; set; }
+
+        [Column(Order = 13)] 
+        public Guid? BoarderStatusId { get; set; }
+
+        [Column(Order = 13)]
+        public bool PupilPremium { get; set; }
+
+        [Column(Order = 14)]
         [StringLength(13)]
         public string Upn { get; set; }
 
-        [Column(Order = 13)]
+        [Column(Order = 15)]
         public bool Deleted { get; set; }
 
         public virtual RegGroup RegGroup { get; set; }
@@ -75,6 +84,12 @@ namespace MyPortal.Database.Models.Entity
         public virtual ExamCandidate Candidate { get; set; }
 
         public virtual SenStatus SenStatus { get; set; }
+
+        public virtual SenType SenType { get; set; }
+
+        public virtual EnrolmentStatus EnrolmentStatus { get; set; }
+
+        public virtual BoarderStatus BoarderStatus { get; set; }
 
         public virtual House House { get; set; }
 

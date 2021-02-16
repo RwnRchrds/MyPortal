@@ -51,7 +51,7 @@ namespace MyPortal.Logic.Services
         {
             var logNotes = await _logNoteRepository.GetByStudent(studentId, academicYearId);
 
-            return logNotes.Select(BusinessMapper.Map<LogNoteModel>);
+            return logNotes.OrderByDescending(n => n.CreatedDate).Select(BusinessMapper.Map<LogNoteModel>);
         }
 
         public async Task<IEnumerable<LogNoteTypeModel>> GetTypes()

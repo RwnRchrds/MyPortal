@@ -25,8 +25,8 @@ export class StudentViewComponent extends PortalViewDirective implements OnInit,
   }
 
   ngOnInit(): void {
-    this.scriptService.loadScript('../../../../../assets/lib/js/pages/custom/profile/profile.js');
-    this.viewService.init(this.route.snapshot.paramMap.get('id'));
+    this.scriptService.loadScript('/assets/lib/js/pages/custom/profile/profile.js');
+    this.viewService.init(this.route.snapshot.paramMap.get('studentId'));
     this.studentSubscription = this.viewService.currentStudent.pipe(map((student: StudentModel) => {
       this.student = student;
     })).subscribe();

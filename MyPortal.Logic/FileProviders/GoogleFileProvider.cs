@@ -3,13 +3,12 @@ using System.Threading.Tasks;
 using Google.Apis.Drive.v3;
 using Microsoft.Extensions.Configuration;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DocumentProvision;
-using MyPortal.Logic.Models.Requests.Documents;
-using File = Google.Apis.Drive.v3.Data.File;
 
 namespace MyPortal.Logic.FileProviders
 {
-    public class GoogleFileProvider : HostedFileProvider
+    public class GoogleFileProvider : IHostedFileProvider
     {
         private readonly DriveService _driveService;
 
@@ -19,12 +18,12 @@ namespace MyPortal.Logic.FileProviders
             _driveService = new DriveService(googleHelper.GetInitializer());
         }
 
-        public override void Dispose()
+        public void Dispose()
         {
             _driveService.Dispose();
         }
 
-        public override async Task<HostedFileMetadata> FetchMetadata(string fileId)
+        public async Task<HostedFileMetadata> FetchMetadata(string fileId)
         {
             var hostedMetadata = new HostedFileMetadata();
             
@@ -42,29 +41,7 @@ namespace MyPortal.Logic.FileProviders
             return hostedMetadata;
         }
 
-        public override async Task<string> UploadFile(UploadAttachmentModel upload)
-        {
-            var metadata = new File();
-
-            metadata.Name = upload.File.FileName;
-
-            var request = _driveService.Files.Create(metadata, upload.File.OpenReadStream(), upload.File.ContentType);
-
-            await request.UploadAsync();
-
-            var result = request.ResponseBody;
-
-            return result.Id;
-        }
-
-        public override async Task DeleteFile(string fileId)
-        {
-            var request = _driveService.Files.Delete(fileId);
-
-            await request.ExecuteAsync();
-        }
-
-        public override async Task<Stream> DownloadFileToStream(string fileId)
+        public async Task<Stream> DownloadFileToStream(string fileId)
         {
             var stream = new MemoryStream();
 

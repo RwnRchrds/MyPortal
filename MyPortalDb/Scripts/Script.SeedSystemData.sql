@@ -2078,9 +2078,8 @@ USING (VALUES
 ('59036718-D349-46D3-B8A6-60FFA9263DB3', 'Authorised Absence'),
 ('59036719-D349-46D3-B8A6-60FFA9263DB3', 'Approved Educational Activity'),
 ('59036720-D349-46D3-B8A6-60FFA9263DB3', 'Unauthorised Absence'),
-('59036721-D349-46D3-B8A6-60FFA9263DB3', 'Attendance Not Required'),
-('59036722-D349-46D3-B8A6-60FFA9263DB3', 'No Mark'),
-('59036723-D349-46D3-B8A6-60FFA9263DB3', 'Late')
+('59036721-D349-46D3-B8A6-60FFA9263DB3', 'Attendance not Required'),
+('59036722-D349-46D3-B8A6-60FFA9263DB3', 'No Mark')
 )
 AS Source (Id, Description)
 ON Target.Id = Source.Id
@@ -2102,12 +2101,11 @@ USING (VALUES
 ('EBACEBAB-183B-452E-B2F4-9CFF11D1B083', 'C', 'Other authorised circumstance', '59036718-D349-46D3-B8A6-60FFA9263DB3', 1, 1),
 ('EBACEBAB-193B-452E-B2F4-9CFF11D1B083', 'D', 'Dual registration', '59036719-D349-46D3-B8A6-60FFA9263DB3', 1, 1),
 ('EBACEBAB-1A3B-452E-B2F4-9CFF11D1B083', 'E', 'Excluded', '59036718-D349-46D3-B8A6-60FFA9263DB3', 1, 1),
-('EBACEBAB-1B3B-452E-B2F4-9CFF11D1B083', 'F', 'Extended family holiday (agreed)', '59036718-D349-46D3-B8A6-60FFA9263DB3', 1, 1),
 ('EBACEBAB-1C3B-452E-B2F4-9CFF11D1B083', 'G', 'Family holiday (not agreed)', '59036720-D349-46D3-B8A6-60FFA9263DB3', 1, 1),
 ('EBACEBAB-1D3B-452E-B2F4-9CFF11D1B083', 'H', 'Family holiday (agreed)', '59036718-D349-46D3-B8A6-60FFA9263DB3', 1, 1),
 ('EBACEBAB-1E3B-452E-B2F4-9CFF11D1B083', 'I', 'Illness', '59036718-D349-46D3-B8A6-60FFA9263DB3', 1, 1),
 ('EBACEBAB-1F3B-452E-B2F4-9CFF11D1B083', 'J', 'Interview', '59036719-D349-46D3-B8A6-60FFA9263DB3', 1, 1),
-('EBACEBAB-203B-452E-B2F4-9CFF11D1B083', 'L', 'Late (before registers closed)', '59036723-D349-46D3-B8A6-60FFA9263DB3', 1, 1),
+('EBACEBAB-203B-452E-B2F4-9CFF11D1B083', 'L', 'Late (before registers closed)', '59036717-D349-46D3-B8A6-60FFA9263DB3', 1, 1),
 ('EBACEBAB-213B-452E-B2F4-9CFF11D1B083', 'M', 'Medical/dental appointment', '59036718-D349-46D3-B8A6-60FFA9263DB3', 1, 1),
 ('EBACEBAB-223B-452E-B2F4-9CFF11D1B083', 'N', 'No reason yet provided for absence', '59036720-D349-46D3-B8A6-60FFA9263DB3', 1, 1),
 ('EBACEBAB-233B-452E-B2F4-9CFF11D1B083', 'O', 'Unauthorised absence', '59036720-D349-46D3-B8A6-60FFA9263DB3', 1, 1),
@@ -2448,7 +2446,7 @@ VALUES (Id, Description, 1);
 
 --[People_RelationshipTypes]
 
-MERGE INTO [dbo].[ContactRelationshipTypes] AS Target
+MERGE INTO [dbo].[RelationshipTypes] AS Target
 USING (VALUES
 ('4266BFD8-7983-4324-B741-AD5FAEC36688', 'Mother'),
 ('4366BFD8-7983-4324-B741-AD5FAEC36688', 'Father'),
@@ -2751,8 +2749,32 @@ USING (VALUES
 ('71D39DF5-B4CA-4EAA-AD51-5B07C2304F27', 'P', 'School/Early Years Action+'),
 ('71D39DF5-B5CA-4EAA-AD51-5B07C2304F27', 'K', 'SEN Support'),
 ('71D39DF5-B6CA-4EAA-AD51-5B07C2304F27', 'X', 'Severe Educational Disability'),
-('71D39DF5-B7CA-4EAA-AD51-5B07C2304F27', 'S', 'Statement'),
-('71D39DF5-B8CA-4EAA-AD51-5B07C2304F27', 'U', 'Support Needed')
+('71D39DF5-B7CA-4EAA-AD51-5B07C2304F27', 'S', 'Statement')
+)
+AS Source (Id, Code, Description)
+ON Target.Id = Source.Id
+
+WHEN MATCHED THEN
+UPDATE SET Description = Source.Description
+
+WHEN NOT MATCHED THEN
+INSERT (Id, Code, Description, Active)
+VALUES (Id, Code, Description, 1);
+
+MERGE INTO [dbo].[SenTypes] AS Target
+USING (VALUES
+('2E7EE554-CDBA-4237-88D2-B8A1E93E506B', 'SPLD', 'Specific Learning Difficulty'),
+('2E7EE554-CDBA-4237-88D2-B8A1E93E506C', 'MLD', 'Moderate Learning Difficulty'),
+('2E7EE554-CDBA-4237-88D2-B8A1E93E506D', 'SLD', 'Severe Learning Difficulty'),
+('2E7EE554-CDBA-4237-88D2-B8A1E93E506E', 'PMLD', 'Profound and Multiple Learning Difficulty'),
+('2E7EE554-CDBA-4237-88D2-B8A1E93E506F', 'SEMH', 'Social, Emotional and Mental Health'),
+('2E7EE554-CDBA-4237-88D2-B8A1E93E5070', 'SLCN', 'Speech, Language and Communication Needs'),
+('2E7EE554-CDBA-4237-88D2-B8A1E93E5071', 'HI', 'Hearing Impairment'),
+('2E7EE554-CDBA-4237-88D2-B8A1E93E5072', 'VI', 'Vision Impairment'),
+('2E7EE554-CDBA-4237-88D2-B8A1E93E5073', 'MSI', 'Multi-Sensory Impairment'),
+('2E7EE554-CDBA-4237-88D2-B8A1E93E5074', 'PD', 'Physical Disability'),
+('2E7EE554-CDBA-4237-88D2-B8A1E93E5075', 'ASD', 'Autistic Spectrum Disorder'),
+('2E7EE554-CDBA-4237-88D2-B8A1E93E5076', 'OTH', 'Other Difficulties/Disability')
 )
 AS Source (Id, Code, Description)
 ON Target.Id = Source.Id
@@ -2977,7 +2999,7 @@ VALUES (Id, Name, KeyStage, Code);
 
 MERGE INTO [dbo].[Directories] AS Target
 USING (VALUES
-('00000000-0000-0000-0000-000000000001', NULL, 'root', 0, 0)
+('B5DBF3AE-D9A9-4502-AE16-E437BED14F38', NULL, 'root', 0, 0)
 )
 AS Source (Id, ParentId, Name, Private, StaffOnly)
 ON Target.Id = Source.Id
@@ -3678,37 +3700,87 @@ VALUES (Id, SubjectCodeSetId, Description, Active, Code);
 
 MERGE INTO [dbo].[ExclusionTypes] AS Target
 USING (VALUES
-('8BE7A245-E1BB-44DC-B427-0247D9CEA9AB', 'Fixed Term', 1, 1),
-('8BE7A245-E1BB-44DC-B427-0247D9CEA9AC', 'Permanent', 1, 1)
+('8BE7A245-E1BB-44DC-B427-0247D9CEA9AB', 'FIXD', 'Fixed Term', 1, 1),
+('8BE7A245-E1BB-44DC-B427-0247D9CEA9AC', 'PERM', 'Permanent', 1, 1)
 )
-AS Source (Id, Description, Active, System)
+AS Source (Id, Code, Description, Active, System)
 ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
-INSERT (Id, Description, Active, System)
-VALUES (Id, Description, Active, System);
+INSERT (Id, Code, Description, Active, System)
+VALUES (Id, Code, Description, Active, System);
 
 MERGE INTO [dbo].[ExclusionReasons] AS Target
 USING (VALUES
-('8D4324AA-A0FC-41A4-B9AE-6345D7C35000', 'Physical Threat or Assault on Pupil', 1, 1),
-('8D4324AA-A0FC-41A4-B9AE-6345D7C35001', 'Physical Threat or Assault on Staff', 1, 1),
-('8D4324AA-A0FC-41A4-B9AE-6345D7C35002', 'Substance Abuse', 1, 1),
-('8D4324AA-A0FC-41A4-B9AE-6345D7C35003', 'Verbal Abuse of Pupil', 1, 1),
-('8D4324AA-A0FC-41A4-B9AE-6345D7C35004', 'Verbal Abuse of Staff', 1, 1),
-('8D4324AA-A0FC-41A4-B9AE-6345D7C35005', 'Bullying', 1, 1),
-('8D4324AA-A0FC-41A4-B9AE-6345D7C35006', 'Racist Abuse', 1, 1),
-('8D4324AA-A0FC-41A4-B9AE-6345D7C35007', 'Sexual Misconduct', 1, 1),
-('8D4324AA-A0FC-41A4-B9AE-6345D7C35008', 'Drug and Alcohol Related', 1, 1),
-('8D4324AA-A0FC-41A4-B9AE-6345D7C35009', 'Damage - Property', 1, 1),
-('8D4324AA-A0FC-41A4-B9AE-6345D7C3500A', 'Theft', 1, 1),
-('8D4324AA-A0FC-41A4-B9AE-6345D7C3500B', 'Persistent Disruptive Behaviour', 1, 1),
-('8D4324AA-A0FC-41A4-B9AE-6345D7C3500C', 'Other', 1, 1)
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35000', 'PP', 'Physical assault on pupil', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35001', 'PA', 'Physical assault on adult', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35003', 'VP', 'Verbal abuse/threat against pupil', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35004', 'VA', 'Verbal abuse/threat against adult', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35005', 'OW', 'Use/threat of use of an offensive weapon/prohibited item', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35006', 'BU', 'Bullying', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35007', 'RA', 'Racist abuse', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35008', 'LG', 'Abuse against sexual orientation/gender identity', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35009', 'DS', 'Abuse relating to disability', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C3500A', 'SM', 'Sexual misconduct', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C3500B', 'DA', 'Drug and alcohol related', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C3500C', 'DM', 'Damage', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C3500D', 'TH', 'Theft', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C3500E', 'DB', 'Persistent disruptive behaviour', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C3500F', 'MT', 'Inappropriate use of social media/online technology', 1, 1),
+('8D4324AA-A0FC-41A4-B9AE-6345D7C35010', 'PH', 'Wilful and repeated transgression of protective measures in place to protect public health', 1, 1)
 )
-AS Source (Id, Description, Active, System)
+AS Source (Id, Code, Description, Active, System)
 ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
 INSERT (Id, Description, Active, System)
 VALUES (Id, Description, Active, System);
+
+MERGE INTO [dbo].[AgencyTypes] AS Target
+USING (VALUES
+('7B32B95C-082C-4DE9-8050-A6DF83F6D841', 'Transport', 1),
+('7B32B95C-082C-4DE9-8050-A6DF83F6D842', 'Catering', 1),
+('7B32B95C-082C-4DE9-8050-A6DF83F6D843', 'Social Services', 1),
+('7B32B95C-082C-4DE9-8050-A6DF83F6D844', 'Local Authority', 1),
+('7B32B95C-082C-4DE9-8050-A6DF83F6D845', 'Teacher Agency', 1),
+('7B32B95C-082C-4DE9-8050-A6DF83F6D846', 'Medical', 1),
+('7B32B95C-082C-4DE9-8050-A6DF83F6D847', 'Agency', 1),
+('7B32B95C-082C-4DE9-8050-A6DF83F6D848', 'Supply Agency', 1),
+('7B32B95C-082C-4DE9-8050-A6DF83F6D849', 'Educational Provider', 1),
+('7B32B95C-082C-4DE9-8050-A6DF83F6D84A', 'Workplace Provider', 1),
+('7B32B95C-082C-4DE9-8050-A6DF83F6D84B', 'Healthcare', 1),
+('7B32B95C-082C-4DE9-8050-A6DF83F6D84C', 'Technical Support', 1),
+('7B32B95C-082C-4DE9-8050-A6DF83F6D84D', 'Law Firm', 1),
+('7B32B95C-082C-4DE9-8050-A6DF83F6D84E', 'Housekeeping', 1)
+)
+AS Source (Id, Description, Active)
+ON Target.Id = Source.Id
+
+WHEN NOT MATCHED THEN
+INSERT (Id, Description, Active)
+VALUES (Id, Description, Active);
+
+MERGE INTO [dbo].[AgentTypes] AS Target
+USING (VALUES
+('6DF2A876-A742-421D-824F-CBB6966AE212', 'Administrator', 1),
+('6DF2A876-A742-421D-824F-CBB6966AE213', 'Audiometrist', 1),
+('6DF2A876-A742-421D-824F-CBB6966AE214', 'Doctor', 1),
+('6DF2A876-A742-421D-824F-CBB6966AE215', 'Education Welfare Officer', 1),
+('6DF2A876-A742-421D-824F-CBB6966AE216', 'Educational Psychologist', 1),
+('6DF2A876-A742-421D-824F-CBB6966AE217', 'External Specialist', 1),
+('6DF2A876-A742-421D-824F-CBB6966AE218', 'Instructor', 1),
+('6DF2A876-A742-421D-824F-CBB6966AE219', 'Physiotherapist', 1),
+('6DF2A876-A742-421D-824F-CBB6966AE21A', 'Social Services', 1),
+('6DF2A876-A742-421D-824F-CBB6966AE21B', 'Speech Therapist', 1),
+('6DF2A876-A742-421D-824F-CBB6966AE21C', 'Supply Teacher', 1),
+('6DF2A876-A742-421D-824F-CBB6966AE21D', 'Technician', 1),
+('6DF2A876-A742-421D-824F-CBB6966AE21E', 'Tutor', 1)
+)
+AS Source (Id, Description, Active)
+ON Target.Id = Source.Id
+
+WHEN NOT MATCHED THEN
+INSERT (Id, Description, Active)
+VALUES (Id, Description, Active);
 
 EXEC sp_MSforeachtable @command1="print '?'", @command2="ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all"

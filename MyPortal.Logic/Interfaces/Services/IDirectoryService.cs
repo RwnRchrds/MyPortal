@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
+using MyPortal.Logic.Models.Response.Documents;
 
 namespace MyPortal.Logic.Interfaces.Services
 {

@@ -24,19 +24,29 @@ namespace MyPortal.Tests
         }
 
         [Test]
-        public void Encryption_Asymmetric()
+        public void Encryption_String()
         {
             var plaintext = @"*Test\pl41nt3xt*";
-            var secret = @"4t7w!z%C&F)J@NcRfUjXn2r5u8x/A?D(";
-            var iv = Guid.NewGuid();
+            var secret = @"$C&F)J@NcRfUjXnZr4u7x!A%D*G-KaPdSgVkYp3s5v8y/B?E(H+MbQeThWmZq4t7";
 
-            var encryptedText = Encryption.Encrypt(Encoding.UTF8.GetBytes(plaintext), Encoding.UTF8.GetBytes(secret),
-                iv.ToByteArray());
+            var encryptedText = Encryption.Encrypt(plaintext, secret);
 
-            var decryptedText = Convert.ToBase64String(Encryption.Decrypt(encryptedText, Encoding.UTF8.GetBytes(secret),
-                iv.ToByteArray()));
+            var decryptedText = Encryption.Decrypt(encryptedText, secret);
 
             Assert.That(decryptedText.Equals(plaintext, StringComparison.InvariantCulture));
+        }
+
+        [Test]
+        public void Encryption_Bytes()
+        {
+            var plainData = new byte[] {32, 64, 51, 28, 133, 122};
+            var secret = @"H+MbQeThWmZq4t7w9z$C&F)J@NcRfUjXn2r5u8x/A%D*G-KaPdSgVkYp3s6v9y$B";
+
+            var encryptedData = Encryption.Encrypt(plainData, secret);
+
+            var decryptedData = Encryption.Decrypt(encryptedData, secret);
+
+            Assert.That(plainData.SequenceEqual(decryptedData));
         }
 
         [Test]
