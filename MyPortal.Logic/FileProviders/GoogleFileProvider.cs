@@ -15,7 +15,7 @@ namespace MyPortal.Logic.FileProviders
         public GoogleFileProvider(IConfiguration config)
         {
             var googleHelper = new GoogleHelper(config);
-            _driveService = new DriveService(googleHelper.GetInitializer());
+            _driveService = new DriveService(googleHelper.GetInitializer(scopes: DriveService.Scope.Drive));
         }
 
         public void Dispose()
