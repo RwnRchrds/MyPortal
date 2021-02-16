@@ -2403,6 +2403,26 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ParentEvenings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    EventId = table.Column<Guid>(nullable: false),
+                    BookingOpened = table.Column<DateTime>(nullable: false),
+                    BookingClosed = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParentEvenings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ParentEvenings_DiaryEvents_EventId",
+                        column: x => x.EventId,
+                        principalTable: "DiaryEvents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ExamRoomSeats",
                 columns: table => new
                 {
@@ -3000,6 +3020,55 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ParentEveningGroup",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    ParentEveningId = table.Column<Guid>(nullable: false),
+                    GroupTypeId = table.Column<Guid>(nullable: false),
+                    GroupId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParentEveningGroup", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ParentEveningGroup_ParentEvenings_ParentEveningId",
+                        column: x => x.ParentEveningId,
+                        principalTable: "ParentEvenings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ParentEveningStaffMembers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    ParentEveningId = table.Column<Guid>(nullable: false),
+                    StaffMemberId = table.Column<Guid>(nullable: false),
+                    AvailableFrom = table.Column<DateTime>(nullable: false),
+                    AvailableTo = table.Column<DateTime>(nullable: false),
+                    AppointmentLength = table.Column<int>(nullable: false),
+                    BreakLimit = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParentEveningStaffMembers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ParentEveningStaffMembers_ParentEvenings_ParentEveningId",
+                        column: x => x.ParentEveningId,
+                        principalTable: "ParentEvenings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ParentEveningStaffMembers_StaffMembers_StaffMemberId",
+                        column: x => x.StaffMemberId,
+                        principalTable: "StaffMembers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RegGroups",
                 columns: table => new
                 {
@@ -3191,6 +3260,26 @@ namespace MyPortal.Database.Migrations
                         name: "FK_StudyTopics_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ParentEveningBreaks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    ParentEveningStaffMemberId = table.Column<Guid>(nullable: false),
+                    Start = table.Column<DateTime>(nullable: false),
+                    End = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParentEveningBreaks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ParentEveningBreaks_ParentEveningStaffMembers_ParentEveningStaffMemberId",
+                        column: x => x.ParentEveningStaffMemberId,
+                        principalTable: "ParentEveningStaffMembers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -3910,6 +3999,34 @@ namespace MyPortal.Database.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_MedicalEvents_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ParentEveningAppointments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    ParentEveningStaffId = table.Column<Guid>(nullable: false),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    Start = table.Column<DateTime>(nullable: false),
+                    End = table.Column<DateTime>(nullable: false),
+                    Attended = table.Column<bool>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParentEveningAppointments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ParentEveningAppointments_ParentEveningStaffMembers_ParentEveningStaffId",
+                        column: x => x.ParentEveningStaffId,
+                        principalTable: "ParentEveningStaffMembers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ParentEveningAppointments_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
@@ -5419,6 +5536,42 @@ namespace MyPortal.Database.Migrations
                 column: "OutcomeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ParentEveningAppointments_ParentEveningStaffId",
+                table: "ParentEveningAppointments",
+                column: "ParentEveningStaffId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParentEveningAppointments_StudentId",
+                table: "ParentEveningAppointments",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParentEveningBreaks_ParentEveningStaffMemberId",
+                table: "ParentEveningBreaks",
+                column: "ParentEveningStaffMemberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParentEveningGroup_ParentEveningId",
+                table: "ParentEveningGroup",
+                column: "ParentEveningId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParentEvenings_EventId",
+                table: "ParentEvenings",
+                column: "EventId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParentEveningStaffMembers_ParentEveningId",
+                table: "ParentEveningStaffMembers",
+                column: "ParentEveningId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParentEveningStaffMembers_StaffMemberId",
+                table: "ParentEveningStaffMembers",
+                column: "StaffMemberId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_People_DirectoryId",
                 table: "People",
                 column: "DirectoryId",
@@ -6068,6 +6221,15 @@ namespace MyPortal.Database.Migrations
                 name: "Observations");
 
             migrationBuilder.DropTable(
+                name: "ParentEveningAppointments");
+
+            migrationBuilder.DropTable(
+                name: "ParentEveningBreaks");
+
+            migrationBuilder.DropTable(
+                name: "ParentEveningGroup");
+
+            migrationBuilder.DropTable(
                 name: "PersonConditions");
 
             migrationBuilder.DropTable(
@@ -6242,6 +6404,9 @@ namespace MyPortal.Database.Migrations
                 name: "ObservationOutcomes");
 
             migrationBuilder.DropTable(
+                name: "ParentEveningStaffMembers");
+
+            migrationBuilder.DropTable(
                 name: "MedicalConditions");
 
             migrationBuilder.DropTable(
@@ -6356,13 +6521,13 @@ namespace MyPortal.Database.Migrations
                 name: "DetentionTypes");
 
             migrationBuilder.DropTable(
-                name: "DiaryEvents");
-
-            migrationBuilder.DropTable(
                 name: "BehaviourOutcomes");
 
             migrationBuilder.DropTable(
                 name: "BehaviourStatus");
+
+            migrationBuilder.DropTable(
+                name: "ParentEvenings");
 
             migrationBuilder.DropTable(
                 name: "ProductTypes");
@@ -6416,10 +6581,7 @@ namespace MyPortal.Database.Migrations
                 name: "ExamSessions");
 
             migrationBuilder.DropTable(
-                name: "DiaryEventTypes");
-
-            migrationBuilder.DropTable(
-                name: "Rooms");
+                name: "DiaryEvents");
 
             migrationBuilder.DropTable(
                 name: "AcademicTerms");
@@ -6461,7 +6623,10 @@ namespace MyPortal.Database.Migrations
                 name: "ExamSeasons");
 
             migrationBuilder.DropTable(
-                name: "Locations");
+                name: "DiaryEventTypes");
+
+            migrationBuilder.DropTable(
+                name: "Rooms");
 
             migrationBuilder.DropTable(
                 name: "AcademicYears");
@@ -6492,6 +6657,9 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "ResultSets");
+
+            migrationBuilder.DropTable(
+                name: "Locations");
 
             migrationBuilder.DropTable(
                 name: "YearGroups");

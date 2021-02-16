@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210216191700_InitialModel")]
+    [Migration("20210216214956_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -3619,6 +3619,141 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ObservationOutcomes");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ParentEvening", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<DateTime>("BookingClosed")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("BookingOpened")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId")
+                        .IsUnique();
+
+                    b.ToTable("ParentEvenings");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ParentEveningAppointment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool?>("Attended")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("End")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ParentEveningStaffId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Start")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentEveningStaffId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("ParentEveningAppointments");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ParentEveningBreak", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<DateTime>("End")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ParentEveningStaffMemberId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Start")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentEveningStaffMemberId");
+
+                    b.ToTable("ParentEveningBreaks");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ParentEveningGroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GroupTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ParentEveningId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentEveningId");
+
+                    b.ToTable("ParentEveningGroup");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ParentEveningStaffMember", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<int>("AppointmentLength")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AvailableFrom")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("AvailableTo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("BreakLimit")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ParentEveningId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StaffMemberId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentEveningId");
+
+                    b.HasIndex("StaffMemberId");
+
+                    b.ToTable("ParentEveningStaffMembers");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Permission", b =>
                 {
                     b.Property<Guid>("Id")
@@ -6895,6 +7030,63 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.Entity.ObservationOutcome", "Outcome")
                         .WithMany("Observations")
                         .HasForeignKey("OutcomeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ParentEvening", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.DiaryEvent", "Event")
+                        .WithOne("ParentEvening")
+                        .HasForeignKey("MyPortal.Database.Models.Entity.ParentEvening", "EventId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ParentEveningAppointment", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.ParentEveningStaffMember", "ParentEveningStaffMember")
+                        .WithMany("Appointments")
+                        .HasForeignKey("ParentEveningStaffId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
+                        .WithMany("ParentEveningAppointments")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ParentEveningBreak", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.ParentEveningStaffMember", "ParentEveningStaffMember")
+                        .WithMany("Breaks")
+                        .HasForeignKey("ParentEveningStaffMemberId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ParentEveningGroup", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.ParentEvening", "ParentEvening")
+                        .WithMany()
+                        .HasForeignKey("ParentEveningId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ParentEveningStaffMember", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.ParentEvening", "ParentEvening")
+                        .WithMany("StaffMembers")
+                        .HasForeignKey("ParentEveningId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.StaffMember", "StaffMember")
+                        .WithMany("ParentEvenings")
+                        .HasForeignKey("StaffMemberId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
