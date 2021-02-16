@@ -10,6 +10,7 @@ using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DocumentProvision;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
+using MyPortal.Logic.Services;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
@@ -19,12 +20,15 @@ namespace MyPortalWeb.Controllers.Api
     public class DocumentsController : BaseApiController
     {
         private readonly IDocumentService _documentService;
+        private readonly IFileService _fileService;
 
         public DocumentsController(IUserService userService, IAcademicYearService academicYearService,
-            IDocumentService documentService, IRolePermissionsCache rolePermissionsCache) : base(userService,
+            IDocumentService documentService, IRolePermissionsCache rolePermissionsCache,
+            IFileService fileService) : base(userService,
             academicYearService, rolePermissionsCache)
         {
             _documentService = documentService;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -60,7 +64,51 @@ namespace MyPortalWeb.Controllers.Api
 
                 await _documentService.Create(document);
 
-                return Ok("Document created successfully.");
+                return Ok();
+            });
+        }
+
+        [HttpPost]
+        [Route("file/upload")]
+        public async Task<IActionResult> UploadFile([FromBody] UploadAttachmentModel model)
+        {
+            return await ProcessAsync(async () =>
+            {
+                if (_fileService is LocalFileService localFileService)
+                {
+                    await localFileService.UploadFileToDocument(model);
+                }
+
+                return BadRequest(
+                    "MyPortal is currently configured to use a 3rd party file provider. Please use LinkHostedFile instead.");
+            });
+        }
+
+        [HttpPost]
+        [Route("file/linkHosted")]
+        public async Task<IActionResult> LinkHostedFile([FromBody] LinkHostedFileModel model)
+        {
+            return await ProcessAsync(async () =>
+            {
+                if (_fileService is HostedFileService hostedFileService)
+                {
+                    await hostedFileService.AttachFileToDocument(model.DocumentId, model.FileId);
+                }
+
+                return BadRequest(
+                    "MyPortal is currently configured to host files locally. Please use UploadFile instead.");
+            });
+        }
+
+        [HttpDelete]
+        [Route("file/{documentId}")]
+        public async Task<IActionResult> RemoveAttachment([FromRoute] Guid documentId)
+        {
+            return await ProcessAsync(async () =>
+            {
+                await _fileService.RemoveFileFromDocument(documentId);
+
+                return Ok();
             });
         }
 
@@ -70,18 +118,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                var document = new DocumentModel
-                {
-                    Id = model.Id,
-                    Title = model.Title,
-                    Description = model.Description,
-                    TypeId = model.TypeId,
-                    Restricted = model.Restricted
-                };
+                await _documentService.Update(model);
 
-                await _documentService.Update(document);
-
-                return Ok("Document updated successfully.");
+                return Ok();
             });
         }
 
@@ -93,17 +132,17 @@ namespace MyPortalWeb.Controllers.Api
             {
                 await _documentService.Delete(documentId);
 
-                return Ok("Document deleted successfully.");
+                return Ok();
             });
         }
 
         [HttpGet]
-        [Route("download")]
-        public async Task<IActionResult> DownloadFile([FromQuery] Guid documentId)
+        [Route("file/{documentId}")]
+        public async Task<IActionResult> DownloadFile([FromRoute] Guid documentId)
         {
             return await ProcessAsync(async () =>
             {
-                var download = await _documentService.GetDownloadByDocument(documentId);
+                var download = await _fileService.GetDownloadByDocument(documentId);
 
                 return File(download.FileStream, download.ContentType, download.FileName);
             });
@@ -116,11 +155,11 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                var file = await _documentService.GetFileMetadataByDocument(documentId);
-
-                if (file is HostedFileMetadata hostedMetadata)
+                if (_fileService is HostedFileService hostedFileService)
                 {
-                    return Ok(hostedMetadata.WebViewLink);
+                    var file = await hostedFileService.GetMetadataByDocument(documentId);
+
+                    return Ok(file.WebViewLink);
                 }
 
                 return BadRequest("You are not using a 3rd party file provider.");

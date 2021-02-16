@@ -7,7 +7,7 @@ namespace MyPortal.Database.Models.Entity
 {
     // FIXED
     [Table("ExclusionTypes")]
-    public class ExclusionType : LookupItem, ISystemEntity
+    public class ExclusionType : LookupItem, ICensusEntity, ISystemEntity
     {
         public ExclusionType()
         {
@@ -15,6 +15,9 @@ namespace MyPortal.Database.Models.Entity
         }
 
         [Column(Order = 3)]
+        public string Code { get; set; }
+
+        [Column(Order = 4)]
         public bool System { get; set; }
 
         public virtual ICollection<Exclusion> Exclusions { get; set; }

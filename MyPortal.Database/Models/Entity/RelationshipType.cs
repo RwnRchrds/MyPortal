@@ -4,14 +4,16 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models.Entity
 {
-    [Table("ContactRelationshipTypes")]
-    public class ContactRelationshipType : LookupItem
+    [Table("RelationshipTypes")]
+    public class RelationshipType : LookupItem
     {
-        public ContactRelationshipType()
+        public RelationshipType()
         {
+            StudentAgents = new HashSet<StudentAgentRelationship>();
             StudentContacts = new HashSet<StudentContactRelationship>();
         }
 
+        public ICollection<StudentAgentRelationship> StudentAgents { get; set; }
         public ICollection<StudentContactRelationship> StudentContacts { get; set; }
     }
 }

@@ -17,6 +17,6 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual Student Student { get; set; }
         public virtual Agent Agent { get; set; }
-        public virtual AgentRelationshipType RelationshipType { get; set; }
+        public virtual RelationshipType RelationshipType { get; set; }
     }
 }

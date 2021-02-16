@@ -7,6 +7,6 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IActivityEventRepository : IReadWriteRepository<ActivityEvent>
     {
-
+        IEnumerable<ActivityEvent> GetByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo);
     }
 }

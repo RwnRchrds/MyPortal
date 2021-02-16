@@ -249,9 +249,9 @@ export class LogNotesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTypes(observe?: 'body', reportProgress?: boolean): Observable<LogNoteTypeModel>;
-    public getTypes(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LogNoteTypeModel>>;
-    public getTypes(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LogNoteTypeModel>>;
+    public getTypes(observe?: 'body', reportProgress?: boolean): Observable<Array<LogNoteTypeModel>>;
+    public getTypes(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<LogNoteTypeModel>>>;
+    public getTypes(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<LogNoteTypeModel>>>;
     public getTypes(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
@@ -271,7 +271,7 @@ export class LogNotesService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<LogNoteTypeModel>('get',`${this.basePath}/api/student/logNotes/types`,
+        return this.httpClient.request<Array<LogNoteTypeModel>>('get',`${this.basePath}/api/student/logNotes/types`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

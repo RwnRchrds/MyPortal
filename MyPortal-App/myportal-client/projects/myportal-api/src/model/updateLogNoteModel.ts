@@ -11,8 +11,7 @@
  */
 
 export interface UpdateLogNoteModel { 
-    studentId?: string;
+    id?: string;
     typeId?: string;
     message: string;
-    id?: string;
 }

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Constants;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Student.LogNotes;
@@ -47,7 +46,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("types")]
-        [Produces(typeof(LogNoteTypeModel))]
+        [Produces(typeof(IEnumerable<LogNoteTypeModel>))]
         public async Task<IActionResult> GetTypes()
         {
             return await ProcessAsync(async () =>
@@ -105,7 +104,7 @@ namespace MyPortalWeb.Controllers.Api
 
                 await _logNoteService.Create(logNote);
 
-                return Ok("Log note created successfully.");
+                return Ok();
             }, Permissions.Student.StudentLogNotes.EditLogNotes);
         }
 
@@ -119,7 +118,6 @@ namespace MyPortalWeb.Controllers.Api
                 var logNote = new LogNoteModel
                 {
                     Id = model.Id,
-                    StudentId = model.StudentId,
                     TypeId = model.TypeId,
                     Message = model.Message
                 };
@@ -129,7 +127,7 @@ namespace MyPortalWeb.Controllers.Api
                 logNote.UpdatedById = user.Id;
                 await _logNoteService.Update(logNote);
 
-                return Ok("Log note updated successfully.");
+                return Ok();
             }, Permissions.Student.StudentLogNotes.EditLogNotes);
         }
 
@@ -142,7 +140,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 await _logNoteService.Delete(logNoteId);
 
-                return Ok("Log note deleted successfully.");
+                return Ok();
             }, Permissions.Student.StudentLogNotes.EditLogNotes);
         }
 

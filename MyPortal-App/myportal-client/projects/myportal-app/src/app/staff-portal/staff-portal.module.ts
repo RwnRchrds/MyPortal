@@ -33,6 +33,7 @@ import { StudentDocumentsComponent } from './people/students/student-view/studen
 import { StudentSendComponent } from './people/students/student-view/student-send/student-send.component';
 import { StudentStatsComponent } from './people/students/student-view/student-overview/student-stats/student-stats.component';
 import { StudentLogNotesComponent } from './people/students/student-view/student-overview/student-log-notes/student-log-notes.component';
+import { LogNoteFormComponent } from './people/students/student-view/student-overview/log-note-form/log-note-form.component';
 
 @NgModule({
   imports: [
@@ -72,7 +73,8 @@ import { StudentLogNotesComponent } from './people/students/student-view/student
     StudentDocumentsComponent,
     StudentSendComponent,
     StudentStatsComponent,
-    StudentLogNotesComponent
+    StudentLogNotesComponent,
+    LogNoteFormComponent
   ],
   exports: [
     StaffPortalComponent,

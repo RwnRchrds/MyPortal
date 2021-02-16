@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace MyPortal.Database.Models.Entity
 {
@@ -20,7 +18,7 @@ namespace MyPortal.Database.Models.Entity
         public Guid ChargeId { get; set; }
 
         [Column(Order = 3)] 
-        public DateTime CreatedDate { get; set; }
+        public DateTime StartDate { get; set; }
 
         [Column(Order = 4)]
         public int Recurrences { get; set; }

@@ -21,7 +21,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAllColumns(typeof(ContactRelationshipType), "RelationshipType");
+            query.SelectAllColumns(typeof(RelationshipType), "RelationshipType");
             query.SelectAllColumns(typeof(Student), "Student");
             query.SelectAllColumns(typeof(Person), "StudentPerson");
             query.SelectAllColumns(typeof(Contact), "Contact");
@@ -30,7 +30,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("ContactRelationshipTypes as RelationshipType", "RelationshipType.Id", "StudentContact.RelationshipTypeId");
+            query.LeftJoin("RelationshipTypes as RelationshipType", "RelationshipType.Id", "StudentContact.RelationshipTypeId");
             query.LeftJoin("Students as Student", "Student.Id", "StudentContact.StudentId");
             query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
             query.LeftJoin("Contacts as Contact", "Contact.Id", "StudentContact.ContactId");
@@ -42,7 +42,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             return await Connection
-                .QueryAsync<StudentContactRelationship, ContactRelationshipType, Student, Person, Contact, Person, StudentContactRelationship>(sql.Sql,
+                .QueryAsync<StudentContactRelationship, RelationshipType, Student, Person, Contact, Person, StudentContactRelationship>(sql.Sql,
                     (sContact, relationship, student, sPerson, contact, cPerson) =>
                     {
                         sContact.RelationshipType = relationship;

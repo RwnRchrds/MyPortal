@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210202221115_InitialModel")]
+    [Migration("20210216191700_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -247,7 +247,7 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("EventId")
                         .IsUnique();
 
-                    b.ToTable("ActivityEvent");
+                    b.ToTable("ActivityEvents");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.ActivityMembership", b =>
@@ -441,6 +441,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("AgencyId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("AgentTypeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
@@ -455,13 +458,15 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("AgencyId");
 
+                    b.HasIndex("AgentTypeId");
+
                     b.HasIndex("PersonId")
                         .IsUnique();
 
                     b.ToTable("Agents");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.AgentRelationshipType", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AgentType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -478,7 +483,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AgentRelationshipTypes");
+                    b.ToTable("AgentTypes");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Aspect", b =>
@@ -947,6 +952,29 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("BillItems");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BoarderStatus", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BoarderStatus");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Bulletin", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1211,26 +1239,6 @@ namespace MyPortal.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("Contacts");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.ContactRelationshipType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ContactRelationshipTypes");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Course", b =>
@@ -1763,9 +1771,6 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<bool>("Global")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
@@ -1913,6 +1918,29 @@ namespace MyPortal.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EmailAddressTypes");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.EnrolmentStatus", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EnrolmentStatus");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Ethnicity", b =>
@@ -2796,6 +2824,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
@@ -2818,6 +2849,9 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -3197,6 +3231,29 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("IntakeTypes");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Language", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Languages");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Entity.LessonPlan", b =>
                 {
                     b.Property<Guid>("Id")
@@ -3443,17 +3500,18 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<Guid>("MarksheetTemplateId")
+                    b.Property<Guid>("GroupId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("StudentGroupId")
+                    b.Property<Guid>("GroupTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MarksheetTemplateId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MarksheetTemplateId");
-
-                    b.HasIndex("StudentGroupId");
 
                     b.ToTable("MarksheetTemplateGroups");
                 });
@@ -3833,13 +3891,13 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<Guid>("DiscountId")
+                    b.Property<Guid?>("DiscountId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("MinRequired")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StoreDiscountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -3847,6 +3905,8 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("DiscountId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("StoreDiscountId");
 
                     b.ToTable("ProductDiscounts");
                 });
@@ -3872,6 +3932,28 @@ namespace MyPortal.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductTypes");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ProductTypeDiscount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("ProductTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StoreDiscountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductTypeId");
+
+                    b.HasIndex("StoreDiscountId");
+
+                    b.ToTable("ProductTypeDiscounts");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.RefreshToken", b =>
@@ -3922,6 +4004,26 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("YearGroupId");
 
                     b.ToTable("RegGroups");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.RelationshipType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RelationshipTypes");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Report", b =>
@@ -4622,6 +4724,29 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SenStatus");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.SenType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SenTypes");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Session", b =>
                 {
                     b.Property<Guid>("Id")
@@ -4787,6 +4912,30 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("StaffMembers");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StoreDiscount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("DiscountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Global")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("MaxQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinQuantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StoreDiscounts");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Student", b =>
                 {
                     b.Property<Guid>("Id")
@@ -4797,6 +4946,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<int>("AdmissionNumber")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("BoarderStatusId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("DateLeaving")
                         .HasColumnType("date");
 
@@ -4805,6 +4957,9 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
+
+                    b.Property<Guid?>("EnrolmentStatusId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("FreeSchoolMeals")
                         .HasColumnType("bit");
@@ -4824,6 +4979,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid?>("SenStatusId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("SenTypeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Upn")
                         .HasColumnType("varchar(13)")
                         .HasMaxLength(13)
@@ -4834,6 +4992,10 @@ namespace MyPortal.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BoarderStatusId");
+
+                    b.HasIndex("EnrolmentStatusId");
+
                     b.HasIndex("HouseId");
 
                     b.HasIndex("PersonId")
@@ -4842,6 +5004,8 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("RegGroupId");
 
                     b.HasIndex("SenStatusId");
+
+                    b.HasIndex("SenTypeId");
 
                     b.HasIndex("YearGroupId");
 
@@ -4885,11 +5049,11 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("ChargeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("Recurrences")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
@@ -4962,24 +5126,6 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("StudentDiscounts");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentGroup", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<Guid>("BaseGroupId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("GroupType")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StudentGroups");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.StudyTopic", b =>
@@ -5682,6 +5828,12 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.Entity.Agency", "Agency")
                         .WithMany("Agents")
                         .HasForeignKey("AgencyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.AgentType", "AgentType")
+                        .WithMany("Agents")
+                        .HasForeignKey("AgentTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -6709,12 +6861,6 @@ namespace MyPortal.Database.Migrations
                         .HasForeignKey("MarksheetTemplateId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Entity.StudentGroup", "StudentGroup")
-                        .WithMany("MarksheetTemplates")
-                        .HasForeignKey("StudentGroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.MedicalEvent", b =>
@@ -6843,15 +6989,34 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.ProductDiscount", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Entity.Discount", "Discount")
+                    b.HasOne("MyPortal.Database.Models.Entity.Discount", null)
                         .WithMany("ProductDiscounts")
-                        .HasForeignKey("DiscountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DiscountId");
 
                     b.HasOne("MyPortal.Database.Models.Entity.Product", "Product")
                         .WithMany("ProductDiscounts")
                         .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.StoreDiscount", "StoreDiscount")
+                        .WithMany("ProductDiscounts")
+                        .HasForeignKey("StoreDiscountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ProductTypeDiscount", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.ProductType", "ProductType")
+                        .WithMany("ProductTypeDiscounts")
+                        .HasForeignKey("ProductTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.StoreDiscount", "StoreDiscount")
+                        .WithMany("ProductTypeDiscounts")
+                        .HasForeignKey("StoreDiscountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -7176,6 +7341,16 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Student", b =>
                 {
+                    b.HasOne("MyPortal.Database.Models.Entity.BoarderStatus", "BoarderStatus")
+                        .WithMany("Students")
+                        .HasForeignKey("BoarderStatusId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MyPortal.Database.Models.Entity.EnrolmentStatus", "EnrolmentStatus")
+                        .WithMany("Students")
+                        .HasForeignKey("EnrolmentStatusId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MyPortal.Database.Models.Entity.House", "House")
                         .WithMany("Students")
                         .HasForeignKey("HouseId");
@@ -7194,7 +7369,13 @@ namespace MyPortal.Database.Migrations
 
                     b.HasOne("MyPortal.Database.Models.Entity.SenStatus", "SenStatus")
                         .WithMany("Students")
-                        .HasForeignKey("SenStatusId");
+                        .HasForeignKey("SenStatusId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MyPortal.Database.Models.Entity.SenType", "SenType")
+                        .WithMany("Students")
+                        .HasForeignKey("SenTypeId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("MyPortal.Database.Models.Entity.YearGroup", "YearGroup")
                         .WithMany("Students")
@@ -7211,8 +7392,8 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Entity.AgentRelationshipType", "RelationshipType")
-                        .WithMany("Relationships")
+                    b.HasOne("MyPortal.Database.Models.Entity.RelationshipType", "RelationshipType")
+                        .WithMany("StudentAgents")
                         .HasForeignKey("RelationshipTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -7247,7 +7428,7 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Entity.ContactRelationshipType", "RelationshipType")
+                    b.HasOne("MyPortal.Database.Models.Entity.RelationshipType", "RelationshipType")
                         .WithMany("StudentContacts")
                         .HasForeignKey("RelationshipTypeId")
                         .OnDelete(DeleteBehavior.Restrict)

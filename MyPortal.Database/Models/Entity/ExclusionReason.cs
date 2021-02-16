@@ -7,7 +7,7 @@ namespace MyPortal.Database.Models.Entity
 {
     // FIXED
     [Table("ExclusionReasons")]
-    public class ExclusionReason : LookupItem, ISystemEntity
+    public class ExclusionReason : LookupItem, ISystemEntity, ICensusEntity
     {
         public ExclusionReason()
         {
@@ -15,6 +15,9 @@ namespace MyPortal.Database.Models.Entity
         }
 
         [Column(Order = 3)]
+        public string Code { get; set; }
+
+        [Column(Order = 4)]
         public bool System { get; set; }
 
         public virtual ICollection<Exclusion> Exclusions { get; set; }

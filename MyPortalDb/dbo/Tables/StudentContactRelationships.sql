@@ -8,8 +8,8 @@
     [PupilReport]            BIT              NOT NULL,
     [CourtOrder]             BIT              NOT NULL,
     CONSTRAINT [PK_StudentContactRelationships] PRIMARY KEY CLUSTERED ([Id] ASC),
-    CONSTRAINT [FK_StudentContactRelationships_ContactRelationshipTypes_RelationshipTypeId] FOREIGN KEY ([RelationshipTypeId]) REFERENCES [dbo].[ContactRelationshipTypes] ([Id]),
     CONSTRAINT [FK_StudentContactRelationships_Contacts_ContactId] FOREIGN KEY ([ContactId]) REFERENCES [dbo].[Contacts] ([Id]),
+    CONSTRAINT [FK_StudentContactRelationships_RelationshipTypes_RelationshipTypeId] FOREIGN KEY ([RelationshipTypeId]) REFERENCES [dbo].[RelationshipTypes] ([Id]),
     CONSTRAINT [FK_StudentContactRelationships_Students_StudentId] FOREIGN KEY ([StudentId]) REFERENCES [dbo].[Students] ([Id])
 );
 

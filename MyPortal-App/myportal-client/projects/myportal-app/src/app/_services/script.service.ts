@@ -9,7 +9,7 @@ export class ScriptService {
 
 constructor() { }
 
-loadScript(scriptUrl: string) {
+loadScript(scriptUrl: string): Promise<void> {
   return new Promise(resolve => {
     const scriptElement = document.createElement('script');
     scriptElement.src = scriptUrl;
@@ -18,7 +18,7 @@ loadScript(scriptUrl: string) {
   });
 }
 
-loadStyleSheet(styleSheetUrl: string) {
+loadStyleSheet(styleSheetUrl: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const styleElement = document.createElement('link');
     styleElement.href = styleSheetUrl;

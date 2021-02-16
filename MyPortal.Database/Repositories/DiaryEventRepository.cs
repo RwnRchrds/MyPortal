@@ -81,7 +81,7 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<DiaryEvent>> GetLessonsByStudent(Guid studentId, DateTime firstDate,
             DateTime lastDate)
         {
-            var query = new Query("Session as S");
+            var query = new Query("Sessions as S");
 
             query.SelectRaw(@"SELECT S.[Id] AS Id
       ,@LessonEventType AS EventTypeId
@@ -93,8 +93,7 @@ namespace MyPortal.Database.Repositories
 	  ,CAST(CONCAT(DATEADD(DAY, (P.Weekday - 1), W.Beginning), ' ', (P.EndTime)) AS DATETIME) AS EndTime
 	  ,0 AS IsAllDay
 	  ,0 AS IsBlock
-	  ,0 AS IsPublic
-	  ,0 AS IsStudentVisible");
+	  ,0 AS IsPublic");
             
             query.Define("LessonEventType", EventTypes.Lesson);
 

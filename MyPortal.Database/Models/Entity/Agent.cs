@@ -20,6 +20,9 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 2)]
         public Guid PersonId { get; set; }
 
+        [Column(Order = 3)] 
+        public Guid AgentTypeId { get; set; }
+
         [Column(Order = 4)]
         [StringLength(128)]
         public string JobTitle { get; set; }
@@ -28,6 +31,7 @@ namespace MyPortal.Database.Models.Entity
         public bool Deleted { get; set; }
 
         public virtual Agency Agency { get; set; }
+        public virtual AgentType AgentType { get; set; }
         public virtual Person Person { get; set; }
         public virtual ICollection<StudentAgentRelationship> LinkedStudents { get; set; }
     }

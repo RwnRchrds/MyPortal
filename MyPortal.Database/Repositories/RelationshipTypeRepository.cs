@@ -10,7 +10,7 @@ using MyPortal.Database.Repositories.Base;
 
 namespace MyPortal.Database.Repositories
 {
-    public class RelationshipTypeRepository : BaseReadRepository<ContactRelationshipType>, IRelationshipTypeRepository
+    public class RelationshipTypeRepository : BaseReadRepository<RelationshipType>, IRelationshipTypeRepository
     {
         public RelationshipTypeRepository(IDbConnection connection) : base(connection)
         {

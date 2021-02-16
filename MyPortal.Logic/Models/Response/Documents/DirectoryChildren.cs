@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using MyPortal.Logic.Models.Entity;
 
-namespace MyPortal.Logic.Models.Requests.Documents
+namespace MyPortal.Logic.Models.Response.Documents
 {
     public class DirectoryChildren
     {
