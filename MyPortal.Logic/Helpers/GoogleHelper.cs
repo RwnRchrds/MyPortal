@@ -7,20 +7,14 @@ namespace MyPortal.Logic.Helpers
 {
     public class GoogleHelper
     {
-        private string[] _scopes;
         private IConfiguration _config;
 
         public GoogleHelper(IConfiguration config)
         {
             _config = config;
-
-            _scopes = new[]
-            {
-                DriveService.Scope.Drive
-            };
         }
 
-        public BaseClientService.Initializer GetInitializer(string accountName = null)
+        public BaseClientService.Initializer GetInitializer(string accountName = null, params string[] scopes)
         {
             var credPath = _config.GetValue<string>("GSuiteIntegration:CredentialPath");
 
@@ -37,7 +31,7 @@ namespace MyPortal.Logic.Helpers
             {
                 User = accountName,
                 Key = originCredential.Key,
-                Scopes = _scopes
+                Scopes = scopes
             };
 
             var credential = new ServiceAccountCredential(initializer);
