@@ -90,5 +90,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<StaffAbsence> Absences { get; set; }
 
         public virtual ICollection<ActivitySupervisor> Activities { get; set; }
+
+        public virtual ICollection<ParentEveningStaffMember> ParentEvenings { get; set; }   
     }
 }

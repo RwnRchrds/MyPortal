@@ -54,6 +54,9 @@ namespace MyPortal.Database.Models.Entity
         [EntityOnly]
         public virtual ActivityEvent Activity { get; set; }
 
+        [EntityOnly] 
+        public virtual ParentEvening ParentEvening { get; set; }
+
         public virtual DiaryEventType EventType { get; set; }
 
         public virtual Room Room { get; set; }

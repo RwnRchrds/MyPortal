@@ -143,6 +143,10 @@ namespace MyPortal.Database.Models
         public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
         public virtual DbSet<Observation> Observations { get; set; }
         public virtual DbSet<ObservationOutcome> ObservationOutcomes { get; set; }
+        public virtual DbSet<ParentEvening> ParentEvenings { get; set; }
+        public virtual DbSet<ParentEveningAppointment> ParentEveningAppointments { get; set; }
+        public virtual DbSet<ParentEveningBreak> ParentEveningBreaks { get; set; }
+        public virtual DbSet<ParentEveningStaffMember> ParentEveningStaffMembers { get; set; }
         public virtual DbSet<Permission> Permissions { get; set; }
         public virtual DbSet<Person> People { get; set; }
         public virtual DbSet<PersonCondition> PersonConditions { get; set; }
@@ -852,6 +856,12 @@ namespace MyPortal.Database.Models
                     e.HasMany(x => x.Attendees)
                         .WithOne(x => x.Event)
                         .HasForeignKey(x => x.EventId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.ParentEvening)
+                        .WithOne(x => x.Event)
+                        .HasForeignKey<ParentEvening>(x => x.EventId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -1679,6 +1689,49 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+                modelBuilder.Entity<ParentEvening>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(x => x.StaffMembers)
+                        .WithOne(x => x.ParentEvening)
+                        .HasForeignKey(x => x.ParentEveningId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ParentEveningAppointment>(e =>
+                {
+                    SetIdDefaultValue(e);
+                });
+
+                modelBuilder.Entity<ParentEveningBreak>(e =>
+                {
+                    SetIdDefaultValue(e);
+                });
+
+                modelBuilder.Entity<ParentEveningGroup>(e =>
+                {
+                    SetIdDefaultValue(e);
+                });
+
+                modelBuilder.Entity<ParentEveningStaffMember>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(x => x.Appointments)
+                        .WithOne(x => x.ParentEveningStaffMember)
+                        .HasForeignKey(x => x.ParentEveningStaffId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Breaks)
+                        .WithOne(x => x.ParentEveningStaffMember)
+                        .HasForeignKey(x => x.ParentEveningStaffMemberId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
                 modelBuilder.Entity<Permission>(e =>
                 {
                     SetIdDefaultValue(e);
@@ -2206,6 +2259,12 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.StaffMemberId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.ParentEvenings)
+                        .WithOne(x => x.StaffMember)
+                        .HasForeignKey(x => x.StaffMemberId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<StoreDiscount>(e =>
@@ -2314,6 +2373,12 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.GroupMemberships)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.ParentEveningAppointments)
                         .WithOne(x => x.Student)
                         .HasForeignKey(x => x.StudentId)
                         .IsRequired()
