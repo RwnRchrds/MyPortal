@@ -2,8 +2,8 @@
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class ContactRelationshipTypeModel : LookupItemModel
+    public class SenTypeModel : LookupItemModel
     {
-        
+        public string Code { get; set; }
     }
 }

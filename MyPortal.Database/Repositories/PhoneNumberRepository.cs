@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PhoneNumberRepository : BaseReadWriteRepository<PhoneNumber>, IPhoneNumberRepository
     {
-        public PhoneNumberRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "PhoneNumber")
+        public PhoneNumberRepository(ApplicationDbContext context) : base(context, "PhoneNumber")
         {
            
         }

@@ -13,6 +13,6 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual StudentModel Student { get; set; }
         public virtual AgentModel Agent { get; set; }
-        public virtual AgentRelationshipTypeModel RelationshipType { get; set; }
+        public virtual RelationshipTypeModel RelationshipType { get; set; }
     }
 }

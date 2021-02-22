@@ -1,21 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
-using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Search;
-using MyPortal.Database.Repositories;
-using MyPortal.Logic.Constants;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Person.Tasks;
 using Task = System.Threading.Tasks.Task;
@@ -25,18 +16,8 @@ namespace MyPortal.Logic.Services
 {
     public class TaskService : BaseService, ITaskService
     {
-        private readonly ITaskRepository _taskRepository;
-        private readonly ITaskTypeRepository _taskTypeRepository;
-        private readonly IPersonRepository _personRepository;
-        private readonly IStaffMemberRepository _staffMemberRepository;
-
-        public TaskService(ITaskRepository taskRepository, ITaskTypeRepository taskTypeRepository,
-            IPersonRepository personRepository, IStaffMemberRepository staffMemberRepository)
+        public TaskService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _taskRepository = taskRepository;
-            _taskTypeRepository = taskTypeRepository;
-            _personRepository = personRepository;
-            _staffMemberRepository = staffMemberRepository;
         }
 
         public async Task Create(params TaskModel[] tasks)
@@ -55,29 +36,29 @@ namespace MyPortal.Logic.Services
                     Completed = false
                 };
 
-                _taskRepository.Create(taskToAdd);
+                UnitOfWork.Tasks.Create(taskToAdd);
             }
 
-            await _taskRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task<IEnumerable<TaskTypeModel>> GetTypes(bool personalOnly, bool activeOnly = true)
         {
-            var taskTypes = await _taskTypeRepository.GetAll(personalOnly, activeOnly, false);
+            var taskTypes = await UnitOfWork.TaskTypes.GetAll(personalOnly, activeOnly, false);
 
             return taskTypes.Select(BusinessMapper.Map<TaskTypeModel>);
         }
 
         public async Task<bool> IsTaskOwner(Guid taskId, Guid userId)
         {
-            var task = await _taskRepository.GetById(taskId);
+            var task = await UnitOfWork.Tasks.GetById(taskId);
 
             if (task == null)
             {
                 throw new NotFoundException("Task not found.");
             }
 
-            var person = await _personRepository.GetByUserId(userId);
+            var person = await UnitOfWork.People.GetByUserId(userId);
 
             if (person != null && task.AssignedToId == person.Id)
             {
@@ -94,7 +75,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<TaskModel> GetById(Guid taskId)
         {
-            var task = await _taskRepository.GetById(taskId);
+            var task = await UnitOfWork.Tasks.GetById(taskId);
 
             if (task == null)
             {
@@ -108,7 +89,7 @@ namespace MyPortal.Logic.Services
         {
             foreach (var task in tasks)
             {
-                var taskInDb = await _taskRepository.GetByIdWithTracking(task.Id);
+                var taskInDb = await UnitOfWork.Tasks.GetByIdForEditing(task.Id);
 
                 if (taskInDb == null)
                 {
@@ -136,24 +117,24 @@ namespace MyPortal.Logic.Services
                 }
             }
 
-            await _taskRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task Delete(params Guid[] taskIds)
         {
             foreach (var taskId in taskIds)
             {
-                var taskInDb = await _taskRepository.GetById(taskId);
+                var taskInDb = await UnitOfWork.Tasks.GetById(taskId);
 
                 if (taskInDb.Type.Id == TaskTypes.Homework)
                 {
                     throw new InvalidDataException("Please use the homework module to manage homework tasks.");
                 }
 
-                await _taskRepository.Delete(taskId);
+                await UnitOfWork.Tasks.Delete(taskId);
             }
 
-            await _taskRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task<IEnumerable<TaskModel>> GetByPerson(Guid personId, TaskSearchOptions searchOptions = null)
@@ -163,17 +144,9 @@ namespace MyPortal.Logic.Services
                 searchOptions = new TaskSearchOptions {Status = TaskStatus.Active};
             }
 
-            var tasks = await _taskRepository.GetByAssignedTo(personId, searchOptions);
+            var tasks = await UnitOfWork.Tasks.GetByAssignedTo(personId, searchOptions);
 
             return tasks.Select(BusinessMapper.Map<TaskModel>);
-        }
-
-        public override void Dispose()
-        {
-            _taskRepository.Dispose();
-            _taskTypeRepository.Dispose();
-            _personRepository.Dispose();
-            _staffMemberRepository.Dispose();
         }
     }
 }

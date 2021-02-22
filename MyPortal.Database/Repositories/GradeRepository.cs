@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class GradeRepository : BaseReadWriteRepository<Grade>, IGradeRepository
     {
-        public GradeRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Grade")
+        public GradeRepository(ApplicationDbContext context) : base(context, "Grade")
         {
             
         }

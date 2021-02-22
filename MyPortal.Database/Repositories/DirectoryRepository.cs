@@ -17,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class DirectoryRepository : BaseReadWriteRepository<Directory>, IDirectoryRepository
     {
-        public DirectoryRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Directory")
+        public DirectoryRepository(ApplicationDbContext context) : base(context, "Directory")
         {
            
         }

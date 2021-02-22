@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Authentication;
@@ -25,41 +26,27 @@ namespace MyPortal.Logic.Services
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IUserRoleRepository _userRoleRepository;
-        private readonly IRolePermissionRepository _rolePermissionRepository;
         private readonly IRolePermissionsCache _rolePermissionsCache;
-        private readonly IPersonRepository _personRepository;
 
-        public UserService(UserManager<User> userManager, RoleManager<Role> roleManager,
-            SignInManager<User> signInManager, IRolePermissionsCache rolePermissionsCache,
-            IUserRoleRepository userRoleRepository, IRolePermissionRepository rolePermissionRepository,
-            IPersonRepository personRepository)
+        public UserService(IUnitOfWork unitOfWork, UserManager<User> userManager, RoleManager<Role> roleManager,
+            SignInManager<User> signInManager, IRolePermissionsCache rolePermissionsCache) : base(unitOfWork)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _rolePermissionsCache = rolePermissionsCache;
-            _userRoleRepository = userRoleRepository;
-            _rolePermissionRepository = rolePermissionRepository;
-            _personRepository = personRepository;
-        }
-
-        public override void Dispose()
-        {
-            _userManager.Dispose();
-            _roleManager.Dispose();
         }
 
         public async Task<IEnumerable<PermissionModel>> GetPermissions(Guid userId)
         {
-            var permissions = await _rolePermissionRepository.GetByUser(userId);
+            var permissions = await UnitOfWork.RolePermissions.GetByUser(userId);
 
             return permissions.Select(p => BusinessMapper.Map<PermissionModel>(p.Permission));
         }
 
         public async Task<IEnumerable<Guid>> GetEffectivePermissions(Guid userId)
         {
-            var roleIds = (await _userRoleRepository.GetByUser(userId)).Select(ur => ur.RoleId).ToArray();
+            var roleIds = (await UnitOfWork.UserRoles.GetByUser(userId)).Select(ur => ur.RoleId).ToArray();
 
             return await _rolePermissionsCache.GetPermissions(roleIds);
         }
@@ -175,7 +162,7 @@ namespace MyPortal.Logic.Services
         {
             foreach (var userId in userIds)
             {
-                var userRoles = await _userRoleRepository.GetByUser(userId);
+                var userRoles = await UnitOfWork.UserRoles.GetByUser(userId);
 
                 await RemoveFromRoles(userId, userRoles.Select(ur => ur.RoleId).ToArray());
 
@@ -321,7 +308,7 @@ namespace MyPortal.Logic.Services
 
             if (user.PersonId.HasValue)
             {
-                user.Person = await _personRepository.GetById(user.PersonId.Value);
+                user.Person = await UnitOfWork.People.GetById(user.PersonId.Value);
             }
 
             return BusinessMapper.Map<UserModel>(user);

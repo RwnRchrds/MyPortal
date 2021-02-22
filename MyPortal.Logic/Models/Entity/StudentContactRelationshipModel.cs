@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Models.Entity
         
         public bool CourtOrder { get; set; }
 
-        public virtual ContactRelationshipTypeModel RelationshipType { get; set; }
+        public virtual RelationshipTypeModel RelationshipType { get; set; }
         public virtual StudentModel Student { get; set; }
         public virtual ContactModel Contact { get; set; }
     }

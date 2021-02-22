@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using Google.Apis.Drive.v3.Data;
-using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Interfaces;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -12,20 +9,18 @@ using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortal.Logic.Services
 {
-    public class LocalFileService : IFileService
+    public class LocalFileService : BaseService, IFileService
     {
         private readonly ILocalFileProvider _fileProvider;
-        private readonly IFileRepository _fileRepository;
 
-        public LocalFileService(ILocalFileProvider fileProvider, IFileRepository fileRepository)
+        public LocalFileService(IUnitOfWork unitOfWork, ILocalFileProvider fileProvider) : base(unitOfWork)
         {
             _fileProvider = fileProvider;
-            _fileRepository = fileRepository;
         }
 
         public async Task UploadFileToDocument(UploadAttachmentModel upload)
         {
-            var existingFile = await _fileRepository.GetByDocumentId(upload.DocumentId);
+            var existingFile = await UnitOfWork.Files.GetByDocumentId(upload.DocumentId);
 
             if (existingFile != null)
             {
@@ -42,14 +37,14 @@ namespace MyPortal.Logic.Services
                 DocumentId = upload.DocumentId
             };
 
-            _fileRepository.Create(file);
+            UnitOfWork.Files.Create(file);
 
-            await _fileRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task<FileDownload> GetDownloadByDocument(Guid documentId)
         {
-            var file = await _fileRepository.GetByDocumentId(documentId);
+            var file = await UnitOfWork.Files.GetByDocumentId(documentId);
 
             var stream = await _fileProvider.DownloadFileToStream(file.FileId);
 
@@ -58,7 +53,7 @@ namespace MyPortal.Logic.Services
 
         public async Task RemoveFileFromDocument(Guid documentId)
         {
-            var file = await _fileRepository.GetByDocumentId(documentId);
+            var file = await UnitOfWork.Files.GetByDocumentId(documentId);
 
             if (file == null)
             {
@@ -67,9 +62,9 @@ namespace MyPortal.Logic.Services
 
             _fileProvider.DeleteFile(file.FileId);
 
-            await _fileRepository.Delete(file.Id);
+            await UnitOfWork.Files.Delete(file.Id);
 
-            await _fileRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
     }
 }

@@ -11,7 +11,6 @@ namespace MyPortal.Database.Models.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AcademicYear()
         {
-            Classes = new HashSet<Class>();
             LogNotes= new HashSet<LogNote>();
             Achievements = new HashSet<Achievement>();
             Incidents = new HashSet<Incident>();
@@ -26,9 +25,6 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 4)] 
         public bool Locked { get; set; }
 
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Class> Classes { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LogNote> LogNotes { get; set; }

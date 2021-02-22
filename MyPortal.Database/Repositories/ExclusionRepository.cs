@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ExclusionRepository : BaseReadWriteRepository<Exclusion>, IExclusionRepository
     {
-        public ExclusionRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "E")
+        public ExclusionRepository(ApplicationDbContext context) : base(context, "E")
         {
         }
 

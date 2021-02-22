@@ -33,7 +33,6 @@ namespace MyPortal.Logic.Models.Entity
         {
             return new AttendanceMarkListModel
             {
-                Id = Id,
                 StudentId = StudentId,
                 WeekId = WeekId,
                 PeriodId = PeriodId,

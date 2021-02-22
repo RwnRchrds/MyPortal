@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class GradeSetRepository : BaseReadWriteRepository<GradeSet>, IGradeSetRepository
     {
-        public GradeSetRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection)
+        public GradeSetRepository(ApplicationDbContext context) : base(context)
         {
         }
     }

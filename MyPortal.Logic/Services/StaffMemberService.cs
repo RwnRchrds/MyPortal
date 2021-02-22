@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
-using MyPortal.Database.Repositories;
+using MyPortal.Database.Interfaces;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 
@@ -14,21 +9,13 @@ namespace MyPortal.Logic.Services
 {
     public class StaffMemberService : BaseService, IStaffMemberService
     {
-        private readonly IStaffMemberRepository _staffMemberRepository;
-
-        public StaffMemberService(IStaffMemberRepository staffMemberRepository)
+        public StaffMemberService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _staffMemberRepository = staffMemberRepository;
-        }
-
-        public override void Dispose()
-        {
-           _staffMemberRepository.Dispose(); 
         }
 
         public async Task<bool> IsLineManager(Guid staffMemberId, Guid lineManagerId)
         {
-            var staffMember = await _staffMemberRepository.GetById(staffMemberId);
+            var staffMember = await UnitOfWork.StaffMembers.GetById(staffMemberId);
 
             if (staffMember == null)
             {
@@ -50,7 +37,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<StaffMemberModel> GetById(Guid staffMemberId)
         {
-            var staffMember = await _staffMemberRepository.GetById(staffMemberId);
+            var staffMember = await UnitOfWork.StaffMembers.GetById(staffMemberId);
 
             if (staffMember == null)
             {
@@ -62,7 +49,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<StaffMemberModel> GetByPersonId(Guid personId, bool throwIfNotFound = true)
         {
-            var staffMember = await _staffMemberRepository.GetByPersonId(personId);
+            var staffMember = await UnitOfWork.StaffMembers.GetByPersonId(personId);
 
             if (staffMember == null && throwIfNotFound)
             {
@@ -74,7 +61,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<StaffMemberModel> GetByUserId(Guid userId, bool throwIfNotFound = true)
         {
-            var staffMember = await _staffMemberRepository.GetByUserId(userId);
+            var staffMember = await UnitOfWork.StaffMembers.GetByUserId(userId);
 
             if (staffMember == null && throwIfNotFound)
             {

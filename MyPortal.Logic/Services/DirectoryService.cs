@@ -1,21 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Google.Apis.Drive.v3.Data;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
-using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Repositories;
-using MyPortal.Logic.Constants;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Documents;
 using MyPortal.Logic.Models.Response.Documents;
 using Task = System.Threading.Tasks.Task;
 
@@ -23,18 +14,13 @@ namespace MyPortal.Logic.Services
 {
     public class DirectoryService : BaseService, IDirectoryService
     {
-        private readonly IDirectoryRepository _directoryRepository;
-        private readonly IDocumentRepository _documentRepository;
-
-        public DirectoryService(IDirectoryRepository directoryRepository, IDocumentRepository documentRepository)
+        public DirectoryService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _directoryRepository = directoryRepository;
-            _documentRepository = documentRepository;
         }
 
         public async Task<DirectoryModel> GetById(Guid directoryId)
         {
-            var directory = await _directoryRepository.GetById(directoryId);
+            var directory = await UnitOfWork.Directories.GetById(directoryId);
 
             if (directory == null)
             {
@@ -53,7 +39,7 @@ namespace MyPortal.Logic.Services
                     throw new InvalidDataException("Parent directory not specified.");
                 }
 
-                var parentDirectory = await _directoryRepository.GetById(directory.ParentId.Value);
+                var parentDirectory = await UnitOfWork.Directories.GetById(directory.ParentId.Value);
 
                 if (parentDirectory == null)
                 {
@@ -68,17 +54,17 @@ namespace MyPortal.Logic.Services
                     StaffOnly = directory.StaffOnly
                 };
                 
-                _directoryRepository.Create(dirToAdd);
+                UnitOfWork.Directories.Create(dirToAdd);
             }
 
-            await _directoryRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task Update(params DirectoryModel[] directories)
         {
             foreach (var directory in directories)
             {
-                var dirInDb = await _directoryRepository.GetByIdWithTracking(directory.Id);
+                var dirInDb = await UnitOfWork.Directories.GetByIdForEditing(directory.Id);
 
                 if (!string.IsNullOrWhiteSpace(directory.Name))
                 {
@@ -95,22 +81,22 @@ namespace MyPortal.Logic.Services
                 }
             }
 
-            await _directoryRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task Delete(params Guid[] directoryIds)
         {
             foreach (var directoryId in directoryIds)
             {
-                await _directoryRepository.Delete(directoryId);
+                await UnitOfWork.Directories.Delete(directoryId);
             }
 
-            await _directoryRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task<DirectoryChildren> GetChildren(Guid directoryId, bool includeStaffOnly)
         {
-            var directory = await _directoryRepository.GetById(directoryId);
+            var directory = await UnitOfWork.Directories.GetById(directoryId);
 
             if (directory == null)
             {
@@ -119,9 +105,9 @@ namespace MyPortal.Logic.Services
 
             var children = new DirectoryChildren();
 
-            var subDirs = await _directoryRepository.GetSubdirectories(directoryId, includeStaffOnly);
+            var subDirs = await UnitOfWork.Directories.GetSubdirectories(directoryId, includeStaffOnly);
 
-            var files = await _documentRepository.GetByDirectory(directoryId);
+            var files = await UnitOfWork.Documents.GetByDirectory(directoryId);
 
             children.Subdirectories = subDirs.Select(BusinessMapper.Map<DirectoryModel>);
             children.Files = files.Select(BusinessMapper.Map<DocumentModel>);
@@ -131,7 +117,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<bool> IsAuthorised(UserModel user, Guid directoryId)
         {
-            var directory = await _directoryRepository.GetById(directoryId);
+            var directory = await UnitOfWork.Directories.GetById(directoryId);
 
             if (directory.StaffOnly)
             {
@@ -150,12 +136,6 @@ namespace MyPortal.Logic.Services
             }
 
             return true;
-        }
-
-        public override void Dispose()
-        {
-            _directoryRepository.Dispose();
-            _documentRepository.Dispose();
         }
     }
 }

@@ -10,20 +10,5 @@ Post-Deployment Script Template
 --------------------------------------------------------------------------------------
 */
 
-IF EXISTS (SELECT * 
-  FROM sys.foreign_keys 
-   WHERE object_id = OBJECT_ID(N'dbo.FK_Person_User')
-   AND parent_object_id = OBJECT_ID(N'dbo.People_Persons')
-)
-  ALTER TABLE [dbo].[People_Persons] DROP CONSTRAINT [FK_Person_User]
-
-GO
-
-ALTER TABLE [dbo].[People_Persons]
-ADD CONSTRAINT [FK_Person_User]
-FOREIGN KEY (UserId) REFERENCES [dbo].[Users](Id)
-ON DELETE SET NULL
-ON UPDATE CASCADE
-
 --Other Scripts
 :r .\Script.SeedSystemData.sql

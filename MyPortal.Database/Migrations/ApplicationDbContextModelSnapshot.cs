@@ -1083,9 +1083,6 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<Guid?>("AcademicYearId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(10)")
@@ -1097,18 +1094,11 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("GroupId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("YearGroupId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("AcademicYearId");
 
                     b.HasIndex("CourseId");
 
                     b.HasIndex("GroupId");
-
-                    b.HasIndex("YearGroupId");
 
                     b.ToTable("Classes");
                 });
@@ -6167,10 +6157,6 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Class", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Entity.AcademicYear", null)
-                        .WithMany("Classes")
-                        .HasForeignKey("AcademicYearId");
-
                     b.HasOne("MyPortal.Database.Models.Entity.Course", "Course")
                         .WithMany("Classes")
                         .HasForeignKey("CourseId")
@@ -6182,10 +6168,6 @@ namespace MyPortal.Database.Migrations
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Entity.YearGroup", null)
-                        .WithMany("Classes")
-                        .HasForeignKey("YearGroupId");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Comment", b =>

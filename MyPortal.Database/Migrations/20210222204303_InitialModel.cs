@@ -3175,19 +3175,11 @@ namespace MyPortal.Database.Migrations
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     CourseId = table.Column<Guid>(nullable: false),
                     GroupId = table.Column<Guid>(nullable: false),
-                    Code = table.Column<string>(maxLength: 10, nullable: false),
-                    AcademicYearId = table.Column<Guid>(nullable: true),
-                    YearGroupId = table.Column<Guid>(nullable: true)
+                    Code = table.Column<string>(maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Classes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Classes_AcademicYears_AcademicYearId",
-                        column: x => x.AcademicYearId,
-                        principalTable: "AcademicYears",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Classes_Courses_CourseId",
                         column: x => x.CourseId,
@@ -3198,12 +3190,6 @@ namespace MyPortal.Database.Migrations
                         name: "FK_Classes_CurriculumGroups_GroupId",
                         column: x => x.GroupId,
                         principalTable: "CurriculumGroups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Classes_YearGroups_YearGroupId",
-                        column: x => x.YearGroupId,
-                        principalTable: "YearGroups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -4927,11 +4913,6 @@ namespace MyPortal.Database.Migrations
                 column: "DiscountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Classes_AcademicYearId",
-                table: "Classes",
-                column: "AcademicYearId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Classes_CourseId",
                 table: "Classes",
                 column: "CourseId");
@@ -4940,11 +4921,6 @@ namespace MyPortal.Database.Migrations
                 name: "IX_Classes_GroupId",
                 table: "Classes",
                 column: "GroupId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Classes_YearGroupId",
-                table: "Classes",
-                column: "YearGroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_CommentBankId",

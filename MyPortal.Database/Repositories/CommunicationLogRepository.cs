@@ -17,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CommunicationLogRepository : BaseReadWriteRepository<CommunicationLog>, ICommunicationLogRepository
     {
-        public CommunicationLogRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "CommunicationLog")
+        public CommunicationLogRepository(ApplicationDbContext context) : base(context, "CommunicationLog")
         {
       
         }

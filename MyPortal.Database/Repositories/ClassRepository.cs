@@ -16,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ClassRepository : BaseReadWriteRepository<Class>, IClassRepository
     {
-        public ClassRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Class")
+        public ClassRepository(ApplicationDbContext context) : base(context, "Class")
         {
 
         }

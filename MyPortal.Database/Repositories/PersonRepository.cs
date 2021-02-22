@@ -19,7 +19,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonRepository : BaseReadWriteRepository<Person>, IPersonRepository
     {
-        public PersonRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Person")
+        public PersonRepository(ApplicationDbContext context) : base(context, "Person")
         {
      
         }

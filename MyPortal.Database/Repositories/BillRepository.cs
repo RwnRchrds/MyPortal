@@ -8,7 +8,7 @@ namespace MyPortal.Database.Repositories
 {
     public class BillRepository : BaseReadWriteRepository<Bill>, IBillRepository
     {
-        public BillRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Bill")
+        public BillRepository(ApplicationDbContext context) : base(context, "Bill")
         {
             
         }

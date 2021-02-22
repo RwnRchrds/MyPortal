@@ -10,7 +10,8 @@ namespace MyPortal.Database.Interfaces.Repositories
     public interface IAttendanceMarkRepository : IReadWriteRepository<AttendanceMark>
     {
         Task<IEnumerable<AttendanceMark>> GetByStudent(Guid studentId, Guid academicYearId);
-        Task<AttendanceMark> Get(Guid studentId, Guid attendanceWeekId, Guid periodId);
+        Task<AttendanceMark> GetMark(Guid studentId, Guid attendanceWeekId, Guid periodId);
+        Task<IEnumerable<AttendanceMark>> GetRegisterMarks(Guid groupTypeId, Guid groupId, DateTime startDate, DateTime endDate);
         void Update(AttendanceMark mark);
     }
 }

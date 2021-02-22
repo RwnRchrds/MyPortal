@@ -12,6 +12,8 @@ namespace MyPortal.Logic.Models.Entity
 
         public Guid PersonId { get; set; }
 
+        public Guid AgentTypeId { get; set; }
+
         [StringLength(128)]
         public string JobTitle { get; set; }
 
@@ -19,5 +21,6 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual AgencyModel Agency { get; set; }
         public virtual PersonModel Person { get; set; }
+        public virtual AgentTypeModel AgentType { get; set; }
     }
 }

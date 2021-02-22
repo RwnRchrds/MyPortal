@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class EmailAddressRepository : BaseReadWriteRepository<EmailAddress>, IEmailAddressRepository
     {
-        public EmailAddressRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "EmailAddress")
+        public EmailAddressRepository(ApplicationDbContext context) : base(context, "EmailAddress")
         {
             
         }

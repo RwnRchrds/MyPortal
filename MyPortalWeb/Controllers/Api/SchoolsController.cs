@@ -24,7 +24,12 @@ namespace MyPortalWeb.Controllers.Api
         [Produces(typeof(string))]
         public async Task<IActionResult> GetLocalSchoolName()
         {
-            return await ProcessAsync(async () => Ok(await _schoolService.GetLocalSchoolName()));
+            return await ProcessAsync(async () =>
+            {
+                var schoolName = await _schoolService.GetLocalSchoolName();
+
+                return Ok(schoolName);
+            });
         }
     }
 }

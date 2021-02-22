@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -17,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AcademicYearRepository : BaseReadWriteRepository<AcademicYear>, IAcademicYearRepository
     {
-        public AcademicYearRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "AcademicYear")
+        public AcademicYearRepository(ApplicationDbContext context) : base(context, "AcademicYear")
         {
             
         }
@@ -35,14 +31,16 @@ namespace MyPortal.Database.Repositories
 
             sql.GroupByAllColumns(typeof(AcademicYear), "AcademicYear");
 
-            return (await ExecuteQuery(sql)).First();
+            return await ExecuteQueryFirstOrDefault(sql);
         }
 
         public async Task<AcademicYear> GetLatest()
         {
             var sql = GenerateQuery();
 
-            sql.OrderByDesc("AcademicYear.FirstDate");
+            sql.LeftJoin("AcademicTerms AS AcademicTerm", "AcademicYear.Id", "AcademicTerm.AcademicYearId");
+            sql.OrderByDesc("AcademicTerm.FirstDate");
+            sql.GroupByAllColumns(typeof(AcademicYear), "AcademicYear");
             sql.Limit(1);
 
             return await ExecuteQueryFirstOrDefault(sql);

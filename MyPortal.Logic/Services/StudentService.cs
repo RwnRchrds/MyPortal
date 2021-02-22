@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyPortal.Database.Enums;
-using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
@@ -18,28 +18,13 @@ namespace MyPortal.Logic.Services
 {
     public class StudentService : BaseService, IStudentService
     {
-        private IStudentRepository _studentRepository;
-        private IAchievementRepository _achievementRepository;
-        private IIncidentRepository _incidentRepository;
-        private IAttendanceMarkRepository _attendanceMarkRepository;
-        private IAttendanceCodeRepository _attendanceCodeRepository;
-        private IExclusionRepository _exclusionRepository;
-
-        public StudentService(IStudentRepository studentRepository, IAchievementRepository achievementRepository,
-            IIncidentRepository incidentRepository, IAttendanceMarkRepository attendanceMarkRepository,
-            IExclusionRepository exclusionRepository, IAttendanceCodeRepository attendanceCodeRepository)
+        public StudentService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _studentRepository = studentRepository;
-            _achievementRepository = achievementRepository;
-            _incidentRepository = incidentRepository;
-            _attendanceMarkRepository = attendanceMarkRepository;
-            _exclusionRepository = exclusionRepository;
-            _attendanceCodeRepository = attendanceCodeRepository;
         }
 
         public async Task<StudentModel> GetById(Guid studentId)
         {
-            var student = await _studentRepository.GetById(studentId);
+            var student = await UnitOfWork.Students.GetById(studentId);
             if (student == null)
             {
                 throw new NotFoundException("Student not found.");
@@ -52,11 +37,11 @@ namespace MyPortal.Logic.Services
         {
             var stats = new StudentStatsModel();
 
-            var achievements = await _achievementRepository.GetPointsByStudent(studentId, academicYearId);
-            var incidents = await _incidentRepository.GetPointsByStudent(studentId, academicYearId);
-            var attendanceMarks = await _attendanceMarkRepository.GetByStudent(studentId, academicYearId);
-            var exclusions = await _exclusionRepository.GetCountByStudent(studentId);
-            var attendanceCodes = await _attendanceCodeRepository.GetAll();
+            var achievements = await UnitOfWork.Achievements.GetPointsByStudent(studentId, academicYearId);
+            var incidents = await UnitOfWork.Incidents.GetPointsByStudent(studentId, academicYearId);
+            var attendanceMarks = await UnitOfWork.AttendanceMarks.GetByStudent(studentId, academicYearId);
+            var exclusions = await UnitOfWork.Exclusions.GetCountByStudent(studentId);
+            var attendanceCodes = await UnitOfWork.AttendanceCodes.GetAll();
 
             var attendanceSummary =
                 new AttendanceSummary(attendanceCodes.Select(BusinessMapper.Map<AttendanceCodeModel>).ToList(),
@@ -73,7 +58,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<StudentModel> GetByUserId(Guid userId, bool throwNotFound = true)
         {
-            var student = await _studentRepository.GetByUserId(userId);
+            var student = await UnitOfWork.Students.GetByUserId(userId);
 
             if (student == null && throwNotFound)
             {
@@ -85,7 +70,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<StudentModel> GetByPersonId(Guid personId, bool throwIfNotFound = true)
         {
-            var student = await _studentRepository.GetByPersonId(personId);
+            var student = await UnitOfWork.Students.GetByPersonId(personId);
 
             if (student == null && throwIfNotFound)
             {
@@ -109,33 +94,23 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<StudentModel>> Get(StudentSearchOptions searchOptions)
         {
-            var students = await _studentRepository.GetAll(searchOptions);
+            var students = await UnitOfWork.Students.GetAll(searchOptions);
 
             return students.Select(BusinessMapper.Map<StudentModel>).ToList();
         }
 
         public async Task Create(StudentModel student)
         {
-            _studentRepository.Create(BusinessMapper.Map<Student>(student));
+            UnitOfWork.Students.Create(BusinessMapper.Map<Student>(student));
 
-            await _studentRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task Update(StudentModel student)
         {
-            var studentInDb = await _studentRepository.GetByIdWithTracking(student.Id);
+            var studentInDb = await UnitOfWork.Students.GetByIdForEditing(student.Id);
 
-            await _studentRepository.SaveChanges();
-        }
-
-        public override void Dispose()
-        {
-            _studentRepository.Dispose();
-            _achievementRepository.Dispose();
-            _incidentRepository.Dispose();
-            _attendanceMarkRepository.Dispose();
-            _exclusionRepository.Dispose();
-            _attendanceCodeRepository.Dispose();
+            await UnitOfWork.SaveChanges();
         }
     }
 }

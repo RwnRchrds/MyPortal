@@ -4,21 +4,19 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
     public class AttendanceMarkRepository : BaseReadWriteRepository<AttendanceMark>, IAttendanceMarkRepository
     {
-        public AttendanceMarkRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "AttendanceMark")
+        public AttendanceMarkRepository(ApplicationDbContext context) : base(context, "AttendanceMark")
         {
        
         }
@@ -73,7 +71,7 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
-        public async Task<AttendanceMark> Get(Guid studentId, Guid attendanceWeekId, Guid periodId)
+        public async Task<AttendanceMark> GetMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
             var query = GenerateQuery();
 
@@ -84,6 +82,11 @@ namespace MyPortal.Database.Repositories
             query.Where("Period.Id", "=", periodId);
 
             return (await ExecuteQuery(query)).SingleOrDefault();
+        }
+
+        public async Task<IEnumerable<AttendanceMark>> GetRegisterMarks(Guid groupTypeId, Guid groupId, DateTime startDate, DateTime endDate)
+        {
+            throw new NotImplementedException();
         }
 
         public void Update(AttendanceMark mark)

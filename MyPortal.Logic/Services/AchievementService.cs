@@ -1,20 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
-using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Behaviour;
 using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
 using Task = System.Threading.Tasks.Task;
 
@@ -22,69 +14,48 @@ namespace MyPortal.Logic.Services
 {
     public class AchievementService : BaseService, IAchievementService
     {
-        private readonly IAcademicYearRepository _academicYearRepository;
-        private readonly IAchievementRepository _achievementRepository;
-        private readonly IAchievementTypeRepository _achievementTypeRepository;
-        private readonly IAchievementOutcomeRepository _achievementOutcomeRepository;
-
-        public AchievementService(IAcademicYearRepository academicYearRepository,
-            IAchievementRepository achievementRepository, IAchievementTypeRepository achievementTypeRepository,
-            IAchievementOutcomeRepository achievementOutcomeRepository)
+        public AchievementService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _academicYearRepository = academicYearRepository;
-            _achievementRepository = achievementRepository;
-            _achievementTypeRepository = achievementTypeRepository;
-            _achievementOutcomeRepository = achievementOutcomeRepository;
         }
 
         public override void Dispose()
         {
-            _achievementRepository.Dispose();
-            _achievementTypeRepository.Dispose();
-            _achievementOutcomeRepository.Dispose();
+            UnitOfWork.Dispose();
         }
 
-        public async Task<IEnumerable<AchievementModel>> GetByStudent(Guid studentId, Guid academicYearId)
+        public async Task<IEnumerable<AchievementModel>> GetAchievementsByStudent(Guid studentId, Guid academicYearId)
         {
-            var achievements = await _achievementRepository.GetByStudent(studentId, academicYearId);
+            var achievements = await UnitOfWork.Achievements.GetByStudent(studentId, academicYearId);
 
             return achievements.Select(BusinessMapper.Map<AchievementModel>).ToList();
         }
 
-        public async Task<AchievementModel> GetById(Guid achievementId)
+        public async Task<AchievementModel> GetAchievementById(Guid achievementId)
         {
-            var achievement = await _achievementRepository.GetById(achievementId);
+            var achievement = await UnitOfWork.Achievements.GetById(achievementId);
 
             return BusinessMapper.Map<AchievementModel>(achievement);
         }
 
-        public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
+        public async Task<int> GetAchievementPointsByStudent(Guid studentId, Guid academicYearId)
         {
-            var points = await _achievementRepository.GetPointsByStudent(studentId, academicYearId);
+            var points = await UnitOfWork.Achievements.GetPointsByStudent(studentId, academicYearId);
 
             return points;
         }
 
-        public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
+        public async Task<int> GetAchievementCountByStudent(Guid studentId, Guid academicYearId)
         {
-            var count = await _achievementRepository.GetCountByStudent(studentId, academicYearId);
+            var count = await UnitOfWork.Achievements.GetCountByStudent(studentId, academicYearId);
 
             return count;
         }
 
-        public async Task CheckYearLock(Guid academicYearId)
-        {
-            if (await _academicYearRepository.IsLocked(academicYearId))
-            {
-                throw new InvalidDataException("Academic year is locked and cannot be modified.");
-            }
-        }
-
-        public async Task Create(params AchievementModel[] requests)
+        public async Task CreateAchievement(params AchievementModel[] requests)
         {
             foreach (var request in requests)
             {
-                await AcademicYearModel.CheckLock(_academicYearRepository, request.AcademicYearId);
+                await AcademicYearModel.CheckLock(UnitOfWork.AcademicYears, request.AcademicYearId);
                 
                 var model = new Achievement
                 {
@@ -99,24 +70,24 @@ namespace MyPortal.Logic.Services
                     CreatedDate = DateTime.Now
                 };
 
-                _achievementRepository.Create(model);
+                UnitOfWork.Achievements.Create(model);
             }
 
-            await _achievementRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
-        public async Task Update(params UpdateAchievementModel[] requests)
+        public async Task UpdateAchievement(params UpdateAchievementModel[] requests)
         {
             foreach (var request in requests)
             {
-                var achievementInDb = await _achievementRepository.GetByIdWithTracking(request.Id);
+                var achievementInDb = await UnitOfWork.Achievements.GetByIdForEditing(request.Id);
 
                 if (achievementInDb == null)
                 {
                     throw new NotFoundException("Achievement not found.");
                 }
 
-                await AcademicYearModel.CheckLock(_academicYearRepository, achievementInDb.AcademicYearId);
+                await AcademicYearModel.CheckLock(UnitOfWork.AcademicYears, achievementInDb.AcademicYearId);
 
                 achievementInDb.AchievementTypeId = request.AchievementTypeId;
                 achievementInDb.LocationId = request.LocationId;
@@ -125,33 +96,33 @@ namespace MyPortal.Logic.Services
                 achievementInDb.Points = request.Points;
             }
 
-            await _achievementRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
-        public async Task Delete(params Guid[] achievementIds)
+        public async Task DeleteAchievement(params Guid[] achievementIds)
         {
             foreach (var achievementId in achievementIds)
             {
-                var achievement = await GetById(achievementId);
+                var achievement = await GetAchievementById(achievementId);
 
-                await AcademicYearModel.CheckLock(_academicYearRepository, achievement.AcademicYearId);
+                await AcademicYearModel.CheckLock(UnitOfWork.AcademicYears, achievement.AcademicYearId);
                 
-                await _achievementRepository.Delete(achievementId);
+                await UnitOfWork.Achievements.Delete(achievementId);
             }
 
-            await _achievementRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
-        public async Task<IEnumerable<AchievementTypeModel>> GetTypes()
+        public async Task<IEnumerable<AchievementTypeModel>> GetAchievementTypes()
         {
-            var types = await _achievementTypeRepository.GetAll();
+            var types = await UnitOfWork.AchievementTypes.GetAll();
 
             return types.Select(BusinessMapper.Map<AchievementTypeModel>).ToList();
         }
 
-        public async Task<IEnumerable<AchievementOutcomeModel>> GetOutcomes()
+        public async Task<IEnumerable<AchievementOutcomeModel>> GetAchievementOutcomes()
         {
-            var outcomes = await _achievementOutcomeRepository.GetAll();
+            var outcomes = await UnitOfWork.AchievementOutcomes.GetAll();
 
             return outcomes.Select(BusinessMapper.Map<AchievementOutcomeModel>).ToList();
         }

@@ -15,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ObservationRepository : BaseReadWriteRepository<Observation>, IObservationRepository
     {
-        public ObservationRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Observation")
+        public ObservationRepository(ApplicationDbContext context) : base(context, "Observation")
         {
             
         }

@@ -18,7 +18,7 @@ namespace MyPortal.Database.Repositories
     public class DiaryEventAttendeeRepository : BaseReadWriteRepository<DiaryEventAttendee>,
         IDiaryEventAttendeeRepository
     {
-        public DiaryEventAttendeeRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Attendee")
+        public DiaryEventAttendeeRepository(ApplicationDbContext context) : base(context, "Attendee")
         {
 
         }

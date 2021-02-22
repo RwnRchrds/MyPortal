@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentContactRelationshipRepository : BaseReadWriteRepository<StudentContactRelationship>, IStudentContactRelationshipRepository
     {
-        public StudentContactRelationshipRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "StudentContact")
+        public StudentContactRelationshipRepository(ApplicationDbContext context) : base(context, "StudentContact")
         {
 
         }   

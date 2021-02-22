@@ -7,6 +7,8 @@ namespace MyPortal.Logic.Models.Entity
 {
     public class ExclusionReasonModel : LookupItemModel
     {
+        public string Code { get; set; }
+
         public bool System { get; set; }
     }
 }

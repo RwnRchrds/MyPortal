@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class IncidentRepository : BaseReadWriteRepository<Incident>, IIncidentRepository
     {
-        public IncidentRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Incident")
+        public IncidentRepository(ApplicationDbContext context) : base(context, "Incident")
         {
             
         }

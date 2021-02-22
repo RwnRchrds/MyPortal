@@ -8,15 +8,15 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface IIncidentService : IService
     {
-        Task<IEnumerable<IncidentModel>> GetByStudent(Guid studentId, Guid academicYearId);
-        Task<IncidentModel> GetById(Guid incidentId);
-        Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId);
-        Task<int> GetCountByStudent(Guid studentId, Guid academicYearId);
-        Task Create(params IncidentModel[] incidents);
-        Task Update(params UpdateIncidentModel[] incidents);
-        Task Delete(params Guid[] incidentIds);
-        Task<IEnumerable<IncidentTypeModel>> GetTypes();
-        Task<IEnumerable<BehaviourOutcomeModel>> GetOutcomes();
-        Task<IEnumerable<BehaviourStatusModel>> GetStatus();
+        Task<IEnumerable<IncidentModel>> GetIncidentsByStudent(Guid studentId, Guid academicYearId);
+        Task<IncidentModel> GetIncidentById(Guid incidentId);
+        Task<int> GetBehaviourPointsByStudent(Guid studentId, Guid academicYearId);
+        Task<int> GetBehaviourCountByStudent(Guid studentId, Guid academicYearId);
+        Task CreateIncident(params IncidentModel[] incidents);
+        Task UpdateIncident(params UpdateIncidentModel[] incidents);
+        Task DeleteIncident(params Guid[] incidentIds);
+        Task<IEnumerable<IncidentTypeModel>> GetIncidentTypes();
+        Task<IEnumerable<BehaviourOutcomeModel>> GetIncidentOutcomes();
+        Task<IEnumerable<BehaviourStatusModel>> GetBehaviourStatus();
     }
 }

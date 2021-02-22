@@ -9,9 +9,10 @@ namespace MyPortal.Logic.Models.Entity
     {
         public Guid MarksheetTemplateId { get; set; }
 
-        public Guid StudentGroupId { get; set; }
+        public Guid GroupTypeId { get; set; }
+
+        public Guid GroupId { get; set; }
 
         public virtual MarksheetTemplateModel Template { get; set; }
-        public virtual StudentGroupModel StudentGroup { get; set; }
     }
 }

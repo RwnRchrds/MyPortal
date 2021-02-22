@@ -2,17 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Repositories;
-using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Behaviour;
 using MyPortal.Logic.Models.Requests.Behaviour.Incidents;
 using Task = System.Threading.Tasks.Task;
 
@@ -20,57 +13,39 @@ namespace MyPortal.Logic.Services
 {
     public class IncidentService : BaseService, IIncidentService
     {
-        private readonly IIncidentRepository _incidentRepository;
-        private readonly IBehaviourOutcomeRepository _outcomeRepository;
-        private readonly IBehaviourStatusRepository _statusRepository;
-        private readonly IIncidentTypeRepository _incidentTypeRepository;
-
-        public IncidentService(IIncidentRepository incidentRepository, IBehaviourOutcomeRepository outcomeRepository,
-            IBehaviourStatusRepository statusRepository, IIncidentTypeRepository incidentTypeRepository)
+        public IncidentService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _incidentRepository = incidentRepository;
-            _outcomeRepository = outcomeRepository;
-            _statusRepository = statusRepository;
-            _incidentTypeRepository = incidentTypeRepository;
         }
 
-        public override void Dispose()
+        public async Task<IEnumerable<IncidentModel>> GetIncidentsByStudent(Guid studentId, Guid academicYearId)
         {
-            _incidentRepository.Dispose();
-            _outcomeRepository.Dispose();
-            _statusRepository.Dispose();
-            _incidentTypeRepository.Dispose();
-        }
-
-        public async Task<IEnumerable<IncidentModel>> GetByStudent(Guid studentId, Guid academicYearId)
-        {
-            var incidents = await _incidentRepository.GetByStudent(studentId, academicYearId);
+            var incidents = await UnitOfWork.Incidents.GetByStudent(studentId, academicYearId);
 
             return incidents.Select(BusinessMapper.Map<IncidentModel>);
         }
 
-        public async Task<IncidentModel> GetById(Guid incidentId)
+        public async Task<IncidentModel> GetIncidentById(Guid incidentId)
         {
-            var incident = await _incidentRepository.GetById(incidentId);
+            var incident = await UnitOfWork.Incidents.GetById(incidentId);
 
             return BusinessMapper.Map<IncidentModel>(incident);
         }
 
-        public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
+        public async Task<int> GetBehaviourPointsByStudent(Guid studentId, Guid academicYearId)
         {
-            var points = await _incidentRepository.GetPointsByStudent(studentId, academicYearId);
+            var points = await UnitOfWork.Incidents.GetPointsByStudent(studentId, academicYearId);
 
             return points;
         }
 
-        public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
+        public async Task<int> GetBehaviourCountByStudent(Guid studentId, Guid academicYearId)
         {
-            var count = await _incidentRepository.GetCountByStudent(studentId, academicYearId);
+            var count = await UnitOfWork.Incidents.GetCountByStudent(studentId, academicYearId);
 
             return count;
         }
 
-        public async Task Create(params IncidentModel[] incidents)
+        public async Task CreateIncident(params IncidentModel[] incidents)
         {
             foreach (var incidentModel in incidents)
             {
@@ -88,17 +63,17 @@ namespace MyPortal.Logic.Services
                     AcademicYearId = incidentModel.AcademicYearId
                 };
                 
-                _incidentRepository.Create(incident);
+                UnitOfWork.Incidents.Create(incident);
             }
 
-            await _incidentRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
-        public async Task Update(params UpdateIncidentModel[] incidents)
+        public async Task UpdateIncident(params UpdateIncidentModel[] incidents)
         {
             foreach (var incidentModel in incidents)
             {
-                var incidentInDb = await _incidentRepository.GetByIdWithTracking(incidentModel.Id);
+                var incidentInDb = await UnitOfWork.Incidents.GetByIdForEditing(incidentModel.Id);
 
                 incidentInDb.Points = incidentModel.Points;
                 incidentInDb.BehaviourTypeId = incidentModel.BehaviourTypeId;
@@ -108,36 +83,36 @@ namespace MyPortal.Logic.Services
                 incidentInDb.Comments = incidentModel.Comments;
             }
 
-            await _incidentRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
-        public async Task Delete(params Guid[] incidentIds)
+        public async Task DeleteIncident(params Guid[] incidentIds)
         {
             foreach (var incidentId in incidentIds)
             {
-                await _incidentRepository.Delete(incidentId);
+                await UnitOfWork.Incidents.Delete(incidentId);
             }
 
-            await _incidentRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
-        public async Task<IEnumerable<IncidentTypeModel>> GetTypes()
+        public async Task<IEnumerable<IncidentTypeModel>> GetIncidentTypes()
         {
-            var types = await _incidentTypeRepository.GetAll();
+            var types = await UnitOfWork.IncidentTypes.GetAll();
 
             return types.Select(BusinessMapper.Map<IncidentTypeModel>).ToList();
         }
 
-        public async Task<IEnumerable<BehaviourOutcomeModel>> GetOutcomes()
+        public async Task<IEnumerable<BehaviourOutcomeModel>> GetIncidentOutcomes()
         {
-            var outcomes = await _outcomeRepository.GetAll();
+            var outcomes = await UnitOfWork.BehaviourOutcomes.GetAll();
 
             return outcomes.Select(BusinessMapper.Map<BehaviourOutcomeModel>).ToList();
         }
 
-        public async Task<IEnumerable<BehaviourStatusModel>> GetStatus()
+        public async Task<IEnumerable<BehaviourStatusModel>> GetBehaviourStatus()
         {
-            var status = await _statusRepository.GetAll();
+            var status = await UnitOfWork.BehaviourStatus.GetAll();
 
             return status.Select(BusinessMapper.Map<BehaviourStatusModel>).ToList();
         }
