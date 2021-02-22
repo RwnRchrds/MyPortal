@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonConditionRepository : BaseReadWriteRepository<PersonCondition>, IPersonConditionRepository
     {
-        public PersonConditionRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "PersonCondition")
+        public PersonConditionRepository(ApplicationDbContext context) : base(context, "PersonCondition")
         {
            
         }

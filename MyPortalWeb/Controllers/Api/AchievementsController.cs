@@ -38,7 +38,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                var achievement = await _achievementService.GetById(achievementId);
+                var achievement = await _achievementService.GetAchievementById(achievementId);
 
                 if (await AuthoriseStudent(achievement.StudentId))
                 {
@@ -58,9 +58,9 @@ namespace MyPortalWeb.Controllers.Api
             {
                 if (await AuthoriseStudent(studentId))
                 {
-                    var fromAcademicYearId = academicYearId ?? (await AcademicYearService.GetCurrent()).Id;
+                    var fromAcademicYearId = academicYearId ?? (await AcademicYearService.GetCurrentAcademicYear(true)).Id;
 
-                    var achievements = await _achievementService.GetByStudent(studentId, fromAcademicYearId);
+                    var achievements = await _achievementService.GetAchievementsByStudent(studentId, fromAcademicYearId);
 
                     return Ok(achievements.Select(x => x.ToListModel()));
                 }
@@ -80,7 +80,7 @@ namespace MyPortalWeb.Controllers.Api
 
                var request = new AchievementModel(model, user.Id);
 
-               await _achievementService.Create(request);
+               await _achievementService.CreateAchievement(request);
 
                 return Ok("Achievement created.");
             }, Permissions.Behaviour.Achievements.EditAchievements);
@@ -93,7 +93,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                await _achievementService.Update(model);
+                await _achievementService.UpdateAchievement(model);
 
                 return Ok("Achievement updated.");
             }, Permissions.Behaviour.Achievements.EditAchievements);
@@ -106,7 +106,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                await _achievementService.Delete(achievementId);
+                await _achievementService.DeleteAchievement(achievementId);
 
                 return Ok("Achievement deleted.");
             }, Permissions.Behaviour.Achievements.EditAchievements);

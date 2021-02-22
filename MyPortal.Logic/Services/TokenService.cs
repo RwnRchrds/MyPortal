@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Enums;
@@ -23,20 +24,10 @@ namespace MyPortal.Logic.Services
     public class TokenService : BaseService, ITokenService
     {
         private readonly SymmetricSecurityKey _key;
-        private readonly IUserRoleRepository _userRoleRepository;
-        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public TokenService(IConfiguration config, IUserRoleRepository userRoleRepository, IRefreshTokenRepository refreshTokenRepository)
+        public TokenService(IUnitOfWork unitOfWork, IConfiguration config) : base(unitOfWork)
         {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["MyPortal:TokenKey"]));
-            _userRoleRepository = userRoleRepository;
-            _refreshTokenRepository = refreshTokenRepository;
-        }
-
-        public override void Dispose()
-        {
-            _userRoleRepository.Dispose();
-            _refreshTokenRepository.Dispose();
         }
 
         private async Task<string> GenerateAccessToken(UserModel userModel)
@@ -49,7 +40,7 @@ namespace MyPortal.Logic.Services
                 new Claim(ApplicationClaimTypes.DisplayName, userModel.GetDisplayName(NameFormat.FullNameAbbreviated))
             };
 
-            var roles = await _userRoleRepository.GetByUser(userModel.Id);
+            var roles = await UnitOfWork.UserRoles.GetByUser(userModel.Id);
 
             claims.AddRange(roles.Select(r =>
                 new Claim(ClaimTypes.Role, r.RoleId.ToString("N"))));
@@ -72,7 +63,7 @@ namespace MyPortal.Logic.Services
 
         private async Task<string> GenerateRefreshToken(Guid userId)
         {
-            _refreshTokenRepository.DeleteExpired(userId);
+            UnitOfWork.RefreshTokens.DeleteExpired(userId);
 
             var randomNumber = new byte[256];
 
@@ -82,14 +73,14 @@ namespace MyPortal.Logic.Services
 
                 var token = Convert.ToBase64String(randomNumber);
 
-                _refreshTokenRepository.Create(new RefreshToken
+                UnitOfWork.RefreshTokens.Create(new RefreshToken
                 {
                     UserId = userId,
                     Value = token,
                     ExpirationDate = DateTime.Now.AddDays(14)
                 });
 
-                await _refreshTokenRepository.SaveChanges();
+                await UnitOfWork.SaveChanges();
 
                 return token;
             }
@@ -133,7 +124,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<TokenModel> RefreshToken(UserModel userModel, TokenModel tokenModel)
         {
-            var userRefreshTokens = await _refreshTokenRepository.GetByUser(userModel.Id);
+            var userRefreshTokens = await UnitOfWork.RefreshTokens.GetByUser(userModel.Id);
 
             var selectedRefreshToken = userRefreshTokens.FirstOrDefault(x => x.Value == tokenModel.RefreshToken);
 
@@ -153,16 +144,16 @@ namespace MyPortal.Logic.Services
 
             var tokenResult = new TokenModel {Token = newToken, RefreshToken = newRefreshToken};
 
-            await _refreshTokenRepository.Delete(selectedRefreshToken.Id);
+            await UnitOfWork.RefreshTokens.Delete(selectedRefreshToken.Id);
 
-            await _refreshTokenRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
 
             return tokenResult;
         }
 
         public async Task<bool> RevokeToken(UserModel userModel, TokenModel tokenModel)
         {
-            var userRefreshTokens = await _refreshTokenRepository.GetByUser(userModel.Id);
+            var userRefreshTokens = await UnitOfWork.RefreshTokens.GetByUser(userModel.Id);
 
             var selectedRefreshToken = userRefreshTokens.FirstOrDefault(x => x.Value == tokenModel.RefreshToken);
 
@@ -171,8 +162,8 @@ namespace MyPortal.Logic.Services
                 return false;
             }
 
-            await _refreshTokenRepository.Delete(selectedRefreshToken.Id);
-            await _refreshTokenRepository.SaveChanges();
+            await UnitOfWork.RefreshTokens.Delete(selectedRefreshToken.Id);
+            await UnitOfWork.SaveChanges();
 
             return true;
         }

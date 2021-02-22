@@ -15,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class TaskRepository : BaseReadWriteRepository<Task>, ITaskRepository
     {
-        public TaskRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Task")
+        public TaskRepository(ApplicationDbContext context) : base(context, "Task")
         {
            
         }

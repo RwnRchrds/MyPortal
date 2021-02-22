@@ -5,7 +5,7 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IReadRepository<TEntity> : IDisposable where TEntity : class, IEntity
+    public interface IReadRepository<TEntity> : IRepository, IDisposable where TEntity : class, IEntity
     {
         Task<IEnumerable<TEntity>> GetAll();
         Task<TEntity> GetById(Guid id);

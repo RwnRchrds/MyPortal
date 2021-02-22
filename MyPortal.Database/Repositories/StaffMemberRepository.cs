@@ -16,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class StaffMemberRepository : BaseReadWriteRepository<StaffMember>, IStaffMemberRepository
     {
-        public StaffMemberRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "StaffMember")
+        public StaffMemberRepository(ApplicationDbContext context) : base(context, "StaffMember")
         {
            
         }

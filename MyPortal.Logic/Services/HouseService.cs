@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
-using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Repositories;
-using MyPortal.Logic.Interfaces;
+using MyPortal.Database.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 
@@ -15,21 +9,13 @@ namespace MyPortal.Logic.Services
 {
     public class HouseService : BaseService, IHouseService
     {
-        private readonly IHouseRepository _houseRepository;
-
-        public HouseService(IHouseRepository houseRepository)
+        public HouseService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _houseRepository = houseRepository;
-        }
-
-        public override void Dispose()
-        {
-            _houseRepository.Dispose();
         }
 
         public async Task<IEnumerable<HouseModel>> GetHouses()
         {
-            var houses = await _houseRepository.GetAll();
+            var houses = await UnitOfWork.Houses.GetAll();
 
             return houses.OrderBy(h => h.Name).Select(BusinessMapper.Map<HouseModel>);
         }

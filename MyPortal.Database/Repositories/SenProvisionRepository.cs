@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SenProvisionRepository : BaseReadWriteRepository<SenProvision>, ISenProvisionRepository
     {
-        public SenProvisionRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "SenProvision")
+        public SenProvisionRepository(ApplicationDbContext context) : base(context, "SenProvision")
         {
             
         }

@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ResultRepository : BaseReadWriteRepository<Result>, IResultRepository
     {
-        public ResultRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Result")
+        public ResultRepository(ApplicationDbContext context) : base(context, "Result")
         {
             
         }

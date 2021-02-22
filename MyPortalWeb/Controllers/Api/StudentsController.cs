@@ -71,7 +71,7 @@ namespace MyPortalWeb.Controllers.Api
                 {
                     if (academicYearId == null || academicYearId == Guid.Empty)
                     {
-                        academicYearId = (await AcademicYearService.GetCurrent()).Id;
+                        academicYearId = (await AcademicYearService.GetCurrentAcademicYear()).Id;
                     }
 
                     var studentStats = await StudentService.GetStatsById(studentId, academicYearId.Value);

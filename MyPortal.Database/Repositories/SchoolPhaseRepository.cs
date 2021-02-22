@@ -10,9 +10,9 @@ using MyPortal.Database.Repositories.Base;
 
 namespace MyPortal.Database.Repositories
 {
-    public class PhaseRepository : BaseReadRepository<SchoolPhase>, IPhaseRepository
+    public class SchoolPhaseRepository : BaseReadRepository<SchoolPhase>, ISchoolPhaseRepository
     {
-        public PhaseRepository(IDbConnection connection) : base(connection)
+        public SchoolPhaseRepository(IDbConnection connection) : base(connection)
         {
         }
     }

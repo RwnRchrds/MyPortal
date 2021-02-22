@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ActivityEventRepository : BaseReadWriteRepository<ActivityEvent>, IActivityEventRepository
     {
-        public ActivityEventRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "AE")
+        public ActivityEventRepository(ApplicationDbContext context) : base(context, "AE")
         {
 
         }

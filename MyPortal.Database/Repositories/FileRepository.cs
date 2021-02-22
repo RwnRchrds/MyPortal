@@ -15,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class FileRepository : BaseReadWriteRepository<File>, IFileRepository
     {
-        public FileRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "File")
+        public FileRepository(ApplicationDbContext context) : base(context, "File")
         {
 
         }

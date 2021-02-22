@@ -8,7 +8,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumBandBlockAssignmentRepository : BaseReadWriteRepository<CurriculumBandBlockAssignment>, ICurriculumBandBlockAssignmentRepository
     {
-        public CurriculumBandBlockAssignmentRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection)
+        public CurriculumBandBlockAssignmentRepository(ApplicationDbContext context) : base(context)
         {
             
         }

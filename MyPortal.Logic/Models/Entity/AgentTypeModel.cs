@@ -5,7 +5,7 @@ using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AgentRelationshipTypeModel : LookupItemModel
+    public class AgentTypeModel : LookupItemModel
     {
 
     }

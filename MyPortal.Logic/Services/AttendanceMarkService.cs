@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
@@ -15,32 +16,6 @@ namespace MyPortal.Logic.Services
 {
     public class AttendanceMarkService : BaseService, IAttendanceMarkService
     {
-        private readonly IAttendanceMarkRepository _attendanceMarkRepository;
-        private readonly IAttendanceCodeRepository _attendanceCodeRepository;
-        private readonly IStudentRepository _studentRepository;
-        private readonly IAttendanceWeekRepository _attendanceWeekRepository;
-        private readonly IAttendancePeriodRepository _periodRepository;
-
-        public AttendanceMarkService(IAttendanceMarkRepository attendanceMarkRepository,
-            IAttendanceCodeRepository attendanceCodeRepository, IStudentRepository studentRepository,
-            IAttendanceWeekRepository attendanceWeekRepository, IAttendancePeriodRepository periodRepository)
-        {
-            _attendanceMarkRepository = attendanceMarkRepository;
-            _attendanceCodeRepository = attendanceCodeRepository;
-            _studentRepository = studentRepository;
-            _attendanceWeekRepository = attendanceWeekRepository;
-            _periodRepository = periodRepository;
-        }
-
-        public override void Dispose()
-        {
-            _attendanceMarkRepository.Dispose();
-            _attendanceCodeRepository.Dispose();
-            _studentRepository.Dispose();
-            _attendanceWeekRepository.Dispose();
-            _periodRepository.Dispose();
-        }
-
         private AttendanceMarkModel NoMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
             return new AttendanceMarkModel
@@ -54,16 +29,21 @@ namespace MyPortal.Logic.Services
             };
         }
 
-        public async Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
+        public async Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId, bool returnNoMark = false)
         {
-            var attendanceMark = await _attendanceMarkRepository.Get(studentId, attendanceWeekId, periodId);
+            var attendanceMark = await UnitOfWork.AttendanceMarks.GetMark(studentId, attendanceWeekId, periodId);
 
-            if (attendanceMark == null)
+            if (returnNoMark && attendanceMark == null)
             {
                 return NoMark(studentId, attendanceWeekId, periodId);
             }
 
             return BusinessMapper.Map<AttendanceMarkModel>(attendanceMark);
+        }
+
+        public async Task<IEnumerable<AttendanceRegisterStudentModel>> GetAttendanceMarksBySession(Guid attendanceWeekId, Guid sessionId)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task Save(params AttendanceMarkListModel[] marks)
@@ -77,7 +57,7 @@ namespace MyPortal.Logic.Services
 
                 var markInDb = await GetAttendanceMark(model.StudentId, model.WeekId, model.PeriodId);
 
-                if (markInDb.Id != Guid.Empty)
+                if (markInDb != null)
                 {
                     markInDb.CodeId = model.CodeId;
                     markInDb.MinutesLate = model.MinutesLate ?? 0;
@@ -94,7 +74,7 @@ namespace MyPortal.Logic.Services
                         Comments = markInDb.Comments
                     };
 
-                    _attendanceMarkRepository.Update(updatedMark);
+                    UnitOfWork.AttendanceMarks.Update(updatedMark);
                 }
                 else
                 {
@@ -108,24 +88,24 @@ namespace MyPortal.Logic.Services
                         Comments = model.Comments
                     };
 
-                    _attendanceMarkRepository.Create(mark);
+                    UnitOfWork.AttendanceMarks.Create(mark);
                 }
             }
 
-            await _attendanceMarkRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task Delete(params Guid[] attendanceMarkIds)
         {
             foreach (var attendanceMarkId in attendanceMarkIds)
             {
-                await _attendanceMarkRepository.Delete(attendanceMarkId);
+                await UnitOfWork.AttendanceMarks.Delete(attendanceMarkId);
             }
 
-            await _attendanceMarkRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
-        public async Task Save(params StudentRegisterMarkCollection[] markCollections)
+        public async Task Save(params AttendanceRegisterStudentModel[] markCollections)
         {
             var attendanceMarks = new List<AttendanceMarkListModel>();
 
@@ -137,18 +117,22 @@ namespace MyPortal.Logic.Services
             await Save(attendanceMarks.ToArray());
         }
 
-        public async Task<AttendanceSummary> GetSummaryByStudent(Guid studentId, Guid academicYearId)
+        public async Task<AttendanceSummary> GetAttendanceSummaryByStudent(Guid studentId, Guid academicYearId)
         {
-            var codes = (await _attendanceCodeRepository.GetAll()).Select(BusinessMapper.Map<AttendanceCodeModel>)
+            var codes = (await UnitOfWork.AttendanceCodes.GetAll()).Select(BusinessMapper.Map<AttendanceCodeModel>)
                 .ToList();
 
             var marks =
-                (await _attendanceMarkRepository.GetByStudent(studentId, academicYearId)).Select(BusinessMapper
+                (await UnitOfWork.AttendanceMarks.GetByStudent(studentId, academicYearId)).Select(BusinessMapper
                     .Map<AttendanceMarkModel>).ToList();
 
             var summary = new AttendanceSummary(codes, marks);
 
             return summary;
+        }
+
+        public AttendanceMarkService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {
         }
     }
 }

@@ -8,7 +8,7 @@ namespace MyPortal.Database.Repositories
 {
     public class BehaviourOutcomeRepository : BaseReadWriteRepository<BehaviourOutcome>, IBehaviourOutcomeRepository
     {
-        public BehaviourOutcomeRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection)
+        public BehaviourOutcomeRepository(ApplicationDbContext context) : base(context)
         {
         }
     }

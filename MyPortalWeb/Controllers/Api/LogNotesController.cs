@@ -68,7 +68,7 @@ namespace MyPortalWeb.Controllers.Api
                 {
                     if (academicYearId == null || academicYearId == Guid.Empty)
                     {
-                        academicYearId = (await AcademicYearService.GetCurrent()).Id;
+                        academicYearId = (await AcademicYearService.GetCurrentAcademicYear(true)).Id;
                     }
 
                     var logNotes = await _logNoteService.GetByStudent(studentId, academicYearId.Value);
@@ -91,7 +91,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var logNote = new LogNoteModel
                 {
-                    AcademicYearId = (await AcademicYearService.GetCurrent()).Id,
+                    AcademicYearId = (await AcademicYearService.GetCurrentAcademicYear(true)).Id,
                         StudentId = model.StudentId,
                     TypeId = model.TypeId,
                     Message = model.Message

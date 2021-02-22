@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
@@ -16,23 +15,15 @@ namespace MyPortal.Logic.Services
 {
     public class DocumentService : BaseService, IDocumentService
     {
-        private readonly IDocumentRepository _documentRepository;
-        private readonly IDocumentTypeRepository _documentTypeRepository;
-        private readonly IDirectoryService _directoryService;
-
-        public DocumentService(IDocumentRepository documentRepository, IDocumentTypeRepository documentTypeRepository,
-            IDirectoryService directoryService)
+        public DocumentService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _documentRepository = documentRepository;
-            _documentTypeRepository = documentTypeRepository;
-            _directoryService = directoryService;
         }
 
         public async Task Create(params DocumentModel[] documents)
         {
             foreach (var document in documents)
             {
-                var directory = await _directoryService.GetById(document.DirectoryId);
+                var directory = await UnitOfWork.Directories.GetById(document.DirectoryId);
 
                 if (directory == null)
                 {
@@ -53,7 +44,7 @@ namespace MyPortal.Logic.Services
                         Restricted = document.Restricted
                     };
 
-                    _documentRepository.Create(docToAdd);
+                    UnitOfWork.Documents.Create(docToAdd);
                 }
                 catch (Exception e)
                 {
@@ -61,14 +52,14 @@ namespace MyPortal.Logic.Services
                 }
             }
 
-            await _documentRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task Update(params UpdateDocumentModel[] documents)
         {
             foreach (var document in documents)
             {
-                var documentInDb = await _documentRepository.GetByIdWithTracking(document.Id);
+                var documentInDb = await UnitOfWork.Documents.GetByIdForEditing(document.Id);
 
                 documentInDb.Title = document.Title;
                 documentInDb.Description = document.Description;
@@ -76,12 +67,12 @@ namespace MyPortal.Logic.Services
                 documentInDb.TypeId = document.TypeId;
             }
 
-            await _documentRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task<IEnumerable<DocumentTypeModel>> GetTypes(DocumentTypeFilter filter)
         {
-            var documentTypes = await _documentTypeRepository.Get(filter);
+            var documentTypes = await UnitOfWork.DocumentTypes.Get(filter);
 
             return documentTypes.Select(BusinessMapper.Map<DocumentTypeModel>).ToList();
         }
@@ -90,15 +81,15 @@ namespace MyPortal.Logic.Services
         {
             foreach (var documentId in documentIds)
             {
-                await _documentRepository.Delete(documentId);
+                await UnitOfWork.Documents.Delete(documentId);
             }
 
-            await _documentRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task<DocumentModel> GetDocumentById(Guid documentId)
         {
-            var document = await _documentRepository.GetById(documentId);
+            var document = await UnitOfWork.Documents.GetById(documentId);
 
             if (document == null)
             {
@@ -106,13 +97,6 @@ namespace MyPortal.Logic.Services
             }
 
             return BusinessMapper.Map<DocumentModel>(document);
-        }
-
-        public override void Dispose()
-        {
-            _documentRepository.Dispose();
-            _documentTypeRepository.Dispose();
-            _directoryService.Dispose();
         }
     }
 }

@@ -1,30 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
-using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
-using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Services
 {
     public class AttendancePeriodService : BaseService, IPeriodService
-    {
-        private readonly IAttendancePeriodRepository _periodRepository;
-
-        public AttendancePeriodService(IAttendancePeriodRepository periodRepository)
+    { 
+        public AttendancePeriodService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _periodRepository = periodRepository;
         }
 
         public async Task<AttendancePeriodModel> GetById(Guid periodId)
         {
-            var period = await _periodRepository.GetById(periodId);
+            var period = await UnitOfWork.AttendancePeriods.GetById(periodId);
 
             if (period == null)
             {
@@ -32,13 +23,6 @@ namespace MyPortal.Logic.Services
             }
 
             return BusinessMapper.Map<AttendancePeriodModel>(period);
-        }
-        
-        
-
-        public override void Dispose()
-        {
-            _periodRepository.Dispose();
         }
     }
 }

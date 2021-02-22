@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
@@ -12,15 +14,22 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories.Base
 {
-    public abstract class BaseReadWriteRepository<TEntity> : BaseReadRepository<TEntity>, IReadWriteRepository<TEntity> where TEntity : class, IEntity
+    public abstract class BaseReadWriteRepository<TEntity> : BaseReadRepository<TEntity>, IReadWriteRepository<TEntity>, IWriteRepository where TEntity : class, IEntity
     {
         protected readonly ApplicationDbContext Context;
         protected readonly List<Query> PendingQueries;
 
-        protected BaseReadWriteRepository(ApplicationDbContext context, IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        protected BaseReadWriteRepository(ApplicationDbContext context, string tblAlias = null) : base(context.Database.GetDbConnection(), tblAlias)
         {
             Context = context;
             PendingQueries = new List<Query>();
+        }
+
+        protected async Task<int> ExecuteNonQuery(Query query)
+        {
+            var compiled = Compiler.Compile(query);
+
+            return await Connection.ExecuteAsync(compiled.Sql, compiled.NamedBindings);
         }
 
         public async Task SaveChanges()
@@ -33,7 +42,7 @@ namespace MyPortal.Database.Repositories.Base
             await Context.SaveChangesAsync();
         }
 
-        public async Task<TEntity> GetByIdWithTracking(Guid id)
+        public async Task<TEntity> GetByIdForEditing(Guid id)
         {
             var entity = await Context.Set<TEntity>().FirstOrDefaultAsync(x => x.Id == id);
 
@@ -52,7 +61,7 @@ namespace MyPortal.Database.Repositories.Base
 
         public async Task Delete(Guid id)
         {
-            var entity = await GetByIdWithTracking(id);
+            var entity = await GetByIdForEditing(id);
 
             switch (entity)
             {
@@ -67,10 +76,9 @@ namespace MyPortal.Database.Repositories.Base
             }
         }
 
-        public new void Dispose()
+        public override void Dispose()
         {
             Context.Dispose();
-            Connection.Dispose();
         }
     }
 }

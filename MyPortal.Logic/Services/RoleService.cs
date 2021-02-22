@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Exceptions;
@@ -19,32 +19,23 @@ namespace MyPortal.Logic.Services
     public class RoleService : BaseService, IRoleService
     {
         private readonly RoleManager<Role> _roleManager;
-        private readonly IRolePermissionRepository _rolePermissionRepository;
-        private readonly IPermissionRepository _permissionRepository;
-        private readonly ISystemAreaRepository _systemAreaRepository;
         private readonly IRolePermissionsCache _rolePermissionsCache;
-        private readonly IUserRoleRepository _userRoleRepository;
 
-        public RoleService(RoleManager<Role> roleManager, IRolePermissionRepository rolePermissionRepository,
-            IPermissionRepository permissionRepository, ISystemAreaRepository systemAreaRepository, IRolePermissionsCache rolePermissionsCache, IUserRoleRepository userRoleRepository)
+        public RoleService(IUnitOfWork unitOfWork, RoleManager<Role> roleManager, IRolePermissionsCache rolePermissionsCache) : base(unitOfWork)
         {
             _roleManager = roleManager;
-            _rolePermissionRepository = rolePermissionRepository;
-            _permissionRepository = permissionRepository;
-            _systemAreaRepository = systemAreaRepository;
             _rolePermissionsCache = rolePermissionsCache;
-            _userRoleRepository = userRoleRepository;
         }
 
         public async Task<TreeNode> GetPermissionsTree(Guid roleId)
         {
             var role = await _roleManager.FindByIdAsync(roleId.ToString());
 
-            var systemAreas = (await _systemAreaRepository.GetAll()).ToList();
+            var systemAreas = (await UnitOfWork.SystemAreas.GetAll()).ToList();
 
-            var permissions = (await _permissionRepository.GetAll()).ToList();
+            var permissions = (await UnitOfWork.Permissions.GetAll()).ToList();
 
-            var existingPermissions = (await _rolePermissionRepository.GetByRole(roleId)).ToList();
+            var existingPermissions = (await UnitOfWork.RolePermissions.GetByRole(roleId)).ToList();
 
             var root = TreeNode.CreateRoot("MyPortal");
 
@@ -88,7 +79,7 @@ namespace MyPortal.Logic.Services
         private async Task SetPermissions(Guid roleId, params Guid[] permIds)
         {
             // Add new permissions from list
-            var existingPermissions = (await _rolePermissionRepository.GetByRole(roleId)).ToList();
+            var existingPermissions = (await UnitOfWork.RolePermissions.GetByRole(roleId)).ToList();
 
             var permissionsToAdd = permIds.Where(x => existingPermissions.All(p => p.PermissionId != x)).ToList();
 
@@ -96,7 +87,7 @@ namespace MyPortal.Logic.Services
 
             foreach (var permId in permissionsToAdd)
             {
-                _rolePermissionRepository.Create(new RolePermission
+                UnitOfWork.RolePermissions.Create(new RolePermission
                     {RoleId = roleId, PermissionId = permId});
             }
 
@@ -104,12 +95,12 @@ namespace MyPortal.Logic.Services
 
             foreach (var perm in permissionsToRemove)
             {
-                await _rolePermissionRepository.Delete(perm.RoleId, perm.PermissionId);
+                await UnitOfWork.RolePermissions.Delete(perm.RoleId, perm.PermissionId);
             }
 
             _rolePermissionsCache.Purge(roleId);
 
-            await _rolePermissionRepository.SaveChanges();
+            await UnitOfWork.RolePermissions.SaveChanges();
         }
 
         public async Task<IEnumerable<Guid>> Create(params CreateRoleModel[] requests)
@@ -172,10 +163,10 @@ namespace MyPortal.Logic.Services
         {
             foreach (var roleId in roleIds)
             {
-                await _rolePermissionRepository.DeleteAllPermissions(roleId);
-                await _userRoleRepository.DeleteAllByRole(roleId);
+                await UnitOfWork.RolePermissions.DeleteAllPermissions(roleId);
+                await UnitOfWork.UserRoles.DeleteAllByRole(roleId);
 
-                await _rolePermissionRepository.SaveChanges();
+                await UnitOfWork.RolePermissions.SaveChanges();
 
                 var roleInDb = await _roleManager.FindByIdAsync(roleId.ToString());
 
@@ -212,13 +203,6 @@ namespace MyPortal.Logic.Services
             }
 
             return BusinessMapper.Map<RoleModel>(role);
-        }
-
-        public override void Dispose()
-        {
-            _rolePermissionRepository.Dispose();
-            _permissionRepository.Dispose();
-            _systemAreaRepository.Dispose();
         }
     }
 }

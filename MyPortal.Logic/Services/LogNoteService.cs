@@ -1,21 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Interfaces;
-using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Helpers;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using Task = System.Threading.Tasks.Task;
 
@@ -23,21 +13,13 @@ namespace MyPortal.Logic.Services
 {
     public class LogNoteService : BaseService, ILogNoteService
     {
-        private readonly IAcademicYearRepository _academicYearRepository;
-        private readonly ILogNoteRepository _logNoteRepository;
-        private readonly ILogNoteTypeRepository _logNoteTypeRepository;
-
-        public LogNoteService(IAcademicYearRepository academicYearRepository, ILogNoteRepository logNoteRepository,
-            ILogNoteTypeRepository logNoteTypeRepository)
+        public LogNoteService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _academicYearRepository = academicYearRepository;
-            _logNoteRepository = logNoteRepository;
-            _logNoteTypeRepository = logNoteTypeRepository;
         }
 
         public async Task<LogNoteModel> GetById(Guid logNoteId)
         {
-            var logNote = await _logNoteRepository.GetById(logNoteId);
+            var logNote = await UnitOfWork.LogNotes.GetById(logNoteId);
 
             if (logNote == null)
             {
@@ -49,14 +31,14 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<LogNoteModel>> GetByStudent(Guid studentId, Guid academicYearId)
         {
-            var logNotes = await _logNoteRepository.GetByStudent(studentId, academicYearId);
+            var logNotes = await UnitOfWork.LogNotes.GetByStudent(studentId, academicYearId);
 
             return logNotes.OrderByDescending(n => n.CreatedDate).Select(BusinessMapper.Map<LogNoteModel>);
         }
 
         public async Task<IEnumerable<LogNoteTypeModel>> GetTypes()
         {
-            var logNoteTypes = await _logNoteTypeRepository.GetAll();
+            var logNoteTypes = await UnitOfWork.LogNoteTypes.GetAll();
 
             return logNoteTypes.Select(BusinessMapper.Map<LogNoteTypeModel>);
         }
@@ -65,7 +47,7 @@ namespace MyPortal.Logic.Services
         {
             foreach (var logNoteObject in logNoteObjects)
             {
-                await AcademicYearModel.CheckLock(_academicYearRepository, logNoteObject.AcademicYearId);
+                await AcademicYearModel.CheckLock(UnitOfWork.AcademicYears, logNoteObject.AcademicYearId);
                 
                 var createDate = DateTime.Now;
 
@@ -81,28 +63,28 @@ namespace MyPortal.Logic.Services
                     AcademicYearId = logNoteObject.AcademicYearId
                 };
 
-                _logNoteRepository.Create(logNote);
+                UnitOfWork.LogNotes.Create(logNote);
             }
 
-            await _logNoteRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task Update(params LogNoteModel[] logNoteObjects)
         {
             foreach (var logNoteObject in logNoteObjects)
             {
-                await AcademicYearModel.CheckLock(_academicYearRepository, logNoteObject.AcademicYearId);
+                await AcademicYearModel.CheckLock(UnitOfWork.AcademicYears, logNoteObject.AcademicYearId);
 
                 var updateDate = DateTime.Now;
 
-                var logNote = await _logNoteRepository.GetByIdWithTracking(logNoteObject.Id);
+                var logNote = await UnitOfWork.LogNotes.GetByIdForEditing(logNoteObject.Id);
 
                 if (logNote == null)
                 {
                     throw new NotFoundException("Log note not found.");
                 }
                 
-                await AcademicYearModel.CheckLock(_academicYearRepository, logNote.AcademicYearId);
+                await AcademicYearModel.CheckLock(UnitOfWork.AcademicYears, logNote.AcademicYearId);
 
                 logNote.TypeId = logNoteObject.TypeId;
                 logNote.Message = logNoteObject.Message;
@@ -110,7 +92,7 @@ namespace MyPortal.Logic.Services
                 logNote.UpdatedById = logNoteObject.UpdatedById;
             }
 
-            await _logNoteRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task Delete(params Guid[] logNoteIds)
@@ -119,18 +101,17 @@ namespace MyPortal.Logic.Services
             {
                 var logNote = await GetById(logNoteId);
 
-                await AcademicYearModel.CheckLock(_academicYearRepository, logNote.AcademicYearId);
+                await AcademicYearModel.CheckLock(UnitOfWork.AcademicYears, logNote.AcademicYearId);
                 
-                await _logNoteRepository.Delete(logNoteId);
+                await UnitOfWork.LogNotes.Delete(logNoteId);
             }
 
-            await _logNoteRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public override void Dispose()
         {
-            _logNoteRepository.Dispose();
-            _logNoteTypeRepository.Dispose();
+            UnitOfWork.Dispose();
         }
     }
 }

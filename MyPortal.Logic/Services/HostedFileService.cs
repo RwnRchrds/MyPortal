@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
@@ -10,15 +10,13 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class HostedFileService : IFileService
+    public class HostedFileService : BaseService, IFileService
     {
         private readonly IHostedFileProvider _fileProvider;
-        private readonly IFileRepository _fileRepository;
 
-        public HostedFileService(IHostedFileProvider fileProvider, IFileRepository fileRepository)
+        public HostedFileService(IUnitOfWork unitOfWork, IHostedFileProvider fileProvider) : base(unitOfWork)
         {
             _fileProvider = fileProvider;
-            _fileRepository = fileRepository;
         }
 
         public async Task AttachFileToDocument(Guid documentId, string fileId)
@@ -38,28 +36,28 @@ namespace MyPortal.Logic.Services
                 FileName = fileData.Name
             };
 
-            _fileRepository.Create(file);
+            UnitOfWork.Files.Create(file);
 
-            await _fileRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task RemoveFileFromDocument(Guid documentId)
         {
-            var file = await _fileRepository.GetByDocumentId(documentId);
+            var file = await UnitOfWork.Files.GetByDocumentId(documentId);
 
             if (file == null)
             {
                 throw new LogicException("No file is attached to this document.");
             }
 
-            await _fileRepository.Delete(file.Id);
+            await UnitOfWork.Files.Delete(file.Id);
 
-            await _fileRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task<HostedFileMetadata> GetMetadataByDocument(Guid documentId)
         {
-            var file = await _fileRepository.GetByDocumentId(documentId);
+            var file = await UnitOfWork.Files.GetByDocumentId(documentId);
 
             var metadata = await _fileProvider.FetchMetadata(file.FileId);
 
@@ -73,7 +71,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<FileDownload> GetDownloadByDocument(Guid documentId)
         {
-            var file = await _fileRepository.GetByDocumentId(documentId);
+            var file = await UnitOfWork.Files.GetByDocumentId(documentId);
 
             var stream = await _fileProvider.DownloadFileToStream(file.FileId);
 

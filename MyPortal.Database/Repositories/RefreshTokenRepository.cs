@@ -17,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class RefreshTokenRepository : BaseReadWriteRepository<RefreshToken>, IRefreshTokenRepository
     {
-        public RefreshTokenRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "RefreshToken")
+        public RefreshTokenRepository(ApplicationDbContext context) : base(context, "RefreshToken")
         {
 
         }

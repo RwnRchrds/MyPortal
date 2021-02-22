@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class MedicalEventRepository : BaseReadWriteRepository<MedicalEvent>, IMedicalEventRepository
     {
-        public MedicalEventRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "MedicalEvent")
+        public MedicalEventRepository(ApplicationDbContext context) : base(context, "MedicalEvent")
         {
            
         }

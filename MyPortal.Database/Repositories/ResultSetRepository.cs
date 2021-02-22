@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ResultSetRepository : BaseReadWriteRepository<ResultSet>, IResultSetRepository
     {
-        public ResultSetRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection)
+        public ResultSetRepository(ApplicationDbContext context) : base(context)
         {
         }
     }

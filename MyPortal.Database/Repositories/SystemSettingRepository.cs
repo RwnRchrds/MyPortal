@@ -11,13 +11,14 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Repositories.Base;
 using SqlKata;
 using SqlKata.Compilers;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class SystemSettingRepository : ISystemSettingRepository
+    public class SystemSettingRepository : ISystemSettingRepository, IWriteRepository
     {
         private IDbConnection _connection;
         private ApplicationDbContext _context;
@@ -41,7 +42,7 @@ namespace MyPortal.Database.Repositories
             return (await _connection.QueryAsync<SystemSetting>(sql.Sql, sql.NamedBindings)).FirstOrDefault();
         }
 
-        public async Task<SystemSetting> GetWithTracking(string name)
+        public async Task<SystemSetting> GetForEditing(string name)
         {
             var setting = await _context.SystemSettings.FirstOrDefaultAsync(x => x.Name == name);
 

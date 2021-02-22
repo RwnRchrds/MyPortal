@@ -4,9 +4,7 @@ using System;
 namespace MyPortal.Logic.Models.DataGrid
 {    
     public class AttendanceMarkListModel
-    {        
-        public Guid Id { get; set; }
-        
+    {
         public Guid StudentId { get; set; }
         
         public Guid WeekId { get; set; }

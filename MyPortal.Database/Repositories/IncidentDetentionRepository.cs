@@ -15,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class IncidentDetentionRepository : BaseReadWriteRepository<IncidentDetention>, IIncidentDetentionRepository
     {
-        public IncidentDetentionRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "IncidentDetention")
+        public IncidentDetentionRepository(ApplicationDbContext context) : base(context, "IncidentDetention")
         {
             
         }

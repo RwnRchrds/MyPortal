@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ContactRepository : BaseReadWriteRepository<Contact>, IContactRepository
     {
-        public ContactRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Contact")
+        public ContactRepository(ApplicationDbContext context) : base(context, "Contact")
         {
      
         }

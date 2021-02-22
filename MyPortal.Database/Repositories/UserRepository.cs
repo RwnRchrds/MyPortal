@@ -16,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class UserRepository : BaseReadWriteRepository<User>, IUserRepository
     {
-        public UserRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "User")
+        public UserRepository(ApplicationDbContext context) : base(context, "User")
         {
 
         }

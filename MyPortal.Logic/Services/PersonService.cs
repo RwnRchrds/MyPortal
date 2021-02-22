@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces.Services;
@@ -13,16 +13,13 @@ namespace MyPortal.Logic.Services
 {
     public class PersonService : BaseService, IPersonService
     {
-        private readonly IPersonRepository _personRepository;
-
-        public PersonService(IPersonRepository personRepository)
+        public PersonService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _personRepository = personRepository;
         }
 
         public async Task<PersonModel> GetById(Guid personId)
         {
-            var person = await _personRepository.GetById(personId);
+            var person = await UnitOfWork.People.GetById(personId);
 
             return BusinessMapper.Map<PersonModel>(person);
         }
@@ -41,28 +38,28 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<PersonModel>> Get(PersonSearchOptions searchModel)
         {
-            var people = await _personRepository.GetAll(searchModel);
+            var people = await UnitOfWork.People.GetAll(searchModel);
 
             return people.Select(BusinessMapper.Map<PersonModel>).ToList();
         }
 
         public async Task<IEnumerable<PersonSearchResultModel>> GetWithTypes(PersonSearchOptions searchModel)
         {
-            var results = await _personRepository.GetAllWithTypes(searchModel);
+            var results = await UnitOfWork.People.GetAllWithTypes(searchModel);
 
             return results.Select(BusinessMapper.Map<PersonSearchResultModel>);
         }
 
         public async Task<PersonSearchResultModel> GetPersonWithTypes(Guid personId)
         {
-            var result = await _personRepository.GetPersonWithTypesById(personId);
+            var result = await UnitOfWork.People.GetPersonWithTypesById(personId);
 
             return BusinessMapper.Map<PersonSearchResultModel>(result);
         }
 
         public async Task<PersonModel> GetByUserId(Guid userId, bool throwIfNotFound = true)
         {
-            var person = await _personRepository.GetByUserId(userId);
+            var person = await UnitOfWork.People.GetByUserId(userId);
 
             if (person == null && throwIfNotFound)
             {
@@ -70,11 +67,6 @@ namespace MyPortal.Logic.Services
             }
 
             return BusinessMapper.Map<PersonModel>(person);
-        }
-
-        public override void Dispose()
-        {
-            _personRepository.Dispose();
         }
     }
 }

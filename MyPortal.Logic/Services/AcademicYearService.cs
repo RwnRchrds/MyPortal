@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Routing.Patterns;
 using MyPortal.Database.Constants;
-using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
@@ -17,27 +16,20 @@ namespace MyPortal.Logic.Services
 {
     public class AcademicYearService : BaseService, IAcademicYearService
     {
-        private readonly IAcademicYearRepository _academicYearRepository;
-        private readonly IAttendanceWeekRepository _attendanceWeekRepository;
-        private readonly IDiaryEventRepository _diaryEventRepository;
-
-        public AcademicYearService(IAcademicYearRepository academicYearRepository,
-            IAttendanceWeekRepository attendanceWeekRepository, IDiaryEventRepository diaryEventRepository)
+        public AcademicYearService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _academicYearRepository = academicYearRepository;
-            _attendanceWeekRepository = attendanceWeekRepository;
-            _diaryEventRepository = diaryEventRepository;
+
         }
 
-        public async Task<AcademicYearModel> GetCurrent(bool getLatestIfNull = false)
+        public async Task<AcademicYearModel> GetCurrentAcademicYear(bool getLatestIfNull = false)
         {
-            var acadYear = await _academicYearRepository.GetCurrent();
+            var acadYear = await UnitOfWork.AcademicYears.GetCurrent();
 
             if (acadYear == null)
             {
                 if (getLatestIfNull)
                 {
-                    acadYear = await _academicYearRepository.GetLatest();
+                    acadYear = await UnitOfWork.AcademicYears.GetLatest();
 
                     if (acadYear == null)
                     {
@@ -53,30 +45,21 @@ namespace MyPortal.Logic.Services
             return BusinessMapper.Map<AcademicYearModel>(acadYear);
         }
 
-        public async Task<AcademicYearModel> GetById(Guid academicYearId)
+        public async Task<AcademicYearModel> GetAcademicYearById(Guid academicYearId)
         {
-            var acadYear = await _academicYearRepository.GetById(academicYearId);
+            var acadYear = await UnitOfWork.AcademicYears.GetById(academicYearId);
 
             return BusinessMapper.Map<AcademicYearModel>(acadYear);
         }
 
-        public async Task<IEnumerable<AcademicYearModel>> GetAll()
+        public async Task<IEnumerable<AcademicYearModel>> GetAcademicYears()
         {
-            var acadYears = await _academicYearRepository.GetAll();
+            var acadYears = await UnitOfWork.AcademicYears.GetAll();
 
             return acadYears.Select(BusinessMapper.Map<AcademicYearModel>);
         }
 
-        public async Task Create(AcademicYearModel academicYearModel)
-        {
-            var academicYear = BusinessMapper.Map<AcademicYear>(academicYearModel);
-
-            _academicYearRepository.Create(academicYear);
-
-            await _academicYearRepository.SaveChanges();
-        }
-
-        public async Task Create(params CreateAcademicYearModel[] createModels)
+        public async Task CreateAcademicYear(params CreateAcademicYearModel[] createModels)
         {
             foreach (var model in createModels)
             {
@@ -106,7 +89,7 @@ namespace MyPortal.Logic.Services
 
                     foreach (var schoolHoliday in termModel.Holidays)
                     {
-                        _diaryEventRepository.Create(new DiaryEvent
+                        UnitOfWork.DiaryEvents.Create(new DiaryEvent
                         {
                             Description = "School Holiday",
                             EventTypeId = EventTypes.SchoolHoliday,
@@ -119,14 +102,13 @@ namespace MyPortal.Logic.Services
                     academicYear.AcademicTerms.Add(term);
                 }
 
-                _academicYearRepository.Create(academicYear);
+                UnitOfWork.AcademicYears.Create(academicYear);
 
-                await _academicYearRepository.SaveChanges();
-                await _diaryEventRepository.SaveChanges();
+                await UnitOfWork.SaveChanges();
             }
         }
 
-        public CreateAcademicTermModel[] GenerateAttendanceWeeks(CreateAcademicTermModel[] termModel)
+        public CreateAcademicTermModel[] GenerateAttendanceWeeks(params CreateAcademicTermModel[] termModel)
         {
             foreach (var model in termModel)
             {
@@ -182,32 +164,32 @@ namespace MyPortal.Logic.Services
             return termModel;
         }
 
-        public async Task Update(params AcademicYearModel[] academicYearModels)
+        public async Task UpdateAcademicYear(params AcademicYearModel[] academicYearModels)
         {
             foreach (var academicYearModel in academicYearModels)
             {
-                var academicYearInDb = await _academicYearRepository.GetById(academicYearModel.Id);
+                var academicYearInDb = await UnitOfWork.AcademicYears.GetById(academicYearModel.Id);
 
                 academicYearInDb.Locked = academicYearModel.Locked;
             }
         }
 
-        public async Task Delete(params Guid[] academicYearIds)
+        public async Task DeleteAcademicYear(params Guid[] academicYearIds)
         {
             foreach (var academicYearId in academicYearIds)
             {
-                await _academicYearRepository.Delete(academicYearId);
+                await UnitOfWork.AcademicYears.Delete(academicYearId);
             }
         }
 
-        public async Task<bool> IsLocked(Guid academicYearId)
+        public async Task<bool> IsAcademicYearLocked(Guid academicYearId)
         {
-            return await _academicYearRepository.IsLocked(academicYearId);
+            return await UnitOfWork.AcademicYears.IsLocked(academicYearId);
         }
 
         public override void Dispose()
         {
-            _academicYearRepository.Dispose();
+            UnitOfWork.Dispose();
         }
     }
 }

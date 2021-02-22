@@ -12,20 +12,10 @@ using SqlKata.Compilers;
 
 namespace MyPortal.Database.Repositories.Base
 {
-    public abstract class BaseReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : class, IEntity
+    public abstract class BaseReadRepository<TEntity> : BaseRepository, IReadRepository<TEntity> where TEntity : class, IEntity
     {
-        protected IDbConnection Connection;
-        protected readonly SqlServerCompiler Compiler;
-
-        public BaseReadRepository(IDbConnection connection, string tblAlias = null) : this(tblAlias)
+        public BaseReadRepository(IDbConnection connection, string tblAlias = null) : base(connection)
         {
-            Connection = connection;
-        }
-
-        private BaseReadRepository(string tblAlias = null)
-        {
-            Compiler = new SqlServerCompiler();
-
             TblName = EntityHelper.GetTableName(typeof(TEntity), out TblAlias, tblAlias);
         }
 
@@ -45,50 +35,6 @@ namespace MyPortal.Database.Repositories.Base
             var result = await ExecuteQuery(query);
 
             return result.FirstOrDefault();
-        }
-
-        protected async Task<T> ExecuteQueryFirstOrDefault<T>(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Connection.QueryFirstOrDefaultAsync<T>(sql.Sql, sql.NamedBindings);
-        }
-
-        protected virtual void JoinRelated(Query query)
-        {
-            
-        }
-
-        protected virtual void SelectAllRelated(Query query)
-        {
-            JoinRelated(query);
-        }
-
-        protected Query GenerateEmptyQuery(Type t, string alias = null)
-        {
-            return new Query(EntityHelper.GetTableName(t, alias));
-        }
-
-        protected async Task<int?> ExecuteQueryIntResult(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            var result = await Connection.QueryFirstOrDefaultAsync<int?>(sql.Sql, sql.NamedBindings);
-            return result;
-        }
-
-        protected async Task<string> ExecuteQueryStringResult(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Connection.QuerySingleOrDefaultAsync<string>(sql.Sql, sql.NamedBindings);
-        }
-
-        protected async Task<int> ExecuteNonQuery(Query query)
-        {
-            var compiled = Compiler.Compile(query);
-
-            return await Connection.ExecuteAsync(compiled.Sql, compiled.NamedBindings);
         }
 
         protected Query GenerateQuery(bool includeSoftDeleted = false, bool getRelated = true)
@@ -124,9 +70,41 @@ namespace MyPortal.Database.Repositories.Base
             return (await ExecuteQuery(query)).SingleOrDefault();
         }
 
-        public void Dispose()
+        protected async Task<T> ExecuteQueryFirstOrDefault<T>(Query query)
         {
-            Connection.Dispose();
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryFirstOrDefaultAsync<T>(sql.Sql, sql.NamedBindings);
+        }
+
+        protected virtual void JoinRelated(Query query)
+        {
+
+        }
+
+        protected virtual void SelectAllRelated(Query query)
+        {
+            JoinRelated(query);
+        }
+
+        protected Query GenerateEmptyQuery(Type t, string alias = null)
+        {
+            return new Query(EntityHelper.GetTableName(t, alias));
+        }
+
+        protected async Task<int?> ExecuteQueryIntResult(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var result = await Connection.QueryFirstOrDefaultAsync<int?>(sql.Sql, sql.NamedBindings);
+            return result;
+        }
+
+        protected async Task<string> ExecuteQueryStringResult(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QuerySingleOrDefaultAsync<string>(sql.Sql, sql.NamedBindings);
         }
     }
 }

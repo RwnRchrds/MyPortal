@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class RoleRepository : BaseReadWriteRepository<Role>, IRoleRepository
     {
-        public RoleRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Role")
+        public RoleRepository(ApplicationDbContext context) : base(context, "Role")
         {
 
         }

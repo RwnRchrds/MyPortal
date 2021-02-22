@@ -35,7 +35,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                var incident = await _incidentService.GetById(incidentId);
+                var incident = await _incidentService.GetIncidentById(incidentId);
 
                 if (await AuthoriseStudent(incident.StudentId))
                 {
@@ -49,15 +49,15 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Route("student", Name = "ApiIncidentGetByStudent")]
         [Produces(typeof(IEnumerable<IncidentListModel>))]
-        public async Task<IActionResult> GetByStudent(Guid studentId)
+        public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             return await ProcessAsync(async () =>
             {
                 if (await AuthoriseStudent(studentId))
                 {
-                    var academicYearId = (await AcademicYearService.GetCurrent()).Id;
+                    var fromAcademicYearId = academicYearId ?? (await AcademicYearService.GetCurrentAcademicYear(true)).Id;
 
-                    var incidents = await _incidentService.GetByStudent(studentId, academicYearId);
+                    var incidents = await _incidentService.GetIncidentsByStudent(studentId, fromAcademicYearId);
 
                     return Ok(incidents.Select(x => x.ToListModel()));
                 }
@@ -89,7 +89,7 @@ namespace MyPortalWeb.Controllers.Api
                     RecordedById = user.Id
                 };
 
-                await _incidentService.Create(incident);
+                await _incidentService.CreateIncident(incident);
 
                 return Ok("Incident created.");
             }, Permissions.Behaviour.Incidents.EditIncidents);
@@ -104,7 +104,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var user = await UserService.GetUserByPrincipal(User);
 
-                await _incidentService.Update(model);
+                await _incidentService.UpdateIncident(model);
 
                 return Ok("Incident updated.");
             }, Permissions.Behaviour.Incidents.EditIncidents);
@@ -117,7 +117,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                await _incidentService.Delete(incidentId);
+                await _incidentService.DeleteIncident(incidentId);
 
                 return Ok("Incident deleted.");
             }, Permissions.Behaviour.Incidents.EditIncidents);

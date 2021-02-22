@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ActivityRepository : BaseReadWriteRepository<Activity>, IActivityRepository
     {
-        public ActivityRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "Activity")
+        public ActivityRepository(ApplicationDbContext context) : base(context, "Activity")
         {
         }
     }

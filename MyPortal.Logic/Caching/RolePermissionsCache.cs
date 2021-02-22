@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Logic.Constants;
 
@@ -11,12 +12,12 @@ namespace MyPortal.Logic.Caching
     public class RolePermissionsCache : IRolePermissionsCache
     {
         private readonly IMemoryCache _cache;
-        private readonly IRolePermissionRepository _rolePermissionRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RolePermissionsCache(IMemoryCache cache, IRolePermissionRepository rolePermissionRepository)
+        public RolePermissionsCache(IMemoryCache cache, IUnitOfWork unitOfWork)
         {
             _cache = cache;
-            _rolePermissionRepository = rolePermissionRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Guid[]> GetPermissions(params Guid[] roleIds)
@@ -33,7 +34,7 @@ namespace MyPortal.Logic.Caching
                 }
                 else
                 {
-                    permissionIds.AddRange((await _rolePermissionRepository.GetByRole(roleId)).Select(x => x.PermissionId));
+                    permissionIds.AddRange((await _unitOfWork.RolePermissions.GetByRole(roleId)).Select(x => x.PermissionId));
                     _cache.Set(key, permissionIds, TimeSpan.FromHours(1));
                 }
             }

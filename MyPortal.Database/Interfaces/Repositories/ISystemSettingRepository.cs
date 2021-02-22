@@ -6,10 +6,10 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface ISystemSettingRepository : IDisposable
+    public interface ISystemSettingRepository : IRepository, IDisposable
     {
         Task<SystemSetting> Get(string name);
-        Task<SystemSetting> GetWithTracking(string name);
+        Task<SystemSetting> GetForEditing(string name);
         Task SaveChanges();
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -18,51 +19,20 @@ namespace MyPortal.Logic.Services
 {
     public class BillService : BaseService, IBillService
     {
-        private readonly IAccountTransactionRepository _accountTransactionRepository;
-        private readonly IBillRepository _billRepository;
-        private readonly IBillAccountTransactionRepository _billAccountTransactionRepository;
-        private readonly IBillChargeRepository _billChargeRepository;
-        private readonly IBillDiscountRepository _billDiscountRepository;
-        private readonly IBillItemRepository _billItemRepository;
-        private readonly IChargeRepository _chargeRepository;
-        private readonly IChargeDiscountRepository _chargeDiscountRepository;
-        private readonly IDiscountRepository _discountRepository;
-        private readonly IStudentChargeRepository _studentChargeRepository;
-        private readonly IStudentDiscountRepository _studentDiscountRepository;
-        private readonly ISystemSettingRepository _settingRepository;
-
-        public BillService(IAccountTransactionRepository accountTransactionRepository, IBillRepository billRepository,
-            IBillAccountTransactionRepository billAccountTransactionRepository,
-            IBillChargeRepository billChargeRepository, IBillDiscountRepository billDiscountRepository,
-            IBillItemRepository billItemRepository, IChargeRepository chargeRepository,
-            IChargeDiscountRepository chargeDiscountRepository, IDiscountRepository discountRepository,
-            IStudentChargeRepository studentChargeRepository, IStudentDiscountRepository studentDiscountRepository,
-            ISystemSettingRepository settingRepository)
+        public BillService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _accountTransactionRepository = accountTransactionRepository;
-            _billRepository = billRepository;
-            _billAccountTransactionRepository = billAccountTransactionRepository;
-            _billChargeRepository = billChargeRepository;
-            _billDiscountRepository = billDiscountRepository;
-            _billItemRepository = billItemRepository;
-            _chargeRepository = chargeRepository;
-            _chargeDiscountRepository = chargeDiscountRepository;
-            _discountRepository = discountRepository;
-            _studentChargeRepository = studentChargeRepository;
-            _studentDiscountRepository = studentDiscountRepository;
-            _settingRepository = settingRepository;
         }
 
         public async Task<IEnumerable<BillModel>> GenerateChargeBills()
         {
-            var hasSetting = int.TryParse((await _settingRepository.Get(SystemSettings.BillPaymentPeriodLength)).Setting, out int paymentPeriodLength);
+            var hasSetting = int.TryParse((await UnitOfWork.SystemSettings.Get(SystemSettings.BillPaymentPeriodLength)).Setting, out int paymentPeriodLength);
 
             if (!hasSetting)
             {
                 throw new LogicException("Bill payment period length not defined.");
             }
 
-            var billableStudents = (await _studentChargeRepository.GetOutstanding()).GroupBy(sc => sc.StudentId);
+            var billableStudents = (await UnitOfWork.StudentCharges.GetOutstanding()).GroupBy(sc => sc.StudentId);
 
             var generatedBills = new List<Bill>();
 
@@ -83,16 +53,16 @@ namespace MyPortal.Logic.Services
                         GrossAmount = charge.Charge.Amount
                     });
 
-                    var chargeInDb = await _studentChargeRepository.GetByIdWithTracking(charge.ChargeId);
+                    var chargeInDb = await UnitOfWork.StudentCharges.GetByIdForEditing(charge.ChargeId);
                     chargeInDb.Recurrences--;
                 }
 
-                var studentDiscounts = await _studentDiscountRepository.GetByStudent(billableStudent.Key);
+                var studentDiscounts = await UnitOfWork.StudentDiscounts.GetByStudent(billableStudent.Key);
 
                 foreach (var studentDiscount in studentDiscounts)
                 {
                     var applicableChargeIds =
-                        (await _chargeDiscountRepository.GetByDiscount(studentDiscount.DiscountId)).Select(x =>
+                        (await UnitOfWork.ChargeDiscounts.GetByDiscount(studentDiscount.DiscountId)).Select(x =>
                             x.ChargeId);
 
                     if (bill.BillCharges.Any(c => applicableChargeIds.Contains(c.ChargeId)))
@@ -106,30 +76,13 @@ namespace MyPortal.Logic.Services
                     }
                 }
 
-                _billRepository.Create(bill);
+                UnitOfWork.Bills.Create(bill);
                 generatedBills.Add(bill);
             }
 
-            await _billRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
 
             return generatedBills.Select(BusinessMapper.Map<BillModel>);
-        }
-
-
-        public override void Dispose()
-        {
-            _accountTransactionRepository?.Dispose();
-            _billRepository?.Dispose();
-            _billAccountTransactionRepository?.Dispose();
-            _billChargeRepository?.Dispose();
-            _billDiscountRepository?.Dispose();
-            _billItemRepository?.Dispose();
-            _chargeRepository?.Dispose();
-            _chargeDiscountRepository?.Dispose();
-            _discountRepository?.Dispose();
-            _studentChargeRepository?.Dispose();
-            _studentDiscountRepository?.Dispose();
-            _settingRepository?.Dispose();
         }
     }
 }

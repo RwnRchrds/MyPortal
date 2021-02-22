@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
-using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
-using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Helpers;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using Task = System.Threading.Tasks.Task;
 
@@ -16,21 +9,13 @@ namespace MyPortal.Logic.Services
 {
     public class SystemSettingService : BaseService, ISystemSettingService
     {
-        private ISystemSettingRepository _systemSettingRepository;
-
-        public SystemSettingService(ISystemSettingRepository systemSettingRepository)
+        public SystemSettingService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _systemSettingRepository = systemSettingRepository;
-        }
-
-        public override void Dispose()
-        {
-            _systemSettingRepository.Dispose();
         }
 
         public async Task SetValue(string name, string value)
         {
-            var setting = await _systemSettingRepository.GetWithTracking(name);
+            var setting = await UnitOfWork.SystemSettings.GetForEditing(name);
 
             if (setting == null)
             {
@@ -39,12 +24,12 @@ namespace MyPortal.Logic.Services
 
             setting.Setting = value;
 
-            await _systemSettingRepository.SaveChanges();
+            await UnitOfWork.SaveChanges();
         }
 
         public async Task<int> GetDatabaseVersion()
         {
-            var databaseVersion = await _systemSettingRepository.Get("DatabaseVersion");
+            var databaseVersion = await UnitOfWork.SystemSettings.Get("DatabaseVersion");
 
             if (databaseVersion == null)
             {

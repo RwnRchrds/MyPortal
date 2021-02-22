@@ -17,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class BasketItemRepository : BaseReadWriteRepository<BasketItem>, IBasketItemRepository
     {
-        public BasketItemRepository(ApplicationDbContext context, IDbConnection connection) : base(context, connection, "BasketItem")
+        public BasketItemRepository(ApplicationDbContext context) : base(context, "BasketItem")
         {
 
         }
