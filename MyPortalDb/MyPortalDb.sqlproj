@@ -141,7 +141,6 @@
     <Build Include="dbo\Tables\AttendanceMarks.sql" />
     <Build Include="dbo\Tables\ChargeDiscounts.sql" />
     <Build Include="dbo\Tables\PhoneNumbers.sql" />
-    <Build Include="dbo\Tables\__EFMigrationsHistory.sql" />
     <Build Include="dbo\Tables\UserTokens.sql" />
     <Build Include="dbo\Tables\Locations.sql" />
     <Build Include="dbo\Tables\BillCharges.sql" />
