@@ -61,6 +61,7 @@
     <Folder Include="Scripts" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
+    <Folder Include="dbo\Views" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Script.SeedSystemData.sql" />
@@ -267,5 +268,6 @@
     <Build Include="dbo\Tables\TaskTypes.sql" />
     <Build Include="dbo\Tables\DocumentTypes.sql" />
     <Build Include="dbo\Tables\ExamBaseComponents.sql" />
+    <Build Include="dbo\Views\AttendancePeriods_PossibleAttendancePeriods.sql" />
   </ItemGroup>
 </Project>

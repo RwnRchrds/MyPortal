@@ -63,11 +63,6 @@ namespace MyPortal.Database.Repositories
                 }, sql.NamedBindings, splitOn:"Id, Id");
         }
 
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
-
         public async Task<IEnumerable<UserRole>> GetByUser(Guid userId)
         {
             var query = GenerateQuery();

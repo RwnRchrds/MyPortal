@@ -53,11 +53,5 @@ namespace MyPortal.Database.Repositories
         {
             await _context.SaveChangesAsync();
         }
-
-        public void Dispose()
-        {
-            _connection?.Dispose();
-            _context?.Dispose();
-        }
     }
 }

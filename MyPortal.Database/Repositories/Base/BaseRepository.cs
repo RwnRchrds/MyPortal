@@ -6,7 +6,7 @@ using SqlKata.Compilers;
 
 namespace MyPortal.Database.Repositories.Base
 {
-    public class BaseRepository : IDisposable
+    public class BaseRepository
     {
         protected IDbConnection Connection;
         protected readonly SqlServerCompiler Compiler;
@@ -15,11 +15,6 @@ namespace MyPortal.Database.Repositories.Base
         {
             Connection = connection;
             Compiler = new SqlServerCompiler();
-        }
-
-        public virtual void Dispose()
-        {
-            Connection.Dispose();
         }
     }
 }
