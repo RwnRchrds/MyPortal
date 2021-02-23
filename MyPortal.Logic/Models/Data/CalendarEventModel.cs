@@ -1,4 +1,6 @@
 ﻿using System;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.Query.Attendance;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.Data
@@ -16,7 +18,24 @@ namespace MyPortal.Logic.Models.Data
             Color = eventModel.EventType.ColourCode;
             Editable = false;
         }
-        
+
+        public CalendarEventModel(SessionMetadata sessionMetadata, string colour)
+        {
+            AllDay = false;
+            Start = sessionMetadata.StartTime;
+            End = sessionMetadata.EndTime;
+            Title = $"{sessionMetadata.ClassCode}";
+            Display = CalendarDisplayModes.Auto;
+            Color = colour;
+            if (sessionMetadata.RoomId.HasValue && !string.IsNullOrWhiteSpace(sessionMetadata.RoomName))
+            {
+                ExtendedProps = new CalendarEventExtendedPropertiesModel
+                {
+                    Room = sessionMetadata.RoomName
+                };
+            }
+        }
+
         public string Id { get; set; }
         public bool AllDay { get; set; }
         public DateTime Start { get; set; }

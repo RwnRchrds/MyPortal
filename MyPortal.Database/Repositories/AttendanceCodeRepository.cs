@@ -54,5 +54,22 @@ namespace MyPortal.Database.Repositories
 
             return (await ExecuteQuery(query)).FirstOrDefault();
         }
+
+        public async Task<IEnumerable<AttendanceCode>> GetAll(bool activeOnly, bool includeRestricted)
+        {
+            var query = GenerateQuery(false, false);
+
+            if (activeOnly)
+            {
+                query.Where("AttendanceCode.Active", true);
+            }
+
+            if (!includeRestricted)
+            {
+                query.Where("AttendanceCode.Restricted", false);
+            }
+
+            return await ExecuteQuery<AttendanceCode>(query);
+        }
     }
 }

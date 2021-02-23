@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Attendance;
+using MyPortal.Logic.Models.Response.Attendance;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
@@ -11,8 +12,7 @@ namespace MyPortal.Logic.Interfaces.Services
     {
         Task<AttendanceSummary> GetAttendanceSummaryByStudent(Guid studentId, Guid academicYearId);
         Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId, bool returnNoMark = false);
-        Task<IEnumerable<AttendanceRegisterStudentModel>> GetAttendanceMarksBySession(Guid attendanceWeekId,
-            Guid sessionId);
+        Task<AttendanceRegisterModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId);
         Task Save(params AttendanceMarkListModel[] marks);
         Task Delete(params Guid[] attendanceMarkIds);
     }

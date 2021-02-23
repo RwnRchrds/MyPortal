@@ -9,6 +9,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.Query.Attendance;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
 
@@ -61,14 +62,6 @@ namespace MyPortal.Database.Repositories
                 }, sql.NamedBindings);
         }
 
-        private Query FilterByStudentGroup(Query query, Guid groupTypeId, Guid groupId)
-        {
-            if (groupTypeId == StudentGroupTypes.CurriculumYearGroup)
-            {
-                
-            }
-        }
-
         public async Task<IEnumerable<AttendanceMark>> GetByStudent(Guid studentId, Guid academicYearId)
         {
             var query = GenerateQuery();
@@ -92,9 +85,22 @@ namespace MyPortal.Database.Repositories
             return (await ExecuteQuery(query)).SingleOrDefault();
         }
 
-        public async Task<IEnumerable<AttendanceMark>> GetRegisterMarks(Guid groupTypeId, Guid groupId, DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<PossibleAttendanceMark>> GetRegisterMarks(Guid groupTypeId, Guid groupId, DateTime startDate, DateTime endDate)
         {
-            
+            var query = GenerateEmptyQuery(typeof(Student), "S");
+
+            query.Select("M.Id", "S.Id AS StudentId", "PAP.AttendanceWeekId AS WeekId", "PAP.PeriodId AS PeriodId",
+                "M.CodeId", "M.Comments", "M.MinutesLate");
+
+            query.LeftJoin("AttendanceMarks AS M", "M.StudentId", "S.Id");
+            query.CrossJoin("AttendancePeriods_PossibleAttendancePeriods AS PAP");
+
+            query.WhereDate("PAP.StartTime", ">=", startDate);
+            query.WhereDate("PAP.EndTime", "<", endDate);
+
+            query.FilterByStudentGroup(groupTypeId, groupId);
+
+            return await ExecuteQuery<PossibleAttendanceMark>(query);
         }
 
         public void Update(AttendanceMark mark)

@@ -62,7 +62,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.LeftJoin("DiaryEventAttendee as A", "A.EventId", "E.Id");
+            query.LeftJoin("DiaryEventAttendees as A", "A.EventId", "DiaryEvent.Id");
             
             query.WhereDate("DiaryEvent.StartTime", ">=", firstDate.Date);
             query.WhereDate("DiaryEvent.EndTime", "<", lastDate.Date.AddDays(1));
@@ -73,74 +73,6 @@ namespace MyPortal.Database.Repositories
             {
                 query.Where(q => q.Where("A.ResponseId", "<>", AttendeeResponses.Declined).WhereFalse("A.Required"));
             }
-
-            return await ExecuteQuery(query);
-        }
-
-
-        public async Task<IEnumerable<DiaryEvent>> GetLessonsByStudent(Guid studentId, DateTime firstDate,
-            DateTime lastDate)
-        {
-            var query = new Query("Sessions as S");
-
-            query.SelectRaw(@"SELECT S.[Id] AS Id
-      ,@LessonEventType AS EventTypeId
-      ,S.RoomId AS RoomId
-      ,C.Name AS Subject
-      ,null AS Description
-	  ,null AS Location
-	  ,CAST(CONCAT(DATEADD(DAY, (P.Weekday - 1), W.Beginning), ' ', (P.StartTime)) AS DATETIME) AS StartTime
-	  ,CAST(CONCAT(DATEADD(DAY, (P.Weekday - 1), W.Beginning), ' ', (P.EndTime)) AS DATETIME) AS EndTime
-	  ,0 AS IsAllDay
-	  ,0 AS IsBlock
-	  ,0 AS IsPublic");
-            
-            query.Define("LessonEventType", EventTypes.Lesson);
-
-            query.LeftJoin("AttendancePeriod as P", "P.Id", "S.PeriodId");
-            query.LeftJoin("AttendanceWeekPattern as WP", "WP.Id", "P.WeekPatternId");
-            query.LeftJoin("AttendanceWeek as W", "W.WeekPatternId", "WP.Id");
-            query.LeftJoin("Class as C", "C.Id", "S.ClassId");
-            query.LeftJoin("CurriculumGroup as G", "G.Id", "C.GroupId");
-            query.LeftJoin("CurriculumGroupMembership as M", "M.GroupId", "G.Id");
-
-            query.WhereFalse("W.IsNonTimetable");
-            query.Where("M.StudentId", studentId);
-            query.WhereDate("StartTime", ">=", firstDate);
-            query.WhereDate("EndTime", "<=", lastDate);
-
-            return await ExecuteQuery(query);
-        }
-
-        public async Task<IEnumerable<DiaryEvent>> GetLessonsByTeacher(Guid staffMemberId, DateTime firstDate,
-            DateTime lastDate)
-        {
-            var query = new Query("Session as S");
-            
-            query.SelectRaw(@"SELECT S.[Id] AS Id
-      ,@LessonEventType AS EventTypeId
-      ,S.RoomId AS RoomId
-      ,C.Name AS Subject
-      ,null AS Description
-	  ,null AS Location
-	  ,CAST(CONCAT(DATEADD(DAY, (P.Weekday - 1), W.Beginning), ' ', (P.StartTime)) AS DATETIME) AS StartTime
-	  ,CAST(CONCAT(DATEADD(DAY, (P.Weekday - 1), W.Beginning), ' ', (P.EndTime)) AS DATETIME) AS EndTime
-	  ,0 AS IsAllDay
-	  ,0 AS IsBlock
-	  ,0 AS IsPublic
-	  ,0 AS IsStudentVisible");
-
-            query.Define("LessonEventType", EventTypes.Lesson);
-
-            query.LeftJoin("AttendancePeriod as P", "P.Id", "S.PeriodId");
-            query.LeftJoin("AttendanceWeekPattern as WP", "WP.Id", "P.WeekPatternId");
-            query.LeftJoin("AttendanceWeek as W", "W.WeekPatternId", "WP.Id");
-            query.LeftJoin("Class as C", "C.Id", "S.ClassId");
-            
-            query.WhereFalse("W.IsNonTimetable");
-            query.Where("S.TeacherId", staffMemberId);
-            query.WhereDate("StartTime", ">=", firstDate);
-            query.WhereDate("EndTime", "<=", lastDate);
 
             return await ExecuteQuery(query);
         }

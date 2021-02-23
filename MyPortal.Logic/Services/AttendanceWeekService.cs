@@ -39,7 +39,7 @@ namespace MyPortal.Logic.Services
 
         public override void Dispose()
         {
-            UnitOfWork.AttendanceWeeks.Dispose();
+            UnitOfWork.Dispose();
         }
     }
 }

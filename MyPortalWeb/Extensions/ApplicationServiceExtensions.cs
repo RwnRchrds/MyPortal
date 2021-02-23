@@ -49,6 +49,7 @@ namespace MyPortalWeb.Extensions
             services.AddScoped<IAttendanceMarkService, AttendanceMarkService>();
             services.AddScoped<IAttendanceWeekService, AttendanceWeekService>();
             services.AddScoped<IBillService, BillService>();
+            services.AddScoped<IDiaryEventService, DiaryEventService>();
             services.AddScoped<IDirectoryService, DirectoryService>();
             services.AddScoped<IDocumentService, DocumentService>();
             services.AddScoped<IHouseService, HouseService>();
