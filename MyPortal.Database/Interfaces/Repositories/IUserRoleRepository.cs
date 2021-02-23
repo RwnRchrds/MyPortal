@@ -7,7 +7,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IUserRoleRepository : IRepository, IDisposable
+    public interface IUserRoleRepository : IRepository
     {
         Task<IEnumerable<UserRole>> GetByUser(Guid userId);
         Task DeleteAllByRole(Guid roleId);

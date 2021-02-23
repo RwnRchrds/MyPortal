@@ -117,10 +117,5 @@ namespace MyPortal.Database.Repositories
 
             return await ExecuteQuery(query);
         }
-
-        public void Dispose()
-        {
-            _context?.Dispose();
-        }
     }
 }

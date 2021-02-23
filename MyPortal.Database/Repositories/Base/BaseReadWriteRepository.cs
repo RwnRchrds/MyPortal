@@ -75,10 +75,5 @@ namespace MyPortal.Database.Repositories.Base
                     break;
             }
         }
-
-        public override void Dispose()
-        {
-            Context.Dispose();
-        }
     }
 }

@@ -7,7 +7,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IRolePermissionRepository : IRepository, IDisposable
+    public interface IRolePermissionRepository : IRepository
     {
         Task<IEnumerable<RolePermission>> GetByRole(Guid roleId);
         Task<IEnumerable<RolePermission>> GetByUser(Guid userId);

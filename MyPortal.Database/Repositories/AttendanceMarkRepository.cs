@@ -61,6 +61,14 @@ namespace MyPortal.Database.Repositories
                 }, sql.NamedBindings);
         }
 
+        private Query FilterByStudentGroup(Query query, Guid groupTypeId, Guid groupId)
+        {
+            if (groupTypeId == StudentGroupTypes.CurriculumYearGroup)
+            {
+                
+            }
+        }
+
         public async Task<IEnumerable<AttendanceMark>> GetByStudent(Guid studentId, Guid academicYearId)
         {
             var query = GenerateQuery();
@@ -86,7 +94,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<AttendanceMark>> GetRegisterMarks(Guid groupTypeId, Guid groupId, DateTime startDate, DateTime endDate)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void Update(AttendanceMark mark)

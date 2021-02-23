@@ -11,6 +11,7 @@ namespace MyPortal.Database
 {
     public class UnitOfWork : IUnitOfWork
     {
+        private ApplicationDbContext _context;
         private IEnumerable<IRepository> _repositories;
 
         public IAcademicTermRepository AcademicTerms { get; }
@@ -126,6 +127,7 @@ namespace MyPortal.Database
 
         public UnitOfWork(ApplicationDbContext context)
         {
+            _context = context;
             var dbConnection = context.Database.GetDbConnection();
             var repositories = new List<IRepository>();
             repositories.Add(AcademicTerms = new AcademicTermRepository(context));
@@ -244,114 +246,7 @@ namespace MyPortal.Database
 
         public void Dispose()
         {
-            AcademicTerms?.Dispose();
-            AcademicYears?.Dispose();
-            AccountTransactions?.Dispose();
-            AchievementOutcomes?.Dispose();
-            Achievements?.Dispose();
-            AchievementTypes?.Dispose();
-            Activities?.Dispose();
-            ActivityEvents?.Dispose();
-            Addresses?.Dispose();
-            AddressPersons?.Dispose();
-            Aspects?.Dispose();
-            AspectTypes?.Dispose();
-            AttendanceCodeMeanings?.Dispose();
-            AttendanceCodes?.Dispose();
-            AttendanceMarks?.Dispose();
-            AttendancePeriods?.Dispose();
-            AttendanceWeeks?.Dispose();
-            BasketItems?.Dispose();
-            BehaviourOutcomes?.Dispose();
-            BehaviourStatus?.Dispose();
-            Bills?.Dispose();
-            Bulletins?.Dispose();
-            Classes?.Dispose();
-            CommentBanks?.Dispose();
-            Comments?.Dispose();
-            CommunicationLogs?.Dispose();
-            CommunicationTypes?.Dispose();
-            Contacts?.Dispose();
-            CurriculumBandBlockAssignments?.Dispose();
-            CurriculumBandMemberships?.Dispose();
-            CurriculumBands?.Dispose();
-            CurriculumBlocks?.Dispose();
-            CurriculumGroupMemberships?.Dispose();
-            CurriculumGroups?.Dispose();
-            CurriculumYearGroups?.Dispose();
-            Detentions?.Dispose();
-            DetentionTypes?.Dispose();
-            DiaryEventAttendees?.Dispose();
-            DiaryEvents?.Dispose();
-            DiaryEventTemplates?.Dispose();
-            DiaryEventTypes?.Dispose();
-            DietaryRequirements?.Dispose();
-            Directories?.Dispose();
-            Documents?.Dispose();
-            DocumentTypes?.Dispose();
-            EmailAddresses?.Dispose();
-            EmailAddressTypes?.Dispose();
-            Exclusions?.Dispose();
-            Files?.Dispose();
-            GiftedTalented?.Dispose();
-            GovernanceTypes?.Dispose();
-            Grades?.Dispose();
-            GradeSets?.Dispose();
-            HomeworkItems?.Dispose();
-            HomeworkSubmissions?.Dispose();
-            Houses?.Dispose();
-            IncidentDetentions?.Dispose();
-            Incidents?.Dispose();
-            IncidentTypes?.Dispose();
-            IntakeTypes?.Dispose();
-            LessonPlans?.Dispose();
-            LessonPlanTemplates?.Dispose();
-            LocalAuthorities?.Dispose();
-            Locations?.Dispose();
-            LogNotes?.Dispose();
-            LogNoteTypes?.Dispose();
-            MedicalConditions?.Dispose();
-            MedicalEvents?.Dispose();
-            ObservationOutcomes?.Dispose();
-            Observations?.Dispose();
-            People?.Dispose();
-            Permissions?.Dispose();
-            PersonConditions?.Dispose();
-            PersonDietaryRequirements?.Dispose();
-            RefreshTokens?.Dispose();
-            RegGroups?.Dispose();
-            RolePermissions?.Dispose();
-            SchoolPhases?.Dispose();
-            Schools?.Dispose();
-            SchoolTypes?.Dispose();
-            SenEvents?.Dispose();
-            SenEventTypes?.Dispose();
-            SenProvisions?.Dispose();
-            SenProvisionTypes?.Dispose();
-            SenReviews?.Dispose();
-            SenReviewTypes?.Dispose();
-            SenStatus?.Dispose();
-            Sessions?.Dispose();
-            StaffMembers?.Dispose();
-            StudentCharges?.Dispose();
-            StudentContactRelationships?.Dispose();
-            StudentDiscounts?.Dispose();
-            Students?.Dispose();
-            StudyTopics?.Dispose();
-            SubjectCodeSets?.Dispose();
-            Subjects?.Dispose();
-            SubjectStaffMemberRoles?.Dispose();
-            SubjectStaffMembers?.Dispose();
-            SystemAreas?.Dispose();
-            SystemSettings?.Dispose();
-            Tasks?.Dispose();
-            TaskTypes?.Dispose();
-            TrainingCertificates?.Dispose();
-            TrainingCertificateStatus?.Dispose();
-            TrainingCourses?.Dispose();
-            UserRoles?.Dispose();
-            Users?.Dispose();
-            YearGroups?.Dispose();
+            _context?.Dispose();
         }
 
         public async Task SaveChanges()
