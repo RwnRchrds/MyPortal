@@ -25,9 +25,14 @@ namespace MyPortal.Database.Repositories.Base
 
         protected virtual async Task<IEnumerable<TEntity>> ExecuteQuery(Query query)
         {
+            return await ExecuteQuery<TEntity>(query);
+        }
+
+        protected virtual async Task<IEnumerable<T>> ExecuteQuery<T>(Query query)
+        {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<TEntity>(sql.Sql, sql.NamedBindings);
+            return await Connection.QueryAsync<T>(sql.Sql, sql.NamedBindings);
         }
 
         protected async Task<TEntity> ExecuteQueryFirstOrDefault(Query query)

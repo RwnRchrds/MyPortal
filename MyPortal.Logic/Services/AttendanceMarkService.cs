@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Attendance;
+using MyPortal.Logic.Models.Response.Attendance;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -41,9 +44,55 @@ namespace MyPortal.Logic.Services
             return BusinessMapper.Map<AttendanceMarkModel>(attendanceMark);
         }
 
-        public async Task<IEnumerable<AttendanceRegisterStudentModel>> GetAttendanceMarksBySession(Guid attendanceWeekId, Guid sessionId)
+        public async Task<AttendanceRegisterModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId)
         {
-            throw new NotImplementedException();
+            var metadata = await UnitOfWork.Sessions.GetMetadata(sessionId, attendanceWeekId);
+
+            if (metadata == null || metadata.AttendanceWeekId == Guid.Empty)
+            {
+                throw new NotFoundException("Failed to load register.");
+            }
+
+            var register = new AttendanceRegisterModel(metadata);
+
+            var codes = await UnitOfWork.AttendanceCodes.GetAll(true, false);
+
+            register.Codes = codes.Select(BusinessMapper.Map<AttendanceCodeModel>).ToList();
+
+            var possibleMarks = (await UnitOfWork.AttendanceMarks.GetRegisterMarks(StudentGroupType.CurriculumGroup,
+                register.Metadata.CurriculumGroupId, register.Metadata.StartTime.Date,
+                register.Metadata.StartTime.Date.AddDays(1))).GroupBy(m => m.StudentId);
+
+            foreach (var possibleMark in possibleMarks)
+            {
+                var student = await UnitOfWork.Students.GetById(possibleMark.Key);
+
+                if (student == null)
+                {
+                    throw new NotFoundException("Student not found.");
+                }
+
+                var studentModel = BusinessMapper.Map<StudentModel>(student);
+
+                var registerStudent = new AttendanceRegisterStudentModel
+                {
+                    StudentId = possibleMark.Key,
+                    StudentName = studentModel.Person.GetDisplayName(),
+                    Marks = possibleMark.Select(m => new AttendanceMarkListModel
+                    {
+                        StudentId = m.StudentId,
+                        WeekId = m.WeekId,
+                        PeriodId = m.PeriodId,
+                        Comments = m.Comments,
+                        MinutesLate = m.MinutesLate,
+                        CodeId = m.CodeId ?? Guid.Empty
+                    }).ToList()
+                };
+
+                register.Students.Add(registerStudent);
+            }
+
+            return register;
         }
 
         public async Task Save(params AttendanceMarkListModel[] marks)

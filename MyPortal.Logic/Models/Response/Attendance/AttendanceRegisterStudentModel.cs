@@ -6,8 +6,13 @@ namespace MyPortal.Logic.Models.Requests.Attendance
 {
     public class AttendanceRegisterStudentModel
     {
+        public AttendanceRegisterStudentModel()
+        {
+            Marks = new List<AttendanceMarkListModel>();
+        }
+
         public Guid StudentId { get; set; }
         public string StudentName { get; set; }
-        public IEnumerable<AttendanceMarkListModel> Marks { get; set; }
+        public ICollection<AttendanceMarkListModel> Marks { get; set; }
     }
 }

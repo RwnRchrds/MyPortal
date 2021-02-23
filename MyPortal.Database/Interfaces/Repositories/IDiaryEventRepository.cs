@@ -12,10 +12,5 @@ namespace MyPortal.Database.Interfaces.Repositories
 
         Task<IEnumerable<DiaryEvent>> GetByPerson(DateTime firstDate, DateTime lastDate, Guid personId,
             bool includeDeclined = false);
-
-        Task<IEnumerable<DiaryEvent>> GetLessonsByStudent(Guid studentId, DateTime firstDate, DateTime lastDate);
-
-        Task<IEnumerable<DiaryEvent>> GetLessonsByTeacher(Guid staffMemberId, DateTime firstDate,
-            DateTime lastDate);
     }
 }

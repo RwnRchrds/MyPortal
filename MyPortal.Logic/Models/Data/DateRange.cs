@@ -6,6 +6,13 @@ namespace MyPortal.Logic.Models.Data
 {
     public class DateRange
     {
+        public static DateRange GetCurrentWeek()
+        {
+            var monday = DateTime.Today.GetDayOfWeek(DayOfWeek.Monday);
+
+            return new DateRange(monday, monday.AddDays(6));
+        }
+
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
 
