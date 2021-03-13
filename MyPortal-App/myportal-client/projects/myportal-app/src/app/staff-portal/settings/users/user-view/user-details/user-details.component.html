@@ -1,4 +1,4 @@
-<div class="card card-custom">
+<div class="card card-custom" id="{{componentName}}">
   <!--begin::Card header-->
   <div class="card-header">
     <h3 class="card-title">
@@ -11,7 +11,7 @@
         <i class="fas fa-arrow-left mr-1"></i>Back
       </button>
       <!--end::BackButton-->
-      <button type="button" (click)="save()" class="btn btn-primary font-weight-bold btn-sm px-3 ml-2 font-size-base">
+      <button type="button" (click)="submit()" class="btn btn-primary font-weight-bold btn-sm px-3 ml-2 font-size-base">
         <i class="fas fa-cloud-upload mr-1"></i>Save
       </button>
     </div>
@@ -20,7 +20,7 @@
   <!--end::Card header-->
   <!--begin::Card body-->
   <div class="card-body">
-    <form [formGroup]="detailsForm" class="form">
+    <form [formGroup]="form" class="form">
       <div class="tab-content">
         <!--begin::Tab-->
         <div class="tab-pane show active px-7" id="role_tab_details" role="tabpanel">

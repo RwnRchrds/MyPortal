@@ -15,7 +15,7 @@ namespace MyPortal.Logic.Models.Data
             End = eventModel.EndTime;
             Title = eventModel.Subject;
             Display = CalendarDisplayModes.Auto;
-            Color = eventModel.EventType.ColourCode;
+            BackgroundColor = eventModel.EventType.ColourCode;
             Editable = false;
         }
 
@@ -26,12 +26,13 @@ namespace MyPortal.Logic.Models.Data
             End = sessionMetadata.EndTime;
             Title = $"{sessionMetadata.ClassCode}";
             Display = CalendarDisplayModes.Auto;
-            Color = colour;
+            BackgroundColor = colour;
             if (sessionMetadata.RoomId.HasValue && !string.IsNullOrWhiteSpace(sessionMetadata.RoomName))
             {
-                ExtendedProps = new CalendarEventExtendedPropertiesModel
+                ExtendedProps = new
                 {
-                    Room = sessionMetadata.RoomName
+                    Room = sessionMetadata.RoomName,
+                    Teacher = sessionMetadata.TeacherName
                 };
             }
         }
@@ -45,8 +46,8 @@ namespace MyPortal.Logic.Models.Data
         public string[] ClassNames { get; set; }
         public bool Editable { get; set; }
         public string Display { get; set; }
-        public string Color { get; set; }
-        public CalendarEventExtendedPropertiesModel ExtendedProps { get; set; }
+        public string BackgroundColor { get; set; }
+        public object ExtendedProps { get; set; }
     }
 
     public static class CalendarDisplayModes

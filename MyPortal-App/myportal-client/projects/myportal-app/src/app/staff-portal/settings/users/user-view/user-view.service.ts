@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {PortalViewServiceDirective} from '../../../../shared/portal-view/portal-view-service.directive';
+import {PortalViewServiceDirective} from '../../../../_directives/portal-view/portal-view-service.directive';
 import {AuthService} from '../../../../_services/auth.service';
 import {RoleModel, RolesService, UserModel, UsersService} from 'myportal-api';
 import {AppService} from '../../../../_services/app.service';

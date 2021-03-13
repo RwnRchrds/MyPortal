@@ -1,4 +1,4 @@
-import {PortalSidebarComponent} from '../../shared/portal-sidebar/portal-sidebar.component';
+import {PortalSidebarDirective} from '../../_directives/portal-sidebar/portal-sidebar.directive';
 import { Component, OnInit } from '@angular/core';
 import { AppPermissions } from '../../_constants/app-permissions';
 
@@ -7,7 +7,7 @@ import { AppPermissions } from '../../_constants/app-permissions';
   templateUrl: './staff-sidebar.component.html',
   styleUrls: ['./staff-sidebar.component.css']
 })
-export class StaffSidebarComponent extends PortalSidebarComponent implements OnInit {
+export class StaffSidebarComponent extends PortalSidebarDirective implements OnInit {
 
   constructor() {
     super();

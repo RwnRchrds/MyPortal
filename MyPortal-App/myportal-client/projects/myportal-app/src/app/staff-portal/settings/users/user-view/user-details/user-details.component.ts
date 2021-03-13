@@ -4,18 +4,16 @@ import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/form
 import {catchError, map} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Subscription, throwError} from 'rxjs';
-import {AppService} from '../../../../../_services/app.service';
-import {AlertService} from '../../../../../_services/alert.service';
 import {RoleModel, UserModel, UsersService} from 'myportal-api';
 import {SweetAlertResult} from '../../../../../_models/sweetAlertResult';
-import {Router} from '@angular/router';
+import {BaseFormDirective} from '../../../../../_directives/base-form/base-form.directive';
 
 @Component({
   selector: 'app-user-details',
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.css']
 })
-export class UserDetailsComponent implements OnInit, OnDestroy {
+export class UserDetailsComponent extends BaseFormDirective implements OnInit, OnDestroy {
 
   user: UserModel;
   roles: RoleModel[];
@@ -23,18 +21,18 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   rolesSubscription: Subscription;
   userRolesSubscription: Subscription;
 
-  detailsForm = new FormGroup({
-    username: new FormControl({value: '', disabled: true}, [Validators.required]),
-    userType: new FormControl({value: '', disabled: true}, [Validators.required]),
-    roles: new FormControl(''),
-    personName: new FormControl({value: '', disabled: true})
-  });
-
-  constructor(private appService: AppService, private alertService: AlertService, private viewService: UserViewService,
-              private userService: UsersService, private router: Router) {
+  constructor(private viewService: UserViewService, private userService: UsersService) {
+    super();
   }
 
   ngOnInit(): void {
+    this.componentName = 'user_details';
+    this.form = new FormGroup({
+      username: new FormControl({value: '', disabled: true}, [Validators.required]),
+      userType: new FormControl({value: '', disabled: true}, [Validators.required]),
+      roles: new FormControl(''),
+      personName: new FormControl({value: '', disabled: true})
+    });
     this.userSubscription = this.viewService.currentUser.pipe(map((user: UserModel) => {
       this.user = user;
       this.username.setValue(this.user.userName);
@@ -60,19 +58,19 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   }
 
   get username(): AbstractControl {
-    return this.detailsForm.get('username');
+    return this.form.get('username');
   }
 
   get userType(): AbstractControl {
-    return this.detailsForm.get('userType');
+    return this.form.get('userType');
   }
 
   get userRoles(): AbstractControl {
-    return this.detailsForm.get('roles');
+    return this.form.get('roles');
   }
 
   get personName(): AbstractControl {
-    return this.detailsForm.get('personName');
+    return this.form.get('personName');
   }
 
   removeLinkedPerson(): void {
@@ -121,21 +119,17 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  save(): void {
-    this.detailsForm.markAllAsTouched();
-    this.appService.blockPage();
-    if (this.detailsForm.invalid) {
-      this.alertService.error('Please review the errors and try again.');
-      return;
+  submit(): void {
+    if (this.validate()) {
+      this.userService.updateUser({id: this.user.id, personId: this.user.personId, roleIds: this.userRoles.value})
+        .pipe(map(result => {
+          this.alertService.toastSuccess('User saved');
+          this.viewService.reload();
+        }), catchError((err: HttpErrorResponse) => {
+          this.appService.unblockPage();
+          this.alertService.error(err.error);
+          return throwError(err);
+        })).subscribe();
     }
-    this.userService.updateUser({id: this.user.id, personId: this.user.personId, roleIds: this.userRoles.value})
-      .pipe(map(result => {
-        this.alertService.toastSuccess('User saved');
-        this.viewService.reload();
-      }), catchError((err: HttpErrorResponse) => {
-        this.appService.unblockPage();
-        this.alertService.error(err.error);
-        return throwError(err);
-      })).subscribe();
   }
 }

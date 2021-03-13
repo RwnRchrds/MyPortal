@@ -2,6 +2,7 @@ import { AuthService } from '../_services/auth.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable, of } from 'rxjs';
+import {map, take} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -18,15 +19,13 @@ export class PermissionGuard implements CanActivate {
       return of(true);
     }
     else {
-      if (this.authService.hasPermission(requiredPermissions)) {
-        // The user has the required permissions - allow them to proceed
-        return of(true);
-      }
-      else {
-        // The user does not have the required permissions - redirect to root
-        this.router.navigate(['']);
-        return of(false);
-      }
+      return this.authService.effectivePermissions$.pipe(take(1), map((perms: string[]) => {
+        if (requiredPermissions.some(p => perms.includes(p.toLowerCase()))) {
+          return true;
+        }
+        this.router.navigate(['login']);
+        return false;
+      }));
     }
   }
 }

@@ -8,7 +8,7 @@ import {StudentViewService} from '../student-view.service';
 })
 export class StudentOverviewComponent implements OnInit {
 
-  constructor(private viewService: StudentViewService, private cdRef: ChangeDetectorRef) { }
+  constructor() { }
 
   ngOnInit(): void {
   }

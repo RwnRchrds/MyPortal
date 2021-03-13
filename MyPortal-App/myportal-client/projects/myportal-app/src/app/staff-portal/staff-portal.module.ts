@@ -1,7 +1,7 @@
 import { SharedModule } from '../shared/shared.module';
 import { StudentSearchComponent } from './people/students/student-browser/student-search/student-search.component';
 import { StudentBrowserComponent } from './people/students/student-browser/student-browser.component';
-import { NgModule } from '@angular/core';
+import {Injector, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { StaffRoutingModule } from './staff-routing/staff-routing.module';
@@ -20,7 +20,7 @@ import { UserViewComponent } from './settings/users/user-view/user-view.componen
 import { UserDetailsComponent } from './settings/users/user-view/user-details/user-details.component';
 import { UserLinkPersonComponent } from './settings/users/user-view/user-link-person/user-link-person.component';
 import { UserResetPasswordComponent } from './settings/users/user-view/user-reset-password/user-reset-password.component';
-import { CreateUserComponent } from './settings/users/create-user/create-user.component';
+import { CreateUserComponent } from './settings/users/user-browser/create-user/create-user.component';
 import { StudentViewComponent } from './people/students/student-view/student-view.component';
 import { StudentOverviewComponent } from './people/students/student-view/student-overview/student-overview.component';
 import { StudentDetailsComponent } from './people/students/student-view/student-details/student-details.component';
@@ -34,6 +34,16 @@ import { StudentSendComponent } from './people/students/student-view/student-sen
 import { StudentStatsComponent } from './people/students/student-view/student-overview/student-stats/student-stats.component';
 import { StudentLogNotesComponent } from './people/students/student-view/student-overview/student-log-notes/student-log-notes.component';
 import { LogNoteFormComponent } from './people/students/student-view/student-overview/log-note-form/log-note-form.component';
+import {InjectorService} from '../_services/injector.service';
+import { StudentTimetableComponent } from './people/students/student-view/student-overview/student-timetable/student-timetable.component';
+import {FullCalendarModule} from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+
+FullCalendarModule.registerPlugins([
+  dayGridPlugin,
+  timeGridPlugin
+]);
 
 @NgModule({
   imports: [
@@ -42,7 +52,8 @@ import { LogNoteFormComponent } from './people/students/student-view/student-ove
     FormsModule,
     ReactiveFormsModule,
     StaffRoutingModule,
-    SharedModule
+    SharedModule,
+    FullCalendarModule
   ],
   declarations: [
     StaffPortalComponent,
@@ -74,7 +85,8 @@ import { LogNoteFormComponent } from './people/students/student-view/student-ove
     StudentSendComponent,
     StudentStatsComponent,
     StudentLogNotesComponent,
-    LogNoteFormComponent
+    LogNoteFormComponent,
+    StudentTimetableComponent
   ],
   exports: [
     StaffPortalComponent,
@@ -82,4 +94,8 @@ import { LogNoteFormComponent } from './people/students/student-view/student-ove
   ],
   providers: []
 })
-export class StaffPortalModule { }
+export class StaffPortalModule {
+  constructor(injector: Injector) {
+    InjectorService.setInjector(injector);
+  }
+}

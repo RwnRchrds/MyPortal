@@ -1,26 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import {StudentModel, StudentsService, StudentStatsModel} from 'myportal-api';
-import {pipe, Subscription, throwError} from 'rxjs';
+import {Subscription, throwError} from 'rxjs';
 import {StudentViewService} from '../../student-view.service';
 import {catchError, map} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
-import {AlertService} from '../../../../../../_services/alert.service';
-import {AppService} from '../../../../../../_services/app.service';
+import {BaseComponentDirective} from '../../../../../../_directives/base-component/base-component.directive';
 
 @Component({
   selector: 'app-student-stats',
   templateUrl: './student-stats.component.html',
   styleUrls: ['./student-stats.component.css']
 })
-export class StudentStatsComponent implements OnInit {
+export class StudentStatsComponent extends BaseComponentDirective implements OnInit {
 
   statsModel: StudentStatsModel;
   private studentStatsSubscription: Subscription;
 
-  constructor(private viewService: StudentViewService, private studentService: StudentsService,
-              private alertService: AlertService, private appService: AppService) { }
+  constructor(private viewService: StudentViewService, private studentService: StudentsService) {
+    super();
+  }
 
   ngOnInit(): void {
+    this.componentName = 'student_stats';
     this.appService.blockPage();
     this.studentStatsSubscription = this.viewService.currentStudent.pipe(map((student: StudentModel) => {
       if (student == null) {

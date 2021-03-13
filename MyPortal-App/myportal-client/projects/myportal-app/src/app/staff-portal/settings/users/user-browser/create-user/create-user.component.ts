@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {AlertService} from '../../../../_services/alert.service';
 import {NewEntityResponse, UsersService} from 'myportal-api';
 import {catchError, map} from 'rxjs/operators';
-import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {throwError} from 'rxjs';
-import {BaseFormDirective} from '../../../../shared/_directives/base-form.directive';
+import {BaseFormDirective} from '../../../../../_directives/base-form/base-form.directive';
 
 @Component({
   selector: 'app-create-user',
@@ -15,57 +13,55 @@ import {BaseFormDirective} from '../../../../shared/_directives/base-form.direct
 })
 export class CreateUserComponent extends BaseFormDirective implements OnInit {
 
-  newUserForm = new FormGroup({
-    username: new FormControl('', [Validators.required]),
-    userType: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required]),
-    confirmPassword: new FormControl('', [Validators.required])
-  });
-
   get username(): AbstractControl {
-    return this.newUserForm.get('username');
+    return this.form.get('username');
   }
 
   get userType(): AbstractControl {
-    return this.newUserForm.get('userType');
+    return this.form.get('userType');
   }
 
   get password(): AbstractControl {
-    return this.newUserForm.get('password');
+    return this.form.get('password');
   }
 
   get confirmPassword(): AbstractControl {
-    return this.newUserForm.get('confirmPassword');
+    return this.form.get('confirmPassword');
   }
 
-  constructor(private alertService: AlertService, private userService: UsersService,
-              private router: Router) {
+  constructor(private userService: UsersService) {
+    super();
   }
 
   ngOnInit(): void {
+    this.componentName = 'new_user';
+    this.form = new FormGroup({
+      username: new FormControl('', [Validators.required]),
+      userType: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required]),
+      confirmPassword: new FormControl('', [Validators.required])
+    });
   }
 
   goBack(): void {
-    this.newUserForm.reset();
+    this.form.reset();
     this.router.navigate(['/staff/settings/users']);
   }
 
-  save(): void {
-    this.newUserForm.markAllAsTouched();
-    if (this.newUserForm.invalid) {
-      this.alertService.error('Please review the errors and try again.');
-      return;
+  submit(): void {
+    if (this.validate()) {
+      if (this.password.value !== this.confirmPassword.value) {
+        this.alertService.error('The passwords you entered do not match.');
+        return;
+      }
+      this.userService.createUser({username: this.username.value, password: this.password.value,
+        userType: +this.userType.value, roleIds: []})
+        .pipe(map((response: NewEntityResponse) => {
+          this.router.navigate([`/staff/settings/users/${response.id}`]);
+        }), catchError((err: HttpErrorResponse) => {
+          this.alertService.error(err.error);
+          return throwError(err);
+        })).subscribe();
     }
-    if (this.password.value !== this.confirmPassword.value) {
-      this.alertService.error('The passwords you entered do not match.');
-      return;
-    }
-    this.userService.createUser({username: this.username.value, password: this.password.value, userType: +this.userType.value, roleIds: []})
-      .pipe(map((response: NewEntityResponse) => {
-        this.router.navigate([`/staff/settings/users/${response.id}`]);
-      }), catchError((err: HttpErrorResponse) => {
-        this.alertService.error(err.error);
-        return throwError(err);
-      })).subscribe();
   }
 }

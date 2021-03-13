@@ -1,13 +1,17 @@
-import { Injectable } from '@angular/core';
-import { User } from './../_models/user';
-import {Observable, ReplaySubject} from 'rxjs';
-import {map, take} from 'rxjs/operators';
-import { AuthenticationService, LoginModel, TokenModel } from 'myportal-api';
+import {Injectable} from '@angular/core';
+import {User} from './../_models/user';
+import {Observable, ReplaySubject, throwError} from 'rxjs';
+import {catchError, map, take} from 'rxjs/operators';
+import {AuthenticationService, LoginModel, TokenModel} from 'myportal-api';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
+  constructor(private authService: AuthenticationService) {
+  }
 
   refreshTokenInProgress = false;
 
@@ -17,7 +21,11 @@ export class AuthService {
   currentUser$ = this.currentUserSource.asObservable();
   effectivePermissions$ = this.permissionSource.asObservable();
 
-  constructor(private authService: AuthenticationService) {
+  private static getDecodedToken(token: string): any {
+    if (!!token)
+    {
+      return JSON.parse(atob(token.split('.')[1]));
+    }
   }
 
   login(model: LoginModel): Observable<void> {
@@ -29,6 +37,9 @@ export class AuthService {
           localStorage.setItem('token', JSON.stringify(loginResponse));
           this.currentUserSource.next(user);
         }
+      }), catchError((err: HttpErrorResponse) => {
+        console.log(err);
+        return throwError(err);
       }));
   }
 
@@ -38,7 +49,6 @@ export class AuthService {
       map((response: string[]) => {
       const latestPermissions = response;
       if (latestPermissions) {
-        localStorage.setItem('perms', JSON.stringify(latestPermissions));
         this.permissionSource.next(latestPermissions);
         console.log('Permissions updated.');
       }
@@ -63,49 +73,23 @@ export class AuthService {
     }));
   }
 
-  hasPermission(requiredPermissions: string[]): boolean {
-    if (!requiredPermissions || requiredPermissions.length === 0) {
-      return true;
-    }
-    else {
-      let userPermissions: string[];
-      this.effectivePermissions$.pipe(take(1)).subscribe(permissions => userPermissions = permissions);
-      for (const perm of requiredPermissions) {
-        if (userPermissions.includes(perm.toLowerCase())) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  private getDecodedToken(token: string): any {
-    if (!!token)
-    {
-      return JSON.parse(atob(token.split('.')[1]));
-    }
-  }
-
   getCurrentUser(tokenModel: TokenModel): User {
-    const decodedToken = this.getDecodedToken(tokenModel.token);
-    const user = {
+    const decodedToken = AuthService.getDecodedToken(tokenModel.token);
+    return {
       displayName: decodedToken.displayName,
       userType: decodedToken.type,
       token: tokenModel.token,
       refreshToken: tokenModel.refreshToken
     } as User;
-    return user;
   }
 
   logout(): void {
-    this.effectivePermissions$.pipe(take(1)).subscribe();
     localStorage.clear();
     this.currentUserSource.next(null);
     this.permissionSource.next(null);
   }
 
-  setCurrentUser(user: User, permissions: string[] = null): void {
+  setCurrentUser(user: User): void {
     this.currentUserSource.next(user);
-    this.permissionSource.next(permissions);
   }
 }

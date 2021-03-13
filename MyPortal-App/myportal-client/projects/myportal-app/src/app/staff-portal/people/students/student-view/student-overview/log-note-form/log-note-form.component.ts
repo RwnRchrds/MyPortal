@@ -2,19 +2,18 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {StudentViewService} from '../../student-view.service';
 import {LogNoteModel, LogNotesService, LogNoteTypeModel, StudentModel} from 'myportal-api';
-import {ActivatedRoute, Route, Router} from '@angular/router';
 import {catchError, map} from 'rxjs/operators';
 import {Subscription, throwError} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
-import {AlertService} from '../../../../../../_services/alert.service';
-import {AppService} from '../../../../../../_services/app.service';
+import {BaseFormDirective} from '../../../../../../_directives/base-form/base-form.directive';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-log-note-form',
   templateUrl: './log-note-form.component.html',
   styleUrls: ['./log-note-form.component.css']
 })
-export class LogNoteFormComponent implements OnInit, OnDestroy {
+export class LogNoteFormComponent extends BaseFormDirective implements OnInit, OnDestroy {
 
   studentId: string;
   studentSubscription: Subscription;
@@ -23,25 +22,25 @@ export class LogNoteFormComponent implements OnInit, OnDestroy {
   editMode: boolean;
   logNoteTypes: LogNoteTypeModel[];
 
-  logNoteForm = new FormGroup({
-    logNoteType: new FormControl('', [Validators.required]),
-    message: new FormControl('', [Validators.required])
-  });
-
   get logNoteType(): AbstractControl {
-    return this.logNoteForm.get('logNoteType');
+    return this.form.get('logNoteType');
   }
 
   get message(): AbstractControl {
-    return this.logNoteForm.get('message');
+    return this.form.get('message');
   }
 
   constructor(private viewService: StudentViewService, private logNoteService: LogNotesService,
-              private route: ActivatedRoute, private router: Router, private alertService: AlertService,
-              private appService: AppService) { }
+              private route: ActivatedRoute) {
+    super();
+  }
 
   ngOnInit(): void {
-    console.log(this.route);
+    this.componentName = 'logNote_form';
+    this.form = new FormGroup({
+      logNoteType: new FormControl('', [Validators.required]),
+      message: new FormControl('', [Validators.required])
+    });
     this.appService.blockPage();
     this.logNoteService.getTypes().pipe(map((logNoteTypes: LogNoteTypeModel[]) => {
       this.logNoteTypes = logNoteTypes;
@@ -77,33 +76,34 @@ export class LogNoteFormComponent implements OnInit, OnDestroy {
     this.studentSubscription.unsubscribe();
   }
 
-  save(): void {
-    if (this.editMode) {
-      this.appService.blockPage();
-      this.logNoteService.update({id: this.logNoteId, message: this.message.value, typeId: this.logNoteType.value}).pipe(map((result => {
-        this.alertService.toastSuccess('Log note updated');
-        this.appService.unblockPage();
-        this.goBack();
-      })), catchError((err: HttpErrorResponse) => {
-        this.appService.unblockPage();
-        this.alertService.error(err.error);
-        return throwError(err);
-      })).subscribe();
-    } else {
-      this.appService.blockPage();
-      this.logNoteService.create({
-        studentId: this.studentId,
-        message: this.message.value,
-        typeId: this.logNoteType.value
-      }).pipe(map((result => {
-        this.alertService.toastSuccess('Log note created');
-        this.appService.unblockPage();
-        this.goBack();
-      })), catchError((err: HttpErrorResponse) => {
-        this.appService.unblockPage();
-        this.alertService.error(err.error);
-        return throwError(err);
-      })).subscribe();
+  submit(): void {
+    this.blockComponent();
+    if (this.validate()) {
+      if (this.editMode) {
+        this.logNoteService.update({id: this.logNoteId, message: this.message.value, typeId: this.logNoteType.value}).pipe(map((result => {
+          this.alertService.toastSuccess('Log note updated');
+          this.unblockComponent();
+          this.goBack();
+        })), catchError((err: HttpErrorResponse) => {
+          this.unblockComponent();
+          this.alertService.error(err.error);
+          return throwError(err);
+        })).subscribe();
+      } else {
+        this.logNoteService.create({
+          studentId: this.studentId,
+          message: this.message.value,
+          typeId: this.logNoteType.value
+        }).pipe(map((result => {
+          this.alertService.toastSuccess('Log note created');
+          this.unblockComponent();
+          this.goBack();
+        })), catchError((err: HttpErrorResponse) => {
+          this.unblockComponent();
+          this.alertService.error(err.error);
+          return throwError(err);
+        })).subscribe();
+      }
     }
   }
 

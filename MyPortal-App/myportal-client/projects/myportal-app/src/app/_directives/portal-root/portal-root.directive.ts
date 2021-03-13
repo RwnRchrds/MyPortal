@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { AuthService } from '../../../_services/auth.service';
+import { AuthService } from '../../_services/auth.service';
 import {Directive, Renderer2} from '@angular/core';
 
 @Directive({

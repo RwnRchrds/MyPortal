@@ -19,7 +19,9 @@ import { Observable }                                        from 'rxjs';
 
 import { CreateDocumentModel } from '../model/createDocumentModel';
 import { DocumentModel } from '../model/documentModel';
+import { LinkHostedFileModel } from '../model/linkHostedFileModel';
 import { UpdateDocumentModel } from '../model/updateDocumentModel';
+import { UploadAttachmentModel } from '../model/uploadAttachmentModel';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -152,15 +154,13 @@ export class DocumentsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public downloadFile(documentId?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public downloadFile(documentId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public downloadFile(documentId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public downloadFile(documentId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public downloadFile(documentId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public downloadFile(documentId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public downloadFile(documentId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public downloadFile(documentId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
-
-        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (documentId !== undefined && documentId !== null) {
-            queryParameters = queryParameters.set('documentId', <any>documentId);
+        if (documentId === null || documentId === undefined) {
+            throw new Error('Required parameter documentId was null or undefined when calling downloadFile.');
         }
 
         let headers = this.defaultHeaders;
@@ -177,9 +177,8 @@ export class DocumentsService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<any>('get',`${this.basePath}/api/documents/download`,
+        return this.httpClient.request<any>('get',`${this.basePath}/api/documents/file/${encodeURIComponent(String(documentId))}`,
             {
-                params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -287,6 +286,91 @@ export class DocumentsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
+    public linkHostedFile(body?: LinkHostedFileModel, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public linkHostedFile(body?: LinkHostedFileModel, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public linkHostedFile(body?: LinkHostedFileModel, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public linkHostedFile(body?: LinkHostedFileModel, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json',
+            'text/json',
+            'application/_*+json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.request<any>('post',`${this.basePath}/api/documents/file/linkHosted`,
+            {
+                body: body,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * 
+     * @param documentId 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public removeAttachment(documentId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public removeAttachment(documentId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public removeAttachment(documentId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public removeAttachment(documentId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (documentId === null || documentId === undefined) {
+            throw new Error('Required parameter documentId was null or undefined when calling removeAttachment.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.request<any>('delete',`${this.basePath}/api/documents/file/${encodeURIComponent(String(documentId))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * 
+     * @param body 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
     public update(body?: UpdateDocumentModel, observe?: 'body', reportProgress?: boolean): Observable<any>;
     public update(body?: UpdateDocumentModel, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
     public update(body?: UpdateDocumentModel, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
@@ -315,6 +399,51 @@ export class DocumentsService {
         }
 
         return this.httpClient.request<any>('put',`${this.basePath}/api/documents/update`,
+            {
+                body: body,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * 
+     * @param body 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public uploadFile(body?: UploadAttachmentModel, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public uploadFile(body?: UploadAttachmentModel, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public uploadFile(body?: UploadAttachmentModel, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public uploadFile(body?: UploadAttachmentModel, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json',
+            'text/json',
+            'application/_*+json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.request<any>('post',`${this.basePath}/api/documents/file/upload`,
             {
                 body: body,
                 withCredentials: this.configuration.withCredentials,

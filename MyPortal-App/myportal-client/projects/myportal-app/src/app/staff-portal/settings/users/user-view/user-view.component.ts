@@ -1,11 +1,10 @@
 import {Component, ElementRef, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {UserViewService} from './user-view.service';
-import {PortalViewDirective} from '../../../../shared/portal-view/portal-view.directive';
+import {PortalViewDirective} from '../../../../_directives/portal-view/portal-view.directive';
 import {ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {UserModel} from 'myportal-api';
-import {AppService} from '../../../../_services/app.service';
 
 @Component({
   selector: 'app-user-view',
@@ -25,7 +24,8 @@ export class UserViewComponent extends PortalViewDirective implements OnInit, On
   showLinkPersonSubscription: Subscription;
   showResetPasswordSubscription: Subscription;
 
-  constructor(renderer: Renderer2, hostElement: ElementRef, private viewService: UserViewService, private route: ActivatedRoute) {
+  constructor(protected renderer: Renderer2, protected hostElement: ElementRef,
+              private viewService: UserViewService, private route: ActivatedRoute) {
     super(renderer, hostElement);
   }
 

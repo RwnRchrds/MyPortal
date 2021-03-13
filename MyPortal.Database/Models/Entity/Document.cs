@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Attributes;
 
 namespace MyPortal.Database.Models.Entity
 {
@@ -44,6 +45,7 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual Directory Directory { get; set; }
         
+        [EntityOnly]
         public virtual HomeworkSubmission HomeworkSubmission { get; set; }
 
         public virtual DocumentType Type { get; set; }

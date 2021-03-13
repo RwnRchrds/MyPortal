@@ -6,11 +6,11 @@ using MyPortal.Database.Constants;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Person.Tasks;
 using MyPortalWeb.Controllers.BaseControllers;
+using MyPortalWeb.Models.Requests;
 
 namespace MyPortalWeb.Controllers.Api
 {
@@ -125,27 +125,16 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPut]
         [Route("toggle")]
-        public async Task<IActionResult> ToggleCompleted([FromQuery] Guid taskId)
+        public async Task<IActionResult> ToggleCompleted([FromBody] TaskToggleRequestModel model)
         {
             return await ProcessAsync(async () =>
             {
                 var user = await UserService.GetUserByPrincipal(User);
-                var task = await _taskService.GetById(taskId);
+                var task = await _taskService.GetById(model.TaskId);
 
                 if (await AuthoriseUpdate(task, user.Id))
                 {
-                    var model = new UpdateTaskModel
-                    {
-                        Id = task.Id,
-                        Description = task.Description,
-                        TypeId = task.TypeId,
-                        Title = task.Title,
-                        Completed = !task.Completed,
-                        AssignedToId = task.AssignedToId,
-                        DueDate = task.DueDate
-                    };
-
-                    await _taskService.Update(model);
+                    await _taskService.SetCompleted(model.TaskId, model.Completed);
 
                     return Ok("Task toggled successfully.");
                 }

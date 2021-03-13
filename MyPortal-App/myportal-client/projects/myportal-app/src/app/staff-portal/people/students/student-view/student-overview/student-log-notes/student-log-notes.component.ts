@@ -4,12 +4,9 @@ import {Subscription, throwError} from 'rxjs';
 import {StudentViewService} from '../../student-view.service';
 import {catchError, map} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
-import {AlertService} from '../../../../../../_services/alert.service';
-import {AppService} from '../../../../../../_services/app.service';
-import {BaseComponentDirective} from '../../../../../../shared/base-component.directive';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AuthService} from '../../../../../../_services/auth.service';
+import {BaseComponentDirective} from '../../../../../../_directives/base-component/base-component.directive';
 import {AppPermissions} from '../../../../../../_constants/app-permissions';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-student-log-notes',
@@ -23,13 +20,13 @@ export class StudentLogNotesComponent extends BaseComponentDirective implements 
   studentSubscription: Subscription;
 
   constructor(private viewService: StudentViewService, private logNoteService: LogNotesService,
-              private alertService: AlertService, protected appService: AppService,
-              private router: Router, private route: ActivatedRoute, private authService: AuthService) {
-    super(appService);
+              private route: ActivatedRoute) {
+    super();
   }
 
   ngOnInit(): void {
-    this.componentName = '#student_logNotes';
+    this.populatePermissions();
+    this.componentName = 'student_logNotes';
     this.appService.blockPage();
     this.studentSubscription = this.viewService.currentStudent.pipe(map((student: StudentModel) => {
       if (student != null) {
@@ -52,10 +49,11 @@ export class StudentLogNotesComponent extends BaseComponentDirective implements 
   }
 
   get allowEdit(): boolean {
-    return this.authService.hasPermission([AppPermissions.STUDENTS_LOGNOTES_EDIT]);
+    return this.hasPermission([AppPermissions.STUDENTS_LOGNOTES_EDIT]);
   }
 
   newLogNote(): void {
+    console.log(this.route);
     this.router.navigate(['logNotes/new'], {relativeTo: this.route});
   }
 

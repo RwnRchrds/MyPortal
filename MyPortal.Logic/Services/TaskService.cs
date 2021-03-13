@@ -58,14 +58,14 @@ namespace MyPortal.Logic.Services
                 throw new NotFoundException("Task not found.");
             }
 
-            var person = await UnitOfWork.People.GetByUserId(userId);
-
-            if (person != null && task.AssignedToId == person.Id)
+            if (task.AssignedById == userId)
             {
                 return true;
             }
 
-            if (task.AssignedById == userId)
+            var person = await UnitOfWork.People.GetByUserId(userId);
+
+            if (person != null && task.AssignedToId == person.Id)
             {
                 return true;
             }
@@ -96,9 +96,9 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Task not found.");
                 }
 
-                if (taskInDb.TypeId == TaskTypes.Homework)
+                if (taskInDb.Type.Reserved)
                 {
-                    throw new InvalidDataException("Please use the homework module to manage homework tasks.");
+                    throw new InvalidDataException("Cannot edit system-generated tasks.");
                 }
 
                 taskInDb.Title = task.Title;
@@ -133,6 +133,15 @@ namespace MyPortal.Logic.Services
 
                 await UnitOfWork.Tasks.Delete(taskId);
             }
+
+            await UnitOfWork.SaveChanges();
+        }
+
+        public async Task SetCompleted(Guid taskId, bool completed)
+        {
+            var taskInDb = await UnitOfWork.Tasks.GetByIdForEditing(taskId);
+
+            taskInDb.Completed = completed;
 
             await UnitOfWork.SaveChanges();
         }

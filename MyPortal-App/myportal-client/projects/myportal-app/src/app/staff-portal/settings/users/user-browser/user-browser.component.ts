@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {PortalViewDirective} from '../../../../shared/portal-view/portal-view.directive';
+import {PortalViewDirective} from '../../../../_directives/portal-view/portal-view.directive';
 
 @Component({
   selector: 'app-user-browser',
@@ -8,7 +8,7 @@ import {PortalViewDirective} from '../../../../shared/portal-view/portal-view.di
 })
 export class UserBrowserComponent extends PortalViewDirective implements OnInit {
 
-  constructor(renderer: Renderer2, hostElement: ElementRef) {
+  constructor(protected renderer: Renderer2, protected hostElement: ElementRef) {
     super(renderer, hostElement);
   }
 
