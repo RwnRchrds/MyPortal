@@ -3,9 +3,12 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 
+import { AcademicYearService } from './api/academicYear.service';
 import { AchievementsService } from './api/achievements.service';
+import { AttendanceMarksService } from './api/attendanceMarks.service';
 import { AuthenticationService } from './api/authentication.service';
 import { BillsService } from './api/bills.service';
+import { CalendarService } from './api/calendar.service';
 import { DirectoriesService } from './api/directories.service';
 import { DocumentsService } from './api/documents.service';
 import { HousesService } from './api/houses.service';
@@ -25,9 +28,12 @@ import { YearGroupsService } from './api/yearGroups.service';
   declarations: [],
   exports:      [],
   providers: [
+    AcademicYearService,
     AchievementsService,
+    AttendanceMarksService,
     AuthenticationService,
     BillsService,
+    CalendarService,
     DirectoriesService,
     DocumentsService,
     HousesService,

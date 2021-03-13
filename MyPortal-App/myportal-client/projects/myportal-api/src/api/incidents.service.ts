@@ -196,18 +196,23 @@ export class IncidentsService {
      * 
      * 
      * @param studentId 
+     * @param academicYearId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getByStudent(studentId?: string, observe?: 'body', reportProgress?: boolean): Observable<Array<IncidentListModel>>;
-    public getByStudent(studentId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<IncidentListModel>>>;
-    public getByStudent(studentId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<IncidentListModel>>>;
-    public getByStudent(studentId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'body', reportProgress?: boolean): Observable<Array<IncidentListModel>>;
+    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<IncidentListModel>>>;
+    public getByStudent(studentId?: string, academicYearId?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<IncidentListModel>>>;
+    public getByStudent(studentId?: string, academicYearId?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
 
 
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
         if (studentId !== undefined && studentId !== null) {
             queryParameters = queryParameters.set('studentId', <any>studentId);
+        }
+        if (academicYearId !== undefined && academicYearId !== null) {
+            queryParameters = queryParameters.set('academicYearId', <any>academicYearId);
         }
 
         let headers = this.defaultHeaders;

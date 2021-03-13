@@ -2,32 +2,24 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {PersonModel, PersonSearchResultModel, PersonService, UserModel} from 'myportal-api';
 import {UserViewService} from '../user-view.service';
-import {AppService} from '../../../../../_services/app.service';
-import {AlertService} from '../../../../../_services/alert.service';
 import {catchError, map} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {throwError} from 'rxjs';
+import {BaseFormDirective} from '../../../../../_directives/base-form/base-form.directive';
 
 @Component({
   selector: 'app-user-link-person',
   templateUrl: './user-link-person.component.html',
   styleUrls: ['./user-link-person.component.css']
 })
-export class UserLinkPersonComponent implements OnInit, OnDestroy {
-
-  componentName = '#person_search';
-
-  searchForm = new FormGroup({
-    firstName: new FormControl(''),
-    lastName: new FormControl('')
-  });
+export class UserLinkPersonComponent extends BaseFormDirective implements OnInit, OnDestroy {
 
   get firstName(): AbstractControl {
-    return this.searchForm.get('firstName');
+    return this.form.get('firstName');
   }
 
   get lastName(): AbstractControl {
-    return this.searchForm.get('lastName');
+    return this.form.get('lastName');
   }
 
   get table(): any {
@@ -39,16 +31,21 @@ export class UserLinkPersonComponent implements OnInit, OnDestroy {
 
   searchResults: PersonSearchResultModel[];
 
-  constructor(private viewService: UserViewService, private appService: AppService, private personService: PersonService,
-              private alertService: AlertService) {
+  constructor(private viewService: UserViewService, private personService: PersonService) {
+    super();
   }
 
   ngOnInit(): void {
+    this.componentName = 'link_person';
+    this.form = new FormGroup({
+      firstName: new FormControl(''),
+      lastName: new FormControl('')
+    });
   }
 
   ngOnDestroy(): void {
     this.unloadTable();
-    this.searchForm.reset();
+    this.form.reset();
   }
 
   setLinkedPerson(person: PersonModel): void {
@@ -63,7 +60,7 @@ export class UserLinkPersonComponent implements OnInit, OnDestroy {
 
   goBack(): void {
     this.unloadTable();
-    this.searchForm.reset();
+    this.form.reset();
     this.viewService.showDetails();
   }
 
@@ -74,7 +71,7 @@ export class UserLinkPersonComponent implements OnInit, OnDestroy {
     }
   }
 
-  search(): void {
+  submit(): void {
     this.appService.blockComponent(this.componentName);
     try {
       this.personService.searchPeople(this.firstName.value, this.lastName.value).pipe(map((results: PersonSearchResultModel[]) => {

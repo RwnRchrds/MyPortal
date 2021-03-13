@@ -1,30 +1,23 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {UserModel, UsersService} from 'myportal-api';
-import {AppService} from '../../../../../_services/app.service';
-import {Router} from '@angular/router';
-import {AlertService} from '../../../../../_services/alert.service';
 import {catchError, map} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {throwError} from 'rxjs';
-import {AuthService} from '../../../../../_services/auth.service';
 import {AppPermissions} from '../../../../../_constants/app-permissions';
+import {BaseFormDirective} from '../../../../../_directives/base-form/base-form.directive';
 
 @Component({
   selector: 'app-user-search',
   templateUrl: './user-search.component.html',
   styleUrls: ['./user-search.component.css']
 })
-export class UserSearchComponent implements OnInit, OnDestroy {
+export class UserSearchComponent extends BaseFormDirective implements OnInit, OnDestroy {
 
   componentName = '#user_search';
 
-  searchForm = new FormGroup({
-    username: new FormControl('')
-  });
-
   get username(): AbstractControl {
-    return this.searchForm.get('username');
+    return this.form.get('username');
   }
 
   get table(): any {
@@ -33,18 +26,23 @@ export class UserSearchComponent implements OnInit, OnDestroy {
   }
 
   get allowEditUsers(): boolean {
-    return this.authService.hasPermission([AppPermissions.SYSTEM_USERS_EDIT]);
+    return this.hasPermission([AppPermissions.SYSTEM_USERS_EDIT]);
   }
 
   tableLoaded = false;
 
   searchResults: UserModel[];
 
-  constructor(private appService: AppService, private userService: UsersService, private router: Router,
-              private alertService: AlertService, private authService: AuthService) {
+  constructor(private userService: UsersService) {
+    super();
   }
 
   ngOnInit(): void {
+    this.populatePermissions();
+    this.componentName = 'user_search';
+    this.form = new FormGroup({
+      username: new FormControl('')
+    });
   }
 
   ngOnDestroy(): void {
@@ -63,25 +61,23 @@ export class UserSearchComponent implements OnInit, OnDestroy {
     this.router.navigate(['/staff/settings/users/new-user']);
   }
 
-  search(): void {
-    this.appService.blockComponent(this.componentName);
-    try {
-      this.userService.getUsers(this.username.value).pipe(map((results: UserModel[]) => {
-        this.searchResults = results;
-        if (!this.tableLoaded) {
-          this.loadTable();
-        }
-        else {
-          this.refreshTable();
-        }
-      }), catchError((err: HttpErrorResponse) => {
-        this.alertService.error(err.error);
-        return throwError(err);
-      })).subscribe();
-    }
-    finally {
-      this.appService.unblockComponent(this.componentName);
-    }
+  submit(): void {
+    this.blockComponent();
+    this.userService.getUsers(this.username.value).pipe(map((results: UserModel[]) => {
+      this.searchResults = results;
+      if (!this.tableLoaded) {
+        this.loadTable();
+        this.unblockComponent();
+      }
+      else {
+        this.refreshTable();
+        this.unblockComponent();
+      }
+    }), catchError((err: HttpErrorResponse) => {
+      this.unblockComponent();
+      this.alertService.error(err.error);
+      return throwError(err);
+    })).subscribe();
   }
 
   refreshTable(): void {

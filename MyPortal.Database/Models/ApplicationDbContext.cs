@@ -956,7 +956,10 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Discount>(e => { SetIdDefaultValue(e); });
 
-                modelBuilder.Entity<Document>(e => { SetIdDefaultValue(e); });
+                modelBuilder.Entity<Document>(e =>
+                {
+                    SetIdDefaultValue(e);
+                });
 
                 modelBuilder.Entity<DocumentType>(e =>
                 {

@@ -22,5 +22,6 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<TaskModel> GetById(Guid taskId);
 
         Task<IEnumerable<TaskModel>> GetByPerson(Guid personId, TaskSearchOptions searchOptions = null);
+        Task SetCompleted(Guid taskId, bool completed);
     }
 }

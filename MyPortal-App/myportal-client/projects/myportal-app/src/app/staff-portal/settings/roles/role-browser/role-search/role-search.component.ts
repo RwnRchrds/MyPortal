@@ -1,30 +1,21 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {RoleModel, RolesService} from 'myportal-api';
-import {AppService} from '../../../../../_services/app.service';
-import {Router} from '@angular/router';
-import {AlertService} from '../../../../../_services/alert.service';
 import {catchError, map} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {throwError} from 'rxjs';
-import {AuthService} from '../../../../../_services/auth.service';
 import {AppPermissions} from '../../../../../_constants/app-permissions';
+import {BaseFormDirective} from '../../../../../_directives/base-form/base-form.directive';
 
 @Component({
   selector: 'app-role-search',
   templateUrl: './role-search.component.html',
   styleUrls: ['./role-search.component.css']
 })
-export class RoleSearchComponent implements OnInit, OnDestroy {
-
-  componentName = '#role_search';
-
-  searchForm = new FormGroup({
-    roleDesc: new FormControl('')
-  });
+export class RoleSearchComponent extends BaseFormDirective implements OnInit, OnDestroy {
 
   get roleDesc(): AbstractControl {
-    return this.searchForm.get('roleDesc');
+    return this.form.get('roleDesc');
   }
 
   get table(): any {
@@ -33,18 +24,23 @@ export class RoleSearchComponent implements OnInit, OnDestroy {
   }
 
   get allowEditRoles(): boolean {
-    return this.authService.hasPermission([AppPermissions.SYSTEM_GROUPS_EDIT]);
+    return this.hasPermission([AppPermissions.SYSTEM_GROUPS_EDIT]);
   }
 
   tableLoaded = false;
 
   searchResults: RoleModel[];
 
-  constructor(private appService: AppService, private roleService: RolesService, private router: Router,
-              private alertService: AlertService, private authService: AuthService) {
+  constructor(private roleService: RolesService) {
+    super();
   }
 
   ngOnInit(): void {
+    this.populatePermissions();
+    this.componentName = 'role_search';
+    this.form = new FormGroup({
+      roleDesc: new FormControl('')
+    });
   }
 
   ngOnDestroy(): void {
@@ -63,17 +59,17 @@ export class RoleSearchComponent implements OnInit, OnDestroy {
     this.router.navigate(['/staff/settings/roles/new-role']);
   }
 
-  search(): void {
-    this.appService.blockComponent(this.componentName);
+  submit(): void {
+    this.blockComponent();
     this.roleService.getRoles(this.roleDesc.value).pipe(map((searchResults => {
       this.searchResults = searchResults;
 
       if (!this.tableLoaded) {
         this.loadTable();
-        this.appService.unblockComponent(this.componentName);
+        this.unblockComponent();
       } else {
         this.refreshTable();
-        this.appService.unblockComponent(this.componentName);
+        this.unblockComponent();
       }
     })), catchError((err: HttpErrorResponse) => {
       this.alertService.error(err.error);

@@ -5,34 +5,32 @@ import {catchError, map} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Subscription, throwError} from 'rxjs';
 import {ScriptService} from '../../../../../_services/script.service';
-import {AppService} from '../../../../../_services/app.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AlertService} from '../../../../../_services/alert.service';
+import {ActivatedRoute} from '@angular/router';
 import {RoleViewService} from '../role-view.service';
+import {BaseFormDirective} from '../../../../../_directives/base-form/base-form.directive';
 
 @Component({
   selector: 'app-role-details',
   templateUrl: './role-details.component.html',
   styleUrls: ['./role-details.component.css']
 })
-export class RoleDetailsComponent implements OnInit, OnDestroy {
+export class RoleDetailsComponent extends BaseFormDirective implements OnInit, OnDestroy {
 
   role: RoleModel;
   permissionTree: TreeNode;
   roleSubscription: Subscription;
   permissionsSubscription: Subscription;
 
-  detailsForm = new FormGroup({
-    code: new FormControl('', [Validators.required]),
-    name: new FormControl('', [Validators.required])
-  });
-
-  constructor(private scriptService: ScriptService, private appService: AppService,
-              protected router: Router, private roleService: RolesService, private alertService: AlertService,
+  constructor(private scriptService: ScriptService, private roleService: RolesService,
               private route: ActivatedRoute, private viewService: RoleViewService) {
+    super();
   }
 
   ngOnInit(): void {
+    this.form = new FormGroup({
+      code: new FormControl('', [Validators.required]),
+      name: new FormControl('', [Validators.required])
+    });
     // @ts-ignore
     $('#perm_tree').jstree({
       plugins: ['wholerow', 'checkbox', 'types'],
@@ -80,42 +78,38 @@ export class RoleDetailsComponent implements OnInit, OnDestroy {
   }
 
   get code(): AbstractControl {
-    return this.detailsForm.get('code');
+    return this.form.get('code');
   }
 
   get name(): AbstractControl {
-    return this.detailsForm.get('name');
+    return this.form.get('name');
   }
 
   reset(): void {
     this.role = null;
     this.permissionTree = null;
-    this.detailsForm.reset();
+    this.form.reset();
   }
 
-  save(): void {
-    this.detailsForm.markAllAsTouched();
-    this.appService.blockPage();
-    if (this.detailsForm.invalid) {
-      this.appService.unblockPage();
-      this.alertService.error('Please review the errors and try again.');
-      return;
+  submit(): void {
+    if (this.validate()) {
+      this.blockComponent();
+      // @ts-ignore
+      const selectedNodes = $('#perm_tree').jstree('get_selected', true).filter(n => n.children.length === 0);
+      console.log(selectedNodes);
+      const selectedPermissionIds = selectedNodes.map(n => this.appService.parseGuid(n.id));
+      this.roleService.updateRole({
+        id: this.role.id, name: this.code.value,
+        description: this.name.value, permissionIds: selectedPermissionIds
+      }).pipe(map(result => {
+        this.alertService.toastSuccess('Role updated');
+        this.viewService.reload();
+      }), catchError((err: HttpErrorResponse) => {
+        this.unblockComponent();
+        this.alertService.error(err.error);
+        return throwError(err);
+      })).subscribe();
     }
-    // @ts-ignore
-    const selectedNodes = $('#perm_tree').jstree('get_selected', true).filter(n => n.children.length === 0);
-    console.log(selectedNodes);
-    const selectedPermissionIds = selectedNodes.map(n => this.appService.parseGuid(n.id));
-    this.roleService.updateRole({
-      id: this.role.id, name: this.code.value,
-      description: this.name.value, permissionIds: selectedPermissionIds
-    }).pipe(map(result => {
-      this.alertService.toastSuccess('Role updated');
-      this.viewService.reload();
-    }), catchError((err: HttpErrorResponse) => {
-      this.appService.unblockPage();
-      this.alertService.error(err.error);
-      return throwError(err);
-    })).subscribe();
   }
 
   delete(): void {

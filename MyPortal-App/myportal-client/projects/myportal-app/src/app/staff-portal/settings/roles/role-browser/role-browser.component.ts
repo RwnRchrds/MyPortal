@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnDestroy, OnInit, Renderer2} from '@angular/core';
-import {PortalViewDirective} from '../../../../shared/portal-view/portal-view.directive';
+import {PortalViewDirective} from '../../../../_directives/portal-view/portal-view.directive';
 
 @Component({
   selector: 'app-role-browser',

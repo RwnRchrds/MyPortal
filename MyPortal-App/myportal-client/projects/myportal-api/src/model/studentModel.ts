@@ -9,11 +9,14 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { BoarderStatusModel } from './boarderStatusModel';
+import { EnrolmentStatusModel } from './enrolmentStatusModel';
 import { ExamCandidateModel } from './examCandidateModel';
 import { HouseModel } from './houseModel';
 import { PersonModel } from './personModel';
 import { RegGroupModel } from './regGroupModel';
 import { SenStatusModel } from './senStatusModel';
+import { SenTypeModel } from './senTypeModel';
 import { YearGroupModel } from './yearGroupModel';
 
 export interface StudentModel { 
@@ -27,6 +30,9 @@ export interface StudentModel {
     dateLeaving?: Date;
     freeSchoolMeals?: boolean;
     senStatusId?: string;
+    senTypeId?: string;
+    enrolmentStatusId?: string;
+    boarderStatusId?: string;
     pupilPremium?: boolean;
     upn?: string;
     deleted?: boolean;
@@ -35,5 +41,8 @@ export interface StudentModel {
     person?: PersonModel;
     candidate?: ExamCandidateModel;
     senStatus?: SenStatusModel;
+    senType?: SenTypeModel;
+    enrolmentStatus?: EnrolmentStatusModel;
+    boarderStatus?: BoarderStatusModel;
     house?: HouseModel;
 }

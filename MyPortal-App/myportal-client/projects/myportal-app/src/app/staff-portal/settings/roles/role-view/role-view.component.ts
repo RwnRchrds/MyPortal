@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnDestroy, OnInit, Renderer2} from '@angular/core';
-import {PortalViewDirective} from '../../../../shared/portal-view/portal-view.directive';
+import {PortalViewDirective} from '../../../../_directives/portal-view/portal-view.directive';
 import {ScriptService} from '../../../../_services/script.service';
 import {RoleModel} from 'myportal-api';
 import {RoleViewService} from './role-view.service';
@@ -17,7 +17,8 @@ export class RoleViewComponent extends PortalViewDirective implements OnInit, On
   role: RoleModel;
   subscription: Subscription;
 
-  constructor(renderer: Renderer2, hostElement: ElementRef, private scriptService: ScriptService,
+  constructor(protected renderer: Renderer2, protected hostElement: ElementRef,
+              private scriptService: ScriptService,
               private viewService: RoleViewService, private route: ActivatedRoute) {
     super(renderer, hostElement);
   }

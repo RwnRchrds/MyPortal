@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { AuthService } from './../_services/auth.service';
-import { PortalRootDirective } from '../shared/portal-root/portal-root.directive';
+import { PortalRootDirective } from '../_directives/portal-root/portal-root.directive';
 import {Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 
 @Component({

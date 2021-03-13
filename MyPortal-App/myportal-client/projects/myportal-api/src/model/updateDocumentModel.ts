@@ -11,11 +11,9 @@
  */
 
 export interface UpdateDocumentModel { 
+    id?: string;
     typeId?: string;
-    directoryId?: string;
     title: string;
     description?: string;
     restricted?: boolean;
-    id?: string;
-    fileId?: string;
 }

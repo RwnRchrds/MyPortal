@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import {BaseComponentDirective} from './base-component/base-component.directive';
+import {BaseComponentDirective} from '../base-component/base-component.directive';
 import {FormGroup} from '@angular/forms';
 
 @Directive({

@@ -14,7 +14,7 @@ import {StudentSearchComponent} from '../people/students/student-browser/student
 import {RoleSearchComponent} from '../settings/roles/role-browser/role-search/role-search.component';
 import {CreateRoleComponent} from '../settings/roles/role-browser/create-role/create-role.component';
 import {UserSearchComponent} from '../settings/users/user-browser/user-search/user-search.component';
-import {CreateUserComponent} from '../settings/users/create-user/create-user.component';
+import {CreateUserComponent} from '../settings/users/user-browser/create-user/create-user.component';
 import {StudentViewComponent} from '../people/students/student-view/student-view.component';
 import {StudentOverviewComponent} from '../people/students/student-view/student-overview/student-overview.component';
 import {StudentDetailsComponent} from '../people/students/student-view/student-details/student-details.component';

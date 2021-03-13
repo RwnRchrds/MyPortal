@@ -1,5 +1,5 @@
-import { PortalViewDirective } from '../../../../shared/portal-view/portal-view.directive';
-import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
+import { PortalViewDirective } from '../../../../_directives/portal-view/portal-view.directive';
+import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
 
 @Component({
   selector: 'app-student-browser',

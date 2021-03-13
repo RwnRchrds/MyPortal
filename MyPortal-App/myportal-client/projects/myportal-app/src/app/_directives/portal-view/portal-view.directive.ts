@@ -1,5 +1,5 @@
 import {Directive, ElementRef, OnDestroy, Renderer2} from '@angular/core';
-import {InjectorService} from '../../../_services/injector.service';
+import {InjectorService} from '../../_services/injector.service';
 
 @Directive({
   selector: '[appPortalView]'
@@ -7,9 +7,6 @@ import {InjectorService} from '../../../_services/injector.service';
 export abstract class PortalViewDirective implements OnDestroy {
 
   protected constructor(protected renderer: Renderer2, protected hostElement: ElementRef) {
-    const injector = InjectorService.getInjector();
-    console.log('Injector here:');
-    console.log(injector);
     this.addStyles();
   }
 
