@@ -3,21 +3,21 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { PortalSidebarComponent } from './portal-sidebar.component';
+import { PortalSidebarDirective } from './portal-sidebar.directive';
 
 describe('PortalSidebarComponent', () => {
-  let component: PortalSidebarComponent;
-  let fixture: ComponentFixture<PortalSidebarComponent>;
+  let component: PortalSidebarDirective;
+  let fixture: ComponentFixture<PortalSidebarDirective>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PortalSidebarComponent ]
+      declarations: [ PortalSidebarDirective ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PortalSidebarComponent);
+    fixture = TestBed.createComponent(PortalSidebarDirective);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
