@@ -6,13 +6,14 @@ import {catchError, map} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {throwError} from 'rxjs';
+import {BaseFormDirective} from '../../../../shared/_directives/base-form.directive';
 
 @Component({
   selector: 'app-create-user',
   templateUrl: './create-user.component.html',
   styleUrls: ['./create-user.component.css']
 })
-export class CreateUserComponent implements OnInit {
+export class CreateUserComponent extends BaseFormDirective implements OnInit {
 
   newUserForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
