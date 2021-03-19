@@ -16,26 +16,23 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/houses")]
     public class HousesController : BaseApiController
     {
-        private readonly IHouseService _houseService;
-
-        public HousesController(IUserService userService, IAcademicYearService academicYearService,
-            IRolePermissionsCache rolePermissionsCache, IHouseService houseService) : base(userService,
-            academicYearService, rolePermissionsCache)
-        {
-            _houseService = houseService;
-        }
+        
 
         [HttpGet]
         [Route("get")]
-        [Produces(typeof(IEnumerable<HouseModel>))]
+        [ProducesResponseType(typeof(IEnumerable<HouseModel>), 200)]
         public async Task<IActionResult> GetHouses()
         {
             return await ProcessAsync(async () =>
             {
-                var houses = await _houseService.GetHouses();
+                var houses = await Services.Houses.GetHouses();
 
                 return Ok(houses);
             });
+        }
+
+        public HousesController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
+        {
         }
     }
 }

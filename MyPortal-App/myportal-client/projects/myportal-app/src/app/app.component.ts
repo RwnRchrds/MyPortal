@@ -2,6 +2,7 @@ import { AuthService } from './_services/auth.service';
 import { TokenModel } from 'myportal-api';
 import { Component, OnInit } from '@angular/core';
 import {map} from 'rxjs/operators';
+import {AppService} from './_services/app.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,7 @@ export class AppComponent implements OnInit {
   title = 'MyPortal';
   showUi = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private appService: AppService, private authService: AuthService) {}
 
 ngOnInit(): void {
   this.setCurrentUser();
@@ -25,8 +26,12 @@ setCurrentUser(): void {
   {
     const user = this.authService.getCurrentUser(tokenWrapper);
     this.authService.setCurrentUser(user);
+    this.appService.blockPage();
     this.authService.updatePermissions().pipe(map(perm => {
       this.showUi = true;
+      // @ts-ignore
+      KTLayoutAsideMenu.init('kt_aside_menu');
+      this.appService.unblockPage();
     })).subscribe();
   }
   else

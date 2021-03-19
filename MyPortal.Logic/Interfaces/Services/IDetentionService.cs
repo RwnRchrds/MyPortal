@@ -7,7 +7,7 @@ using MyPortal.Logic.Models.Requests.Behaviour.Detentions;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IDetentionService : IService
+    public interface IDetentionService
     {
         Task<IEnumerable<DetentionModel>> Get(DetentionSearchOptions searchOptions);
         Task<DetentionModel> GetById(Guid detentionId);

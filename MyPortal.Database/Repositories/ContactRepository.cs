@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -14,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ContactRepository : BaseReadWriteRepository<Contact>, IContactRepository
     {
-        public ContactRepository(ApplicationDbContext context) : base(context, "Contact")
+        public ContactRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Contact")
         {
      
         }
@@ -35,12 +36,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Contact, Person, Contact>(sql.Sql, (contact, person) =>
+            return await Transaction.Connection.QueryAsync<Contact, Person, Contact>(sql.Sql, (contact, person) =>
             {
                 contact.Person = person;
 
                 return contact;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
     }
 }

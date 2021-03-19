@@ -1,31 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data.Common;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Repositories.Base;
 using SqlKata;
 using SqlKata.Compilers;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class SystemSettingRepository : ISystemSettingRepository, IWriteRepository
+    public class SystemSettingRepository : ISystemSettingRepository
     {
-        private IDbConnection _connection;
         private ApplicationDbContext _context;
+        private DbTransaction _transaction;
 
-        public SystemSettingRepository(ApplicationDbContext context)
+        public SystemSettingRepository(ApplicationDbContext context, DbTransaction transaction)
         {
-            _connection = context.Database.GetDbConnection();
+            _transaction = transaction;
             _context = context;
         }
 
@@ -39,7 +32,7 @@ namespace MyPortal.Database.Repositories
 
             var sql = new SqlServerCompiler().Compile(query);
 
-            return (await _connection.QueryAsync<SystemSetting>(sql.Sql, sql.NamedBindings)).FirstOrDefault();
+            return (await _transaction.Connection.QueryAsync<SystemSetting>(sql.Sql, sql.NamedBindings, _transaction)).FirstOrDefault();
         }
 
         public async Task<SystemSetting> GetForEditing(string name)
@@ -47,11 +40,6 @@ namespace MyPortal.Database.Repositories
             var setting = await _context.SystemSettings.FirstOrDefaultAsync(x => x.Name == name);
 
             return setting;
-        }
-
-        public async Task SaveChanges()
-        {
-            await _context.SaveChangesAsync();
         }
     }
 }

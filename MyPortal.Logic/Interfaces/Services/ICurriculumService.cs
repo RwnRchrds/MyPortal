@@ -5,7 +5,7 @@ using MyPortal.Logic.Models.Requests.Curriculum;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface ICurriculumService : IService
+    public interface ICurriculumService
     {
         Task CreateBand(params CurriculumBandModel[] bandModels);
         Task UpdateBand(params CurriculumBandModel[] bandModels);

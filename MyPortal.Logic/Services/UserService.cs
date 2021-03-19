@@ -9,10 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Authentication;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin.Users;
@@ -23,37 +26,36 @@ namespace MyPortal.Logic.Services
 {
     public class UserService : BaseService, IUserService
     {
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<Role> _roleManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly IRolePermissionsCache _rolePermissionsCache;
+        private readonly IIdentityServiceCollection _identityServices;
 
-        public UserService(IUnitOfWork unitOfWork, UserManager<User> userManager, RoleManager<Role> roleManager,
-            SignInManager<User> signInManager, IRolePermissionsCache rolePermissionsCache) : base(unitOfWork)
+        public UserService(IIdentityServiceCollection identityServices)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _signInManager = signInManager;
-            _rolePermissionsCache = rolePermissionsCache;
+            _identityServices = identityServices;
         }
 
         public async Task<IEnumerable<PermissionModel>> GetPermissions(Guid userId)
         {
-            var permissions = await UnitOfWork.RolePermissions.GetByUser(userId);
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var permissions = await unitOfWork.RolePermissions.GetByUser(userId);
 
-            return permissions.Select(p => BusinessMapper.Map<PermissionModel>(p.Permission));
+                return permissions.Select(p => BusinessMapper.Map<PermissionModel>(p.Permission));
+            }
         }
 
         public async Task<IEnumerable<Guid>> GetEffectivePermissions(Guid userId)
         {
-            var roleIds = (await UnitOfWork.UserRoles.GetByUser(userId)).Select(ur => ur.RoleId).ToArray();
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var roleIds = (await unitOfWork.UserRoles.GetByUser(userId)).Select(ur => ur.RoleId).ToArray();
 
-            return await _rolePermissionsCache.GetPermissions(roleIds);
+                return await _identityServices.RolePermissionsCache.GetPermissions(roleIds);
+            }
         }
 
         public async Task<IEnumerable<UserModel>> GetUsers(string usernameSearch)
         {
-            var query = _userManager.Users;
+            var query = _identityServices.UserManager.Users;
 
             if (!string.IsNullOrWhiteSpace(usernameSearch))
             {
@@ -84,7 +86,7 @@ namespace MyPortal.Logic.Services
                     CreatedDate = DateTime.Now
                 };
 
-                var result = await _userManager.CreateAsync(user, request.Password);
+                var result = await _identityServices.UserManager.CreateAsync(user, request.Password);
 
                 if (!result.Succeeded)
                 {
@@ -99,7 +101,7 @@ namespace MyPortal.Logic.Services
 
         public async Task LinkPerson(Guid userId, Guid personId)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _identityServices.UserManager.FindByIdAsync(userId.ToString());
 
             if (user == null)
             {
@@ -108,12 +110,12 @@ namespace MyPortal.Logic.Services
 
             user.PersonId = personId;
 
-            await _userManager.UpdateAsync(user);
+            await _identityServices.UserManager.UpdateAsync(user);
         }
 
         public async Task UnlinkPerson(Guid userId)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _identityServices.UserManager.FindByIdAsync(userId.ToString());
 
             if (user == null)
             {
@@ -122,14 +124,14 @@ namespace MyPortal.Logic.Services
 
             user.PersonId = null;
 
-            await _userManager.UpdateAsync(user);
+            await _identityServices.UserManager.UpdateAsync(user);
         }
 
         public async Task UpdateUser(params UpdateUserModel[] updateUserRequests)
         {
             foreach (var updateUserRequest in updateUserRequests)
             {
-                var user = await _userManager.FindByIdAsync(updateUserRequest.Id.ToString());
+                var user = await _identityServices.UserManager.FindByIdAsync(updateUserRequest.Id.ToString());
 
                 if (user == null)
                 {
@@ -138,49 +140,52 @@ namespace MyPortal.Logic.Services
 
                 user.PersonId = updateUserRequest.PersonId;
 
-                await _userManager.UpdateAsync(user);
+                await _identityServices.UserManager.UpdateAsync(user);
 
                 var selectedRoles = new List<Role>();
 
-                var existingRoleNames = await _userManager.GetRolesAsync(user);
+                var existingRoleNames = await _identityServices.UserManager.GetRolesAsync(user);
 
                 foreach (var roleId in updateUserRequest.RoleIds)
                 {
-                    selectedRoles.Add(await _roleManager.FindByIdAsync(roleId.ToString()));
+                    selectedRoles.Add(await _identityServices.RoleManager.FindByIdAsync(roleId.ToString()));
                 }
 
                 var rolesToRemove = existingRoleNames.Where(r => selectedRoles.All(s => s.Name != r));
 
                 var rolesToAdd = selectedRoles.Where(s => existingRoleNames.All(r => r != s.Name)).Select(x => x.Name);
 
-                await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
-                await _userManager.AddToRolesAsync(user, rolesToAdd);
+                await _identityServices.UserManager.RemoveFromRolesAsync(user, rolesToRemove);
+                await _identityServices.UserManager.AddToRolesAsync(user, rolesToAdd);
             }
         }
 
         public async Task DeleteUser(params Guid[] userIds)
         {
-            foreach (var userId in userIds)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var userRoles = await UnitOfWork.UserRoles.GetByUser(userId);
+                foreach (var userId in userIds)
+                {
+                    var userRoles = await unitOfWork.UserRoles.GetByUser(userId);
 
-                await RemoveFromRoles(userId, userRoles.Select(ur => ur.RoleId).ToArray());
+                    await RemoveFromRoles(userId, userRoles.Select(ur => ur.RoleId).ToArray());
 
-                var user = await _userManager.FindByIdAsync(userId.ToString());
+                    var user = await _identityServices.UserManager.FindByIdAsync(userId.ToString());
 
-                await _userManager.DeleteAsync(user);
+                    await _identityServices.UserManager.DeleteAsync(user);
+                }
             }
         }
 
         public async Task SetPassword(Guid userId, string newPassword)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            var user = await _identityServices.UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
             List<IdentityError> errors = new List<IdentityError>();
 
-            foreach (var passwordValidator in _userManager.PasswordValidators)
+            foreach (var passwordValidator in _identityServices.UserManager.PasswordValidators)
             {
-                var passwordValidationResult = await passwordValidator.ValidateAsync(_userManager, user, newPassword);
+                var passwordValidationResult = await passwordValidator.ValidateAsync(_identityServices.UserManager, user, newPassword);
                 if (!passwordValidationResult.Succeeded)
                 {
                     errors.AddRange(passwordValidationResult.Errors);
@@ -193,9 +198,9 @@ namespace MyPortal.Logic.Services
                 throw new Exception(message);
             }
 
-            await _userManager.RemovePasswordAsync(user);
+            await _identityServices.UserManager.RemovePasswordAsync(user);
 
-            var setPasswordResult = await _userManager.AddPasswordAsync(user, newPassword);
+            var setPasswordResult = await _identityServices.UserManager.AddPasswordAsync(user, newPassword);
 
             if (!setPasswordResult.Succeeded)
             {
@@ -213,7 +218,7 @@ namespace MyPortal.Logic.Services
         {
             var result = new LoginResult();
 
-            var user = await _userManager.Users.Include(u => u.Person)
+            var user = await _identityServices.UserManager.Users.Include(u => u.Person)
                 .FirstOrDefaultAsync(x => x.UserName == login.Username.ToLower());
 
             if (user == null)
@@ -223,7 +228,7 @@ namespace MyPortal.Logic.Services
                 return result;
             }
 
-            var signInResult = await _signInManager.CheckPasswordSignInAsync(user, login.Password, false);
+            var signInResult = await _identityServices.SignInManager.CheckPasswordSignInAsync(user, login.Password, false);
 
             if (!signInResult.Succeeded)
             {
@@ -231,7 +236,7 @@ namespace MyPortal.Logic.Services
             }
             else if (!user.Enabled)
             {
-                result.Fail("Your account has been disabled. Please try again later.");
+                result.Fail("Your account is currently disabled. Please try again later.");
             }
             else
             {
@@ -243,39 +248,39 @@ namespace MyPortal.Logic.Services
 
         public async Task AddToRoles(Guid userId, params Guid[] roleIds)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _identityServices.UserManager.FindByIdAsync(userId.ToString());
 
             foreach (var roleId in roleIds)
             {
-                var role = await _roleManager.FindByIdAsync(roleId.ToString());
+                var role = await _identityServices.RoleManager.FindByIdAsync(roleId.ToString());
 
-                await _userManager.AddToRoleAsync(user, role.Name);
+                await _identityServices.UserManager.AddToRoleAsync(user, role.Name);
             }
         }
 
         public async Task RemoveFromRoles(Guid userId, params Guid[] roleIds)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _identityServices.UserManager.FindByIdAsync(userId.ToString());
 
             foreach (var roleId in roleIds)
             {
-                var role = await _roleManager.FindByIdAsync(roleId.ToString());
+                var role = await _identityServices.RoleManager.FindByIdAsync(roleId.ToString());
 
-                await _userManager.RemoveFromRoleAsync(user, role.Name);
+                await _identityServices.UserManager.RemoveFromRoleAsync(user, role.Name);
             }
         }
 
         public async Task<IEnumerable<RoleModel>> GetUserRoles(Guid userId)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _identityServices.UserManager.FindByIdAsync(userId.ToString());
 
-            var roleNames = await _userManager.GetRolesAsync(user);
+            var roleNames = await _identityServices.UserManager.GetRolesAsync(user);
 
             var roles = new List<RoleModel>();
 
             foreach (var roleName in roleNames)
             {
-                var role = await _roleManager.FindByNameAsync(roleName);
+                var role = await _identityServices.RoleManager.FindByNameAsync(roleName);
                 
                 roles.Add(BusinessMapper.Map<RoleModel>(role));
             }
@@ -285,12 +290,12 @@ namespace MyPortal.Logic.Services
 
         public async Task<bool> UsernameExists(string username)
         {
-            return await _userManager.Users.AnyAsync(x => x.UserName == username.ToLower());
+            return await _identityServices.UserManager.Users.AnyAsync(x => x.UserName == username.ToLower());
         }
 
         public async Task SetUserEnabled(Guid userId, bool enabled)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            var user = await _identityServices.UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
             if (user == null)
             {
@@ -299,19 +304,22 @@ namespace MyPortal.Logic.Services
 
             user.Enabled = enabled;
 
-            await _userManager.UpdateAsync(user);
+            await _identityServices.UserManager.UpdateAsync(user);
         }
 
         public async Task<UserModel> GetUserById(Guid userId)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
-
-            if (user.PersonId.HasValue)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                user.Person = await UnitOfWork.People.GetById(user.PersonId.Value);
-            }
+                var user = await _identityServices.UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
-            return BusinessMapper.Map<UserModel>(user);
+                if (user.PersonId.HasValue)
+                {
+                    user.Person = await unitOfWork.People.GetById(user.PersonId.Value);
+                }
+
+                return BusinessMapper.Map<UserModel>(user);
+            }
         }
 
         public async Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal)

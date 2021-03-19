@@ -11,23 +11,14 @@ namespace MyPortalWeb.Controllers.BaseControllers
 {
     public abstract class StudentApiController : BaseApiController
     {
-        protected readonly IStudentService StudentService;
-
-        protected StudentApiController(IUserService userService, IAcademicYearService academicYearService,
-            IRolePermissionsCache rolePermissionsCache, IStudentService studentService) : base(userService,
-            academicYearService, rolePermissionsCache)
-        {
-            StudentService = studentService;
-        }
-
         protected async Task<bool> AuthoriseStudent(Guid requestedStudentId)
         {
             if (User.IsType(UserTypes.Student))
             {
                 // Students can only access resources involving themselves
-                var user = await UserService.GetUserByPrincipal(User);
+                var user = await Services.Users.GetUserByPrincipal(User);
 
-                var student = await StudentService.GetByUserId(user.Id);
+                var student = await Services.Students.GetByUserId(user.Id);
 
                 if (student.Id == requestedStudentId)
                 {
@@ -48,11 +39,8 @@ namespace MyPortalWeb.Controllers.BaseControllers
             return false;
         }
 
-        public override void Dispose()
+        protected StudentApiController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
         {
-            StudentService.Dispose();
-
-            base.Dispose();
         }
     }
 }

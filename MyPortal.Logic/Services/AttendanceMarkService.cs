@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.Database;
 using MyPortal.Database.Constants;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
@@ -34,124 +34,136 @@ namespace MyPortal.Logic.Services
 
         public async Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId, bool returnNoMark = false)
         {
-            var attendanceMark = await UnitOfWork.AttendanceMarks.GetMark(studentId, attendanceWeekId, periodId);
-
-            if (returnNoMark && attendanceMark == null)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                return NoMark(studentId, attendanceWeekId, periodId);
-            }
+                var attendanceMark = await unitOfWork.AttendanceMarks.GetMark(studentId, attendanceWeekId, periodId);
 
-            return BusinessMapper.Map<AttendanceMarkModel>(attendanceMark);
+                if (returnNoMark && attendanceMark == null)
+                {
+                    return NoMark(studentId, attendanceWeekId, periodId);
+                }
+
+                return BusinessMapper.Map<AttendanceMarkModel>(attendanceMark);
+            }
         }
 
         public async Task<AttendanceRegisterModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId)
         {
-            var metadata = await UnitOfWork.Sessions.GetMetadata(sessionId, attendanceWeekId);
-
-            if (metadata == null || metadata.AttendanceWeekId == Guid.Empty)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                throw new NotFoundException("Failed to load register.");
-            }
+                var metadata = await unitOfWork.Sessions.GetMetadata(sessionId, attendanceWeekId);
 
-            var register = new AttendanceRegisterModel(metadata);
-
-            var codes = await UnitOfWork.AttendanceCodes.GetAll(true, false);
-
-            register.Codes = codes.Select(BusinessMapper.Map<AttendanceCodeModel>).ToList();
-
-            var possibleMarks = (await UnitOfWork.AttendanceMarks.GetRegisterMarks(StudentGroupType.CurriculumGroup,
-                register.Metadata.CurriculumGroupId, register.Metadata.StartTime.Date,
-                register.Metadata.StartTime.Date.AddDays(1))).GroupBy(m => m.StudentId);
-
-            foreach (var possibleMark in possibleMarks)
-            {
-                var student = await UnitOfWork.Students.GetById(possibleMark.Key);
-
-                if (student == null)
+                if (metadata == null || metadata.AttendanceWeekId == Guid.Empty)
                 {
-                    throw new NotFoundException("Student not found.");
+                    throw new NotFoundException("Failed to load register.");
                 }
 
-                var studentModel = BusinessMapper.Map<StudentModel>(student);
+                var register = new AttendanceRegisterModel(metadata);
 
-                var registerStudent = new AttendanceRegisterStudentModel
+                var codes = await unitOfWork.AttendanceCodes.GetAll(true, false);
+
+                register.Codes = codes.Select(BusinessMapper.Map<AttendanceCodeModel>).ToList();
+
+                var possibleMarks = (await unitOfWork.AttendanceMarks.GetRegisterMarks(StudentGroupType.CurriculumGroup,
+                    register.Metadata.CurriculumGroupId, register.Metadata.StartTime.Date,
+                    register.Metadata.StartTime.Date.AddDays(1))).GroupBy(m => m.StudentId);
+
+                foreach (var possibleMark in possibleMarks)
                 {
-                    StudentId = possibleMark.Key,
-                    StudentName = studentModel.Person.GetDisplayName(),
-                    Marks = possibleMark.Select(m => new AttendanceMarkListModel
+                    var student = await unitOfWork.Students.GetById(possibleMark.Key);
+
+                    if (student == null)
                     {
-                        StudentId = m.StudentId,
-                        WeekId = m.WeekId,
-                        PeriodId = m.PeriodId,
-                        Comments = m.Comments,
-                        MinutesLate = m.MinutesLate,
-                        CodeId = m.CodeId ?? Guid.Empty
-                    }).ToList()
-                };
+                        throw new NotFoundException("Student not found.");
+                    }
 
-                register.Students.Add(registerStudent);
+                    var studentModel = BusinessMapper.Map<StudentModel>(student);
+
+                    var registerStudent = new AttendanceRegisterStudentModel
+                    {
+                        StudentId = possibleMark.Key,
+                        StudentName = studentModel.Person.GetDisplayName(),
+                        Marks = possibleMark.Select(m => new AttendanceMarkListModel
+                        {
+                            StudentId = m.StudentId,
+                            WeekId = m.WeekId,
+                            PeriodId = m.PeriodId,
+                            Comments = m.Comments,
+                            MinutesLate = m.MinutesLate,
+                            CodeId = m.CodeId ?? Guid.Empty
+                        }).ToList()
+                    };
+
+                    register.Students.Add(registerStudent);
+                }
+
+                return register;
             }
-
-            return register;
         }
 
         public async Task Save(params AttendanceMarkListModel[] marks)
         {
-            foreach (var model in marks)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                if (model.CodeId == Guid.Empty)
+                foreach (var model in marks)
                 {
-                    throw new AttendanceCodeException("Cannot insert blank attendance codes.");
-                }
-
-                var markInDb = await GetAttendanceMark(model.StudentId, model.WeekId, model.PeriodId);
-
-                if (markInDb != null)
-                {
-                    markInDb.CodeId = model.CodeId;
-                    markInDb.MinutesLate = model.MinutesLate ?? 0;
-                    markInDb.Comments = model.Comments;
-
-                    var updatedMark = new AttendanceMark
+                    if (model.CodeId == Guid.Empty)
                     {
-                        Id = markInDb.Id,
-                        CodeId = markInDb.CodeId,
-                        StudentId = markInDb.StudentId,
-                        WeekId = markInDb.WeekId,
-                        PeriodId = markInDb.PeriodId,
-                        MinutesLate = markInDb.MinutesLate,
-                        Comments = markInDb.Comments
-                    };
+                        throw new AttendanceCodeException("Cannot insert blank attendance codes.");
+                    }
 
-                    UnitOfWork.AttendanceMarks.Update(updatedMark);
-                }
-                else
-                {
-                    var mark = new AttendanceMark
+                    var markInDb = await GetAttendanceMark(model.StudentId, model.WeekId, model.PeriodId);
+
+                    if (markInDb != null)
                     {
-                        StudentId = model.StudentId,
-                        WeekId = model.WeekId,
-                        PeriodId = model.PeriodId,
-                        CodeId = model.CodeId,
-                        MinutesLate = model.MinutesLate ?? 0,
-                        Comments = model.Comments
-                    };
+                        markInDb.CodeId = model.CodeId;
+                        markInDb.MinutesLate = model.MinutesLate ?? 0;
+                        markInDb.Comments = model.Comments;
 
-                    UnitOfWork.AttendanceMarks.Create(mark);
+                        var updatedMark = new AttendanceMark
+                        {
+                            Id = markInDb.Id,
+                            CodeId = markInDb.CodeId,
+                            StudentId = markInDb.StudentId,
+                            WeekId = markInDb.WeekId,
+                            PeriodId = markInDb.PeriodId,
+                            MinutesLate = markInDb.MinutesLate,
+                            Comments = markInDb.Comments
+                        };
+
+                        unitOfWork.AttendanceMarks.Update(updatedMark);
+                    }
+                    else
+                    {
+                        var mark = new AttendanceMark
+                        {
+                            StudentId = model.StudentId,
+                            WeekId = model.WeekId,
+                            PeriodId = model.PeriodId,
+                            CodeId = model.CodeId,
+                            MinutesLate = model.MinutesLate ?? 0,
+                            Comments = model.Comments
+                        };
+
+                        unitOfWork.AttendanceMarks.Create(mark);
+                    }
                 }
+
+                await unitOfWork.SaveChangesAsync();
             }
-
-            await UnitOfWork.SaveChanges();
         }
 
         public async Task Delete(params Guid[] attendanceMarkIds)
         {
-            foreach (var attendanceMarkId in attendanceMarkIds)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                await UnitOfWork.AttendanceMarks.Delete(attendanceMarkId);
-            }
+                foreach (var attendanceMarkId in attendanceMarkIds)
+                {
+                    await unitOfWork.AttendanceMarks.Delete(attendanceMarkId);
+                }
 
-            await UnitOfWork.SaveChanges();
+                await unitOfWork.SaveChangesAsync();
+            }
         }
 
         public async Task Save(params AttendanceRegisterStudentModel[] markCollections)
@@ -168,20 +180,19 @@ namespace MyPortal.Logic.Services
 
         public async Task<AttendanceSummary> GetAttendanceSummaryByStudent(Guid studentId, Guid academicYearId)
         {
-            var codes = (await UnitOfWork.AttendanceCodes.GetAll()).Select(BusinessMapper.Map<AttendanceCodeModel>)
-                .ToList();
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var codes = (await unitOfWork.AttendanceCodes.GetAll()).Select(BusinessMapper.Map<AttendanceCodeModel>)
+                    .ToList();
 
-            var marks =
-                (await UnitOfWork.AttendanceMarks.GetByStudent(studentId, academicYearId)).Select(BusinessMapper
-                    .Map<AttendanceMarkModel>).ToList();
+                var marks =
+                    (await unitOfWork.AttendanceMarks.GetByStudent(studentId, academicYearId)).Select(BusinessMapper
+                        .Map<AttendanceMarkModel>).ToList();
 
-            var summary = new AttendanceSummary(codes, marks);
+                var summary = new AttendanceSummary(codes, marks);
 
-            return summary;
-        }
-
-        public AttendanceMarkService(IUnitOfWork unitOfWork) : base(unitOfWork)
-        {
+                return summary;
+            }
         }
     }
 }

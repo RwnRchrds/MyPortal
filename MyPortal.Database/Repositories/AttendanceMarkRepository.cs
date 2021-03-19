@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -12,12 +13,13 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Query.Attendance;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
     public class AttendanceMarkRepository : BaseReadWriteRepository<AttendanceMark>, IAttendanceMarkRepository
     {
-        public AttendanceMarkRepository(ApplicationDbContext context) : base(context, "AttendanceMark")
+        public AttendanceMarkRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "AttendanceMark")
         {
        
         }
@@ -48,7 +50,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<AttendanceMark, Student, Person, AttendanceWeek, AttendanceWeekPattern, AttendancePeriod, AttendanceMark>(
+            return await Transaction.Connection.QueryAsync<AttendanceMark, Student, Person, AttendanceWeek, AttendanceWeekPattern, AttendancePeriod, AttendanceMark>(
                 sql.Sql,
                 (mark, student, person, week, pattern, period) =>
                 {
@@ -59,7 +61,7 @@ namespace MyPortal.Database.Repositories
                     mark.AttendancePeriod = period;
 
                     return mark;
-                }, sql.NamedBindings);
+                }, sql.NamedBindings, Transaction);
         }
 
         public async Task<IEnumerable<AttendanceMark>> GetByStudent(Guid studentId, Guid academicYearId)
@@ -103,7 +105,7 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery<PossibleAttendanceMark>(query);
         }
 
-        public void Update(AttendanceMark mark)
+        public async Task Update(AttendanceMark mark)
         {
             var columns = new List<string> { "CodeId", "MinutesLate", "Comments" };
 
@@ -111,7 +113,7 @@ namespace MyPortal.Database.Repositories
 
             var query = new Query(TblName).Where("AttendanceMark.Id", "=", mark.Id).AsUpdate(columns, values);
 
-            PendingQueries.Add(query);
+            await ExecuteNonQuery(query);
         }
     }
 }

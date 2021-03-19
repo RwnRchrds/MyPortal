@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Text;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -15,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class FileRepository : BaseReadWriteRepository<File>, IFileRepository
     {
-        public FileRepository(ApplicationDbContext context) : base(context, "File")
+        public FileRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "File")
         {
 
         }
@@ -34,12 +33,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<File, Document, File>(sql.Sql, (file, document) =>
+            return await Transaction.Connection.QueryAsync<File, Document, File>(sql.Sql, (file, document) =>
             {
                 file.Document = document;
 
                 return file;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
 
 

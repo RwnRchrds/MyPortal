@@ -2,16 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Behaviour;
 using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -21,24 +18,18 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/behaviour/achievements")]
     public class AchievementsController : StudentApiController
     {
-        private readonly IAchievementService _achievementService;
-
-        public AchievementsController(IUserService userService, IAcademicYearService academicYearService,
-            IRolePermissionsCache rolePermissionsCache, IStudentService studentService,
-            IAchievementService achievementService) : base(userService, academicYearService, rolePermissionsCache,
-            studentService)
+        public AchievementsController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
         {
-            _achievementService = achievementService;
         }
 
         [HttpGet]
         [Route("id", Name = "ApiAchievementGetById")]
-        [Produces(typeof(AchievementModel))]
+        [ProducesResponseType(typeof(AchievementModel), 200)]
         public async Task<IActionResult> GetById([FromQuery] Guid achievementId)
         {
             return await ProcessAsync(async () =>
             {
-                var achievement = await _achievementService.GetAchievementById(achievementId);
+                var achievement = await Services.Achievements.GetAchievementById(achievementId);
 
                 if (await AuthoriseStudent(achievement.StudentId))
                 {
@@ -51,16 +42,16 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("student", Name = "ApiAchievementGetByStudent")]
-        [Produces(typeof(AchievementDataGridModel))]
+        [ProducesResponseType(typeof(AchievementDataGridModel), 200)]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             return await ProcessAsync(async () =>
             {
                 if (await AuthoriseStudent(studentId))
                 {
-                    var fromAcademicYearId = academicYearId ?? (await AcademicYearService.GetCurrentAcademicYear(true)).Id;
+                    var fromAcademicYearId = academicYearId ?? (await Services.AcademicYears.GetCurrentAcademicYear(true)).Id;
 
-                    var achievements = await _achievementService.GetAchievementsByStudent(studentId, fromAcademicYearId);
+                    var achievements = await Services.Achievements.GetAchievementsByStudent(studentId, fromAcademicYearId);
 
                     return Ok(achievements.Select(x => x.ToListModel()));
                 }
@@ -72,51 +63,47 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPost]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("create", Name = "ApiAchievementCreate")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Create([FromBody] CreateAchievementModel model)
         {
             return await ProcessAsync(async () =>
             {
-                var user = await UserService.GetUserByPrincipal(User);
+                var user = await Services.Users.GetUserByPrincipal(User);
 
                var request = new AchievementModel(model, user.Id);
 
-               await _achievementService.CreateAchievement(request);
+               await Services.Achievements.CreateAchievement(request);
 
-                return Ok("Achievement created.");
+                return Ok();
             }, Permissions.Behaviour.Achievements.EditAchievements);
         }
 
         [HttpPut]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("update", Name = "ApiAchievementUpdate")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Update([FromBody] UpdateAchievementModel model)
         {
             return await ProcessAsync(async () =>
             {
-                await _achievementService.UpdateAchievement(model);
+                await Services.Achievements.UpdateAchievement(model);
 
-                return Ok("Achievement updated.");
+                return Ok();
             }, Permissions.Behaviour.Achievements.EditAchievements);
         }
 
         [HttpDelete]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("delete", Name = "ApiAchievementDelete")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Delete([FromQuery] Guid achievementId)
         {
             return await ProcessAsync(async () =>
             {
-                await _achievementService.DeleteAchievement(achievementId);
+                await Services.Achievements.DeleteAchievement(achievementId);
 
-                return Ok("Achievement deleted.");
+                return Ok();
             }, Permissions.Behaviour.Achievements.EditAchievements);
-        }
-
-        public override void Dispose()
-        {
-            _achievementService.Dispose();
-
-            base.Dispose();
         }
     }
 }

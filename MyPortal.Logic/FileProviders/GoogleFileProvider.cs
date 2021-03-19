@@ -12,9 +12,9 @@ namespace MyPortal.Logic.FileProviders
     {
         private readonly DriveService _driveService;
 
-        public GoogleFileProvider(IConfiguration config)
+        public GoogleFileProvider()
         {
-            var googleHelper = new GoogleHelper(config);
+            var googleHelper = new GoogleHelper(Configuration.Instance.GoogleConfig);
             _driveService = new DriveService(googleHelper.GetInitializer(scopes: DriveService.Scope.Drive));
         }
 

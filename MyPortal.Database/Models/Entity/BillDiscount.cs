@@ -14,10 +14,7 @@ namespace MyPortal.Database.Models.Entity
         public Guid DiscountId { get; set; }
 
         [Column(Order = 3, TypeName = "decimal(10,2)")]
-        public decimal Amount { get; set; }
-
-        [Column(Order = 4)]
-        public bool Percentage { get; set; }
+        public decimal GrossAmount { get; set; }    
 
         public virtual Bill Bill { get; set; }
         public virtual Discount Discount { get; set; }

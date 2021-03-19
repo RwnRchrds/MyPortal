@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
     public class UserRepository : BaseReadWriteRepository<User>, IUserRepository
     {
-        public UserRepository(ApplicationDbContext context) : base(context, "User")
+        public UserRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "User")
         {
 
         }
@@ -37,12 +34,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<User, Person, User>(sql.Sql, (user, person) =>
+            return await Transaction.Connection.QueryAsync<User, Person, User>(sql.Sql, (user, person) =>
             {
                 user.Person = person;
 
                 return user;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
 
         public async Task<bool> UserExists(string username)

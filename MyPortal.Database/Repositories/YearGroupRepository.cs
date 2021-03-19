@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -14,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class YearGroupRepository : BaseReadWriteRepository<YearGroup>, IYearGroupRepository
     {
-        public YearGroupRepository(ApplicationDbContext context) : base(context, "YearGroup")
+        public YearGroupRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "YearGroup")
         {
             
         }
@@ -39,7 +38,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<YearGroup, StaffMember, Person, CurriculumYearGroup, YearGroup>(sql.Sql, (yearGroup, head, person, curriculumGroup) =>
+            return await Transaction.Connection.QueryAsync<YearGroup, StaffMember, Person, CurriculumYearGroup, YearGroup>(sql.Sql, (yearGroup, head, person, curriculumGroup) =>
             {
                 yearGroup.HeadOfYear = head;
 
@@ -51,7 +50,7 @@ namespace MyPortal.Database.Repositories
                 yearGroup.CurriculumYearGroup = curriculumGroup;
 
                 return yearGroup;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
     }
 }

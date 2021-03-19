@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -14,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class GradeRepository : BaseReadWriteRepository<Grade>, IGradeRepository
     {
-        public GradeRepository(ApplicationDbContext context) : base(context, "Grade")
+        public GradeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Grade")
         {
             
         }
@@ -35,12 +36,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Grade, GradeSet, Grade>(sql.Sql, (grade, set) =>
+            return await Transaction.Connection.QueryAsync<Grade, GradeSet, Grade>(sql.Sql, (grade, set) =>
             {
                 grade.GradeSet = set;
 
                 return grade;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
     }
 }

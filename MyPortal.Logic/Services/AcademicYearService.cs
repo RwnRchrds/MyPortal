@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.Database;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Curriculum;
@@ -16,95 +19,102 @@ namespace MyPortal.Logic.Services
 {
     public class AcademicYearService : BaseService, IAcademicYearService
     {
-        public AcademicYearService(IUnitOfWork unitOfWork) : base(unitOfWork)
-        {
-
-        }
-
         public async Task<AcademicYearModel> GetCurrentAcademicYear(bool getLatestIfNull = false)
         {
-            var acadYear = await UnitOfWork.AcademicYears.GetCurrent();
-
-            if (acadYear == null)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                if (getLatestIfNull)
-                {
-                    acadYear = await UnitOfWork.AcademicYears.GetLatest();
+                var acadYear = await unitOfWork.AcademicYears.GetCurrent();
 
-                    if (acadYear == null)
+                if (acadYear == null)
+                {
+                    if (getLatestIfNull)
                     {
-                        throw new NotFoundException("No academic years are defined.");
+                        acadYear = await unitOfWork.AcademicYears.GetLatest();
+
+                        if (acadYear == null)
+                        {
+                            throw new NotFoundException("No academic years are defined.");
+                        }
+                    }
+                    else
+                    {
+                        throw new NotFoundException("There is no academic year defined for the current date.");
                     }
                 }
-                else
-                {
-                    throw new NotFoundException("There is no academic year defined for the current date.");
-                }
-            }
 
-            return BusinessMapper.Map<AcademicYearModel>(acadYear);
+                return BusinessMapper.Map<AcademicYearModel>(acadYear);
+            }
         }
 
         public async Task<AcademicYearModel> GetAcademicYearById(Guid academicYearId)
         {
-            var acadYear = await UnitOfWork.AcademicYears.GetById(academicYearId);
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var acadYear = await unitOfWork.AcademicYears.GetById(academicYearId);
 
-            return BusinessMapper.Map<AcademicYearModel>(acadYear);
+                return BusinessMapper.Map<AcademicYearModel>(acadYear);
+            }
         }
 
         public async Task<IEnumerable<AcademicYearModel>> GetAcademicYears()
         {
-            var acadYears = await UnitOfWork.AcademicYears.GetAll();
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var acadYears = await unitOfWork.AcademicYears.GetAll();
 
-            return acadYears.Select(BusinessMapper.Map<AcademicYearModel>);
+                return acadYears.Select(BusinessMapper.Map<AcademicYearModel>);
+            }
         }
 
         public async Task CreateAcademicYear(params CreateAcademicYearModel[] createModels)
         {
-            foreach (var model in createModels)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var academicYear = new AcademicYear
+                foreach (var model in createModels)
                 {
-                    Name = model.Name
-                };
-
-                foreach (var termModel in model.AcademicTerms)
-                {
-                    var term = new AcademicTerm
+                    var academicYear = new AcademicYear
                     {
-                        Name = termModel.Name,
-                        StartDate = termModel.StartDate,
-                        EndDate = termModel.EndDate
+                        Name = model.Name
                     };
 
-                    foreach (var attendanceWeek in termModel.AttendanceWeeks)
+                    foreach (var termModel in model.AcademicTerms)
                     {
-                        term.AttendanceWeeks.Add(new AttendanceWeek
+                        var term = new AcademicTerm
                         {
-                            Beginning = attendanceWeek.WeekBeginning,
-                            WeekPatternId = attendanceWeek.WeekPatternId,
-                            IsNonTimetable = attendanceWeek.NonTimetable
-                        });
+                            Name = termModel.Name,
+                            StartDate = termModel.StartDate,
+                            EndDate = termModel.EndDate
+                        };
+
+                        foreach (var attendanceWeek in termModel.AttendanceWeeks)
+                        {
+                            term.AttendanceWeeks.Add(new AttendanceWeek
+                            {
+                                Beginning = attendanceWeek.WeekBeginning,
+                                WeekPatternId = attendanceWeek.WeekPatternId,
+                                IsNonTimetable = attendanceWeek.NonTimetable
+                            });
+                        }
+
+                        foreach (var schoolHoliday in termModel.Holidays)
+                        {
+                            unitOfWork.DiaryEvents.Create(new DiaryEvent
+                            {
+                                Description = "School Holiday",
+                                EventTypeId = EventTypes.SchoolHoliday,
+                                IsAllDay = true,
+                                StartTime = schoolHoliday.Date,
+                                EndTime = schoolHoliday.Date
+                            });
+                        }
+
+                        academicYear.AcademicTerms.Add(term);
                     }
 
-                    foreach (var schoolHoliday in termModel.Holidays)
-                    {
-                        UnitOfWork.DiaryEvents.Create(new DiaryEvent
-                        {
-                            Description = "School Holiday",
-                            EventTypeId = EventTypes.SchoolHoliday,
-                            IsAllDay = true,
-                            StartTime = schoolHoliday.Date,
-                            EndTime = schoolHoliday.Date
-                        });
-                    }
+                    unitOfWork.AcademicYears.Create(academicYear);
 
-                    academicYear.AcademicTerms.Add(term);
+                    await unitOfWork.SaveChangesAsync();
                 }
-
-                UnitOfWork.AcademicYears.Create(academicYear);
-
-                await UnitOfWork.SaveChanges();
             }
         }
 
@@ -166,30 +176,38 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateAcademicYear(params AcademicYearModel[] academicYearModels)
         {
-            foreach (var academicYearModel in academicYearModels)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var academicYearInDb = await UnitOfWork.AcademicYears.GetById(academicYearModel.Id);
+                foreach (var academicYearModel in academicYearModels)
+                {
+                    var academicYearInDb = await unitOfWork.AcademicYears.GetByIdForEditing(academicYearModel.Id);
 
-                academicYearInDb.Locked = academicYearModel.Locked;
+                    academicYearInDb.Locked = academicYearModel.Locked;
+                }
+
+                await unitOfWork.SaveChangesAsync();
             }
         }
 
         public async Task DeleteAcademicYear(params Guid[] academicYearIds)
         {
-            foreach (var academicYearId in academicYearIds)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                await UnitOfWork.AcademicYears.Delete(academicYearId);
+                foreach (var academicYearId in academicYearIds)
+                {
+                    await unitOfWork.AcademicYears.Delete(academicYearId);
+                }
+
+                await unitOfWork.SaveChangesAsync();
             }
         }
 
         public async Task<bool> IsAcademicYearLocked(Guid academicYearId)
         {
-            return await UnitOfWork.AcademicYears.IsLocked(academicYearId);
-        }
-
-        public override void Dispose()
-        {
-            UnitOfWork.Dispose();
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                return await unitOfWork.AcademicYears.IsLocked(academicYearId);
+            }
         }
     }
 }

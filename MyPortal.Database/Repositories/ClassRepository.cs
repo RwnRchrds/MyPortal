@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -16,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ClassRepository : BaseReadWriteRepository<Class>, IClassRepository
     {
-        public ClassRepository(ApplicationDbContext context) : base(context, "Class")
+        public ClassRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Class")
         {
 
         }
@@ -43,7 +44,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Class, Course, StaffMember, Person, CurriculumGroup, Class>(sql.Sql,
+            return await Transaction.Connection.QueryAsync<Class, Course, StaffMember, Person, CurriculumGroup, Class>(sql.Sql,
                 (currClass, course, teacher, person, group) =>
                 {
                     currClass.Course = course;

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Data.Common;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -19,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentRepository : BaseReadWriteRepository<Student>, IStudentRepository
     {
-        public StudentRepository(ApplicationDbContext context) : base(context, "Student")
+        public StudentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Student")
         {
 
         }
@@ -176,7 +174,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync(sql.Sql,
+            return await Transaction.Connection.QueryAsync(sql.Sql,
                 new[]
                 {
                     typeof(Student), typeof(Person), typeof(User), typeof(RegGroup), typeof(StaffMember),
@@ -203,7 +201,7 @@ namespace MyPortal.Database.Repositories
                     student.SenStatus = (SenStatus) objects[10];
 
                     return student;
-                }, sql.NamedBindings);
+                }, sql.NamedBindings, Transaction);
         }
     }
 }

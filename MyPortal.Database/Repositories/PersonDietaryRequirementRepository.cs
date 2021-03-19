@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -14,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonDietaryRequirementRepository : BaseReadWriteRepository<PersonDietaryRequirement>, IPersonDietaryRequirementRepository
     {
-        public PersonDietaryRequirementRepository(ApplicationDbContext context) : base(context, "PDR")
+        public PersonDietaryRequirementRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "PDR")
         {
 
         }
@@ -37,7 +38,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection
+            return await Transaction.Connection
                 .QueryAsync<PersonDietaryRequirement, Person, DietaryRequirement, PersonDietaryRequirement>(sql.Sql,
                     (pdr, person, req) =>
                     {
@@ -45,7 +46,7 @@ namespace MyPortal.Database.Repositories
                         pdr.DietaryRequirement = req;
 
                         return pdr;
-                    }, sql.NamedBindings);
+                    }, sql.NamedBindings, Transaction);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyPortal.Database;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
@@ -10,6 +11,7 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
@@ -19,70 +21,68 @@ namespace MyPortal.Logic.Services
 {
     public class BillService : BaseService, IBillService
     {
-        public BillService(IUnitOfWork unitOfWork) : base(unitOfWork)
-        {
-        }
-
         public async Task<IEnumerable<BillModel>> GenerateChargeBills()
         {
-            var hasSetting = int.TryParse((await UnitOfWork.SystemSettings.Get(SystemSettings.BillPaymentPeriodLength)).Setting, out int paymentPeriodLength);
-
-            if (!hasSetting)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                throw new LogicException("Bill payment period length not defined.");
-            }
+                var hasSetting = int.TryParse((await unitOfWork.SystemSettings.Get(SystemSettings.BillPaymentPeriodLength)).Setting, out int paymentPeriodLength);
 
-            var billableStudents = (await UnitOfWork.StudentCharges.GetOutstanding()).GroupBy(sc => sc.StudentId);
-
-            var generatedBills = new List<Bill>();
-
-            foreach (var billableStudent in billableStudents)
-            {
-                var bill = new Bill
+                if (!hasSetting)
                 {
-                    CreatedDate = DateTime.Now,
-                    StudentId = billableStudent.Key,
-                    DueDate = DateTime.Today.AddMonths(paymentPeriodLength)
-                };
-
-                foreach (var charge in billableStudent)
-                {
-                    bill.BillCharges.Add(new BillCharge
-                    {
-                        ChargeId = charge.ChargeId,
-                        GrossAmount = charge.Charge.Amount
-                    });
-
-                    var chargeInDb = await UnitOfWork.StudentCharges.GetByIdForEditing(charge.ChargeId);
-                    chargeInDb.Recurrences--;
+                    throw new LogicException("Bill payment period length not defined.");
                 }
 
-                var studentDiscounts = await UnitOfWork.StudentDiscounts.GetByStudent(billableStudent.Key);
+                var billableStudents = (await unitOfWork.StudentCharges.GetOutstanding()).GroupBy(sc => sc.StudentId);
 
-                foreach (var studentDiscount in studentDiscounts)
+                var generatedBills = new List<Bill>();
+
+                foreach (var billableStudent in billableStudents)
                 {
-                    var applicableChargeIds =
-                        (await UnitOfWork.ChargeDiscounts.GetByDiscount(studentDiscount.DiscountId)).Select(x =>
-                            x.ChargeId);
-
-                    if (bill.BillCharges.Any(c => applicableChargeIds.Contains(c.ChargeId)))
+                    var bill = new Bill
                     {
-                        bill.BillDiscounts.Add(new BillDiscount
+                        CreatedDate = DateTime.Now,
+                        StudentId = billableStudent.Key,
+                        DueDate = DateTime.Today.AddMonths(paymentPeriodLength)
+                    };
+
+                    foreach (var charge in billableStudent)
+                    {
+                        bill.BillCharges.Add(new BillCharge
                         {
-                            DiscountId = studentDiscount.DiscountId,
-                            Amount = studentDiscount.Discount.Amount,
-                            Percentage = studentDiscount.Discount.Percentage
+                            ChargeId = charge.ChargeId,
+                            GrossAmount = charge.Charge.Amount
                         });
+
+                        var chargeInDb = await unitOfWork.StudentCharges.GetByIdForEditing(charge.ChargeId);
+                        chargeInDb.Recurrences--;
                     }
+
+                    var studentDiscounts = await unitOfWork.StudentDiscounts.GetByStudent(billableStudent.Key);
+
+                    foreach (var studentDiscount in studentDiscounts)
+                    {
+                        var applicableChargeIds =
+                            (await unitOfWork.ChargeDiscounts.GetByDiscount(studentDiscount.DiscountId)).Select(x =>
+                                x.ChargeId);
+
+                        if (bill.BillCharges.Any(c => applicableChargeIds.Contains(c.ChargeId)))
+                        {
+                            bill.BillDiscounts.Add(new BillDiscount
+                            {
+                                DiscountId = studentDiscount.DiscountId,
+                                GrossAmount = studentDiscount.Discount.Amount,
+                            });
+                        }
+                    }
+
+                    unitOfWork.Bills.Create(bill);
+                    generatedBills.Add(bill);
                 }
 
-                UnitOfWork.Bills.Create(bill);
-                generatedBills.Add(bill);
+                await unitOfWork.SaveChangesAsync();
+
+                return generatedBills.Select(BusinessMapper.Map<BillModel>);
             }
-
-            await UnitOfWork.SaveChanges();
-
-            return generatedBills.Select(BusinessMapper.Map<BillModel>);
         }
     }
 }

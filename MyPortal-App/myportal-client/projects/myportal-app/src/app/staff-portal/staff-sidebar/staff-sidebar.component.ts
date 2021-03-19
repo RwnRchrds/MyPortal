@@ -1,6 +1,7 @@
 import {PortalSidebarDirective} from '../../_directives/portal-sidebar/portal-sidebar.directive';
 import { Component, OnInit } from '@angular/core';
 import { AppPermissions } from '../../_constants/app-permissions';
+import {AuthService} from '../../_services/auth.service';
 
 @Component({
   selector: 'app-staff-sidebar',
@@ -9,7 +10,7 @@ import { AppPermissions } from '../../_constants/app-permissions';
 })
 export class StaffSidebarComponent extends PortalSidebarDirective implements OnInit {
 
-  constructor() {
+  constructor(public authService: AuthService) {
     super();
 
     this.homeRoute = '/staff/home';

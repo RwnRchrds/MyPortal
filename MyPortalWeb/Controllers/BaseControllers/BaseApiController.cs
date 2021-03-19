@@ -4,13 +4,10 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using MyPortal.Database.Constants;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Helpers;
-using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortalWeb.Controllers.BaseControllers
@@ -20,21 +17,18 @@ namespace MyPortalWeb.Controllers.BaseControllers
     [ApiController]
     public abstract class BaseApiController : ControllerBase, IDisposable
     {
-        protected readonly IUserService UserService;
-        protected readonly IAcademicYearService AcademicYearService;
+        protected readonly IAppServiceCollection Services;
         private readonly IRolePermissionsCache _rolePermissionsCache;
 
-        public BaseApiController(IUserService userService, IAcademicYearService academicYearService, IRolePermissionsCache rolePermissionsCache)
+        public BaseApiController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache)
         {
-            UserService = userService;
-            AcademicYearService = academicYearService;
+            Services = services;
             _rolePermissionsCache = rolePermissionsCache;
         }
 
         public virtual void Dispose()
         {
-            UserService.Dispose();
-            AcademicYearService.Dispose();
+            Services.Dispose();
         }
 
         protected async Task<IActionResult> ProcessAsync(Func<Task<IActionResult>> method, params Guid[] permissionsRequired)
@@ -56,7 +50,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
 
         protected async Task<UserModel> GetLoggedInUser()
         {
-            return await UserService.GetUserByPrincipal(User);
+            return await Services.Users.GetUserByPrincipal(User);
         }
 
         protected async Task<bool> UserHasPermission(params Guid[] permissionIds)

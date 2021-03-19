@@ -10,7 +10,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IUserService : IService
+    public interface IUserService
     {
         Task<IEnumerable<Guid>> CreateUser(params CreateUserModel[] createUserRequests);
         Task LinkPerson(Guid userId, Guid personId);

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -14,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class HouseRepository : BaseReadWriteRepository<House>, IHouseRepository
     {
-        public HouseRepository(ApplicationDbContext context) : base(context, "House")
+        public HouseRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "House")
         {
            
         }
@@ -37,12 +36,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<House, StaffMember, House>(sql.Sql, (house, head) =>
+            return await Transaction.Connection.QueryAsync<House, StaffMember, House>(sql.Sql, (house, head) =>
             {
                 house.HeadOfHouse = head;
 
                 return house;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
     }
 }

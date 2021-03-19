@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using Task = System.Threading.Tasks.Task;
 
@@ -12,6 +10,6 @@ namespace MyPortal.Database.Interfaces.Repositories
     {
         Task<IEnumerable<RefreshToken>> GetByUser(Guid userId);
 
-        void DeleteExpired(Guid userId);
+        Task DeleteExpired(Guid userId);
     }
 }

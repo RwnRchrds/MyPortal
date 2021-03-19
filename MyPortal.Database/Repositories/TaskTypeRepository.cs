@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
@@ -12,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class TaskTypeRepository : BaseReadWriteRepository<TaskType>, ITaskTypeRepository
     {
-        public TaskTypeRepository(ApplicationDbContext context) : base(context, "TaskType")
+        public TaskTypeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "TaskType")
         {
 
         }

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.Database;
 using MyPortal.Database.Constants;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Response.Documents;
@@ -14,128 +15,142 @@ namespace MyPortal.Logic.Services
 {
     public class DirectoryService : BaseService, IDirectoryService
     {
-        public DirectoryService(IUnitOfWork unitOfWork) : base(unitOfWork)
-        {
-        }
-
         public async Task<DirectoryModel> GetById(Guid directoryId)
         {
-            var directory = await UnitOfWork.Directories.GetById(directoryId);
-
-            if (directory == null)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                throw new NotFoundException("Directory not found.");
-            }
+                var directory = await unitOfWork.Directories.GetById(directoryId);
 
-            return BusinessMapper.Map<DirectoryModel>(directory);
+                if (directory == null)
+                {
+                    throw new NotFoundException("Directory not found.");
+                }
+
+                return BusinessMapper.Map<DirectoryModel>(directory);
+            }
         }
 
         public async Task Create(params DirectoryModel[] directories)
         {
-            foreach (var directory in directories)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                if (directory.ParentId == null)
+                foreach (var directory in directories)
                 {
-                    throw new InvalidDataException("Parent directory not specified.");
+                    if (directory.ParentId == null)
+                    {
+                        throw new InvalidDataException("Parent directory not specified.");
+                    }
+
+                    var parentDirectory = await unitOfWork.Directories.GetById(directory.ParentId.Value);
+
+                    if (parentDirectory == null)
+                    {
+                        throw new NotFoundException("Parent directory not found.");
+                    }
+
+                    var dirToAdd = new Directory
+                    {
+                        ParentId = directory.ParentId,
+                        Name = directory.Name,
+                        Private = parentDirectory.Private || directory.Private,
+                        StaffOnly = directory.StaffOnly
+                    };
+
+                    unitOfWork.Directories.Create(dirToAdd);
                 }
 
-                var parentDirectory = await UnitOfWork.Directories.GetById(directory.ParentId.Value);
-
-                if (parentDirectory == null)
-                {
-                    throw new NotFoundException("Parent directory not found.");
-                }
-
-                var dirToAdd = new Directory
-                {
-                    ParentId = directory.ParentId,
-                    Name = directory.Name,
-                    Private = parentDirectory.Private || directory.Private,
-                    StaffOnly = directory.StaffOnly
-                };
-                
-                UnitOfWork.Directories.Create(dirToAdd);
+                await unitOfWork.SaveChangesAsync();
             }
-
-            await UnitOfWork.SaveChanges();
         }
 
         public async Task Update(params DirectoryModel[] directories)
         {
-            foreach (var directory in directories)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var dirInDb = await UnitOfWork.Directories.GetByIdForEditing(directory.Id);
-
-                if (!string.IsNullOrWhiteSpace(directory.Name))
+                foreach (var directory in directories)
                 {
-                    dirInDb.Name = directory.Name;   
-                }
-                
-                dirInDb.Private = directory.Private;
-                dirInDb.StaffOnly = directory.StaffOnly;
+                    var dirInDb = await unitOfWork.Directories.GetByIdForEditing(directory.Id);
 
-                // Cannot move root directories or remove parent from child directories
-                if (dirInDb.ParentId != null && directory.ParentId != null)
-                {
-                    dirInDb.ParentId = directory.ParentId;
+                    if (!string.IsNullOrWhiteSpace(directory.Name))
+                    {
+                        dirInDb.Name = directory.Name;
+                    }
+
+                    dirInDb.Private = directory.Private;
+                    dirInDb.StaffOnly = directory.StaffOnly;
+
+                    // Cannot move root directories or remove parent from child directories
+                    if (dirInDb.ParentId != null && directory.ParentId != null)
+                    {
+                        dirInDb.ParentId = directory.ParentId;
+                    }
                 }
+
+                await unitOfWork.SaveChangesAsync();
             }
-
-            await UnitOfWork.SaveChanges();
         }
 
         public async Task Delete(params Guid[] directoryIds)
         {
-            foreach (var directoryId in directoryIds)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                await UnitOfWork.Directories.Delete(directoryId);
-            }
+                foreach (var directoryId in directoryIds)
+                {
+                    await unitOfWork.Directories.Delete(directoryId);
+                }
 
-            await UnitOfWork.SaveChanges();
+                await unitOfWork.SaveChangesAsync();
+            }
         }
 
         public async Task<DirectoryChildren> GetChildren(Guid directoryId, bool includeStaffOnly)
         {
-            var directory = await UnitOfWork.Directories.GetById(directoryId);
-
-            if (directory == null)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                throw new NotFoundException("Directory not found.");
+                var directory = await unitOfWork.Directories.GetById(directoryId);
+
+                if (directory == null)
+                {
+                    throw new NotFoundException("Directory not found.");
+                }
+
+                var children = new DirectoryChildren();
+
+                var subDirs = await unitOfWork.Directories.GetSubdirectories(directoryId, includeStaffOnly);
+
+                var files = await unitOfWork.Documents.GetByDirectory(directoryId);
+
+                children.Subdirectories = subDirs.Select(BusinessMapper.Map<DirectoryModel>);
+                children.Files = files.Select(BusinessMapper.Map<DocumentModel>);
+
+                return children;
             }
-
-            var children = new DirectoryChildren();
-
-            var subDirs = await UnitOfWork.Directories.GetSubdirectories(directoryId, includeStaffOnly);
-
-            var files = await UnitOfWork.Documents.GetByDirectory(directoryId);
-
-            children.Subdirectories = subDirs.Select(BusinessMapper.Map<DirectoryModel>);
-            children.Files = files.Select(BusinessMapper.Map<DocumentModel>);
-
-            return children;
         }
 
         public async Task<bool> IsAuthorised(UserModel user, Guid directoryId)
         {
-            var directory = await UnitOfWork.Directories.GetById(directoryId);
-
-            if (directory.StaffOnly)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                return user.UserType == UserTypes.Staff;
-            }
+                var directory = await unitOfWork.Directories.GetById(directoryId);
 
-            if (directory.Private)
-            {
-                if (user.UserType == UserTypes.Staff || user.Person?.DirectoryId == directory.Id ||
-                    directory.ParentId != null && await IsAuthorised(user, directory.ParentId.Value))
+                if (directory.StaffOnly)
                 {
-                    return true;
+                    return user.UserType == UserTypes.Staff;
                 }
 
-                return false;
-            }
+                if (directory.Private)
+                {
+                    if (user.UserType == UserTypes.Staff || user.Person?.DirectoryId == directory.Id ||
+                        directory.ParentId != null && await IsAuthorised(user, directory.ParentId.Value))
+                    {
+                        return true;
+                    }
 
-            return true;
+                    return false;
+                }
+
+                return true;
+            }
         }
     }
 }

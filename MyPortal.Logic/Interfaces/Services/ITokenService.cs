@@ -5,7 +5,7 @@ using MyPortal.Logic.Models.Requests.Auth;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface ITokenService : IService
+    public interface ITokenService
     {
         Task<TokenModel> GenerateToken(UserModel userModel);
         Task<TokenModel> RefreshToken(UserModel userModel, TokenModel tokenModel);

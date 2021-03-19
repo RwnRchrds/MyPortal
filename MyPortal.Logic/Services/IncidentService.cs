@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour.Incidents;
@@ -13,108 +13,134 @@ namespace MyPortal.Logic.Services
 {
     public class IncidentService : BaseService, IIncidentService
     {
-        public IncidentService(IUnitOfWork unitOfWork) : base(unitOfWork)
-        {
-        }
-
         public async Task<IEnumerable<IncidentModel>> GetIncidentsByStudent(Guid studentId, Guid academicYearId)
         {
-            var incidents = await UnitOfWork.Incidents.GetByStudent(studentId, academicYearId);
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var incidents = await unitOfWork.Incidents.GetByStudent(studentId, academicYearId);
 
-            return incidents.Select(BusinessMapper.Map<IncidentModel>);
+                return incidents.Select(BusinessMapper.Map<IncidentModel>);
+            }
         }
 
         public async Task<IncidentModel> GetIncidentById(Guid incidentId)
         {
-            var incident = await UnitOfWork.Incidents.GetById(incidentId);
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var incident = await unitOfWork.Incidents.GetById(incidentId);
 
-            return BusinessMapper.Map<IncidentModel>(incident);
+                return BusinessMapper.Map<IncidentModel>(incident);
+            }
         }
 
         public async Task<int> GetBehaviourPointsByStudent(Guid studentId, Guid academicYearId)
         {
-            var points = await UnitOfWork.Incidents.GetPointsByStudent(studentId, academicYearId);
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var points = await unitOfWork.Incidents.GetPointsByStudent(studentId, academicYearId);
 
-            return points;
+                return points;
+            }
         }
 
         public async Task<int> GetBehaviourCountByStudent(Guid studentId, Guid academicYearId)
         {
-            var count = await UnitOfWork.Incidents.GetCountByStudent(studentId, academicYearId);
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var count = await unitOfWork.Incidents.GetCountByStudent(studentId, academicYearId);
 
-            return count;
+                return count;
+            }
         }
 
         public async Task CreateIncident(params IncidentModel[] incidents)
         {
-            foreach (var incidentModel in incidents)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var incident = new Incident
+                foreach (var incidentModel in incidents)
                 {
-                    Points = incidentModel.Points,
-                    CreatedDate = DateTime.Now,
-                    BehaviourTypeId = incidentModel.BehaviourTypeId,
-                    LocationId = incidentModel.LocationId,
-                    OutcomeId = incidentModel.OutcomeId,
-                    StatusId = incidentModel.StatusId,
-                    RecordedById = incidentModel.RecordedById,
-                    StudentId = incidentModel.StudentId,
-                    Comments = incidentModel.Comments,
-                    AcademicYearId = incidentModel.AcademicYearId
-                };
-                
-                UnitOfWork.Incidents.Create(incident);
-            }
+                    var incident = new Incident
+                    {
+                        Points = incidentModel.Points,
+                        CreatedDate = DateTime.Now,
+                        BehaviourTypeId = incidentModel.BehaviourTypeId,
+                        LocationId = incidentModel.LocationId,
+                        OutcomeId = incidentModel.OutcomeId,
+                        StatusId = incidentModel.StatusId,
+                        RecordedById = incidentModel.RecordedById,
+                        StudentId = incidentModel.StudentId,
+                        Comments = incidentModel.Comments,
+                        AcademicYearId = incidentModel.AcademicYearId
+                    };
 
-            await UnitOfWork.SaveChanges();
+                    unitOfWork.Incidents.Create(incident);
+                }
+
+                await unitOfWork.SaveChangesAsync();
+            }
         }
 
         public async Task UpdateIncident(params UpdateIncidentModel[] incidents)
         {
-            foreach (var incidentModel in incidents)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var incidentInDb = await UnitOfWork.Incidents.GetByIdForEditing(incidentModel.Id);
+                foreach (var incidentModel in incidents)
+                {
+                    var incidentInDb = await unitOfWork.Incidents.GetByIdForEditing(incidentModel.Id);
 
-                incidentInDb.Points = incidentModel.Points;
-                incidentInDb.BehaviourTypeId = incidentModel.BehaviourTypeId;
-                incidentInDb.LocationId = incidentModel.LocationId;
-                incidentInDb.OutcomeId = incidentModel.OutcomeId;
-                incidentInDb.StatusId = incidentModel.StatusId;
-                incidentInDb.Comments = incidentModel.Comments;
+                    incidentInDb.Points = incidentModel.Points;
+                    incidentInDb.BehaviourTypeId = incidentModel.BehaviourTypeId;
+                    incidentInDb.LocationId = incidentModel.LocationId;
+                    incidentInDb.OutcomeId = incidentModel.OutcomeId;
+                    incidentInDb.StatusId = incidentModel.StatusId;
+                    incidentInDb.Comments = incidentModel.Comments;
+                }
+
+                await unitOfWork.SaveChangesAsync();
             }
-
-            await UnitOfWork.SaveChanges();
         }
 
         public async Task DeleteIncident(params Guid[] incidentIds)
         {
-            foreach (var incidentId in incidentIds)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                await UnitOfWork.Incidents.Delete(incidentId);
-            }
+                foreach (var incidentId in incidentIds)
+                {
+                    await unitOfWork.Incidents.Delete(incidentId);
+                }
 
-            await UnitOfWork.SaveChanges();
+                await unitOfWork.SaveChangesAsync();
+            }
         }
 
         public async Task<IEnumerable<IncidentTypeModel>> GetIncidentTypes()
         {
-            var types = await UnitOfWork.IncidentTypes.GetAll();
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var types = await unitOfWork.IncidentTypes.GetAll();
 
-            return types.Select(BusinessMapper.Map<IncidentTypeModel>).ToList();
+                return types.Select(BusinessMapper.Map<IncidentTypeModel>).ToList();
+            }
         }
 
         public async Task<IEnumerable<BehaviourOutcomeModel>> GetIncidentOutcomes()
         {
-            var outcomes = await UnitOfWork.BehaviourOutcomes.GetAll();
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var outcomes = await unitOfWork.BehaviourOutcomes.GetAll();
 
-            return outcomes.Select(BusinessMapper.Map<BehaviourOutcomeModel>).ToList();
+                return outcomes.Select(BusinessMapper.Map<BehaviourOutcomeModel>).ToList();
+            }
         }
 
         public async Task<IEnumerable<BehaviourStatusModel>> GetBehaviourStatus()
         {
-            var status = await UnitOfWork.BehaviourStatus.GetAll();
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var status = await unitOfWork.BehaviourStatus.GetAll();
 
-            return status.Select(BusinessMapper.Map<BehaviourStatusModel>).ToList();
+                return status.Select(BusinessMapper.Map<BehaviourStatusModel>).ToList();
+            }
         }
     }
 }

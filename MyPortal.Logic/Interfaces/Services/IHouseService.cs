@@ -4,7 +4,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IHouseService : IService
+    public interface IHouseService
     {
         Task<IEnumerable<HouseModel>> GetHouses();
     }

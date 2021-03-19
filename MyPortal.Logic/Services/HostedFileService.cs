@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DocumentProvision;
@@ -14,68 +16,80 @@ namespace MyPortal.Logic.Services
     {
         private readonly IHostedFileProvider _fileProvider;
 
-        public HostedFileService(IUnitOfWork unitOfWork, IHostedFileProvider fileProvider) : base(unitOfWork)
+        public HostedFileService(IHostedFileProvider fileProvider)
         {
             _fileProvider = fileProvider;
         }
 
         public async Task AttachFileToDocument(Guid documentId, string fileId)
         {
-            var fileData = await _fileProvider.FetchMetadata(fileId);
-
-            if (fileData == null)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                throw new NotFoundException("The selected file was not found.");
+                var fileData = await _fileProvider.FetchMetadata(fileId);
+
+                if (fileData == null)
+                {
+                    throw new NotFoundException("The selected file was not found.");
+                }
+
+                var file = new File
+                {
+                    ContentType = fileData.MimeType,
+                    DocumentId = documentId,
+                    FileId = fileData.Id,
+                    FileName = fileData.Name
+                };
+
+                unitOfWork.Files.Create(file);
+
+                await unitOfWork.SaveChangesAsync();
             }
-
-            var file = new File
-            {
-                ContentType = fileData.MimeType,
-                DocumentId = documentId,
-                FileId = fileData.Id,
-                FileName = fileData.Name
-            };
-
-            UnitOfWork.Files.Create(file);
-
-            await UnitOfWork.SaveChanges();
         }
 
         public async Task RemoveFileFromDocument(Guid documentId)
         {
-            var file = await UnitOfWork.Files.GetByDocumentId(documentId);
-
-            if (file == null)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                throw new LogicException("No file is attached to this document.");
+                var file = await unitOfWork.Files.GetByDocumentId(documentId);
+
+                if (file == null)
+                {
+                    throw new LogicException("No file is attached to this document.");
+                }
+
+                await unitOfWork.Files.Delete(file.Id);
+
+                await unitOfWork.SaveChangesAsync();
             }
-
-            await UnitOfWork.Files.Delete(file.Id);
-
-            await UnitOfWork.SaveChanges();
         }
 
         public async Task<HostedFileMetadata> GetMetadataByDocument(Guid documentId)
         {
-            var file = await UnitOfWork.Files.GetByDocumentId(documentId);
-
-            var metadata = await _fileProvider.FetchMetadata(file.FileId);
-
-            if (metadata == null)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                throw new NotFoundException("File not found.");
-            }
+                var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
-            return metadata;
+                var metadata = await _fileProvider.FetchMetadata(file.FileId);
+
+                if (metadata == null)
+                {
+                    throw new NotFoundException("File not found.");
+                }
+
+                return metadata;
+            }
         }
 
         public async Task<FileDownload> GetDownloadByDocument(Guid documentId)
         {
-            var file = await UnitOfWork.Files.GetByDocumentId(documentId);
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
-            var stream = await _fileProvider.DownloadFileToStream(file.FileId);
+                var stream = await _fileProvider.DownloadFileToStream(file.FileId);
 
-            return new FileDownload(stream, file.ContentType, file.FileName);
+                return new FileDownload(stream, file.ContentType, file.FileName);
+            }
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
+﻿using System.Data.Common;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -11,7 +8,7 @@ namespace MyPortal.Database.Repositories
 {
     public class RoleRepository : BaseReadWriteRepository<Role>, IRoleRepository
     {
-        public RoleRepository(ApplicationDbContext context) : base(context, "Role")
+        public RoleRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Role")
         {
 
         }

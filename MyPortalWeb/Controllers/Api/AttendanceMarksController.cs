@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MyPortal.Logic.Caching;
-using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Response.Attendance;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
@@ -15,24 +13,21 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/attendanceMarks")]
     public class AttendanceMarksController : BaseApiController
     {
-        private readonly IAttendanceMarkService _attendanceMarkService;
-
-        public AttendanceMarksController(IUserService userService, IAcademicYearService academicYearService, IRolePermissionsCache rolePermissionsCache, IAttendanceMarkService attendanceMarkService) : base(userService, academicYearService, rolePermissionsCache)
-        {
-            _attendanceMarkService = attendanceMarkService;
-        }
-
         [HttpGet]
-        [AllowAnonymous]
         [Route("register/{attendanceWeekId}/{sessionId}")]
+        [ProducesResponseType(typeof(AttendanceRegisterModel), 200)]
         public async Task<IActionResult> GetRegister([FromRoute] Guid attendanceWeekId, [FromRoute] Guid sessionId)
         {
             return await ProcessAsync(async () =>
             {
-                var register = await _attendanceMarkService.GetRegisterBySession(attendanceWeekId, sessionId);
+                var register = await Services.AttendanceMarks.GetRegisterBySession(attendanceWeekId, sessionId);
 
                 return Ok(register);
             });
+        }
+
+        public AttendanceMarksController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
+        {
         }
     }
 }

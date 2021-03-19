@@ -1,26 +1,26 @@
 ﻿using Google.Apis.Auth.OAuth2;
-using Google.Apis.Drive.v3;
 using Google.Apis.Services;
-using Microsoft.Extensions.Configuration;
+using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Models.Configuration;
 
 namespace MyPortal.Logic.Helpers
 {
     public class GoogleHelper
     {
-        private IConfiguration _config;
+        private GoogleConfig _google;
 
-        public GoogleHelper(IConfiguration config)
+        public GoogleHelper(GoogleConfig google)
         {
-            _config = config;
+            _google = google ?? throw new ConfigurationException(@"The google configuration has not been added.");
         }
 
         public BaseClientService.Initializer GetInitializer(string accountName = null, params string[] scopes)
         {
-            var credPath = _config.GetValue<string>("GSuiteIntegration:CredentialPath");
+            var credPath = _google.CredentiaPath;
 
             if (string.IsNullOrWhiteSpace(accountName))
             {
-                accountName = _config.GetValue<string>("GSuiteIntegration:DefaultAccountName");
+                accountName = _google.DefaultAccountName;
             }
 
             var originCredential =

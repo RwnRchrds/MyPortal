@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -14,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class MedicalEventRepository : BaseReadWriteRepository<MedicalEvent>, IMedicalEventRepository
     {
-        public MedicalEventRepository(ApplicationDbContext context) : base(context, "MedicalEvent")
+        public MedicalEventRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "MedicalEvent")
         {
            
         }
@@ -35,14 +34,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<MedicalEvent, Student, User, MedicalEvent>(sql.Sql,
+            return await Transaction.Connection.QueryAsync<MedicalEvent, Student, User, MedicalEvent>(sql.Sql,
                 (medEvent, student, recorder) =>
                 {
                     medEvent.Student = student;
                     medEvent.RecordedBy = recorder;
 
                     return medEvent;
-                }, sql.NamedBindings);
+                }, sql.NamedBindings, Transaction);
         }
     }
 }

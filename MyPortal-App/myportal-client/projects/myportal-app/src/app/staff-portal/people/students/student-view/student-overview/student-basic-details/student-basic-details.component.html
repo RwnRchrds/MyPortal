@@ -1,1 +1,44 @@
-<p>student-basic-details works!</p>
+<div class="card card-custom gutter-b" id="{{componentName}}">
+  <div class="card-header">
+    <div class="card-title">
+      Basic Details
+    </div>
+    <div class="card-toolbar">
+
+    </div>
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered">
+      <tbody>
+      <tr *ngIf="student.person">
+        <th>First Name</th>
+        <td>{{student.person.firstName}}</td>
+      </tr>
+      <tr *ngIf="student.person">
+        <th>Last Name</th>
+        <td>{{student.person.lastName}}</td>
+      </tr>
+      <tr *ngIf="student.person && student.person.dob">
+        <th>Date of Birth</th>
+        <td>{{student.person.dob | date:'dd/MM/yyyy'}}</td>
+      </tr>
+      <tr *ngIf="addresses && firstAddress">
+        <th>Address</th>
+        <td class="ws-pre-line">{{firstAddress | postalAddress}}</td>
+      </tr>
+      <tr *ngIf="student.senStatus">
+        <th>SEND</th>
+        <td>{{student.senStatus.code}} - {{student.senStatus.description}}</td>
+      </tr>
+      <tr *ngIf="giftedTalented">
+        <th>G&T</th>
+        <td>{{isGiftedTalented ? 'Yes' : 'No'}}</td>
+      </tr>
+      <tr>
+        <th>Pupil Premium</th>
+        <td>{{student.pupilPremium ? 'Yes' : 'No'}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

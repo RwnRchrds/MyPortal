@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
@@ -13,9 +12,14 @@ namespace MyPortal.Logic.FileProviders
     {
         private readonly string _fileStoragePath;
 
-        public LocalFileProvider(IConfiguration config)
+        public LocalFileProvider()
         {
-            var installPath = config.GetValue<string>("MyPortal:InstallLocation");
+            var installPath = Configuration.Instance.InstallLocation;
+
+            if (string.IsNullOrWhiteSpace(installPath))
+            {
+                throw new ConfigurationException(@"MyPortal path has not been set.");
+            }
 
             _fileStoragePath = Path.Combine(installPath, "FileStorage");
 

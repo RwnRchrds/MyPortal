@@ -1,19 +1,12 @@
-﻿using System.Data;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MyPortal.Database;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
-using MyPortal.Database.Repositories;
+using MyPortal.Logic;
 using MyPortal.Logic.Caching;
-using MyPortal.Logic.FileProviders;
-using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Services;
+using MyPortal.Logic.Models.Configuration;
 
 namespace MyPortalWeb.Extensions
 {
@@ -21,69 +14,53 @@ namespace MyPortalWeb.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
-            DataConnectionFactory.ConnectionString = config.GetConnectionString("MyPortal");
-
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     config.GetConnectionString("MyPortal")));
 
-            // MyPortal Business Services
-            services.AddBusinessServices();
-
-            // MyPortal File Provider
-            services.AddFileProvider(config);
+            // MyPortal Configuration Settings
+            SetConfiguration(config);
 
             // MyPortal Cache
             services.AddScoped<IRolePermissionsCache, RolePermissionsCache>();
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-
             return services;
         }
 
-        private static void AddBusinessServices(this IServiceCollection services)
+        public static void AddBusinessServices(this IServiceCollection services)
         {
-            services.AddScoped<IAcademicYearService, AcademicYearService>();
-            services.AddScoped<IAchievementService, AchievementService>();
-            services.AddScoped<IActivityService, ActivityService>();
-            services.AddScoped<IAttendanceMarkService, AttendanceMarkService>();
-            services.AddScoped<IAttendanceWeekService, AttendanceWeekService>();
-            services.AddScoped<IBillService, BillService>();
-            services.AddScoped<IDiaryEventService, DiaryEventService>();
-            services.AddScoped<IDirectoryService, DirectoryService>();
-            services.AddScoped<IDocumentService, DocumentService>();
-            services.AddScoped<IHouseService, HouseService>();
-            services.AddScoped<IIncidentService, IncidentService>();
-            services.AddScoped<ILocationService, LocationService>();
-            services.AddScoped<ILogNoteService, LogNoteService>();
-            services.AddScoped<IPeriodService, AttendancePeriodService>();
-            services.AddScoped<IPersonService, PersonService>();
-            services.AddScoped<IRegGroupService, RegGroupService>();
-            services.AddScoped<IRoleService, RoleService>();
-            services.AddScoped<ISchoolService, SchoolService>();
-            services.AddScoped<IStaffMemberService, StaffMemberService>();
-            services.AddScoped<IStudentService, StudentService>();
-            services.AddScoped<ISystemSettingService, SystemSettingService>();
-            services.AddScoped<ITaskService, TaskService>();
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IYearGroupService, YearGroupService>();
+            services.AddScoped<IAppServiceCollection, AppServiceCollection>();
         }
 
-        private static void AddFileProvider(this IServiceCollection services, IConfiguration config)
+        private static void SetConfiguration(IConfiguration config)
         {
-            string provider = config["FileProvider:ProviderName"];
+            var connectionString = config.GetConnectionString("MyPortal");
 
-            switch (provider)
+            Configuration.Instance.ConnectionString = connectionString;
+
+            Configuration.Instance.InstallLocation = config["MyPortal:InstallLocation"];
+
+            Configuration.Instance.TokenKey = config["MyPortal:TokenKey"];
+
+            switch (config["FileProvider:ProviderName"])
             {
                 case "Google":
-                    services.AddScoped<IHostedFileProvider, GoogleFileProvider>();
-                    services.AddScoped<IFileService, HostedFileService>();
+                    Configuration.Instance.FileProvider = FileProvider.GoogleDrive;
                     break;
                 default:
-                    services.AddScoped<ILocalFileProvider, LocalFileProvider>();
-                    services.AddScoped<IFileService, LocalFileService>();
+                    Configuration.Instance.FileProvider = FileProvider.Local;
                     break;
+            }
+
+            var googleCredPath = config["Google:CredentialPath"];
+
+            if (!string.IsNullOrWhiteSpace(googleCredPath))
+            {
+                Configuration.Instance.GoogleConfig = new GoogleConfig
+                {
+                    CredentiaPath = googleCredPath,
+                    DefaultAccountName = config["Google:DefaultAccountName"]
+                };
             }
         }
     }

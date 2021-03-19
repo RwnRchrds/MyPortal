@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces.Repositories;
@@ -12,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ChargeDiscountRepository : BaseReadWriteRepository<ChargeDiscount>, IChargeDiscountRepository
     {
-        public ChargeDiscountRepository(ApplicationDbContext context) : base(context, "CD")
+        public ChargeDiscountRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "CD")
         {
         }
 

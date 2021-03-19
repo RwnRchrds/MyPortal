@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -14,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ExclusionRepository : BaseReadWriteRepository<Exclusion>, IExclusionRepository
     {
-        public ExclusionRepository(ApplicationDbContext context) : base(context, "E")
+        public ExclusionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "E")
         {
         }
 
@@ -41,7 +42,7 @@ namespace MyPortal.Database.Repositories
         protected override async Task<IEnumerable<Exclusion>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
-            return await Connection
+            return await Transaction.Connection
                 .QueryAsync<Exclusion, Student, Person, ExclusionType, ExclusionReason, ExclusionAppealResult, Exclusion
                 >(sql.Sql,
                     (e, s, p, et, er, ear) =>
@@ -53,7 +54,7 @@ namespace MyPortal.Database.Repositories
                         e.AppealResult = ear;
 
                         return e;
-                    }, sql.NamedBindings);
+                    }, sql.NamedBindings, Transaction);
         }
 
         public async Task<int> GetCountByStudent(Guid studentId)

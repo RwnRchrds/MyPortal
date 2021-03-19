@@ -6,7 +6,7 @@ using MyPortal.Logic.Models.Response.Documents;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IDirectoryService : IService
+    public interface IDirectoryService
     {
         Task<DirectoryChildren> GetChildren(Guid directoryId, bool includeStaffOnly);
         Task<DirectoryModel> GetById(Guid directoryId);

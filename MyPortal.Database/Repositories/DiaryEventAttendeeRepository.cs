@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +19,7 @@ namespace MyPortal.Database.Repositories
     public class DiaryEventAttendeeRepository : BaseReadWriteRepository<DiaryEventAttendee>,
         IDiaryEventAttendeeRepository
     {
-        public DiaryEventAttendeeRepository(ApplicationDbContext context) : base(context, "Attendee")
+        public DiaryEventAttendeeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Attendee")
         {
 
         }
@@ -43,7 +44,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection
+            return await Transaction.Connection
                 .QueryAsync<DiaryEventAttendee, DiaryEvent, Person, DiaryEventAttendeeResponse, DiaryEventAttendee>(
                     sql.Sql,
                     (attendee, diaryEvent, person, response) =>
@@ -53,7 +54,7 @@ namespace MyPortal.Database.Repositories
                         attendee.Response = response;
 
                         return attendee;
-                    }, sql.NamedBindings);
+                    }, sql.NamedBindings, Transaction);
         }
 
         public async Task<IEnumerable<DiaryEventAttendee>> GetByEvent(Guid eventId)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -16,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceWeekRepository : BaseReadWriteRepository<AttendanceWeek>, IAttendanceWeekRepository
     {
-        public AttendanceWeekRepository(ApplicationDbContext context) : base(context, "AttendanceWeek")
+        public AttendanceWeekRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "AttendanceWeek")
         {
       
         }
@@ -38,12 +39,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<AttendanceWeek, AttendanceWeekPattern, AttendanceWeek>(sql.Sql, (week, pattern) =>
+            return await Transaction.Connection.QueryAsync<AttendanceWeek, AttendanceWeekPattern, AttendanceWeek>(sql.Sql, (week, pattern) =>
             {
                 week.WeekPattern = pattern;
 
                 return week;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
 
         public async Task<AttendanceWeek> GetByDate(DateTime date)

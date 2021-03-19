@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
@@ -19,15 +20,7 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/roles")]
     public class RolesController : BaseApiController
     {
-        private readonly IRoleService _roleService;
-
-        public RolesController(IUserService userService, IAcademicYearService academicYearService,
-            IRolePermissionsCache rolePermissionsCache, IRoleService roleService) : base(userService,
-            academicYearService, rolePermissionsCache)
-        {
-            _roleService = roleService;
-        }
-
+        
         [HttpPost]
         [Route("create")]
         [ProducesResponseType(typeof(NewEntityResponse), 200)]
@@ -35,7 +28,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                var newId = (await _roleService.Create(model)).FirstOrDefault();
+                var newId = (await Services.Roles.Create(model)).FirstOrDefault();
 
                 return Ok(new NewEntityResponse {Id = newId});
             }, Permissions.System.Groups.EditGroups);
@@ -43,11 +36,12 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPut]
         [Route("update")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleModel model)
         {
             return await ProcessAsync(async () =>
             {
-                await _roleService.Update(model);
+                await Services.Roles.Update(model);
 
                 return Ok();
             }, Permissions.System.Groups.EditGroups);
@@ -55,11 +49,12 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpDelete]
         [Route("delete/{roleId}")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> DeleteRole([FromRoute] Guid roleId)
         {
             return await ProcessAsync(async () =>
             {
-                await _roleService.Delete(roleId);
+                await Services.Roles.Delete(roleId);
 
                 return Ok();
             }, Permissions.System.Groups.EditGroups);
@@ -72,7 +67,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                IEnumerable<RoleModel> roles = await _roleService.GetRoles(roleName);
+                IEnumerable<RoleModel> roles = await Services.Roles.GetRoles(roleName);
 
                 return Ok(roles);
             });
@@ -80,12 +75,12 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("get/id/{roleId}")]
-        [Produces(typeof(RoleModel))]
+        [ProducesResponseType(typeof(RoleModel), 200)]
         public async Task<IActionResult> GetRoleById([FromRoute] Guid roleId)
         {
             return await ProcessAsync(async () =>
             {
-                var role = await _roleService.GetRoleById(roleId);
+                var role = await Services.Roles.GetRoleById(roleId);
 
                 return Ok(role);
             }, Permissions.System.Groups.ViewGroups);
@@ -93,15 +88,19 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("permissions/role/{roleId}")]
-        [Produces(typeof(TreeNode))]
+        [ProducesResponseType(typeof(TreeNode), 200)]
         public async Task<IActionResult> GetPermissionsTree([FromRoute] Guid roleId)
         {
             return await ProcessAsync(async () =>
             {
-                var permissionsTree = await _roleService.GetPermissionsTree(roleId);
+                var permissionsTree = await Services.Roles.GetPermissionsTree(roleId);
 
                 return Ok(permissionsTree);
             }, Permissions.System.Groups.ViewGroups);
+        }
+
+        public RolesController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
+        {
         }
     }
 }

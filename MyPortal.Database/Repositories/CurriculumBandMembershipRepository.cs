@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Dapper;
@@ -15,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumBandMembershipRepository : BaseReadWriteRepository<CurriculumBandMembership>, ICurriculumBandMembershipRepository
     {
-        public CurriculumBandMembershipRepository(ApplicationDbContext context) : base(context, "CurriculumBandMembership")
+        public CurriculumBandMembershipRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "CurriculumBandMembership")
         {
            
         }
@@ -38,14 +39,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<CurriculumBandMembership, Student, CurriculumBand, CurriculumBandMembership>(sql.Sql,
+            return await Transaction.Connection.QueryAsync<CurriculumBandMembership, Student, CurriculumBand, CurriculumBandMembership>(sql.Sql,
                 (enrolment, student, band) =>
                 {
                     enrolment.Student = student;
                     enrolment.Band = band;
 
                     return enrolment;
-                }, sql.NamedBindings);
+                }, sql.NamedBindings, Transaction);
         }
     }
 }

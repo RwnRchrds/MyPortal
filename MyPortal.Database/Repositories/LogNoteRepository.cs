@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -16,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class LogNoteRepository : BaseReadWriteRepository<LogNote>, ILogNoteRepository
     {
-        public LogNoteRepository(ApplicationDbContext context) : base(context, "LogNote")
+        public LogNoteRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "LogNote")
         {
            
         }
@@ -47,7 +45,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection
+            return await Transaction.Connection
                 .QueryAsync<LogNote, LogNoteType, User, Person, Student, Person, AcademicYear,
                     LogNote>(sql.Sql,
                     (note, type, user, authorPerson, student, studentPerson, acadYear) =>
@@ -60,7 +58,7 @@ namespace MyPortal.Database.Repositories
                         note.AcademicYear = acadYear;
 
                         return note;
-                    }, sql.NamedBindings);
+                    }, sql.NamedBindings, Transaction);
         }
 
         public Task<IEnumerable<LogNote>> GetByStudent(Guid studentId, Guid academicYearId)

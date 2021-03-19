@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Text;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
@@ -13,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ActivityEventRepository : BaseReadWriteRepository<ActivityEvent>, IActivityEventRepository
     {
-        public ActivityEventRepository(ApplicationDbContext context) : base(context, "AE")
+        public ActivityEventRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "AE")
         {
 
         }

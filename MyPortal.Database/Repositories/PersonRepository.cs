@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using MyPortal.Database.Constants;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Models.Query;
 using MyPortal.Database.Models.Query.Person;
 using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
@@ -19,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonRepository : BaseReadWriteRepository<Person>, IPersonRepository
     {
-        public PersonRepository(ApplicationDbContext context) : base(context, "Person")
+        public PersonRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Person")
         {
      
         }
@@ -116,19 +114,19 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Person, User, Person>(sql.Sql, (person, user) =>
+            return await Transaction.Connection.QueryAsync<Person, User, Person>(sql.Sql, (person, user) =>
             {
                 person.User = user;
 
                 return person;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
 
         protected async Task<IEnumerable<PersonSearchResult>> ExecuteQueryWithTypes(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Person, User, PersonTypeIndicator, PersonSearchResult>(sql.Sql,
+            return await Transaction.Connection.QueryAsync<Person, User, PersonTypeIndicator, PersonSearchResult>(sql.Sql,
                 (person, user, types) =>
                 {
                     var result = new PersonSearchResult();
@@ -137,7 +135,7 @@ namespace MyPortal.Database.Repositories
                     result.PersonTypes = types;
 
                     return result;
-                }, sql.NamedBindings, splitOn:"Id, IsUser");
+                }, sql.NamedBindings, Transaction, splitOn:"Id, IsUser");
         }
     }
 }

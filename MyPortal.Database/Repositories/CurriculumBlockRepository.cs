@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -15,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumBlockRepository : BaseReadWriteRepository<CurriculumBlock>, ICurriculumBlockRepository
     {
-        public CurriculumBlockRepository(ApplicationDbContext context) : base(context, "Block")
+        public CurriculumBlockRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Block")
         {
             
         }
@@ -44,7 +45,7 @@ namespace MyPortal.Database.Repositories
 
             var sql = Compiler.Compile(query);
 
-            return (await Connection.QueryAsync<Guid>(sql.Sql, sql.NamedBindings)).FirstOrDefault();
+            return (await Transaction.Connection.QueryAsync<Guid>(sql.Sql, sql.NamedBindings, Transaction)).FirstOrDefault();
         }
 
         public async Task<bool> CheckUniqueCode(Guid academicYearId, string code)

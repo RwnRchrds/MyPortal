@@ -4,7 +4,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface ILocationService : IService
+    public interface ILocationService
     {
         Task<IEnumerable<LocationModel>> GetLocations();
     }

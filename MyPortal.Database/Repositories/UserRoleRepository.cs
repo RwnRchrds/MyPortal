@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
@@ -19,11 +19,13 @@ namespace MyPortal.Database.Repositories
     {
         private SqlServerCompiler _compiler;
         private ApplicationDbContext _context;
+        private DbTransaction _transaction;
 
-        public UserRoleRepository(ApplicationDbContext context)
+        public UserRoleRepository(ApplicationDbContext context, DbTransaction transaction)
         {
             _compiler = new SqlServerCompiler();
             _context = context;
+            _transaction = transaction;
         }
 
         protected void SelectAllRelated(Query query)
@@ -53,14 +55,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = _compiler.Compile(query);
 
-            return await _context.Database.GetDbConnection().QueryAsync<UserRole, User, Role, UserRole>(sql.Sql, (
+            return await _transaction.Connection.QueryAsync<UserRole, User, Role, UserRole>(sql.Sql, (
                 userRole, user, role) =>
                 {
                     userRole.User = user;
                     userRole.Role = role;
 
                     return userRole;
-                }, sql.NamedBindings, splitOn:"Id, Id");
+                }, sql.NamedBindings, _transaction, splitOn:"Id, Id");
         }
 
         public async Task<IEnumerable<UserRole>> GetByUser(Guid userId)

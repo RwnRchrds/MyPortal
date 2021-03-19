@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using MyPortal.Database.Helpers;
@@ -13,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AcademicYearRepository : BaseReadWriteRepository<AcademicYear>, IAcademicYearRepository
     {
-        public AcademicYearRepository(ApplicationDbContext context) : base(context, "AcademicYear")
+        public AcademicYearRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "AcademicYear")
         {
             
         }
@@ -29,7 +30,7 @@ namespace MyPortal.Database.Repositories
             sql.Where("AcademicTerm.StartDate", "<=", dateToday);
             sql.Where("AcademicTerm.EndDate", ">=", dateToday);
 
-            sql.GroupByAllColumns(typeof(AcademicYear), "AcademicYear");
+            sql.GroupByEntityColumns(typeof(AcademicYear), "AcademicYear");
 
             return await ExecuteQueryFirstOrDefault(sql);
         }
@@ -40,7 +41,7 @@ namespace MyPortal.Database.Repositories
 
             sql.LeftJoin("AcademicTerms AS AcademicTerm", "AcademicYear.Id", "AcademicTerm.AcademicYearId");
             sql.OrderByDesc("AcademicTerm.FirstDate");
-            sql.GroupByAllColumns(typeof(AcademicYear), "AcademicYear");
+            sql.GroupByEntityColumns(typeof(AcademicYear), "AcademicYear");
             sql.Limit(1);
 
             return await ExecuteQueryFirstOrDefault(sql);

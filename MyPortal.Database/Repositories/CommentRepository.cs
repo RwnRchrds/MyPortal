@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -16,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CommentRepository : BaseReadWriteRepository<Comment>, ICommentRepository
     {
-        public CommentRepository(ApplicationDbContext context) : base(context, "Comment")
+        public CommentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Comment")
         {
 
         }
@@ -37,12 +34,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Comment, CommentBank, Comment>(sql.Sql, (comment, bank) =>
+            return await Transaction.Connection.QueryAsync<Comment, CommentBank, Comment>(sql.Sql, (comment, bank) =>
                 {
                     comment.CommentBank = bank;
 
                     return comment;
-                }, sql.NamedBindings);
+                }, sql.NamedBindings, Transaction);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -16,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class BulletinRepository : BaseReadWriteRepository<Bulletin>, IBulletinRepository
     {
-        public BulletinRepository(ApplicationDbContext context) : base(context, "Bulletin")
+        public BulletinRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Bulletin")
         {
        
         }
@@ -37,12 +38,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Bulletin, User, Bulletin>(sql.Sql, (bulletin, author) =>
+            return await Transaction.Connection.QueryAsync<Bulletin, User, Bulletin>(sql.Sql, (bulletin, author) =>
             {
                 bulletin.Author = author;
 
                 return bulletin;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
 
         public async Task<IEnumerable<Bulletin>> GetApproved()

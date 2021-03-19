@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin.Users;
@@ -19,10 +20,7 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/user")]
     public class UsersController : BaseApiController
     {
-        public UsersController(IUserService userService, IAcademicYearService academicYearService,
-            IRolePermissionsCache rolePermissionsCache) : base(userService, academicYearService, rolePermissionsCache)
-        {
-        }
+        
 
         private async Task<bool> AuthoriseUser(Guid requestedUserId, bool requireEdit = false)
         {
@@ -35,12 +33,12 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPost]
         [Route("create")]
-        [Produces(typeof(NewEntityResponse))]
+        [ProducesResponseType(typeof(NewEntityResponse), 200)]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserModel model)
         {
             return await ProcessAsync(async () =>
             {
-                var userId = (await UserService.CreateUser(model)).FirstOrDefault();
+                var userId = (await Services.Users.CreateUser(model)).FirstOrDefault();
 
                 return Ok(new NewEntityResponse {Id = userId});
             }, Permissions.System.Users.EditUsers);
@@ -48,12 +46,12 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("get")]
-        [Produces(typeof(IEnumerable<UserModel>))]
+        [ProducesResponseType(typeof(IEnumerable<UserModel>), 200)]
         public async Task<IActionResult> GetUsers([FromQuery] string username)
         {
             return await ProcessAsync(async () =>
             {
-                var users = await UserService.GetUsers(username);
+                var users = await Services.Users.GetUsers(username);
 
                 return Ok(users);
             }, Permissions.System.Users.ViewUsers);
@@ -61,14 +59,14 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("get/id/{userId}")]
-        [Produces(typeof(UserModel))]
+        [ProducesResponseType(typeof(UserModel), 200)]
         public async Task<IActionResult> GetUserById([FromRoute] Guid userId)
         {
             return await ProcessAsync(async () =>
             {
                 if (await AuthoriseUser(userId))
                 {
-                    var user = await UserService.GetUserById(userId);
+                    var user = await Services.Users.GetUserById(userId);
 
                     return Ok(user);
                 }
@@ -79,14 +77,14 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("roles/get/{userId}")]
-        [Produces(typeof(IEnumerable<RoleModel>))]
+        [ProducesResponseType(typeof(IEnumerable<RoleModel>), 200)]
         public async Task<IActionResult> GetUserRoles([FromRoute] Guid userId)
         {
             return await ProcessAsync(async () =>
             {
                 if (await AuthoriseUser(userId))
                 {
-                    var roles = await UserService.GetUserRoles(userId);
+                    var roles = await Services.Users.GetUserRoles(userId);
 
                     return Ok(roles);
                 }
@@ -97,42 +95,42 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPut]
         [Route("update")]
-        [Produces(typeof(string))]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserModel model)
         {
             return await ProcessAsync(async () =>
             {
-                await UserService.UpdateUser(model);
+                await Services.Users.UpdateUser(model);
 
-                return Ok("User updated.");
+                return Ok();
             }, Permissions.System.Users.EditUsers);
         }
 
         [HttpDelete]
         [Route("delete/{userId}")]
-        [Produces(typeof(string))]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
         {
             return await ProcessAsync(async () =>
             {
-                await UserService.DeleteUser(userId);
+                await Services.Users.DeleteUser(userId);
 
-                return Ok("User deleted.");
+                return Ok();
             }, Permissions.System.Users.EditUsers);
         }
 
         [HttpPut]
         [Route("setPassword")]
-        [Produces(typeof(string))]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> SetPassword(SetPasswordModel request)
         {
             return await ProcessAsync(async () =>
             {
                 if (await AuthoriseUser(request.UserId, true))
                 {
-                    await UserService.SetPassword(request.UserId, request.NewPassword);
+                    await Services.Users.SetPassword(request.UserId, request.NewPassword);
 
-                    return Ok("Password updated.");
+                    return Ok();
                 }
 
                 return Forbid();
@@ -141,15 +139,19 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPut]
         [Route("setEnabled")]
-        [Produces(typeof(bool))]
+        [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> SetEnabled(SetUserEnabledModel model)
         {
             return await ProcessAsync(async () =>
             {
-                await UserService.SetUserEnabled(model.UserId, model.Enabled);
+                await Services.Users.SetUserEnabled(model.UserId, model.Enabled);
 
                 return Ok(model.Enabled);
             }, Permissions.System.Users.EditUsers);
+        }
+
+        public UsersController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
+        {
         }
     }
 }

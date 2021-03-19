@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
@@ -14,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class DiaryEventTemplateRepository : BaseReadWriteRepository<DiaryEventTemplate>, IDiaryEventTemplateRepository
     {
-        public DiaryEventTemplateRepository(ApplicationDbContext context) : base(context, "DiaryEventTemplate")
+        public DiaryEventTemplateRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "DiaryEventTemplate")
         {
             
         }
@@ -35,13 +37,13 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<DiaryEventTemplate, DiaryEventType, DiaryEventTemplate>(sql.Sql,
+            return await Transaction.Connection.QueryAsync<DiaryEventTemplate, DiaryEventType, DiaryEventTemplate>(sql.Sql,
                 (template, eventType) =>
                 {
                     template.DiaryEventType = eventType;
 
                     return template;
-                }, sql.NamedBindings);
+                }, sql.NamedBindings, Transaction);
         }
     }
 }
