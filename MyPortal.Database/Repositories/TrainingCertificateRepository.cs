@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -14,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class TrainingCertificateRepository : BaseReadWriteRepository<TrainingCertificate>, ITrainingCertificateRepository
     {
-        public TrainingCertificateRepository(ApplicationDbContext context) : base(context, "TrainingCertificate")
+        public TrainingCertificateRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "TrainingCertificate")
         {
             
         }
@@ -40,7 +41,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection
+            return await Transaction.Connection
                 .QueryAsync<TrainingCertificate, StaffMember, TrainingCourse, TrainingCertificateStatus,
                     TrainingCertificate>(sql.Sql,
                     (certificate, staff, course, status) =>
@@ -50,7 +51,7 @@ namespace MyPortal.Database.Repositories
                         certificate.Status = status;
 
                         return certificate;
-                    }, sql.NamedBindings);
+                    }, sql.NamedBindings, Transaction);
         }
     }
 }

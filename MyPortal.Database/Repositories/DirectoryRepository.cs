@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Text;
+using System.Data.Common;
 using System.Threading.Tasks;
-using System.Xml;
 using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -17,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class DirectoryRepository : BaseReadWriteRepository<Directory>, IDirectoryRepository
     {
-        public DirectoryRepository(ApplicationDbContext context) : base(context, "Directory")
+        public DirectoryRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Directory")
         {
            
         }
@@ -38,12 +35,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Directory, Directory, Directory>(sql.Sql, (directory, parent) =>
+            return await Transaction.Connection.QueryAsync<Directory, Directory, Directory>(sql.Sql, (directory, parent) =>
                 {
                     directory.Parent = parent;
 
                     return directory;
-                }, sql.NamedBindings);
+                }, sql.NamedBindings, Transaction);
         }
 
         public async Task<IEnumerable<Directory>> GetSubdirectories(Guid directoryId, bool includeStaffOnly)

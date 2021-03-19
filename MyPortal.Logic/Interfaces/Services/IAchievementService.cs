@@ -6,7 +6,7 @@ using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IAchievementService : IService
+    public interface IAchievementService
     {
         Task<IEnumerable<AchievementModel>> GetAchievementsByStudent(Guid studentId, Guid academicYearId);
         Task<AchievementModel> GetAchievementById(Guid achievementId);

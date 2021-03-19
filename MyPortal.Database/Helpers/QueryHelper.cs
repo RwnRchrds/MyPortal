@@ -17,13 +17,20 @@ namespace MyPortal.Database.Helpers
             return query;
         }
 
-        public static Query GroupByAllColumns(this Query query, Type type, string alias = null)
+        public static Query GroupByEntityColumns(this Query query, Type type, string alias = null)
         {
             var columnNames = EntityHelper.GetPropertyNames(type, alias);
 
             query.GroupBy(columnNames);
 
             return query;
+        }
+
+        public static Query JoinEntity(this Query query, Type type, string column, string alias = null, string joinType = null)
+        {
+            var tableName = EntityHelper.GetTableName(type, out string generatedAlias, alias);
+
+            return query.Join(tableName, $"{generatedAlias}.Id", column, "=", joinType);
         }
 
         public static Query FilterByStudentGroup(this Query query, Guid groupTypeId, Guid groupId, string studentAlias = "S")

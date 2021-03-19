@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin.Roles;
@@ -10,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IRoleService : IService
+    public interface IRoleService
     {
         Task<IEnumerable<Guid>> Create(params CreateRoleModel[] model);
         Task Update(params UpdateRoleModel[] model);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -17,7 +18,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CommunicationLogRepository : BaseReadWriteRepository<CommunicationLog>, ICommunicationLogRepository
     {
-        public CommunicationLogRepository(ApplicationDbContext context) : base(context, "CommunicationLog")
+        public CommunicationLogRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "CommunicationLog")
         {
       
         }
@@ -38,12 +39,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<CommunicationLog, CommunicationType, CommunicationLog>(sql.Sql, (log, type) =>
+            return await Transaction.Connection.QueryAsync<CommunicationLog, CommunicationType, CommunicationLog>(sql.Sql, (log, type) =>
             {
                 log.Type = type;
 
                 return log;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
     }
 }

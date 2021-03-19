@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
@@ -14,32 +15,20 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories.Base
 {
-    public abstract class BaseReadWriteRepository<TEntity> : BaseReadRepository<TEntity>, IReadWriteRepository<TEntity>, IWriteRepository where TEntity : class, IEntity
+    public abstract class BaseReadWriteRepository<TEntity> : BaseReadRepository<TEntity>, IReadWriteRepository<TEntity> where TEntity : class, IEntity
     {
         protected readonly ApplicationDbContext Context;
-        protected readonly List<Query> PendingQueries;
 
-        protected BaseReadWriteRepository(ApplicationDbContext context, string tblAlias = null) : base(context.Database.GetDbConnection(), tblAlias)
+        protected BaseReadWriteRepository(ApplicationDbContext context, DbTransaction transaction, string tblAlias = null) : base(transaction, tblAlias)
         {
             Context = context;
-            PendingQueries = new List<Query>();
         }
 
         protected async Task<int> ExecuteNonQuery(Query query)
         {
             var compiled = Compiler.Compile(query);
 
-            return await Connection.ExecuteAsync(compiled.Sql, compiled.NamedBindings);
-        }
-
-        public async Task SaveChanges()
-        {
-            foreach (var query in PendingQueries)
-            {
-                await ExecuteNonQuery(query);
-            }
-
-            await Context.SaveChangesAsync();
+            return await Transaction.Connection.ExecuteAsync(compiled.Sql, compiled.NamedBindings, Transaction);
         }
 
         public async Task<TEntity> GetByIdForEditing(Guid id)

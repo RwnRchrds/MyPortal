@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -14,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentContactRelationshipRepository : BaseReadWriteRepository<StudentContactRelationship>, IStudentContactRelationshipRepository
     {
-        public StudentContactRelationshipRepository(ApplicationDbContext context) : base(context, "StudentContact")
+        public StudentContactRelationshipRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "StudentContact")
         {
 
         }   
@@ -41,7 +40,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection
+            return await Transaction.Connection
                 .QueryAsync<StudentContactRelationship, RelationshipType, Student, Person, Contact, Person, StudentContactRelationship>(sql.Sql,
                     (sContact, relationship, student, sPerson, contact, cPerson) =>
                     {
@@ -52,7 +51,7 @@ namespace MyPortal.Database.Repositories
                         sContact.Contact.Person = cPerson;
 
                         return sContact;
-                    }, sql.NamedBindings);
+                    }, sql.NamedBindings, Transaction);
         }
     }
 }

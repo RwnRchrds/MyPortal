@@ -7,7 +7,7 @@ using MyPortal.Logic.Models.Response.People;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IPersonService : IService
+    public interface IPersonService
     {
         Task<IEnumerable<PersonModel>> Get(PersonSearchOptions searchModel);
         Task<PersonModel> GetByUserId(Guid userId, bool throwIfNotFound = true);

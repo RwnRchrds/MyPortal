@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Caching;
-using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -15,12 +14,7 @@ namespace MyPortalWeb.Controllers.Api
     [Authorize]
     public class CalendarController : BaseApiController
     {
-        private readonly IDiaryEventService _diaryEventService;
-
-        public CalendarController(IUserService userService, IAcademicYearService academicYearService, IRolePermissionsCache rolePermissionsCache, IDiaryEventService diaryEventService) : base(userService, academicYearService, rolePermissionsCache)
-        {
-            _diaryEventService = diaryEventService;
-        }
+        
 
         [HttpGet]
         [AllowAnonymous]
@@ -43,10 +37,14 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 var events =
-                    await _diaryEventService.GetCalendarEventsByStudent(studentId, dateRange);
+                    await Services.Calendar.GetCalendarEventsByStudent(studentId, dateRange);
 
                 return Ok(events);
             });
+        }
+
+        public CalendarController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
+        {
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Interfaces;
@@ -12,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class DietaryRequirementRepository : BaseReadRepository<DietaryRequirement>, IDietaryRequirementRepository
     {
-        public DietaryRequirementRepository(IDbConnection connection) : base(connection)
+        public DietaryRequirementRepository(DbTransaction transaction) : base(transaction)
         {
         }
     }

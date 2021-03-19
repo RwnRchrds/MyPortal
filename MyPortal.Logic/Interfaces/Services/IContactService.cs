@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IContactService : IService
+    public interface IContactService
     {
         
     }

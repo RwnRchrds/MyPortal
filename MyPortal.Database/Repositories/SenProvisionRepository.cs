@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -14,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SenProvisionRepository : BaseReadWriteRepository<SenProvision>, ISenProvisionRepository
     {
-        public SenProvisionRepository(ApplicationDbContext context) : base(context, "SenProvision")
+        public SenProvisionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "SenProvision")
         {
             
         }
@@ -37,14 +38,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<SenProvision, Student, SenProvisionType, SenProvision>(sql.Sql,
+            return await Transaction.Connection.QueryAsync<SenProvision, Student, SenProvisionType, SenProvision>(sql.Sql,
                 (provision, student, type) =>
                 {
                     provision.Student = student;
                     provision.Type = type;
 
                     return provision;
-                }, sql.NamedBindings);
+                }, sql.NamedBindings, Transaction);
         }
     }
 }

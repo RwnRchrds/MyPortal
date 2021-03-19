@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Storage;
 using SqlKata.Compilers;
 
 namespace MyPortal.Database.Repositories.Base
 {
     public class BaseRepository
     {
-        protected IDbConnection Connection;
+        protected DbTransaction Transaction;
         protected readonly SqlServerCompiler Compiler;
 
-        public BaseRepository(IDbConnection connection)
+        public BaseRepository(DbTransaction transaction)
         {
-            Connection = connection;
+            Transaction = transaction;
             Compiler = new SqlServerCompiler();
         }
     }

@@ -4,7 +4,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IBillService : IService
+    public interface IBillService
     {
         Task<IEnumerable<BillModel>> GenerateChargeBills();
     }

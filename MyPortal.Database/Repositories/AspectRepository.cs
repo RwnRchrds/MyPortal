@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -16,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AspectRepository : BaseReadWriteRepository<Aspect>, IAspectRepository
     {
-        public AspectRepository(ApplicationDbContext context) : base(context, "Aspect")
+        public AspectRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Aspect")
         {
 
         }
@@ -39,13 +40,13 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Aspect, AspectType, GradeSet, Aspect>(sql.Sql, (aspect, type, gradeSet) =>
+            return await Transaction.Connection.QueryAsync<Aspect, AspectType, GradeSet, Aspect>(sql.Sql, (aspect, type, gradeSet) =>
             {
                 aspect.Type = type;
                 aspect.GradeSet = gradeSet;
 
                 return aspect;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
     }
 }

@@ -4,7 +4,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IRegGroupService : IService
+    public interface IRegGroupService
     {
         Task<IEnumerable<RegGroupModel>> GetRegGroups();
     }

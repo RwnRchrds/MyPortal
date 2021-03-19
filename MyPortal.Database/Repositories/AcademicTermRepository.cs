@@ -1,4 +1,5 @@
-﻿using MyPortal.Database.Helpers;
+﻿using System.Data.Common;
+using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -9,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AcademicTermRepository : BaseReadWriteRepository<AcademicTerm>, IAcademicTermRepository
     {
-        public AcademicTermRepository(ApplicationDbContext context) : base(context, "AT")
+        public AcademicTermRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "AT")
         {
         }
 

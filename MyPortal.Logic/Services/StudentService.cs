@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MyPortal.Database;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Attendance;
@@ -18,66 +21,74 @@ namespace MyPortal.Logic.Services
 {
     public class StudentService : BaseService, IStudentService
     {
-        public StudentService(IUnitOfWork unitOfWork) : base(unitOfWork)
-        {
-        }
-
         public async Task<StudentModel> GetById(Guid studentId)
         {
-            var student = await UnitOfWork.Students.GetById(studentId);
-            if (student == null)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                throw new NotFoundException("Student not found.");
-            }
+                var student = await unitOfWork.Students.GetById(studentId);
+                if (student == null)
+                {
+                    throw new NotFoundException("Student not found.");
+                }
 
-            return BusinessMapper.Map<StudentModel>(student);
+                return BusinessMapper.Map<StudentModel>(student);
+            }
         }
 
         public async Task<StudentStatsModel> GetStatsById(Guid studentId, Guid academicYearId)
         {
-            var stats = new StudentStatsModel();
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var stats = new StudentStatsModel();
 
-            var achievements = await UnitOfWork.Achievements.GetPointsByStudent(studentId, academicYearId);
-            var incidents = await UnitOfWork.Incidents.GetPointsByStudent(studentId, academicYearId);
-            var attendanceMarks = await UnitOfWork.AttendanceMarks.GetByStudent(studentId, academicYearId);
-            var exclusions = await UnitOfWork.Exclusions.GetCountByStudent(studentId);
-            var attendanceCodes = await UnitOfWork.AttendanceCodes.GetAll();
+                var achievements = await unitOfWork.Achievements.GetPointsByStudent(studentId, academicYearId);
+                var incidents = await unitOfWork.Incidents.GetPointsByStudent(studentId, academicYearId);
+                var attendanceMarks = await unitOfWork.AttendanceMarks.GetByStudent(studentId, academicYearId);
+                var exclusions = await unitOfWork.Exclusions.GetCountByStudent(studentId);
+                var attendanceCodes = await unitOfWork.AttendanceCodes.GetAll();
 
-            var attendanceSummary =
-                new AttendanceSummary(attendanceCodes.Select(BusinessMapper.Map<AttendanceCodeModel>).ToList(),
-                    attendanceMarks.Select(BusinessMapper.Map<AttendanceMarkModel>).ToList());
+                var attendanceSummary =
+                    new AttendanceSummary(attendanceCodes.Select(BusinessMapper.Map<AttendanceCodeModel>).ToList(),
+                        attendanceMarks.Select(BusinessMapper.Map<AttendanceMarkModel>).ToList());
 
-            stats.StudentId = studentId;
-            stats.AchievementPoints = achievements;
-            stats.BehaviourPoints = incidents;
-            stats.PercentageAttendance = attendanceSummary.GetPresentAndAea(true);
-            stats.Exclusions = exclusions;
+                stats.StudentId = studentId;
+                stats.AchievementPoints = achievements;
+                stats.BehaviourPoints = incidents;
+                stats.PercentageAttendance = attendanceSummary.GetPresentAndAea(true);
+                stats.Exclusions = exclusions;
 
-            return stats;
+                return stats;
+            }
         }
 
         public async Task<StudentModel> GetByUserId(Guid userId, bool throwNotFound = true)
         {
-            var student = await UnitOfWork.Students.GetByUserId(userId);
-
-            if (student == null && throwNotFound)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                throw new NotFoundException("Student not found.");
-            }
+                var student = await unitOfWork.Students.GetByUserId(userId);
 
-            return BusinessMapper.Map<StudentModel>(student);
+                if (student == null && throwNotFound)
+                {
+                    throw new NotFoundException("Student not found.");
+                }
+
+                return BusinessMapper.Map<StudentModel>(student);
+            }
         }
 
         public async Task<StudentModel> GetByPersonId(Guid personId, bool throwIfNotFound = true)
         {
-            var student = await UnitOfWork.Students.GetByPersonId(personId);
-
-            if (student == null && throwIfNotFound)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                throw new NotFoundException("Student not found.");
-            }
+                var student = await unitOfWork.Students.GetByPersonId(personId);
 
-            return BusinessMapper.Map<StudentModel>(student);
+                if (student == null && throwIfNotFound)
+                {
+                    throw new NotFoundException("Student not found.");
+                }
+
+                return BusinessMapper.Map<StudentModel>(student);
+            }
         }
 
         public SelectList GetStudentStatusOptions(StudentStatus defaultStatus = StudentStatus.OnRoll)
@@ -94,23 +105,32 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<StudentModel>> Get(StudentSearchOptions searchOptions)
         {
-            var students = await UnitOfWork.Students.GetAll(searchOptions);
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var students = await unitOfWork.Students.GetAll(searchOptions);
 
-            return students.Select(BusinessMapper.Map<StudentModel>).ToList();
+                return students.Select(BusinessMapper.Map<StudentModel>).ToList();
+            }
         }
 
         public async Task Create(StudentModel student)
         {
-            UnitOfWork.Students.Create(BusinessMapper.Map<Student>(student));
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                unitOfWork.Students.Create(BusinessMapper.Map<Student>(student));
 
-            await UnitOfWork.SaveChanges();
+                await unitOfWork.SaveChangesAsync();
+            }
         }
 
         public async Task Update(StudentModel student)
         {
-            var studentInDb = await UnitOfWork.Students.GetByIdForEditing(student.Id);
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var studentInDb = await unitOfWork.Students.GetByIdForEditing(student.Id);
 
-            await UnitOfWork.SaveChanges();
+                await unitOfWork.SaveChangesAsync();
+            }
         }
     }
 }

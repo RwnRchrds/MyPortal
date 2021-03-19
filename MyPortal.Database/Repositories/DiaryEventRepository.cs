@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Constants;
@@ -15,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class DiaryEventRepository : BaseReadWriteRepository<DiaryEvent>, IDiaryEventRepository
     {
-        public DiaryEventRepository(ApplicationDbContext context) : base(context, "DiaryEvent")
+        public DiaryEventRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "DiaryEvent")
         {
 
         }
@@ -36,11 +37,11 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<DiaryEvent, DiaryEventType, DiaryEvent>(sql.Sql, (diaryEvent, type) =>
+            return await Transaction.Connection.QueryAsync<DiaryEvent, DiaryEventType, DiaryEvent>(sql.Sql, (diaryEvent, type) =>
             {
                 diaryEvent.EventType = type;
                 return diaryEvent;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
 
         public async Task<IEnumerable<DiaryEvent>> GetByDateRange(DateTime firstDate, DateTime lastDate, bool includePrivateEvents = false)

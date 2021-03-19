@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Text;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -10,14 +9,13 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
-using SqlKata.Extensions;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
     public class RefreshTokenRepository : BaseReadWriteRepository<RefreshToken>, IRefreshTokenRepository
     {
-        public RefreshTokenRepository(ApplicationDbContext context) : base(context, "RefreshToken")
+        public RefreshTokenRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "RefreshToken")
         {
 
         }
@@ -38,12 +36,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<RefreshToken, User, RefreshToken>(sql.Sql, (token, user) =>
+            return await Transaction.Connection.QueryAsync<RefreshToken, User, RefreshToken>(sql.Sql, (token, user) =>
             {
                 token.User = user;
 
                 return token;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
 
         public async Task<IEnumerable<RefreshToken>> GetByUser(Guid userId)
@@ -55,7 +53,7 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
-        public void DeleteExpired(Guid userId)
+        public async Task DeleteExpired(Guid userId)
         {
             var query = GenerateEmptyQuery(typeof(RefreshToken));
 
@@ -64,7 +62,7 @@ namespace MyPortal.Database.Repositories
 
             query.AsDelete();
 
-            PendingQueries.Add(query);
+            await ExecuteNonQuery(query);
         }
     }
 }

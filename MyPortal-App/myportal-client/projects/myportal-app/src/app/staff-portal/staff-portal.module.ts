@@ -39,6 +39,7 @@ import { StudentTimetableComponent } from './people/students/student-view/studen
 import {FullCalendarModule} from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import { StudentBasicDetailsComponent } from './people/students/student-view/student-overview/student-basic-details/student-basic-details.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -86,7 +87,8 @@ FullCalendarModule.registerPlugins([
     StudentStatsComponent,
     StudentLogNotesComponent,
     LogNoteFormComponent,
-    StudentTimetableComponent
+    StudentTimetableComponent,
+    StudentBasicDetailsComponent
   ],
   exports: [
     StaffPortalComponent,

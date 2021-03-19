@@ -119,6 +119,6 @@ namespace MyPortal.Database.Interfaces
         IUserRepository Users { get; }
         IYearGroupRepository YearGroups { get; }
 
-        Task SaveChanges();
+        Task SaveChangesAsync();
     }
 }

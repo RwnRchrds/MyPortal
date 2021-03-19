@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -14,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ReportRepository : BaseReadRepository<Report>, IReportRepository
     {
-        public ReportRepository(IDbConnection connection) : base(connection, "Report")
+        public ReportRepository(DbTransaction transaction) : base(transaction, "Report")
         {
             
         }
@@ -35,12 +33,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Report, SystemArea, Report>(sql.Sql, (report, area) =>
+            return await Transaction.Connection.QueryAsync<Report, SystemArea, Report>(sql.Sql, (report, area) =>
             {
                 report.SystemArea = area;
 
                 return report;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
     }
 }

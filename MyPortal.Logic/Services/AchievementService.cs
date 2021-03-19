@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyPortal.Database.Interfaces;
+using MyPortal.Database;
+using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
@@ -14,117 +16,135 @@ namespace MyPortal.Logic.Services
 {
     public class AchievementService : BaseService, IAchievementService
     {
-        public AchievementService(IUnitOfWork unitOfWork) : base(unitOfWork)
-        {
-        }
-
-        public override void Dispose()
-        {
-            UnitOfWork.Dispose();
-        }
-
         public async Task<IEnumerable<AchievementModel>> GetAchievementsByStudent(Guid studentId, Guid academicYearId)
         {
-            var achievements = await UnitOfWork.Achievements.GetByStudent(studentId, academicYearId);
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var achievements = await unitOfWork.Achievements.GetByStudent(studentId, academicYearId);
 
-            return achievements.Select(BusinessMapper.Map<AchievementModel>).ToList();
+                return achievements.Select(BusinessMapper.Map<AchievementModel>).ToList();
+            }
         }
 
         public async Task<AchievementModel> GetAchievementById(Guid achievementId)
         {
-            var achievement = await UnitOfWork.Achievements.GetById(achievementId);
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var achievement = await unitOfWork.Achievements.GetById(achievementId);
 
-            return BusinessMapper.Map<AchievementModel>(achievement);
+                return BusinessMapper.Map<AchievementModel>(achievement);
+            }
         }
 
         public async Task<int> GetAchievementPointsByStudent(Guid studentId, Guid academicYearId)
         {
-            var points = await UnitOfWork.Achievements.GetPointsByStudent(studentId, academicYearId);
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var points = await unitOfWork.Achievements.GetPointsByStudent(studentId, academicYearId);
 
-            return points;
+                return points;
+            }
         }
 
         public async Task<int> GetAchievementCountByStudent(Guid studentId, Guid academicYearId)
         {
-            var count = await UnitOfWork.Achievements.GetCountByStudent(studentId, academicYearId);
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var count = await unitOfWork.Achievements.GetCountByStudent(studentId, academicYearId);
 
-            return count;
+                return count;
+            }
         }
 
         public async Task CreateAchievement(params AchievementModel[] requests)
         {
-            foreach (var request in requests)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                await AcademicYearModel.CheckLock(UnitOfWork.AcademicYears, request.AcademicYearId);
-                
-                var model = new Achievement
+                foreach (var request in requests)
                 {
-                    AcademicYearId = request.AcademicYearId,
-                    AchievementTypeId = request.AchievementTypeId,
-                    LocationId = request.LocationId,
-                    StudentId = request.StudentId,
-                    Comments = request.Comments,
-                    OutcomeId = request.OutcomeId,
-                    Points = request.Points,
-                    RecordedById = request.RecordedById,
-                    CreatedDate = DateTime.Now
-                };
+                    await AcademicYearModel.CheckLock(unitOfWork.AcademicYears, request.AcademicYearId);
 
-                UnitOfWork.Achievements.Create(model);
+                    var model = new Achievement
+                    {
+                        AcademicYearId = request.AcademicYearId,
+                        AchievementTypeId = request.AchievementTypeId,
+                        LocationId = request.LocationId,
+                        StudentId = request.StudentId,
+                        Comments = request.Comments,
+                        OutcomeId = request.OutcomeId,
+                        Points = request.Points,
+                        RecordedById = request.RecordedById,
+                        CreatedDate = DateTime.Now
+                    };
+
+                    unitOfWork.Achievements.Create(model);
+                }
+
+                await unitOfWork.SaveChangesAsync();
             }
-
-            await UnitOfWork.SaveChanges();
         }
 
         public async Task UpdateAchievement(params UpdateAchievementModel[] requests)
         {
-            foreach (var request in requests)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var achievementInDb = await UnitOfWork.Achievements.GetByIdForEditing(request.Id);
-
-                if (achievementInDb == null)
+                foreach (var request in requests)
                 {
-                    throw new NotFoundException("Achievement not found.");
+                    var achievementInDb = await unitOfWork.Achievements.GetByIdForEditing(request.Id);
+
+                    if (achievementInDb == null)
+                    {
+                        throw new NotFoundException("Achievement not found.");
+                    }
+
+                    await AcademicYearModel.CheckLock(unitOfWork.AcademicYears, achievementInDb.AcademicYearId);
+
+                    achievementInDb.AchievementTypeId = request.AchievementTypeId;
+                    achievementInDb.LocationId = request.LocationId;
+                    achievementInDb.OutcomeId = request.OutcomeId;
+                    achievementInDb.Comments = request.Comments;
+                    achievementInDb.Points = request.Points;
                 }
 
-                await AcademicYearModel.CheckLock(UnitOfWork.AcademicYears, achievementInDb.AcademicYearId);
-
-                achievementInDb.AchievementTypeId = request.AchievementTypeId;
-                achievementInDb.LocationId = request.LocationId;
-                achievementInDb.OutcomeId = request.OutcomeId;
-                achievementInDb.Comments = request.Comments;
-                achievementInDb.Points = request.Points;
+                await unitOfWork.SaveChangesAsync();
             }
-
-            await UnitOfWork.SaveChanges();
         }
 
         public async Task DeleteAchievement(params Guid[] achievementIds)
         {
-            foreach (var achievementId in achievementIds)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var achievement = await GetAchievementById(achievementId);
+                foreach (var achievementId in achievementIds)
+                {
+                    var achievement = await GetAchievementById(achievementId);
 
-                await AcademicYearModel.CheckLock(UnitOfWork.AcademicYears, achievement.AcademicYearId);
-                
-                await UnitOfWork.Achievements.Delete(achievementId);
+                    await AcademicYearModel.CheckLock(unitOfWork.AcademicYears, achievement.AcademicYearId);
+
+                    await unitOfWork.Achievements.Delete(achievementId);
+                }
+
+                await unitOfWork.SaveChangesAsync();
             }
-
-            await UnitOfWork.SaveChanges();
         }
 
         public async Task<IEnumerable<AchievementTypeModel>> GetAchievementTypes()
         {
-            var types = await UnitOfWork.AchievementTypes.GetAll();
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var types = await unitOfWork.AchievementTypes.GetAll();
 
-            return types.Select(BusinessMapper.Map<AchievementTypeModel>).ToList();
+                return types.Select(BusinessMapper.Map<AchievementTypeModel>).ToList();
+            }
         }
 
         public async Task<IEnumerable<AchievementOutcomeModel>> GetAchievementOutcomes()
         {
-            var outcomes = await UnitOfWork.AchievementOutcomes.GetAll();
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var outcomes = await unitOfWork.AchievementOutcomes.GetAll();
 
-            return outcomes.Select(BusinessMapper.Map<AchievementOutcomeModel>).ToList();
+                return outcomes.Select(BusinessMapper.Map<AchievementOutcomeModel>).ToList();
+            }
         }
     }
 }

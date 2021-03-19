@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -15,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class HomeworkSubmissionRepository : BaseReadWriteRepository<HomeworkSubmission>, IHomeworkSubmissionRepository
     {
-        public HomeworkSubmissionRepository(ApplicationDbContext context) : base(context, "HomeworkSubmission")
+        public HomeworkSubmissionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "HomeworkSubmission")
         {
             
         }
@@ -42,7 +43,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection
+            return await Transaction.Connection
                 .QueryAsync<HomeworkSubmission, HomeworkItem, Student, Person, Task, HomeworkSubmission>(sql.Sql,
                     (submission, homework, student, person, task) =>
                     {
@@ -52,7 +53,7 @@ namespace MyPortal.Database.Repositories
                         submission.Task = task;
 
                         return submission;
-                    }, sql.NamedBindings);
+                    }, sql.NamedBindings, Transaction);
         }
     }
 }

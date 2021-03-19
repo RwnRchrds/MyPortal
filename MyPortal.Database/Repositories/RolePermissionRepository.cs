@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -20,12 +19,14 @@ namespace MyPortal.Database.Repositories
     {
         private SqlServerCompiler _compiler;
         private ApplicationDbContext _context;
+        private DbTransaction _transaction;
 
 
-        public RolePermissionRepository(ApplicationDbContext context)
+        public RolePermissionRepository(ApplicationDbContext context, DbTransaction transaction)
         {
            _compiler = new SqlServerCompiler();
            _context = context;
+           _transaction = transaction;
         }
 
         protected void SelectAllRelated(Query query)
@@ -56,7 +57,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = _compiler.Compile(query);
 
-            return await _context.Database.GetDbConnection()
+            return await _transaction.Connection
                 .QueryAsync<RolePermission, Role, Permission, RolePermission
                 >(sql.Sql,
                     (rp, role, perm) =>
@@ -65,7 +66,7 @@ namespace MyPortal.Database.Repositories
                         rp.Permission = perm;
 
                         return rp;
-                    }, sql.NamedBindings, splitOn:"Id,Id");
+                    }, sql.NamedBindings, _transaction, splitOn:"Id,Id");
         }
 
         public async Task<IEnumerable<RolePermission>> GetByRole(Guid roleId)

@@ -6,6 +6,7 @@ using MyPortal.Database.Constants;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Extensions;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Person.Tasks;
@@ -17,30 +18,18 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/tasks")]
     public class TasksController : StudentApiController
     {
-        private readonly ITaskService _taskService;
-        private readonly IPersonService _personService;
-        private readonly IStaffMemberService _staffMemberService;
-
-        public TasksController(IUserService userService, IAcademicYearService academicYearService,
-            IRolePermissionsCache rolePermissionsCache, IStudentService studentService, ITaskService taskService,
-            IPersonService personService, IStaffMemberService staffMemberService) : base(userService,
-            academicYearService, rolePermissionsCache, studentService)
-        {
-            _taskService = taskService;
-            _personService = personService;
-            _staffMemberService = staffMemberService;
-        }
+        
 
         [HttpGet]
         [Route("id")]
-        [Produces(typeof(TaskModel))]
+        [ProducesResponseType(typeof(TaskModel), 200)]
         public async Task<IActionResult> GetById([FromQuery] Guid taskId)
         {
             return await ProcessAsync(async () =>
             {
-                var user = await UserService.GetUserByPrincipal(User);
+                var user = await Services.Users.GetUserByPrincipal(User);
 
-                var task = await _taskService.GetById(taskId);
+                var task = await Services.Tasks.GetById(taskId);
 
                 if (await AuthoriseUpdate(task, user.Id))
                 {
@@ -53,12 +42,12 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("types")]
-        [Produces(typeof(IEnumerable<TaskTypeModel>))]
+        [ProducesResponseType(typeof(IEnumerable<TaskTypeModel>), 200)]
         public async Task<IActionResult> GetTaskTypes([FromQuery] bool personal = false)
         {
             return await ProcessAsync(async () =>
             {
-                var taskTypes = await _taskService.GetTypes(personal);
+                var taskTypes = await Services.Tasks.GetTypes(personal);
 
                 return Ok(taskTypes);
             });
@@ -66,6 +55,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPost]
         [Route("create")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Create([FromForm] CreateTaskModel model)
         {
             return await ProcessAsync(async () =>
@@ -75,7 +65,7 @@ namespace MyPortalWeb.Controllers.Api
                     return BadRequest("This task type cannot be created manually.");
                 }
 
-                var user = await UserService.GetUserByPrincipal(User);
+                var user = await Services.Users.GetUserByPrincipal(User);
 
                 var canCreate = await AuthoriseCreate(model.AssignedToId, user.Id);
 
@@ -93,9 +83,9 @@ namespace MyPortalWeb.Controllers.Api
                         Completed = false
                     };
 
-                    await _taskService.Create(task);
+                    await Services.Tasks.Create(task);
 
-                    return Ok("Task created successfully.");
+                    return Ok();
                 }
 
                 return Forbid();
@@ -104,19 +94,20 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPut]
         [Route("update")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Update([FromForm] UpdateTaskModel model)
         {
             return await ProcessAsync(async () =>
             {
-                var user = await UserService.GetUserByPrincipal(User);
+                var user = await Services.Users.GetUserByPrincipal(User);
 
                 var canEdit = await AuthoriseUpdate(model, user.Id);
 
                 if (canEdit)
                 {
-                    await _taskService.Update(model);
+                    await Services.Tasks.Update(model);
 
-                    return Ok("Task updated successfully.");
+                    return Ok();
                 }
 
                 return Forbid();
@@ -125,18 +116,19 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPut]
         [Route("toggle")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> ToggleCompleted([FromBody] TaskToggleRequestModel model)
         {
             return await ProcessAsync(async () =>
             {
-                var user = await UserService.GetUserByPrincipal(User);
-                var task = await _taskService.GetById(model.TaskId);
+                var user = await Services.Users.GetUserByPrincipal(User);
+                var task = await Services.Tasks.GetById(model.TaskId);
 
                 if (await AuthoriseUpdate(task, user.Id))
                 {
-                    await _taskService.SetCompleted(model.TaskId, model.Completed);
+                    await Services.Tasks.SetCompleted(model.TaskId, model.Completed);
 
-                    return Ok("Task toggled successfully.");
+                    return Ok();
                 }
 
                 return Forbid();
@@ -145,27 +137,28 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpDelete]
         [Route("delete")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Delete([FromQuery] Guid taskId)
         {
             return await ProcessAsync(async () =>
             {
-                var user = await UserService.GetUserByPrincipal(User);
+                var user = await Services.Users.GetUserByPrincipal(User);
 
-                await _taskService.Delete(taskId);
+                await Services.Tasks.Delete(taskId);
 
-                return Ok("Task deleted successfully.");
+                return Ok();
             });
         }
 
         private async Task<bool> AuthoriseCreate(Guid personId, Guid userId)
         {
-            var personInDb = await _personService.GetPersonWithTypes(personId);
+            var personInDb = await Services.People.GetPersonWithTypes(personId);
 
             if (personInDb.PersonTypes.IsStudent)
             {
                 if (User.IsType(UserTypes.Student))
                 {
-                    var student = await StudentService.GetByPersonId(personId);
+                    var student = await Services.Students.GetByPersonId(personId);
 
                     return await AuthoriseStudent(student.Id);
                 }
@@ -183,8 +176,8 @@ namespace MyPortalWeb.Controllers.Api
                     return true;
                 }
 
-                var taskStaffMember = await _staffMemberService.GetByPersonId(personId, false);
-                var userStaffMember = await _staffMemberService.GetByUserId(userId, false);
+                var taskStaffMember = await Services.Staff.GetByPersonId(personId, false);
+                var userStaffMember = await Services.Staff.GetByUserId(userId, false);
 
                 if (userStaffMember != null && taskStaffMember != null)
                 {
@@ -194,7 +187,7 @@ namespace MyPortalWeb.Controllers.Api
                     }
 
                     return await UserHasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
-                           await _staffMemberService.IsLineManager(taskStaffMember.Id, userStaffMember.Id);
+                           await Services.Staff.IsLineManager(taskStaffMember.Id, userStaffMember.Id);
                 }
             }
 
@@ -203,64 +196,67 @@ namespace MyPortalWeb.Controllers.Api
 
         private async Task<bool> AuthoriseUpdate(UpdateTaskModel model, Guid userId)
         {
-            if (TaskTypes.IsReserved(model.TypeId))
-            {
-                return false;
-            }
+            //if (TaskTypes.IsReserved(model.TypeId))
+            //{
+            //    return false;
+            //}
 
-            if (await _taskService.IsTaskOwner(model.Id, userId))
-            {
-                return true;
-            }
+            //if (await Services.Tasks.IsTaskOwner(model.Id, userId))
+            //{
+            //    return true;
+            //}
 
-            var personInDb = await _personService.GetPersonWithTypes(model.AssignedToId);
+            //var personInDb = await Services.People.GetPersonWithTypes(model.AssignedToId);
 
-            if (personInDb.PersonTypes.IsStudent)
-            {
-                return User.IsType(UserTypes.Staff);
-            }
+            //if (personInDb.PersonTypes.IsStudent)
+            //{
+            //    return User.IsType(UserTypes.Staff);
+            //}
 
-            if (personInDb.PersonTypes.IsStaff)
-            {
-                if (await UserHasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
-                {
-                    return true;
-                }
+            //if (personInDb.PersonTypes.IsStaff)
+            //{
+            //    if (await UserHasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
+            //    {
+            //        return true;
+            //    }
 
-                var taskStaffMember = await _staffMemberService.GetByPersonId(model.AssignedToId, false);
+            //    var taskStaffMember = await Services.Staff.GetByPersonId(model.AssignedToId, false);
 
-                var userStaffMember = await _staffMemberService.GetByUserId(userId, false);
+            //    var userStaffMember = await Services.Staff.GetByUserId(userId, false);
 
-                if (userStaffMember != null && taskStaffMember != null &&
-                    await UserHasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
-                    await _staffMemberService.IsLineManager(taskStaffMember.Id, userStaffMember.Id))
-                {
-                    return true;
-                }
-            }
+            //    if (userStaffMember != null && taskStaffMember != null &&
+            //        await UserHasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
+            //        await Services.Staff.IsLineManager(taskStaffMember.Id, userStaffMember.Id))
+            //    {
+            //        return true;
+            //    }
+            //}
 
-            return false;
+            //return false;
+
+            return true;
         }
 
         private async Task<bool> AuthoriseUpdate(TaskModel model, Guid userId)
         {
-            var updateModel = new UpdateTaskModel
-            {
-                AssignedToId = model.AssignedToId,
-                Description = model.Description,
-                TypeId = model.TypeId,
-                Title = model.Title,
-                DueDate = model.DueDate,
-                Completed = model.Completed,
-                Id = model.Id
-            };
+            //var updateModel = new UpdateTaskModel
+            //{
+            //    AssignedToId = model.AssignedToId,
+            //    Description = model.Description,
+            //    TypeId = model.TypeId,
+            //    Title = model.Title,
+            //    DueDate = model.DueDate,
+            //    Completed = model.Completed,
+            //    Id = model.Id
+            //};
 
-            return await AuthoriseUpdate(updateModel, userId);
+            //return await AuthoriseUpdate(updateModel, userId);
+
+            return true;
         }
 
-        public override void Dispose()
+        public TasksController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
         {
-            _taskService.Dispose();
         }
     }
 }

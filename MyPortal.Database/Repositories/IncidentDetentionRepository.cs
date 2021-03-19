@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -15,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class IncidentDetentionRepository : BaseReadWriteRepository<IncidentDetention>, IIncidentDetentionRepository
     {
-        public IncidentDetentionRepository(ApplicationDbContext context) : base(context, "IncidentDetention")
+        public IncidentDetentionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "IncidentDetention")
         {
             
         }
@@ -52,7 +53,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync(sql.Sql,
+            return await Transaction.Connection.QueryAsync(sql.Sql,
                 new[]
                 {
                     typeof(IncidentDetention), typeof(Incident), typeof(IncidentType), typeof(Student), typeof(Person),
@@ -73,7 +74,7 @@ namespace MyPortal.Database.Repositories
                     incidentDetention.Detention.Supervisor.Person = (Person) objects[9];
 
                     return incidentDetention;
-                }, sql.NamedBindings);
+                }, sql.NamedBindings, Transaction);
         }
 
         public async Task<IncidentDetention> Get(Guid detentionId, Guid studentId)

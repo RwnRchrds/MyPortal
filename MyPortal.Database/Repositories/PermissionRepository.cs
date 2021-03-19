@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.EntityFrameworkCore.Internal;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -18,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PermissionRepository : BaseReadRepository<Permission>, IPermissionRepository
     {
-        public PermissionRepository(IDbConnection connection) : base(connection)
+        public PermissionRepository(DbTransaction transaction) : base(transaction)
         {
            
         }
@@ -39,13 +33,13 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Permission, SystemArea, Permission>(sql.Sql,
+            return await Transaction.Connection.QueryAsync<Permission, SystemArea, Permission>(sql.Sql,
                 (permission, area) =>
                 {
                     permission.SystemArea = area;
 
                     return permission;
-                }, sql.NamedBindings);
+                }, sql.NamedBindings, Transaction);
         }
     }
 }

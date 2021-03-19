@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
@@ -15,88 +15,99 @@ namespace MyPortal.Logic.Services
 {
     public class DocumentService : BaseService, IDocumentService
     {
-        public DocumentService(IUnitOfWork unitOfWork) : base(unitOfWork)
-        {
-        }
-
         public async Task Create(params DocumentModel[] documents)
         {
-            foreach (var document in documents)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var directory = await UnitOfWork.Directories.GetById(document.DirectoryId);
-
-                if (directory == null)
+                foreach (var document in documents)
                 {
-                    throw new NotFoundException("Directory not found.");
-                }
+                    var directory = await unitOfWork.Directories.GetById(document.DirectoryId);
 
-                try
-                {
-                    var docToAdd = new Document
+                    if (directory == null)
                     {
-                        TypeId = document.TypeId,
-                        Title = document.Title,
-                        Description = document.Description,
-                        CreatedDate = DateTime.Today,
-                        DirectoryId = document.DirectoryId,
-                        CreatedById = document.CreatedById,
-                        Deleted = false,
-                        Restricted = document.Restricted
-                    };
+                        throw new NotFoundException("Directory not found.");
+                    }
 
-                    UnitOfWork.Documents.Create(docToAdd);
+                    try
+                    {
+                        var docToAdd = new Document
+                        {
+                            TypeId = document.TypeId,
+                            Title = document.Title,
+                            Description = document.Description,
+                            CreatedDate = DateTime.Today,
+                            DirectoryId = document.DirectoryId,
+                            CreatedById = document.CreatedById,
+                            Deleted = false,
+                            Restricted = document.Restricted
+                        };
+
+                        unitOfWork.Documents.Create(docToAdd);
+                    }
+                    catch (Exception e)
+                    {
+                        throw e.GetBaseException();
+                    }
                 }
-                catch (Exception e)
-                {
-                    throw e.GetBaseException();
-                }
+
+                await unitOfWork.SaveChangesAsync();
             }
-
-            await UnitOfWork.SaveChanges();
         }
 
         public async Task Update(params UpdateDocumentModel[] documents)
         {
-            foreach (var document in documents)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var documentInDb = await UnitOfWork.Documents.GetByIdForEditing(document.Id);
+                foreach (var document in documents)
+                {
+                    var documentInDb = await unitOfWork.Documents.GetByIdForEditing(document.Id);
 
-                documentInDb.Title = document.Title;
-                documentInDb.Description = document.Description;
-                documentInDb.Restricted = document.Restricted;
-                documentInDb.TypeId = document.TypeId;
+                    documentInDb.Title = document.Title;
+                    documentInDb.Description = document.Description;
+                    documentInDb.Restricted = document.Restricted;
+                    documentInDb.TypeId = document.TypeId;
+                }
+
+                await unitOfWork.SaveChangesAsync();
             }
-
-            await UnitOfWork.SaveChanges();
         }
 
         public async Task<IEnumerable<DocumentTypeModel>> GetTypes(DocumentTypeFilter filter)
         {
-            var documentTypes = await UnitOfWork.DocumentTypes.Get(filter);
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var documentTypes = await unitOfWork.DocumentTypes.Get(filter);
 
-            return documentTypes.Select(BusinessMapper.Map<DocumentTypeModel>).ToList();
+                return documentTypes.Select(BusinessMapper.Map<DocumentTypeModel>).ToList();
+            }
         }
 
         public async Task Delete(params Guid[] documentIds)
         {
-            foreach (var documentId in documentIds)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                await UnitOfWork.Documents.Delete(documentId);
-            }
+                foreach (var documentId in documentIds)
+                {
+                    await unitOfWork.Documents.Delete(documentId);
+                }
 
-            await UnitOfWork.SaveChanges();
+                await unitOfWork.SaveChangesAsync();
+            }
         }
 
         public async Task<DocumentModel> GetDocumentById(Guid documentId)
         {
-            var document = await UnitOfWork.Documents.GetById(documentId);
-
-            if (document == null)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                throw new NotFoundException("Document not found.");
-            }
+                var document = await unitOfWork.Documents.GetById(documentId);
 
-            return BusinessMapper.Map<DocumentModel>(document);
+                if (document == null)
+                {
+                    throw new NotFoundException("Document not found.");
+                }
+
+                return BusinessMapper.Map<DocumentModel>(document);
+            }
         }
     }
 }

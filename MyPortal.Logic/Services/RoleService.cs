@@ -5,9 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
@@ -18,89 +21,93 @@ namespace MyPortal.Logic.Services
 {
     public class RoleService : BaseService, IRoleService
     {
-        private readonly RoleManager<Role> _roleManager;
-        private readonly IRolePermissionsCache _rolePermissionsCache;
+        private readonly IIdentityServiceCollection _identityServices;
 
-        public RoleService(IUnitOfWork unitOfWork, RoleManager<Role> roleManager, IRolePermissionsCache rolePermissionsCache) : base(unitOfWork)
+        public RoleService(IIdentityServiceCollection identityServices)
         {
-            _roleManager = roleManager;
-            _rolePermissionsCache = rolePermissionsCache;
+            _identityServices = identityServices;
         }
 
         public async Task<TreeNode> GetPermissionsTree(Guid roleId)
         {
-            var role = await _roleManager.FindByIdAsync(roleId.ToString());
-
-            var systemAreas = (await UnitOfWork.SystemAreas.GetAll()).ToList();
-
-            var permissions = (await UnitOfWork.Permissions.GetAll()).ToList();
-
-            var existingPermissions = (await UnitOfWork.RolePermissions.GetByRole(roleId)).ToList();
-
-            var root = TreeNode.CreateRoot("MyPortal");
-
-            foreach (var systemArea in systemAreas.Where(a => a.ParentId == null))
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                // Load System Areas
-                root.Children.Add(new TreeNode
+                var role = await _identityServices.RoleManager.FindByIdAsync(roleId.ToString());
+
+                var systemAreas = (await unitOfWork.SystemAreas.GetAll()).ToList();
+
+                var permissions = (await unitOfWork.Permissions.GetAll()).ToList();
+
+                var existingPermissions = (await unitOfWork.RolePermissions.GetByRole(roleId)).ToList();
+
+                var root = TreeNode.CreateRoot("MyPortal");
+
+                foreach (var systemArea in systemAreas.Where(a => a.ParentId == null))
                 {
-                    Id = systemArea.Id.ToString("N"),
-                    State = TreeNodeState.Default,
-                    Text = systemArea.Description,
-
-                    // Load Subareas
-                    Children = systemAreas.Where(x => x.ParentId.HasValue && x.ParentId.Value == systemArea.Id).Select(sa => new TreeNode
+                    // Load System Areas
+                    root.Children.Add(new TreeNode
                     {
-                        Id = sa.Id.ToString("N"),
-                        Text = sa.Description,
+                        Id = systemArea.Id.ToString("N"),
                         State = TreeNodeState.Default,
+                        Text = systemArea.Description,
 
-                        // Load Permissions
-                        Children = permissions.Where(x => x.AreaId == sa.Id).Select(p => new TreeNode
+                        // Load Subareas
+                        Children = systemAreas.Where(x => x.ParentId.HasValue && x.ParentId.Value == systemArea.Id).Select(sa => new TreeNode
                         {
-                            Id = p.Id.ToString("N"),
-                            Text = p.ShortDescription,
-                            State = new TreeNodeState
+                            Id = sa.Id.ToString("N"),
+                            Text = sa.Description,
+                            State = TreeNodeState.Default,
+
+                            // Load Permissions
+                            Children = permissions.Where(x => x.AreaId == sa.Id).Select(p => new TreeNode
                             {
-                                Opened = false,
-                                Disabled = false,
-                                Selected = existingPermissions.Any(ep => ep.PermissionId == p.Id)
-                            }
+                                Id = p.Id.ToString("N"),
+                                Text = p.ShortDescription,
+                                State = new TreeNodeState
+                                {
+                                    Opened = false,
+                                    Disabled = false,
+                                    Selected = existingPermissions.Any(ep => ep.PermissionId == p.Id)
+                                }
+                            }).ToList()
                         }).ToList()
-                    }).ToList()
-                });
+                    });
+                }
+
+                root.SetEnabled(!role.System);
+
+                return root;
             }
-
-            root.SetEnabled(!role.System);
-
-            return root;
         }
 
         private async Task SetPermissions(Guid roleId, params Guid[] permIds)
         {
-            // Add new permissions from list
-            var existingPermissions = (await UnitOfWork.RolePermissions.GetByRole(roleId)).ToList();
-
-            var permissionsToAdd = permIds.Where(x => existingPermissions.All(p => p.PermissionId != x)).ToList();
-
-            var permissionsToRemove = existingPermissions.Where(p => permIds.All(x => x != p.PermissionId)).ToList();
-
-            foreach (var permId in permissionsToAdd)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                UnitOfWork.RolePermissions.Create(new RolePermission
-                    {RoleId = roleId, PermissionId = permId});
+                // Add new permissions from list
+                var existingPermissions = (await unitOfWork.RolePermissions.GetByRole(roleId)).ToList();
+
+                var permissionsToAdd = permIds.Where(x => existingPermissions.All(p => p.PermissionId != x)).ToList();
+
+                var permissionsToRemove = existingPermissions.Where(p => permIds.All(x => x != p.PermissionId)).ToList();
+
+                foreach (var permId in permissionsToAdd)
+                {
+                    unitOfWork.RolePermissions.Create(new RolePermission
+                        { RoleId = roleId, PermissionId = permId });
+                }
+
+                // Remove permissions that no longer apply
+
+                foreach (var perm in permissionsToRemove)
+                {
+                    await unitOfWork.RolePermissions.Delete(perm.RoleId, perm.PermissionId);
+                }
+
+                _identityServices.RolePermissionsCache.Purge(roleId);
+
+                await unitOfWork.SaveChangesAsync();
             }
-
-            // Remove permissions that no longer apply
-
-            foreach (var perm in permissionsToRemove)
-            {
-                await UnitOfWork.RolePermissions.Delete(perm.RoleId, perm.PermissionId);
-            }
-
-            _rolePermissionsCache.Purge(roleId);
-
-            await UnitOfWork.RolePermissions.SaveChanges();
         }
 
         public async Task<IEnumerable<Guid>> Create(params CreateRoleModel[] requests)
@@ -115,7 +122,7 @@ namespace MyPortal.Logic.Services
                     Description = request.Description
                 };
 
-                var result = await _roleManager.CreateAsync(role);
+                var result = await _identityServices.RoleManager.CreateAsync(role);
 
                 if (!result.Succeeded)
                 {
@@ -125,7 +132,7 @@ namespace MyPortal.Logic.Services
 
                 if (request.PermissionIds != null && request.PermissionIds.Any())
                 {
-                    role = await _roleManager.FindByNameAsync(request.Name);
+                    role = await _identityServices.RoleManager.FindByNameAsync(request.Name);
 
                     await SetPermissions(role.Id, request.PermissionIds);
                 }
@@ -140,7 +147,7 @@ namespace MyPortal.Logic.Services
         {
             foreach (var request in requests)
             {
-                var roleInDb = await _roleManager.FindByIdAsync(request.Id.ToString());
+                var roleInDb = await _identityServices.RoleManager.FindByIdAsync(request.Id.ToString());
 
                 if (roleInDb.System)
                 {
@@ -150,7 +157,7 @@ namespace MyPortal.Logic.Services
                 roleInDb.Name = request.Name;
                 roleInDb.Description = request.Description;
 
-                await _roleManager.UpdateAsync(roleInDb);
+                await _identityServices.RoleManager.UpdateAsync(roleInDb);
 
                 if (request.PermissionIds != null)
                 {
@@ -161,27 +168,30 @@ namespace MyPortal.Logic.Services
 
         public async Task Delete(params Guid[] roleIds)
         {
-            foreach (var roleId in roleIds)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                await UnitOfWork.RolePermissions.DeleteAllPermissions(roleId);
-                await UnitOfWork.UserRoles.DeleteAllByRole(roleId);
-
-                await UnitOfWork.RolePermissions.SaveChanges();
-
-                var roleInDb = await _roleManager.FindByIdAsync(roleId.ToString());
-
-                if (roleInDb.System)
+                foreach (var roleId in roleIds)
                 {
-                    throw new LogicException("Cannot delete a system role.");
-                }
+                    await unitOfWork.RolePermissions.DeleteAllPermissions(roleId);
+                    await unitOfWork.UserRoles.DeleteAllByRole(roleId);
 
-                await _roleManager.DeleteAsync(roleInDb);
+                    await unitOfWork.SaveChangesAsync();
+
+                    var roleInDb = await _identityServices.RoleManager.FindByIdAsync(roleId.ToString());
+
+                    if (roleInDb.System)
+                    {
+                        throw new LogicException("Cannot delete a system role.");
+                    }
+
+                    await _identityServices.RoleManager.DeleteAsync(roleInDb);
+                }
             }
         }
 
         public async Task<IEnumerable<RoleModel>> GetRoles(string roleName)
         {
-            var query = _roleManager.Roles;
+            var query = _identityServices.RoleManager.Roles;
 
             if (!string.IsNullOrWhiteSpace(roleName))
             {
@@ -195,7 +205,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<RoleModel> GetRoleById(Guid roleId)
         {
-            var role = await _roleManager.FindByIdAsync(roleId.ToString());
+            var role = await _identityServices.RoleManager.FindByIdAsync(roleId.ToString());
 
             if (role == null)
             {

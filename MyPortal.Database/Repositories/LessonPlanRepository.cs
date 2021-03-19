@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -14,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class LessonPlanRepository : BaseReadWriteRepository<LessonPlan>, ILessonPlanRepository
     {
-        public LessonPlanRepository(ApplicationDbContext context) : base(context, "LessonPlan")
+        public LessonPlanRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "LessonPlan")
         {
            
         }
@@ -39,7 +38,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<LessonPlan, StudyTopic, User, Person, LessonPlan>(sql.Sql,
+            return await Transaction.Connection.QueryAsync<LessonPlan, StudyTopic, User, Person, LessonPlan>(sql.Sql,
                 (lessonPlan, topic, author, person) =>
                 {
                     lessonPlan.StudyTopic = topic;
@@ -47,7 +46,7 @@ namespace MyPortal.Database.Repositories
                     lessonPlan.Author.Person = person;
 
                     return lessonPlan;
-                }, sql.NamedBindings);
+                }, sql.NamedBindings, Transaction);
         }
     }
 }

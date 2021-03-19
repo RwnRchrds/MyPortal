@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Student.LogNotes;
@@ -17,23 +18,18 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/student/logNotes")]
     public class LogNotesController : StudentApiController
     {
-        private readonly ILogNoteService _logNoteService;
-
-        public LogNotesController(IUserService userService, IAcademicYearService academicYearService,
-            IRolePermissionsCache rolePermissionsCache, IStudentService studentService, ILogNoteService logNoteService)
-            : base(userService, academicYearService, rolePermissionsCache, studentService)
+        public LogNotesController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
         {
-            _logNoteService = logNoteService;
         }
 
         [HttpGet]
         [Route("id")]
-        [Produces(typeof(LogNoteModel))]
+        [ProducesResponseType(typeof(LogNoteModel), 200)]
         public async Task<IActionResult> GetById([FromQuery] Guid logNoteId)
         {
             return await ProcessAsync(async () =>
             {
-                var logNote = await _logNoteService.GetById(logNoteId);
+                var logNote = await Services.LogNotes.GetById(logNoteId);
 
                 if (await AuthoriseStudent(logNote.StudentId))
                 {
@@ -46,12 +42,12 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("types")]
-        [Produces(typeof(IEnumerable<LogNoteTypeModel>))]
+        [ProducesResponseType(typeof(IEnumerable<LogNoteTypeModel>), 200)]
         public async Task<IActionResult> GetTypes()
         {
             return await ProcessAsync(async () =>
             {
-                var logNoteTypes = await _logNoteService.GetTypes();
+                var logNoteTypes = await Services.LogNotes.GetTypes();
 
                 return Ok(logNoteTypes);
             });
@@ -59,7 +55,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("student")]
-        [Produces(typeof(IEnumerable<LogNoteModel>))]
+        [ProducesResponseType(typeof(IEnumerable<LogNoteModel>), 200)]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             return await ProcessAsync(async () =>
@@ -68,10 +64,10 @@ namespace MyPortalWeb.Controllers.Api
                 {
                     if (academicYearId == null || academicYearId == Guid.Empty)
                     {
-                        academicYearId = (await AcademicYearService.GetCurrentAcademicYear(true)).Id;
+                        academicYearId = (await Services.AcademicYears.GetCurrentAcademicYear(true)).Id;
                     }
 
-                    var logNotes = await _logNoteService.GetByStudent(studentId, academicYearId.Value);
+                    var logNotes = await Services.LogNotes.GetByStudent(studentId, academicYearId.Value);
 
                     var result = logNotes;
 
@@ -85,24 +81,25 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPost]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("create")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Create([FromBody] CreateLogNoteModel model)
         {
             return await ProcessAsync(async () =>
             {
                 var logNote = new LogNoteModel
                 {
-                    AcademicYearId = (await AcademicYearService.GetCurrentAcademicYear(true)).Id,
+                    AcademicYearId = (await Services.AcademicYears.GetCurrentAcademicYear(true)).Id,
                         StudentId = model.StudentId,
                     TypeId = model.TypeId,
                     Message = model.Message
                 };
 
-                var author = await UserService.GetUserByPrincipal(User);
+                var author = await Services.Users.GetUserByPrincipal(User);
 
                 logNote.CreatedById = author.Id;
                 logNote.UpdatedById = author.Id;
 
-                await _logNoteService.Create(logNote);
+                await Services.LogNotes.Create(logNote);
 
                 return Ok();
             }, Permissions.Student.StudentLogNotes.EditLogNotes);
@@ -111,6 +108,7 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPut]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("update")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Update([FromBody] UpdateLogNoteModel model)
         {
             return await ProcessAsync(async () =>
@@ -122,10 +120,10 @@ namespace MyPortalWeb.Controllers.Api
                     Message = model.Message
                 };
 
-                var user = await UserService.GetUserByPrincipal(User);
+                var user = await Services.Users.GetUserByPrincipal(User);
 
                 logNote.UpdatedById = user.Id;
-                await _logNoteService.Update(logNote);
+                await Services.LogNotes.Update(logNote);
 
                 return Ok();
             }, Permissions.Student.StudentLogNotes.EditLogNotes);
@@ -134,19 +132,15 @@ namespace MyPortalWeb.Controllers.Api
         [HttpDelete]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("delete")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Delete([FromQuery] Guid logNoteId)
         {
             return await ProcessAsync(async () =>
             {
-                await _logNoteService.Delete(logNoteId);
+                await Services.LogNotes.Delete(logNoteId);
 
                 return Ok();
             }, Permissions.Student.StudentLogNotes.EditLogNotes);
-        }
-
-        public override void Dispose()
-        {
-            _logNoteService.Dispose();
         }
     }
 }

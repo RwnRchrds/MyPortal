@@ -4,7 +4,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IAttendanceWeekService : IService
+    public interface IAttendanceWeekService
     {
         Task<AttendanceWeekModel> GetById(Guid attendanceWeekId);
     }

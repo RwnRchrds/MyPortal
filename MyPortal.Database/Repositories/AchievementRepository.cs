@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AchievementRepository : BaseReadWriteRepository<Achievement>, IAchievementRepository
     {
-        public AchievementRepository(ApplicationDbContext context) : base(context, "Achievement")
+        public AchievementRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Achievement")
         {
            
         }
@@ -98,7 +99,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection
+            return await Transaction.Connection
                 .QueryAsync(sql.Sql,
                     new[]
                     {
@@ -118,7 +119,7 @@ namespace MyPortal.Database.Repositories
                         achievement.RecordedBy.Person = (Person) objects[8];
 
                         return achievement;
-                    }, sql.NamedBindings);
+                    }, sql.NamedBindings, Transaction);
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore.Storage;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
@@ -14,7 +16,7 @@ namespace MyPortal.Database.Repositories.Base
 {
     public abstract class BaseReadRepository<TEntity> : BaseRepository, IReadRepository<TEntity> where TEntity : class, IEntity
     {
-        public BaseReadRepository(IDbConnection connection, string tblAlias = null) : base(connection)
+        public BaseReadRepository(DbTransaction transaction, string tblAlias = null) : base(transaction)
         {
             TblName = EntityHelper.GetTableName(typeof(TEntity), out TblAlias, tblAlias);
         }
@@ -32,7 +34,7 @@ namespace MyPortal.Database.Repositories.Base
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<T>(sql.Sql, sql.NamedBindings);
+            return await Transaction.Connection.QueryAsync<T>(sql.Sql, sql.NamedBindings, Transaction);
         }
 
         protected async Task<TEntity> ExecuteQueryFirstOrDefault(Query query)
@@ -79,7 +81,7 @@ namespace MyPortal.Database.Repositories.Base
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryFirstOrDefaultAsync<T>(sql.Sql, sql.NamedBindings);
+            return await Transaction.Connection.QueryFirstOrDefaultAsync<T>(sql.Sql, sql.NamedBindings, Transaction);
         }
 
         protected virtual void JoinRelated(Query query)
@@ -101,7 +103,7 @@ namespace MyPortal.Database.Repositories.Base
         {
             var sql = Compiler.Compile(query);
 
-            var result = await Connection.QueryFirstOrDefaultAsync<int?>(sql.Sql, sql.NamedBindings);
+            var result = await Transaction.Connection.QueryFirstOrDefaultAsync<int?>(sql.Sql, sql.NamedBindings, Transaction);
             return result;
         }
 
@@ -109,7 +111,7 @@ namespace MyPortal.Database.Repositories.Base
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QuerySingleOrDefaultAsync<string>(sql.Sql, sql.NamedBindings);
+            return await Transaction.Connection.QuerySingleOrDefaultAsync<string>(sql.Sql, sql.NamedBindings, Transaction);
         }
     }
 }

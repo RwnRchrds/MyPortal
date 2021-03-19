@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -14,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendancePeriodRepository : BaseReadWriteRepository<AttendancePeriod>, IAttendancePeriodRepository
     {
-        public AttendancePeriodRepository(ApplicationDbContext context) : base(context, "AttendancePeriod")
+        public AttendancePeriodRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "AttendancePeriod")
         {
         }
 
@@ -34,12 +35,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<AttendancePeriod, AttendanceWeekPattern, AttendancePeriod>(sql.Sql, (period, pattern) =>
+            return await Transaction.Connection.QueryAsync<AttendancePeriod, AttendanceWeekPattern, AttendancePeriod>(sql.Sql, (period, pattern) =>
             {
                 period.WeekPattern = pattern;
 
                 return period;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
     }
 }

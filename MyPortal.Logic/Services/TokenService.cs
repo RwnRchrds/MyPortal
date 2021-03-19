@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Helpers;
@@ -25,64 +26,70 @@ namespace MyPortal.Logic.Services
     {
         private readonly SymmetricSecurityKey _key;
 
-        public TokenService(IUnitOfWork unitOfWork, IConfiguration config) : base(unitOfWork)
+        public TokenService()
         {
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["MyPortal:TokenKey"]));
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.Instance.TokenKey));
         }
 
         private async Task<string> GenerateAccessToken(UserModel userModel)
         {
-            var claims = new List<Claim>
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                new Claim(JwtRegisteredClaimNames.NameId, userModel.Id.ToString("N")),
-                new Claim(JwtRegisteredClaimNames.UniqueName, userModel.UserName),
-                new Claim(ApplicationClaimTypes.UserType, userModel.UserType.ToString()),
-                new Claim(ApplicationClaimTypes.DisplayName, userModel.GetDisplayName(NameFormat.FullNameAbbreviated))
-            };
+                var claims = new List<Claim>
+                {
+                    new Claim(JwtRegisteredClaimNames.NameId, userModel.Id.ToString("N")),
+                    new Claim(JwtRegisteredClaimNames.UniqueName, userModel.UserName),
+                    new Claim(ApplicationClaimTypes.UserType, userModel.UserType.ToString()),
+                    new Claim(ApplicationClaimTypes.DisplayName, userModel.GetDisplayName(NameFormat.FullNameAbbreviated))
+                };
 
-            var roles = await UnitOfWork.UserRoles.GetByUser(userModel.Id);
+                var roles = await unitOfWork.UserRoles.GetByUser(userModel.Id);
 
-            claims.AddRange(roles.Select(r =>
-                new Claim(ClaimTypes.Role, r.RoleId.ToString("N"))));
+                claims.AddRange(roles.Select(r =>
+                    new Claim(ClaimTypes.Role, r.RoleId.ToString("N"))));
 
-            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+                var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddMinutes(15),
-                SigningCredentials = creds
-            };
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    Expires = DateTime.Now.AddMinutes(15),
+                    SigningCredentials = creds
+                };
 
-            var tokenHandler = new JwtSecurityTokenHandler();
+                var tokenHandler = new JwtSecurityTokenHandler();
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+                var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return tokenHandler.WriteToken(token);
+                return tokenHandler.WriteToken(token);
+            }
         }
 
         private async Task<string> GenerateRefreshToken(Guid userId)
         {
-            UnitOfWork.RefreshTokens.DeleteExpired(userId);
-
-            var randomNumber = new byte[256];
-
-            using (var rng = RandomNumberGenerator.Create())
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                rng.GetBytes(randomNumber);
+                await unitOfWork.RefreshTokens.DeleteExpired(userId);
 
-                var token = Convert.ToBase64String(randomNumber);
+                var randomNumber = new byte[256];
 
-                UnitOfWork.RefreshTokens.Create(new RefreshToken
+                using (var rng = RandomNumberGenerator.Create())
                 {
-                    UserId = userId,
-                    Value = token,
-                    ExpirationDate = DateTime.Now.AddDays(14)
-                });
+                    rng.GetBytes(randomNumber);
 
-                await UnitOfWork.SaveChanges();
+                    var token = Convert.ToBase64String(randomNumber);
 
-                return token;
+                    unitOfWork.RefreshTokens.Create(new RefreshToken
+                    {
+                        UserId = userId,
+                        Value = token,
+                        ExpirationDate = DateTime.Now.AddDays(14)
+                    });
+
+                    await unitOfWork.SaveChangesAsync();
+
+                    return token;
+                }
             }
         }
 
@@ -124,48 +131,54 @@ namespace MyPortal.Logic.Services
 
         public async Task<TokenModel> RefreshToken(UserModel userModel, TokenModel tokenModel)
         {
-            var userRefreshTokens = await UnitOfWork.RefreshTokens.GetByUser(userModel.Id);
-
-            var selectedRefreshToken = userRefreshTokens.FirstOrDefault(x => x.Value == tokenModel.RefreshToken);
-
-            if (selectedRefreshToken == null)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                throw new SecurityTokenException("Invalid refresh token.");
+                var userRefreshTokens = await unitOfWork.RefreshTokens.GetByUser(userModel.Id);
+
+                var selectedRefreshToken = userRefreshTokens.FirstOrDefault(x => x.Value == tokenModel.RefreshToken);
+
+                if (selectedRefreshToken == null)
+                {
+                    throw new SecurityTokenException("Invalid refresh token.");
+                }
+
+                if (selectedRefreshToken.ExpirationDate < DateTime.Now)
+                {
+                    throw new SecurityTokenExpiredException("Refresh token has expired.");
+                }
+
+                var newToken = await GenerateAccessToken(userModel);
+
+                var newRefreshToken = await GenerateRefreshToken(userModel.Id);
+
+                var tokenResult = new TokenModel { Token = newToken, RefreshToken = newRefreshToken };
+
+                await unitOfWork.RefreshTokens.Delete(selectedRefreshToken.Id);
+
+                await unitOfWork.SaveChangesAsync();
+
+                return tokenResult;
             }
-
-            if (selectedRefreshToken.ExpirationDate < DateTime.Now)
-            {
-                throw new SecurityTokenExpiredException("Refresh token has expired.");
-            }
-
-            var newToken = await GenerateAccessToken(userModel);
-
-            var newRefreshToken = await GenerateRefreshToken(userModel.Id);
-
-            var tokenResult = new TokenModel {Token = newToken, RefreshToken = newRefreshToken};
-
-            await UnitOfWork.RefreshTokens.Delete(selectedRefreshToken.Id);
-
-            await UnitOfWork.SaveChanges();
-
-            return tokenResult;
         }
 
         public async Task<bool> RevokeToken(UserModel userModel, TokenModel tokenModel)
         {
-            var userRefreshTokens = await UnitOfWork.RefreshTokens.GetByUser(userModel.Id);
-
-            var selectedRefreshToken = userRefreshTokens.FirstOrDefault(x => x.Value == tokenModel.RefreshToken);
-
-            if (selectedRefreshToken == null)
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                return false;
+                var userRefreshTokens = await unitOfWork.RefreshTokens.GetByUser(userModel.Id);
+
+                var selectedRefreshToken = userRefreshTokens.FirstOrDefault(x => x.Value == tokenModel.RefreshToken);
+
+                if (selectedRefreshToken == null)
+                {
+                    return false;
+                }
+
+                await unitOfWork.RefreshTokens.Delete(selectedRefreshToken.Id);
+                await unitOfWork.SaveChangesAsync();
+
+                return true;
             }
-
-            await UnitOfWork.RefreshTokens.Delete(selectedRefreshToken.Id);
-            await UnitOfWork.SaveChanges();
-
-            return true;
         }
     }
 }

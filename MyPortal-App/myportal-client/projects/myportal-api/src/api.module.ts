@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { AcademicYearService } from './api/academicYear.service';
 import { AchievementsService } from './api/achievements.service';
+import { AddressService } from './api/address.service';
 import { AttendanceMarksService } from './api/attendanceMarks.service';
 import { AuthenticationService } from './api/authentication.service';
 import { BillsService } from './api/bills.service';
@@ -18,6 +19,7 @@ import { PersonService } from './api/person.service';
 import { RegGroupsService } from './api/regGroups.service';
 import { RolesService } from './api/roles.service';
 import { SchoolsService } from './api/schools.service';
+import { SenService } from './api/sen.service';
 import { StudentsService } from './api/students.service';
 import { TasksService } from './api/tasks.service';
 import { UsersService } from './api/users.service';
@@ -30,6 +32,7 @@ import { YearGroupsService } from './api/yearGroups.service';
   providers: [
     AcademicYearService,
     AchievementsService,
+    AddressService,
     AttendanceMarksService,
     AuthenticationService,
     BillsService,
@@ -43,6 +46,7 @@ import { YearGroupsService } from './api/yearGroups.service';
     RegGroupsService,
     RolesService,
     SchoolsService,
+    SenService,
     StudentsService,
     TasksService,
     UsersService,

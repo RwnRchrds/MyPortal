@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Caching;
-using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Interfaces;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
@@ -12,21 +9,18 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/schools")]
     public class SchoolsController : BaseApiController
     {
-        private readonly ISchoolService _schoolService;
-
-        public SchoolsController(IUserService userService, IAcademicYearService academicYearService, IRolePermissionsCache rolePermissionsCache, ISchoolService schoolService) : base(userService, academicYearService, rolePermissionsCache)
+        public SchoolsController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
         {
-            _schoolService = schoolService;
         }
 
         [HttpGet]
         [Route("local/name")]
-        [Produces(typeof(string))]
+        [ProducesResponseType(typeof(string), 200)]
         public async Task<IActionResult> GetLocalSchoolName()
         {
             return await ProcessAsync(async () =>
             {
-                var schoolName = await _schoolService.GetLocalSchoolName();
+                var schoolName = await Services.Schools.GetLocalSchoolName();
 
                 return Ok(schoolName);
             });

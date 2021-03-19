@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.DocumentProvision;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
 using MyPortal.Logic.Services;
@@ -19,26 +16,14 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/documents")]
     public class DocumentsController : BaseApiController
     {
-        private readonly IDocumentService _documentService;
-        private readonly IFileService _fileService;
-
-        public DocumentsController(IUserService userService, IAcademicYearService academicYearService,
-            IDocumentService documentService, IRolePermissionsCache rolePermissionsCache,
-            IFileService fileService) : base(userService,
-            academicYearService, rolePermissionsCache)
-        {
-            _documentService = documentService;
-            _fileService = fileService;
-        }
-
         [HttpGet]
         [Route("get")]
-        [Produces(typeof(DocumentModel))]
+        [ProducesResponseType(typeof(DocumentModel), 200)]
         public async Task<IActionResult> GetById([FromQuery] Guid documentId)
         {
             return await ProcessAsync(async () =>
             {
-                var document = await _documentService.GetDocumentById(documentId);
+                var document = await Services.Documents.GetDocumentById(documentId);
 
                 return Ok(document);
             });
@@ -46,11 +31,12 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPost]
         [Route("create")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Create([FromBody] CreateDocumentModel model)
         {
             return await ProcessAsync(async () =>
             {
-                var user = await UserService.GetUserByPrincipal(User);
+                var user = await Services.Users.GetUserByPrincipal(User);
 
                 var document = new DocumentModel
                 {
@@ -62,7 +48,7 @@ namespace MyPortalWeb.Controllers.Api
                     Restricted = model.Restricted
                 };
 
-                await _documentService.Create(document);
+                await Services.Documents.Create(document);
 
                 return Ok();
             });
@@ -70,13 +56,17 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPost]
         [Route("file/upload")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> UploadFile([FromBody] UploadAttachmentModel model)
         {
             return await ProcessAsync(async () =>
             {
-                if (_fileService is LocalFileService localFileService)
+                if (Services.Files is LocalFileService localFileService)
                 {
                     await localFileService.UploadFileToDocument(model);
+
+                    return Ok();
                 }
 
                 return BadRequest(
@@ -86,13 +76,17 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPost]
         [Route("file/linkHosted")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> LinkHostedFile([FromBody] LinkHostedFileModel model)
         {
             return await ProcessAsync(async () =>
             {
-                if (_fileService is HostedFileService hostedFileService)
+                if (Services.Files is HostedFileService hostedFileService)
                 {
                     await hostedFileService.AttachFileToDocument(model.DocumentId, model.FileId);
+
+                    return Ok();
                 }
 
                 return BadRequest(
@@ -102,11 +96,12 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpDelete]
         [Route("file/{documentId}")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> RemoveAttachment([FromRoute] Guid documentId)
         {
             return await ProcessAsync(async () =>
             {
-                await _fileService.RemoveFileFromDocument(documentId);
+                await Services.Files.RemoveFileFromDocument(documentId);
 
                 return Ok();
             });
@@ -114,11 +109,12 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPut]
         [Route("update")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Update([FromBody] UpdateDocumentModel model)
         {
             return await ProcessAsync(async () =>
             {
-                await _documentService.Update(model);
+                await Services.Documents.Update(model);
 
                 return Ok();
             });
@@ -126,11 +122,12 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpDelete]
         [Route("delete")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Delete([FromQuery] Guid documentId)
         {
             return await ProcessAsync(async () =>
             {
-                await _documentService.Delete(documentId);
+                await Services.Documents.Delete(documentId);
 
                 return Ok();
             });
@@ -138,11 +135,12 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("file/{documentId}")]
+        [ProducesResponseType(typeof(Stream), 200)]
         public async Task<IActionResult> DownloadFile([FromRoute] Guid documentId)
         {
             return await ProcessAsync(async () =>
             {
-                var download = await _fileService.GetDownloadByDocument(documentId);
+                var download = await Services.Files.GetDownloadByDocument(documentId);
 
                 return File(download.FileStream, download.ContentType, download.FileName);
             });
@@ -150,12 +148,13 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("view")]
-        [Produces(typeof(string))]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> GetWebViewLink([FromQuery] Guid documentId)
         {
             return await ProcessAsync(async () =>
             {
-                if (_fileService is HostedFileService hostedFileService)
+                if (Services.Files is HostedFileService hostedFileService)
                 {
                     var file = await hostedFileService.GetMetadataByDocument(documentId);
 
@@ -166,9 +165,8 @@ namespace MyPortalWeb.Controllers.Api
             });
         }
 
-        public override void Dispose()
+        public DocumentsController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
         {
-            _documentService.Dispose();
         }
     }
 }

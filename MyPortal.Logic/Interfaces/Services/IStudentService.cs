@@ -9,7 +9,7 @@ using MyPortal.Logic.Models.Response.Students;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IStudentService : IService
+    public interface IStudentService
     {
         Task<IEnumerable<StudentModel>> Get(StudentSearchOptions searchModel);
 

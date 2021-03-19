@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Caching;
-using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Requests.Auth;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -13,25 +13,18 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/auth")]
     public class AuthenticationController : BaseApiController
     {
-        private readonly ITokenService _tokenService;
-
-        public AuthenticationController(IUserService userService, IAcademicYearService academicYearService, IRolePermissionsCache rolePermissionsCache, ITokenService tokenService) : base(userService, academicYearService, rolePermissionsCache)
-        {
-            _tokenService = tokenService;
-        }
-
         [HttpPost]
         [Route("login")]
-        [Produces(typeof(TokenModel))]
+        [ProducesResponseType(typeof(TokenModel), 200)]
         public async Task<IActionResult> Login([FromBody] LoginModel login)
         {
             return await ProcessAsync(async () =>
             {
-                var loginResult = await UserService.Login(login);
+                var loginResult = await Services.Users.Login(login);
 
                 if (loginResult.Succeeded)
                 {
-                    var tokenModel = await _tokenService.GenerateToken(loginResult.User);
+                    var tokenModel = await Services.Tokens.GenerateToken(loginResult.User);
 
                     return Ok(tokenModel);
                 }
@@ -43,14 +36,14 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Authorize]
         [Route("permissions")]
-        [Produces(typeof(IEnumerable<Guid>))]
+        [ProducesResponseType(typeof(IEnumerable<Guid>), 200)]
         public async Task<IActionResult> GetEffectivePermissions()
         {
             return await ProcessAsync(async () =>
             {
                 var user = await GetLoggedInUser();
 
-                var effectivePermissions = await UserService.GetEffectivePermissions(user.Id);
+                var effectivePermissions = await Services.Users.GetEffectivePermissions(user.Id);
 
                 return Ok(effectivePermissions);
             });
@@ -58,16 +51,16 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPost]
         [Route("tokens/refresh")]
-        [Produces(typeof(TokenModel))]
+        [ProducesResponseType(typeof(TokenModel), 200)]
         public async Task<IActionResult> RefreshToken([FromBody] TokenModel tokenModel)
         {
             return await ProcessAsync(async () =>
             {
-                var principal = _tokenService.GetPrincipalFromToken(tokenModel.Token);
+                var principal = Services.Tokens.GetPrincipalFromToken(tokenModel.Token);
 
-                var user = await UserService.GetUserByPrincipal(principal);
+                var user = await Services.Users.GetUserByPrincipal(principal);
 
-                var newTokenModel = await _tokenService.RefreshToken(user, tokenModel);
+                var newTokenModel = await Services.Tokens.RefreshToken(user, tokenModel);
 
                 return Ok(newTokenModel);
             });
@@ -75,26 +68,23 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPost]
         [Route("tokens/revoke")]
-        [Produces(typeof(bool))]
+        [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> RevokeToken([FromBody] TokenModel tokenModel)
         {
             return await ProcessAsync(async () =>
             {
-                var principal = _tokenService.GetPrincipalFromToken(tokenModel.Token);
+                var principal = Services.Tokens.GetPrincipalFromToken(tokenModel.Token);
 
-                var user = await UserService.GetUserByPrincipal(principal);
+                var user = await Services.Users.GetUserByPrincipal(principal);
 
-                var result = await _tokenService.RevokeToken(user, tokenModel);
+                var result = await Services.Tokens.RevokeToken(user, tokenModel);
 
                 return Ok(result);
             });
         }
 
-        public override void Dispose()
+        public AuthenticationController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
         {
-            _tokenService.Dispose();
-
-            base.Dispose();
         }
     }
 }

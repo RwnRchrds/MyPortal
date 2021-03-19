@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Data.Common;
 using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -15,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class TaskRepository : BaseReadWriteRepository<Task>, ITaskRepository
     {
-        public TaskRepository(ApplicationDbContext context) : base(context, "Task")
+        public TaskRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Task")
         {
            
         }
@@ -42,7 +41,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Task, Person, User, Person, TaskType, Task>(sql.Sql, (task, assignedTo, assignedBy, abp, type) =>
+            return await Transaction.Connection.QueryAsync<Task, Person, User, Person, TaskType, Task>(sql.Sql, (task, assignedTo, assignedBy, abp, type) =>
             {
                 task.AssignedTo = assignedTo;
                 task.AssignedBy = assignedBy;
@@ -50,7 +49,7 @@ namespace MyPortal.Database.Repositories
                 task.Type = type;
 
                 return task;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
 
         public async System.Threading.Tasks.Task<IEnumerable<Task>> GetByAssignedTo(Guid personId, TaskSearchOptions searchOptions = null)

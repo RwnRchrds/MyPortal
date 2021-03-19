@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Constants;
-using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour.Incidents;
@@ -18,24 +18,18 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/behaviour/incidents")]
     public class IncidentsController : StudentApiController
     {
-        private readonly IIncidentService _incidentService;
-
-        public IncidentsController(IUserService userService, IAcademicYearService academicYearService,
-            IRolePermissionsCache rolePermissionsCache, IStudentService studentService,
-            IIncidentService incidentService) : base(userService, academicYearService, rolePermissionsCache,
-            studentService)
+        public IncidentsController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
         {
-            _incidentService = incidentService;
         }
 
         [HttpGet]
         [Route("id", Name = "ApiIncidentGetById")]
-        [Produces(typeof(IncidentModel))]
+        [ProducesResponseType(typeof(IncidentModel), 200)]
         public async Task<IActionResult> GetById(Guid incidentId)
         {
             return await ProcessAsync(async () =>
             {
-                var incident = await _incidentService.GetIncidentById(incidentId);
+                var incident = await Services.Incidents.GetIncidentById(incidentId);
 
                 if (await AuthoriseStudent(incident.StudentId))
                 {
@@ -48,16 +42,16 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("student", Name = "ApiIncidentGetByStudent")]
-        [Produces(typeof(IEnumerable<IncidentListModel>))]
+        [ProducesResponseType(typeof(IEnumerable<IncidentListModel>), 200)]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             return await ProcessAsync(async () =>
             {
                 if (await AuthoriseStudent(studentId))
                 {
-                    var fromAcademicYearId = academicYearId ?? (await AcademicYearService.GetCurrentAcademicYear(true)).Id;
+                    var fromAcademicYearId = academicYearId ?? (await Services.AcademicYears.GetCurrentAcademicYear(true)).Id;
 
-                    var incidents = await _incidentService.GetIncidentsByStudent(studentId, fromAcademicYearId);
+                    var incidents = await Services.Incidents.GetIncidentsByStudent(studentId, fromAcademicYearId);
 
                     return Ok(incidents.Select(x => x.ToListModel()));
                 }
@@ -69,11 +63,12 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPost]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("create", Name = "ApiIncidentCreate")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Create([FromBody] CreateIncidentModel model)
         {
             return await ProcessAsync(async () =>
             {
-                var user = await UserService.GetUserByPrincipal(User);
+                var user = await Services.Users.GetUserByPrincipal(User);
 
                 var incident = new IncidentModel
                 {
@@ -89,43 +84,40 @@ namespace MyPortalWeb.Controllers.Api
                     RecordedById = user.Id
                 };
 
-                await _incidentService.CreateIncident(incident);
+                await Services.Incidents.CreateIncident(incident);
 
-                return Ok("Incident created.");
+                return Ok();
             }, Permissions.Behaviour.Incidents.EditIncidents);
         }
 
         [HttpPut]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("update", Name = "ApiIncidentUpdate")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Update([FromBody] UpdateIncidentModel model)
         {
             return await ProcessAsync(async () =>
             {
-                var user = await UserService.GetUserByPrincipal(User);
+                var user = await Services.Users.GetUserByPrincipal(User);
 
-                await _incidentService.UpdateIncident(model);
+                await Services.Incidents.UpdateIncident(model);
 
-                return Ok("Incident updated.");
+                return Ok();
             }, Permissions.Behaviour.Incidents.EditIncidents);
         }
 
         [HttpDelete]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("delete", Name = "ApiIncidentDelete")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Delete([FromQuery] Guid incidentId)
         {
             return await ProcessAsync(async () =>
             {
-                await _incidentService.DeleteIncident(incidentId);
+                await Services.Incidents.DeleteIncident(incidentId);
 
-                return Ok("Incident deleted.");
+                return Ok();
             }, Permissions.Behaviour.Incidents.EditIncidents);
-        }
-
-        public override void Dispose()
-        {
-            _incidentService.Dispose();
         }
     }
 }

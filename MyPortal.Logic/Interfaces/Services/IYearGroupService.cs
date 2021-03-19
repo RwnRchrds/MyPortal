@@ -4,7 +4,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IYearGroupService : IService
+    public interface IYearGroupService
     {
         Task<IEnumerable<YearGroupModel>> GetYearGroups();
     }

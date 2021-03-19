@@ -6,7 +6,7 @@ import {AppService} from '../_services/app.service';
 import {catchError, flatMap, map, switchMap} from 'rxjs/operators';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {HttpErrorResponse} from '@angular/common/http';
-import {throwError} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {Router} from '@angular/router';
 
 @Component({
@@ -53,6 +53,10 @@ export class LoginComponent implements OnInit {
         this.appService.unblockPage();
         location.reload();
       })).subscribe();
+    }), catchError((err: HttpErrorResponse) => {
+      this.loginError = err.error;
+      this.appService.unblockPage();
+      return throwError(err);
     })).subscribe();
   }
 

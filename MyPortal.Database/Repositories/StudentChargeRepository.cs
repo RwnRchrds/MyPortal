@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Text;
+using System.Data.Common;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
@@ -12,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentChargeRepository : BaseReadWriteRepository<StudentCharge>, IStudentChargeRepository
     {
-        public StudentChargeRepository(ApplicationDbContext context) : base(context, "SC")
+        public StudentChargeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "SC")
         {
         }
 

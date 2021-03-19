@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -14,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ProductRepository : BaseReadWriteRepository<Product>, IProductRepository
     {
-        public ProductRepository(ApplicationDbContext context) : base(context, "Product")
+        public ProductRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Product")
         {
 
         }
@@ -35,12 +34,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Product, ProductType, Product>(sql.Sql, (product, type) =>
+            return await Transaction.Connection.QueryAsync<Product, ProductType, Product>(sql.Sql, (product, type) =>
             {
                 product.Type = type;
 
                 return product;
-            }, sql.NamedBindings);
+            }, sql.NamedBindings, Transaction);
         }
     }
 }

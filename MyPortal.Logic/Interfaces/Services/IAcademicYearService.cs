@@ -6,7 +6,7 @@ using MyPortal.Logic.Models.Requests.Curriculum;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IAcademicYearService : IService
+    public interface IAcademicYearService
     {
         Task<AcademicYearModel> GetCurrentAcademicYear(bool getLatestIfNull = false);
         Task<AcademicYearModel> GetAcademicYearById(Guid academicYearId);

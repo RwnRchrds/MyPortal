@@ -8,7 +8,7 @@ using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IDocumentService : IService
+    public interface IDocumentService
     {
         Task Create(params DocumentModel[] documents);
         Task Update(params UpdateDocumentModel[] documents);

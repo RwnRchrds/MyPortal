@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -15,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class DocumentTypeRepository : BaseReadRepository<DocumentType>, IDocumentTypeRepository
     {
-        public DocumentTypeRepository(IDbConnection connection) : base(connection, "DocumentType")
+        public DocumentTypeRepository(DbTransaction transaction) : base(transaction, "DocumentType")
         {
         }
 

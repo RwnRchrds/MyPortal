@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -15,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumBandRepository : BaseReadWriteRepository<CurriculumBand>, ICurriculumBandRepository
     {
-        public CurriculumBandRepository(ApplicationDbContext context) : base(context, "CurriculumBand")
+        public CurriculumBandRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "CurriculumBand")
         {
             
         }
@@ -38,14 +39,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<CurriculumBand, AcademicYear, CurriculumYearGroup, CurriculumBand>(sql.Sql,
+            return await Transaction.Connection.QueryAsync<CurriculumBand, AcademicYear, CurriculumYearGroup, CurriculumBand>(sql.Sql,
                 (band, academicYear, yearGroup) =>
                 {
                     band.AcademicYear = academicYear;
                     band.CurriculumYearGroup = yearGroup;
 
                     return band;
-                }, sql.NamedBindings);
+                }, sql.NamedBindings, Transaction);
         }
 
         public async Task<bool> CheckUniqueCode(Guid academicYearId, string code)

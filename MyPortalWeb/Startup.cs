@@ -32,14 +32,17 @@ namespace MyPortalWeb
 
             services.AddIdentityServices(Configuration);
 
+            services.AddBusinessServices();
+
             services.AddSwaggerGen(c =>
             {
                 c.CustomOperationIds(e => e.TryGetMethodInfo(out MethodInfo methodInfo) ? methodInfo.Name : null);
 
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Version = "1.0",
-                    Title = "MyPortal"
+                    Version = "3.1.0",
+                    Title = "MyPortal",
+                    Description = "MyPortal Master Web Service"
                 });
 
                 //var filePath = Path.Combine("MyPortalWeb.xml");

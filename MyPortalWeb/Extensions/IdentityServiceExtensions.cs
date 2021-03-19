@@ -8,7 +8,9 @@ using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Interfaces;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortalWeb.Extensions
@@ -71,6 +73,8 @@ namespace MyPortalWeb.Extensions
                 options.AddPolicy(Policies.UserType.Parent,
                     policy => policy.RequireClaim(ApplicationClaimTypes.UserType, UserTypes.Parent.ToString()));
             });
+
+            services.AddScoped<IIdentityServiceCollection, IdentityServiceCollection>();
 
             return services;
         }

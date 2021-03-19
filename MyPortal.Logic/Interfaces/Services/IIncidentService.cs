@@ -6,7 +6,7 @@ using MyPortal.Logic.Models.Requests.Behaviour.Incidents;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IIncidentService : IService
+    public interface IIncidentService
     {
         Task<IEnumerable<IncidentModel>> GetIncidentsByStudent(Guid studentId, Guid academicYearId);
         Task<IncidentModel> GetIncidentById(Guid incidentId);

@@ -8,7 +8,7 @@ using MyPortal.Database.Models.Search;
 using MyPortal.Database.Permissions;
 using MyPortal.Logic.Caching;
 using MyPortal.Logic.Constants;
-using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Response.Students;
@@ -20,23 +20,21 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/students")]
     public class StudentsController : StudentApiController
     {
-        public StudentsController(IUserService userService, IAcademicYearService academicYearService,
-            IRolePermissionsCache rolePermissionsCache, IStudentService studentService) : base(userService,
-            academicYearService, rolePermissionsCache, studentService)
+        public StudentsController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
         {
         }
 
         [HttpGet]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("search")]
-        [Produces(typeof(IEnumerable<StudentDataGridModel>))]
+        [ProducesResponseType(typeof(IEnumerable<StudentDataGridModel>), 200)]
         public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchOptions searchModel)
         {
             return await ProcessAsync(async () =>
             {
                 IEnumerable<StudentDataGridModel> students;
 
-                students = (await StudentService.Get(searchModel)).Select(x => x.GetDataGridModel());
+                students = (await Services.Students.Get(searchModel)).Select(x => x.GetDataGridModel());
 
                 return Ok(students);
             }, Permissions.Student.StudentDetails.ViewStudentDetails);
@@ -44,14 +42,14 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("id")]
-        [Produces(typeof(StudentModel))]
+        [ProducesResponseType(typeof(StudentModel), 200)]
         public async Task<IActionResult> GetById([FromQuery] Guid studentId)
         {
             return await ProcessAsync(async () =>
             {
                 if (await AuthoriseStudent(studentId))
                 {
-                    var student = await StudentService.GetById(studentId);
+                    var student = await Services.Students.GetById(studentId);
 
                     return Ok(student);
                 }
@@ -62,7 +60,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("stats")]
-        [Produces(typeof(StudentStatsModel))]
+        [ProducesResponseType(typeof(StudentStatsModel), 200)]
         public async Task<IActionResult> GetStatsById([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             return await ProcessAsync(async () =>
@@ -71,10 +69,10 @@ namespace MyPortalWeb.Controllers.Api
                 {
                     if (academicYearId == null || academicYearId == Guid.Empty)
                     {
-                        academicYearId = (await AcademicYearService.GetCurrentAcademicYear()).Id;
+                        academicYearId = (await Services.AcademicYears.GetCurrentAcademicYear()).Id;
                     }
 
-                    var studentStats = await StudentService.GetStatsById(studentId, academicYearId.Value);
+                    var studentStats = await Services.Students.GetStatsById(studentId, academicYearId.Value);
 
                     return Ok(studentStats);
                 }

@@ -2,7 +2,7 @@
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface ISchoolService : IService
+    public interface ISchoolService
     {
         Task<string> GetLocalSchoolName();
     }
