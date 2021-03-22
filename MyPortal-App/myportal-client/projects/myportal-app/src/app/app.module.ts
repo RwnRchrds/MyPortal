@@ -18,28 +18,31 @@ import { ApiModule, BASE_PATH } from 'myportal-api';
 import { environment } from '../environments/environment';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent
-   ],
-  imports: [
-    CommonModule,
-    BrowserModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    FlexLayoutModule,
-    StaffPortalModule,
-    StudentPortalModule,
-    ParentPortalModule,
-    AppRoutingModule,
-    ApiModule
-  ],
-  providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
-    {provide: BASE_PATH, useValue: environment.apiUrl}
-  ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        LoginComponent
+    ],
+    imports: [
+        CommonModule,
+        BrowserModule,
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        FlexLayoutModule,
+        StaffPortalModule,
+        StudentPortalModule,
+        ParentPortalModule,
+        AppRoutingModule,
+        ApiModule
+    ],
+    providers: [
+        {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+        {provide: BASE_PATH, useValue: environment.apiUrl}
+    ],
+    exports: [
+
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
   constructor() {

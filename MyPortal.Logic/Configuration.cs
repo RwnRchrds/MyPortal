@@ -28,7 +28,7 @@ namespace MyPortal.Logic
             }
             catch (Exception e)
             {
-                throw new ConnectionStringException(@"Could not contact database with the specified connection string.");
+                throw;
             }
         }
 
