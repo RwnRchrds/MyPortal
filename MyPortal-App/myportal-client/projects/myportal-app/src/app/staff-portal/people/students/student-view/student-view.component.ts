@@ -24,11 +24,18 @@ export class StudentViewComponent extends PortalViewDirective implements OnInit,
   }
 
   ngOnInit(): void {
-    this.scriptService.loadScript('/assets/lib/js/pages/custom/profile/profile.js');
-    this.viewService.init(this.route.snapshot.paramMap.get('studentId'));
-    this.studentSubscription = this.viewService.currentStudent.pipe(map((student: StudentModel) => {
-      this.student = student;
-    })).subscribe();
+    this.scriptService.loadScript('/assets/lib/js/pages/custom/profile/profile.js').then(result => {
+      this.viewService.init(this.route.snapshot.paramMap.get('studentId'));
+      this.studentSubscription = this.viewService.currentStudent.pipe(map((student: StudentModel) => {
+        this.student = student;
+      })).subscribe();
+    });
+  }
+
+  initSidebar(): void {
+    // Used to enable the mobile sidebar toggle
+    // @ts-ignore
+    KTProfile.init();
   }
 
   ngOnDestroy(): void {

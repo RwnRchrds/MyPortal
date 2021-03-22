@@ -895,17 +895,14 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(10,2)");
-
                     b.Property<Guid>("BillId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("DiscountId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Percentage")
-                        .HasColumnType("bit");
+                    b.Property<decimal>("GrossAmount")
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 
@@ -1091,12 +1088,17 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("DirectoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("GroupId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
+
+                    b.HasIndex("DirectoryId");
 
                     b.HasIndex("GroupId");
 
@@ -6161,6 +6163,12 @@ namespace MyPortal.Database.Migrations
                         .WithMany("Classes")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.Directory", "Directory")
+                        .WithMany()
+                        .HasForeignKey("DirectoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MyPortal.Database.Models.Entity.CurriculumGroup", "Group")

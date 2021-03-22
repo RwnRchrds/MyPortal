@@ -20,6 +20,7 @@ namespace MyPortalWeb
         }
 
         public IConfiguration Configuration { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
             // Enable memory caching
@@ -34,6 +35,7 @@ namespace MyPortalWeb
 
             services.AddBusinessServices();
 
+#if DEBUG
             services.AddSwaggerGen(c =>
             {
                 c.CustomOperationIds(e => e.TryGetMethodInfo(out MethodInfo methodInfo) ? methodInfo.Name : null);
@@ -48,10 +50,12 @@ namespace MyPortalWeb
                 //var filePath = Path.Combine("MyPortalWeb.xml");
                 //c.IncludeXmlComments(filePath);
             });
+#endif
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+#if DEBUG
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
@@ -59,7 +63,7 @@ namespace MyPortalWeb
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyPortal API v1");
                 c.RoutePrefix = "api";
             });
-
+#endif
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
