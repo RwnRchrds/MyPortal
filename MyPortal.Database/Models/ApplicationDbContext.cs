@@ -167,7 +167,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<ReportCardTargetSubmission> ReportCardTargetSubmissions { get; set; }
         public virtual DbSet<Result> Results { get; set; }
         public virtual DbSet<ResultSet> ResultSets { get; set; }
-        public virtual DbSet<RolePermission> RolePermissions { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
         public virtual DbSet<RoomClosure> RoomClosures { get; set; }
         public virtual DbSet<RoomClosureReason> RoomClosureReasons { get; set; }
@@ -1744,12 +1743,6 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.AreaId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasMany(x => x.RolePermissions)
-                        .WithOne(x => x.Permission)
-                        .HasForeignKey(x => x.PermissionId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<Person>(e =>
@@ -2009,12 +2002,6 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasMany(x => x.RolePermissions)
-                        .WithOne(x => x.Role)
-                        .HasForeignKey(x => x.RoleId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     e.HasMany(x => x.RoleClaims)
                         .WithOne(x => x.Role)
                         .HasForeignKey(x => x.RoleId)
@@ -2024,11 +2011,6 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<RoleClaim>(e =>
                 {
                     e.ToTable("RoleClaims");
-                });
-
-                modelBuilder.Entity<RolePermission>(e =>
-                {
-                    e.HasKey(x => new { x.RoleId, x.PermissionId });
                 });
 
                 modelBuilder.Entity<Room>(e =>

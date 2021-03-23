@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -13,7 +12,10 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/regGroups")]
     public class RegGroupsController : BaseApiController
     {
-        
+        public RegGroupsController(IAppServiceCollection services) : base(services)
+        {
+        }
+
         [HttpGet]
         [Route("get")]
         [ProducesResponseType(typeof(IEnumerable<RegGroupModel>), 200)]
@@ -25,10 +27,6 @@ namespace MyPortalWeb.Controllers.Api
 
                 return Ok(regGroups);
             });
-        }
-
-        public RegGroupsController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
-        {
         }
     }
 }

@@ -3,8 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Database.Permissions;
-using MyPortal.Logic.Caching;
+using MyPortal.Database.Enums;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DataGrid;
@@ -18,7 +17,7 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/behaviour/achievements")]
     public class AchievementsController : StudentApiController
     {
-        public AchievementsController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
+        public AchievementsController(IAppServiceCollection services) : base(services)
         {
         }
 
@@ -37,7 +36,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            }, Permissions.Behaviour.Achievements.ViewAchievements);
+            }, PermissionValue.BehaviourViewAchievements);
         }
 
         [HttpGet]
@@ -57,7 +56,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            }, Permissions.Behaviour.Achievements.ViewAchievements);
+            }, PermissionValue.BehaviourViewAchievements);
         }
 
         [HttpPost]
@@ -75,7 +74,7 @@ namespace MyPortalWeb.Controllers.Api
                await Services.Achievements.CreateAchievement(request);
 
                 return Ok();
-            }, Permissions.Behaviour.Achievements.EditAchievements);
+            }, PermissionValue.BehaviourEditAchievements);
         }
 
         [HttpPut]
@@ -89,7 +88,7 @@ namespace MyPortalWeb.Controllers.Api
                 await Services.Achievements.UpdateAchievement(model);
 
                 return Ok();
-            }, Permissions.Behaviour.Achievements.EditAchievements);
+            }, PermissionValue.BehaviourEditAchievements);
         }
 
         [HttpDelete]
@@ -103,7 +102,7 @@ namespace MyPortalWeb.Controllers.Api
                 await Services.Achievements.DeleteAchievement(achievementId);
 
                 return Ok();
-            }, Permissions.Behaviour.Achievements.EditAchievements);
+            }, PermissionValue.BehaviourEditAchievements);
         }
     }
 }

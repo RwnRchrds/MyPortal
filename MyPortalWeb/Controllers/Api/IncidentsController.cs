@@ -4,8 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Database.Permissions;
-using MyPortal.Logic.Caching;
+using MyPortal.Database.Enums;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DataGrid;
@@ -18,7 +17,7 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/behaviour/incidents")]
     public class IncidentsController : StudentApiController
     {
-        public IncidentsController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
+        public IncidentsController(IAppServiceCollection services) : base(services)
         {
         }
 
@@ -37,7 +36,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            }, Permissions.Behaviour.Incidents.ViewIncidents);
+            }, PermissionValue.BehaviourViewIncidents);
         }
 
         [HttpGet]
@@ -57,7 +56,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            }, Permissions.Behaviour.Incidents.ViewIncidents);
+            }, PermissionValue.BehaviourViewIncidents);
         }
 
         [HttpPost]
@@ -87,7 +86,7 @@ namespace MyPortalWeb.Controllers.Api
                 await Services.Incidents.CreateIncident(incident);
 
                 return Ok();
-            }, Permissions.Behaviour.Incidents.EditIncidents);
+            }, PermissionValue.BehaviourEditIncidents);
         }
 
         [HttpPut]
@@ -103,7 +102,7 @@ namespace MyPortalWeb.Controllers.Api
                 await Services.Incidents.UpdateIncident(model);
 
                 return Ok();
-            }, Permissions.Behaviour.Incidents.EditIncidents);
+            }, PermissionValue.BehaviourEditIncidents);
         }
 
         [HttpDelete]
@@ -117,7 +116,7 @@ namespace MyPortalWeb.Controllers.Api
                 await Services.Incidents.DeleteIncident(incidentId);
 
                 return Ok();
-            }, Permissions.Behaviour.Incidents.EditIncidents);
+            }, PermissionValue.BehaviourEditIncidents);
         }
     }
 }

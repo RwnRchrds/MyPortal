@@ -13,5 +13,5 @@
 export interface CreateRoleModel { 
     name: string;
     description: string;
-    permissionIds?: Array<string>;
+    permissions?: Array<number>;
 }

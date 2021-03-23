@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -14,7 +13,9 @@ namespace MyPortalWeb.Controllers.Api
     [Authorize]
     public class CalendarController : BaseApiController
     {
-        
+        public CalendarController(IAppServiceCollection services) : base(services)
+        {
+        }
 
         [HttpGet]
         [AllowAnonymous]
@@ -41,10 +42,6 @@ namespace MyPortalWeb.Controllers.Api
 
                 return Ok(events);
             });
-        }
-
-        public CalendarController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
-        {
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Logic.Caching;
+using MyPortal.Database.Enums;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -13,7 +13,7 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/SEND")]
     public class SenController : BaseApiController
     {
-        public SenController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
+        public SenController(IAppServiceCollection services) : base(services)
         {
         }
 
@@ -27,7 +27,7 @@ namespace MyPortalWeb.Controllers.Api
                 var giftedTalented = await Services.Sen.GetGiftedTalentedSubjects(studentId);
 
                 return Ok(giftedTalented);
-            });
+            }, PermissionValue.StudentViewSenDetails);
         }
     }
 }

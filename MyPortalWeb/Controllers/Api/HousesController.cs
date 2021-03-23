@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
@@ -16,7 +15,9 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/houses")]
     public class HousesController : BaseApiController
     {
-        
+        public HousesController(IAppServiceCollection services) : base(services)
+        {
+        }
 
         [HttpGet]
         [Route("get")]
@@ -29,10 +30,6 @@ namespace MyPortalWeb.Controllers.Api
 
                 return Ok(houses);
             });
-        }
-
-        public HousesController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
-        {
         }
     }
 }

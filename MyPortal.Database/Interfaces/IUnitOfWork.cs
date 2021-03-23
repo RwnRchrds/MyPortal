@@ -86,7 +86,7 @@ namespace MyPortal.Database.Interfaces
         IPersonRepository People { get; }
         IRefreshTokenRepository RefreshTokens { get; }
         IRegGroupRepository RegGroups { get; }
-        IRolePermissionRepository RolePermissions { get; }
+        IRoleRepository Roles { get; }
         ISchoolPhaseRepository SchoolPhases { get; }
         ISchoolRepository Schools { get; }
         ISchoolTypeRepository SchoolTypes { get; }

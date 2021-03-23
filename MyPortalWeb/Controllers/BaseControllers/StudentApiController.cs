@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -39,7 +38,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
             return false;
         }
 
-        protected StudentApiController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
+        protected StudentApiController(IAppServiceCollection services) : base(services)
         {
         }
     }

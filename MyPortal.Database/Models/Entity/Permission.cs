@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models.Entity
@@ -9,7 +10,7 @@ namespace MyPortal.Database.Models.Entity
     {
         public Permission()
         {
-            RolePermissions = new HashSet<RolePermission>();
+            
         }
 
         [Column(Order = 1)]
@@ -21,8 +22,10 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 3)]
         public string FullDescription { get; set; }
 
-        public virtual SystemArea SystemArea { get; set; }
+        [Column(Order = 4)]
+        [Range(1, int.MaxValue)]
+        public int Value { get; set; }
 
-        public virtual ICollection<RolePermission> RolePermissions { get; set; }
+        public virtual SystemArea SystemArea { get; set; }
     }
 }

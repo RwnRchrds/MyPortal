@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore.Storage;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database
 {
@@ -94,7 +96,7 @@ namespace MyPortal.Database
         private IPersonRepository _people;
         private IRefreshTokenRepository _refreshTokens;
         private IRegGroupRepository _regGroups;
-        private IRolePermissionRepository _rolePermissions;
+        private IRoleRepository _roles;
         private ISchoolPhaseRepository _schoolPhases;
         private ISchoolRepository _schools;
         private ISchoolTypeRepository _schoolTypes;
@@ -336,8 +338,7 @@ namespace MyPortal.Database
 
         public IRegGroupRepository RegGroups => _regGroups ??= new RegGroupRepository(_context, _transaction);
 
-        public IRolePermissionRepository RolePermissions =>
-            _rolePermissions ??= new RolePermissionRepository(_context, _transaction);
+        public IRoleRepository Roles => _roles ??= new RoleRepository(_context, _transaction);
 
         public ISchoolPhaseRepository SchoolPhases => _schoolPhases ??= new SchoolPhaseRepository(_transaction);
 
@@ -544,7 +545,7 @@ namespace MyPortal.Database
             _people = null;
             _refreshTokens = null;
             _regGroups = null;
-            _rolePermissions = null;
+            _roles = null;
             _schoolPhases = null;
             _schools = null;
             _schoolTypes = null;

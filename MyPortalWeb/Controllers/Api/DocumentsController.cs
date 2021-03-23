@@ -3,7 +3,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
@@ -16,6 +15,10 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/documents")]
     public class DocumentsController : BaseApiController
     {
+        public DocumentsController(IAppServiceCollection services) : base(services)
+        {
+        }
+
         [HttpGet]
         [Route("get")]
         [ProducesResponseType(typeof(DocumentModel), 200)]
@@ -163,10 +166,6 @@ namespace MyPortalWeb.Controllers.Api
 
                 return BadRequest("You are not using a 3rd party file provider.");
             });
-        }
-
-        public DocumentsController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
-        {
         }
     }
 }

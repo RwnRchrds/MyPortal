@@ -16,7 +16,7 @@ export class AuthService {
   refreshTokenInProgress = false;
 
   private currentUserSource = new ReplaySubject<User>(1);
-  private permissionSource = new ReplaySubject<string[]>(1);
+  private permissionSource = new ReplaySubject<number[]>(1);
 
   currentUser$ = this.currentUserSource.asObservable();
   effectivePermissions$ = this.permissionSource.asObservable();
@@ -46,7 +46,7 @@ export class AuthService {
   updatePermissions(): Observable<void> {
     console.log('Updating permissions...');
     return this.authService.getEffectivePermissions().pipe(
-      map((response: string[]) => {
+      map((response: number[]) => {
       const latestPermissions = response;
       if (latestPermissions) {
         this.permissionSource.next(latestPermissions);

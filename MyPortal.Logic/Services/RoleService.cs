@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -38,7 +39,7 @@ namespace MyPortal.Logic.Services
 
                 var permissions = (await unitOfWork.Permissions.GetAll()).ToList();
 
-                var existingPermissions = (await unitOfWork.RolePermissions.GetByRole(roleId)).ToList();
+                var existingPermissions = new BitArray(role.Permissions);
 
                 var root = TreeNode.CreateRoot("MyPortal");
 
@@ -61,13 +62,13 @@ namespace MyPortal.Logic.Services
                             // Load Permissions
                             Children = permissions.Where(x => x.AreaId == sa.Id).Select(p => new TreeNode
                             {
-                                Id = p.Id.ToString("N"),
+                                Id = p.Value.ToString(),
                                 Text = p.ShortDescription,
                                 State = new TreeNodeState
                                 {
                                     Opened = false,
                                     Disabled = false,
-                                    Selected = existingPermissions.Any(ep => ep.PermissionId == p.Id)
+                                    Selected = existingPermissions[p.Value]
                                 }
                             }).ToList()
                         }).ToList()
@@ -80,31 +81,20 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        private async Task SetPermissions(Guid roleId, params Guid[] permIds)
+        private async Task SetPermissions(Guid roleId, params int[] permValues)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                // Add new permissions from list
-                var existingPermissions = (await unitOfWork.RolePermissions.GetByRole(roleId)).ToList();
+                var role = await unitOfWork.Roles.GetByIdForEditing(roleId);
 
-                var permissionsToAdd = permIds.Where(x => existingPermissions.All(p => p.PermissionId != x)).ToList();
+                var permArray = PermissionHelper.CreatePermissionArray();
 
-                var permissionsToRemove = existingPermissions.Where(p => permIds.All(x => x != p.PermissionId)).ToList();
-
-                foreach (var permId in permissionsToAdd)
+                foreach (var permValue in permValues)
                 {
-                    unitOfWork.RolePermissions.Create(new RolePermission
-                        { RoleId = roleId, PermissionId = permId });
+                    permArray.Set(permValue, true);
                 }
 
-                // Remove permissions that no longer apply
-
-                foreach (var perm in permissionsToRemove)
-                {
-                    await unitOfWork.RolePermissions.Delete(perm.RoleId, perm.PermissionId);
-                }
-
-                _identityServices.RolePermissionsCache.Purge(roleId);
+                role.Permissions = permArray.ToBytes();
 
                 await unitOfWork.SaveChangesAsync();
             }
@@ -130,11 +120,11 @@ namespace MyPortal.Logic.Services
                     throw new Exception(message);
                 }
 
-                if (request.PermissionIds != null && request.PermissionIds.Any())
+                if (request.Permissions != null && request.Permissions.Any())
                 {
                     role = await _identityServices.RoleManager.FindByNameAsync(request.Name);
 
-                    await SetPermissions(role.Id, request.PermissionIds);
+                    await SetPermissions(role.Id, request.Permissions);
                 }
 
                 newIds.Add(role.Id);
@@ -159,9 +149,9 @@ namespace MyPortal.Logic.Services
 
                 await _identityServices.RoleManager.UpdateAsync(roleInDb);
 
-                if (request.PermissionIds != null)
+                if (request.PermissionValues != null)
                 {
-                    await SetPermissions(roleInDb.Id, request.PermissionIds);
+                    await SetPermissions(roleInDb.Id, request.PermissionValues);
                 }
             }
         }
@@ -172,7 +162,6 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var roleId in roleIds)
                 {
-                    await unitOfWork.RolePermissions.DeleteAllPermissions(roleId);
                     await unitOfWork.UserRoles.DeleteAllByRole(roleId);
 
                     await unitOfWork.SaveChangesAsync();

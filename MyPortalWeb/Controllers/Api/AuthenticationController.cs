@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Requests.Auth;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -36,14 +35,14 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Authorize]
         [Route("permissions")]
-        [ProducesResponseType(typeof(IEnumerable<Guid>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<int>), 200)]
         public async Task<IActionResult> GetEffectivePermissions()
         {
             return await ProcessAsync(async () =>
             {
                 var user = await GetLoggedInUser();
 
-                var effectivePermissions = await Services.Users.GetEffectivePermissions(user.Id);
+                var effectivePermissions = await Services.Users.GetPermissionValues(user.Id);
 
                 return Ok(effectivePermissions);
             });
@@ -83,7 +82,7 @@ namespace MyPortalWeb.Controllers.Api
             });
         }
 
-        public AuthenticationController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
+        public AuthenticationController(IAppServiceCollection services) : base(services)
         {
         }
     }

@@ -4,9 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Search;
-using MyPortal.Database.Permissions;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DataGrid;
@@ -20,7 +19,7 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/students")]
     public class StudentsController : StudentApiController
     {
-        public StudentsController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
+        public StudentsController(IAppServiceCollection services) : base(services)
         {
         }
 
@@ -37,7 +36,7 @@ namespace MyPortalWeb.Controllers.Api
                 students = (await Services.Students.Get(searchModel)).Select(x => x.GetDataGridModel());
 
                 return Ok(students);
-            }, Permissions.Student.StudentDetails.ViewStudentDetails);
+            }, PermissionValue.StudentViewStudentDetails);
         }
 
         [HttpGet]
@@ -55,7 +54,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            }, Permissions.Student.StudentDetails.ViewStudentDetails);
+            }, PermissionValue.StudentViewStudentDetails);
         }
 
         [HttpGet]
@@ -78,7 +77,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            }, Permissions.Student.StudentDetails.ViewStudentDetails);
+            }, PermissionValue.StudentViewStudentDetails);
         }
     }
 }

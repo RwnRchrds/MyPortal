@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyPortal.Database.Models;
 using MyPortal.Logic;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Configuration;
@@ -20,9 +19,6 @@ namespace MyPortalWeb.Extensions
 
             // MyPortal Configuration Settings
             SetConfiguration(config);
-
-            // MyPortal Cache
-            services.AddScoped<IRolePermissionsCache, RolePermissionsCache>();
 
             return services;
         }

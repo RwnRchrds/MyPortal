@@ -3,9 +3,12 @@
     [AreaId]           UNIQUEIDENTIFIER NOT NULL,
     [ShortDescription] NVARCHAR (MAX)   NULL,
     [FullDescription]  NVARCHAR (MAX)   NULL,
+    [Value]            INT              NOT NULL,
     CONSTRAINT [PK_Permissions] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Permissions_SystemAreas_AreaId] FOREIGN KEY ([AreaId]) REFERENCES [dbo].[SystemAreas] ([Id])
 );
+
+
 
 
 GO

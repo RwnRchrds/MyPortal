@@ -16,5 +16,6 @@ export interface RoleModel {
     concurrencyStamp?: string;
     normalizedName?: string;
     description?: string;
+    permissions?: string;
     system?: boolean;
 }

@@ -2,9 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Search;
-using MyPortal.Database.Permissions;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -17,7 +16,9 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/people")]
     public class PersonController : BaseApiController
     {
-        
+        public PersonController(IAppServiceCollection services) : base(services)
+        {
+        }
 
         [HttpGet]
         [Authorize(Policy = Policies.UserType.Staff)]
@@ -30,11 +31,7 @@ namespace MyPortalWeb.Controllers.Api
                 var people = await Services.People.GetWithTypes(searchModel);
 
                 return Ok(people);
-            }, Permissions.System.Users.EditUsers);
-        }
-
-        public PersonController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
-        {
+            }, PermissionValue.SystemEditUsers);
         }
     }
 }

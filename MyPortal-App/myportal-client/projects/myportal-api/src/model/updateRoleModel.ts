@@ -14,5 +14,5 @@ export interface UpdateRoleModel {
     id?: string;
     name?: string;
     description?: string;
-    permissionIds?: Array<string>;
+    permissionValues?: Array<number>;
 }

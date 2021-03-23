@@ -17,9 +17,9 @@ export class MenuFilterPipe implements PipeTransform {
     }
 
     return this.authService.effectivePermissions$.pipe(take(1),
-      map((permissions: string[]) => {
+      map((permissions: number[]) => {
         return menuItems.filter(item =>
-          item.section === filter && item.requiredPermissions.some(s => permissions.includes(s.toLowerCase())));
+          item.section === filter && item.requiredPermissions.some(s => permissions.includes(s)));
     }));
   }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
@@ -12,15 +13,14 @@ namespace MyPortal.Database.Models.Entity
         public Role()
         {
             UserRoles = new HashSet<UserRole>();
-            RolePermissions = new HashSet<RolePermission>();
             RoleClaims = new HashSet<RoleClaim>();
         }
 
         public string Description { get; set; }
+        public byte[] Permissions { get; set; }
         public bool System { get; set; }
 
         public virtual ICollection<UserRole> UserRoles { get; set; }
-        public virtual ICollection<RolePermission> RolePermissions { get; set; }
         public virtual ICollection<RoleClaim> RoleClaims { get; set; }
     }
 }

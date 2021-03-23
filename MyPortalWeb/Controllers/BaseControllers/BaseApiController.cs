@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using MyPortal.Logic.Caching;
+using MyPortal.Database.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
@@ -18,12 +19,10 @@ namespace MyPortalWeb.Controllers.BaseControllers
     public abstract class BaseApiController : ControllerBase, IDisposable
     {
         protected readonly IAppServiceCollection Services;
-        private readonly IRolePermissionsCache _rolePermissionsCache;
 
-        public BaseApiController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache)
+        public BaseApiController(IAppServiceCollection services)
         {
             Services = services;
-            _rolePermissionsCache = rolePermissionsCache;
         }
 
         public virtual void Dispose()
@@ -31,7 +30,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
             Services.Dispose();
         }
 
-        protected async Task<IActionResult> ProcessAsync(Func<Task<IActionResult>> method, params Guid[] permissionsRequired)
+        protected async Task<IActionResult> ProcessAsync(Func<Task<IActionResult>> method, params PermissionValue[] permissionsRequired)
         {
             if (await UserHasPermission(permissionsRequired))
             {
@@ -53,9 +52,9 @@ namespace MyPortalWeb.Controllers.BaseControllers
             return await Services.Users.GetUserByPrincipal(User);
         }
 
-        protected async Task<bool> UserHasPermission(params Guid[] permissionIds)
+        protected async Task<bool> UserHasPermission(params PermissionValue[] permissionValues)
         {
-            if (!permissionIds.Any())
+            if (!permissionValues.Any())
             {
                 return true;
             }
@@ -66,11 +65,16 @@ namespace MyPortalWeb.Controllers.BaseControllers
             {
                 if (Guid.TryParse(roleClaim.Value, out Guid roleId))
                 {
-                    var rolePermissions = await _rolePermissionsCache.GetPermissions(roleId);
+                    var role = await Services.Roles.GetRoleById(roleId);
 
-                    if (permissionIds.Any(rolePermissions.Contains))
+                    var rolePermissions = new BitArray(role.Permissions);
+
+                    foreach (var permissionValue in permissionValues)
                     {
-                        return true;
+                        if (rolePermissions[(int) permissionValue])
+                        {
+                            return true;
+                        }
                     }
                 }
             }

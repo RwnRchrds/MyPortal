@@ -9,6 +9,7 @@ namespace MyPortal.Logic.Models.Entity
         public string ConcurrencyStamp { get; set; }
         public string NormalizedName { get; set; }
         public string Description { get; set; }
+        public byte[] Permissions { get; set; }
 
         public bool System { get; set; }
     }

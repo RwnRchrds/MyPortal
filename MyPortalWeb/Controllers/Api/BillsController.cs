@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -11,7 +10,9 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/bills")]
     public class BillsController : BaseApiController
     {
-        
+        public BillsController(IAppServiceCollection services) : base(services)
+        {
+        }
 
         [HttpGet]
         [Route("generate")]
@@ -24,10 +25,6 @@ namespace MyPortalWeb.Controllers.Api
 
                 return Ok(generatedBills);
             });
-        }
-
-        public BillsController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
-        {
         }
     }
 }

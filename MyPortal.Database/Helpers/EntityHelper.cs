@@ -55,6 +55,7 @@ namespace MyPortal.Database.Helpers
                 $"{tblAlias}.NormalizedName",
                 $"{tblAlias}.Description",
                 $"{tblAlias}.ConcurrencyStamp",
+                $"{tblAlias}.Permissions",
                 $"{tblAlias}.System"
             };
 

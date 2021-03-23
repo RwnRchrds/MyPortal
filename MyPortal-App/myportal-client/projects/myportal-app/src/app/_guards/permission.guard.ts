@@ -12,15 +12,15 @@ export class PermissionGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    const requiredPermissions = route.data.requiredPermissions as string[];
+    const requiredPermissions = route.data.requiredPermissions as number[];
 
     // If route has no required permissions, allow the user to proceed
     if (!requiredPermissions) {
       return of(true);
     }
     else {
-      return this.authService.effectivePermissions$.pipe(take(1), map((perms: string[]) => {
-        if (requiredPermissions.some(p => perms.includes(p.toLowerCase()))) {
+      return this.authService.effectivePermissions$.pipe(take(1), map((perms: number[]) => {
+        if (requiredPermissions.some(p => perms.includes(p))) {
           return true;
         }
         this.router.navigate(['login']);

@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -9,7 +8,7 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/schools")]
     public class SchoolsController : BaseApiController
     {
-        public SchoolsController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
+        public SchoolsController(IAppServiceCollection services) : base(services)
         {
         }
 

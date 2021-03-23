@@ -13,7 +13,7 @@ import {map, take} from 'rxjs/operators';
 })
 export abstract class BaseComponentDirective {
 
-  protected userPermissions: string[];
+  protected userPermissions: number[];
   protected permissionSubscription: Subscription;
   protected appService: AppService;
   protected alertService: AlertService;
@@ -29,12 +29,12 @@ export abstract class BaseComponentDirective {
     this.authService = injector.get(AuthService);
   }
 
-  protected hasPermission(permissions: string[]): boolean {
-    return permissions.some(p => this.userPermissions.includes(p.toLowerCase()));
+  protected hasPermission(permissions: number[]): boolean {
+    return permissions.some(p => this.userPermissions.includes(p));
   }
 
   protected populatePermissions(): void {
-    this.permissionSubscription = this.authService.effectivePermissions$.pipe(take(1), map((permissions: string[]) => {
+    this.permissionSubscription = this.authService.effectivePermissions$.pipe(take(1), map((permissions: number[]) => {
       this.userPermissions = permissions;
     })).subscribe();
   }

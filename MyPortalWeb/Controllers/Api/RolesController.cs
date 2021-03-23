@@ -4,8 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Database.Permissions;
-using MyPortal.Logic.Caching;
+using MyPortal.Database.Enums;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
@@ -20,7 +19,10 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/roles")]
     public class RolesController : BaseApiController
     {
-        
+        public RolesController(IAppServiceCollection services) : base(services)
+        {
+        }
+
         [HttpPost]
         [Route("create")]
         [ProducesResponseType(typeof(NewEntityResponse), 200)]
@@ -31,7 +33,7 @@ namespace MyPortalWeb.Controllers.Api
                 var newId = (await Services.Roles.Create(model)).FirstOrDefault();
 
                 return Ok(new NewEntityResponse {Id = newId});
-            }, Permissions.System.Groups.EditGroups);
+            }, PermissionValue.SystemEditGroups);
         }
 
         [HttpPut]
@@ -44,7 +46,7 @@ namespace MyPortalWeb.Controllers.Api
                 await Services.Roles.Update(model);
 
                 return Ok();
-            }, Permissions.System.Groups.EditGroups);
+            }, PermissionValue.SystemEditGroups);
         }
 
         [HttpDelete]
@@ -57,7 +59,7 @@ namespace MyPortalWeb.Controllers.Api
                 await Services.Roles.Delete(roleId);
 
                 return Ok();
-            }, Permissions.System.Groups.EditGroups);
+            }, PermissionValue.SystemEditGroups);
         }
 
         [HttpGet]
@@ -83,7 +85,7 @@ namespace MyPortalWeb.Controllers.Api
                 var role = await Services.Roles.GetRoleById(roleId);
 
                 return Ok(role);
-            }, Permissions.System.Groups.ViewGroups);
+            }, PermissionValue.SystemViewGroups);
         }
 
         [HttpGet]
@@ -96,11 +98,7 @@ namespace MyPortalWeb.Controllers.Api
                 var permissionsTree = await Services.Roles.GetPermissionsTree(roleId);
 
                 return Ok(permissionsTree);
-            }, Permissions.System.Groups.ViewGroups);
-        }
-
-        public RolesController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
-        {
+            }, PermissionValue.SystemViewGroups);
         }
     }
 }
