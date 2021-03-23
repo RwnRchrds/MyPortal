@@ -786,6 +786,7 @@ namespace MyPortal.Database.Migrations
                     NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
+                    Permissions = table.Column<byte[]>(nullable: true),
                     System = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -1629,7 +1630,8 @@ namespace MyPortal.Database.Migrations
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     AreaId = table.Column<Guid>(nullable: false),
                     ShortDescription = table.Column<string>(nullable: true),
-                    FullDescription = table.Column<string>(nullable: true)
+                    FullDescription = table.Column<string>(nullable: true),
+                    Value = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -2285,30 +2287,6 @@ namespace MyPortal.Database.Migrations
                         principalTable: "SubjectCodes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RolePermissions",
-                columns: table => new
-                {
-                    RoleId = table.Column<Guid>(nullable: false),
-                    PermissionId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RolePermissions", x => new { x.RoleId, x.PermissionId });
-                    table.ForeignKey(
-                        name: "FK_RolePermissions_Permissions_PermissionId",
-                        column: x => x.PermissionId,
-                        principalTable: "Permissions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RolePermissions_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -5735,11 +5713,6 @@ namespace MyPortal.Database.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RolePermissions_PermissionId",
-                table: "RolePermissions",
-                column: "PermissionId");
-
-            migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 table: "Roles",
                 column: "NormalizedName",
@@ -6217,6 +6190,9 @@ namespace MyPortal.Database.Migrations
                 name: "ParentEveningGroup");
 
             migrationBuilder.DropTable(
+                name: "Permissions");
+
+            migrationBuilder.DropTable(
                 name: "PersonConditions");
 
             migrationBuilder.DropTable(
@@ -6242,9 +6218,6 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");
-
-            migrationBuilder.DropTable(
-                name: "RolePermissions");
 
             migrationBuilder.DropTable(
                 name: "RoomClosures");
@@ -6415,13 +6388,13 @@ namespace MyPortal.Database.Migrations
                 name: "ReportCardTargets");
 
             migrationBuilder.DropTable(
+                name: "SystemAreas");
+
+            migrationBuilder.DropTable(
                 name: "Aspects");
 
             migrationBuilder.DropTable(
                 name: "Grades");
-
-            migrationBuilder.DropTable(
-                name: "Permissions");
 
             migrationBuilder.DropTable(
                 name: "RoomClosureReasons");
@@ -6539,9 +6512,6 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspectTypes");
-
-            migrationBuilder.DropTable(
-                name: "SystemAreas");
 
             migrationBuilder.DropTable(
                 name: "Agencies");

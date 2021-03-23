@@ -3760,6 +3760,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<string>("ShortDescription")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AreaId");
@@ -4395,6 +4398,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
+                    b.Property<byte[]>("Permissions")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<bool>("System")
                         .HasColumnType("bit");
 
@@ -4429,21 +4435,6 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("RoleClaims");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.RolePermission", b =>
-                {
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PermissionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("RoleId", "PermissionId");
-
-                    b.HasIndex("PermissionId");
-
-                    b.ToTable("RolePermissions");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Room", b =>
@@ -7336,21 +7327,6 @@ namespace MyPortal.Database.Migrations
                         .WithMany("RoleClaims")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.RolePermission", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Entity.Permission", "Permission")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Entity.Role", "Role")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

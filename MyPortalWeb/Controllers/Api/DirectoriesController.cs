@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
@@ -19,7 +18,9 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/document/directories")]
     public class DirectoriesController : BaseApiController
     {
-        
+        public DirectoriesController(IAppServiceCollection services) : base(services)
+        {
+        }
 
         [HttpGet]
         [Route("children")]
@@ -152,10 +153,6 @@ namespace MyPortalWeb.Controllers.Api
 
                 return Unauthorized("Access denied.");
             });
-        }
-
-        public DirectoriesController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
-        {
         }
     }
 }

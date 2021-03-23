@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using MyPortal.Database.Permissions;
-using MyPortal.Logic.Caching;
+using MyPortal.Database.Enums;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
@@ -20,14 +19,16 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/user")]
     public class UsersController : BaseApiController
     {
-        
+        public UsersController(IAppServiceCollection services) : base(services)
+        {
+        }
 
         private async Task<bool> AuthoriseUser(Guid requestedUserId, bool requireEdit = false)
         {
             // Users do not require extra permission to access resources related to themselves
             return await UserHasPermission(requireEdit
-                       ? Permissions.System.Users.EditUsers
-                       : Permissions.System.Users.ViewUsers) ||
+                       ? PermissionValue.SystemEditUsers
+                       : PermissionValue.SystemViewUsers) ||
                    (await GetLoggedInUser()).Id == requestedUserId;
         }
 
@@ -41,7 +42,7 @@ namespace MyPortalWeb.Controllers.Api
                 var userId = (await Services.Users.CreateUser(model)).FirstOrDefault();
 
                 return Ok(new NewEntityResponse {Id = userId});
-            }, Permissions.System.Users.EditUsers);
+            }, PermissionValue.SystemEditUsers);
         }
 
         [HttpGet]
@@ -54,7 +55,7 @@ namespace MyPortalWeb.Controllers.Api
                 var users = await Services.Users.GetUsers(username);
 
                 return Ok(users);
-            }, Permissions.System.Users.ViewUsers);
+            }, PermissionValue.SystemViewUsers);
         }
 
         [HttpGet]
@@ -103,7 +104,7 @@ namespace MyPortalWeb.Controllers.Api
                 await Services.Users.UpdateUser(model);
 
                 return Ok();
-            }, Permissions.System.Users.EditUsers);
+            }, PermissionValue.SystemEditUsers);
         }
 
         [HttpDelete]
@@ -116,7 +117,7 @@ namespace MyPortalWeb.Controllers.Api
                 await Services.Users.DeleteUser(userId);
 
                 return Ok();
-            }, Permissions.System.Users.EditUsers);
+            }, PermissionValue.SystemEditUsers);
         }
 
         [HttpPut]
@@ -147,11 +148,7 @@ namespace MyPortalWeb.Controllers.Api
                 await Services.Users.SetUserEnabled(model.UserId, model.Enabled);
 
                 return Ok(model.Enabled);
-            }, Permissions.System.Users.EditUsers);
-        }
-
-        public UsersController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
-        {
+            }, PermissionValue.SystemEditUsers);
         }
     }
 }

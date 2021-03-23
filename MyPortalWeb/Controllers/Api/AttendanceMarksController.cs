@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Response.Attendance;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -13,6 +12,10 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/attendanceMarks")]
     public class AttendanceMarksController : BaseApiController
     {
+        public AttendanceMarksController(IAppServiceCollection services) : base(services)
+        {
+        }
+
         [HttpGet]
         [Route("register/{attendanceWeekId}/{sessionId}")]
         [ProducesResponseType(typeof(AttendanceRegisterModel), 200)]
@@ -24,10 +27,6 @@ namespace MyPortalWeb.Controllers.Api
 
                 return Ok(register);
             });
-        }
-
-        public AttendanceMarksController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
-        {
         }
     }
 }

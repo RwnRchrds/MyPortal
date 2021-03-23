@@ -97,10 +97,12 @@ export class RoleDetailsComponent extends BaseFormDirective implements OnInit, O
       // @ts-ignore
       const selectedNodes = $('#perm_tree').jstree('get_selected', true).filter(n => n.children.length === 0);
       console.log(selectedNodes);
-      const selectedPermissionIds = selectedNodes.map(n => this.appService.parseGuid(n.id));
+      const selectedPermissions = selectedNodes.map((n: TreeNode) => parseInt(n.id, 10));
       this.roleService.updateRole({
-        id: this.role.id, name: this.code.value,
-        description: this.name.value, permissionIds: selectedPermissionIds
+        id: this.role.id,
+        description: this.name.value,
+        name: this.code.value,
+        permissionValues: selectedPermissions
       }).pipe(map(result => {
         this.alertService.toastSuccess('Role updated');
         this.viewService.reload();

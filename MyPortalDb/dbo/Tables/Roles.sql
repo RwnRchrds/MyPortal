@@ -4,9 +4,12 @@
     [NormalizedName]   NVARCHAR (256)   NULL,
     [ConcurrencyStamp] NVARCHAR (MAX)   NULL,
     [Description]      NVARCHAR (MAX)   NULL,
+    [Permissions]      VARBINARY (MAX)  NULL,
     [System]           BIT              NOT NULL,
     CONSTRAINT [PK_Roles] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
 
 GO

@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Database.Permissions;
-using MyPortal.Logic.Caching;
+using MyPortal.Database.Enums;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -18,7 +17,7 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/student/logNotes")]
     public class LogNotesController : StudentApiController
     {
-        public LogNotesController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
+        public LogNotesController(IAppServiceCollection services) : base(services)
         {
         }
 
@@ -37,7 +36,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            }, Permissions.Student.StudentLogNotes.ViewLogNotes);
+            }, PermissionValue.StudentViewStudentLogNotes);
         }
 
         [HttpGet]
@@ -75,7 +74,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            }, Permissions.Student.StudentLogNotes.ViewLogNotes);
+            }, PermissionValue.StudentViewStudentLogNotes);
         }
 
         [HttpPost]
@@ -102,7 +101,7 @@ namespace MyPortalWeb.Controllers.Api
                 await Services.LogNotes.Create(logNote);
 
                 return Ok();
-            }, Permissions.Student.StudentLogNotes.EditLogNotes);
+            }, PermissionValue.StudentEditStudentLogNotes);
         }
 
         [HttpPut]
@@ -126,7 +125,7 @@ namespace MyPortalWeb.Controllers.Api
                 await Services.LogNotes.Update(logNote);
 
                 return Ok();
-            }, Permissions.Student.StudentLogNotes.EditLogNotes);
+            }, PermissionValue.StudentEditStudentLogNotes);
         }
 
         [HttpDelete]
@@ -140,7 +139,7 @@ namespace MyPortalWeb.Controllers.Api
                 await Services.LogNotes.Delete(logNoteId);
 
                 return Ok();
-            }, Permissions.Student.StudentLogNotes.EditLogNotes);
+            }, PermissionValue.StudentEditStudentLogNotes);
         }
     }
 }

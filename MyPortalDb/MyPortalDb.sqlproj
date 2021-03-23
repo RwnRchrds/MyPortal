@@ -202,7 +202,6 @@
     <Build Include="dbo\Tables\ParentEveningStaffMembers.sql" />
     <Build Include="dbo\Tables\ExamResultEmbargoes.sql" />
     <Build Include="dbo\Tables\SchoolPhases.sql" />
-    <Build Include="dbo\Tables\RolePermissions.sql" />
     <Build Include="dbo\Tables\IncidentDetentions.sql" />
     <Build Include="dbo\Tables\BehaviourTargets.sql" />
     <Build Include="dbo\Tables\SchoolTypes.sql" />

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using MyPortal.Database.Attributes;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Curriculum;
@@ -164,6 +165,20 @@ namespace MyPortal.Tests
                 $"Surplus properties were found in the following mappings: {string.Join(", ", faultyMappings.Keys.Select(x => x.Name))}.";
 
             Assert.Fail(message);
+        }
+
+        [Test]
+        public void BitArrayToBytes_IsValid()
+        {
+            var array = PermissionHelper.CreatePermissionArray();
+
+            array.SetAll(true);
+
+            var bytes = array.ToBytes();
+
+            var byteString = BitConverter.ToString(bytes).Replace("-", "");
+
+            Assert.That(bytes != null);
         }
     }
 }

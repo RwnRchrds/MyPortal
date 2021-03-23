@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
-using MyPortal.Database.Permissions;
-using MyPortal.Logic.Caching;
+using MyPortal.Database.Enums;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -18,7 +17,9 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/tasks")]
     public class TasksController : StudentApiController
     {
-        
+        public TasksController(IAppServiceCollection services) : base(services)
+        {
+        }
 
         [HttpGet]
         [Route("id")]
@@ -171,7 +172,7 @@ namespace MyPortalWeb.Controllers.Api
 
             if (personInDb.PersonTypes.IsStaff)
             {
-                if (await UserHasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
+                if (await UserHasPermission(PermissionValue.PeopleEditAllStaffTasks))
                 {
                     return true;
                 }
@@ -186,7 +187,7 @@ namespace MyPortalWeb.Controllers.Api
                         return true;
                     }
 
-                    return await UserHasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
+                    return await UserHasPermission(PermissionValue.PeopleEditManagedStaffTasks) &&
                            await Services.Staff.IsLineManager(taskStaffMember.Id, userStaffMember.Id);
                 }
             }
@@ -253,10 +254,6 @@ namespace MyPortalWeb.Controllers.Api
             //return await AuthoriseUpdate(updateModel, userId);
 
             return true;
-        }
-
-        public TasksController(IAppServiceCollection services, IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
-        {
         }
     }
 }

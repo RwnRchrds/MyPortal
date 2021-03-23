@@ -5,7 +5,7 @@ using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 
-namespace MyPortal.Database.Interfaces
+namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IRoleRepository : IReadWriteRepository<Role>
     {

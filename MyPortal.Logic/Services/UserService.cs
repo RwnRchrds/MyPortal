@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -6,13 +7,14 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.IdentityModel.Tokens;
+using MyPortal.Database.Enums;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Authentication;
-using MyPortal.Logic.Caching;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
@@ -37,19 +39,43 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var permissions = await unitOfWork.RolePermissions.GetByUser(userId);
+                var permissionValues = await GetPermissionValues(userId);
 
-                return permissions.Select(p => BusinessMapper.Map<PermissionModel>(p.Permission));
+                return new List<PermissionModel>();
             }
         }
 
-        public async Task<IEnumerable<Guid>> GetEffectivePermissions(Guid userId)
+        public async Task<IEnumerable<int>> GetPermissionValues(Guid userId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var roleIds = (await unitOfWork.UserRoles.GetByUser(userId)).Select(ur => ur.RoleId).ToArray();
+                var rolePermissions = (await unitOfWork.UserRoles.GetByUser(userId)).ToList();
 
-                return await _identityServices.RolePermissionsCache.GetPermissions(roleIds);
+                BitArray userPermissions = null;
+
+                foreach (var role in rolePermissions)
+                {
+                    var permissions = new BitArray(role.Role.Permissions);
+
+                    userPermissions = userPermissions == null ? permissions : userPermissions.And(permissions);
+                }
+
+                var permIndexes = Enumerable.Range(0, Enum.GetNames(typeof(PermissionValue)).Length);
+
+                List<int> permissionValues = new List<int>();
+
+                if (userPermissions != null)
+                {
+                    foreach (var permIndex in permIndexes)
+                    {
+                        if (userPermissions[permIndex])
+                        {
+                            permissionValues.Add(permIndex);
+                        }
+                    }
+                }
+
+                return permissionValues;
             }
         }
 

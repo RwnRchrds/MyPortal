@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Logic.Caching;
+using MyPortal.Database.Enums;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Requests.Curriculum;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -12,8 +12,7 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/academicYears")]
     public class AcademicYearController : BaseApiController
     {
-        public AcademicYearController(IAppServiceCollection services,
-            IRolePermissionsCache rolePermissionsCache) : base(services, rolePermissionsCache)
+        public AcademicYearController(IAppServiceCollection services) : base(services)
         {
 
         }
