@@ -85,7 +85,7 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var role = await unitOfWork.Roles.GetByIdForEditing(roleId);
+                var role = await unitOfWork.Roles.GetById(roleId);
 
                 var permArray = PermissionHelper.CreatePermissionArray();
 
@@ -95,6 +95,8 @@ namespace MyPortal.Logic.Services
                 }
 
                 role.Permissions = permArray.ToBytes();
+
+                await unitOfWork.Roles.Update(role);
 
                 await unitOfWork.SaveChangesAsync();
             }

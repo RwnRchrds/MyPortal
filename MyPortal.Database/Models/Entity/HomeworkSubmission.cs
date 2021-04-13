@@ -19,12 +19,9 @@ namespace MyPortal.Database.Models.Entity
         public Guid? DocumentId { get; set; }
 
         [Column(Order = 5)]
-        public int MaxPoints { get; set; }
-
-        [Column(Order = 6)]
         public int PointsAchieved { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 6)]
         public string Comments { get; set; }
 
         public virtual HomeworkItem HomeworkItem { get; set; }

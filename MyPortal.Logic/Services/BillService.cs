@@ -53,7 +53,7 @@ namespace MyPortal.Logic.Services
                             GrossAmount = charge.Charge.Amount
                         });
 
-                        var chargeInDb = await unitOfWork.StudentCharges.GetByIdForEditing(charge.ChargeId);
+                        var chargeInDb = await unitOfWork.StudentCharges.GetById(charge.ChargeId);
                         chargeInDb.Recurrences--;
                     }
 
@@ -67,9 +67,9 @@ namespace MyPortal.Logic.Services
 
                         if (bill.BillCharges.Any(c => applicableChargeIds.Contains(c.ChargeId)))
                         {
-                            bill.BillDiscounts.Add(new BillDiscount
+                            bill.BillDiscounts.Add(new BillChargeDiscount
                             {
-                                DiscountId = studentDiscount.DiscountId,
+                                ChargeDiscountId = studentDiscount.DiscountId,
                                 GrossAmount = studentDiscount.Discount.Amount,
                             });
                         }

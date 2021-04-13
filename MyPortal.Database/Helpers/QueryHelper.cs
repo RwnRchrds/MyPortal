@@ -35,19 +35,19 @@ namespace MyPortal.Database.Helpers
 
         public static Query FilterByStudentGroup(this Query query, Guid groupTypeId, Guid groupId, string studentAlias = "S")
         {
-            if (groupTypeId == StudentGroupType.YearGroup)
+            if (groupTypeId == StudentGroupTypes.YearGroup)
             {
                 query.LeftJoin("YearGroups AS Y", "Y.Id", $"{studentAlias}.YearGroupId");
                 query.Where("Y.Id", groupId);
             }
 
-            if (groupTypeId == StudentGroupType.CurriculumGroup)
+            if (groupTypeId == StudentGroupTypes.CurriculumGroup)
             {
                 query.LeftJoin("CurriculumGroupMemberships AS CGM", "CGM.StudentId", $"{studentAlias}.Id");
                 query.Where("CGM.GroupId", groupId);
             }
 
-            if (groupTypeId == StudentGroupType.RegGroup)
+            if (groupTypeId == StudentGroupTypes.RegGroup)
             {
                 query.LeftJoin("RegGroups AS R", "R.Id", $"{studentAlias}.RegGroupId");
                 query.Where("R.Id", groupId);

@@ -79,12 +79,14 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var model in detentionModels)
                 {
-                    var detentionInDb = await unitOfWork.Detentions.GetByIdForEditing(model.Id);
+                    var detentionInDb = await unitOfWork.Detentions.GetById(model.Id);
 
                     detentionInDb.DetentionTypeId = model.DetentionTypeId;
                     detentionInDb.Event.StartTime = model.StartTime;
                     detentionInDb.Event.EndTime = model.EndTime;
                     detentionInDb.Event.RoomId = model.RoomId;
+
+                    await unitOfWork.Detentions.Update(detentionInDb);
                 }
 
                 await unitOfWork.SaveChangesAsync();

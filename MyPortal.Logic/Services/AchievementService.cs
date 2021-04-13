@@ -62,7 +62,7 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var request in requests)
                 {
-                    await AcademicYearModel.CheckLock(unitOfWork.AcademicYears, request.AcademicYearId);
+                    await AcademicYearModel.CheckLock(unitOfWork, request.AcademicYearId);
 
                     var model = new Achievement
                     {
@@ -90,20 +90,22 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var request in requests)
                 {
-                    var achievementInDb = await unitOfWork.Achievements.GetByIdForEditing(request.Id);
+                    var achievementInDb = await unitOfWork.Achievements.GetById(request.Id);
 
                     if (achievementInDb == null)
                     {
                         throw new NotFoundException("Achievement not found.");
                     }
 
-                    await AcademicYearModel.CheckLock(unitOfWork.AcademicYears, achievementInDb.AcademicYearId);
+                    await AcademicYearModel.CheckLock(unitOfWork, achievementInDb.AcademicYearId);
 
                     achievementInDb.AchievementTypeId = request.AchievementTypeId;
                     achievementInDb.LocationId = request.LocationId;
                     achievementInDb.OutcomeId = request.OutcomeId;
                     achievementInDb.Comments = request.Comments;
                     achievementInDb.Points = request.Points;
+
+                    await unitOfWork.Achievements.Update(achievementInDb);
                 }
 
                 await unitOfWork.SaveChangesAsync();
@@ -118,7 +120,7 @@ namespace MyPortal.Logic.Services
                 {
                     var achievement = await GetAchievementById(achievementId);
 
-                    await AcademicYearModel.CheckLock(unitOfWork.AcademicYears, achievement.AcademicYearId);
+                    await AcademicYearModel.CheckLock(unitOfWork, achievement.AcademicYearId);
 
                     await unitOfWork.Achievements.Delete(achievementId);
                 }

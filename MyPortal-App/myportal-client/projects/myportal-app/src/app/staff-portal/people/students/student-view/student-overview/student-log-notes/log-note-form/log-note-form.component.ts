@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {StudentViewService} from '../../student-view.service';
+import {StudentViewService} from '../../../student-view.service';
 import {LogNoteModel, LogNotesService, LogNoteTypeModel, StudentModel} from 'myportal-api';
 import {catchError, map} from 'rxjs/operators';
 import {Subscription, throwError} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
-import {BaseFormDirective} from '../../../../../../_directives/base-form/base-form.directive';
+import {BaseFormDirective} from '../../../../../../../_directives/base-form/base-form.directive';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({

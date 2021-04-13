@@ -26,5 +26,6 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual PhoneNumberType Type { get; set; }
         public virtual Person Person { get; set; }
+        public virtual Agency Agency { get; set; }
     }
 }

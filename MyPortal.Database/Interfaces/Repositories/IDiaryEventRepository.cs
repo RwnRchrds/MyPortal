@@ -6,7 +6,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IDiaryEventRepository : IReadWriteRepository<DiaryEvent>
+    public interface IDiaryEventRepository : IReadWriteRepository<DiaryEvent>, IUpdateRepository<DiaryEvent>
     {
         Task<IEnumerable<DiaryEvent>> GetByDateRange(DateTime firstDate, DateTime lastDate, bool includePrivateEvents = false);
 

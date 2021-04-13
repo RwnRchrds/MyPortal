@@ -12,10 +12,8 @@ namespace MyPortal.Logic.Models.Entity
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
-        
-        public bool Private { get; set; }
-        
-        public bool StaffOnly { get; set; } 
+
+        public bool Restricted { get; set; } 
 
         public virtual DirectoryModel Parent { get; set; }
         public virtual BulletinModel Bulletin { get; set; }

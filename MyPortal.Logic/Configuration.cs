@@ -20,16 +20,9 @@ namespace MyPortal.Logic
 
         private void TestConnection(string connectionString)
         {
-            try
-            {
-                var conn = new SqlConnection(connectionString);
+            var conn = new SqlConnection(connectionString);
 
-                conn.Open();
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            conn.Open();
         }
 
         public string InstallLocation

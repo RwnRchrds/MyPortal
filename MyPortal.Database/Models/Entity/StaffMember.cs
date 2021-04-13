@@ -36,12 +36,24 @@ namespace MyPortal.Database.Models.Entity
         public string Code { get; set; }
 
         [Column(Order = 4)]
-        [StringLength(128)]
+        [StringLength(50)]
+        public string BankName { get; set; }
+
+        [Column(Order = 5)]
+        [StringLength(15)]
+        public string BankAccount { get; set; }
+        
+        [Column(Order = 6)]
+        [StringLength(10)]
+        public string BankSortCode { get; set; }
+
+        [Column(Order = 4)]
+        [StringLength(9)]
         public string NiNumber { get; set; }
 
         [Column(Order = 5)]
         [StringLength(128)]
-        public string PostNominal { get; set; }
+        public string Qualifications { get; set; }
 
         [Column(Order = 6)]
         public bool TeachingStaff { get; set; }
@@ -50,6 +62,8 @@ namespace MyPortal.Database.Models.Entity
         public bool Deleted { get; set; }
 
         public virtual Person Person { get; set; }
+
+        public virtual NextOfKin NextOfKin { get; set; }
 
         public virtual StaffMember LineManager { get; set; }
 
@@ -89,8 +103,8 @@ namespace MyPortal.Database.Models.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StaffAbsence> Absences { get; set; }
 
-        public virtual ICollection<ActivitySupervisor> Activities { get; set; }
-
-        public virtual ICollection<ParentEveningStaffMember> ParentEvenings { get; set; }   
+        public virtual ICollection<ParentEveningStaffMember> ParentEvenings { get; set; }
+        
+        public virtual ICollection<StudentGroupSupervisor> StudentGroupSupervisors { get; set; }
     }
 }

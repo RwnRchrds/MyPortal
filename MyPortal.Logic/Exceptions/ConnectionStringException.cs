@@ -15,11 +15,11 @@ namespace MyPortal.Logic.Exceptions
         {
         }
 
-        public ConnectionStringException(string? message) : base(message)
+        public ConnectionStringException(string message) : base(message)
         {
         }
 
-        public ConnectionStringException(string? message, Exception? innerException) : base(message, innerException)
+        public ConnectionStringException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

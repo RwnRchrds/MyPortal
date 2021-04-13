@@ -13,14 +13,7 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var setting = await unitOfWork.SystemSettings.GetForEditing(name);
-
-                if (setting == null)
-                {
-                    throw new NotFoundException("Setting not found.");
-                }
-
-                setting.Setting = value;
+                await unitOfWork.SystemSettings.Update(name, value);
 
                 await unitOfWork.SaveChangesAsync();
             }

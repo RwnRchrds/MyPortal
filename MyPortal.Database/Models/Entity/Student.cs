@@ -16,7 +16,6 @@ namespace MyPortal.Database.Models.Entity
             AttendanceMarks = new HashSet<AttendanceMark>();
             Achievements = new HashSet<Achievement>();
             Incidents = new HashSet<Incident>();
-            Enrolments = new HashSet<CurriculumBandMembership>();
             FinanceBasketItems = new HashSet<BasketItem>();
             Bills = new HashSet<Bill>();
             MedicalEvents = new HashSet<MedicalEvent>();
@@ -26,58 +25,47 @@ namespace MyPortal.Database.Models.Entity
             GiftedTalentedSubjects = new HashSet<GiftedTalented>();
             StudentContacts = new HashSet<StudentContactRelationship>();
             HomeworkSubmissions = new HashSet<HomeworkSubmission>();
-            GroupMemberships = new HashSet<CurriculumGroupMembership>();
         }
 
         [Column(Order = 1)]
         public Guid PersonId { get; set; }
 
         [Column(Order = 2)]
-        public Guid RegGroupId { get; set; }
-
-        [Column(Order = 3)]
-        public Guid YearGroupId { get; set; }
-
-        [Column(Order = 4)]
         public Guid? HouseId { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 3)]
         public int AdmissionNumber { get; set; }
 
-        [Column(Order = 6, TypeName = "date")]
+        [Column(Order = 4, TypeName = "date")]
         public DateTime? DateStarting { get; set; }
 
-        [Column(Order = 7, TypeName = "date")]
+        [Column(Order = 5, TypeName = "date")]
         public DateTime? DateLeaving { get; set; }
 
-        [Column(Order = 9)]
+        [Column(Order = 6)]
         public bool FreeSchoolMeals { get; set; }
 
-        [Column(Order = 10)]
+        [Column(Order = 7)]
         public Guid? SenStatusId { get; set; }
 
-        [Column(Order = 11)] 
+        [Column(Order = 8)] 
         public Guid? SenTypeId { get; set; }
 
-        [Column(Order = 12)]
+        [Column(Order = 9)]
         public Guid? EnrolmentStatusId { get; set; }
 
-        [Column(Order = 13)] 
+        [Column(Order = 10)] 
         public Guid? BoarderStatusId { get; set; }
 
-        [Column(Order = 13)]
+        [Column(Order = 11)]
         public bool PupilPremium { get; set; }
 
-        [Column(Order = 14)]
+        [Column(Order = 12)]
         [StringLength(13)]
         public string Upn { get; set; }
 
-        [Column(Order = 15)]
+        [Column(Order = 13)]
         public bool Deleted { get; set; }
-
-        public virtual RegGroup RegGroup { get; set; }
-
-        public virtual YearGroup YearGroup { get; set; }
 
         public virtual Person Person { get; set; }
 
@@ -97,9 +85,6 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<Result> Results { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurriculumGroupMembership> GroupMemberships { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -107,9 +92,6 @@ namespace MyPortal.Database.Models.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Incident> Incidents { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurriculumBandMembership> Enrolments { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BasketItem> FinanceBasketItems { get; set; }
@@ -142,8 +124,6 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual ICollection<ReportCard> ReportCards { get; set; }
 
-        public virtual ICollection<ActivityMembership> ActivityMemberships { get; set; }
-
         public virtual ICollection<AccountTransaction> AccountTransactions { get; set; }
 
         public virtual ICollection<StudentCharge> Charges { get; set; }
@@ -152,5 +132,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<Exclusion> Exclusions { get; set; }
 
         public virtual ICollection<ParentEveningAppointment> ParentEveningAppointments { get; set; }
+        
+        public virtual ICollection<StudentGroupMembership> StudentGroupMemberships { get; set; }
     }
 }

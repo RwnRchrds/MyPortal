@@ -6,7 +6,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IBulletinRepository : IReadWriteRepository<Bulletin>
+    public interface IBulletinRepository : IReadWriteRepository<Bulletin>, IUpdateRepository<Bulletin>
     {
         Task<IEnumerable<Bulletin>> GetApproved();
 

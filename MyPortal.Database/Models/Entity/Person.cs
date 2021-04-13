@@ -51,10 +51,6 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(256)]
         public string LastName { get; set; }
 
-        [Column(Order = 6)]
-        [StringLength(256)]
-        public string ChosenFirstName { get; set; }
-
         [Column(Order = 8)]
         public Guid? PhotoId { get; set; }
 
@@ -124,5 +120,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<DiaryEventAttendee> DiaryEventInvitations { get; set; }
 
         public virtual ICollection<Task> AssignedTo { get; set; }
+
+        public virtual ICollection<NextOfKin> RelatedStaff { get; set; }
     }
 }

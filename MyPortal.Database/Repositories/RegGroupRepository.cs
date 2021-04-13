@@ -36,9 +36,8 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Transaction.Connection.QueryAsync<RegGroup, StaffMember, YearGroup, RegGroup>(sql.Sql, (reg, tutor, year) =>
+            return await Transaction.Connection.QueryAsync<RegGroup, YearGroup, RegGroup>(sql.Sql, (reg, year) =>
             {
-                reg.Tutor = tutor;
                 reg.YearGroup = year;
 
                 return reg;

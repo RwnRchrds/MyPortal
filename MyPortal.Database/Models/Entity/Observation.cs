@@ -17,6 +17,9 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 4)]
         public Guid OutcomeId { get; set; }
+        
+        [Column(Order = 5)] 
+        public string Notes { get; set; }
 
         public virtual StaffMember Observee { get; set; }
 

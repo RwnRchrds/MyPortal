@@ -11,6 +11,9 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 2)]
         public Guid ProductId { get; set; }
+        
+        [Column(Order = 3)]
+        public int Quantity { get; set; }
 
         public virtual Student Student { get; set; }
 

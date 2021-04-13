@@ -7,7 +7,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface ITaskTypeRepository : IReadWriteRepository<TaskType>
+    public interface ITaskTypeRepository : IReadWriteRepository<TaskType>, IUpdateRepository<TaskType>
     {
         Task<IEnumerable<TaskType>> GetAll(bool personal, bool active, bool includeReserved);
     }

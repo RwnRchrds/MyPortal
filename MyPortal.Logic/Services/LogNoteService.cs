@@ -57,7 +57,7 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var logNoteObject in logNoteObjects)
                 {
-                    await AcademicYearModel.CheckLock(unitOfWork.AcademicYears, logNoteObject.AcademicYearId);
+                    await AcademicYearModel.CheckLock(unitOfWork, logNoteObject.AcademicYearId);
 
                     var createDate = DateTime.Now;
 
@@ -86,23 +86,25 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var logNoteObject in logNoteObjects)
                 {
-                    await AcademicYearModel.CheckLock(unitOfWork.AcademicYears, logNoteObject.AcademicYearId);
+                    await AcademicYearModel.CheckLock(unitOfWork, logNoteObject.AcademicYearId);
 
                     var updateDate = DateTime.Now;
 
-                    var logNote = await unitOfWork.LogNotes.GetByIdForEditing(logNoteObject.Id);
+                    var logNote = await unitOfWork.LogNotes.GetById(logNoteObject.Id);
 
                     if (logNote == null)
                     {
                         throw new NotFoundException("Log note not found.");
                     }
 
-                    await AcademicYearModel.CheckLock(unitOfWork.AcademicYears, logNote.AcademicYearId);
+                    await AcademicYearModel.CheckLock(unitOfWork, logNote.AcademicYearId);
 
                     logNote.TypeId = logNoteObject.TypeId;
                     logNote.Message = logNoteObject.Message;
                     logNote.UpdatedDate = updateDate;
                     logNote.UpdatedById = logNoteObject.UpdatedById;
+
+                    await unitOfWork.LogNotes.Update(logNote);
                 }
 
                 await unitOfWork.SaveChangesAsync();
@@ -117,7 +119,7 @@ namespace MyPortal.Logic.Services
                 {
                     var logNote = await GetById(logNoteId);
 
-                    await AcademicYearModel.CheckLock(unitOfWork.AcademicYears, logNote.AcademicYearId);
+                    await AcademicYearModel.CheckLock(unitOfWork, logNote.AcademicYearId);
 
                     await unitOfWork.LogNotes.Delete(logNoteId);
                 }

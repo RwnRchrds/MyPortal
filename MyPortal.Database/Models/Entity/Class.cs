@@ -19,7 +19,7 @@ namespace MyPortal.Database.Models.Entity
         public Guid CourseId { get; set; }
 
         [Column (Order = 2)]
-        public Guid GroupId { get; set; }
+        public Guid CurriculumGroupId { get; set; }
 
         [Column(Order = 3)]
         public Guid DirectoryId { get; set; }

@@ -49,10 +49,8 @@ namespace MyPortal.Database
         private ICommunicationTypeRepository _communicationTypes;
         private IContactRepository _contacts;
         private ICurriculumBandBlockAssignmentRepository _curriculumBandBlockAssignments;
-        private ICurriculumBandMembershipRepository _curriculumBandMemberships;
         private ICurriculumBandRepository _curriculumBands;
         private ICurriculumBlockRepository _curriculumBlocks;
-        private ICurriculumGroupMembershipRepository _curriculumGroupMemberships;
         private ICurriculumGroupRepository _curriculumGroups;
         private ICurriculumYearGroupRepository _curriculumYearGroups;
         private IDetentionRepository _detentions;
@@ -113,6 +111,7 @@ namespace MyPortal.Database
         private IStudentContactRelationshipRepository _studentContactRelationships;
         private IStudentDiscountRepository _studentDiscounts;
         private IStudentRepository _students;
+        private IStudentGroupRepository _studentGroups;
         private IStudyTopicRepository _studyTopics;
         private ISubjectCodeSetRepository _subjectCodeSets;
         private ISubjectRepository _subjects;
@@ -169,7 +168,7 @@ namespace MyPortal.Database
             _attendanceCodeMeanings ??= new AttendanceCodeMeaningRepository(_transaction);
 
         public IAttendanceCodeRepository AttendanceCodes =>
-            _attendanceCodes = new AttendanceCodeRepository(_transaction);
+            _attendanceCodes = new AttendanceCodeRepository(_context, _transaction);
 
         public IAttendanceMarkRepository AttendanceMarks =>
             _attendanceMarks ??= new AttendanceMarkRepository(_context, _transaction);
@@ -216,17 +215,11 @@ namespace MyPortal.Database
         public ICurriculumBandBlockAssignmentRepository CurriculumBandBlockAssignments =>
             _curriculumBandBlockAssignments ??= new CurriculumBandBlockAssignmentRepository(_context, _transaction);
 
-        public ICurriculumBandMembershipRepository CurriculumBandMemberships => _curriculumBandMemberships ??=
-            new CurriculumBandMembershipRepository(_context, _transaction);
-
         public ICurriculumBandRepository CurriculumBands =>
             _curriculumBands ??= new CurriculumBandRepository(_context, _transaction);
 
         public ICurriculumBlockRepository CurriculumBlocks =>
             _curriculumBlocks ??= new CurriculumBlockRepository(_context, _transaction);
-
-        public ICurriculumGroupMembershipRepository CurriculumGroupMemberships => _curriculumGroupMemberships ??=
-            new CurriculumGroupMembershipRepository(_context, _transaction);
 
         public ICurriculumGroupRepository CurriculumGroups =>
             _curriculumGroups ??= new CurriculumGroupRepository(_context, _transaction);
@@ -257,7 +250,8 @@ namespace MyPortal.Database
 
         public IDocumentRepository Documents => _documents ??= new DocumentRepository(_context, _transaction);
 
-        public IDocumentTypeRepository DocumentTypes => _documentTypes ??= new DocumentTypeRepository(_transaction);
+        public IDocumentTypeRepository DocumentTypes =>
+            _documentTypes ??= new DocumentTypeRepository(_context, _transaction);
 
         public IEmailAddressRepository EmailAddresses =>
             _emailAddresses ??= new EmailAddressRepository(_context, _transaction);
@@ -378,6 +372,9 @@ namespace MyPortal.Database
 
         public IStudentRepository Students => _students ??= new StudentRepository(_context, _transaction);
 
+        public IStudentGroupRepository StudentGroups =>
+            _studentGroups ??= new StudentGroupRepository(_context, _transaction);
+
         public IStudyTopicRepository StudyTopics => _studyTopics ??= new StudyTopicRepository(_context, _transaction);
 
         public ISubjectCodeSetRepository SubjectCodeSets =>
@@ -424,6 +421,13 @@ namespace MyPortal.Database
 
         private async Task Init()
         {
+            if (_transaction != null)
+            {
+                await _transaction.DisposeAsync();
+                _transaction = null;
+                ResetRepositories();
+            }
+
             var transaction = await _context.Database.BeginTransactionAsync();
 
             _transaction = transaction.GetDbTransaction();
@@ -440,12 +444,6 @@ namespace MyPortal.Database
             _context?.Dispose();
         }
 
-        private void DisposeTransaction()
-        {
-            _transaction?.Dispose();
-            ResetRepositories();
-        }
-
         public async Task SaveChangesAsync()
         {
             try
@@ -453,14 +451,13 @@ namespace MyPortal.Database
                 await _context.SaveChangesAsync();
                 await _context.Database.CurrentTransaction.CommitAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 await _context.Database.CurrentTransaction.RollbackAsync();
                 throw;
             }
             finally
             {
-                DisposeTransaction();
                 await Init();
             }
         }
@@ -498,10 +495,8 @@ namespace MyPortal.Database
             _communicationTypes = null;
             _contacts = null;
             _curriculumBandBlockAssignments = null;
-            _curriculumBandMemberships = null;
             _curriculumBands = null;
             _curriculumBlocks = null;
-            _curriculumGroupMemberships = null;
             _curriculumGroups = null;
             _curriculumYearGroups = null;
             _detentions = null;
@@ -562,6 +557,7 @@ namespace MyPortal.Database
             _studentContactRelationships = null;
             _studentDiscounts = null;
             _students = null;
+            _studentGroups = null;
             _studyTopics = null;
             _subjectCodeSets = null;
             _subjects = null;

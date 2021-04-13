@@ -180,9 +180,12 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var academicYearModel in academicYearModels)
                 {
-                    var academicYearInDb = await unitOfWork.AcademicYears.GetByIdForEditing(academicYearModel.Id);
+                    var academicYearInDb = await unitOfWork.AcademicYears.GetById(academicYearModel.Id);
 
+                    academicYearInDb.Name = academicYearModel.Name;
                     academicYearInDb.Locked = academicYearModel.Locked;
+
+                    await unitOfWork.AcademicYears.Update(academicYearInDb);
                 }
 
                 await unitOfWork.SaveChangesAsync();

@@ -4,8 +4,6 @@ namespace MyPortal.Logic.Models.Requests.Behaviour.Detentions
 {
     public class CreateDetentionRequest
     {
-        public Guid Id { get; set; }
-
         public Guid DetentionTypeId { get; set; }
 
         public DateTime StartTime { get; set; }

@@ -6,7 +6,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IDocumentRepository : IReadWriteRepository<Document>
+    public interface IDocumentRepository : IReadWriteRepository<Document>, IUpdateRepository<Document>
     {
         Task<IEnumerable<Document>> GetByDirectory(Guid directoryId);
     }

@@ -3,7 +3,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IBehaviourOutcomeRepository : IReadWriteRepository<BehaviourOutcome>
+    public interface IBehaviourOutcomeRepository : IReadWriteRepository<BehaviourOutcome>, IUpdateRepository<BehaviourOutcome>
     {
         
     }

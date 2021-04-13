@@ -5,6 +5,10 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using MyPortal.Database.Constants;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
@@ -12,6 +16,7 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -47,6 +52,36 @@ namespace MyPortal.Database.Repositories
 
                 return aspect;
             }, sql.NamedBindings, Transaction);
+        }
+
+        public async Task Update(Aspect entity)
+        {
+            var aspect = await Context.Aspects.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (aspect == null)
+            {
+                throw new EntityNotFoundException("Aspect not found.");
+            }
+
+            aspect.ColumnHeading = entity.ColumnHeading;
+            aspect.GradeSetId = entity.GradeSetId;
+            aspect.TypeId = entity.TypeId;
+
+            if (entity.TypeId == AspectTypes.MarkDecimal || entity.TypeId == AspectTypes.MarkInteger)
+            {
+                aspect.MinMark = entity.MinMark;
+                aspect.MaxMark = entity.MaxMark;   
+            }
+            else
+            {
+                aspect.MinMark = null;
+                aspect.MaxMark = null;
+            }
+
+            aspect.StudentVisible = entity.StudentVisible;
+            aspect.Active = entity.Active;
+            aspect.Description = entity.Description;
+            aspect.Name = entity.Name;
         }
     }
 }

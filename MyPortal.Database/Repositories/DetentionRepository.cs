@@ -4,6 +4,8 @@ using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
@@ -11,6 +13,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -114,6 +117,20 @@ namespace MyPortal.Database.Repositories
             }
 
             return await ExecuteQuery(query);
+        }
+
+
+        public async Task Update(Detention entity)
+        {
+            var detention = await Context.Detentions.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (detention == null)
+            {
+                throw new EntityNotFoundException("Detention not found.");
+            }
+
+            detention.SupervisorId = entity.SupervisorId;
+            detention.DetentionTypeId = entity.DetentionTypeId;
         }
     }
 }

@@ -5,6 +5,8 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -63,6 +65,19 @@ namespace MyPortal.Database.Repositories
             var result = await ExecuteQueryIntResult(query);
 
             return result == null || result == 0;
+        }
+
+        public async Task Update(CurriculumBlock entity)
+        {
+            var block = await Context.CurriculumBlocks.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (block == null)
+            {
+                throw new EntityNotFoundException("Block not found.");
+            }
+
+            block.Code = entity.Code;
+            block.Description = entity.Description;
         }
     }
 }

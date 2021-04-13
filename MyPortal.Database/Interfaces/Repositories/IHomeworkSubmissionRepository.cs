@@ -3,7 +3,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IHomeworkSubmissionRepository : IReadWriteRepository<HomeworkSubmission>
+    public interface IHomeworkSubmissionRepository : IReadWriteRepository<HomeworkSubmission>, IUpdateRepository<HomeworkSubmission>
     {
     }
 }

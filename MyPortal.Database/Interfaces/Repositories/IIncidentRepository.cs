@@ -6,7 +6,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IIncidentRepository : IReadWriteRepository<Incident>
+    public interface IIncidentRepository : IReadWriteRepository<Incident>, IUpdateRepository<Incident>
     {
         Task<IEnumerable<Incident>> GetByStudent(Guid studentId, Guid academicYearId);
 

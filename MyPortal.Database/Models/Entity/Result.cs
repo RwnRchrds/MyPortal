@@ -28,9 +28,6 @@ namespace MyPortal.Database.Models.Entity
         public string Comments { get; set; }
 
         [Column(Order = 8)] 
-        public string Note { get; set; }
-
-        [Column(Order = 9)] 
         public string ColourCode { get; set; }
 
         public virtual ResultSet ResultSet { get; set; }

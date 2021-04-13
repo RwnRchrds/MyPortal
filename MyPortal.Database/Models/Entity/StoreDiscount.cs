@@ -20,6 +20,8 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 2)]
         public bool Global { get; set; }
 
+        public virtual Discount Discount { get; set; }
+        public virtual ICollection<BillStoreDiscount> BillStoreDiscounts { get; set; }
         public virtual ICollection<ProductDiscount> ProductDiscounts { get; set; }
         public virtual ICollection<ProductTypeDiscount> ProductTypeDiscounts { get; set; }
     }

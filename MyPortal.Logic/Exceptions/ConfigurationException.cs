@@ -10,7 +10,7 @@ namespace MyPortal.Logic.Exceptions
         {
         }
 
-        public ConfigurationException(string? message) : base(message)
+        public ConfigurationException(string message) : base(message)
         {
         }
     }

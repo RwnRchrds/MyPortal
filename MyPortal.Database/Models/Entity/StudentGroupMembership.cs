@@ -3,22 +3,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models.Entity
 {
-    [Table("CurriculumGroupMemberships")]
-    public class CurriculumGroupMembership : BaseTypes.Entity
+    [Table("StudentGroupMemberships")]
+    public class StudentGroupMembership : BaseTypes.Entity
     {
         [Column(Order = 1)]
         public Guid StudentId { get; set; }
         
         [Column(Order = 2)]
-        public Guid GroupId { get; set; }
+        public Guid StudentGroupId { get; set; }
         
-        [Column(Order = 3)]
+        [Column(Order = 3, TypeName = "date")]
         public DateTime StartDate { get; set; }
         
-        [Column(Order = 4)]
-        public DateTime EndDate { get; set; }
+        [Column(Order = 4, TypeName = "date")]
+        public DateTime? EndDate { get; set; }
 
         public virtual Student Student { get; set; }
-        public virtual CurriculumGroup CurriculumGroup { get; set; }
+        public virtual StudentGroup StudentGroup { get; set; }
     }
 }

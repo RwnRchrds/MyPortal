@@ -7,7 +7,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IDiaryEventAttendeeRepository : IReadWriteRepository<DiaryEventAttendee>
+    public interface IDiaryEventAttendeeRepository : IReadWriteRepository<DiaryEventAttendee>, IUpdateRepository<DiaryEventAttendee>
     {
         Task<IEnumerable<DiaryEventAttendee>> GetByEvent(Guid eventId);
     }

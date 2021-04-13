@@ -2,12 +2,15 @@
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -32,16 +35,16 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("People as Person", "Person.Id", "StaffMember.PersonId");
         }
 
-        protected override async Task<IEnumerable<House>> ExecuteQuery(Query query)
+        public async Task Update(House entity)
         {
-            var sql = Compiler.Compile(query);
+            var house = await Context.Houses.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
-            return await Transaction.Connection.QueryAsync<House, StaffMember, House>(sql.Sql, (house, head) =>
+            if (house == null)
             {
-                house.HeadOfHouse = head;
-
-                return house;
-            }, sql.NamedBindings, Transaction);
+                throw new EntityNotFoundException("House not found.");
+            }
+            
+            house.ColourCode = entity.ColourCode;
         }
     }
 }

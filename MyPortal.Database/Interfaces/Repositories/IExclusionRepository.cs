@@ -6,7 +6,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IExclusionRepository : IReadWriteRepository<Exclusion>
+    public interface IExclusionRepository : IReadWriteRepository<Exclusion>, IUpdateRepository<Exclusion>
     {
         Task<int> GetCountByStudent(Guid studentId);
         Task<IEnumerable<Exclusion>> GetByStudent(Guid studentId);

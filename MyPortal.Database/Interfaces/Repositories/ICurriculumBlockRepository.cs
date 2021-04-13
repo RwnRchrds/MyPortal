@@ -7,7 +7,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface ICurriculumBlockRepository : IReadWriteRepository<CurriculumBlock>
+    public interface ICurriculumBlockRepository : IReadWriteRepository<CurriculumBlock>, IUpdateRepository<CurriculumBlock>
     {
         Task<IEnumerable<CurriculumBlock>> GetByCurriculumBand(Guid bandId);
         Task<Guid?> GetAcademicYearId(Guid blockId);

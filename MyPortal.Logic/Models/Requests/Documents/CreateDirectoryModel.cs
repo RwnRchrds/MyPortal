@@ -13,7 +13,6 @@ namespace MyPortal.Logic.Models.Requests.Documents
         [StringLength(128)]
         public string Name { get; set; }
 
-        public bool Private { get; set; }
-        public bool StaffOnly { get; set; }
+        public bool Restricted { get; set; }
     }
 }

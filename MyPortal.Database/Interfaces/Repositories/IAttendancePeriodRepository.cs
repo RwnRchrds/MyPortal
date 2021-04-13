@@ -3,7 +3,8 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IAttendancePeriodRepository : IReadWriteRepository<AttendancePeriod>
+    public interface IAttendancePeriodRepository : IReadWriteRepository<AttendancePeriod>,
+        IUpdateRepository<AttendancePeriod>
     {
     }
 }

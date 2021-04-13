@@ -13,24 +13,43 @@ namespace MyPortal.Logic.Helpers
     {
         public static bool ValidateUpn(string upn)
         {
+            upn = upn.Replace(" ", "");
+            
+            if (upn.Length != 13)
+            {
+                return false;
+            }
+
+            var chars = upn.ToCharArray();
+
+            var checkDigit = GetUpnCheckDigit(chars[new Range(1, 12)]);
+
+            return chars[0] == checkDigit;
+        }
+
+        public static char GetUpnCheckDigit(string baseUpn)
+        {
+            return GetUpnCheckDigit(baseUpn.ToCharArray());
+        }
+
+        public static char GetUpnCheckDigit(char[] baseUpn)
+        {
+            if (baseUpn.Length != 12)
+            {
+                throw new ArgumentException("Please enter the base UPN only", nameof(baseUpn));
+            }
+            
             var alpha = new[]
             {
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'T', 'U', 'V', 'W', 'X',
                 'Y', 'Z'
             };
-
-            var chars = upn.ToCharArray();
-
-            if (chars.Length != 13)
-            {
-                return false;
-            }
-
+            
             var check = 0;
 
-            for (var i = 1; i < chars.Length; i++)
+            for (var i = 1; i < baseUpn.Length; i++)
             {
-                if (int.TryParse(chars[i].ToString(), out var x))
+                if (int.TryParse(baseUpn[i].ToString(), out var x))
                 {
                     var n = x * (i + 1);
                     check += n;
@@ -39,7 +58,7 @@ namespace MyPortal.Logic.Helpers
 
             var alphaIndex = check % 23;
 
-            return chars[0] == alpha[alphaIndex];
+            return alpha[alphaIndex];
         }
 
         public static bool ValidateNhsNumber(string nhsNumber)

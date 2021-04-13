@@ -31,18 +31,6 @@ namespace MyPortal.Database.Repositories.Base
             return await Transaction.Connection.ExecuteAsync(compiled.Sql, compiled.NamedBindings, Transaction);
         }
 
-        public async Task<TEntity> GetByIdForEditing(Guid id)
-        {
-            var entity = await Context.Set<TEntity>().FirstOrDefaultAsync(x => x.Id == id);
-
-            if (entity == null)
-            {
-                throw new Exception($"{typeof(TEntity).Name} with ID {id} not found.");
-            }
-
-            return entity;
-        }
-
         public void Create(TEntity entity)
         {
             var result = Context.Set<TEntity>().Add(entity);
@@ -50,7 +38,7 @@ namespace MyPortal.Database.Repositories.Base
 
         public async Task Delete(Guid id)
         {
-            var entity = await GetByIdForEditing(id);
+            var entity = await Context.Set<TEntity>().FindAsync(id);
 
             switch (entity)
             {

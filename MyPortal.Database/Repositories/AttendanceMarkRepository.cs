@@ -5,7 +5,9 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
@@ -107,13 +109,24 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(AttendanceMark mark)
         {
-            var columns = new List<string> { "CodeId", "MinutesLate", "Comments" };
+            /*var columns = new List<string> { "CodeId", "MinutesLate", "Comments" };
 
             var values = new List<object> { mark.CodeId, mark.MinutesLate, mark.Comments };
 
             var query = new Query(TblName).Where("AttendanceMark.Id", "=", mark.Id).AsUpdate(columns, values);
 
-            await ExecuteNonQuery(query);
+            await ExecuteNonQuery(query);*/
+
+            var attendanceMark = await Context.AttendanceMarks.FirstOrDefaultAsync(x => x.Id == mark.Id);
+
+            if (attendanceMark == null)
+            {
+                throw new EntityNotFoundException("Attendance mark not found.");
+            }
+
+            attendanceMark.CodeId = mark.CodeId;
+            attendanceMark.Comments = mark.Comments;
+            attendanceMark.MinutesLate = mark.MinutesLate;
         }
     }
 }

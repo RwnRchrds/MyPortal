@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -67,6 +70,19 @@ namespace MyPortal.Database.Repositories
             query.Where("AcademicYear.Id", academicYearId);
 
             return await ExecuteQueryFirstOrDefault<bool>(query);
+        }
+
+        public async Task Update(AcademicYear entity)
+        {
+            var academicYear = await Context.AcademicYears.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (academicYear == null)
+            {
+                throw new EntityNotFoundException("Academic year not found.");
+            }
+
+            academicYear.Name = entity.Name;
+            academicYear.Locked = entity.Locked;
         }
     }
 }

@@ -86,7 +86,7 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var incidentModel in incidents)
                 {
-                    var incidentInDb = await unitOfWork.Incidents.GetByIdForEditing(incidentModel.Id);
+                    var incidentInDb = await unitOfWork.Incidents.GetById(incidentModel.Id);
 
                     incidentInDb.Points = incidentModel.Points;
                     incidentInDb.BehaviourTypeId = incidentModel.BehaviourTypeId;
@@ -94,6 +94,8 @@ namespace MyPortal.Logic.Services
                     incidentInDb.OutcomeId = incidentModel.OutcomeId;
                     incidentInDb.StatusId = incidentModel.StatusId;
                     incidentInDb.Comments = incidentModel.Comments;
+
+                    await unitOfWork.Incidents.Update(incidentInDb);
                 }
 
                 await unitOfWork.SaveChangesAsync();

@@ -2,12 +2,15 @@
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -38,19 +41,24 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Transaction.Connection.QueryAsync<YearGroup, StaffMember, Person, CurriculumYearGroup, YearGroup>(sql.Sql, (yearGroup, head, person, curriculumGroup) =>
+            return await Transaction.Connection.QueryAsync<YearGroup, CurriculumYearGroup, YearGroup>(sql.Sql, (yearGroup, curriculumGroup) =>
             {
-                yearGroup.HeadOfYear = head;
-
-                if (yearGroup.HeadOfYear != null)
-                {
-                    yearGroup.HeadOfYear.Person = person;
-                }
-
                 yearGroup.CurriculumYearGroup = curriculumGroup;
 
                 return yearGroup;
             }, sql.NamedBindings, Transaction);
+        }
+
+        public async Task Update(YearGroup entity)
+        {
+            var yearGroup = await Context.YearGroups.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (yearGroup == null)
+            {
+                throw new EntityNotFoundException("Year group not found.");
+            }
+
+            yearGroup.CurriculumYearGroupId = entity.CurriculumYearGroupId;
         }
     }
 }

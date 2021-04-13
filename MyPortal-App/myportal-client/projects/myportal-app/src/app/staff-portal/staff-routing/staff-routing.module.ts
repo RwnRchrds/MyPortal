@@ -25,7 +25,7 @@ import {StudentCommunicationComponent} from '../people/students/student-view/stu
 import {StudentCurriculumComponent} from '../people/students/student-view/student-curriculum/student-curriculum.component';
 import {StudentDocumentsComponent} from '../people/students/student-view/student-documents/student-documents.component';
 import {StudentSendComponent} from '../people/students/student-view/student-send/student-send.component';
-import {LogNoteFormComponent} from '../people/students/student-view/student-overview/log-note-form/log-note-form.component';
+import {LogNoteFormComponent} from '../people/students/student-view/student-overview/student-log-notes/log-note-form/log-note-form.component';
 
 const staffRoutes: Routes = [
   {

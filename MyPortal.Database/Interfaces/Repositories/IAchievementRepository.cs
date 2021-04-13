@@ -6,7 +6,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IAchievementRepository : IReadWriteRepository<Achievement>
+    public interface IAchievementRepository : IReadWriteRepository<Achievement>, IUpdateRepository<Achievement>
     {
         Task<int> GetCountByStudent(Guid studentId, Guid academicYearId);
         Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId);

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
@@ -10,6 +13,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Query.Attendance;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -87,6 +91,20 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<SessionMetadata>> GetMetadataByStaffMember(Guid staffMember, DateTime dateFrom, DateTime dateTo)
         {
             return null;
+        }
+
+        public async Task Update(Session entity)
+        {
+            var session = await Context.Sessions.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (session == null)
+            {
+                throw new EntityNotFoundException("Session not found.");
+            }
+
+            session.PeriodId = entity.PeriodId;
+            session.RoomId = entity.RoomId;
+            session.TeacherId = entity.TeacherId;
         }
     }
 }

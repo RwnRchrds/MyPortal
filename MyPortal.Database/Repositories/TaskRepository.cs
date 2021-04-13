@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
@@ -82,6 +84,22 @@ namespace MyPortal.Database.Repositories
             {
                 query.Where("Task.Completed", true);
             }
+        }
+
+        public async System.Threading.Tasks.Task Update(Task entity)
+        {
+            var task = await Context.Tasks.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (task == null)
+            {
+                throw new EntityNotFoundException("Task not found.");
+            }
+
+            task.Completed = entity.Completed;
+            task.Description = entity.Description;
+            task.TypeId = entity.TypeId;
+            task.DueDate = entity.DueDate;
+            task.CompletedDate = entity.CompletedDate;
         }
     }
 }
