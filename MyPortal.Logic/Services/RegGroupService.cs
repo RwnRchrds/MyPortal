@@ -17,7 +17,8 @@ namespace MyPortal.Logic.Services
             {
                 var regGroups = await unitOfWork.RegGroups.GetAll();
 
-                return regGroups.OrderBy(r => r.Name).Select(BusinessMapper.Map<RegGroupModel>);
+                // TODO: Add order by
+                return regGroups.Select(BusinessMapper.Map<RegGroupModel>);
             }
         }
     }

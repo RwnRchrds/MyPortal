@@ -4,6 +4,8 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
@@ -12,6 +14,7 @@ using MyPortal.Database.Models.Query.Person;
 using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -136,6 +139,28 @@ namespace MyPortal.Database.Repositories
 
                     return result;
                 }, sql.NamedBindings, Transaction, splitOn:"Id, IsUser");
+        }
+
+        public async Task Update(Person entity)
+        {
+            var person = await Context.People.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (person == null)
+            {
+                throw new EntityNotFoundException("Person not found.");
+            }
+
+            person.Title = entity.Title;
+            person.FirstName = entity.FirstName;
+            person.MiddleName = entity.MiddleName;
+            person.LastName = entity.LastName;
+            person.PhotoId = entity.PhotoId;
+            person.NhsNumber = entity.NhsNumber;
+            person.UpdatedDate = entity.UpdatedDate;
+            person.Gender = entity.Gender;
+            person.Dob = entity.Dob;
+            person.Deceased = entity.Deceased;
+            person.EthnicityId = entity.EthnicityId;
         }
     }
 }

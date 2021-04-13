@@ -60,12 +60,14 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var document in documents)
                 {
-                    var documentInDb = await unitOfWork.Documents.GetByIdForEditing(document.Id);
+                    var documentInDb = await unitOfWork.Documents.GetById(document.Id);
 
                     documentInDb.Title = document.Title;
                     documentInDb.Description = document.Description;
                     documentInDb.Restricted = document.Restricted;
                     documentInDb.TypeId = document.TypeId;
+
+                    await unitOfWork.Documents.Update(documentInDb);
                 }
 
                 await unitOfWork.SaveChangesAsync();

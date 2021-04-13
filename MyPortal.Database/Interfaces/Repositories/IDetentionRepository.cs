@@ -7,7 +7,7 @@ using MyPortal.Database.Models.Search;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IDetentionRepository : IReadWriteRepository<Detention>
+    public interface IDetentionRepository : IReadWriteRepository<Detention>, IUpdateRepository<Detention>
     {
         Task<IEnumerable<Detention>> GetByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo);
 

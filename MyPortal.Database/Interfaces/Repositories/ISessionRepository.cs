@@ -7,7 +7,7 @@ using MyPortal.Database.Models.Query.Attendance;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface ISessionRepository : IReadWriteRepository<Session>
+    public interface ISessionRepository : IReadWriteRepository<Session>, IUpdateRepository<Session>
     {
         Task<IEnumerable<SessionMetadata>> GetMetadata(Guid sessionId, DateTime dateFrom, DateTime dateTo);
         Task<SessionMetadata> GetMetadata(Guid sessionId, Guid attendanceWeekId);

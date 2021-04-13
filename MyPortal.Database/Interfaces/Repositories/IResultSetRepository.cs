@@ -3,7 +3,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IResultSetRepository : IReadWriteRepository<ResultSet>
+    public interface IResultSetRepository : IReadWriteRepository<ResultSet>, IUpdateRepository<ResultSet>
     {
     }
 }

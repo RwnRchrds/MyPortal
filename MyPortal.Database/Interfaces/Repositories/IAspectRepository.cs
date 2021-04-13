@@ -3,7 +3,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IAspectRepository : IReadWriteRepository<Aspect>
+    public interface IAspectRepository : IReadWriteRepository<Aspect>, IUpdateRepository<Aspect>
     {
     }
 }

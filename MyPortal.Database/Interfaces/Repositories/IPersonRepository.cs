@@ -10,7 +10,7 @@ using MyPortal.Database.Models.Search;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IPersonRepository : IReadWriteRepository<Person>
+    public interface IPersonRepository : IReadWriteRepository<Person>, IUpdateRepository<Person>
     {
         Task<Person> GetByUserId(Guid userId);
         Task<IEnumerable<Person>> GetAll(PersonSearchOptions searchParams);

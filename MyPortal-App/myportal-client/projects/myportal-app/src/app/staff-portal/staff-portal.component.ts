@@ -16,6 +16,7 @@ export class StaffPortalComponent extends PortalRootDirective implements OnInit,
 
   ngOnInit(): void {
     super.addBodyClasses();
+    this.initPortal();
   }
 
   ngOnDestroy(): void {

@@ -4,7 +4,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface ISchoolRepository : IReadWriteRepository<School>
+    public interface ISchoolRepository : IReadWriteRepository<School>, IUpdateRepository<School>
     {
         Task<string> GetLocalSchoolName();
         Task<School> GetLocal();

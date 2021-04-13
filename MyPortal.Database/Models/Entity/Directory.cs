@@ -23,11 +23,8 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(128)]
         public string Name { get; set; }
 
-        [Column(Order = 3)]
-        public bool Private { get; set; }
-
         [Column(Order = 4)]
-        public bool StaffOnly { get; set; } 
+        public bool Restricted { get; set; } 
 
         public virtual Directory Parent { get; set; }
 

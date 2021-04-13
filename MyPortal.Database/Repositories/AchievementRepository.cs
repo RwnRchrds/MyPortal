@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
@@ -15,6 +16,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
 using SqlKata.Compilers;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -120,6 +122,22 @@ namespace MyPortal.Database.Repositories
 
                         return achievement;
                     }, sql.NamedBindings, Transaction);
+        }
+
+        public async Task Update(Achievement entity)
+        {
+            var achievement = await Context.Achievements.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (achievement == null)
+            {
+                throw new EntityNotFoundException("Achievement not found.");
+            }
+
+            achievement.AchievementTypeId = entity.AchievementTypeId;
+            achievement.Comments = entity.Comments;
+            achievement.LocationId = entity.LocationId;
+            achievement.OutcomeId = entity.OutcomeId;
+            achievement.Points = entity.Points;
         }
     }
 }

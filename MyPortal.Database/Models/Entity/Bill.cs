@@ -11,6 +11,8 @@ namespace MyPortal.Database.Models.Entity
     {
         public Bill()
         {
+            BillDiscounts = new HashSet<BillChargeDiscount>();
+            BillCharges = new HashSet<BillCharge>();
             BillItems = new HashSet<BillItem>();
             AccountTransactions = new HashSet<BillAccountTransaction>();
         }
@@ -29,7 +31,8 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual Student Student { get; set; }
 
-        public virtual ICollection<BillDiscount> BillDiscounts { get; set; }
+        public virtual ICollection<BillChargeDiscount> BillDiscounts { get; set; }
+        public virtual ICollection<BillStoreDiscount> BillStoreDiscounts { get; set; }
         public virtual ICollection<BillCharge> BillCharges { get; set; }    
         public virtual ICollection<BillItem> BillItems { get; set; }
         public virtual ICollection<BillAccountTransaction> AccountTransactions { get; set; }

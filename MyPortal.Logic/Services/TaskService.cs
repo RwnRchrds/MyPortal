@@ -44,9 +44,6 @@ namespace MyPortal.Logic.Services
         public async Task<bool> CanAssign(Guid userId, Guid personId)
         {
             return true;
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-            }
         }
 
         public async Task<IEnumerable<TaskTypeModel>> GetTypes(bool personalOnly, bool activeOnly = true)
@@ -107,7 +104,7 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var task in tasks)
                 {
-                    var taskInDb = await unitOfWork.Tasks.GetByIdForEditing(task.Id);
+                    var taskInDb = await unitOfWork.Tasks.GetById(task.Id);
 
                     if (taskInDb == null)
                     {
@@ -123,6 +120,8 @@ namespace MyPortal.Logic.Services
                     taskInDb.Description = task.Description;
                     taskInDb.DueDate = task.DueDate;
                     taskInDb.TypeId = task.TypeId;
+
+                    await unitOfWork.Tasks.Update(taskInDb);
                 }
 
                 await unitOfWork.SaveChangesAsync();
@@ -153,9 +152,11 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var taskInDb = await unitOfWork.Tasks.GetByIdForEditing(taskId);
+                var taskInDb = await unitOfWork.Tasks.GetById(taskId);
 
                 taskInDb.Completed = completed;
+
+                await unitOfWork.Tasks.Update(taskInDb);
 
                 await unitOfWork.SaveChangesAsync();
             }

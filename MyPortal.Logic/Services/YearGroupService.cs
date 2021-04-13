@@ -17,7 +17,8 @@ namespace MyPortal.Logic.Services
             {
                 var yearGroups = await unitOfWork.YearGroups.GetAll();
 
-                return yearGroups.OrderBy(y => y.Name).Select(BusinessMapper.Map<YearGroupModel>);
+                // TODO: Add order by
+                return yearGroups.Select(BusinessMapper.Map<YearGroupModel>);
             }
         }
     }

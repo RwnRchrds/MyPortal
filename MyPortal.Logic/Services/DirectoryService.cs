@@ -52,8 +52,7 @@ namespace MyPortal.Logic.Services
                     {
                         ParentId = directory.ParentId,
                         Name = directory.Name,
-                        Private = parentDirectory.Private || directory.Private,
-                        StaffOnly = directory.StaffOnly
+                        Restricted = directory.Restricted
                     };
 
                     unitOfWork.Directories.Create(dirToAdd);
@@ -69,21 +68,22 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var directory in directories)
                 {
-                    var dirInDb = await unitOfWork.Directories.GetByIdForEditing(directory.Id);
+                    var dirInDb = await unitOfWork.Directories.GetById(directory.Id);
 
                     if (!string.IsNullOrWhiteSpace(directory.Name))
                     {
                         dirInDb.Name = directory.Name;
                     }
 
-                    dirInDb.Private = directory.Private;
-                    dirInDb.StaffOnly = directory.StaffOnly;
+                    dirInDb.Restricted = directory.Restricted;
 
                     // Cannot move root directories or remove parent from child directories
                     if (dirInDb.ParentId != null && directory.ParentId != null)
                     {
                         dirInDb.ParentId = directory.ParentId;
                     }
+
+                    await unitOfWork.Directories.Update(dirInDb);
                 }
 
                 await unitOfWork.SaveChangesAsync();
@@ -133,12 +133,12 @@ namespace MyPortal.Logic.Services
             {
                 var directory = await unitOfWork.Directories.GetById(directoryId);
 
-                if (directory.StaffOnly)
+                if (directory.Restricted)
                 {
                     return user.UserType == UserTypes.Staff;
                 }
 
-                if (directory.Private)
+                if (directory.Restricted)
                 {
                     if (user.UserType == UserTypes.Staff || user.Person?.DirectoryId == directory.Id ||
                         directory.ParentId != null && await IsAuthorised(user, directory.ParentId.Value))

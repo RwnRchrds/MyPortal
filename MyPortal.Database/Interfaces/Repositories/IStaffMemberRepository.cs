@@ -5,7 +5,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IStaffMemberRepository : IReadWriteRepository<StaffMember>
+    public interface IStaffMemberRepository : IReadWriteRepository<StaffMember>, IUpdateRepository<StaffMember>
     {
         Task<StaffMember> GetByPersonId(Guid personId);
 

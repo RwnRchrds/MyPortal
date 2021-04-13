@@ -27,6 +27,9 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 5)]
         public bool Restricted { get; set; }
+        
+        [Column(Order = 6)]
+        public bool System { get; set; }
 
         public virtual AttendanceCodeMeaning CodeMeaning { get; set; }
 

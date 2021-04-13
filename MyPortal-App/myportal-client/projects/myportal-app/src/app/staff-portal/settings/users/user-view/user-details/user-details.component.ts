@@ -55,6 +55,7 @@ export class UserDetailsComponent extends BaseFormDirective implements OnInit, O
     this.userSubscription.unsubscribe();
     this.rolesSubscription.unsubscribe();
     this.userRolesSubscription.unsubscribe();
+    this.form.reset();
   }
 
   get username(): AbstractControl {

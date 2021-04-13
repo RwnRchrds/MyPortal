@@ -17,7 +17,8 @@ namespace MyPortal.Logic.Services
             {
                 var houses = await unitOfWork.Houses.GetAll();
 
-                return houses.OrderBy(h => h.Name).Select(BusinessMapper.Map<HouseModel>);
+                // TODO: Add order by
+                return houses.Select(BusinessMapper.Map<HouseModel>);
             }
         }
     }

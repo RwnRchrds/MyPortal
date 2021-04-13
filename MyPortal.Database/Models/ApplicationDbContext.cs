@@ -24,10 +24,9 @@ namespace MyPortal.Database.Models
         public virtual DbSet<AchievementType> AchievementTypes { get; set; }
         public virtual DbSet<Activity> Activities { get; set; }
         public virtual DbSet<ActivityEvent> ActivityEvents { get; set; }
-        public virtual DbSet<ActivityMembership> ActivityMemberships { get; set; }
-        public virtual DbSet<ActivitySupervisor> ActivitySupervisors { get; set; }
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<AddressPerson> AddressPersons { get; set; }
+        public virtual DbSet<AddressType> AddressTypes { get; set; }
         public virtual DbSet<Agency> Agencies { get; set; }
         public virtual DbSet<AgencyType> AgencyTypes { get; set; }
         public virtual DbSet<Agent> Agents { get; set; }
@@ -46,9 +45,11 @@ namespace MyPortal.Database.Models
         public virtual DbSet<BehaviourTarget> BehaviourTargets { get; set; }
         public virtual DbSet<Bill> Bills { get; set; }
         public virtual DbSet<BillCharge> BillCharges { get; set; }
+        public virtual DbSet<BillChargeDiscount> BillChargeDiscounts { get; set; }
         public virtual DbSet<StudentDiscount> BillDiscounts { get; set; }
         public virtual DbSet<BillAccountTransaction> BillAccountTransactions { get; set; }
         public virtual DbSet<BillItem> BillItems { get; set; }
+        public virtual DbSet<BillStoreDiscount> BillStoreDiscounts { get; set; }
         public virtual DbSet<BoarderStatus> BoarderStatuses { get; set; }
         public virtual DbSet<Bulletin> Bulletins { get; set; }
         public virtual DbSet<Charge> Charges { get; set; }
@@ -65,10 +66,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<CoverArrangement> CoverArrangements { get; set; }
         public virtual DbSet<CurriculumBand> CurriculumBands { get; set; }
         public virtual DbSet<CurriculumBandBlockAssignment> CurriculumBandBlocks { get; set; }
-        public virtual DbSet<CurriculumBandMembership> Enrolments { get; set; }
         public virtual DbSet<CurriculumBlock> CurriculumBlocks { get; set; }
         public virtual DbSet<CurriculumGroup> CurriculumGroups { get; set; }
-        public virtual DbSet<CurriculumGroupMembership> CurriculumGroupMemberships { get; set; }
         public virtual DbSet<CurriculumYearGroup> CurriculumYearGroups { get; set; }
         public virtual DbSet<Detention> Detentions { get; set; }
         public virtual DbSet<DetentionType> DetentionTypes { get; set; }
@@ -141,6 +140,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<MarksheetTemplateGroup> MarksheetTemplateGroups { get; set; }
         public virtual DbSet<MedicalCondition> Conditions { get; set; }
         public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
+        public virtual DbSet<NextOfKinRelationshipType> NextOfKinRelationshipTypes { get; set; }
+        public virtual DbSet<NextOfKin> NextOfKin { get; set; }
         public virtual DbSet<Observation> Observations { get; set; }
         public virtual DbSet<ObservationOutcome> ObservationOutcomes { get; set; }
         public virtual DbSet<ParentEvening> ParentEvenings { get; set; }
@@ -191,6 +192,11 @@ namespace MyPortal.Database.Models
         public virtual DbSet<StudentCharge> StudentCharges { get; set; }
         public virtual DbSet<StudentContactRelationship> StudentContactRelationships { get; set; }
         public virtual DbSet<StudentContactRelationship> StudentContacts { get; set; }
+        public virtual DbSet<StudentGroup> StudentGroups { get; set; }
+        public virtual DbSet<StudentGroupMembership> StudentGroupMemberships { get; set; }
+        public virtual DbSet<StudentGroupSupervisor> StudentGroupSupervisors { get; set; }
+        public virtual DbSet<StudentGroupSupervisorTitle> StudentGroupSupervisorTitles { get; set; }
+        public virtual DbSet<StudentGroupType> StudentGroupTypes { get; set; }
         public virtual DbSet<StudyTopic> StudyTopics { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<SubjectCode> SubjectCodes { get; set; }
@@ -301,15 +307,9 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasMany(x => x.Memberships)
-                        .WithOne(x => x.Activity)
-                        .HasForeignKey(x => x.ActivityId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasMany(x => x.Supervisors)
-                        .WithOne(x => x.Activity)
-                        .HasForeignKey(x => x.ActivityId)
+                    e.HasOne(x => x.StudentGroup)
+                        .WithMany(x => x.Activities)
+                        .HasForeignKey(x => x.StudentGroupId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -321,28 +321,6 @@ namespace MyPortal.Database.Models
                     e.HasOne(x => x.Event)
                         .WithOne(x => x.Activity)
                         .HasForeignKey<ActivityEvent>(x => x.EventId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-                modelBuilder.Entity<ActivityMembership>(e =>
-                {
-                    SetIdDefaultValue(e);
-
-                    e.HasOne(x => x.Student)
-                        .WithMany(x => x.ActivityMemberships)
-                        .HasForeignKey(x => x.StudentId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-                modelBuilder.Entity<ActivitySupervisor>(e =>
-                {
-                    SetIdDefaultValue(e);
-
-                    e.HasOne(x => x.Supervisor)
-                        .WithMany(x => x.Activities)
-                        .HasForeignKey(x => x.SupervisorId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -361,6 +339,17 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<AddressPerson>(e =>
                 {
                     SetIdDefaultValue(e);
+                });
+
+                modelBuilder.Entity<AddressType>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(x => x.AddressPersons)
+                        .WithOne(x => x.AddressType)
+                        .HasForeignKey(x => x.AddressTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<Agency>(e =>
@@ -388,6 +377,11 @@ namespace MyPortal.Database.Models
                         .WithOne(x => x.Agency)
                         .HasForeignKey<Agency>(x => x.DirectoryId)
                         .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.PhoneNumbers)
+                        .WithOne(x => x.Agency)
+                        .HasForeignKey(x => x.AgencyId)
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -601,13 +595,13 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<BillDiscount>(e =>
+                modelBuilder.Entity<BillChargeDiscount>(e =>
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasOne(x => x.Discount)
-                        .WithMany(x => x.BillDiscounts)
-                        .HasForeignKey(x => x.DiscountId)
+                    e.HasOne(x => x.ChargeDiscount)
+                        .WithMany(x => x.BillChargeDiscounts)
+                        .HasForeignKey(x => x.ChargeDiscountId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -619,6 +613,23 @@ namespace MyPortal.Database.Models
                 });
 
                 modelBuilder.Entity<BillItem>(e => { SetIdDefaultValue(e); });
+
+                modelBuilder.Entity<BillStoreDiscount>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasOne(x => x.StoreDiscount)
+                        .WithMany(x => x.BillStoreDiscounts)
+                        .HasForeignKey(x => x.StoreDiscountId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.Bill)
+                        .WithMany(x => x.BillStoreDiscounts)
+                        .HasForeignKey(x => x.BillId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
 
                 modelBuilder.Entity<BoarderStatus>(e =>
                 {
@@ -739,13 +750,12 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasIndex(i => new {i.AcademicYearId, i.Code}).IsUnique();
-
-                    e.HasMany(x => x.Enrolments)
-                        .WithOne(x => x.Band)
-                        .HasForeignKey(x => x.BandId)
+                    e.HasOne(x => x.StudentGroup)
+                        .WithMany(x => x.CurriculumBands)
+                        .HasForeignKey(x => x.StudentGroupId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
+                        
 
                     e.HasMany(x => x.AssignedBlocks)
                         .WithOne(x => x.Band)
@@ -755,11 +765,6 @@ namespace MyPortal.Database.Models
                 });
 
                 modelBuilder.Entity<CurriculumBandBlockAssignment>(e =>
-                {
-                    SetIdDefaultValue(e);
-                });
-
-                modelBuilder.Entity<CurriculumBandMembership>(e =>
                 {
                     SetIdDefaultValue(e);
                 });
@@ -785,22 +790,17 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasMany(x => x.Memberships)
-                        .WithOne(x => x.CurriculumGroup)
-                        .HasForeignKey(x => x.GroupId)
+                    e.HasOne(x => x.StudentGroup)
+                        .WithMany(x => x.CurriculumGroups)
+                        .HasForeignKey(x => x.StudentGroupId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.Classes)
                         .WithOne(x => x.Group)
-                        .HasForeignKey(x => x.GroupId)
+                        .HasForeignKey(x => x.CurriculumGroupId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-                modelBuilder.Entity<CurriculumGroupMembership>(e =>
-                {
-                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<CurriculumYearGroup>(e =>
@@ -1419,9 +1419,9 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasOne(e => e.AppealResult)
-                        .WithMany(e => e.Exclusions)
-                        .HasForeignKey(e => e.AppealResultId)
+                    e.HasOne(x => x.AppealResult)
+                        .WithMany(x => x.Exclusions)
+                        .HasForeignKey(x => x.AppealResultId)
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -1471,9 +1471,9 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasMany(e => e.Results)
-                        .WithOne(e => e.Grade)
-                        .HasForeignKey(e => e.GradeId)
+                    e.HasMany(x => x.Results)
+                        .WithOne(x => x.Grade)
+                        .HasForeignKey(x => x.GradeId)
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -1530,9 +1530,11 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasMany(x => x.Students)
-                        .WithOne(x => x.House)
-                        .HasForeignKey(x => x.HouseId);
+                    e.HasOne(x => x.StudentGroup)
+                        .WithMany(x => x.Houses)
+                        .HasForeignKey(x => x.StudentGroupId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<Incident>(e =>
@@ -1609,7 +1611,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.BehaviourIncidents)
-                        .WithOne(e => e.Location)
+                        .WithOne(x => x.Location)
                         .HasForeignKey(x => x.LocationId)
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -1652,9 +1654,9 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasOne(x => x.Template)
-                        .WithMany(x => x.TemplateGroups)
-                        .HasForeignKey(x => x.MarksheetTemplateId)
+                    e.HasOne(x => x.StudentGroup)
+                        .WithMany(x => x.MarksheetTemplateGroups)
+                        .HasForeignKey(x => x.StudentGroupId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -1673,6 +1675,34 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<MedicalEvent>(e =>
                 {
                     SetIdDefaultValue(e);
+                });
+
+                modelBuilder.Entity<NextOfKin>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasOne(x => x.StaffMember)
+                        .WithOne(x => x.NextOfKin)
+                        .HasForeignKey<NextOfKin>(x => x.StaffMemberId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.NextOfKinPerson)
+                        .WithMany(x => x.RelatedStaff)
+                        .HasForeignKey(x => x.NextOfKinPersonId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<NextOfKinRelationshipType>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(x => x.NextOfKin)
+                        .WithOne(x => x.RelationshipType)
+                        .HasForeignKey(x => x.RelationshipTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<Observation>(e =>
@@ -1770,7 +1800,6 @@ namespace MyPortal.Database.Models
                     e.HasMany(p => p.PhoneNumbers)
                         .WithOne(pn => pn.Person)
                         .HasForeignKey(pn => pn.PersonId)
-                        .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.Property(p => p.Gender)
@@ -1891,9 +1920,9 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasMany(x => x.Students)
-                        .WithOne(x => x.RegGroup)
-                        .HasForeignKey(x => x.RegGroupId)
+                    e.HasOne(x => x.StudentGroup)
+                        .WithMany(x => x.RegGroups)
+                        .HasForeignKey(x => x.StudentGroupId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -2189,20 +2218,10 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasMany(sm => sm.PastoralHouses)
-                        .WithOne(h => h.HeadOfHouse)
-                        .HasForeignKey(h => h.HeadId)
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasMany(sm => sm.PastoralRegGroups)
-                        .WithOne(rg => rg.Tutor)
-                        .HasForeignKey(rg => rg.TutorId)
+                    e.HasMany(x => x.StudentGroupSupervisors)
+                        .WithOne(x => x.Supervisor)
+                        .HasForeignKey(x => x.SupervisorId)
                         .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasMany(sm => sm.PastoralYearGroups)
-                        .WithOne(yg => yg.HeadOfYear)
-                        .HasForeignKey(yg => yg.HeadId)
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(sm => sm.PersonnelObservationsObserved)
@@ -2297,12 +2316,6 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasMany(x => x.Enrolments)
-                        .WithOne(x => x.Student)
-                        .HasForeignKey(x => x.StudentId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     e.HasMany(x => x.FinanceBasketItems)
                         .WithOne(x => x.Student)
                         .HasForeignKey(x => x.StudentId)
@@ -2357,7 +2370,7 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasMany(x => x.GroupMemberships)
+                    e.HasMany(x => x.StudentGroupMemberships)
                         .WithOne(x => x.Student)
                         .HasForeignKey(x => x.StudentId)
                         .IsRequired()
@@ -2433,6 +2446,54 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.DiscountId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<StudentGroup>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasOne(x => x.StudentGroupType)
+                        .WithMany(x => x.StudentGroups)
+                        .HasForeignKey(x => x.StudentGroupTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.PromoteToGroup)
+                        .WithMany(x => x.PromotionSourceGroups)
+                        .HasForeignKey(x => x.PromoteToGroupId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.StudentMemberships)
+                        .WithOne(x => x.StudentGroup)
+                        .HasForeignKey(x => x.StudentGroupId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.StudentGroupSupervisors)
+                        .WithOne(x => x.StudentGroup)
+                        .HasForeignKey(x => x.StudentGroupId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<StudentGroupMembership>(e =>
+                {
+                    SetIdDefaultValue(e);
+                });
+
+                modelBuilder.Entity<StudentGroupSupervisor>(e =>
+                {
+                    SetIdDefaultValue(e);
+                });
+
+                modelBuilder.Entity<StudentGroupSupervisorTitle>(e =>
+                {
+                    SetIdDefaultValue(e);
+                });
+
+                modelBuilder.Entity<StudentGroupType>(e =>
+                {
+                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<StudyTopic>(e =>
@@ -2685,9 +2746,9 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasMany(x => x.Students)
-                        .WithOne(x => x.YearGroup)
-                        .HasForeignKey(x => x.YearGroupId)
+                    e.HasOne(x => x.StudentGroup)
+                        .WithMany(x => x.YearGroups)
+                        .HasForeignKey(x => x.StudentGroupId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });

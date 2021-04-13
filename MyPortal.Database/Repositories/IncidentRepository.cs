@@ -4,12 +4,15 @@ using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -106,6 +109,24 @@ namespace MyPortal.Database.Repositories
             query.Where("Incident.AcademicYearId", academicYearId);
 
             return await ExecuteQueryIntResult(query) ?? 0;
+        }
+
+        public async Task Update(Incident entity)
+        {
+            var incident = await Context.Incidents.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (incident == null)
+            {
+                throw new EntityNotFoundException("Incident not found.");
+            }
+
+            incident.Comments = entity.Comments;
+            incident.BehaviourTypeId = entity.BehaviourTypeId;
+            incident.LocationId = entity.LocationId;
+            incident.OutcomeId = entity.OutcomeId;
+            incident.StatusId = entity.StatusId;
+            incident.Comments = entity.Comments;
+            incident.Points = entity.Points;
         }
     }
 }

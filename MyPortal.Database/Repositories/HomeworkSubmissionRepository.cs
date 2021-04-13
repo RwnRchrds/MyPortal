@@ -3,6 +3,8 @@ using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
@@ -54,6 +56,19 @@ namespace MyPortal.Database.Repositories
 
                         return submission;
                     }, sql.NamedBindings, Transaction);
+        }
+
+        public async System.Threading.Tasks.Task Update(HomeworkSubmission entity)
+        {
+            var homeworkSubmission = await Context.HomeworkSubmissions.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (homeworkSubmission == null)
+            {
+                throw new EntityNotFoundException("Homework submission not found.");
+            }
+
+            homeworkSubmission.DocumentId = entity.DocumentId;
+            homeworkSubmission.PointsAchieved = entity.PointsAchieved;
         }
     }
 }

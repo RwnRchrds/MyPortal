@@ -39,10 +39,8 @@ namespace MyPortal.Database.Interfaces
         ICommunicationTypeRepository CommunicationTypes { get; }
         IContactRepository Contacts { get; }
         ICurriculumBandBlockAssignmentRepository CurriculumBandBlockAssignments { get; }
-        ICurriculumBandMembershipRepository CurriculumBandMemberships { get; }
         ICurriculumBandRepository CurriculumBands { get; }
         ICurriculumBlockRepository CurriculumBlocks { get; }
-        ICurriculumGroupMembershipRepository CurriculumGroupMemberships { get; }
         ICurriculumGroupRepository CurriculumGroups { get; }
         ICurriculumYearGroupRepository CurriculumYearGroups { get; }
         IDetentionRepository Detentions { get; }
@@ -103,6 +101,7 @@ namespace MyPortal.Database.Interfaces
         IStudentContactRelationshipRepository StudentContactRelationships { get; }
         IStudentDiscountRepository StudentDiscounts { get; }
         IStudentRepository Students { get; }
+        IStudentGroupRepository StudentGroups { get; }
         IStudyTopicRepository StudyTopics { get; }
         ISubjectCodeSetRepository SubjectCodeSets { get; }
         ISubjectRepository Subjects { get; }

@@ -73,8 +73,7 @@ namespace MyPortalWeb.Controllers.Api
                     {
                         ParentId = model.ParentId,
                         Name = model.Name,
-                        Private = model.Private,
-                        StaffOnly = model.StaffOnly
+                        Restricted = model.Restricted
                     };
 
                     await Services.Directories.Create(directory);
@@ -102,8 +101,7 @@ namespace MyPortalWeb.Controllers.Api
                         Id = model.Id,
                         ParentId = model.ParentId,
                         Name = model.Name,
-                        Private = model.Private,
-                        StaffOnly = model.StaffOnly
+                        Restricted = model.Restricted
                     };
 
                     await Services.Directories.Update(directory);

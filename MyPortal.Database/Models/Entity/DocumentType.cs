@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using MyPortal.Database.BaseTypes;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("DocumentTypes")]
-    public class DocumentType : LookupItem
+    public class DocumentType : LookupItem, ISystemEntity
     {
         public DocumentType()
         {
@@ -26,6 +27,9 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 7)]
         public bool Sen { get; set; }
+        
+        [Column(Order = 8)] 
+        public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Document> Documents { get; set; }

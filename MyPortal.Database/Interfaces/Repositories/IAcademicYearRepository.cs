@@ -6,7 +6,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IAcademicYearRepository : IReadWriteRepository<AcademicYear>
+    public interface IAcademicYearRepository : IReadWriteRepository<AcademicYear>, IUpdateRepository<AcademicYear>
     {
         Task<AcademicYear> GetCurrent();
         Task<AcademicYear> GetLatest();

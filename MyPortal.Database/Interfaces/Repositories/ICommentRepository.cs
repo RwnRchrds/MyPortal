@@ -3,7 +3,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface ICommentRepository : IReadWriteRepository<Comment>
+    public interface ICommentRepository : IReadWriteRepository<Comment>, IUpdateRepository<Comment>
     {
     }
 }

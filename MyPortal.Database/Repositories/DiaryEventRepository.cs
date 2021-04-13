@@ -4,13 +4,16 @@ using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -76,6 +79,27 @@ namespace MyPortal.Database.Repositories
             }
 
             return await ExecuteQuery(query);
+        }
+
+        public async Task Update(DiaryEvent entity)
+        {
+            var diaryEvent = await Context.DiaryEvents.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (diaryEvent == null)
+            {
+                throw new EntityNotFoundException("Calendar event not found.");
+            }
+
+            diaryEvent.EventTypeId = entity.EventTypeId;
+            diaryEvent.RoomId = entity.RoomId;
+            diaryEvent.Subject = entity.Subject;
+            diaryEvent.Description = entity.Description;
+            diaryEvent.Location = entity.Location;
+            diaryEvent.StartTime = entity.StartTime;
+            diaryEvent.EndTime = entity.EndTime;
+            diaryEvent.IsAllDay = entity.IsAllDay;
+            diaryEvent.IsBlock = entity.IsBlock;
+            diaryEvent.IsPublic = entity.IsPublic;
         }
     }
 }

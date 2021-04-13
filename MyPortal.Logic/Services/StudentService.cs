@@ -123,11 +123,58 @@ namespace MyPortal.Logic.Services
             }
         }
 
+        public async Task<string> GenerateUpn()
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var school = await unitOfWork.Schools.GetLocal();
+
+                if (school == null)
+                {
+                    throw new NotFoundException("Local school not found.");
+                }
+
+                var academicYear = await unitOfWork.AcademicYears.GetCurrent();
+
+                if (academicYear == null)
+                {
+                    throw new NotFoundException("No academic year is currently in session.");
+                }
+
+                var academicTerms =
+                    (await unitOfWork.AcademicTerms.GetByAcademicYear(academicYear.Id)).OrderBy(t => t.StartDate)
+                    .ToList();
+
+                var firstTerm = academicTerms.FirstOrDefault();
+
+                if (firstTerm == null)
+                {
+                    throw new NotFoundException("No academic terms were found in current academic year.");
+                }
+
+                var allocationYear =
+                    int.Parse(firstTerm.StartDate.Year.ToString().Substring(3, 2));
+
+                var upnSerials = (await unitOfWork.Students.GetUpns(school.LocalAuthority.LeaCode,
+                    school.EstablishmentNumber,
+                    allocationYear)).Select(u => int.Parse(u.Substring(10, 3))).ToList();
+
+                var nextSerial = upnSerials.Any() ? upnSerials.Max() : 1;
+
+                var baseUpn =
+                    $"{school.LocalAuthority.LeaCode}{school.EstablishmentNumber}{allocationYear}{nextSerial:000}";
+
+                var checkDigit = ValidationHelper.GetUpnCheckDigit(baseUpn);
+
+                return $"{checkDigit}{baseUpn}";
+            }
+        }
+
         public async Task Update(StudentModel student)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var studentInDb = await unitOfWork.Students.GetByIdForEditing(student.Id);
+                var studentInDb = await unitOfWork.Students.GetById(student.Id);
 
                 await unitOfWork.SaveChangesAsync();
             }

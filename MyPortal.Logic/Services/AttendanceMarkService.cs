@@ -64,7 +64,7 @@ namespace MyPortal.Logic.Services
 
                 register.Codes = codes.Select(BusinessMapper.Map<AttendanceCodeModel>).ToList();
 
-                var possibleMarks = (await unitOfWork.AttendanceMarks.GetRegisterMarks(StudentGroupType.CurriculumGroup,
+                var possibleMarks = (await unitOfWork.AttendanceMarks.GetRegisterMarks(StudentGroupTypes.CurriculumGroup,
                     register.Metadata.CurriculumGroupId, register.Metadata.StartTime.Date,
                     register.Metadata.StartTime.Date.AddDays(1))).GroupBy(m => m.StudentId);
 
@@ -131,7 +131,7 @@ namespace MyPortal.Logic.Services
                             Comments = markInDb.Comments
                         };
 
-                        unitOfWork.AttendanceMarks.Update(updatedMark);
+                        await unitOfWork.AttendanceMarks.Update(updatedMark);
                     }
                     else
                     {

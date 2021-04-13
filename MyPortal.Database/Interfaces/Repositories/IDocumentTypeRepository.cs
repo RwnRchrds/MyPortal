@@ -6,7 +6,7 @@ using MyPortal.Database.Models.Filters;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IDocumentTypeRepository : IReadRepository<DocumentType>
+    public interface IDocumentTypeRepository : IReadWriteRepository<DocumentType>, IUpdateRepository<DocumentType>
     {
         Task<IEnumerable<DocumentType>> Get(DocumentTypeFilter filter);
     }

@@ -37,8 +37,11 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 10)]
         public bool Restricted { get; set; }
+        
+        [Column(Order = 11)] 
+        public bool Confidential { get; set; }
 
-        [Column(Order = 11)]
+        [Column(Order = 12)]
         public bool Deleted { get; set; }
 
         public virtual User CreatedBy { get; set; }

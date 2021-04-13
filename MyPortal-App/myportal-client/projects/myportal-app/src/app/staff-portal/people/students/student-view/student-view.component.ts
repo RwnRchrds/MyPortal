@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {PortalViewDirective} from '../../../../_directives/portal-view/portal-view.directive';
 import {StudentModel} from 'myportal-api';
 import {Subscription} from 'rxjs';
@@ -24,10 +24,14 @@ export class StudentViewComponent extends PortalViewDirective implements OnInit,
   }
 
   ngOnInit(): void {
-    this.scriptService.loadScript('/assets/lib/js/pages/custom/profile/profile.js').then(result => {
+    this.scriptService.loadScript('/assets/lib/js/pages/custom/profile/profile.js').then(result =>
+    {
       this.viewService.init(this.route.snapshot.paramMap.get('studentId'));
       this.studentSubscription = this.viewService.currentStudent.pipe(map((student: StudentModel) => {
         this.student = student;
+        if (student) {
+          setTimeout(this.initSidebar, 0);
+        }
       })).subscribe();
     });
   }
@@ -36,6 +40,7 @@ export class StudentViewComponent extends PortalViewDirective implements OnInit,
     // Used to enable the mobile sidebar toggle
     // @ts-ignore
     KTProfile.init();
+    console.log('init sidebar');
   }
 
   ngOnDestroy(): void {

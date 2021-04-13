@@ -6,7 +6,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IAchievementTypeRepository : IReadWriteRepository<AchievementType>
+    public interface IAchievementTypeRepository : IReadWriteRepository<AchievementType>, IUpdateRepository<AchievementType>
     {
         Task<IEnumerable<AchievementType>> GetRecorded(Guid academicYearId);
     }

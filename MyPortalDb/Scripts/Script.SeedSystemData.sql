@@ -1989,8 +1989,8 @@ WHEN MATCHED THEN
 UPDATE SET Code = Source.Code, Description = Source.Description, MeaningId = Source.MeaningId
 
 WHEN NOT MATCHED THEN
-INSERT (Id, Code, Description, MeaningId, Active, Restricted)
-VALUES (Id, Code, Description, MeaningId, Active, 0);
+INSERT (Id, Code, Description, MeaningId, Active, Restricted, System)
+VALUES (Id, Code, Description, MeaningId, Active, 0, 1);
 
 --[AchievementOutcome]
 
@@ -2240,8 +2240,8 @@ AS Source (Id, Student, Staff, Contact, General, Sen, Description)
 ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
-INSERT (Id, Description, Student, Staff, Contact, General, Sen, Active)
-VALUES (Id, Description, Student, Staff, Contact, General, Sen, 1);
+INSERT (Id, Description, Student, Staff, Contact, General, Sen, Active, System)
+VALUES (Id, Description, Student, Staff, Contact, General, Sen, 1, 1);
 
 --[Finance_ProductTypes]
 
@@ -2860,17 +2860,17 @@ VALUES (Id, Name, KeyStage, Code);
 
 MERGE INTO [dbo].[Directories] AS Target
 USING (VALUES
-('B5DBF3AE-D9A9-4502-AE16-E437BED14F38', NULL, 'root', 0, 0)
+('B5DBF3AE-D9A9-4502-AE16-E437BED14F38', NULL, 'root', 0)
 )
-AS Source (Id, ParentId, Name, Private, StaffOnly)
+AS Source (Id, ParentId, Name, Restricted)
 ON Target.Id = Source.Id
 
 WHEN MATCHED THEN
-UPDATE SET ParentId = Source.ParentId, Name = Source.Name, Private = Source.Private, StaffOnly = Source.StaffOnly
+UPDATE SET ParentId = Source.ParentId, Name = Source.Name, Restricted = Source.Restricted
 
 WHEN NOT MATCHED THEN
-INSERT (Id, ParentId, Name, Private, StaffOnly)
-VALUES (Id, ParentId, Name, Private, StaffOnly);
+INSERT (Id, ParentId, Name, Restricted)
+VALUES (Id, ParentId, Name, Restricted);
 
 MERGE INTO [dbo].[DiaryEventTypes] AS Target
 USING (VALUES
@@ -3636,6 +3636,38 @@ USING (VALUES
 ('6DF2A876-A742-421D-824F-CBB6966AE21C', 'Supply Teacher', 1),
 ('6DF2A876-A742-421D-824F-CBB6966AE21D', 'Technician', 1),
 ('6DF2A876-A742-421D-824F-CBB6966AE21E', 'Tutor', 1)
+)
+AS Source (Id, Description, Active)
+ON Target.Id = Source.Id
+
+WHEN NOT MATCHED THEN
+INSERT (Id, Description, Active)
+VALUES (Id, Description, Active);
+
+MERGE INTO [dbo].[StudentGroupTypes] AS Target
+USING (VALUES
+('5E37BCFF-6C32-4FC9-B2CB-D45E44C7A3D6', 'Activity', 1, 'ACTIVITY', 1, 0),
+('5E37BCFF-6C32-4FC9-B2CB-D45E44C7A3D7', 'Reg Group', 1, 'REG', 0, 1),
+('5E37BCFF-6C32-4FC9-B2CB-D45E44C7A3D8', 'Year Group', 1, 'YEAR', 0, 1),
+('5E37BCFF-6C32-4FC9-B2CB-D45E44C7A3D9', 'House', 1, 'HOUSE', 0, 0),
+('5E37BCFF-6C32-4FC9-B2CB-D45E44C7A3DA', 'Curriculum Band', 1, 'CURRBAND', 0, 0),
+('5E37BCFF-6C32-4FC9-B2CB-D45E44C7A3DB', 'Curriculum Group', 1, 'CURRGROUP', 1, 0),
+('5E37BCFF-6C32-4FC9-B2CB-D45E44C7A3DC', 'User Defined', 1, 'CUSTOM', 1, 0)
+)
+AS Source (Id, Description, Active, Code, AllowSimultaneous, AllowPromotion)
+ON Target.Id = Source.Id
+
+WHEN NOT MATCHED THEN
+INSERT (Id, Description, Active, Code, AllowSimultaneous, AllowPromotion)
+VALUES (Id, Description, Active, Code, AllowSimultaneous, AllowPromotion);
+
+MERGE INTO [dbo].[StudentGroupSupervisorTitles] AS Target
+USING (VALUES
+('EA876C02-ACF0-4E3C-A567-5B07CA9C8B03', 'Activity Leader', 1),
+('EA876C02-ACF0-4E3C-A567-5B07CA9C8B04', 'Registration Tutor', 1),
+('EA876C02-ACF0-4E3C-A567-5B07CA9C8B05', 'Head of Year', 1),
+('EA876C02-ACF0-4E3C-A567-5B07CA9C8B06', 'Head of House', 1),
+('EA876C02-ACF0-4E3C-A567-5B07CA9C8B07', 'Class Teacher', 1)
 )
 AS Source (Id, Description, Active)
 ON Target.Id = Source.Id

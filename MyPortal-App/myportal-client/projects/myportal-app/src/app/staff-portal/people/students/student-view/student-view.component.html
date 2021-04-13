@@ -5,7 +5,7 @@
       <!--begin::Info-->
       <div class="d-flex align-items-center flex-wrap mr-2">
         <!--begin::Mobile Toggle-->
-        <button appNgInit="initSidebar()" class="burger-icon burger-icon-left mr-4 d-inline-block d-lg-none" id="kt_subheader_mobile_toggle">
+        <button class="burger-icon burger-icon-left mr-4 d-inline-block d-lg-none" id="kt_subheader_mobile_toggle">
           <span></span>
         </button>
         <!--end::Mobile Toggle-->
@@ -15,7 +15,7 @@
         <!--end::Separator-->
         <!--begin::Student Name-->
         <div class="d-flex align-items-center" id="kt_subheader_search">
-          <span class="text-dark-50 font-weight-bold">{{student.person | nameFormat}}</span>
+          <span class="text-dark-50 font-weight-bold">{{student?.person | nameFormat}}</span>
         </div>
         <!--end::Page Title-->
       </div>

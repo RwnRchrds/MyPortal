@@ -16,6 +16,9 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 2)]
         public Guid ChargeId { get; set; }
+        
+        [Column(Order = 3)] 
+        public string Description { get; set; }
 
         [Column(Order = 3)] 
         public DateTime StartDate { get; set; }

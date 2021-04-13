@@ -161,6 +161,17 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
+        public async Task<IEnumerable<string>> GetUpns(int leaCode, int establishmentNo, int allocationYear)
+        {
+            var query = new Query("Students AS S");
+
+            query.Select("S.Upn");
+
+            query.WhereLike("S.Upn", $"{leaCode}{establishmentNo}{allocationYear}", false);
+
+            return await ExecuteQuery<string>(query);
+        }
+
         public async Task<IEnumerable<Student>> GetGiftedTalented()
         {
             var query = GenerateQuery();
@@ -186,17 +197,7 @@ namespace MyPortal.Database.Repositories
 
                     student.Person = (Person) objects[1];
                     student.Person.User = (User) objects[2];
-                    student.RegGroup = (RegGroup) objects[3];
-                    student.RegGroup.Tutor = (StaffMember) objects[4];
-                    student.RegGroup.Tutor.Person = (Person) objects[5];
-                    student.YearGroup = (YearGroup) objects[6];
-                    
-                    if (objects[7] != null)
-                    {
-                        student.YearGroup.HeadOfYear = (StaffMember) objects[7];
-                        student.YearGroup.HeadOfYear.Person = (Person) objects[8];
-                    }
-                    
+
                     student.House = (House) objects[9];
                     student.SenStatus = (SenStatus) objects[10];
 

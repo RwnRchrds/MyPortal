@@ -6,7 +6,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IStudentChargeRepository : IReadWriteRepository<StudentCharge>
+    public interface IStudentChargeRepository : IReadWriteRepository<StudentCharge>, IUpdateRepository<StudentCharge>
     {
         Task<IEnumerable<StudentCharge>> GetOutstanding();
     }
