@@ -26,13 +26,6 @@ namespace MyPortal.Database.Helpers
             return query;
         }
 
-        public static Query JoinEntity(this Query query, Type type, string column, string alias = null, string joinType = null)
-        {
-            var tableName = EntityHelper.GetTableName(type, out string generatedAlias, alias);
-
-            return query.Join(tableName, $"{generatedAlias}.Id", column, "=", joinType);
-        }
-
         public static Query FilterByStudentGroup(this Query query, Guid groupTypeId, Guid groupId, string studentAlias = "S")
         {
             if (groupTypeId == StudentGroupTypes.YearGroup)

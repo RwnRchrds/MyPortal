@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentChargeRepository : BaseReadWriteRepository<StudentCharge>, IStudentChargeRepository
     {
-        public StudentChargeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "SC")
+        public StudentChargeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
         }
 

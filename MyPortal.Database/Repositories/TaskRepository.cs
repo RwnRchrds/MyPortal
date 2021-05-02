@@ -16,42 +16,9 @@ namespace MyPortal.Database.Repositories
 {
     public class TaskRepository : BaseReadWriteRepository<Task>, ITaskRepository
     {
-        public TaskRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Task")
+        public TaskRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
            
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Person), "AssignedTo");
-            query.SelectAllColumns(typeof(User), "AssignedBy");
-            query.SelectAllColumns(typeof(Person), "AssignedByPerson");
-            query.SelectAllColumns(typeof(TaskType), "Type");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("People as AssignedTo", "AssignedTo.Id", "Task.AssignedToId");
-            query.LeftJoin("Users as AssignedBy", "AssignedBy.Id", "Task.AssignedById");
-            query.LeftJoin("People as AssignedByPerson", "AssignedByPerson.UserId", "AssignedBy.Id");
-            query.LeftJoin("TaskTypes as Type", "Type.Id", "Task.TypeId");
-        }
-
-        protected override async System.Threading.Tasks.Task<IEnumerable<Task>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<Task, Person, User, Person, TaskType, Task>(sql.Sql, (task, assignedTo, assignedBy, abp, type) =>
-            {
-                task.AssignedTo = assignedTo;
-                task.AssignedBy = assignedBy;
-                task.AssignedBy.Person = abp;
-                task.Type = type;
-
-                return task;
-            }, sql.NamedBindings, Transaction);
         }
 
         public async System.Threading.Tasks.Task<IEnumerable<Task>> GetByAssignedTo(Guid personId, TaskSearchOptions searchOptions = null)

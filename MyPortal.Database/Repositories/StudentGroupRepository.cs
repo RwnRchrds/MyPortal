@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
     public class StudentGroupRepository : BaseReadWriteRepository<StudentGroup>, IStudentGroupRepository
     {
         public StudentGroupRepository(ApplicationDbContext context, DbTransaction transaction) :
-            base(context, transaction, "SG")
+            base(context, transaction)
         {
         }
 

@@ -9,7 +9,7 @@ namespace MyPortal.Database.Repositories
 {
     public class LocalAuthorityRepository : BaseReadRepository<LocalAuthority>, ILocalAuthorityRepository
     {
-        public LocalAuthorityRepository(DbTransaction transaction) : base(transaction, "LA")
+        public LocalAuthorityRepository(DbTransaction transaction) : base(transaction)
         {
         }
 
@@ -17,7 +17,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.LeftJoin("Schools as School", "School.LocalAuthorityId", "LA.Id");
+            query.LeftJoin("Schools as School", "School.LocalAuthorityId", $"{TblAlias}.Id");
 
             query.Where("School.Local", true);
 

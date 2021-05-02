@@ -16,34 +16,9 @@ namespace MyPortal.Database.Repositories
 {
     public class StudyTopicRepository : BaseReadWriteRepository<StudyTopic>, IStudyTopicRepository
     {
-        public StudyTopicRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "StudyTopic")
+        public StudyTopicRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Course));
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("Courses as Course", "Course.Id", "StudyTopic.CourseId");
-        }
-
-        protected override async Task<IEnumerable<StudyTopic>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<StudyTopic, Course, StudyTopic>(sql.Sql,
-                (topic, course) =>
-                {
-                    topic.Course = course;
-
-                    return topic;
-                }, sql.NamedBindings, Transaction);
         }
 
         public async Task Update(StudyTopic entity)

@@ -19,33 +19,9 @@ namespace MyPortal.Database.Repositories
 {
     public class ContactRepository : BaseReadWriteRepository<Contact>, IContactRepository
     {
-        public ContactRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Contact")
+        public ContactRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
      
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Person), "Person");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("People as Person", "Person.Id", "Contact.PersonId");
-        }
-
-        protected override async Task<IEnumerable<Contact>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<Contact, Person, Contact>(sql.Sql, (contact, person) =>
-            {
-                contact.Person = person;
-
-                return contact;
-            }, sql.NamedBindings, Transaction);
         }
 
         public async Task Update(Contact entity)

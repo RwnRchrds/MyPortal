@@ -25,32 +25,37 @@ namespace MyPortal.Database.Repositories
            
         }
 
-        protected override void SelectAllRelated(Query query)
+        protected override Query JoinRelated(Query query)
         {
-            query.SelectAllColumns(typeof(Person), "Person");
-            query.SelectAllColumns(typeof(Address), "Address");
+            query.LeftJoin("Addresses as A", "A.Id", $"{TblAlias}.AddressId");
+            query.LeftJoin("People as P", "P.Id", $"{TblAlias}.PersonId");
 
-            JoinRelated(query);
+            return query;
         }
 
-        protected override void JoinRelated(Query query)
+        protected override Query SelectAllRelated(Query query)
         {
-            query.LeftJoin("People as Person", "Person.Id", "AddressPerson.PersonId");
-            query.LeftJoin("Addresses as Address", "Address.Id", "AddressPerson.AddressId");
+            query.SelectAllColumns(typeof(Address), "A");
+            query.SelectAllColumns(typeof(Person), "P");
+
+            return query;
         }
 
         protected override async Task<IEnumerable<AddressPerson>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            return await Transaction.Connection.QueryAsync<AddressPerson, Address, Person, AddressPerson>(sql.Sql,
-                (ap, address, person) =>
+            var addressPeople = await Transaction.Connection.QueryAsync<AddressPerson, Address, Person, AddressPerson>(
+                sql.Sql,
+                (addressPerson, address, person) =>
                 {
-                    ap.Address = address;
-                    ap.Person = person;
+                    addressPerson.Address = address;
+                    addressPerson.Person = person;
 
-                    return ap;
+                    return addressPerson;
                 }, sql.NamedBindings, Transaction);
+
+            return addressPeople;
         }
 
         public async Task Update(AddressPerson entity)

@@ -7,11 +7,6 @@ using MyPortal.Logic.Interfaces.Services;
 {
     public abstract class BaseService
     {
-        protected readonly IMapper BusinessMapper;
-
-        public BaseService()
-        {
-            BusinessMapper = MappingHelper.GetConfig();
-        }
+        
     }
 }

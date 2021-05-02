@@ -19,44 +19,16 @@ namespace MyPortal.Database.Repositories
 {
     public class DocumentRepository : BaseReadWriteRepository<Document>, IDocumentRepository
     {
-        public DocumentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Document")
+        public DocumentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
            
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(DocumentType), "DocumentType");
-            query.SelectAllColumns(typeof(User), "User"); 
-            
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("DocumentTypes as DocumentType", "DocumentType.Id", "Document.TypeId");
-            query.LeftJoin("Users as User", "User.Id", "Document.CreatedById");
-        }
-
-        protected override async Task<IEnumerable<Document>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<Document, DocumentType, User, Document>(sql.Sql,
-                (document, type, uploader) =>
-                {
-                    document.Type = type;
-                    document.CreatedBy = uploader;
-
-                    return document;
-                }, sql.NamedBindings, Transaction);
         }
 
         public async Task<IEnumerable<Document>> GetByDirectory(Guid directoryId)
         {
             var query = GenerateQuery();
 
-            query.Where("Document.DirectoryId", directoryId);
+            query.Where($"{TblAlias}.DirectoryId", directoryId);
 
             return await ExecuteQuery(query);
         }

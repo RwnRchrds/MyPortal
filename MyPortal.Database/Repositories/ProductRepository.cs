@@ -16,33 +16,9 @@ namespace MyPortal.Database.Repositories
 {
     public class ProductRepository : BaseReadWriteRepository<Product>, IProductRepository
     {
-        public ProductRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Product")
+        public ProductRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(ProductType), "ProductType");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("ProductTypes as ProductType", "ProductType.Id", "Product.ProductTypeId");
-        }
-
-        protected override async Task<IEnumerable<Product>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<Product, ProductType, Product>(sql.Sql, (product, type) =>
-            {
-                product.Type = type;
-
-                return product;
-            }, sql.NamedBindings, Transaction);
         }
 
         public async Task Update(Product entity)

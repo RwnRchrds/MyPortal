@@ -20,7 +20,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonRepository : BaseReadWriteRepository<Person>, IPersonRepository
     {
-        public PersonRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Person")
+        public PersonRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
      
         }
@@ -32,18 +32,6 @@ namespace MyPortal.Database.Repositories
             query.Where("Person.UserId", userId);
 
             return (await ExecuteQuery(query)).FirstOrDefault();
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(User), "User");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("Users as User", "User.PersonId", "Person.Id");
         }
 
         private static void ApplySearch(Query query, PersonSearchOptions search, bool includePersonTypes)
@@ -113,32 +101,18 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQueryWithTypes(query);
         }
 
-        protected override async Task<IEnumerable<Person>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<Person, User, Person>(sql.Sql, (person, user) =>
-            {
-                person.User = user;
-
-                return person;
-            }, sql.NamedBindings, Transaction);
-        }
-
         protected async Task<IEnumerable<PersonSearchResult>> ExecuteQueryWithTypes(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            return await Transaction.Connection.QueryAsync<Person, User, PersonTypeIndicator, PersonSearchResult>(sql.Sql,
-                (person, user, types) =>
+            return await Transaction.Connection.QueryAsync<Person, PersonTypeIndicator, PersonSearchResult>(sql.Sql,
+                (user, types) =>
                 {
                     var result = new PersonSearchResult();
-                    person.User = user;
-                    result.Person = person;
                     result.PersonTypes = types;
 
                     return result;
-                }, sql.NamedBindings, Transaction, splitOn:"Id, IsUser");
+                }, sql.NamedBindings, Transaction, splitOn:"IsUser");
         }
 
         public async Task Update(Person entity)

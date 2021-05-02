@@ -20,41 +20,9 @@ namespace MyPortal.Database.Repositories
 {
     public class ClassRepository : BaseReadWriteRepository<Class>, IClassRepository
     {
-        public ClassRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Class")
+        public ClassRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Subject), "Subject");
-            query.SelectAllColumns(typeof(StaffMember), "Teacher");
-            query.SelectAllColumns(typeof(Person), "TeacherPerson");
-            query.SelectAllColumns(typeof(CurriculumGroup), "CurriculumGroup");
-            
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("Subjects as Subject", "Subject.Id", "Class.SubjectId");
-            query.LeftJoin("StaffMembers as Teacher", "Teacher.Id", "Class.TeacherId");
-            query.LeftJoin("People as TeacherPerson", "TeacherPerson.Id", "Teacher.PersonId");
-            query.LeftJoin("CurriculumGroups as CurriculumGroup", "CurriculumGroup.Id", "Class.GroupId");
-        }
-
-        protected override async Task<IEnumerable<Class>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<Class, Course, StaffMember, Person, CurriculumGroup, Class>(sql.Sql,
-                (currClass, course, teacher, person, group) =>
-                {
-                    currClass.Course = course;
-                    currClass.Group = group;
-
-                    return currClass;
-                }, sql.NamedBindings);
         }
 
         public async Task Update(Class entity)

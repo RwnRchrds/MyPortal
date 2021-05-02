@@ -16,40 +16,9 @@ namespace MyPortal.Database.Repositories
 {
     public class SenReviewRepository : BaseReadWriteRepository<SenReview>, ISenReviewRepository
     {
-        public SenReviewRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "SenReview")
+        public SenReviewRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
             
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Student), "Student");
-            query.SelectAllColumns(typeof(Person), "Person");
-            query.SelectAllColumns(typeof(SenReviewType), "SenReviewType");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("Students as Student", "Student.Id", "SenReview.StudentId");
-            query.LeftJoin("People as Person", "Person.Id", "Student.PersonId");
-            query.LeftJoin("SenReviewTypes as SenReviewType", "SenReviewType.Id", "SenReview.ReviewTypeId");
-        }
-
-        protected override async Task<IEnumerable<SenReview>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<SenReview, Student, Person, SenReviewType, SenReview>(sql.Sql,
-                (review, student, person, reviewType) =>
-                {
-                    review.Student = student;
-                    review.Student.Person = person;
-                    review.ReviewType = reviewType;
-
-                    return review;
-                }, sql.NamedBindings, Transaction);
         }
 
         public async Task Update(SenReview entity)

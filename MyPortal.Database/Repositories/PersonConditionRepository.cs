@@ -16,37 +16,9 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonConditionRepository : BaseReadWriteRepository<PersonCondition>, IPersonConditionRepository
     {
-        public PersonConditionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "PersonCondition")
+        public PersonConditionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
            
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Person), "Person");
-            query.SelectAllColumns(typeof(MedicalCondition), "MedicalCondition");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("Person", "Person.Id", "PersonCondition.PersonId");
-            query.LeftJoin("MedicalCondition", "MedicalCondition.Id", "PersonCondition.ConditionId");
-        }
-
-        protected override async Task<IEnumerable<PersonCondition>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<PersonCondition, Person, MedicalCondition, PersonCondition>(sql.Sql,
-                (pcondition, person, condition) =>
-                {
-                    pcondition.Person = person;
-                    pcondition.MedicalCondition = condition;
-
-                    return pcondition;
-                }, sql.NamedBindings, Transaction);
         }
 
         public async Task Update(PersonCondition entity)

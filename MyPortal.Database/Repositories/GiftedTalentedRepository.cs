@@ -19,44 +19,16 @@ namespace MyPortal.Database.Repositories
 {
     public class GiftedTalentedRepository : BaseReadWriteRepository<GiftedTalented>, IGiftedTalentedRepository
     {
-        public GiftedTalentedRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "GiftedTalented")
+        public GiftedTalentedRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Student), "Student");
-            query.SelectAllColumns(typeof(Subject), "Subject");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("Students as Student", "Student.Id", "GiftedTalented.StudentId");
-            query.LeftJoin("Subjects as Subject", "Subject.Id", "GiftedTalented.SubjectId");
-        }
-
-        protected override async Task<IEnumerable<GiftedTalented>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<GiftedTalented, Student, Subject, GiftedTalented>(sql.Sql,
-                (gt, student, subject) =>
-                {
-                    gt.Student = student;
-                    gt.Subject = subject;
-
-                    return gt;
-                }, sql.NamedBindings, Transaction);
         }
 
         public async Task<IEnumerable<GiftedTalented>> GetByStudent(Guid studentId)
         {
             var query = GenerateQuery();
 
-            query.Where("GiftedTalented.StudentId", studentId);
+            query.Where($"{TblAlias}.StudentId", studentId);
 
             return await ExecuteQuery(query);
         }

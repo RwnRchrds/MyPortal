@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AddressRepository : BaseReadWriteRepository<Address>, IAddressRepository
     {
-        public AddressRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "A")
+        public AddressRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
         }
@@ -23,7 +23,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.LeftJoin("AddressPeople AS AP", "AP.AddressId", "A.Id");
+            query.LeftJoin("AddressPeople AS AP", "AP.AddressId", $"{TblAlias}.Id");
 
             query.Where("AP.PersonId", personId);
 

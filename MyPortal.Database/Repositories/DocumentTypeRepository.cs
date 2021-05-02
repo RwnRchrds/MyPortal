@@ -20,7 +20,7 @@ namespace MyPortal.Database.Repositories
     public class DocumentTypeRepository : BaseReadWriteRepository<DocumentType>, IDocumentTypeRepository
     {
         public DocumentTypeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context,
-            transaction, "DocumentType")
+            transaction)
         {
         }
 
@@ -30,32 +30,32 @@ namespace MyPortal.Database.Repositories
 
             if (filter.Active)
             {
-                query.Where("DocumentType.Active", true);
+                query.Where($"{TblAlias}.Active", true);
             }
 
             if (filter.Staff)
             {
-                query.Where("DocumentType.Staff", true);
+                query.Where($"{TblAlias}.Staff", true);
             }
 
             if (filter.Student)
             {
-                query.Where("DocumentType.Student", true);
+                query.Where($"{TblAlias}.Student", true);
             }
 
             if (filter.Contact)
             {
-                query.Where("DocumentType.Contact", true);
+                query.Where($"{TblAlias}.Contact", true);
             }
 
             if (filter.General)
             {
-                query.Where("DocumentType.General", true);
+                query.Where($"{TblAlias}.General", true);
             }
 
             if (filter.Sen)
             {
-                query.Where("DocumentType.Sen", true);
+                query.Where($"{TblAlias}.Sen", true);
             }
 
             return await ExecuteQuery(query);

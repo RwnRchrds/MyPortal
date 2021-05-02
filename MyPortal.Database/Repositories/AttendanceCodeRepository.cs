@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,57 +18,61 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceCodeRepository : BaseReadWriteRepository<AttendanceCode>, IAttendanceCodeRepository
     {
-        public AttendanceCodeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "AttendanceCode")
+        public AttendanceCodeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
         }
 
-        protected override void SelectAllRelated(Query query)
+        protected override Query JoinRelated(Query query)
         {
-            query.SelectAllColumns(typeof(AttendanceCodeMeaning), "AttendanceCodeMeaning");
+            query.LeftJoin("AttendanceCodeMeanings as ACM", "ACM.Id", $"{TblAlias}.MeaningId");
 
-            JoinRelated(query);
+            return query;
         }
 
-        protected override void JoinRelated(Query query)
+        protected override Query SelectAllRelated(Query query)
         {
-            query.LeftJoin("AttendanceCodeMeanings as AttendanceCodeMeaning", "AttendanceCodeMeaning.Id", "AttendanceCode.MeaningId");
+            query.SelectAllColumns(typeof(AttendanceCodeMeaning), "ACM");
+
+            return query;
         }
 
         protected override async Task<IEnumerable<AttendanceCode>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            return await Transaction.Connection.QueryAsync<AttendanceCode, AttendanceCodeMeaning, AttendanceCode>(sql.Sql,
+            var codes = await Transaction.Connection.QueryAsync<AttendanceCode, AttendanceCodeMeaning, AttendanceCode>(sql.Sql,
                 (code, meaning) =>
                 {
                     code.CodeMeaning = meaning;
 
                     return code;
                 }, sql.NamedBindings, Transaction);
+
+            return codes;
         }
 
         public async Task<AttendanceCode> GetByCode(string code)
         {
             var query = GenerateQuery();
 
-            query.Where("AttendanceCode.Code", "=", code);
+            query.Where($"{TblAlias}.Code", "=", code);
 
             return (await ExecuteQuery(query)).FirstOrDefault();
         }
 
         public async Task<IEnumerable<AttendanceCode>> GetAll(bool activeOnly, bool includeRestricted)
         {
-            var query = GenerateQuery(false, false);
+            var query = GenerateQuery();
 
             if (activeOnly)
             {
-                query.Where("AttendanceCode.Active", true);
+                query.Where($"{TblAlias}.Active", true);
             }
 
             if (!includeRestricted)
             {
-                query.Where("AttendanceCode.Restricted", false);
+                query.Where($"{TblAlias}.Restricted", false);
             }
 
             return await ExecuteQuery<AttendanceCode>(query);

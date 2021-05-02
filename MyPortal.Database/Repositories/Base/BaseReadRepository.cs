@@ -25,12 +25,25 @@ namespace MyPortal.Database.Repositories.Base
 
         protected string TblAlias;
 
+        protected virtual Query JoinRelated(Query query)
+        {
+            return query;
+        }
+
+        protected virtual Query SelectAllRelated(Query query)
+        {
+            return query;
+        }
+
         protected virtual async Task<IEnumerable<TEntity>> ExecuteQuery(Query query)
         {
+            JoinRelated(query);
+            SelectAllRelated(query);
+            
             return await ExecuteQuery<TEntity>(query);
         }
 
-        protected virtual async Task<IEnumerable<T>> ExecuteQuery<T>(Query query)
+        protected async Task<IEnumerable<T>> ExecuteQuery<T>(Query query)
         {
             var sql = Compiler.Compile(query);
 
@@ -44,18 +57,27 @@ namespace MyPortal.Database.Repositories.Base
             return result.FirstOrDefault();
         }
 
-        protected Query GenerateQuery(bool includeSoftDeleted = false, bool getRelated = true)
+        protected Query GenerateQuery(bool includeSoftDeleted = false)
         {
-            var query = new Query(TblName).SelectAllColumns(typeof(TEntity), TblAlias);
+            var query = new Query($"{TblName} as {TblAlias}").SelectAllColumns(typeof(TEntity), TblAlias);
 
             if (typeof(TEntity).GetInterfaces().Contains(typeof(ISoftDeleteEntity)) && !includeSoftDeleted)
             {
                 query.Where($"{TblAlias}.Deleted", false);
             }
 
-            if (getRelated)
+            return query;
+        }
+
+        protected Query GenerateQuery(Type t, bool includeSoftDeleted = false)
+        {
+            var tblName = EntityHelper.GetTableName(t, out string tblAlias);
+            
+            var query = new Query($"{tblName} as {tblAlias}").SelectAllColumns(t,tblAlias);
+
+            if (t.GetInterfaces().Contains(typeof(ISoftDeleteEntity)) && !includeSoftDeleted)
             {
-                SelectAllRelated(query);
+                query.Where($"{tblAlias}.Deleted", false);
             }
 
             return query;
@@ -84,19 +106,16 @@ namespace MyPortal.Database.Repositories.Base
             return await Transaction.Connection.QueryFirstOrDefaultAsync<T>(sql.Sql, sql.NamedBindings, Transaction);
         }
 
-        protected virtual void JoinRelated(Query query)
+        protected Query GenerateEmptyQuery()
         {
-
-        }
-
-        protected virtual void SelectAllRelated(Query query)
-        {
-            JoinRelated(query);
+            return GenerateEmptyQuery(typeof(TEntity), TblAlias);
         }
 
         protected Query GenerateEmptyQuery(Type t, string alias = null)
         {
-            return new Query(EntityHelper.GetTableName(t, alias));
+            var tableName = EntityHelper.GetTableName(t);
+            var table = string.IsNullOrWhiteSpace(alias) ? tableName : $"{tableName} as {alias}";
+            return new Query(table);
         }
 
         protected async Task<int?> ExecuteQueryIntResult(Query query)

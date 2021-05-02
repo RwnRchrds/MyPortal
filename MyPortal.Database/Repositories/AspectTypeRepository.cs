@@ -17,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AspectTypeRepository : BaseReadRepository<AspectType>, IAspectTypeRepository
     {
-        public AspectTypeRepository(DbTransaction transaction) : base(transaction, "AT")
+        public AspectTypeRepository(DbTransaction transaction) : base(transaction)
         {
         }
     }

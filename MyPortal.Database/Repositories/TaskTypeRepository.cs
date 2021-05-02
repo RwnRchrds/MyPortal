@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class TaskTypeRepository : BaseReadWriteRepository<TaskType>, ITaskTypeRepository
     {
-        public TaskTypeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "TaskType")
+        public TaskTypeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
         }

@@ -125,13 +125,14 @@ namespace MyPortal.Database.Helpers
 
                 if (includeSchema)
                 {
-                    return $"{schema}.{entityTable} as {tblAlias}";   
+                    return $"{schema}.{entityTable}";   
                 }
                 
-                return $"{entityTable} as {tblAlias}";
+                return $"{entityTable}";
             }
 
-            outputAlias = entityTable;
+            // StudentGroup -> SG
+            outputAlias = string.Concat(entityTable.Where(char.IsUpper));
 
             if (includeSchema)
             {
@@ -141,19 +142,9 @@ namespace MyPortal.Database.Helpers
             return $"{entityTable}";
         }
 
-        internal static string GetTableName(Type t, string tblAlias = null, bool includeSchema = false, string schema = "dbo")
+        internal static string GetTableName(Type t, bool includeSchema = false, string schema = "dbo")
         {
             var entityTable = ((TableAttribute)t.GetCustomAttribute(typeof(TableAttribute)))?.Name ?? t.Name;
-
-            if (!string.IsNullOrWhiteSpace(tblAlias))
-            {
-                if (includeSchema)
-                {
-                    return $"{schema}.{entityTable} as {tblAlias}";
-                }
-
-                return $"{entityTable} as {tblAlias}";
-            }
 
             if (includeSchema)
             {

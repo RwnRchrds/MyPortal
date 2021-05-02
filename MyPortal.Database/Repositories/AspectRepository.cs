@@ -22,36 +22,41 @@ namespace MyPortal.Database.Repositories
 {
     public class AspectRepository : BaseReadWriteRepository<Aspect>, IAspectRepository
     {
-        public AspectRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Aspect")
+        public AspectRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
         }
 
-        protected override void SelectAllRelated(Query query)
+        protected override Query JoinRelated(Query query)
         {
-            query.SelectAllColumns(typeof(AspectType), "AspectType");
-            query.SelectAllColumns(typeof(GradeSet), "GradeSet");
+            query.LeftJoin("AspectTypes as AT", "AT.Id", "Aspect.TypeId");
+            query.LeftJoin("GradeSets as GS", "GS.Id", "Aspect.GradeSetId");
 
-            JoinRelated(query);
+            return query;
         }
 
-        protected override void JoinRelated(Query query)
+        protected override Query SelectAllRelated(Query query)
         {
-            query.LeftJoin("AspectTypes as AspectType", "AspectType.Id", "Aspect.TypeId");
-            query.LeftJoin("GradeSets as GradeSet", "GradeSet.Id", "Aspect.GradeSetId");
+            query.SelectAllColumns(typeof(AspectType), "AT");
+            query.SelectAllColumns(typeof(GradeSet), "GS");
+
+            return query;
         }
 
         protected override async Task<IEnumerable<Aspect>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            return await Transaction.Connection.QueryAsync<Aspect, AspectType, GradeSet, Aspect>(sql.Sql, (aspect, type, gradeSet) =>
-            {
-                aspect.Type = type;
-                aspect.GradeSet = gradeSet;
+            var aspects = await Transaction.Connection.QueryAsync<Aspect, AspectType, GradeSet, Aspect>(sql.Sql,
+                (aspect, type, gradeSet) =>
+                {
+                    aspect.Type = type;
+                    aspect.GradeSet = gradeSet;
 
-                return aspect;
-            }, sql.NamedBindings, Transaction);
+                    return aspect;
+                }, sql.NamedBindings, Transaction);
+
+            return aspects;
         }
 
         public async Task Update(Aspect entity)

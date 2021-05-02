@@ -19,32 +19,9 @@ namespace MyPortal.Database.Repositories
 {
     public class DiaryEventRepository : BaseReadWriteRepository<DiaryEvent>, IDiaryEventRepository
     {
-        public DiaryEventRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "DiaryEvent")
+        public DiaryEventRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(DiaryEventType), "DiaryEventType");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("DiaryEventTypes as DiaryEventType", "DiaryEventType.Id", "DiaryEvent.EventTypeId");
-        }
-
-        protected override async Task<IEnumerable<DiaryEvent>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<DiaryEvent, DiaryEventType, DiaryEvent>(sql.Sql, (diaryEvent, type) =>
-            {
-                diaryEvent.EventType = type;
-                return diaryEvent;
-            }, sql.NamedBindings, Transaction);
         }
 
         public async Task<IEnumerable<DiaryEvent>> GetByDateRange(DateTime firstDate, DateTime lastDate, bool includePrivateEvents = false)

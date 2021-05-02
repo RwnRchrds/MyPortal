@@ -15,8 +15,8 @@ namespace MyPortal.Database.Repositories
 {
     public class SystemSettingRepository : ISystemSettingRepository
     {
-        private ApplicationDbContext _context;
-        private DbTransaction _transaction;
+        private readonly ApplicationDbContext _context;
+        private readonly DbTransaction _transaction;
 
         public SystemSettingRepository(ApplicationDbContext context, DbTransaction transaction)
         {

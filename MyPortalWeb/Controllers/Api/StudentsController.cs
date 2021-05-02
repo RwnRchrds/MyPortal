@@ -8,8 +8,8 @@ using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.List;
 using MyPortal.Logic.Models.Response.Students;
 using MyPortalWeb.Controllers.BaseControllers;
 

@@ -15,33 +15,9 @@ namespace MyPortal.Database.Repositories
 {
     public class RefreshTokenRepository : BaseReadWriteRepository<RefreshToken>, IRefreshTokenRepository
     {
-        public RefreshTokenRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "RefreshToken")
+        public RefreshTokenRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(User), "User");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("Users AS User", "User.Id", "RefreshToken.UserId");
-        }
-
-        protected override async Task<IEnumerable<RefreshToken>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<RefreshToken, User, RefreshToken>(sql.Sql, (token, user) =>
-            {
-                token.User = user;
-
-                return token;
-            }, sql.NamedBindings, Transaction);
         }
 
         public async Task<IEnumerable<RefreshToken>> GetByUser(Guid userId)

@@ -24,11 +24,11 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.LeftJoin("Achievements as Achievement", "Achievement.AchievementTypeId", "AchievementType.Id");
+            query.LeftJoin("Achievements as A", "A.AchievementTypeId", $"{TblAlias}.Id");
 
             query.GroupBy(EntityHelper.GetPropertyNames(typeof(AchievementType)));
 
-            query.Having("COUNT([Achievement].[Id])", ">", 0);
+            query.Having($"COUNT({TblAlias}.Id)", ">", 0);
 
             return await ExecuteQuery(query);
         }

@@ -15,38 +15,9 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonDietaryRequirementRepository : BaseReadWriteRepository<PersonDietaryRequirement>, IPersonDietaryRequirementRepository
     {
-        public PersonDietaryRequirementRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "PDR")
+        public PersonDietaryRequirementRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Person), "P");
-            query.SelectAllColumns(typeof(DietaryRequirement), "D");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("People as P", "P.Id", "PDR.PersonId");
-            query.LeftJoin("DietaryRequirements as D", "D.Id", "PDR.DietaryRequirementId");
-        }
-
-        protected override async Task<IEnumerable<PersonDietaryRequirement>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection
-                .QueryAsync<PersonDietaryRequirement, Person, DietaryRequirement, PersonDietaryRequirement>(sql.Sql,
-                    (pdr, person, req) =>
-                    {
-                        pdr.Person = person;
-                        pdr.DietaryRequirement = req;
-
-                        return pdr;
-                    }, sql.NamedBindings, Transaction);
         }
     }
 }
