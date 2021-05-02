@@ -27,17 +27,35 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            return base.JoinRelated(query);
+            query.LeftJoin("AcademicTerms as AT", "AT.Id", $"{TblAlias}.AcademicTermId");
+            query.LeftJoin("AttendanceWeekPatters as AWP", "AWP.Id", $"{TblAlias}.WeekPatternId");
+
+            return query;
         }
 
         protected override Query SelectAllRelated(Query query)
         {
-            return base.SelectAllRelated(query);
+            query.SelectAllColumns(typeof(AcademicTerm), "AT");
+            query.SelectAllColumns(typeof(AttendanceWeekPattern), "AWP");
+
+            return query;
         }
 
-        protected override Task<IEnumerable<AttendanceWeek>> ExecuteQuery(Query query)
+        protected override async Task<IEnumerable<AttendanceWeek>> ExecuteQuery(Query query)
         {
-            return base.ExecuteQuery(query);
+            var sql = Compiler.Compile(query);
+
+            var weeks = await Transaction.Connection
+                .QueryAsync<AttendanceWeek, AcademicTerm, AttendanceWeekPattern, AttendanceWeek>(sql.Sql,
+                    (week, term, pattern) =>
+                    {
+                        week.AcademicTerm = term;
+                        week.WeekPattern = pattern;
+
+                        return week;
+                    }, sql.NamedBindings, Transaction);
+
+            return weeks;
         }
 
         public async Task<AttendanceWeek> GetByDate(DateTime date)
