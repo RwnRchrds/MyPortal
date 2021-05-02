@@ -22,6 +22,37 @@ namespace MyPortal.Database.Repositories
         {
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("AttendanceWeekPatterns as AWP", "AWP.Id", $"{TblAlias}.WeekPatternId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(AttendanceWeekPattern), "AWP");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<AttendancePeriod>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var periods =
+                await Transaction.Connection.QueryAsync<AttendancePeriod, AttendanceWeekPattern, AttendancePeriod>(
+                    sql.Sql,
+                    (period, pattern) =>
+                    {
+                        period.WeekPattern = pattern;
+
+                        return period;
+                    }, sql.NamedBindings, Transaction);
+
+            return periods;
+        }
+
         public async Task Update(AttendancePeriod entity)
         {
             var period = await Context.AttendancePeriods.FirstOrDefaultAsync(x => x.Id == entity.Id);
