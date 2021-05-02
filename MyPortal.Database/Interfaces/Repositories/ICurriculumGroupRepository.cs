@@ -7,6 +7,6 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface ICurriculumGroupRepository : IReadWriteRepository<CurriculumGroup>, IUpdateRepository<CurriculumGroup>
     {
-        Task<bool> CheckUniqueCode(Guid academicYearId, string code);
+        
     }
 }

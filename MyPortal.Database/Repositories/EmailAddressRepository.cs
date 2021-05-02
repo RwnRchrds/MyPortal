@@ -18,37 +18,9 @@ namespace MyPortal.Database.Repositories
 {
     public class EmailAddressRepository : BaseReadWriteRepository<EmailAddress>, IEmailAddressRepository
     {
-        public EmailAddressRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "EmailAddress")
+        public EmailAddressRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
             
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(EmailAddressType), "EmailAddressType");
-            query.SelectAllColumns(typeof(Person), "Person");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("EmailAddressTypes as EmailAddressType", "EmailAddressType.Id", "EmailAddress.TypeId");
-            query.LeftJoin("People as Person", "Person.Id", "EmailAddress.PersonId");
-        }
-
-        protected override async Task<IEnumerable<EmailAddress>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<EmailAddress, EmailAddressType, Person, EmailAddress>(sql.Sql,
-                (address, type, person) =>
-                {
-                    address.Type = type;
-                    address.Person = person;
-
-                    return address;
-                }, sql.NamedBindings, Transaction);
         }
 
         public async Task Update(EmailAddress entity)

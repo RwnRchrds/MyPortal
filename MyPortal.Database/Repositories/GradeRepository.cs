@@ -19,33 +19,9 @@ namespace MyPortal.Database.Repositories
 {
     public class GradeRepository : BaseReadWriteRepository<Grade>, IGradeRepository
     {
-        public GradeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Grade")
+        public GradeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
             
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(GradeSet));
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("GradeSets as GradeSet", "GradeSet.Id", "Grade.GradeSetId");
-        }
-
-        protected override async Task<IEnumerable<Grade>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<Grade, GradeSet, Grade>(sql.Sql, (grade, set) =>
-            {
-                grade.GradeSet = set;
-
-                return grade;
-            }, sql.NamedBindings, Transaction);
         }
 
         public async Task Update(Grade entity)

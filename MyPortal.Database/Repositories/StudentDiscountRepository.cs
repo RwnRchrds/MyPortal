@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentDiscountRepository : BaseReadWriteRepository<StudentDiscount>, IStudentDiscountRepository
     {
-        public StudentDiscountRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "SD")
+        public StudentDiscountRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
         }
 

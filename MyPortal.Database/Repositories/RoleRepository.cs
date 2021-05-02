@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class RoleRepository : BaseReadWriteRepository<Role>, IRoleRepository
     {
-        public RoleRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Role")
+        public RoleRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
         }

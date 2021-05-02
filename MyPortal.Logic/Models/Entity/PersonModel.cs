@@ -1,13 +1,35 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Enums;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
     public class PersonModel : BaseModel
     {
+        public PersonModel(Person person)
+        {
+            Id = person.Id;
+            DirectoryId = person.DirectoryId;
+            Title = person.Title;
+            FirstName = person.FirstName;
+            MiddleName = person.MiddleName;
+            LastName = person.LastName;
+            PhotoId = person.PhotoId;
+            NhsNumber = person.NhsNumber;
+            UpdatedDate = person.UpdatedDate;
+            Gender = person.Gender;
+            Dob = person.Dob;
+            Deceased = person.Deceased;
+            EthnicityId = person.EthnicityId;
+            Deleted = person.Deleted;
+        }
+        
         public Guid DirectoryId { get; set; }
 
         [StringLength(128)]
@@ -23,9 +45,6 @@ namespace MyPortal.Logic.Models.Entity
         [Required]
         [StringLength(256)]
         public string LastName { get; set; }
-
-        [StringLength(256)]
-        public string ChosenFirstName { get; set; }
 
         public Guid? PhotoId { get; set; }
 
@@ -58,21 +77,21 @@ namespace MyPortal.Logic.Models.Entity
             switch (format)
             {
                 case NameFormat.FullName:
-                    name = $"{Title} {(useLegalName ? FirstName : ChosenFirstName)} {MiddleName} {LastName}";
+                    name = $"{Title} {FirstName} {MiddleName} {LastName}";
                     break;
                 case NameFormat.FullNameAbbreviated:
                     name =
-                        $"{Title} {(useLegalName ? FirstName : ChosenFirstName).Substring(0, 1)} {MiddleName?.Substring(0, 1)} {LastName}";
+                        $"{Title} {FirstName.Substring(0, 1)} {MiddleName?.Substring(0, 1)} {LastName}";
                     break;
                 case NameFormat.FullNameNoTitle:
-                    name = $"{(useLegalName ? FirstName : ChosenFirstName)} {MiddleName} {LastName}";
+                    name = $"{FirstName} {MiddleName} {LastName}";
                     break;
                 case NameFormat.Initials:
                     name =
-                        $"{(useLegalName ? FirstName : ChosenFirstName).Substring(0, 1)}{MiddleName.Substring(0, 1)}{LastName.Substring(0, 1)}";
+                        $"{FirstName.Substring(0, 1)}{MiddleName.Substring(0, 1)}{LastName.Substring(0, 1)}";
                     break;
                 default:
-                    name = $"{LastName}, {(useLegalName ? FirstName : ChosenFirstName)} {MiddleName}";
+                    name = $"{LastName}, {FirstName} {MiddleName}";
                     break;
             }
 

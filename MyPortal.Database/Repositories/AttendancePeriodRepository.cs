@@ -18,32 +18,8 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendancePeriodRepository : BaseReadWriteRepository<AttendancePeriod>, IAttendancePeriodRepository
     {
-        public AttendancePeriodRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "AttendancePeriod")
+        public AttendancePeriodRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(AttendanceWeekPattern), "WeekPattern");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("AttendanceWeekPatterns as WeekPattern", "WeekPattern.Id", "AttendancePeriod.WeekPatternId");
-        }
-
-        protected override async Task<IEnumerable<AttendancePeriod>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<AttendancePeriod, AttendanceWeekPattern, AttendancePeriod>(sql.Sql, (period, pattern) =>
-            {
-                period.WeekPattern = pattern;
-
-                return period;
-            }, sql.NamedBindings, Transaction);
         }
 
         public async Task Update(AttendancePeriod entity)

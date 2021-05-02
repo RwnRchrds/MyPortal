@@ -18,33 +18,9 @@ namespace MyPortal.Database.Repositories
 {
     public class StaffMemberRepository : BaseReadWriteRepository<StaffMember>, IStaffMemberRepository
     {
-        public StaffMemberRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "StaffMember")
+        public StaffMemberRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
            
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Person), "Person");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("People as Person", "Person.Id", "StaffMember.PersonId");
-        }
-
-        protected override async Task<IEnumerable<StaffMember>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<StaffMember, Person, StaffMember>(sql.Sql, (staff, person) =>
-            {
-                staff.Person = person;
-
-                return staff;
-            }, sql.NamedBindings, Transaction);
         }
 
         public async Task<StaffMember> GetByPersonId(Guid personId)

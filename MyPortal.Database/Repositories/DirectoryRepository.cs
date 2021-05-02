@@ -17,44 +17,20 @@ namespace MyPortal.Database.Repositories
 {
     public class DirectoryRepository : BaseReadWriteRepository<Directory>, IDirectoryRepository
     {
-        public DirectoryRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Directory")
+        public DirectoryRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
            
         }
 
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Directory), "Parent");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("Directories as Parent", "Parent.Id", "Directory.ParentId");
-        }
-
-        protected override async Task<IEnumerable<Directory>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<Directory, Directory, Directory>(sql.Sql, (directory, parent) =>
-                {
-                    directory.Parent = parent;
-
-                    return directory;
-                }, sql.NamedBindings, Transaction);
-        }
-
-        public async Task<IEnumerable<Directory>> GetSubdirectories(Guid directoryId, bool includeStaffOnly)
+        public async Task<IEnumerable<Directory>> GetSubdirectories(Guid directoryId, bool includeRestricted)
         {
             var query = GenerateQuery();
 
-            query.Where("Directory.ParentId", "=", directoryId);
+            query.Where($"{TblAlias}.ParentId", "=", directoryId);
 
-            if (!includeStaffOnly)
+            if (!includeRestricted)
             {
-                query.Where("Directory.StaffOnly", false);
+                query.Where($"{TblAlias}.Restricted", false);
             }
 
             return await ExecuteQuery(query);

@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Logic.Models.Data
 {
-    public class BaseModel : IEntity
+    public abstract class BaseModel
     {
         public Guid Id { get; set; }
     }

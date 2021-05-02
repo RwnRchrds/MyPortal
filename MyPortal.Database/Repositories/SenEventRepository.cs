@@ -18,37 +18,9 @@ namespace MyPortal.Database.Repositories
 {
     public class SenEventRepository : BaseReadWriteRepository<SenEvent>, ISenEventRepository
     {
-        public SenEventRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "SenEvent")
+        public SenEventRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
            
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Student), "Student");
-            query.SelectAllColumns(typeof(SenEventType), "SenEventType");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("Students as Student", "Student.Id", "SenEvent.StudentId");
-            query.LeftJoin("SenEventTypes as SenEventType", "SenEventType.Id", "SenEvent.EventTypeId");
-        }
-
-        protected override async Task<IEnumerable<SenEvent>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<SenEvent, Student, SenEventType, SenEvent>(sql.Sql,
-                (senEvent, student, type) =>
-                {
-                    senEvent.Student = student;
-                    senEvent.Type = type;
-
-                    return senEvent;
-                }, sql.NamedBindings, Transaction);
         }
 
         public async Task Update(SenEvent entity)

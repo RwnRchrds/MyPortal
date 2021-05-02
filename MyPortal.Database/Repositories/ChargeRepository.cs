@@ -15,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ChargeRepository : BaseReadWriteRepository<Charge>, IChargeRepository
     {
-        public ChargeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "C")
+        public ChargeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
         }
 

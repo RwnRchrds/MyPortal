@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class BillRepository : BaseReadWriteRepository<Bill>, IBillRepository
     {
-        public BillRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Bill")
+        public BillRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
             
         }

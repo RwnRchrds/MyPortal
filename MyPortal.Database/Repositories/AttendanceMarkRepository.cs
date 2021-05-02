@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.Constants;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
@@ -21,56 +19,60 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceMarkRepository : BaseReadWriteRepository<AttendanceMark>, IAttendanceMarkRepository
     {
-        public AttendanceMarkRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "AttendanceMark")
+        public AttendanceMarkRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
        
         }
 
-        protected override void SelectAllRelated(Query query)
+        protected override Query JoinRelated(Query query)
         {
-            query.SelectAllColumns(typeof(Student), "Student");
-            query.SelectAllColumns(typeof(Person), "StudentPerson");
-            query.SelectAllColumns(typeof(AttendanceWeek), "AttendanceWeek");
-            query.SelectAllColumns(typeof(AttendanceWeekPattern), "AttendanceWeekPattern");
-            query.SelectAllColumns(typeof(AttendancePeriod), "Period");
+            query.LeftJoin("AttendanceCodes as AC", "AC.Id", $"{TblAlias}.CodeId");
+            query.LeftJoin("AttendancePeriods as AP", "AP.Id", $"{TblAlias}.PeriodId");
+            query.LeftJoin("Students as S", "S.Id", $"{TblAlias}.StudentId");
+            query.LeftJoin("AttendanceWeeks as AW", "AW.Id", $"{TblAlias}.WeekId");
 
-            JoinRelated(query);
+            return query;
         }
 
-        protected override void JoinRelated(Query query)
+        protected override Query SelectAllRelated(Query query)
         {
-            query.LeftJoin("Students as Student", "Student.Id", "AttendanceMark.StudentId");
-            query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("AttendanceWeeks as AttendanceWeek", "AttendanceWeek.Id", "AttendanceMark.WeekId");
-            query.LeftJoin("AcademicTerms as AT", "AT.Id", "AttendanceWeek.AcademicTermId");
-            query.LeftJoin("AcademicYears as AY", "AY.Id", "AT.AcademicYearId");
-            query.LeftJoin("AttendanceWeekPatterns as AttendanceWeekPattern", "AttendanceWeekPattern.Id", "AttendanceWeek.WeekPatternId");
-            query.LeftJoin("AttendancePeriods AS Period", "Period.Id", "AttendanceMark.PeriodId");
+            query.SelectAllColumns(typeof(AttendanceCode), "AC");
+            query.SelectAllColumns(typeof(AttendancePeriod), "AP");
+            query.SelectAllColumns(typeof(Student), "S");
+            query.SelectAllColumns(typeof(AttendanceWeek), "AW");
+
+            return query;
         }
 
         protected override async Task<IEnumerable<AttendanceMark>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            return await Transaction.Connection.QueryAsync<AttendanceMark, Student, Person, AttendanceWeek, AttendanceWeekPattern, AttendancePeriod, AttendanceMark>(
-                sql.Sql,
-                (mark, student, person, week, pattern, period) =>
-                {
-                    mark.Student = student;
-                    mark.Student.Person = person;
-                    mark.Week = week;
-                    mark.Week.WeekPattern = pattern;
-                    mark.AttendancePeriod = period;
+            var marks = await Transaction.Connection
+                .QueryAsync<AttendanceMark, AttendanceCode, AttendancePeriod, AttendanceWeek, Student, AttendanceMark>(
+                    sql.Sql,
+                    (mark, code, period, week, student) =>
+                    {
+                        mark.Week = week;
+                        mark.AttendancePeriod = period;
+                        mark.AttendanceCode = code;
+                        mark.Student = student;
 
-                    return mark;
-                }, sql.NamedBindings, Transaction);
+                        return mark;
+                    }, sql.NamedBindings, Transaction);
+
+            return marks;
         }
 
         public async Task<IEnumerable<AttendanceMark>> GetByStudent(Guid studentId, Guid academicYearId)
         {
             var query = GenerateQuery();
 
-            query.Where("Student.Id", "=", studentId);
+            query.LeftJoin("AttendanceWeeks as AW", "AW.Id", $"{TblAlias}.WeekId");
+            query.LeftJoin("AcademicTerms AS AT", "AT.Id", "AW.AcademicTermId");
+            query.LeftJoin("AcademicYears AS AY", "AY.Id", "AT.AcademicYearId");
+
+            query.Where($"{TblAlias}.StudentId", "=", studentId);
             query.Where("AY.Id", "=", academicYearId);
 
             return await ExecuteQuery(query);
@@ -79,12 +81,12 @@ namespace MyPortal.Database.Repositories
         public async Task<AttendanceMark> GetMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
             var query = GenerateQuery();
+            
+            query.LeftJoin("AttendanceWeeks as AW", "AW.Id", $"{TblAlias}.WeekId");
 
-            query.Where("Student.Id", "=", studentId);
-
-            query.Where("AttendanceWeek.Id", "=", attendanceWeekId);
-
-            query.Where("Period.Id", "=", periodId);
+            query.Where($"{TblAlias}.StudentId", "=", studentId);
+            query.Where("AW.Id", "=", attendanceWeekId);
+            query.Where($"{TblAlias}.PeriodId", "=", periodId);
 
             return (await ExecuteQuery(query)).SingleOrDefault();
         }
@@ -96,7 +98,7 @@ namespace MyPortal.Database.Repositories
             query.Select("M.Id", "S.Id AS StudentId", "PAP.AttendanceWeekId AS WeekId", "PAP.PeriodId AS PeriodId",
                 "M.CodeId", "M.Comments", "M.MinutesLate");
 
-            query.LeftJoin("AttendanceMarks AS M", "M.StudentId", "S.Id");
+            query.LeftJoin($"{TblName} AS M", "M.StudentId", "S.Id");
             query.CrossJoin("AttendancePeriods_PossibleAttendancePeriods AS PAP");
 
             query.WhereDate("PAP.StartTime", ">=", startDate);
@@ -109,14 +111,6 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(AttendanceMark mark)
         {
-            /*var columns = new List<string> { "CodeId", "MinutesLate", "Comments" };
-
-            var values = new List<object> { mark.CodeId, mark.MinutesLate, mark.Comments };
-
-            var query = new Query(TblName).Where("AttendanceMark.Id", "=", mark.Id).AsUpdate(columns, values);
-
-            await ExecuteNonQuery(query);*/
-
             var attendanceMark = await Context.AttendanceMarks.FirstOrDefaultAsync(x => x.Id == mark.Id);
 
             if (attendanceMark == null)

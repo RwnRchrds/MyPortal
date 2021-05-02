@@ -16,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class DiaryEventTypeRepository : BaseReadWriteRepository<DiaryEventType>, IDiaryEventTypeRepository
     {
-        public DiaryEventTypeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "DiaryEventType")
+        public DiaryEventTypeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
         }
 
@@ -26,7 +26,7 @@ namespace MyPortal.Database.Repositories
 
             if (!includeReserved)
             {
-                query.Where("DiaryEventType.Reserved", false);
+                query.Where($"{TblAlias}.Reserved", false);
             }
 
             return await ExecuteQuery(query);

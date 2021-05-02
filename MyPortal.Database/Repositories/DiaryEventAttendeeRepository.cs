@@ -21,49 +21,16 @@ namespace MyPortal.Database.Repositories
     public class DiaryEventAttendeeRepository : BaseReadWriteRepository<DiaryEventAttendee>,
         IDiaryEventAttendeeRepository
     {
-        public DiaryEventAttendeeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Attendee")
+        public DiaryEventAttendeeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(DiaryEvent), "Event");
-            query.SelectAllColumns(typeof(Person));
-            query.SelectAllColumns(typeof(DiaryEventAttendeeResponse), "Response");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("DiaryEvents as Event", "Event.Id", "Attendee.EventId");
-            query.LeftJoin("People as Person", "Person.Id", "Attendee.PersonId");
-            query.LeftJoin("DiaryEventAttendeeResponses as Response", "Response.Id", "Attendee.ResponseId");
-        }
-
-        protected override async Task<IEnumerable<DiaryEventAttendee>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection
-                .QueryAsync<DiaryEventAttendee, DiaryEvent, Person, DiaryEventAttendeeResponse, DiaryEventAttendee>(
-                    sql.Sql,
-                    (attendee, diaryEvent, person, response) =>
-                    {
-                        attendee.Event = diaryEvent;
-                        attendee.Person = person;
-                        attendee.Response = response;
-
-                        return attendee;
-                    }, sql.NamedBindings, Transaction);
         }
 
         public async Task<IEnumerable<DiaryEventAttendee>> GetByEvent(Guid eventId)
         {
             var query = GenerateQuery();
 
-            query.Where("Event.Id", eventId);
+            query.Where($"{TblAlias}.Id", eventId);
 
             return await ExecuteQuery(query);
         }

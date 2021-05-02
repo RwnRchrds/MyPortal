@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
@@ -17,23 +19,42 @@ namespace MyPortal.Database.Repositories
 {
     public class ActivityEventRepository : BaseReadWriteRepository<ActivityEvent>, IActivityEventRepository
     {
-        public ActivityEventRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "AE")
+        public ActivityEventRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
         }
 
-        protected override void SelectAllRelated(Query query)
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("Activities as A", "A.Id", $"{TblAlias}.ActivityId");
+            query.LeftJoin("DiaryEvents as DE", "DE.Id", $"{TblAlias}.DiaryEventId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
         {
             query.SelectAllColumns(typeof(Activity), "A");
-            query.SelectAllColumns(typeof(DiaryEvent), "E");
-            query.SelectAllColumns(typeof(DiaryEventType), "ET");
-            query.SelectAllColumns(typeof(Room), "R");
+            query.SelectAllColumns(typeof(DiaryEvent), "DE");
+
+            return query;
         }
 
-        protected override void JoinRelated(Query query)
+        protected override async Task<IEnumerable<ActivityEvent>> ExecuteQuery(Query query)
         {
-            query.LeftJoin(EntityHelper.GetTableName(typeof(Activity), "A"), "A.Id", "AE.ActivityId");
-            query.LeftJoin(EntityHelper.GetTableName(typeof(DiaryEvent), "E"), "E.Id", "AE.EventId");
+            var sql = Compiler.Compile(query);
+
+            var activityEvents =
+                await Transaction.Connection.QueryAsync<ActivityEvent, Activity, DiaryEvent, ActivityEvent>(sql.Sql,
+                    (activityEvent, activity, diaryEvent) =>
+                    {
+                        activityEvent.Activity = activity;
+                        activityEvent.Event = diaryEvent;
+
+                        return activityEvent;
+                    }, sql.NamedBindings, Transaction);
+
+            return activityEvents;
         }
 
         public IEnumerable<ActivityEvent> GetByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo)

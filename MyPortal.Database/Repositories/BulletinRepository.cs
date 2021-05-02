@@ -20,40 +20,16 @@ namespace MyPortal.Database.Repositories
 {
     public class BulletinRepository : BaseReadWriteRepository<Bulletin>, IBulletinRepository
     {
-        public BulletinRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Bulletin")
+        public BulletinRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
        
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(User), "User");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("Users as User", "User.Id", "Bulletin.AuthorId");
-        }
-
-        protected override async Task<IEnumerable<Bulletin>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<Bulletin, User, Bulletin>(sql.Sql, (bulletin, author) =>
-            {
-                bulletin.Author = author;
-
-                return bulletin;
-            }, sql.NamedBindings, Transaction);
         }
 
         public async Task<IEnumerable<Bulletin>> GetApproved()
         {
             var query = GenerateQuery();
 
-            query.Where("Bulletin.Approved", "=", true);
+            query.Where($"{TblAlias}.Approved", "=", true);
 
             return await ExecuteQuery(query);
         }
@@ -62,8 +38,8 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Where("Bulletin.Approved", "=", true);
-            query.Where("Bulletin.ShowStudents", "=", true);
+            query.Where($"{TblAlias}.Approved", "=", true);
+            query.Where($"{TblAlias}.ShowStudents", "=", true);
 
             return await ExecuteQuery(query);
         }
@@ -72,7 +48,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Where("Bulletin.AuthorId", "=", authorId);
+            query.Where($"{TblAlias}.AuthorId", "=", authorId);
 
             return await ExecuteQuery(query);
         }

@@ -18,49 +18,8 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumGroupRepository : BaseReadWriteRepository<CurriculumGroup>, ICurriculumGroupRepository
     {
-        public CurriculumGroupRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "CurriculumGroup")
+        public CurriculumGroupRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(CurriculumBlock), "Block");
-            
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("CurriculumBlocks as Block", "Block.Id", "CurriculumGroup.BlockId");
-        }
-
-        protected override async Task<IEnumerable<CurriculumGroup>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<CurriculumGroup, CurriculumBlock, CurriculumGroup>(sql.Sql,
-                (group, block) =>
-                {
-                    group.Block = block;
-
-                    return group;
-                }, sql.NamedBindings, Transaction);
-
-        }
-
-        public async Task<bool> CheckUniqueCode(Guid academicYearId, string code)
-        {
-            var query = GenerateQuery();
-
-            query.LeftJoin("CurriculumBandBlockAssignment as Assignment", "Assignment.BlockId", "Block.Id");
-            query.LeftJoin("CurriculumBand as Band", "Band.Id", "Assignment.BandId");
-
-            query.Where("Band.AcademicYearId", academicYearId);
-            query.Where("CurriculumGroup.Code", code);
-
-            var result = await ExecuteQueryIntResult(query);
-
-            return result == null || result == 0;
         }
 
         public async Task Update(CurriculumGroup entity)

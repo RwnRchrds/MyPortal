@@ -19,38 +19,9 @@ namespace MyPortal.Database.Repositories
 {
     public class SessionRepository : BaseReadWriteRepository<Session>, ISessionRepository
     {
-        public SessionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Session")
+        public SessionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
             
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Class), "Class");
-            query.SelectAllColumns(typeof(AttendancePeriod), "Period");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("Classes as Class", "Class.Id", "Session.ClassId");
-            query.LeftJoin("AttendancePeriods as Period", "Period.Id", "Session.PeriodId");
-        }
-
-
-
-        protected override async Task<IEnumerable<Session>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<Session, Class, AttendancePeriod, Session>(sql.Sql, (session, currClass, period) =>
-                {
-                    session.Class = currClass;
-                    session.AttendancePeriod = period;
-
-                    return session;
-                }, sql.NamedBindings);
         }
 
         public async Task<IEnumerable<SessionMetadata>> GetMetadata(Guid sessionId, DateTime dateFrom, DateTime dateTo)

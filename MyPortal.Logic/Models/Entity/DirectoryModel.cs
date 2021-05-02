@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using MyPortal.Logic.Models.Data;
-using MyPortal.Logic.Models.DataGrid;
 
 namespace MyPortal.Logic.Models.Entity
 {
@@ -16,15 +15,5 @@ namespace MyPortal.Logic.Models.Entity
         public bool Restricted { get; set; } 
 
         public virtual DirectoryModel Parent { get; set; }
-        public virtual BulletinModel Bulletin { get; set; }
-        public virtual HomeworkModel HomeworkItem { get; set; }
-        public virtual PersonModel Person { get; set; }
-        public virtual LessonPlanModel LessonPlan { get; set; }
-        public virtual AgencyModel Agency { get; set; }
-
-        public DirectoryChildListModel GetListModel()
-        {
-            return new DirectoryChildListModel(this);
-        }
     }
 }

@@ -13,33 +13,9 @@ namespace MyPortal.Database.Repositories
 {
     public class UserRepository : BaseReadWriteRepository<User>, IUserRepository
     {
-        public UserRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "User")
+        public UserRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Person), "Person");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("People as Person", "Person.Id", "User.PersonId");
-        }
-
-        protected override async Task<IEnumerable<User>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<User, Person, User>(sql.Sql, (user, person) =>
-            {
-                user.Person = person;
-
-                return user;
-            }, sql.NamedBindings, Transaction);
         }
 
         public async Task<bool> UserExists(string username)

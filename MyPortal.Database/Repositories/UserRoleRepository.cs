@@ -28,25 +28,9 @@ namespace MyPortal.Database.Repositories
             _transaction = transaction;
         }
 
-        protected void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(User), "User");
-            query.SelectAllColumns(typeof(Role), "Role");
-
-            JoinRelated(query);
-        }
-
-        protected void JoinRelated(Query query)
-        {
-            query.LeftJoin("Users as User", "User.Id", "UserRole.UserId");
-            query.LeftJoin("Roles as Role", "Role.Id", "UserRole.RoleId");
-        }
-
         private Query GenerateQuery()
         {
-            var query = new Query("UserRoles as UserRole").SelectAllColumns(typeof(UserRole), "UserRole");
-
-            SelectAllRelated(query);
+            var query = new Query("UserRoles as UR").SelectAllColumns(typeof(UserRole), "UR");
 
             return query;
         }

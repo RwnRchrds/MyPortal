@@ -25,11 +25,8 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 4)]
         public bool IsNonTimetable { get; set; }
 
-        public virtual AcademicTerm AcademicTerm { get; set; }  
-
+        public virtual AcademicTerm AcademicTerm { get; set; }
         public virtual AttendanceWeekPattern WeekPattern { get; set; }
-        
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }
 
         public virtual ICollection<ReportCardSubmission> ReportCardSubmissions { get; set; }

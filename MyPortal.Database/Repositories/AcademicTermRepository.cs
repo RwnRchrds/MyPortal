@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
@@ -16,18 +17,37 @@ namespace MyPortal.Database.Repositories
 {
     public class AcademicTermRepository : BaseReadWriteRepository<AcademicTerm>, IAcademicTermRepository
     {
-        public AcademicTermRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "AT")
+        public AcademicTermRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
         }
 
-        protected override void SelectAllRelated(Query query)
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("AcademicYears as AY", "AY.Id", $"{TblAlias}.AcademicYearId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
         {
             query.SelectAllColumns(typeof(AcademicYear), "AY");
+
+            return query;
         }
 
-        protected override void JoinRelated(Query query)
+        protected override async Task<IEnumerable<AcademicTerm>> ExecuteQuery(Query query)
         {
-            query.LeftJoin("AcademicYears AS AY", "AY.Id", "AT.AcademicYearId");
+            var sql = Compiler.Compile(query);
+
+            var terms = await Transaction.Connection.QueryAsync<AcademicTerm, AcademicYear, AcademicTerm>(sql.Sql,
+                (term, year) =>
+                {
+                    term.AcademicYear = year;
+
+                    return term;
+                }, sql.NamedBindings, Transaction);
+
+            return terms;
         }
 
         public async Task Update(AcademicTerm entity)
@@ -46,7 +66,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Where("AY.AcademicYearId", academicYearId);
+            query.Where($"{TblAlias}.AcademicYearId", academicYearId);
 
             return await ExecuteQuery(query);
         }

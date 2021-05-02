@@ -20,34 +20,24 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceWeekRepository : BaseReadWriteRepository<AttendanceWeek>, IAttendanceWeekRepository
     {
-        public AttendanceWeekRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "AttendanceWeek")
+        public AttendanceWeekRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
       
         }
 
-        protected override void SelectAllRelated(Query query)
+        protected override Query JoinRelated(Query query)
         {
-            query.SelectAllColumns(typeof(AttendanceWeekPattern), "WeekPattern");
-
-            JoinRelated(query);
+            return base.JoinRelated(query);
         }
 
-        protected override void JoinRelated(Query query)
+        protected override Query SelectAllRelated(Query query)
         {
-            query.LeftJoin("AttendanceWeekPatterns as WeekPattern", "WeekPattern.Id",
-                "AttendanceWeek.WeekPatternId");
+            return base.SelectAllRelated(query);
         }
 
-        protected override async Task<IEnumerable<AttendanceWeek>> ExecuteQuery(Query query)
+        protected override Task<IEnumerable<AttendanceWeek>> ExecuteQuery(Query query)
         {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<AttendanceWeek, AttendanceWeekPattern, AttendanceWeek>(sql.Sql, (week, pattern) =>
-            {
-                week.WeekPattern = pattern;
-
-                return week;
-            }, sql.NamedBindings, Transaction);
+            return base.ExecuteQuery(query);
         }
 
         public async Task<AttendanceWeek> GetByDate(DateTime date)

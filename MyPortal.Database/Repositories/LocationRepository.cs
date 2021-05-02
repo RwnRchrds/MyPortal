@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class LocationRepository : BaseReadWriteRepository<Location>, ILocationRepository
     {
-        public LocationRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Location")
+        public LocationRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
         }
 

@@ -17,39 +17,9 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentRepository : BaseReadWriteRepository<Student>, IStudentRepository
     {
-        public StudentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Student")
+        public StudentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Person), "StudentPerson");
-            query.SelectAllColumns(typeof(User), "User");
-            query.SelectAllColumns(typeof(RegGroup), "RegGroup");
-            query.SelectAllColumns(typeof(StaffMember), "Tutor");
-            query.SelectAllColumns(typeof(Person), "TutorPerson");
-            query.SelectAllColumns(typeof(YearGroup), "YearGroup");
-            query.SelectAllColumns(typeof(StaffMember), "HeadOfYear");
-            query.SelectAllColumns(typeof(Person), "HeadOfYearPerson");
-            query.SelectAllColumns(typeof(House), "House");
-            query.SelectAllColumns(typeof(SenStatus), "SenStatus");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("Users as User", "User.PersonId", "StudentPerson.Id");
-            query.LeftJoin("RegGroups as RegGroup", "RegGroup.Id", "Student.RegGroupId");
-            query.LeftJoin("StaffMembers as Tutor", "Tutor.Id", "RegGroup.TutorId");
-            query.LeftJoin("People as TutorPerson", "TutorPerson.Id", "Tutor.PersonId");
-            query.LeftJoin("YearGroups as YearGroup", "YearGroup.Id", "Student.YearGroupId");
-            query.LeftJoin("StaffMembers as HeadOfYear", "HeadOfYear.Id", "YearGroup.HeadId");
-            query.LeftJoin("People as HeadOfYearPerson", "HeadOfYearPerson.Id", "HeadOfYear.PersonId");
-            query.LeftJoin("Houses as House", "House.Id", "Student.HouseId");
-            query.LeftJoin("SenStatus", "SenStatus.Id", "Student.SenStatusId");
         }
 
         private static void ApplySearch(Query query, StudentSearchOptions search)
@@ -179,30 +149,6 @@ namespace MyPortal.Database.Repositories
             query.Where("Student.GiftedAndTalented", true);
 
             return await ExecuteQuery(query);
-        }
-
-        protected override async Task<IEnumerable<Student>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync(sql.Sql,
-                new[]
-                {
-                    typeof(Student), typeof(Person), typeof(User), typeof(RegGroup), typeof(StaffMember),
-                    typeof(Person), typeof(YearGroup), typeof(StaffMember), typeof(Person), typeof(House), typeof(SenStatus)
-                },
-                objects =>
-                {
-                    var student = (Student) objects[0];
-
-                    student.Person = (Person) objects[1];
-                    student.Person.User = (User) objects[2];
-
-                    student.House = (House) objects[9];
-                    student.SenStatus = (SenStatus) objects[10];
-
-                    return student;
-                }, sql.NamedBindings, Transaction);
         }
     }
 }

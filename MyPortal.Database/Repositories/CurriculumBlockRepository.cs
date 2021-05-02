@@ -18,7 +18,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumBlockRepository : BaseReadWriteRepository<CurriculumBlock>, ICurriculumBlockRepository
     {
-        public CurriculumBlockRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Block")
+        public CurriculumBlockRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
             
         }
@@ -27,7 +27,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.LeftJoin("CurriculumBandBlock as BandBlock", "BandBlock.BlockId", "Block.Id");
+            query.LeftJoin("CurriculumBandBlock as BandBlock", "BandBlock.BlockId", $"{TblAlias}.Id");
 
             query.Where("BandBlock.BandId", bandId);
 
@@ -40,7 +40,7 @@ namespace MyPortal.Database.Repositories
 
             query.Select("Band.AcademicYearId");
 
-            query.LeftJoin("CurriculumBandBlockAssignments as Assignment", "Assignment.BlockId", "Block.Id");
+            query.LeftJoin("CurriculumBandBlockAssignments as Assignment", "Assignment.BlockId", $"{TblAlias}.Id");
             query.LeftJoin("CurriculumBands as Band", "Band.Id", "Assignment.BandId");
 
             query.Where("Block.Id", blockId);
@@ -54,7 +54,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.LeftJoin("CurriculumBandBlockAssignment as Assignment", "Assignment.BlockId", "Block.Id");
+            query.LeftJoin("CurriculumBandBlockAssignment as Assignment", "Assignment.BlockId", $"{TblAlias}.Id");
             query.LeftJoin("CurriculumBand as Band", "Band.Id", "Assignment.BandId");
 
             query.Where("Band.AcademicYearId", academicYearId);

@@ -19,58 +19,24 @@ namespace MyPortal.Database.Repositories
 {
     public class DetentionRepository : BaseReadWriteRepository<Detention>, IDetentionRepository
     {
-        public DetentionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "Detention")
+        public DetentionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(DetentionType), "DetentionType");
-            query.SelectAllColumns(typeof(DiaryEvent), "DiaryEvent");
-            query.SelectAllColumns(typeof(StaffMember), "StaffMember");
-            query.SelectAllColumns(typeof(Person), "Person");
-            
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("DetentionTypes as DetentionType", "DetentionType.Id", "Detention.DetentionTypeId");
-            query.LeftJoin("DiaryEvents as DiaryEvent", "DiaryEvent.Id", "Detention.EventId");
-            query.LeftJoin("StaffMembers as StaffMember", "StaffMember.Id", "Detention.SupervisorId");
-            query.LeftJoin("People as Person", "Person.Id", "StaffMember.PersonId");
-        }
-
-        protected override async Task<IEnumerable<Detention>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<Detention, DetentionType, DiaryEvent, StaffMember, Person, Detention>(sql.Sql,
-                (detention, type, diaryEvent, supervisor, person) =>
-                {
-                    detention.Type = type;
-                    detention.Event = diaryEvent;
-                    detention.Supervisor = supervisor;
-
-                    detention.Supervisor.Person = person;
-
-                    return detention;
-                }, sql.NamedBindings, Transaction);
         }
 
         public async Task<IEnumerable<Detention>> GetByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo)
         {
             var query = GenerateQuery();
 
-            query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", "Detention.Id");
+            query.LeftJoin("DiaryEvent as DE", "DE.Id", $"{TblAlias}.EventId");
+            query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", $"{TblAlias}.Id");
             query.LeftJoin("Incident", "Incident.Id", "IncidentDetention.IncidentId");
 
             query.Where("Incident.StudentId", studentId);
 
             query.Where(q =>
-                q.WhereDate("DiaryEvent.StartTime", ">=", dateFrom)
-                    .WhereDate("DiaryEvent.EndTime", "<=", dateTo));
+                q.WhereDate("DE.StartTime", ">=", dateFrom)
+                    .WhereDate("DE.EndTime", "<=", dateTo));
 
             return await ExecuteQuery(query);
         }
@@ -79,7 +45,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", "Detention.Id");
+            query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", $"{TblAlias}.Id");
             query.LeftJoin("Incident", "Incident.Id", "IncidentDetention.IncidentId");
 
             query.Where("Incident.StudentId", studentId);
@@ -93,7 +59,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
             
-            query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", "Detention.Id");
+            query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", $"{TblAlias}.Id");
             query.LeftJoin("Incident", "Incident.Id", "IncidentDetention.IncidentId");
 
             query.Where("Incident.Id", incidentId);

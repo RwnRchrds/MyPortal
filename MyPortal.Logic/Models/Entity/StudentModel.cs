@@ -1,24 +1,35 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
-using MyPortal.Logic.Models.DataGrid;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
     public class StudentModel : BaseModel
     {
+        public StudentModel(Student student)
+        {
+            Id = student.Id;
+            PersonId = student.PersonId;
+            AdmissionNumber = student.AdmissionNumber;
+            DateStarting = student.DateStarting;
+            DateLeaving = student.DateLeaving;
+            FreeSchoolMeals = student.FreeSchoolMeals;
+            SenStatusId = student.SenStatusId;
+            SenTypeId = student.SenTypeId;
+            EnrolmentStatusId = student.EnrolmentStatusId;
+            BoarderStatusId = student.BoarderStatusId;
+            PupilPremium = student.PupilPremium;
+            Upn = student.Upn;
+            Deleted = student.Deleted;
+        }
+        
         public Guid PersonId { get; set; }
 
-        
-        public Guid RegGroupId { get; set; }
 
-        
-        public Guid YearGroupId { get; set; }
-
-        
-        public Guid? HouseId { get; set; }
-
-        
         public int AdmissionNumber { get; set; }
 
         
@@ -51,14 +62,8 @@ namespace MyPortal.Logic.Models.Entity
 
         
         public bool Deleted { get; set; }
-
-        public virtual RegGroupModel RegGroup { get; set; }
-
-        public virtual YearGroupModel YearGroup { get; set; }
-
+        
         public virtual PersonModel Person { get; set; }
-
-        public virtual ExamCandidateModel Candidate { get; set; }
 
         public virtual SenStatusModel SenStatus { get; set; }
 
@@ -67,12 +72,5 @@ namespace MyPortal.Logic.Models.Entity
         public virtual EnrolmentStatusModel EnrolmentStatus { get; set; }
 
         public virtual BoarderStatusModel BoarderStatus { get; set; }
-
-        public virtual HouseModel House { get; set; }
-
-        public StudentDataGridModel GetDataGridModel()
-        {
-            return new StudentDataGridModel(this);
-        }
     }
 }

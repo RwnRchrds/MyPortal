@@ -7,7 +7,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceCodeMeaningRepository : BaseReadRepository<AttendanceCodeMeaning>, IAttendanceCodeMeaningRepository
     {
-        public AttendanceCodeMeaningRepository(DbTransaction transaction) : base(transaction, "ACM")
+        public AttendanceCodeMeaningRepository(DbTransaction transaction) : base(transaction)
         {
         }
     }

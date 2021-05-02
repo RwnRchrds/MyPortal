@@ -17,39 +17,16 @@ namespace MyPortal.Database.Repositories
 {
     public class FileRepository : BaseReadWriteRepository<File>, IFileRepository
     {
-        public FileRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "File")
+        public FileRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
         }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Document), "Document");
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("Documents as Document", "Document.Id", "File.DocumentId");
-        }
-
-        protected override async Task<IEnumerable<File>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<File, Document, File>(sql.Sql, (file, document) =>
-            {
-                file.Document = document;
-
-                return file;
-            }, sql.NamedBindings, Transaction);
-        }
-
 
         public async Task<File> GetByDocumentId(Guid documentId)
         {
             var query = GenerateQuery();
 
-            query.Where("DocumentId", documentId);
+            query.Where($"{TblAlias}.DocumentId", documentId);
 
             return await ExecuteQueryFirstOrDefault(query);
         }

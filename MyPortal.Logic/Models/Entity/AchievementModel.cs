@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Models.Data;
-using MyPortal.Logic.Models.DataGrid;
+using MyPortal.Logic.Models.List;
 using MyPortal.Logic.Models.Requests.Behaviour;
 using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
 

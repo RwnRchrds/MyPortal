@@ -20,33 +20,9 @@ namespace MyPortal.Database.Repositories
 {
     public class CommunicationLogRepository : BaseReadWriteRepository<CommunicationLog>, ICommunicationLogRepository
     {
-        public CommunicationLogRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "CommunicationLog")
+        public CommunicationLogRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
       
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(CommunicationType), "CommunicationType");
-            
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("CommunicationTypes as CommunicationType", "CommunicationType.Id", "CommnicationLog.CommunicationTypeId");
-        }
-
-        protected override async Task<IEnumerable<CommunicationLog>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<CommunicationLog, CommunicationType, CommunicationLog>(sql.Sql, (log, type) =>
-            {
-                log.Type = type;
-
-                return log;
-            }, sql.NamedBindings, Transaction);
         }
 
         public async Task Update(CommunicationLog entity)

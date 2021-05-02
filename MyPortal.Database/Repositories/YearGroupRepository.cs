@@ -16,37 +16,9 @@ namespace MyPortal.Database.Repositories
 {
     public class YearGroupRepository : BaseReadWriteRepository<YearGroup>, IYearGroupRepository
     {
-        public YearGroupRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "YearGroup")
+        public YearGroupRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
             
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(StaffMember), "StaffMember");
-            query.SelectAllColumns(typeof(Person), "Person");
-            query.SelectAllColumns(typeof(CurriculumYearGroup), "CYG");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("StaffMembers as StaffMember", "StaffMember.Id", "YearGroup.HeadId");
-            query.LeftJoin("People as Person", "Person.Id", "StaffMember.PersonId");
-            query.LeftJoin("CurriculumYearGroups as CYG", "CYG.Id", "YearGroup.Id");
-        }
-
-        protected override async Task<IEnumerable<YearGroup>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<YearGroup, CurriculumYearGroup, YearGroup>(sql.Sql, (yearGroup, curriculumGroup) =>
-            {
-                yearGroup.CurriculumYearGroup = curriculumGroup;
-
-                return yearGroup;
-            }, sql.NamedBindings, Transaction);
         }
 
         public async Task Update(YearGroup entity)

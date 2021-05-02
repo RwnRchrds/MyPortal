@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using MyPortal.Logic.Models.DataGrid;
+using MyPortal.Logic.Models.List;
 
 namespace MyPortal.Logic.Models.Entity
 {

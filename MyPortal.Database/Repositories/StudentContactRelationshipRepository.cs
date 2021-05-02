@@ -16,45 +16,9 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentContactRelationshipRepository : BaseReadWriteRepository<StudentContactRelationship>, IStudentContactRelationshipRepository
     {
-        public StudentContactRelationshipRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "StudentContact")
+        public StudentContactRelationshipRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
-        }   
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(RelationshipType), "RelationshipType");
-            query.SelectAllColumns(typeof(Student), "Student");
-            query.SelectAllColumns(typeof(Person), "StudentPerson");
-            query.SelectAllColumns(typeof(Contact), "Contact");
-            query.SelectAllColumns(typeof(Person), "ContactPerson");
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("RelationshipTypes as RelationshipType", "RelationshipType.Id", "StudentContact.RelationshipTypeId");
-            query.LeftJoin("Students as Student", "Student.Id", "StudentContact.StudentId");
-            query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("Contacts as Contact", "Contact.Id", "StudentContact.ContactId");
-            query.LeftJoin("People as ContactPerson", "ContactPerson.Id", "Contact.PersonId");
-        }
-
-        protected override async Task<IEnumerable<StudentContactRelationship>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection
-                .QueryAsync<StudentContactRelationship, RelationshipType, Student, Person, Contact, Person, StudentContactRelationship>(sql.Sql,
-                    (sContact, relationship, student, sPerson, contact, cPerson) =>
-                    {
-                        sContact.RelationshipType = relationship;
-                        sContact.Student = student;
-                        sContact.Student.Person = sPerson;
-                        sContact.Contact = contact;
-                        sContact.Contact.Person = cPerson;
-
-                        return sContact;
-                    }, sql.NamedBindings, Transaction);
         }
 
         public async Task Update(StudentContactRelationship entity)

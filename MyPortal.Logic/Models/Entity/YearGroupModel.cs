@@ -2,21 +2,23 @@
 using System.ComponentModel.DataAnnotations;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class YearGroupModel
+    public class YearGroupModel : BaseModel
     {
-        public Guid Id { get; set; }
-
-        [Required]
-        [StringLength(256)]
-        public string Name { get; set; }
-
-        public Guid? HeadId { get; set; }
+        public YearGroupModel(YearGroup yearGroup)
+        {
+            StudentGroupId = yearGroup.StudentGroupId;
+            CurriculumYearGroupId = yearGroup.CurriculumYearGroupId;
+        }
+        
+        public Guid StudentGroupId { get; set; }
+        
         public Guid CurriculumYearGroupId { get; set; }
 
-        public virtual StaffMemberModel HeadOfYear { get; set; }
+        public virtual StudentGroupModel StudentGroup { get; set; }
         public virtual CurriculumYearGroupModel CurriculumYearGroup { get; set; }
     }
 }

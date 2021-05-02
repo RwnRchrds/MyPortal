@@ -18,32 +18,8 @@ namespace MyPortal.Database.Repositories
 {
     public class HomeworkItemRepository : BaseReadWriteRepository<HomeworkItem>, IHomeworkItemRepository
     {
-        public HomeworkItemRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "HomeworkItem")
+        public HomeworkItemRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(Directory), "Directory");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("Directories as Directory", "Directory.Id", "HomeworkItem.DirectoryId");
-        }
-
-        protected override async Task<IEnumerable<HomeworkItem>> ExecuteQuery(Query query)
-        {
-            var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<HomeworkItem, Directory, HomeworkItem>(sql.Sql, (homework, directory) =>
-            {
-                homework.Directory = directory;
-
-                return homework;
-            }, sql.NamedBindings, Transaction);
         }
 
         public async Task Update(HomeworkItem entity)

@@ -16,23 +16,9 @@ namespace MyPortal.Database.Repositories
 {
     public class HouseRepository : BaseReadWriteRepository<House>, IHouseRepository
     {
-        public HouseRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction, "House")
+        public HouseRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
            
-        }
-
-        protected override void SelectAllRelated(Query query)
-        {
-            query.SelectAllColumns(typeof(StaffMember), "StaffMember");
-            query.SelectAllColumns(typeof(Person), "Person");
-
-            JoinRelated(query);
-        }
-
-        protected override void JoinRelated(Query query)
-        {
-            query.LeftJoin("StaffMembers as StaffMember", "StaffMember.Id", "House.HeadId");
-            query.LeftJoin("People as Person", "Person.Id", "StaffMember.PersonId");
         }
 
         public async Task Update(House entity)
