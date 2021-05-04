@@ -25,6 +25,40 @@ namespace MyPortal.Database.Repositories
       
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("Contacts as C", "C.Id", $"{TblAlias}.ContactId");
+            query.LeftJoin("CommunicationTypes as CT", "CT.Id", $"{TblAlias}.CommunicationTypeId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Contact), "C");
+            query.SelectAllColumns(typeof(CommunicationType), "CT");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<CommunicationLog>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var communicationLogs =
+                await Transaction.Connection.QueryAsync<CommunicationLog, Contact, CommunicationType, CommunicationLog>(
+                    sql.Sql,
+                    (log, contact, type) =>
+                    {
+                        log.Contact = contact;
+                        log.Type = type;
+
+                        return log;
+                    }, sql.NamedBindings, Transaction);
+
+            return communicationLogs;
+        }
+
         public async Task Update(CommunicationLog entity)
         {
             var log = await Context.CommunicationLogs.FirstOrDefaultAsync(x => x.Id == entity.Id);

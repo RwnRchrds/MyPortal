@@ -5,8 +5,8 @@ using System.Text;
 
 namespace MyPortal.Database.Models.Entity
 {
-    [Table("StudentDiscounts")]
-    public class StudentDiscount : BaseTypes.Entity
+    [Table("StudentChargeDiscounts")]
+    public class StudentChargeDiscount : BaseTypes.Entity
     {
         [Column(Order = 1)]
         public Guid StudentId { get; set; }
@@ -15,6 +15,6 @@ namespace MyPortal.Database.Models.Entity
         public Guid DiscountId { get; set; }
 
         public virtual Student Student { get; set; }
-        public virtual Discount Discount { get; set; }
+        public virtual ChargeDiscount ChargeDiscount { get; set; }
     }
 }
