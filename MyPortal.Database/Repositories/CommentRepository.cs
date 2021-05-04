@@ -21,6 +21,35 @@ namespace MyPortal.Database.Repositories
 
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("CommentBanks as CB", "CB.Id", $"{TblAlias}.CommentBankId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(CommentBank), "CB");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Comment>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var comments = await Transaction.Connection.QueryAsync<Comment, CommentBank, Comment>(sql.Sql,
+                (comment, bank) =>
+                {
+                    comment.CommentBank = bank;
+
+                    return comment;
+                }, sql.NamedBindings, Transaction);
+
+            return comments;
+        }
+
         public async Task Update(Comment entity)
         {
             var comment = await Context.Comments.FirstOrDefaultAsync(x => x.Id == entity.Id);

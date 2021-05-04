@@ -25,6 +25,38 @@ namespace MyPortal.Database.Repositories
        
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("Users as U", "U.Id", $"{TblAlias}.AuthorId");
+            query.LeftJoin("Directories as D", "D.Id", $"{TblAlias}.DirectoryId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(User), "U");
+            query.SelectAllColumns(typeof(Directory), "D");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Bulletin>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var bulletins = await Transaction.Connection.QueryAsync<Bulletin, User, Directory, Bulletin>(sql.Sql,
+                (bulletin, user, dir) =>
+                {
+                    bulletin.Author = user;
+                    bulletin.Directory = dir;
+
+                    return bulletin;
+                }, sql.NamedBindings, Transaction);
+
+            return bulletins;
+        }
+
         public async Task<IEnumerable<Bulletin>> GetApproved()
         {
             var query = GenerateQuery();

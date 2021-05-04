@@ -22,8 +22,7 @@ namespace MyPortal.Database.Models.Entity
         
         [Column(Order = 6)] 
         public int MaxUsage { get; set; }
-        
-        public virtual ICollection<StudentDiscount> StudentDiscounts { get; set; }
+
         public virtual ICollection<ChargeDiscount> ChargeDiscounts { get; set; }
         public virtual ICollection<StoreDiscount> StoreDiscounts { get; set; }
         public virtual ICollection<ProductDiscount> ProductDiscounts { get; set; }

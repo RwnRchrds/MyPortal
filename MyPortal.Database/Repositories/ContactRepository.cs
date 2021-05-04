@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -22,6 +23,35 @@ namespace MyPortal.Database.Repositories
         public ContactRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
      
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("People as P", "P.Id", $"{TblAlias}.PersonId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Person), "P");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Contact>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var contacts = await Transaction.Connection.QueryAsync<Contact, Person, Contact>(sql.Sql,
+                (contact, person) =>
+                {
+                    contact.Person = person;
+
+                    return contact;
+                }, sql.NamedBindings, Transaction);
+
+            return contacts;
         }
 
         public async Task Update(Contact entity)

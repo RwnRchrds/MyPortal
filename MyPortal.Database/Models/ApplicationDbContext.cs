@@ -46,7 +46,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Bill> Bills { get; set; }
         public virtual DbSet<BillCharge> BillCharges { get; set; }
         public virtual DbSet<BillChargeDiscount> BillChargeDiscounts { get; set; }
-        public virtual DbSet<StudentDiscount> BillDiscounts { get; set; }
+        public virtual DbSet<StudentChargeDiscount> StudentChargeDiscounts { get; set; }
         public virtual DbSet<BillAccountTransaction> BillAccountTransactions { get; set; }
         public virtual DbSet<BillItem> BillItems { get; set; }
         public virtual DbSet<BillStoreDiscount> BillStoreDiscounts { get; set; }
@@ -2431,18 +2431,18 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<StudentDiscount>(e =>
+                modelBuilder.Entity<StudentChargeDiscount>(e =>
                 {
                     SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Student)
-                        .WithMany(x => x.Discounts)
+                        .WithMany(x => x.ChargeDiscounts)
                         .HasForeignKey(x => x.StudentId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasOne(x => x.Discount)
-                        .WithMany(x => x.StudentDiscounts)
+                    e.HasOne(x => x.ChargeDiscount)
+                        .WithMany(x => x.StudentChargeDiscounts)
                         .HasForeignKey(x => x.DiscountId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
