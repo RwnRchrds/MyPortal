@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -23,6 +17,40 @@ namespace MyPortal.Database.Repositories
         public IncidentDetentionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
             
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "Incidents", "I", "IncidentId");
+            JoinEntity(query, "Detentions", "D", "DetentionId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Incident), "I");
+            query.SelectAllColumns(typeof(Detention), "D");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<IncidentDetention>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var incidentDetentions =
+                await Transaction.Connection.QueryAsync<IncidentDetention, Incident, Detention, IncidentDetention>(
+                    sql.Sql,
+                    (incidentDetention, incident, detention) =>
+                    {
+                        incidentDetention.Incident = incident;
+                        incidentDetention.Detention = detention;
+
+                        return incidentDetention;
+                    }, sql.NamedBindings, Transaction);
+
+            return incidentDetentions;
         }
 
         public async Task<IncidentDetention> Get(Guid detentionId, Guid studentId)

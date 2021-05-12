@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -20,6 +21,35 @@ namespace MyPortal.Database.Repositories
     {
         public HomeworkItemRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "Directories", "D", "DirectoryId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Directory), "D");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<HomeworkItem>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var homeworkItems = await Transaction.Connection.QueryAsync<HomeworkItem, Directory, HomeworkItem>(sql.Sql,
+                (homework, directory) =>
+                {
+                    homework.Directory = directory;
+
+                    return homework;
+                }, sql.NamedBindings, Transaction);
+
+            return homeworkItems;
         }
 
         public async Task Update(HomeworkItem entity)

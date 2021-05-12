@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
@@ -19,6 +20,34 @@ namespace MyPortal.Database.Repositories
         public HouseRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
            
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "StudentGroups", "SG", "StudentGroupId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(StudentGroup), "SG");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<House>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var houses = await Transaction.Connection.QueryAsync<House, StudentGroup, House>(sql.Sql, (house, group) =>
+            {
+                house.StudentGroup = group;
+
+                return house;
+            }, sql.NamedBindings, Transaction);
+
+            return houses;
         }
 
         public async Task Update(House entity)

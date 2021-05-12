@@ -22,6 +22,46 @@ namespace MyPortal.Database.Repositories
         {
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "Students", "S", "StudentId");
+            JoinEntity(query, "ExclusionTypes", "ET", "ExclusionTypeId");
+            JoinEntity(query, "ExclusionReasons", "ER", "ExclusionReasonId");
+            JoinEntity(query, "ExclusionAppealResults", "EAR", "AppealResultId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Student), "S");
+            query.SelectAllColumns(typeof(ExclusionType), "ET");
+            query.SelectAllColumns(typeof(ExclusionReason), "ER");
+            query.SelectAllColumns(typeof(ExclusionAppealResult), "EAR");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Exclusion>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var exclusions = await Transaction.Connection
+                .QueryAsync<Exclusion, Student, ExclusionType, ExclusionReason, ExclusionAppealResult, Exclusion>(
+                    sql.Sql,
+                    (exclusion, student, type, reason, appealResult) =>
+                    {
+                        exclusion.Student = student;
+                        exclusion.ExclusionType = type;
+                        exclusion.ExclusionReason = reason;
+                        exclusion.AppealResult = appealResult;
+
+                        return exclusion;
+                    }, sql.NamedBindings, Transaction);
+
+            return exclusions;
+        }
+
         public async Task<int> GetCountByStudent(Guid studentId)
         {
             var query = GenerateQuery().AsCount();

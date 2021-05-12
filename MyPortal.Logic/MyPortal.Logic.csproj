@@ -28,8 +28,4 @@
     <None Remove="Models\Requests\Admissions\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Caching\" />
-  </ItemGroup>
-
 </Project>

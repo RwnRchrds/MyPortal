@@ -24,6 +24,39 @@ namespace MyPortal.Database.Repositories
 
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "Students", "S", "StudentId");
+            JoinEntity(query, "Subjects", "SU", "SubjectId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Student), "S");
+            query.SelectAllColumns(typeof(Subject), "SU");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<GiftedTalented>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var giftedTalented =
+                await Transaction.Connection.QueryAsync<GiftedTalented, Student, Subject, GiftedTalented>(sql.Sql,
+                    (giftedTalented, student, subject) =>
+                    {
+                        giftedTalented.Student = student;
+                        giftedTalented.Subject = subject;
+
+                        return giftedTalented;
+                    }, sql.NamedBindings, Transaction);
+
+            return giftedTalented;
+        }
+
         public async Task<IEnumerable<GiftedTalented>> GetByStudent(Guid studentId)
         {
             var query = GenerateQuery();

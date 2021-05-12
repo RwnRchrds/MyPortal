@@ -24,25 +24,29 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var existingFile = await unitOfWork.Files.GetByDocumentId(upload.DocumentId);
+                var document = await unitOfWork.Documents.GetById(upload.DocumentId);
 
-                if (existingFile != null)
+                if (document == null)
+                {
+                    throw new NotFoundException("Document not found.");
+                }
+
+                if (document.FileId.HasValue)
                 {
                     throw new LogicException("A file is already attached to this document.");
                 }
 
-                string fileId = await _fileProvider.UploadFile(upload);
+                string fileId = await _fileProvider.SaveFile(upload);
 
-                var file = new Database.Models.Entity.File
+                document.Attachment = new Database.Models.Entity.File
                 {
                     FileId = fileId,
                     FileName = upload.File.FileName,
-                    ContentType = upload.File.ContentType,
-                    DocumentId = upload.DocumentId
+                    ContentType = upload.File.ContentType
                 };
 
-                unitOfWork.Files.Create(file);
-
+                await unitOfWork.Documents.Update(document);
+                
                 await unitOfWork.SaveChangesAsync();
             }
         }

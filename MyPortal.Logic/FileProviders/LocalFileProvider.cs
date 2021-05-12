@@ -26,7 +26,7 @@ namespace MyPortal.Logic.FileProviders
             Directory.CreateDirectory(_fileStoragePath);
         }
 
-        public async Task<string> UploadFile(UploadAttachmentModel upload)
+        public async Task<string> SaveFile(UploadAttachmentModel upload)
         {
             var fileName = Guid.NewGuid().ToString("N");
 
