@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -21,6 +22,45 @@ namespace MyPortal.Database.Repositories
         public HomeworkSubmissionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
             
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "HomeworkItems", "HI", "HomeworkId");
+            JoinEntity(query, "Students", "S", "StudentId");
+            JoinEntity(query, "Tasks", "T", "TaskId");
+            JoinEntity(query, "Documents", "D", "DocumentId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(HomeworkItem), "HI");
+            query.SelectAllColumns(typeof(Student), "S");
+            query.SelectAllColumns(typeof(Task), "T");
+            query.SelectAllColumns(typeof(Document), "D");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<HomeworkSubmission>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var submissions = await Transaction.Connection
+                .QueryAsync<HomeworkSubmission, HomeworkItem, Student, Task, Document, HomeworkSubmission>(sql.Sql,
+                    (submission, item, student, task, document) =>
+                    {
+                        submission.HomeworkItem = item;
+                        submission.Student = student;
+                        submission.Task = task;
+                        submission.SubmittedWork = document;
+
+                        return submission;
+                    }, sql.NamedBindings, Transaction);
+
+            return submissions;
         }
 
         public async System.Threading.Tasks.Task Update(HomeworkSubmission entity)

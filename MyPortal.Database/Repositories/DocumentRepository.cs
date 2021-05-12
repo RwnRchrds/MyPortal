@@ -85,6 +85,7 @@ namespace MyPortal.Database.Repositories
             document.Description = entity.Description;
             document.TypeId = entity.TypeId;
             document.Restricted = entity.Restricted;
+            document.Attachment = entity.Attachment;
         }
     }
 }

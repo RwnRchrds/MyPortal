@@ -24,6 +24,34 @@ namespace MyPortal.Database.Repositories
             
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "GradeSets", "GS", "GradeSetId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(GradeSet), "GS");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Grade>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var grades = await Transaction.Connection.QueryAsync<Grade, GradeSet, Grade>(sql.Sql, (grade, set) =>
+            {
+                grade.GradeSet = set;
+
+                return grade;
+            }, sql.NamedBindings, Transaction);
+
+            return grades;
+        }
+
         public async Task Update(Grade entity)
         {
             var grade = await Context.Grades.FirstOrDefaultAsync(x => x.Id == entity.Id);

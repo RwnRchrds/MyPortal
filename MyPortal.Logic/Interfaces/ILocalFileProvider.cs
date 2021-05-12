@@ -7,7 +7,7 @@ namespace MyPortal.Logic.Interfaces
 {
     public interface ILocalFileProvider
     {
-        Task<string> UploadFile(UploadAttachmentModel upload);
+        Task<string> SaveFile(UploadAttachmentModel upload);
         void DeleteFile(string fileId);
         Task<Stream> DownloadFileToStream(string fileId);
     }
