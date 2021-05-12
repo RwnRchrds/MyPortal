@@ -26,6 +26,43 @@ namespace MyPortal.Database.Repositories
 
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("DiaryEvents as DE", "DE.Id", $"{TblAlias}.EventId");
+            query.LeftJoin("People as P", "P.Id", $"{TblAlias}.PersonId");
+            query.LeftJoin("DiaryEventAttendeeResponses as DEAR", "DEAR.Id", $"{TblAlias}.ResponseId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(DiaryEvent), "DE");
+            query.SelectAllColumns(typeof(Person), "P");
+            query.SelectAllColumns(typeof(DiaryEventAttendeeResponse), "DEAR");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<DiaryEventAttendee>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var attendees = await Transaction.Connection
+                .QueryAsync<DiaryEventAttendee, DiaryEvent, Person, DiaryEventAttendeeResponse, DiaryEventAttendee>(
+                    sql.Sql,
+                    (attendee, diaryEvent, person, response) =>
+                    {
+                        attendee.Event = diaryEvent;
+                        attendee.Person = person;
+                        attendee.Response = response;
+
+                        return attendee;
+                    }, sql.NamedBindings, Transaction);
+
+            return attendees;
+        }
+
         public async Task<IEnumerable<DiaryEventAttendee>> GetByEvent(Guid eventId)
         {
             var query = GenerateQuery();

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MyPortal.Database.Attributes;
 
 namespace MyPortal.Database.Models.Entity
 {
@@ -23,25 +22,17 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(128)]
         public string Name { get; set; }
 
+        
+        // Only visible to staff users
         [Column(Order = 4)]
         public bool Restricted { get; set; } 
 
         public virtual Directory Parent { get; set; }
-
-        [EntityOnly]
-        public virtual Bulletin Bulletin { get; set; }
-
-        [EntityOnly]
-        public virtual HomeworkItem HomeworkItem { get; set; }
-
-        [EntityOnly]
-        public virtual Person Person { get; set; }
-
-        [EntityOnly]
-        public virtual LessonPlan LessonPlan { get; set; }
-
-        public virtual Agency Agency { get; set; }
-
+        public virtual ICollection<Agency> Agencies { get; set; }
+        public virtual ICollection<Bulletin> Bulletins { get; set; }
+        public virtual ICollection<HomeworkItem> HomeworkItems { get; set; }
+        public virtual ICollection<Person> People { get; set; }
+        public virtual ICollection<LessonPlan> LessonPlans { get; set; }
         public virtual ICollection<Directory> Subdirectories { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
     }

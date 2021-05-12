@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
@@ -20,6 +18,39 @@ namespace MyPortal.Database.Repositories
     {
         public CurriculumGroupRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("CurriculumBlocks as CB", "CB.Id", $"{TblAlias}.BlockId");
+            query.LeftJoin("StudentGroups as SG", "SG.Id", $"{TblAlias}.StudentGroupId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(CurriculumBlock), "CB");
+            query.SelectAllColumns(typeof(StudentGroup), "SG");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<CurriculumGroup>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var groups = await Transaction.Connection
+                .QueryAsync<CurriculumGroup, CurriculumBlock, StudentGroup, CurriculumGroup>(sql.Sql,
+                    (group, block, studentGroup) =>
+                    {
+                        group.Block = block;
+                        group.StudentGroup = studentGroup;
+
+                        return group;
+                    }, sql.NamedBindings, Transaction);
+
+            return groups;
         }
 
         public async Task Update(CurriculumGroup entity)

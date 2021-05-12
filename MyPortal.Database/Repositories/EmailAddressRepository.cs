@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -21,6 +19,43 @@ namespace MyPortal.Database.Repositories
         public EmailAddressRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
             
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "Agencies", "A", "AgencyId");
+            JoinEntity(query, "People", "P", "PersonId");
+            JoinEntity(query, "EmailAddressTypes", "EAT", "TypeId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Agency), "A");
+            query.SelectAllColumns(typeof(Person), "P");
+            query.SelectAllColumns(typeof(EmailAddressType), "EAT");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<EmailAddress>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var emailAddresses =
+                await Transaction.Connection.QueryAsync<EmailAddress, Agency, Person, EmailAddressType, EmailAddress>(
+                    sql.Sql,
+                    (email, agency, person, type) =>
+                    {
+                        email.Agency = agency;
+                        email.Person = person;
+                        email.Type = type;
+
+                        return email;
+                    }, sql.NamedBindings, Transaction);
+
+            return emailAddresses;
         }
 
         public async Task Update(EmailAddress entity)

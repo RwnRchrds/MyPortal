@@ -6,8 +6,8 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IStudentDiscountRepository : IReadWriteRepository<StudentDiscount>
+    public interface IStudentChargeDiscountRepository : IReadWriteRepository<StudentChargeDiscount>
     {
-        Task<IEnumerable<StudentDiscount>> GetByStudent(Guid studentId);
+        Task<IEnumerable<StudentChargeDiscount>> GetByStudent(Guid studentId);
     }
 }

@@ -22,6 +22,35 @@ namespace MyPortal.Database.Repositories
            
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "Directories", "P", "ParentId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Directory), "P");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Directory>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var directories = await Transaction.Connection.QueryAsync<Directory, Directory, Directory>(sql.Sql,
+                (directory, parent) =>
+                {
+                    directory.Parent = parent;
+
+                    return directory;
+                }, sql.NamedBindings, Transaction);
+
+            return directories;
+        }
+
         public async Task<IEnumerable<Directory>> GetSubdirectories(Guid directoryId, bool includeRestricted)
         {
             var query = GenerateQuery();

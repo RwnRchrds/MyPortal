@@ -83,6 +83,12 @@ namespace MyPortal.Database.Enums
         CurriculumEditStudyTopics = 47,
 
         #endregion
+        
+        #region Documents
+        
+        ViewConfidentialDocuments = 123,
+        
+        #endregion
 
         #region Finance
 

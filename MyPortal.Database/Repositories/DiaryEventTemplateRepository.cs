@@ -23,6 +23,36 @@ namespace MyPortal.Database.Repositories
             
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "DiaryEventTypes", "T", "EventTypeId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(DiaryEventType), "T");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<DiaryEventTemplate>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var templates =
+                await Transaction.Connection.QueryAsync<DiaryEventTemplate, DiaryEventType, DiaryEventTemplate>(sql.Sql,
+                    (template, type) =>
+                    {
+                        template.DiaryEventType = type;
+
+                        return template;
+                    }, sql.NamedBindings, Transaction);
+
+            return templates;
+        }
+
         public async Task Update(DiaryEventTemplate entity)
         {
             var template = await Context.DiaryEventTemplates.FirstOrDefaultAsync(x => x.Id == entity.Id);
