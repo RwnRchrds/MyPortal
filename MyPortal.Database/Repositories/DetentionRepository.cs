@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
@@ -24,11 +23,47 @@ namespace MyPortal.Database.Repositories
 
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("DetentionTypes as DT", "DT.Id", $"{TblAlias}.DetentionTypeId");
+            query.LeftJoin("DiaryEvent as DE", "DE.Id", $"{TblAlias}.EventId");
+            query.LeftJoin("StaffMembers as S", "S.Id", $"{TblAlias}.SupervisorId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(DetentionType), "DT");
+            query.SelectAllColumns(typeof(DiaryEvent), "DE");
+            query.SelectAllColumns(typeof(StaffMember), "S");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Detention>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var detentions =
+                await Transaction.Connection.QueryAsync<Detention, DetentionType, DiaryEvent, StaffMember, Detention>(
+                    sql.Sql,
+                    (detention, type, diaryEvent, supervisor) =>
+                    {
+                        detention.Type = type;
+                        detention.Event = diaryEvent;
+                        detention.Supervisor = supervisor;
+
+                        return detention;
+                    }, sql.NamedBindings, Transaction);
+
+            return detentions;
+        }
+
         public async Task<IEnumerable<Detention>> GetByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo)
         {
             var query = GenerateQuery();
-
-            query.LeftJoin("DiaryEvent as DE", "DE.Id", $"{TblAlias}.EventId");
+            
             query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", $"{TblAlias}.Id");
             query.LeftJoin("Incident", "Incident.Id", "IncidentDetention.IncidentId");
 

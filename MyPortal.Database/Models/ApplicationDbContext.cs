@@ -319,8 +319,8 @@ namespace MyPortal.Database.Models
                     SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Event)
-                        .WithOne(x => x.Activity)
-                        .HasForeignKey<ActivityEvent>(x => x.EventId)
+                        .WithMany(x => x.ActivityEvents)
+                        .HasForeignKey(x => x.EventId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -374,8 +374,8 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasOne(x => x.Directory)
-                        .WithOne(x => x.Agency)
-                        .HasForeignKey<Agency>(x => x.DirectoryId)
+                        .WithMany(x => x.Agencies)
+                        .HasForeignKey(x => x.DirectoryId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -395,8 +395,8 @@ namespace MyPortal.Database.Models
                     SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Person)
-                        .WithOne(x => x.AgentDetails)
-                        .HasForeignKey<Agent>(x => x.PersonId)
+                        .WithMany(x => x.Agents)
+                        .HasForeignKey(x => x.PersonId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -713,8 +713,8 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasOne(x => x.Person)
-                        .WithOne(x => x.ContactDetails)
-                        .HasForeignKey<Contact>(x => x.PersonId)
+                        .WithMany(x => x.Contacts)
+                        .HasForeignKey(x => x.PersonId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -846,9 +846,9 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasOne(x => x.Detention)
+                    e.HasMany(x => x.Detentions)
                         .WithOne(x => x.Event)
-                        .HasForeignKey<Detention>(x => x.EventId)
+                        .HasForeignKey(x => x.EventId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -858,9 +858,9 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasOne(x => x.ParentEvening)
+                    e.HasMany(x => x.ParentEvenings)
                         .WithOne(x => x.Event)
-                        .HasForeignKey<ParentEvening>(x => x.EventId)
+                        .HasForeignKey(x => x.EventId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -917,27 +917,27 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasOne(d => d.Bulletin)
+                    e.HasMany(d => d.Bulletins)
                         .WithOne(b => b.Directory)
-                        .HasForeignKey<Bulletin>(b => b.DirectoryId)
+                        .HasForeignKey(b => b.DirectoryId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasOne(d => d.Person)
+                    e.HasMany(d => d.People)
                         .WithOne(p => p.Directory)
-                        .HasForeignKey<Person>(p => p.DirectoryId)
+                        .HasForeignKey(p => p.DirectoryId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasOne(d => d.HomeworkItem)
+                    e.HasMany(d => d.HomeworkItems)
                         .WithOne(hi => hi.Directory)
-                        .HasForeignKey<HomeworkItem>(hi => hi.DirectoryId)
+                        .HasForeignKey(hi => hi.DirectoryId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasOne(d => d.LessonPlan)
+                    e.HasMany(d => d.LessonPlans)
                         .WithOne(lp => lp.Directory)
-                        .HasForeignKey<LessonPlan>(lp => lp.DirectoryId)
+                        .HasForeignKey(lp => lp.DirectoryId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -1444,10 +1444,9 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasOne(x => x.Document)
+                    e.HasMany(x => x.Documents)
                         .WithOne(x => x.Attachment)
-                        .HasForeignKey<File>(x => x.DocumentId)
-                        .IsRequired()
+                        .HasForeignKey(x => x.FileId)
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -1521,8 +1520,8 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasOne(x => x.SubmittedWork)
-                        .WithOne(x => x.HomeworkSubmission)
-                        .HasForeignKey<HomeworkSubmission>(x => x.DocumentId)
+                        .WithMany(x => x.HomeworkSubmissions)
+                        .HasForeignKey(x => x.DocumentId)
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -2213,8 +2212,8 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasOne(sm => sm.Person)
-                        .WithOne(p => p.StaffMemberDetails)
-                        .HasForeignKey<StaffMember>(sm => sm.PersonId)
+                        .WithMany(p => p.StaffMembers)
+                        .HasForeignKey(sm => sm.PersonId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -2341,8 +2340,8 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasOne(x => x.Person)
-                        .WithOne(x => x.StudentDetails)
-                        .HasForeignKey<Student>(x => x.PersonId)
+                        .WithMany(x => x.Students)
+                        .HasForeignKey(x => x.PersonId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -2629,8 +2628,8 @@ namespace MyPortal.Database.Models
                     e.ToTable("Users");
 
                     e.HasOne(x => x.Person)
-                        .WithOne(x => x.User)
-                        .HasForeignKey<User>(x => x.PersonId)
+                        .WithMany(x => x.Users)
+                        .HasForeignKey(x => x.PersonId)
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.UserRoles)

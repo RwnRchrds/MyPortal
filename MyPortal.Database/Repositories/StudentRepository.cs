@@ -60,27 +60,7 @@ namespace MyPortal.Database.Repositories
                 query.WhereDate("StudentPerson.Dob", search.Dob.Value);
             }
 
-            if (search.CurriculumGroupId != null)
-            {
-                query.LeftJoin("CurriculumGroupMembership as Membership", "Membership.StudentId", "Student.Id");
-
-                query.Where("Membership.GroupId", search.CurriculumGroupId);
-            }
-
-            if (search.RegGroupId != null)
-            {
-                query.Where("Student.RegGroupId", search.RegGroupId.Value);
-            }
-
-            if (search.YearGroupId != null)
-            {
-                query.Where("Student.YearGroupId", search.YearGroupId.Value);
-            }
-
-            if (search.HouseId != null)
-            {
-                query.Where("Student.HouseId", search.HouseId.Value);
-            }
+            // TODO: Add filter for student group
 
             if (search.SenStatusId != null)
             {

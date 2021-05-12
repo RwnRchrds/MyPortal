@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MyPortal.Database.Attributes;
 
 namespace MyPortal.Database.Models.Entity
 {
@@ -77,48 +76,30 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 15)]
         public bool Deleted { get; set; }
-
-        [EntityOnly]
-        public virtual Contact ContactDetails { get; set; }
-
-        public virtual Directory Directory { get; set; }
-
-        [EntityOnly]
-        public virtual StaffMember StaffMemberDetails { get; set; }
-
-        [EntityOnly]
-        public virtual Student StudentDetails { get; set; }
-
-        [EntityOnly]
-        public virtual Agent AgentDetails { get; set; }
-
-        [EntityOnly]
-        public virtual User User { get; set; }
-
+        
+        
         public virtual Photo Photo { get; set; }
 
         public virtual Ethnicity Ethnicity { get; set; }
-
+        public virtual Directory Directory { get; set; }
+        public virtual ICollection<Contact> Contacts { get; set; }
+        public virtual ICollection<StaffMember> StaffMembers { get; set; }
+        public virtual ICollection<Student> Students { get; set; }
+        public virtual ICollection<Agent> Agents { get; set; }
+        public virtual ICollection<User> Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PhoneNumber> PhoneNumbers { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PersonCondition> MedicalConditions { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PersonDietaryRequirement> DietaryRequirements { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<School> HeadteacherOf { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EmailAddress> EmailAddresses { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AddressPerson> Addresses { get; set; }
-
         public virtual ICollection<DiaryEventAttendee> DiaryEventInvitations { get; set; }
-
         public virtual ICollection<Task> AssignedTo { get; set; }
 
         public virtual ICollection<NextOfKin> RelatedStaff { get; set; }

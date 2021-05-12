@@ -40,5 +40,6 @@ namespace MyPortal.Database.Models.Entity
         public virtual Directory Directory { get; set; }
         public virtual ICollection<Agent> Agents { get; set; }
         public virtual ICollection<PhoneNumber> PhoneNumbers { get; set; }
+        public virtual ICollection<EmailAddress> EmailAddresses { get; set; }
     }
 }

@@ -24,6 +24,38 @@ namespace MyPortal.Database.Repositories
 
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "DiaryEventTypes", "DET", "EventTypeId");
+            JoinEntity(query, "Rooms", "R", "RoomId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(DiaryEventType), "DET");
+            query.SelectAllColumns(typeof(Room), "R");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<DiaryEvent>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var events = await Transaction.Connection.QueryAsync<DiaryEvent, DiaryEventType, Room, DiaryEvent>(sql.Sql,
+                (diaryEvent, type, room) =>
+                {
+                    diaryEvent.EventType = type;
+                    diaryEvent.Room = room;
+
+                    return diaryEvent;
+                }, sql.NamedBindings, Transaction);
+
+            return events;
+        }
+
         public async Task<IEnumerable<DiaryEvent>> GetByDateRange(DateTime firstDate, DateTime lastDate, bool includePrivateEvents = false)
         {
             var query = GenerateQuery();

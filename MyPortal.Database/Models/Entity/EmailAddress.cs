@@ -28,6 +28,7 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 7)]
         public string Notes { get; set; }
 
+        public virtual Agency Agency { get; set; }
         public virtual Person Person { get; set; }
         public virtual EmailAddressType Type { get; set; }
     }

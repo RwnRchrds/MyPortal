@@ -99,7 +99,7 @@ namespace MyPortal.Database.Interfaces
         IStaffMemberRepository StaffMembers { get; }
         IStudentChargeRepository StudentCharges { get; }
         IStudentContactRelationshipRepository StudentContactRelationships { get; }
-        IStudentDiscountRepository StudentDiscounts { get; }
+        IStudentChargeDiscountRepository StudentChargeDiscounts { get; }
         IStudentRepository Students { get; }
         IStudentGroupRepository StudentGroups { get; }
         IStudyTopicRepository StudyTopics { get; }

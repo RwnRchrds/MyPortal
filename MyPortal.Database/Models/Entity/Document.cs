@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MyPortal.Database.Attributes;
 
 namespace MyPortal.Database.Models.Entity
 {
@@ -19,40 +19,44 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 2)]
         public Guid DirectoryId { get; set; }
+        
+        [Column(Order = 3)] 
+        public Guid? FileId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [Required]
         [StringLength(128)]
         public string Title { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [Column(Order = 8)]
+        [Column(Order = 6)]
         public Guid CreatedById { get; set; }
 
-        [Column(Order = 9, TypeName = "date")]
+        [Column(Order = 7, TypeName = "date")]
         public DateTime CreatedDate { get; set; }
 
-        [Column(Order = 10)]
+        // Only visible to staff users who have access to the directory
+        [Column(Order = 8)]
         public bool Restricted { get; set; }
         
-        [Column(Order = 11)] 
+        // Only visible to people who have the ViewConfidentialDocuments permission
+        [Column(Order = 9)] 
         public bool Confidential { get; set; }
 
-        [Column(Order = 12)]
+        [Column(Order = 10)]
         public bool Deleted { get; set; }
 
         public virtual User CreatedBy { get; set; }
 
         public virtual Directory Directory { get; set; }
-        
-        [EntityOnly]
-        public virtual HomeworkSubmission HomeworkSubmission { get; set; }
 
         public virtual DocumentType Type { get; set; }
 
         public virtual File Attachment { get; set; }
+        
+        public virtual ICollection<HomeworkSubmission> HomeworkSubmissions { get; set; }
     }
 }

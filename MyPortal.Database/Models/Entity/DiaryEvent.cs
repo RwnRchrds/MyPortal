@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MyPortal.Database.Attributes;
 
 namespace MyPortal.Database.Models.Entity
 {
@@ -47,20 +46,14 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 10)]
         public bool IsPublic { get; set; }
-
-        [EntityOnly]
-        public virtual Detention Detention { get; set; }
-
-        [EntityOnly]
-        public virtual ActivityEvent Activity { get; set; }
-
-        [EntityOnly] 
-        public virtual ParentEvening ParentEvening { get; set; }
-
+        
+        
         public virtual DiaryEventType EventType { get; set; }
 
         public virtual Room Room { get; set; }
-
+        public virtual ICollection<Detention> Detentions { get; set; }
+        public virtual ICollection<ActivityEvent> ActivityEvents { get; set; }
+        public virtual ICollection<ParentEvening> ParentEvenings { get; set; }
         public virtual ICollection<DiaryEventAttendee> Attendees { get; set; }
     }
 }
