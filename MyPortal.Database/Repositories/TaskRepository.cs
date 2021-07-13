@@ -21,6 +21,41 @@ namespace MyPortal.Database.Repositories
            
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "People", "AT", "AssignedToId");
+            JoinEntity(query, "Users", "AB", "AssignedById");
+            JoinEntity(query, "TaskTypes", "TT", "TypeId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Person), "AT");
+            query.SelectAllColumns(typeof(User), "AB");
+            query.SelectAllColumns(typeof(TaskType), "TT");
+            
+            return query;
+        }
+
+        protected override async System.Threading.Tasks.Task<IEnumerable<Task>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var tasks = await Transaction.Connection.QueryAsync<Task, Person, User, TaskType, Task>(sql.Sql,
+                (task, person, user, type) =>
+                {
+                    task.AssignedTo = person;
+                    task.AssignedBy = user;
+                    task.Type = type;
+
+                    return task;
+                }, sql.NamedBindings, Transaction);
+
+            return tasks;
+        }
+
         public async System.Threading.Tasks.Task<IEnumerable<Task>> GetByAssignedTo(Guid personId, TaskSearchOptions searchOptions = null)
         {
             var query = GenerateQuery();

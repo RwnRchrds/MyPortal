@@ -70,6 +70,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual SchoolType Type { get; set; }
         public virtual GovernanceType GovernanceType { get; set; }
         public virtual IntakeType IntakeType { get; set; }
+        
         public virtual Person HeadTeacher { get; set; }
         public virtual LocalAuthority LocalAuthority { get; set; }
     }

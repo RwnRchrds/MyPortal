@@ -21,6 +21,38 @@ namespace MyPortal.Database.Repositories
 
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "ProductTypes", "PT", "ProductTypeId");
+            JoinEntity(query, "VatRates", "VR", "VatRateId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(ProductType), "PT");
+            query.SelectAllColumns(typeof(VatRate), "VR");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Product>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var products = await Transaction.Connection.QueryAsync<Product, ProductType, VatRate, Product>(sql.Sql,
+                (product, type, vatRate) =>
+                {
+                    product.Type = type;
+                    product.VatRate = vatRate;
+
+                    return product;
+                }, sql.NamedBindings, Transaction);
+
+            return products;
+        }
+
         public async Task Update(Product entity)
         {
             var product = await Context.Products.FirstOrDefaultAsync(x => x.Id == entity.Id);

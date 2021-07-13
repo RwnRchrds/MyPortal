@@ -27,7 +27,7 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("AchievementTypes as AT", "AT.Id", $"{TblAlias}.AchievementTypeId");
             query.LeftJoin("Locations as L", "L.Id", $"{TblAlias}.LocationId");
             query.LeftJoin("AcademicYears as AY", "AY.Id", $"{TblAlias}.AcademicYearId");
-            query.LeftJoin("Users as U", "U.Id", $"{TblAlias}.RecordedById");
+            query.LeftJoin("Users as U", "U.Id", $"{TblAlias}.CreatedById");
             query.LeftJoin("Student as S", "S.Id", $"{TblAlias}.StudentId");
             query.LeftJoin("AchievementOutcomes as AO", "AO.Id", $"{TblAlias}.OutcomeId");
             
@@ -58,7 +58,7 @@ namespace MyPortal.Database.Repositories
                         achievement.Type = type;
                         achievement.Location = location;
                         achievement.AcademicYear = year;
-                        achievement.RecordedBy = user;
+                        achievement.CreatedBy = user;
                         achievement.Student = student;
 
                         return achievement;

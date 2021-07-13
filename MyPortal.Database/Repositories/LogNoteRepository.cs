@@ -22,6 +22,46 @@ namespace MyPortal.Database.Repositories
            
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "Users", "U", "CreatedById");
+            JoinEntity(query, "Students", "S", "StudentId");
+            JoinEntity(query, "AcademicYears", "AY", "AcademicYearId");
+            JoinEntity(query, "LogNoteTypes", "LNT", "TypeId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(User), "U");
+            query.SelectAllColumns(typeof(Student), "S");
+            query.SelectAllColumns(typeof(AcademicYear), "AY");
+            query.SelectAllColumns(typeof(LogNoteType), "LNT");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<LogNote>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var logNotes =
+                await Transaction.Connection.QueryAsync<LogNote, User, Student, AcademicYear, LogNoteType, LogNote>(
+                    sql.Sql,
+                    (note, user, student, year, type) =>
+                    {
+                        note.CreatedBy = user;
+                        note.Student = student;
+                        note.AcademicYear = year;
+                        note.LogNoteType = type;
+
+                        return note;
+                    }, sql.NamedBindings, Transaction);
+
+            return logNotes;
+        }
+
         public Task<IEnumerable<LogNote>> GetByStudent(Guid studentId, Guid academicYearId)
         {
             var query = GenerateQuery();
@@ -40,8 +80,7 @@ namespace MyPortal.Database.Repositories
             {
                 throw new EntityNotFoundException("Log note not found.");
             }
-
-            logNote.UpdatedById = entity.UpdatedById;
+            
             logNote.Message = entity.Message;
             logNote.UpdatedDate = entity.UpdatedDate;
             logNote.TypeId = entity.TypeId;

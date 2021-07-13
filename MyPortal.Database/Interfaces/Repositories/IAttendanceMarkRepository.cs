@@ -12,6 +12,8 @@ namespace MyPortal.Database.Interfaces.Repositories
     {
         Task<IEnumerable<AttendanceMark>> GetByStudent(Guid studentId, Guid academicYearId);
         Task<AttendanceMark> GetMark(Guid studentId, Guid attendanceWeekId, Guid periodId);
-        Task<IEnumerable<PossibleAttendanceMark>> GetRegisterMarks(Guid groupTypeId, Guid groupId, DateTime startDate, DateTime endDate);
+
+        Task<IEnumerable<PossibleAttendanceMark>> GetRegisterMarks(Guid studentGroupId, DateTime startDate,
+            DateTime endDate);
     }
 }

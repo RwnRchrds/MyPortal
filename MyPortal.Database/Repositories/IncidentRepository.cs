@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
@@ -21,6 +20,67 @@ namespace MyPortal.Database.Repositories
         public IncidentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
             
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "IncidentTypes", "IT", "BehaviourTypeId");
+            JoinEntity(query, "Locations", "L", "LocationId");
+            JoinEntity(query, "AcademicYears", "AY", "AcademicYearId");
+            JoinEntity(query, "Users", "U", "CreatedById");
+            JoinEntity(query, "Students", "S", "StudentId");
+            JoinEntity(query, "BehaviourOutcomes", "BO", "OutcomeId");
+            JoinEntity(query, "BehaviourStatus", "BS", "StatusId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(IncidentType), "IT");
+            query.SelectAllColumns(typeof(Location), "L");
+            query.SelectAllColumns(typeof(AcademicYear), "AY");
+            query.SelectAllColumns(typeof(User), "U");
+            query.SelectAllColumns(typeof(BehaviourOutcome), "BO");
+            query.SelectAllColumns(typeof(BehaviourStatus), "BS");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Incident>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var incidents = await Transaction.Connection.QueryAsync(sql.Sql,
+                new[]
+                {
+                    typeof(Incident), typeof(IncidentType), typeof(Location), typeof(AcademicYear), typeof(User),
+                    typeof(BehaviourOutcome), typeof(BehaviourStatus)
+                },
+                objects =>
+                {
+                    var incident = objects[0] as Incident;
+                    var incidentType = objects[1] as IncidentType;
+                    var location = objects[2] as Location;
+                    var academicYear = objects[3] as AcademicYear;
+                    var user = objects[4] as User;
+                    var outcome = objects[5] as BehaviourOutcome;
+                    var status = objects[6] as BehaviourStatus;
+
+                    if (incident != null)
+                    {
+                        incident.Type = incidentType;
+                        incident.Location = location;
+                        incident.AcademicYear = academicYear;
+                        incident.CreatedBy = user;
+                        incident.Outcome = outcome;
+                        incident.Status = status;
+                    }
+
+                    return incident;
+                }, sql.NamedBindings, Transaction);
+
+            return incidents;
         }
 
         public async Task<IEnumerable<Incident>> GetByStudent(Guid studentId, Guid academicYearId)

@@ -21,6 +21,39 @@ namespace MyPortal.Database.Repositories
            
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "Users", "U", "CreatedById");
+            JoinEntity(query, "Students", "S", "StudentId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(User), "U");
+            query.SelectAllColumns(typeof(Student), "S");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<MedicalEvent>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var medicalEvents = await Transaction.Connection.QueryAsync<MedicalEvent, User, Student, MedicalEvent>(
+                sql.Sql,
+                (medicalEvent, user, student) =>
+                {
+                    medicalEvent.CreatedBy = user;
+                    medicalEvent.Student = student;
+
+                    return medicalEvent;
+                }, sql.NamedBindings, Transaction);
+
+            return medicalEvents;
+        }
+
         public async Task Update(MedicalEvent entity)
         {
             var medicalEvent = await Context.MedicalEvents.FirstOrDefaultAsync(x => x.Id == entity.Id);

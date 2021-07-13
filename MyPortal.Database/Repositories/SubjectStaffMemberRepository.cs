@@ -21,6 +21,44 @@ namespace MyPortal.Database.Repositories
             
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "Subjects", "SU", "SubjectId");
+            JoinEntity(query, "StaffMembers", "SM", "StaffMemberId");
+            JoinEntity(query, "SubjectStaffMemberRoles", "SSMR", "RoleId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Subject), "SU");
+            query.SelectAllColumns(typeof(StaffMember), "SM");
+            query.SelectAllColumns(typeof(SubjectStaffMemberRole), "SSMR");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<SubjectStaffMember>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var subjectStaff =
+                await Transaction.Connection
+                    .QueryAsync<SubjectStaffMember, Subject, StaffMember, SubjectStaffMemberRole, SubjectStaffMember>(
+                        sql.Sql,
+                        (subjectStaffMember, subject, staff, role) =>
+                        {
+                            subjectStaffMember.Subject = subject;
+                            subjectStaffMember.StaffMember = staff;
+                            subjectStaffMember.Role = role;
+
+                            return subjectStaffMember;
+                        }, sql.NamedBindings, Transaction);
+
+            return subjectStaff;
+        }
+
         public async Task Update(SubjectStaffMember entity)
         {
             var subjectStaffMember = await Context.SubjectStaffMembers.FirstOrDefaultAsync(x => x.Id == entity.Id);

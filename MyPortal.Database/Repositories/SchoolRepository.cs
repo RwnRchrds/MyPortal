@@ -22,11 +22,57 @@ namespace MyPortal.Database.Repositories
 
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "SchoolPhases", "SP", "PhaseId");
+            JoinEntity(query, "SchoolTypes", "ST", "TypeId");
+            JoinEntity(query, "GovernanceTypes", "GT", "GovernanceTypeId");
+            JoinEntity(query, "IntakeTypes", "IT", "IntakeTypeId");
+            JoinEntity(query, "People", "HT", "HeadTeacherId");
+            JoinEntity(query, "LocalAuthorities", "LA", "LocalAuthorityId");
+            
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(SchoolPhase), "SP");
+            query.SelectAllColumns(typeof(SchoolType), "ST");
+            query.SelectAllColumns(typeof(GovernanceType), "GT");
+            query.SelectAllColumns(typeof(IntakeType), "IT");
+            query.SelectAllColumns(typeof(Person), "HT");
+            query.SelectAllColumns(typeof(LocalAuthority), "LA");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<School>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var schools = await Transaction.Connection
+                .QueryAsync<School, SchoolPhase, SchoolType, GovernanceType, IntakeType, Person, LocalAuthority,
+                    School>(sql.Sql,
+                    (school, phase, type, govType, intakeType, headTeacher, la) =>
+                    {
+                        school.SchoolPhase = phase;
+                        school.Type = type;
+                        school.GovernanceType = govType;
+                        school.IntakeType = intakeType;
+                        school.HeadTeacher = headTeacher;
+                        school.LocalAuthority = la;
+
+                        return school;
+                    }, sql.NamedBindings, Transaction);
+
+            return schools;
+        }
+
         public async Task<string> GetLocalSchoolName()
         {
-            var query = new Query(TblName).Select("School.Name");
+            var query = new Query(TblName).Select($"{TblAlias}.Name");
 
-            query.Where("School.Local", true);
+            query.Where($"{TblAlias}.Local", true);
 
             return await ExecuteQueryStringResult(query);
         }
@@ -35,7 +81,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Where("School.Local", true);
+            query.Where($"{TblAlias}.Local", true);
 
             return (await ExecuteQuery(query)).First();
         }

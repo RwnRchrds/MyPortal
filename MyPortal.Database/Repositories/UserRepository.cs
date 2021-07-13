@@ -18,6 +18,34 @@ namespace MyPortal.Database.Repositories
 
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "People", "P", "PersonId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Person), "P");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<User>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var users = await Transaction.Connection.QueryAsync<User, Person, User>(sql.Sql, (user, person) =>
+            {
+                user.Person = person;
+
+                return user;
+            }, sql.NamedBindings, Transaction);
+
+            return users;
+        }
+
         public async Task<bool> UserExists(string username)
         {
             var query = GenerateEmptyQuery(typeof(User), "User");

@@ -5,7 +5,7 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models.Entity
 {
     [Table("Achievements")]
-    public class Achievement : BaseTypes.Entity, ISoftDeleteEntity
+    public class Achievement : BaseTypes.Entity, ISoftDeleteEntity, ICreatable
     {
         [Column(Order = 1)]
         public Guid AcademicYearId { get; set; }
@@ -20,21 +20,24 @@ namespace MyPortal.Database.Models.Entity
         public Guid? LocationId { get; set; }
 
         [Column(Order = 5)]
-        public Guid RecordedById { get; set; }
+        public Guid CreatedById { get; set; }
 
         [Column(Order = 6)]
         public Guid? OutcomeId { get; set; }
-
-        [Column(Order = 7, TypeName = "date")]
+        
+        [Column(Order = 7)] 
         public DateTime CreatedDate { get; set; }
 
-        [Column(Order = 8)]
-        public string Comments { get; set; }
+        [Column(Order = 8, TypeName = "date")]
+        public DateTime Date { get; set; }
 
         [Column(Order = 9)]
-        public int Points { get; set; }
+        public string Comments { get; set; }
 
         [Column(Order = 10)]
+        public int Points { get; set; }
+
+        [Column(Order = 11)]
         public bool Deleted { get; set; }
 
         public virtual AchievementType Type { get; set; }
@@ -43,7 +46,7 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual AcademicYear AcademicYear { get; set; }
 
-        public virtual User RecordedBy { get; set; }
+        public virtual User CreatedBy { get; set; }
 
         public virtual Student Student { get; set; }
 

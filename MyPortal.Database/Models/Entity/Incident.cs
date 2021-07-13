@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("Incidents")]
-    public class Incident : BaseTypes.Entity
+    public class Incident : BaseTypes.Entity, ICreatable
     {
         public Incident()
         {
@@ -25,7 +26,7 @@ namespace MyPortal.Database.Models.Entity
         public Guid? LocationId { get; set; }
 
         [Column(Order = 5)]
-        public Guid RecordedById { get; set; }
+        public Guid CreatedById { get; set; }
 
         [Column(Order = 6)]
         public Guid? OutcomeId { get; set; }
@@ -51,7 +52,7 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual AcademicYear AcademicYear { get; set; }
 
-        public virtual User RecordedBy { get; set; } 
+        public virtual User CreatedBy { get; set; } 
 
         public virtual Student Student { get; set; }
 

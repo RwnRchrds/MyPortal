@@ -6,7 +6,7 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models.Entity
 {
     [Table("LogNotes")]
-    public class LogNote : BaseTypes.Entity, ISoftDeleteEntity
+    public class LogNote : BaseTypes.Entity, ISoftDeleteEntity, ICreatable
     {
         [Column(Order = 1)]
         public Guid TypeId { get; set; }
@@ -15,30 +15,25 @@ namespace MyPortal.Database.Models.Entity
         public Guid CreatedById { get; set; }
 
         [Column(Order = 3)]
-        public Guid UpdatedById { get; set; }
-
-        [Column(Order = 4)]
         public Guid StudentId { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 4)]
         public Guid AcademicYearId { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 5)]
         [Required]
         public string Message { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 6)]
         public DateTime CreatedDate { get; set; }
 
-        [Column(Order = 8)]
+        [Column(Order = 7)]
         public DateTime UpdatedDate { get; set; }
 
-        [Column(Order = 9)]
+        [Column(Order = 8)]
         public bool Deleted { get; set; }
 
         public virtual User CreatedBy { get; set; }
-
-        public virtual User UpdatedBy { get; set; }
 
         public virtual Student Student { get; set; }
             

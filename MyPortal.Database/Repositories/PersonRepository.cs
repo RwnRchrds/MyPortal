@@ -25,6 +25,41 @@ namespace MyPortal.Database.Repositories
      
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "Ethnicities", "E", "EthnicityId");
+            JoinEntity(query, "Directory", "D", "DirectoryId");
+            JoinEntity(query, "Photos", "PH", "PhotoId");
+
+            return query;
+        }
+        
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Ethnicity), "E");
+            query.SelectAllColumns(typeof(Directory), "D");
+            query.SelectAllColumns(typeof(Photo), "PH");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Person>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var people = await Transaction.Connection.QueryAsync<Person, Ethnicity, Directory, Photo, Person>(sql.Sql,
+                (person, ethnicity, dir, photo) =>
+                {
+                    person.Ethnicity = ethnicity;
+                    person.Directory = dir;
+                    person.Photo = photo;
+
+                    return person;
+                }, sql.NamedBindings, Transaction);
+
+            return people;
+        }
+
         public async Task<Person> GetByUserId(Guid userId)
         {
             var query = GenerateQuery();
@@ -34,7 +69,7 @@ namespace MyPortal.Database.Repositories
             return (await ExecuteQuery(query)).FirstOrDefault();
         }
 
-        private static void ApplySearch(Query query, PersonSearchOptions search, bool includePersonTypes)
+        private void ApplySearch(Query query, PersonSearchOptions search, bool includePersonTypes)
         {
             if (search != null)
             {
@@ -61,14 +96,15 @@ namespace MyPortal.Database.Repositories
 
             if (includePersonTypes)
             {
+                query.LeftJoin("Users as U", "U.PersonId", $"{TblAlias}.Id");
+                query.LeftJoin("Students AS S", "S.PersonId", $"{TblAlias}.Id");
+                query.LeftJoin("StaffMembers AS ST", "ST.PersonId", $"{TblAlias}.Id");
+                query.LeftJoin("Contacts AS C", "C.PersonId", $"{TblAlias}.Id");
+                
                 query.SelectRaw("CASE WHEN [User].[Id] IS NULL THEN 0 ELSE 1 END AS IsUser");
                 query.SelectRaw("CASE WHEN [Student].[Id] IS NULL THEN 0 ELSE 1 END AS IsStudent");
                 query.SelectRaw("CASE WHEN [StaffMember].[Id] IS NULL THEN 0 ELSE 1 END AS IsStaff");
                 query.SelectRaw("CASE WHEN [Contact].[Id] IS NULL THEN 0 ELSE 1 END AS IsContact");
-
-                query.LeftJoin("dbo.Students AS Student", "Student.PersonId", "Person.Id");
-                query.LeftJoin("dbo.StaffMembers AS StaffMember", "StaffMember.PersonId", "Person.Id");
-                query.LeftJoin("dbo.Contacts AS Contact", "Contact.PersonId", "Person.Id");
             }
         }
 
@@ -104,15 +140,21 @@ namespace MyPortal.Database.Repositories
         protected async Task<IEnumerable<PersonSearchResult>> ExecuteQueryWithTypes(Query query)
         {
             var sql = Compiler.Compile(query);
-
-            return await Transaction.Connection.QueryAsync<Person, PersonTypeIndicator, PersonSearchResult>(sql.Sql,
-                (user, types) =>
+            
+            var people = await Transaction.Connection.QueryAsync<Person, Ethnicity, Directory, Photo, PersonTypeIndicator, PersonSearchResult>(sql.Sql,
+                (person, ethnicity, dir, photo, types) =>
                 {
                     var result = new PersonSearchResult();
+                    result.Person = person;
+                    person.Ethnicity = ethnicity;
+                    person.Directory = dir;
+                    person.Photo = photo;
                     result.PersonTypes = types;
 
                     return result;
-                }, sql.NamedBindings, Transaction, splitOn:"IsUser");
+                }, sql.NamedBindings, Transaction, splitOn:"Id, Id, Id, IsUser");
+
+            return people;
         }
 
         public async Task Update(Person entity)

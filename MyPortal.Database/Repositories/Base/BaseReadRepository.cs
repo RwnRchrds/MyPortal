@@ -44,9 +44,6 @@ namespace MyPortal.Database.Repositories.Base
 
         protected virtual async Task<IEnumerable<TEntity>> ExecuteQuery(Query query)
         {
-            JoinRelated(query);
-            SelectAllRelated(query);
-            
             return await ExecuteQuery<TEntity>(query);
         }
 
@@ -67,6 +64,9 @@ namespace MyPortal.Database.Repositories.Base
         protected Query GenerateQuery(bool includeSoftDeleted = false)
         {
             var query = new Query($"{TblName} as {TblAlias}").SelectAllColumns(typeof(TEntity), TblAlias);
+            
+            JoinRelated(query);
+            SelectAllRelated(query);
 
             if (typeof(TEntity).GetInterfaces().Contains(typeof(ISoftDeleteEntity)) && !includeSoftDeleted)
             {

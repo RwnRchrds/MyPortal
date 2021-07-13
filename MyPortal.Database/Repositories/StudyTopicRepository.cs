@@ -21,6 +21,35 @@ namespace MyPortal.Database.Repositories
 
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "Courses", "C", "CourseId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Course), "C");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<StudyTopic>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var studyTopics = await Transaction.Connection.QueryAsync<StudyTopic, Course, StudyTopic>(sql.Sql,
+                (topic, course) =>
+                {
+                    topic.Course = course;
+
+                    return topic;
+                }, sql.NamedBindings, Transaction);
+
+            return studyTopics;
+        }
+
         public async Task Update(StudyTopic entity)
         {
             var studyTopic = await Context.StudyTopics.FirstOrDefaultAsync(x => x.Id == entity.Id);

@@ -11,8 +11,8 @@ namespace MyPortal.Database.Models.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SystemArea()
         {
-            Reports = new HashSet<Report>();
             SubAreas = new HashSet<SystemArea>();
+            Permissions = new HashSet<Permission>();
         }
 
         [Column(Order = 1)]
@@ -24,9 +24,6 @@ namespace MyPortal.Database.Models.Entity
         public Guid? ParentId { get; set; }
 
         public virtual SystemArea Parent { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Report> Reports { get; set; }
 
         public virtual ICollection<SystemArea> SubAreas { get; set; }
 
