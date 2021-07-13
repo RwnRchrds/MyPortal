@@ -21,6 +21,43 @@ namespace MyPortal.Database.Repositories
             
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "StaffMembers", "OE", "ObserveeId");
+            JoinEntity(query, "StaffMembers", "OR", "ObserverId");
+            JoinEntity(query, "ObservationOutcomes", "OO", "OutcomeId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(StaffMember), "OE");
+            query.SelectAllColumns(typeof(StaffMember), "OR");
+            query.SelectAllColumns(typeof(ObservationOutcome), "OO");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Observation>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var observations =
+                await Transaction.Connection
+                    .QueryAsync<Observation, StaffMember, StaffMember, ObservationOutcome, Observation>(sql.Sql,
+                        (observation, observee, observer, outcome) =>
+                        {
+                            observation.Observee = observee;
+                            observation.Observer = observer;
+                            observation.Outcome = outcome;
+
+                            return observation;
+                        }, sql.NamedBindings, Transaction);
+
+            return observations;
+        }
+
         public async Task Update(Observation entity)
         {
             var observation = await Context.Observations.FirstOrDefaultAsync(x => x.Id == entity.Id);

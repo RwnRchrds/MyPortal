@@ -16,9 +16,7 @@ namespace MyPortal.Database.Models.Entity
         public Guid StatusId { get; set; }
 
         public virtual StaffMember StaffMember { get; set; }
-
         public virtual TrainingCourse TrainingCourse { get; set; }
-
         public virtual TrainingCertificateStatus Status { get; set; }
     }
 }

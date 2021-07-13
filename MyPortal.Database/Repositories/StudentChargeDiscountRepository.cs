@@ -11,13 +11,13 @@ using MyPortal.Database.Repositories.Base;
 
 namespace MyPortal.Database.Repositories
 {
-    public class StudentDiscountRepository : BaseReadWriteRepository<StudentDiscount>, IStudentDiscountRepository
+    public class StudentChargeDiscountRepository : BaseReadWriteRepository<StudentChargeDiscount>, IStudentChargeDiscountRepository
     {
-        public StudentDiscountRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public StudentChargeDiscountRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
         }
 
-        public async Task<IEnumerable<StudentDiscount>> GetByStudent(Guid studentId)
+        public async Task<IEnumerable<StudentChargeDiscount>> GetByStudent(Guid studentId)
         {
             throw new NotImplementedException();
         }

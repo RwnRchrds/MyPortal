@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -36,9 +37,10 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 9)]
         public bool Completed { get; set; }
-        public virtual HomeworkSubmission HomeworkSubmission { get; set; }
         public virtual Person AssignedTo { get; set; }
         public virtual User AssignedBy { get; set; }
         public virtual TaskType Type { get; set; }
+        
+        public virtual ICollection<HomeworkSubmission> HomeworkSubmissions { get; set; }
     }
 }

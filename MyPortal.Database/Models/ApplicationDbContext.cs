@@ -161,7 +161,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<ProductTypeDiscount> ProductTypeDiscounts { get; set; }
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public virtual DbSet<RegGroup> RegGroups { get; set; }
-        public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<ReportCard> ReportCards { get; set; }
         public virtual DbSet<ReportCardSubmission> ReportCardSubmissions { get; set; }
         public virtual DbSet<ReportCardTarget> ReportCardTargets { get; set; }
@@ -1508,8 +1507,8 @@ namespace MyPortal.Database.Models
                     SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Task)
-                        .WithOne(x => x.HomeworkSubmission)
-                        .HasForeignKey<HomeworkSubmission>(x => x.TaskId)
+                        .WithMany(x => x.HomeworkSubmissions)
+                        .HasForeignKey(x => x.TaskId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -1942,8 +1941,6 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
-
-                modelBuilder.Entity<Report>(e => { SetIdDefaultValue(e); });
 
                 modelBuilder.Entity<ReportCard>(e =>
                 {
@@ -2570,13 +2567,7 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<SystemArea>(e =>
                 {
                     SetIdDefaultValue(e);
-
-                    e.HasMany(x => x.Reports)
-                        .WithOne(x => x.SystemArea)
-                        .HasForeignKey(x => x.AreaId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
+                    
                     e.HasMany(x => x.SubAreas)
                         .WithOne(x => x.Parent)
                         .HasForeignKey(x => x.ParentId)
@@ -2644,12 +2635,6 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasMany(x => x.LogNotesUpdated)
-                        .WithOne(x => x.UpdatedBy)
-                        .HasForeignKey(x => x.UpdatedById)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     e.HasMany(x => x.Documents)
                         .WithOne(x => x.CreatedBy)
                         .HasForeignKey(x => x.CreatedById)
@@ -2657,26 +2642,26 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.MedicalEvents)
-                        .WithOne(x => x.RecordedBy)
-                        .HasForeignKey(x => x.RecordedById)
+                        .WithOne(x => x.CreatedBy)
+                        .HasForeignKey(x => x.CreatedById)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.Incidents)
-                        .WithOne(x => x.RecordedBy)
-                        .HasForeignKey(x => x.RecordedById)
+                        .WithOne(x => x.CreatedBy)
+                        .HasForeignKey(x => x.CreatedById)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.Achievements)
-                        .WithOne(x => x.RecordedBy)
-                        .HasForeignKey(x => x.RecordedById)
+                        .WithOne(x => x.CreatedBy)
+                        .HasForeignKey(x => x.CreatedById)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.LessonPlans)
-                        .WithOne(x => x.Author)
-                        .HasForeignKey(x => x.AuthorId)
+                        .WithOne(x => x.CreatedBy)
+                        .HasForeignKey(x => x.CreatedById)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 

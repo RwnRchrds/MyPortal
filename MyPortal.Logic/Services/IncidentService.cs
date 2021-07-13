@@ -67,7 +67,7 @@ namespace MyPortal.Logic.Services
                         LocationId = incidentModel.LocationId,
                         OutcomeId = incidentModel.OutcomeId,
                         StatusId = incidentModel.StatusId,
-                        RecordedById = incidentModel.RecordedById,
+                        CreatedById = incidentModel.RecordedById,
                         StudentId = incidentModel.StudentId,
                         Comments = incidentModel.Comments,
                         AcademicYearId = incidentModel.AcademicYearId

@@ -21,6 +21,43 @@ namespace MyPortal.Database.Repositories
            
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "PhoneNumberTypes", "PNT", "TypeId");
+            JoinEntity(query, "People", "P", "PersonId");
+            JoinEntity(query, "Agencies", "A", "AgencyId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(PhoneNumberType), "PNT");
+            query.SelectAllColumns(typeof(Person), "P");
+            query.SelectAllColumns(typeof(Agency), "A");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<PhoneNumber>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var phoneNumbers =
+                await Transaction.Connection.QueryAsync<PhoneNumber, PhoneNumberType, Person, Agency, PhoneNumber>(
+                    sql.Sql,
+                    (number, type, person, agency) =>
+                    {
+                        number.Type = type;
+                        number.Person = person;
+                        number.Agency = agency;
+
+                        return number;
+                    }, sql.NamedBindings, Transaction);
+
+            return phoneNumbers;
+        }
+
         public async Task Update(PhoneNumber entity)
         {
             var phoneNumber = await Context.PhoneNumbers.FirstOrDefaultAsync(x => x.Id == entity.Id);

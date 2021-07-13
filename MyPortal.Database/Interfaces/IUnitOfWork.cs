@@ -82,8 +82,11 @@ namespace MyPortal.Database.Interfaces
         IPersonConditionRepository PersonConditions { get; }
         IPersonDietaryRequirementRepository PersonDietaryRequirements { get; }
         IPersonRepository People { get; }
+        IPhoneNumberRepository PhoneNumbers { get; }
+        IProductRepository Products { get; }
         IRefreshTokenRepository RefreshTokens { get; }
         IRegGroupRepository RegGroups { get; }
+        IResultRepository Results { get; }
         IRoleRepository Roles { get; }
         ISchoolPhaseRepository SchoolPhases { get; }
         ISchoolRepository Schools { get; }
@@ -118,6 +121,7 @@ namespace MyPortal.Database.Interfaces
         IUserRepository Users { get; }
         IYearGroupRepository YearGroups { get; }
 
+        Task BatchSaveChangesAsync();
         Task SaveChangesAsync();
     }
 }

@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Models.Entity
         [Required(ErrorMessage = "Location is required.")]
         public Guid? LocationId { get; set; }
         
-        public Guid RecordedById { get; set; }
+        public Guid CreatedById { get; set; }
         
         public Guid? OutcomeId { get; set; }
         
@@ -42,7 +42,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual AcademicYearModel AcademicYear { get; set; }
 
-        public virtual UserModel RecordedBy { get; set; } 
+        public virtual UserModel CreatedBy { get; set; } 
 
         public virtual StudentModel Student { get; set; }
 

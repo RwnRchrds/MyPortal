@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
-using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories;
 using Task = System.Threading.Tasks.Task;
 
@@ -16,6 +13,8 @@ namespace MyPortal.Database
     public class UnitOfWork : IUnitOfWork
     {
         private ApplicationDbContext _context;
+        private int _batchSize = 0;
+        private const int BatchLimit = 1000;
 
         private DbTransaction _transaction;
         private IAcademicTermRepository _academicTerms;
@@ -92,8 +91,11 @@ namespace MyPortal.Database
         private IPersonConditionRepository _personConditions;
         private IPersonDietaryRequirementRepository _personDietaryRequirements;
         private IPersonRepository _people;
+        private IPhoneNumberRepository _phoneNumbers;
+        private IProductRepository _products;
         private IRefreshTokenRepository _refreshTokens;
         private IRegGroupRepository _regGroups;
+        private IResultRepository _results;
         private IRoleRepository _roles;
         private ISchoolPhaseRepository _schoolPhases;
         private ISchoolRepository _schools;
@@ -109,7 +111,7 @@ namespace MyPortal.Database
         private IStaffMemberRepository _staffMembers;
         private IStudentChargeRepository _studentCharges;
         private IStudentContactRelationshipRepository _studentContactRelationships;
-        private IStudentDiscountRepository _studentDiscounts;
+        private IStudentChargeDiscountRepository _studentChargeDiscounts;
         private IStudentRepository _students;
         private IStudentGroupRepository _studentGroups;
         private IStudyTopicRepository _studyTopics;
@@ -327,10 +329,17 @@ namespace MyPortal.Database
 
         public IPersonRepository People => _people ??= new PersonRepository(_context, _transaction);
 
+        public IPhoneNumberRepository PhoneNumbers =>
+            _phoneNumbers ??= new PhoneNumberRepository(_context, _transaction);
+
+        public IProductRepository Products => _products ??= new ProductRepository(_context, _transaction);
+
         public IRefreshTokenRepository RefreshTokens =>
             _refreshTokens ??= new RefreshTokenRepository(_context, _transaction);
 
         public IRegGroupRepository RegGroups => _regGroups ??= new RegGroupRepository(_context, _transaction);
+
+        public IResultRepository Results => _results ??= new ResultRepository(_context, _transaction);
 
         public IRoleRepository Roles => _roles ??= new RoleRepository(_context, _transaction);
 
@@ -367,8 +376,10 @@ namespace MyPortal.Database
         public IStudentContactRelationshipRepository StudentContactRelationships => _studentContactRelationships ??=
             new StudentContactRelationshipRepository(_context, _transaction);
 
-        public IStudentDiscountRepository StudentDiscounts =>
-            _studentDiscounts ??= new StudentDiscountRepository(_context, _transaction);
+        public IStudentChargeDiscountRepository StudentChargeDiscounts { get; }
+
+        public IStudentChargeDiscountRepository StudentDiscounts =>
+            _studentChargeDiscounts ??= new StudentChargeDiscountRepository(_context, _transaction);
 
         public IStudentRepository Students => _students ??= new StudentRepository(_context, _transaction);
 
@@ -444,12 +455,23 @@ namespace MyPortal.Database
             _context?.Dispose();
         }
 
+        public async Task BatchSaveChangesAsync()
+        {
+            _batchSize++;
+
+            if (_batchSize >= BatchLimit)
+            {
+                await SaveChangesAsync();
+            }
+        }
+
         public async Task SaveChangesAsync()
         {
             try
             {
                 await _context.SaveChangesAsync();
                 await _context.Database.CurrentTransaction.CommitAsync();
+                _batchSize = 0;
             }
             catch (Exception)
             {
@@ -538,8 +560,11 @@ namespace MyPortal.Database
             _personConditions = null;
             _personDietaryRequirements = null;
             _people = null;
+            _phoneNumbers = null;
+            _products = null;
             _refreshTokens = null;
             _regGroups = null;
+            _results = null;
             _roles = null;
             _schoolPhases = null;
             _schools = null;
@@ -555,7 +580,7 @@ namespace MyPortal.Database
             _staffMembers = null;
             _studentCharges = null;
             _studentContactRelationships = null;
-            _studentDiscounts = null;
+            _studentChargeDiscounts = null;
             _students = null;
             _studentGroups = null;
             _studyTopics = null;

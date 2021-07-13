@@ -21,6 +21,40 @@ namespace MyPortal.Database.Repositories
             
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "StudentGroups", "SG", "StudentGroupId");
+            JoinEntity(query, "CurriculumYearGroups", "CYG", "CurriculumYearGroupId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(StudentGroup), "SG");
+            query.SelectAllColumns(typeof(CurriculumYearGroup), "CYG");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<YearGroup>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var yearGroups =
+                await Transaction.Connection.QueryAsync<YearGroup, StudentGroup, CurriculumYearGroup, YearGroup>(
+                    sql.Sql,
+                    (yearGroup, studentGroup, curriculumYear) =>
+                    {
+                        yearGroup.StudentGroup = studentGroup;
+                        yearGroup.CurriculumYearGroup = curriculumYear;
+
+                        return yearGroup;
+                    }, sql.NamedBindings, Transaction);
+
+            return yearGroups;
+        }
+
         public async Task Update(YearGroup entity)
         {
             var yearGroup = await Context.YearGroups.FirstOrDefaultAsync(x => x.Id == entity.Id);

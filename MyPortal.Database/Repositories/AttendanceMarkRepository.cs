@@ -91,7 +91,7 @@ namespace MyPortal.Database.Repositories
             return (await ExecuteQuery(query)).SingleOrDefault();
         }
 
-        public async Task<IEnumerable<PossibleAttendanceMark>> GetRegisterMarks(Guid groupTypeId, Guid groupId, DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<PossibleAttendanceMark>> GetRegisterMarks(Guid studentGroupId, DateTime startDate, DateTime endDate)
         {
             var query = GenerateEmptyQuery(typeof(Student), "S");
 
@@ -104,7 +104,7 @@ namespace MyPortal.Database.Repositories
             query.WhereDate("PAP.StartTime", ">=", startDate);
             query.WhereDate("PAP.EndTime", "<", endDate);
 
-            query.FilterByStudentGroup(groupTypeId, groupId);
+            query.FilterByStudentGroup(studentGroupId, "S");
 
             return await ExecuteQuery<PossibleAttendanceMark>(query);
         }

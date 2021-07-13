@@ -16,5 +16,34 @@ namespace MyPortal.Database.Repositories
         {
            
         }
+
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "SystemAreas", "SA", "AreaId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(SystemArea), "SA");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Permission>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var permissions = await Transaction.Connection.QueryAsync<Permission, SystemArea, Permission>(sql.Sql,
+                (permission, area) =>
+                {
+                    permission.SystemArea = area;
+
+                    return permission;
+                }, sql.NamedBindings, Transaction);
+
+            return permissions;
+        }
     }
 }

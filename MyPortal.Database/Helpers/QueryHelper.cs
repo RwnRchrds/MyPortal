@@ -26,25 +26,11 @@ namespace MyPortal.Database.Helpers
             return query;
         }
 
-        public static Query FilterByStudentGroup(this Query query, Guid groupTypeId, Guid groupId, string studentAlias = "S")
+        public static Query FilterByStudentGroup(this Query query, Guid studentGroupId, string studentAlias)
         {
-            if (groupTypeId == StudentGroupTypes.YearGroup)
-            {
-                query.LeftJoin("YearGroups AS Y", "Y.Id", $"{studentAlias}.YearGroupId");
-                query.Where("Y.Id", groupId);
-            }
+            query.LeftJoin("StudentGroupMemberships as SGM", "SGM.StudentId", "S.Id");
 
-            if (groupTypeId == StudentGroupTypes.CurriculumGroup)
-            {
-                query.LeftJoin("CurriculumGroupMemberships AS CGM", "CGM.StudentId", $"{studentAlias}.Id");
-                query.Where("CGM.GroupId", groupId);
-            }
-
-            if (groupTypeId == StudentGroupTypes.RegGroup)
-            {
-                query.LeftJoin("RegGroups AS R", "R.Id", $"{studentAlias}.RegGroupId");
-                query.Where("R.Id", groupId);
-            }
+            query.Where("SGM.StudentGroupId", studentGroupId);
 
             return query;
         }
