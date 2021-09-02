@@ -28,4 +28,8 @@
     <None Remove="Models\Requests\Admissions\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Requests\Attendance" />
+  </ItemGroup>
+
 </Project>

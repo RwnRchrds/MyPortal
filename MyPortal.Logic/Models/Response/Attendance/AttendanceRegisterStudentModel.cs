@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using MyPortal.Logic.Models.List;
 
-namespace MyPortal.Logic.Models.Requests.Attendance
+namespace MyPortal.Logic.Models.Response.Attendance
 {
     public class AttendanceRegisterStudentModel
     {

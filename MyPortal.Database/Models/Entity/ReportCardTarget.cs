@@ -15,6 +15,6 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual ReportCard ReportCard { get; set; }
         public virtual BehaviourTarget Target { get; set; }
-        public virtual ICollection<ReportCardTargetSubmission> Submissions { get; set; }
+        public virtual ICollection<ReportCardTargetEntry> Submissions { get; set; }
     }
 }

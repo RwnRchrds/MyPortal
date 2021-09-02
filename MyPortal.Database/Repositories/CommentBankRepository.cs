@@ -25,7 +25,7 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Comment bank not found.");
             }
 
-            commentBank.Name = entity.Name;
+            commentBank.Description = entity.Description;
             commentBank.Active = entity.Active;
         }
     }

@@ -1,11 +1,43 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Data;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class DiaryEventModel
+    public class DiaryEventModel : BaseModel, ILoadable
     {
-        public Guid Id { get; set; }
+        public DiaryEventModel(DiaryEvent model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(DiaryEvent model)
+        {
+            EventTypeId = model.EventTypeId;
+            RoomId = model.RoomId;
+            Subject = model.Subject;
+            Description = model.Description;
+            Location = model.Location;
+            StartTime = model.StartTime;
+            EndTime = model.EndTime;
+            IsAllDay = model.IsAllDay;
+            IsBlock = model.IsBlock;
+            IsPublic = model.IsPublic;
+
+            if (model.EventType != null)
+            {
+                EventType = new DiaryEventTypeModel(model.EventType);
+            }
+
+            if (model.Room != null)
+            {
+                Room = new RoomModel(model.Room);
+            }
+        }
         
         public Guid EventTypeId { get; set; }
         
@@ -33,5 +65,11 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual DiaryEventTypeModel EventType { get; set; }
         public virtual RoomModel Room { get; set; }
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            var model = await unitOfWork.DiaryEvents.GetById(Id);
+            
+            LoadFromModel(model);
+        }
     }
 }

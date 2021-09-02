@@ -1,10 +1,41 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Scaffolding;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Data;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class DetentionModel
+    public class DetentionModel : BaseModel, ILoadable
     {
-        public Guid Id { get; set; }
+        public DetentionModel(Detention model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(Detention model)
+        {
+            DetentionTypeId = model.DetentionTypeId;
+            EventId = model.EventId;
+            SupervisorId = model.SupervisorId;
+
+            if (model.Type != null)
+            {
+                Type = new DetentionTypeModel(model.Type);
+            }
+
+            if (model.Event != null)
+            {
+                Event = new DiaryEventModel(model.Event);
+            }
+
+            if (model.Supervisor != null)
+            {
+                Supervisor = new StaffMemberModel(model.Supervisor);
+            }
+        }
         
         public Guid DetentionTypeId { get; set; }
         
@@ -12,8 +43,14 @@ namespace MyPortal.Logic.Models.Entity
         
         public Guid? SupervisorId { get; set; }
 
-        public virtual DetentionTypeModel Type { get; set; }
-        public virtual DiaryEventModel Event { get; set; }
-        public virtual StaffMemberModel Supervisor { get; set; }
+        public DetentionTypeModel Type { get; set; }
+        public DiaryEventModel Event { get; set; }
+        public StaffMemberModel Supervisor { get; set; }
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            var model = await unitOfWork.Detentions.GetById(Id);
+            
+            LoadFromModel(model);
+        }
     }
 }

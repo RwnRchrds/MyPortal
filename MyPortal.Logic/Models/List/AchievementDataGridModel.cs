@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Models.List
             Id = model.Id;
             TypeName = model.Type.Description;
             Location = model.Location.Description;
-            RecordedBy = model.RecordedBy.GetDisplayName(NameFormat.FullNameAbbreviated);
+            RecordedBy = model.CreatedBy.GetDisplayName(NameFormat.FullNameAbbreviated);
             CreatedDate = model.CreatedDate;
             Comments = model.Comments;
             Points = model.Points;

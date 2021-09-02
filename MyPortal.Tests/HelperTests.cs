@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
-using MyPortal.Database.Attributes;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
-using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Curriculum;
-using MyPortal.Logic.Services;
 using NUnit.Framework;
 
 namespace MyPortal.Tests

@@ -7,7 +7,7 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models.Entity
 {
     [Table("TaskTypes")]
-    public class TaskType : LookupItem, ISystemEntity, IReservable
+    public class TaskType : LookupItem, ISystemEntity
     {
         public TaskType()
         {
@@ -23,9 +23,6 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 5)] 
         public bool System { get; set; }
-
-        [Column(Order = 6)] 
-        public bool Reserved { get; set; }
 
         public virtual ICollection<Task> Tasks { get; set; }
     }

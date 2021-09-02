@@ -1,11 +1,41 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using MyPortal.Database.BaseTypes;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Data;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AspectModel : LookupItem
+    public class AspectModel : LookupItemModel, ILoadable
     {
+        public AspectModel(Aspect model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(Aspect model)
+        {
+            TypeId = model.TypeId;
+            GradeSetId = model.GradeSetId;
+            MinMark = model.MinMark;
+            MaxMark = model.MaxMark;
+            Name = model.Name;
+            ColumnHeading = model.ColumnHeading;
+            StudentVisible = model.StudentVisible;
+
+            if (model.Type != null)
+            {
+                Type = new AspectTypeModel(model.Type);
+            }
+
+            if (model.GradeSet != null)
+            {
+                GradeSet = new GradeSetModel(model.GradeSet);
+            }
+        }
+        
         public Guid TypeId { get; set; }
 
         public Guid? GradeSetId { get; set; }
@@ -27,5 +57,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual AspectTypeModel Type { get; set; }
 
         public virtual GradeSetModel GradeSet { get; set; }
+        
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            var model = await unitOfWork.Aspects.GetById(Id);
+            
+            LoadFromModel(model);
+        }
     }
 }

@@ -69,9 +69,9 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var user = await Services.Users.GetUserByPrincipal(User);
 
-               var request = new AchievementModel(model, user.Id);
+                model.CreatedById = user.Id;
 
-               await Services.Achievements.CreateAchievement(request);
+                await Services.Achievements.CreateAchievement(model);
 
                 return Ok();
             }, PermissionValue.BehaviourEditAchievements);

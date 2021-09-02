@@ -11,7 +11,7 @@ using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.List;
-using MyPortal.Logic.Models.Requests.Attendance;
+using MyPortal.Logic.Models.Reporting;
 using MyPortal.Logic.Models.Response.Attendance;
 using Task = System.Threading.Tasks.Task;
 
@@ -19,20 +19,8 @@ namespace MyPortal.Logic.Services
 {
     public class AttendanceMarkService : BaseService, IAttendanceMarkService
     {
-        private AttendanceMarkModel NoMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
-        {
-            return new AttendanceMarkModel
-            {
-                Id = Guid.Empty,
-                StudentId = studentId,
-                WeekId = attendanceWeekId,
-                PeriodId = periodId,
-                MinutesLate = 0,
-                CodeId = Guid.Empty
-            };
-        }
-
-        public async Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId, bool returnNoMark = false)
+        public async Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId,
+            bool returnNoMark = false)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -40,10 +28,10 @@ namespace MyPortal.Logic.Services
 
                 if (returnNoMark && attendanceMark == null)
                 {
-                    return NoMark(studentId, attendanceWeekId, periodId);
+                    return AttendanceMarkModel.NoMark(studentId, attendanceWeekId, periodId);
                 }
 
-                return BusinessMapper.Map<AttendanceMarkModel>(attendanceMark);
+                return new AttendanceMarkModel(attendanceMark);
             }
         }
 
@@ -64,7 +52,7 @@ namespace MyPortal.Logic.Services
 
                 register.Codes = codes.Select(BusinessMapper.Map<AttendanceCodeModel>).ToList();
 
-                var possibleMarks = (await unitOfWork.AttendanceMarks.GetRegisterMarks(StudentGroupTypes.CurriculumGroup,
+                var possibleMarks = (await unitOfWork.AttendanceMarks.GetRegisterMarks(
                     register.Metadata.CurriculumGroupId, register.Metadata.StartTime.Date,
                     register.Metadata.StartTime.Date.AddDays(1))).GroupBy(m => m.StudentId);
 

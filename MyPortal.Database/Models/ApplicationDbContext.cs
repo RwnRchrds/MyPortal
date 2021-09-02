@@ -162,9 +162,9 @@ namespace MyPortal.Database.Models
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public virtual DbSet<RegGroup> RegGroups { get; set; }
         public virtual DbSet<ReportCard> ReportCards { get; set; }
-        public virtual DbSet<ReportCardSubmission> ReportCardSubmissions { get; set; }
+        public virtual DbSet<ReportCardEntry> ReportCardSubmissions { get; set; }
         public virtual DbSet<ReportCardTarget> ReportCardTargets { get; set; }
-        public virtual DbSet<ReportCardTargetSubmission> ReportCardTargetSubmissions { get; set; }
+        public virtual DbSet<ReportCardTargetEntry> ReportCardTargetSubmissions { get; set; }
         public virtual DbSet<Result> Results { get; set; }
         public virtual DbSet<ResultSet> ResultSets { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
@@ -1022,21 +1022,21 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasOne(x => x.ExamAward)
+                    e.HasMany(x => x.ExamAwards)
                         .WithOne(x => x.Assessment)
-                        .HasForeignKey<ExamAward>(x => x.AssessmentId)
+                        .HasForeignKey(x => x.AssessmentId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasOne(x => x.ExamBaseElement)
+                    e.HasMany(x => x.ExamBaseElements)
                         .WithOne(x => x.Assessment)
-                        .HasForeignKey<ExamBaseElement>(x => x.AssessmentId)
+                        .HasForeignKey(x => x.AssessmentId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasOne(x => x.ExamBaseComponent)
+                    e.HasMany(x => x.ExamBaseComponents)
                         .WithOne(x => x.Assessment)
-                        .HasForeignKey<ExamBaseComponent>(x => x.ExamAssessmentId)
+                        .HasForeignKey(x => x.ExamAssessmentId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -1193,8 +1193,8 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasOne(x => x.Student)
-                        .WithOne(x => x.Candidate)
-                        .HasForeignKey<ExamCandidate>(x => x.StudentId)
+                        .WithMany(x => x.ExamCandidates)
+                        .HasForeignKey(x => x.StudentId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -1336,8 +1336,8 @@ namespace MyPortal.Database.Models
                     SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Room)
-                        .WithOne(x => x.ExamRoom)
-                        .HasForeignKey<ExamRoom>(x => x.RoomId)
+                        .WithMany(x => x.ExamRooms)
+                        .HasForeignKey(x => x.RoomId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -1680,8 +1680,8 @@ namespace MyPortal.Database.Models
                     SetIdDefaultValue(e);
 
                     e.HasOne(x => x.StaffMember)
-                        .WithOne(x => x.NextOfKin)
-                        .HasForeignKey<NextOfKin>(x => x.StaffMemberId)
+                        .WithMany(x => x.NextOfKin)
+                        .HasForeignKey(x => x.StaffMemberId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -1971,19 +1971,19 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<ReportCardSubmission>(e =>
+                modelBuilder.Entity<ReportCardEntry>(e =>
                 {
                     SetIdDefaultValue(e);
 
                     e.HasMany(x => x.TargetSubmissions)
-                        .WithOne(x => x.Submission)
-                        .HasForeignKey(x => x.SubmissionId)
+                        .WithOne(x => x.Entry)
+                        .HasForeignKey(x => x.EntryId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasOne(x => x.SubmittedBy)
+                    e.HasOne(x => x.CreatedBy)
                         .WithMany(x => x.ReportCardSubmissions)
-                        .HasForeignKey(x => x.SubmittedById)
+                        .HasForeignKey(x => x.CreatedById)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -1999,7 +1999,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<ReportCardTargetSubmission>(e =>
+                modelBuilder.Entity<ReportCardTargetEntry>(e =>
                 {
                     SetIdDefaultValue(e);
                 });

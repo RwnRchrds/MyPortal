@@ -34,7 +34,7 @@ namespace MyPortal.Database.Helpers
 
             string tblAlias;
             GetTableName(t, out tblAlias, alias);
-            var props = GetProperties(t);
+            var props = GetColumnProperties(t);
 
             foreach (var prop in props)
             {
@@ -105,7 +105,7 @@ namespace MyPortal.Database.Helpers
             return propNames.ToArray();
         }
 
-        private static IEnumerable<PropertyInfo> GetProperties(Type t)
+        private static IEnumerable<PropertyInfo> GetColumnProperties(Type t)
         {
             var props = new List<PropertyInfo>();
 

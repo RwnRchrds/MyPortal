@@ -68,7 +68,7 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Communication log not found.");
             }
 
-            log.Note = entity.Note;
+            log.Notes = entity.Notes;
             log.Date = entity.Date;
             log.Outgoing = entity.Outgoing;
         }

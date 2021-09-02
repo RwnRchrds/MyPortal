@@ -2,12 +2,27 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
     public class AddressModel : BaseModel
     {
+        public AddressModel(Address model) : base(model)
+        {
+            HouseNumber = model.HouseNumber;
+            HouseName = model.HouseName;
+            Apartment = model.Apartment;
+            Street = model.Street;
+            District = model.District;
+            Town = model.Town;
+            County = model.County;
+            Postcode = model.Postcode;
+            Country = model.Country;
+            Validated = model.Validated;
+        }
+        
         [StringLength(128)]
         public string HouseNumber { get; set; }
 

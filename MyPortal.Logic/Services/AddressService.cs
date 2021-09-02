@@ -16,7 +16,7 @@ namespace MyPortal.Logic.Services
             {
                 var addresses = await unitOfWork.Addresses.GetAddressesByPerson(personId);
 
-                return addresses.Select(BusinessMapper.Map<AddressModel>).ToList();
+                return addresses.Select(a => new AddressModel(a)).ToList();
             }
         }
     }

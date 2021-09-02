@@ -22,7 +22,7 @@ namespace MyPortal.Database.Models.Entity
             LessonPlans = new HashSet<LessonPlan>();
             Bulletins = new HashSet<Bulletin>();
             AssignedBy = new HashSet<Task>();
-            ReportCardSubmissions = new HashSet<ReportCardSubmission>();
+            ReportCardSubmissions = new HashSet<ReportCardEntry>();
         }
 
         [Column(Order = 3)]
@@ -60,7 +60,7 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual ICollection<Task> AssignedBy { get; set; }
 
-        public virtual ICollection<ReportCardSubmission> ReportCardSubmissions { get; set; }
+        public virtual ICollection<ReportCardEntry> ReportCardSubmissions { get; set; }
 
         public virtual ICollection<UserClaim> UserClaims { get; set; }
 

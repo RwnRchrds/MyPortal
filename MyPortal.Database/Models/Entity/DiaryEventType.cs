@@ -7,7 +7,7 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models.Entity
 {
     [Table("DiaryEventTypes")]
-    public class DiaryEventType : LookupItem, ISystemEntity, IReservable
+    public class DiaryEventType : LookupItem, ISystemEntity
     {
         public DiaryEventType()
         {
@@ -21,9 +21,6 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 4)] 
         public bool System { get; set; }
-
-        [Column(Order = 5)] 
-        public bool Reserved { get; set; }
 
         public virtual  ICollection<DiaryEventTemplate> DiaryEventTemplates { get; set; }
         public virtual  ICollection<DiaryEvent> DiaryEvents { get; set; }

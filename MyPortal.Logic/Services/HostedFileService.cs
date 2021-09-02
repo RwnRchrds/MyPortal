@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models;
-using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DocumentProvision;
+using MyPortal.Logic.Models.Web;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -25,22 +24,18 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var fileData = await _fileProvider.FetchMetadata(fileId);
+                var document = await unitOfWork.Documents.GetById(documentId);
 
-                if (fileData == null)
+                if (document == null)
                 {
-                    throw new NotFoundException("The selected file was not found.");
+                    throw new NotFoundException("Document not found.");
                 }
 
-                var file = new File
-                {
-                    ContentType = fileData.MimeType,
-                    DocumentId = documentId,
-                    FileId = fileData.Id,
-                    FileName = fileData.Name
-                };
+                var file = await _fileProvider.GetFileById(fileId);
 
-                unitOfWork.Files.Create(file);
+                document.Attachment = file;
+                
+                await unitOfWork.Documents.Update(document);
 
                 await unitOfWork.SaveChangesAsync();
             }
@@ -63,20 +58,15 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<HostedFileMetadata> GetMetadataByDocument(Guid documentId)
+        public async Task<IEnumerable<WebAction>> GetWebActionsByDocument(Guid documentId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
-                var metadata = await _fileProvider.FetchMetadata(file.FileId);
+                var webActions = await _fileProvider.GetWebActions(file.FileId);
 
-                if (metadata == null)
-                {
-                    throw new NotFoundException("File not found.");
-                }
-
-                return metadata;
+                return webActions;
             }
         }
 

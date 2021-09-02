@@ -57,7 +57,7 @@ namespace MyPortal.Logic.Services
                         chargeInDb.Recurrences--;
                     }
 
-                    var studentDiscounts = await unitOfWork.StudentDiscounts.GetByStudent(billableStudent.Key);
+                    var studentDiscounts = await unitOfWork.StudentChargeDiscounts.GetByStudent(billableStudent.Key);
 
                     foreach (var studentDiscount in studentDiscounts)
                     {
@@ -70,7 +70,7 @@ namespace MyPortal.Logic.Services
                             bill.BillDiscounts.Add(new BillChargeDiscount
                             {
                                 ChargeDiscountId = studentDiscount.DiscountId,
-                                GrossAmount = studentDiscount.Discount.Amount,
+                                GrossAmount = studentDiscount.ChargeDiscount.Discount.Amount,
                             });
                         }
                     }

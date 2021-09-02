@@ -1,32 +1,63 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using MyPortal.Database.Models;
-using MyPortal.Logic.Attributes;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.List;
-using MyPortal.Logic.Models.Requests.Behaviour;
-using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AchievementModel : BaseModel
+    public class AchievementModel : BaseModel, ILoadable
     {
-        public AchievementModel()
+        public AchievementModel(Achievement model) : base(model)
         {
-
+            LoadFromModel(model);
         }
 
-        public AchievementModel(CreateAchievementModel model, Guid userId)
+        private void LoadFromModel(Achievement model)
         {
             AcademicYearId = model.AcademicYearId;
             AchievementTypeId = model.AchievementTypeId;
             StudentId = model.StudentId;
             LocationId = model.LocationId;
-            RecordedById = userId;
+            CreatedById = model.CreatedById;
             OutcomeId = model.OutcomeId;
-            CreatedDate = DateTime.Now;
+            CreatedDate = model.CreatedDate;
             Comments = model.Comments;
             Points = model.Points;
+            Deleted = model.Deleted;
+
+            if (model.Type != null)
+            {
+                Type = new AchievementTypeModel(model.Type);
+            }
+
+            if (model.Outcome != null)
+            {
+                Outcome = new AchievementOutcomeModel(model.Outcome);
+            }
+
+            if (model.Location != null)
+            {
+                Location = new LocationModel(model.Location);
+            }
+
+            if (model.AcademicYear != null)
+            {
+                AcademicYear = new AcademicYearModel(model.AcademicYear);
+            }
+
+            if (model.CreatedBy != null)
+            {
+                CreatedBy = new UserModel(model.CreatedBy);
+            }
+
+            if (model.Student != null)
+            {
+                Student = new StudentModel(model.Student);
+            }
         }
 
         public Guid AcademicYearId { get; set; }
@@ -38,7 +69,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public Guid? LocationId { get; set; }
         
-        public Guid RecordedById { get; set; }
+        public Guid CreatedById { get; set; }
 
         public Guid? OutcomeId { get; set; }
 
@@ -52,21 +83,28 @@ namespace MyPortal.Logic.Models.Entity
 
         public bool Deleted { get; set; }
 
-        public virtual AchievementTypeModel Type { get; set; }
+        public AchievementTypeModel Type { get; set; }
 
-        public virtual AchievementOutcomeModel Outcome { get; set; }
+        public AchievementOutcomeModel Outcome { get; set; }
 
-        public virtual LocationModel Location { get; set; }
+        public LocationModel Location { get; set; }
 
-        public virtual AcademicYearModel AcademicYear { get; set; }
+        public AcademicYearModel AcademicYear { get; set; }
 
-        public virtual UserModel RecordedBy { get; set; }
+        public UserModel CreatedBy { get; set; }
 
-        public virtual StudentModel Student { get; set; }
+        public StudentModel Student { get; set; }
 
         public AchievementDataGridModel ToListModel()
         {
             return new AchievementDataGridModel(this);
+        }
+
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            var model = await unitOfWork.Achievements.GetById(Id);
+            
+            LoadFromModel(model);
         }
     }
 }

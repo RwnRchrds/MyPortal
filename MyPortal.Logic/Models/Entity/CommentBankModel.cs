@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using MyPortal.Database.BaseTypes;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class CommentBankModel : BaseModel
+    public class CommentBankModel : LookupItemModel
     {
-        [Required]
-        [StringLength(128)]
-        public string Name { get; set; }
-
-        public bool Active { get; set; }
+        public CommentBankModel(CommentBank model) : base(model)
+        {
+            
+        }
     }
 }

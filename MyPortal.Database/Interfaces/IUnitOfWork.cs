@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Models.Entity;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Interfaces
 {
@@ -18,17 +19,29 @@ namespace MyPortal.Database.Interfaces
         IActivityRepository Activities { get; }
         IAddressPersonRepository AddressPersons { get; }
         IAddressRepository Addresses { get; }
+        IAddressTypeRepository AddressTypes { get; }
+        IAgencyRepository Agencies { get; }
+        IAgentRepository Agents { get; }
+        IAgentTypeRepository AgentTypes { get; }
         IAspectRepository Aspects { get; }
         IAspectTypeRepository AspectTypes { get; }
         IAttendanceCodeMeaningRepository AttendanceCodeMeanings { get; }
         IAttendanceCodeRepository AttendanceCodes { get; }
         IAttendanceMarkRepository AttendanceMarks { get; }
         IAttendancePeriodRepository AttendancePeriods { get; }
+        IAttendanceWeekPatternRepository AttendanceWeekPatterns { get; }
         IAttendanceWeekRepository AttendanceWeeks { get; }
         IBasketItemRepository BasketItems { get; }
         IBehaviourOutcomeRepository BehaviourOutcomes { get; }
         IBehaviourStatusRepository BehaviourStatus { get; }
+        IBehaviourTargetRepository BehaviourTargets { get; }
+        IBillAccountTransactionRepository BillAccountTransactions { get; }
+        IBillChargeDiscountRepository BillChargeDiscounts { get; }
+        IBillChargeRepository BillCharges { get; }
+        IBillItemRepository BillItems { get; }
         IBillRepository Bills { get; }
+        IBillStoreDiscountRepository BillStoreDiscounts { get; }
+        IBoarderStatusRepository BoarderStatus { get; }
         IBulletinRepository Bulletins { get; }
         IChargeDiscountRepository ChargeDiscounts { get; }
         IChargeRepository Charges { get; }
@@ -38,6 +51,8 @@ namespace MyPortal.Database.Interfaces
         ICommunicationLogRepository CommunicationLogs { get; }
         ICommunicationTypeRepository CommunicationTypes { get; }
         IContactRepository Contacts { get; }
+        ICourseRepository Courses { get; }
+        ICoverArrangementRepository CoverArrangements { get; }
         ICurriculumBandBlockAssignmentRepository CurriculumBandBlockAssignments { get; }
         ICurriculumBandRepository CurriculumBands { get; }
         ICurriculumBlockRepository CurriculumBlocks { get; }
@@ -46,16 +61,50 @@ namespace MyPortal.Database.Interfaces
         IDetentionRepository Detentions { get; }
         IDetentionTypeRepository DetentionTypes { get; }
         IDiaryEventAttendeeRepository DiaryEventAttendees { get; }
+        IDiaryEventAttendeeResponseRepository DiaryEventAttendeeResponses { get; }
         IDiaryEventRepository DiaryEvents { get; }  
         IDiaryEventTemplateRepository DiaryEventTemplates { get; }
         IDiaryEventTypeRepository DiaryEventTypes { get; }
         IDietaryRequirementRepository DietaryRequirements { get; }
         IDirectoryRepository Directories { get; }
+        IDiscountRepository Discounts { get; }
         IDocumentRepository Documents { get; }
         IDocumentTypeRepository DocumentTypes { get; }
         IEmailAddressRepository EmailAddresses { get; }
         IEmailAddressTypeRepository EmailAddressTypes { get; }
+        IEnrolmentStatusRepository EnrolmentStatus { get; }
+        IEthnicityRepository Ethnicities { get; }
+        IExamAssessmentAspectRepository ExamAssessmentAspects { get; }
+        IExamAssessmentModeRepository ExamAssessmentModes { get; }
+        IExamAssessmentRepository ExamAssessments { get; }
+        IExamAwardElementRepository ExamAwardElements { get; }
+        IExamAwardRepository ExamAwards { get; }
+        IExamAwardSeriesRepository ExamAwardSeries { get; }
+        IExamBaseComponentRepository ExamBaseComponents { get; }
+        IExamBaseElementRepository ExamBaseElements { get; }
+        IExamBoardRepository ExamBoards { get; }
+        IExamCandidateRepository ExamCandidates { get; }
+        IExamCandidateSeriesRepository ExamCandidateSeries { get; }
+        IExamCandidateSpecialArrangementRepository ExamCandidateSpecialArrangements { get; }
+        IExamComponentRepository ExamComponents { get; }
+        IExamComponentSittingRepository ExamComponentSittings { get; }
+        IExamElementComponentRepository ExamElementComponents { get; }
+        IExamElementRepository ExamElements { get; }
+        IExamEnrolmentRepository ExamEnrolments { get; }
+        IExamQualificationLevelRepository ExamQualificationLevels { get; }
+        IExamQualificationRepository ExamQualifications { get; }
+        IExamResultEmbargoRepository ExamResultEmbargoes { get; }
+        IExamRoomRepository ExamRooms { get; }
+        IExamRoomSeatRepository ExamRoomSeats { get; }
+        IExamSeasonRepository ExamSeasons { get; }
+        IExamSeatAllocationRepository ExamSeatAllocations { get; }
+        IExamSeriesRepository ExamSeries { get; }
+        IExamSessionRepository ExamSessions { get; }
+        IExamSpecialArrangementRepository ExamSpecialArrangements { get; }
+        IExclusionAppealResultRepository ExclusionAppealResults { get; }
+        IExclusionReasonRepository ExclusionReasons { get; }
         IExclusionRepository Exclusions { get; }
+        IExclusionTypeRepository ExclusionTypes { get; }
         IFileRepository Files { get; }
         IGiftedTalentedRepository GiftedTalented { get; }
         IGovernanceTypeRepository GovernanceTypes { get; }
@@ -68,26 +117,49 @@ namespace MyPortal.Database.Interfaces
         IIncidentRepository Incidents { get; }
         IIncidentTypeRepository IncidentTypes { get; }
         IIntakeTypeRepository IntakeTypes { get; }
+        ILanguageRepository Languages { get; }
         ILessonPlanRepository LessonPlans { get; }
         ILessonPlanTemplateRepository LessonPlanTemplates { get; }
         ILocalAuthorityRepository LocalAuthorities { get; }
         ILocationRepository Locations { get; }
         ILogNoteRepository LogNotes { get; }
         ILogNoteTypeRepository LogNoteTypes { get; }
+        IMarksheetColumnRepository MarksheetColumns { get; }
+        IMarksheetTemplateGroupRepository MarksheetTemplateGroups { get; }
+        IMarksheetTemplateRepository MarksheetTemplates { get; }
         IMedicalConditionRepository MedicalConditions { get; }
         IMedicalEventRepository MedicalEvents { get; }
+        INextOfKinRelationshipTypeRepository NextOfKinRelationshipTypes { get; }
+        INextOfKinRepository NextOfKin { get; }
         IObservationOutcomeRepository ObservationOutcomes { get; }
         IObservationRepository Observations { get; }
+        IParentEveningAppointmentRepository ParentEveningAppointments { get; }
+        IParentEveningBreakRepository ParentEveningBreaks { get; }
+        IParentEveningGroupRepository ParentEveningGroups { get; }
+        IParentEveningRepository ParentEvenings { get; }
+        IParentEveningStaffMemberRepository ParentEveningStaffMembers { get; }
         IPermissionRepository Permissions { get; }
         IPersonConditionRepository PersonConditions { get; }
         IPersonDietaryRequirementRepository PersonDietaryRequirements { get; }
         IPersonRepository People { get; }
         IPhoneNumberRepository PhoneNumbers { get; }
+        IPhoneNumberTypeRepository PhoneNumberTypes { get; }
+        IPhotoRepository Photos { get; }
+        IProductDiscountRepository ProductDiscounts { get; }
         IProductRepository Products { get; }
         IRefreshTokenRepository RefreshTokens { get; }
         IRegGroupRepository RegGroups { get; }
+        IRelationshipTypeRepository RelationshipTypes { get; }
+        IReportCardEntryRepository ReportCardEntries { get; }
+        IReportCardRepository ReportCards { get; }
+        IReportCardTargetEntryRepository ReportCardTargetEntries { get; }
+        IReportCardTargetRepository ReportCardTargets { get; }
         IResultRepository Results { get; }
+        IResultSetRepository ResultSets { get; }
         IRoleRepository Roles { get; }
+        IRoomClosureReasonRepository RoomClosureReasons { get; }
+        IRoomClosureRepository RoomClosures { get; }
+        IRoomRepository Rooms { get; }
         ISchoolPhaseRepository SchoolPhases { get; }
         ISchoolRepository Schools { get; }
         ISchoolTypeRepository SchoolTypes { get; }
@@ -98,14 +170,25 @@ namespace MyPortal.Database.Interfaces
         ISenReviewRepository SenReviews { get; }
         ISenReviewTypeRepository SenReviewTypes { get; }
         ISenStatusRepository SenStatus { get; }
+        ISenTypeRepository SenTypes { get; }
         ISessionRepository Sessions { get; }
+        IStaffAbsenceRepository StaffAbsences { get; }
+        IStaffAbsenceTypeRepository StaffAbsenceTypes { get; }
+        IStaffIllnessTypeRepository StaffIllnessTypeRepository { get; }
         IStaffMemberRepository StaffMembers { get; }
+        IStoreDiscountRepository StoreDiscounts { get; }
+        IStudentAgentRelationshipRepository StudentAgentRelationships { get; }
+        IStudentChargeDiscountRepository StudentChargeDiscounts { get; }
         IStudentChargeRepository StudentCharges { get; }
         IStudentContactRelationshipRepository StudentContactRelationships { get; }
-        IStudentChargeDiscountRepository StudentChargeDiscounts { get; }
-        IStudentRepository Students { get; }
+        IStudentGroupMembershipRepository StudentGroupMemberships { get; }
         IStudentGroupRepository StudentGroups { get; }
+        IStudentGroupSupervisorRepository StudentGroupSupervisors { get; }
+        IStudentGroupSupervisorTitleRepository StudentGroupSupervisorTitles { get; }
+        IStudentGroupTypeRepository StudentGroupTypes { get; }
+        IStudentRepository Students { get; }
         IStudyTopicRepository StudyTopics { get; }
+        ISubjectCodeRepository SubjectCodes { get; }
         ISubjectCodeSetRepository SubjectCodeSets { get; }
         ISubjectRepository Subjects { get; }
         ISubjectStaffMemberRepository SubjectStaffMembers { get; }
@@ -117,10 +200,12 @@ namespace MyPortal.Database.Interfaces
         ITrainingCertificateRepository TrainingCertificates { get; }
         ITrainingCertificateStatusRepository TrainingCertificateStatus { get; }
         ITrainingCourseRepository TrainingCourses { get; }
-        IUserRoleRepository UserRoles { get; }
         IUserRepository Users { get; }
+        IUserRoleRepository UserRoles { get; }
+        IVatRateRepository VatRates { get; }
         IYearGroupRepository YearGroups { get; }
 
+        int BatchLimit { get; set; }
         Task BatchSaveChangesAsync();
         Task SaveChangesAsync();
     }

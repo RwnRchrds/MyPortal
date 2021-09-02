@@ -46,6 +46,6 @@ namespace MyPortal.Database.Models.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Session> Sessions { get; set; }
 
-        public virtual ICollection<ReportCardSubmission> ReportCardSubmissions { get; set; }
+        public virtual ICollection<ReportCardEntry> ReportCardSubmissions { get; set; }
     }
 }

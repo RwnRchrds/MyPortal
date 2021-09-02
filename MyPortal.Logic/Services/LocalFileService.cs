@@ -2,12 +2,14 @@
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DocumentProvision;
 using MyPortal.Logic.Models.Requests.Documents;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
@@ -36,15 +38,10 @@ namespace MyPortal.Logic.Services
                     throw new LogicException("A file is already attached to this document.");
                 }
 
-                string fileId = await _fileProvider.SaveFile(upload);
+                var file = await _fileProvider.SaveFile(upload);
 
-                document.Attachment = new Database.Models.Entity.File
-                {
-                    FileId = fileId,
-                    FileName = upload.File.FileName,
-                    ContentType = upload.File.ContentType
-                };
-
+                document.Attachment = file;
+                
                 await unitOfWork.Documents.Update(document);
                 
                 await unitOfWork.SaveChangesAsync();

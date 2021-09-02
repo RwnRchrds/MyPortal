@@ -41,7 +41,7 @@ namespace MyPortal.Logic.Services
 
                 var existingPermissions = new BitArray(role.Permissions);
 
-                var root = TreeNode.CreateRoot("MyPortal");
+                var root = TreeNode.CreateRoot("#", "MyPortal");
 
                 foreach (var systemArea in systemAreas.Where(a => a.ParentId == null))
                 {

@@ -17,11 +17,11 @@ namespace MyPortal.Logic.Models.Data
         public TreeNodeState State { get; set; }
         public ICollection<TreeNode> Children { get; set; }
 
-        public static TreeNode CreateRoot(string name)
+        public static TreeNode CreateRoot(string id, string name)
         {
             return new TreeNode
             {
-                Id = "#",
+                Id = id,
                 Text = name,
                 State = new TreeNodeState
                 {

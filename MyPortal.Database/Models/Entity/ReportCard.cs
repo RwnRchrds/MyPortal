@@ -30,6 +30,6 @@ namespace MyPortal.Database.Models.Entity
         public virtual Student Student { get; set; }
         public virtual IncidentType BehaviourType { get; set; }
         public virtual ICollection<ReportCardTarget> Targets { get; set; }
-        public virtual ICollection<ReportCardSubmission> Submissions { get; set; }
+        public virtual ICollection<ReportCardEntry> Submissions { get; set; }
     }
 }

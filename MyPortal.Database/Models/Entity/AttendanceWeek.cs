@@ -29,6 +29,6 @@ namespace MyPortal.Database.Models.Entity
         public virtual AttendanceWeekPattern WeekPattern { get; set; }
         public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }
 
-        public virtual ICollection<ReportCardSubmission> ReportCardSubmissions { get; set; }
+        public virtual ICollection<ReportCardEntry> ReportCardSubmissions { get; set; }
     }
 }

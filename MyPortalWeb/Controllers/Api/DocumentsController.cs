@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
+using MyPortal.Logic.Models.Web;
 using MyPortal.Logic.Services;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -41,17 +43,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var user = await Services.Users.GetUserByPrincipal(User);
 
-                var document = new DocumentModel
-                {
-                    Title = model.Title,
-                    Description = model.Description,
-                    DirectoryId = model.DirectoryId,
-                    CreatedById = user.Id,
-                    TypeId = model.TypeId,
-                    Restricted = model.Restricted
-                };
-
-                await Services.Documents.Create(document);
+                await Services.Documents.Create(model);
 
                 return Ok();
             });
@@ -73,7 +65,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return BadRequest(
-                    "MyPortal is currently configured to use a 3rd party file provider. Please use LinkHostedFile instead.");
+                    "MyPortal is currently configured to use a 3rd party file provider. Please use LinkHostedFile endpoint instead.");
             });
         }
 
@@ -93,7 +85,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return BadRequest(
-                    "MyPortal is currently configured to host files locally. Please use UploadFile instead.");
+                    "MyPortal is currently configured to host files locally. Please use UploadFile endpoint instead.");
             });
         }
 
@@ -150,21 +142,21 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("view")]
-        [ProducesResponseType(typeof(string), 200)]
+        [Route("webActions")]
+        [ProducesResponseType(typeof(IEnumerable<WebAction>), 200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetWebViewLink([FromQuery] Guid documentId)
+        public async Task<IActionResult> GetWebActions([FromQuery] Guid documentId)
         {
             return await ProcessAsync(async () =>
             {
                 if (Services.Files is HostedFileService hostedFileService)
                 {
-                    var file = await hostedFileService.GetMetadataByDocument(documentId);
+                    var webActions = await hostedFileService.GetWebActionsByDocument(documentId);
 
-                    return Ok(file.WebViewLink);
+                    return Ok(webActions);
                 }
 
-                return BadRequest("You are not using a 3rd party file provider.");
+                return Ok(new List<WebAction>());
             });
         }
     }

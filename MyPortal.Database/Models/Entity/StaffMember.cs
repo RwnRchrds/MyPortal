@@ -63,7 +63,7 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual Person Person { get; set; }
 
-        public virtual NextOfKin NextOfKin { get; set; }
+        public virtual ICollection<NextOfKin> NextOfKin { get; set; }
 
         public virtual StaffMember LineManager { get; set; }
 

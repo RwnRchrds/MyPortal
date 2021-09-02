@@ -1,4 +1,6 @@
-﻿using MyPortal.Logic.Models.Data;
+﻿using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
@@ -9,5 +11,12 @@ namespace MyPortal.Logic.Models.Entity
         public bool System { get; set; }
         
         public bool Reserved { get; set; }
+
+        public DiaryEventTypeModel(DiaryEventType model) : base(model)
+        {
+            ColourCode = model.ColourCode;
+            System = model.System;
+            Reserved = model.Reserved;
+        }
     }
 }

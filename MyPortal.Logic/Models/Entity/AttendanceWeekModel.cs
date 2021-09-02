@@ -1,11 +1,37 @@
 ﻿using System;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Data;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AttendanceWeekModel
+    public class AttendanceWeekModel : BaseModel, ILoadable
     {
-        public Guid Id { get; set; }
+        public AttendanceWeekModel(AttendanceWeek model) : base(model)
+        {
+            LoadFromModel(model);
+        }
 
+        private void LoadFromModel(AttendanceWeek model)
+        {
+            WeekPatternId = model.WeekPatternId;
+            AcademicTermId = model.AcademicTermId;
+            Beginning = model.Beginning;
+            IsNonTimetable = model.IsNonTimetable;
+
+            if (model.WeekPattern != null)
+            {
+                WeekPattern = new AttendanceWeekPatternModel(model.WeekPattern);
+            }
+
+            if (model.AcademicTerm != null)
+            {
+                AcademicTerm = new AcademicTermModel(model.AcademicTerm);
+            }
+        }
+        
         public Guid WeekPatternId { get; set; }
 
         public Guid AcademicTermId { get; set; }
@@ -14,7 +40,14 @@ namespace MyPortal.Logic.Models.Entity
 
         public bool IsNonTimetable { get; set; }
 
-        public virtual AttendanceWeekPatternModel WeekPattern { get; set; }
-        public virtual AcademicTermModel AcademicTerm { get; set; }
+        public AttendanceWeekPatternModel WeekPattern { get; set; }
+        public AcademicTermModel AcademicTerm { get; set; }
+        
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            var model = await unitOfWork.AttendanceWeeks.GetById(Id);
+            
+            LoadFromModel(model);
+        }
     }
 }

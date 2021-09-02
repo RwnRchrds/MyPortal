@@ -12,7 +12,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<AchievementModel> GetAchievementById(Guid achievementId);
         Task<int> GetAchievementPointsByStudent(Guid studentId, Guid academicYearId);
         Task<int> GetAchievementCountByStudent(Guid studentId, Guid academicYearId);
-        Task CreateAchievement(params AchievementModel[] achievements);
+        Task CreateAchievement(params CreateAchievementModel[] achievements);
         Task UpdateAchievement(params UpdateAchievementModel[] achievements);
         Task DeleteAchievement(params Guid[] achievementIds);
         Task<IEnumerable<AchievementTypeModel>> GetAchievementTypes();

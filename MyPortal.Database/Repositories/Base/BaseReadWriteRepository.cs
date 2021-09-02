@@ -42,7 +42,7 @@ namespace MyPortal.Database.Repositories.Base
 
             switch (entity)
             {
-                case ISystemEntity systemObject when systemObject.System:
+                case ISystemEntity {System: true}:
                     throw new SystemEntityException("System entities cannot be deleted.");
                 case ISoftDeleteEntity softDeleteObject:
                     softDeleteObject.Deleted = true;

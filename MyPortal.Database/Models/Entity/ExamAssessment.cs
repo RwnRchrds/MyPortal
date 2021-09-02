@@ -27,9 +27,9 @@ namespace MyPortal.Database.Models.Entity
         public string ExternalTitle { get; set; }
 
         public virtual ExamBoard ExamBoard { get; set; }
-        public virtual ExamAward ExamAward { get; set; }
-        public virtual ExamBaseComponent ExamBaseComponent { get; set; }
-        public virtual ExamBaseElement ExamBaseElement { get; set; }
+        public virtual ICollection<ExamBaseComponent> ExamBaseComponents { get; set; }
+        public virtual ICollection<ExamBaseElement> ExamBaseElements { get; set; }
+        public virtual ICollection<ExamAward> ExamAwards { get; set; }
         public virtual ICollection<ExamAssessmentAspect> Aspects { get; set; }
     }
 }

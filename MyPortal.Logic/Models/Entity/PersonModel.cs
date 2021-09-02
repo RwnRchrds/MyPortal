@@ -12,22 +12,27 @@ namespace MyPortal.Logic.Models.Entity
 {
     public class PersonModel : BaseModel
     {
-        public PersonModel(Person person)
+        public PersonModel(Person model) : base(model)
         {
-            Id = person.Id;
-            DirectoryId = person.DirectoryId;
-            Title = person.Title;
-            FirstName = person.FirstName;
-            MiddleName = person.MiddleName;
-            LastName = person.LastName;
-            PhotoId = person.PhotoId;
-            NhsNumber = person.NhsNumber;
-            UpdatedDate = person.UpdatedDate;
-            Gender = person.Gender;
-            Dob = person.Dob;
-            Deceased = person.Deceased;
-            EthnicityId = person.EthnicityId;
-            Deleted = person.Deleted;
+            Id = model.Id;
+            DirectoryId = model.DirectoryId;
+            Title = model.Title;
+            FirstName = model.FirstName;
+            MiddleName = model.MiddleName;
+            LastName = model.LastName;
+            PhotoId = model.PhotoId;
+            NhsNumber = model.NhsNumber;
+            UpdatedDate = model.UpdatedDate;
+            Gender = model.Gender;
+            Dob = model.Dob;
+            Deceased = model.Deceased;
+            EthnicityId = model.EthnicityId;
+            Deleted = model.Deleted;
+
+            if (model.Directory != null)
+            {
+                Directory = new DirectoryModel(model.Directory);
+            }
         }
         
         public Guid DirectoryId { get; set; }
@@ -71,7 +76,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual EthnicityModel Ethnicity { get; set; }
 
-        public string GetDisplayName(NameFormat format = NameFormat.Default, bool useLegalName = true)
+        public string GetDisplayName(NameFormat format = NameFormat.Default)
         {
             string name;
             switch (format)

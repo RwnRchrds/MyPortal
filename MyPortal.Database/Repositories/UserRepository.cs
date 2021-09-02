@@ -2,12 +2,14 @@
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -66,6 +68,23 @@ namespace MyPortal.Database.Repositories
             query.Where("User.UserName", username);
 
             return await ExecuteQueryFirstOrDefault(query);
+        }
+
+        public async Task Update(User entity)
+        {
+            var user = await Context.Users.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            user.AccessFailedCount = entity.AccessFailedCount;
+            user.Email = entity.Email;
+            user.EmailConfirmed = entity.EmailConfirmed;
+            user.LockoutEnabled = entity.LockoutEnabled;
+            user.LockoutEnd = entity.LockoutEnd;
+            user.PhoneNumber = entity.PhoneNumber;
+            user.PhoneNumberConfirmed = entity.PhoneNumberConfirmed;
+            user.CreatedDate = entity.CreatedDate;
+            user.PersonId = entity.PersonId;
+            user.UserType = entity.UserType;
+            user.Enabled = entity.Enabled;
         }
     }
 }

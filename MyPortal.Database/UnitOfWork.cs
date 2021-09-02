@@ -13,8 +13,8 @@ namespace MyPortal.Database
     public class UnitOfWork : IUnitOfWork
     {
         private ApplicationDbContext _context;
-        private int _batchSize = 0;
-        private const int BatchLimit = 1000;
+        private int _batchSize;
+        private int _batchLimit = 1000;
 
         private DbTransaction _transaction;
         private IAcademicTermRepository _academicTerms;
@@ -27,6 +27,10 @@ namespace MyPortal.Database
         private IActivityRepository _activities;
         private IAddressPersonRepository _addressPersons;
         private IAddressRepository _addresses;
+        private IAddressTypeRepository _addressTypes;
+        private IAgencyRepository _agencies;
+        private IAgentRepository _agents;
+        private IAgentTypeRepository _agentTypes;
         private IAspectRepository _aspects;
         private IAspectTypeRepository _aspectTypes;
         private IAttendanceCodeMeaningRepository _attendanceCodeMeanings;
@@ -37,6 +41,7 @@ namespace MyPortal.Database
         private IBasketItemRepository _basketItems;
         private IBehaviourOutcomeRepository _behaviourOutcomes;
         private IBehaviourStatusRepository _behaviourStatus;
+        private IBillItemRepository _billItems;
         private IBillRepository _bills;
         private IBulletinRepository _bulletins;
         private IChargeDiscountRepository _chargeDiscounts;
@@ -47,6 +52,8 @@ namespace MyPortal.Database
         private ICommunicationLogRepository _communicationLogs;
         private ICommunicationTypeRepository _communicationTypes;
         private IContactRepository _contacts;
+        private ICourseRepository _courses;
+        private ICoverArrangementRepository _coverArrangements;
         private ICurriculumBandBlockAssignmentRepository _curriculumBandBlockAssignments;
         private ICurriculumBandRepository _curriculumBands;
         private ICurriculumBlockRepository _curriculumBlocks;
@@ -64,6 +71,13 @@ namespace MyPortal.Database
         private IDocumentTypeRepository _documentTypes;
         private IEmailAddressRepository _emailAddresses;
         private IEmailAddressTypeRepository _emailAddressTypes;
+        private IExamAssessmentAspectRepository _examAssessmentAspects;
+        private IExamAssessmentModeRepository _examAssessmentModes;
+        private IExamAssessmentRepository _examAssessments;
+        private IExamAwardElementRepository _examAwardElements;
+        private IExamAwardRepository _examAwards;
+        private IExamAwardSeriesRepository _examAwardSeries;
+        private IExamBaseComponentRepository _examBaseComponents;
         private IExclusionRepository _exclusions;
         private IFileRepository _files;
         private IGiftedTalentedRepository _giftedTalented;
@@ -109,11 +123,11 @@ namespace MyPortal.Database
         private ISenStatusRepository _senStatus;
         private ISessionRepository _sessions;
         private IStaffMemberRepository _staffMembers;
+        private IStudentChargeDiscountRepository _studentChargeDiscounts;
         private IStudentChargeRepository _studentCharges;
         private IStudentContactRelationshipRepository _studentContactRelationships;
-        private IStudentChargeDiscountRepository _studentChargeDiscounts;
-        private IStudentRepository _students;
         private IStudentGroupRepository _studentGroups;
+        private IStudentRepository _students;
         private IStudyTopicRepository _studyTopics;
         private ISubjectCodeSetRepository _subjectCodeSets;
         private ISubjectRepository _subjects;
@@ -126,8 +140,8 @@ namespace MyPortal.Database
         private ITrainingCertificateRepository _trainingCertificates;
         private ITrainingCertificateStatusRepository _trainingCertificateStatus;
         private ITrainingCourseRepository _trainingCourses;
-        private IUserRoleRepository _userRoles;
         private IUserRepository _users;
+        private IUserRoleRepository _userRoles;
         private IYearGroupRepository _yearGroups;
 
         public IAcademicTermRepository AcademicTerms =>
@@ -160,6 +174,15 @@ namespace MyPortal.Database
         public IAddressRepository Addresses =>
             _addresses ??= new AddressRepository(_context, _transaction);
 
+        public IAddressTypeRepository AddressTypes =>
+            _addressTypes ??= new AddressTypeRepository(_transaction);
+
+        public IAgencyRepository Agencies => _agencies ??= new AgencyRepository(_context, _transaction);
+
+        public IAgentRepository Agents => _agents ??= new AgentRepository(_context, _transaction);
+
+        public IAgentTypeRepository AgentTypes => _agentTypes ??= new AgentTypeRepository(_transaction);
+
         public IAspectRepository Aspects =>
             _aspects ??= new AspectRepository(_context, _transaction);
 
@@ -190,6 +213,8 @@ namespace MyPortal.Database
         public IBehaviourStatusRepository BehaviourStatus =>
             _behaviourStatus ??= new BehaviourStatusRepository(_transaction);
 
+        public IBillItemRepository BillItems => _billItems ??= new BillItemRepository(_context, _transaction);
+
         public IBillRepository Bills => _bills ??= new BillRepository(_context, _transaction);
 
         public IBulletinRepository Bulletins => _bulletins ??= new BulletinRepository(_context, _transaction);
@@ -213,6 +238,11 @@ namespace MyPortal.Database
             _communicationTypes ??= new CommunicationTypeRepository(_transaction);
 
         public IContactRepository Contacts => _contacts ??= new ContactRepository(_context, _transaction);
+
+        public ICourseRepository Courses => _courses ??= new CourseRepository(_context, _transaction);
+
+        public ICoverArrangementRepository CoverArrangements =>
+            _coverArrangements ??= new CoverArrangementRepository(_context, _transaction);
 
         public ICurriculumBandBlockAssignmentRepository CurriculumBandBlockAssignments =>
             _curriculumBandBlockAssignments ??= new CurriculumBandBlockAssignmentRepository(_context, _transaction);
@@ -260,6 +290,26 @@ namespace MyPortal.Database
 
         public IEmailAddressTypeRepository EmailAddressTypes =>
             _emailAddressTypes ??= new EmailAddressTypeRepository(_transaction);
+
+        public IExamAssessmentAspectRepository ExamAssessmentAspects => _examAssessmentAspects ??=
+            new ExamAssessmentAspectRepository(_context, _transaction);
+
+        public IExamAssessmentRepository ExamAssessments =>
+            _examAssessments ??= new ExamAssessmentRepository(_context, _transaction);
+
+        public IExamAssessmentModeRepository ExamAssessmentModes =>
+            _examAssessmentModes ??= new ExamAssessmentModeRepository(_transaction);
+
+        public IExamAwardElementRepository ExamAwardElements =>
+            _examAwardElements ??= new ExamAwardElementRepository(_context, _transaction);
+
+        public IExamAwardRepository ExamAwards => _examAwards ??= new ExamAwardRepository(_context, _transaction);
+
+        public IExamAwardSeriesRepository ExamAwardSeries =>
+            _examAwardSeries ??= new ExamAwardSeriesRepository(_context, _transaction);
+
+        public IExamBaseComponentRepository ExamBaseComponents =>
+            _examBaseComponents ??= new ExamBaseComponentRepository(_context, _transaction);
 
         public IExclusionRepository Exclusions => _exclusions ??= new ExclusionRepository(_context, _transaction);
 
@@ -426,11 +476,20 @@ namespace MyPortal.Database
         public static async Task<IUnitOfWork> Create(ApplicationDbContext context)
         {
             var unitOfWork = new UnitOfWork(context);
-            await unitOfWork.Init();
+            await unitOfWork.Initialise();
             return unitOfWork;
         }
 
-        private async Task Init()
+        private async Task<DbTransaction> GetDbTransaction(ApplicationDbContext context)
+        {
+            var contextTransaction = await _context.Database.BeginTransactionAsync();
+
+            var transaction = contextTransaction.GetDbTransaction();
+
+            return transaction;
+        }
+
+        private async Task Initialise()
         {
             if (_transaction != null)
             {
@@ -439,14 +498,26 @@ namespace MyPortal.Database
                 ResetRepositories();
             }
 
-            var transaction = await _context.Database.BeginTransactionAsync();
-
-            _transaction = transaction.GetDbTransaction();
+            _transaction = await GetDbTransaction(_context);
         }
 
         private UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        public int BatchLimit
+        {
+            get => _batchLimit;
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("Batch limit cannot be less than 0.");
+                }
+
+                _batchLimit = value;
+            }
         }
 
         public void Dispose()
@@ -459,7 +530,7 @@ namespace MyPortal.Database
         {
             _batchSize++;
 
-            if (_batchSize >= BatchLimit)
+            if (_batchSize >= _batchLimit)
             {
                 await SaveChangesAsync();
             }
@@ -480,7 +551,7 @@ namespace MyPortal.Database
             }
             finally
             {
-                await Init();
+                await Initialise();
             }
         }
 
@@ -495,7 +566,11 @@ namespace MyPortal.Database
             _activityEvents = null;
             _activities = null;
             _addressPersons = null;
+            _addressTypes = null;
             _addresses = null;
+            _agencies = null;
+            _agents = null;
+            _agentTypes = null;
             _aspects = null;
             _aspectTypes = null;
             _attendanceCodeMeanings = null;
@@ -506,6 +581,7 @@ namespace MyPortal.Database
             _basketItems = null;
             _behaviourOutcomes = null;
             _behaviourStatus = null;
+            _billItems = null;
             _bills = null;
             _bulletins = null;
             _chargeDiscounts = null;
@@ -516,6 +592,8 @@ namespace MyPortal.Database
             _communicationLogs = null;
             _communicationTypes = null;
             _contacts = null;
+            _courses = null;
+            _coverArrangements = null;
             _curriculumBandBlockAssignments = null;
             _curriculumBands = null;
             _curriculumBlocks = null;
@@ -533,6 +611,13 @@ namespace MyPortal.Database
             _documentTypes = null;
             _emailAddresses = null;
             _emailAddressTypes = null;
+            _examAssessmentAspects = null;
+            _examAssessments = null;
+            _examAssessmentModes = null;
+            _examAwardElements = null;
+            _examAwards = null;
+            _examAwardSeries = null;
+            _examBaseComponents = null;
             _exclusions = null;
             _files = null;
             _giftedTalented = null;

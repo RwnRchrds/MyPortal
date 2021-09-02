@@ -37,7 +37,7 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual Location Location { get; set; }
 
-        public virtual ExamRoom ExamRoom { get; set; }
+        public virtual ICollection<ExamRoom> ExamRooms { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Session> Sessions { get; set; }

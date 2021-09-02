@@ -1,10 +1,11 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Google.Apis.Drive.v3;
-using Microsoft.Extensions.Configuration;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.DocumentProvision;
+using MyPortal.Logic.Models.Web;
+using File = MyPortal.Database.Models.Entity.File;
 
 namespace MyPortal.Logic.FileProviders
 {
@@ -23,22 +24,39 @@ namespace MyPortal.Logic.FileProviders
             _driveService.Dispose();
         }
 
-        public async Task<HostedFileMetadata> FetchMetadata(string fileId)
+        public async Task<IEnumerable<WebAction>> GetWebActions(string fileId)
         {
-            var hostedMetadata = new HostedFileMetadata();
+            var actions = new List<WebAction>();
             
             var request = _driveService.Files.Get(fileId);
 
-            request.Fields = "id, name, description, mimeType, webViewLink";
+            var data = await request.ExecuteAsync();
+
+            request.Fields = "id, name, mimeType, webViewLink";
+
+            var webViewAction = new WebAction("", "View on Web", data.WebViewLink);
+
+            actions.Add(webViewAction);
+
+            return actions;
+        }
+
+        public async Task<File> GetFileById(string fileId)
+        {
+            var request = _driveService.Files.Get(fileId);
+
+            request.Fields = "id, name, mimeType";
 
             var data = await request.ExecuteAsync();
 
-            hostedMetadata.Id = data.Id;
-            hostedMetadata.IconLink = data.IconLink;
-            hostedMetadata.WebViewLink = data.WebViewLink;
-            hostedMetadata.MimeType = data.MimeType;
+            var file = new File
+            {
+                FileId = data.Id,
+                FileName = data.Name,
+                ContentType = data.MimeType
+            };
 
-            return hostedMetadata;
+            return file;
         }
 
         public async Task<Stream> DownloadFileToStream(string fileId)

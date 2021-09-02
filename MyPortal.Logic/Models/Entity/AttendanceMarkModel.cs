@@ -1,12 +1,69 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.List;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AttendanceMarkModel
+    public class AttendanceMarkModel : BaseModel, ILoadable
     {
-        public Guid Id { get; set; }
+        public AttendanceMarkModel(AttendanceMark model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private AttendanceMarkModel()
+        {
+            
+        }
+
+        private void LoadFromModel(AttendanceMark model)
+        {
+            StudentId = model.StudentId;
+            WeekId = model.WeekId;
+            PeriodId = model.PeriodId;
+            CodeId = model.CodeId;
+            Comments = model.Comments;
+            MinutesLate = model.MinutesLate;
+
+            if (model.AttendancePeriod != null)
+            {
+                AttendancePeriod = new AttendancePeriodModel(model.AttendancePeriod);
+            }
+
+            if (model.AttendanceCode != null)
+            {
+                AttendanceCode = new AttendanceCodeModel(model.AttendanceCode);
+            }
+
+            if (model.Student != null)
+            {
+                Student = new StudentModel(model.Student);
+            }
+
+            if (model.Week != null)
+            {
+                Week = new AttendanceWeekModel(model.Week);
+            }
+        }
+
+        public static AttendanceMarkModel NoMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
+        {
+            return new AttendanceMarkModel
+            {
+                Id = Guid.Empty,
+                StudentId = studentId,
+                WeekId = attendanceWeekId,
+                PeriodId = periodId,
+                MinutesLate = 0,
+                CodeId = Guid.Empty
+            };
+        }
 
         public Guid StudentId { get; set; }
 
@@ -21,13 +78,13 @@ namespace MyPortal.Logic.Models.Entity
 
         public int MinutesLate { get; set; }
 
-        public virtual AttendancePeriodModel AttendancePeriod { get; set; }
+        public AttendancePeriodModel AttendancePeriod { get; set; }
 
-        public virtual AttendanceCodeModel AttendanceCode { get; set; }
+        public AttendanceCodeModel AttendanceCode { get; set; }
 
-        public virtual StudentModel Student { get; set; }
+        public StudentModel Student { get; set; }
 
-        public virtual AttendanceWeekModel Week { get; set; }
+        public AttendanceWeekModel Week { get; set; }
 
         public AttendanceMarkListModel ToListModel()
         {
@@ -40,6 +97,18 @@ namespace MyPortal.Logic.Models.Entity
                 MinutesLate = MinutesLate,
                 Comments = Comments
             };
+        }
+
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            if (Id == Guid.Empty)
+            {
+                return;
+            }
+            
+            var model = await unitOfWork.AttendanceMarks.GetById(Id);
+            
+            LoadFromModel(model);
         }
     }
 }

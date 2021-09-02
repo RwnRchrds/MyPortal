@@ -22,7 +22,7 @@ namespace MyPortal.Logic.Services
             {
                 var achievements = await unitOfWork.Achievements.GetByStudent(studentId, academicYearId);
 
-                return achievements.Select(BusinessMapper.Map<AchievementModel>).ToList();
+                return achievements.Select(a => new AchievementModel(a)).ToList();
             }
         }
 
@@ -32,7 +32,7 @@ namespace MyPortal.Logic.Services
             {
                 var achievement = await unitOfWork.Achievements.GetById(achievementId);
 
-                return BusinessMapper.Map<AchievementModel>(achievement);
+                return new AchievementModel(achievement);
             }
         }
 
@@ -56,7 +56,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateAchievement(params AchievementModel[] requests)
+        public async Task CreateAchievement(params CreateAchievementModel[] requests)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -73,7 +73,7 @@ namespace MyPortal.Logic.Services
                         Comments = request.Comments,
                         OutcomeId = request.OutcomeId,
                         Points = request.Points,
-                        RecordedById = request.RecordedById,
+                        CreatedById = request.CreatedById,
                         CreatedDate = DateTime.Now
                     };
 
@@ -135,7 +135,7 @@ namespace MyPortal.Logic.Services
             {
                 var types = await unitOfWork.AchievementTypes.GetAll();
 
-                return types.Select(BusinessMapper.Map<AchievementTypeModel>).ToList();
+                return types.Select(t => new AchievementTypeModel(t)).ToList();
             }
         }
 
@@ -145,7 +145,7 @@ namespace MyPortal.Logic.Services
             {
                 var outcomes = await unitOfWork.AchievementOutcomes.GetAll();
 
-                return outcomes.Select(BusinessMapper.Map<AchievementOutcomeModel>).ToList();
+                return outcomes.Select(o => new AchievementOutcomeModel(o)).ToList();
             }
         }
     }

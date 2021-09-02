@@ -1,18 +1,17 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AchievementTypeModel
+    public class AchievementTypeModel : LookupItemModel
     {
-        public Guid Id { get; set; }
-
-        [Required(ErrorMessage = "Description is required")]
-        [StringLength(256)]
-        public string Description { get; set; }
-
         public int DefaultPoints { get; set; }
 
-        public bool Active { get; set; }
+        public AchievementTypeModel(AchievementType model) : base(model)
+        {
+            DefaultPoints = model.DefaultPoints;
+        }
     }
 }

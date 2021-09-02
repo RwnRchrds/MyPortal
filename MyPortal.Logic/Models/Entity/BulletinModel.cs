@@ -1,11 +1,41 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Data;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class BulletinModel
+    public class BulletinModel : BaseModel, ILoadable
     {
-        public Guid Id { get; set; }
+        public BulletinModel(Bulletin model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(Bulletin model)
+        {
+            DirectoryId = model.DirectoryId;
+            AuthorId = model.AuthorId;
+            CreateDate = model.CreateDate;
+            ExpireDate = model.ExpireDate;
+            Title = model.Title;
+            Detail = model.Detail;
+            StaffOnly = model.StaffOnly;
+            Approved = model.Approved;
+
+            if (model.Author != null)
+            {
+                Author = new UserModel(model.Author);
+            }
+
+            if (model.Directory != null)
+            {
+                Directory = new DirectoryModel(model.Directory);
+            }
+        }
         
         public Guid DirectoryId { get; set; }
         
@@ -26,7 +56,14 @@ namespace MyPortal.Logic.Models.Entity
         
         public bool Approved { get; set; }
 
-        public virtual UserModel Author { get; set; }
-        public virtual DirectoryModel Directory { get; set; }
+        public UserModel Author { get; set; }
+        public DirectoryModel Directory { get; set; }
+        
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            var model = await unitOfWork.Bulletins.GetById(Id);
+            
+            LoadFromModel(model);
+        }
     }
 }

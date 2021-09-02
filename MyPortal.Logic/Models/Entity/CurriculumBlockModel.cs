@@ -1,11 +1,17 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class CurriculumBlockModel
+    public class CurriculumBlockModel : BaseModel
     {
-        public Guid Id { get; set; }
+        public CurriculumBlockModel(CurriculumBlock model) : base(model)
+        {
+            Code = model.Code;
+            Description = model.Description;
+        }
         
         [StringLength(10)]
         public string Code { get; set; }

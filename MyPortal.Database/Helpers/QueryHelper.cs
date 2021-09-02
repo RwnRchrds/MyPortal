@@ -28,7 +28,7 @@ namespace MyPortal.Database.Helpers
 
         public static Query FilterByStudentGroup(this Query query, Guid studentGroupId, string studentAlias)
         {
-            query.LeftJoin("StudentGroupMemberships as SGM", "SGM.StudentId", "S.Id");
+            query.LeftJoin("StudentGroupMemberships as SGM", "SGM.StudentId", $"{studentAlias}.Id");
 
             query.Where("SGM.StudentGroupId", studentGroupId);
 

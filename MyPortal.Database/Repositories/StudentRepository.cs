@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
+using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Enums;
-using MyPortal.Database.Helpers;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -129,6 +130,27 @@ namespace MyPortal.Database.Repositories
             query.Where("Student.GiftedAndTalented", true);
 
             return await ExecuteQuery(query);
+        }
+
+        public async Task Update(Student entity)
+        {
+            var student = await Context.Students.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (student == null)
+            {
+                throw new EntityNotFoundException("Student not found.");
+            }
+
+            student.HouseId = entity.HouseId;
+            student.AdmissionNumber = entity.AdmissionNumber;
+            student.DateStarting = entity.DateStarting;
+            student.DateLeaving = entity.DateLeaving;
+            student.FreeSchoolMeals = entity.FreeSchoolMeals;
+            student.SenStatusId = entity.SenStatusId;
+            student.SenTypeId = entity.SenTypeId;
+            student.EnrolmentStatusId = entity.EnrolmentStatusId;
+            student.PupilPremium = entity.PupilPremium;
+            student.Upn = entity.Upn;
         }
     }
 }

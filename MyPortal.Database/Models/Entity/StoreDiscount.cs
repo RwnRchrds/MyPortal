@@ -11,14 +11,14 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 1)]
         public Guid DiscountId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 2)]
         public int MinQuantity { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 3)]
         public int? MaxQuantity { get; set; }
 
-        [Column(Order = 2)]
-        public bool Global { get; set; }
+        [Column(Order = 4)]
+        public bool Auto { get; set; }
 
         public virtual Discount Discount { get; set; }
         public virtual ICollection<BillStoreDiscount> BillStoreDiscounts { get; set; }

@@ -111,7 +111,7 @@ namespace MyPortal.Logic.Services
                         throw new NotFoundException("Task not found.");
                     }
 
-                    if (taskInDb.Type.Reserved)
+                    if (taskInDb.Type.System)
                     {
                         throw new InvalidDataException("Cannot edit system-generated tasks.");
                     }

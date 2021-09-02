@@ -1,10 +1,48 @@
 ﻿using System;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class CoverArrangementModel : BaseModel
+    public class CoverArrangementModel : BaseModel, ILoadable
     {
+        public CoverArrangementModel(CoverArrangement model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(CoverArrangement model)
+        {
+            WeekId = model.WeekId;
+            SessionId = model.SessionId;
+            TeacherId = model.TeacherId;
+            RoomId = model.RoomId;
+            Comments = model.Comments;
+
+            if (model.Week != null)
+            {
+                Week = new AttendanceWeekModel(model.Week);
+            }
+
+            if (model.Session != null)
+            {
+                Session = new SessionModel(model.Session);
+            }
+
+            if (model.Teacher != null)
+            {
+                Teacher = new StaffMemberModel(model.Teacher);
+            }
+
+            if (model.Room != null)
+            {
+                Room = new RoomModel(model.Room);
+            }
+        }
+        
         public Guid WeekId { get; set; }
         
         public Guid SessionId { get; set; }
@@ -15,13 +53,19 @@ namespace MyPortal.Logic.Models.Entity
         
         public string Comments { get; set; }
 
-        public virtual AttendanceWeekModel Week { get; set; }
-        public virtual SessionModel Session { get; set; }
-        public virtual StaffMemberModel Teacher { get; set; }
-        public virtual RoomModel Room { get; set; }
+        public AttendanceWeekModel Week { get; set; }
+        public SessionModel Session { get; set; }
+        public StaffMemberModel Teacher { get; set; }
+        public RoomModel Room { get; set; }
 
         public bool StaffChanged => TeacherId != null;
 
         public bool RoomChanged => RoomId != null;
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            var model = await unitOfWork.CoverArrangements.GetById(Id);
+            
+            LoadFromModel(model);
+        }
     }
 }

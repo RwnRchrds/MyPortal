@@ -16,7 +16,7 @@ namespace MyPortal.Database.Models.Entity
         public DateTime Date { get; set; }
 
         [Column(Order = 4)]
-        public string Note { get; set; }
+        public string Notes { get; set; }
 
         [Column(Order = 5)] 
         public bool Outgoing { get; set; }

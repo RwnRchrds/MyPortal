@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Data;
+using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database;
 using MyPortal.Database.Interfaces;
@@ -13,9 +16,27 @@ namespace MyPortal.Logic.Helpers
         {
             CheckConnectionString();
 
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlServer(Configuration.Instance.ConnectionString).Options;
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseSqlServer(Configuration.Instance.ConnectionString).Options;
 
             return new ApplicationDbContext(options);
+        }
+
+        internal static SqlConnection CreateConnection()
+        {
+            CheckConnectionString();
+
+            var connection = new SqlConnection(Configuration.Instance.ConnectionString);
+
+            return connection;
+        }
+
+        internal static async Task CheckDbConnection()
+        {
+            var connection = CreateConnection();
+
+            await connection.OpenAsync();
+            await connection.CloseAsync();
         }
 
         internal static async Task<IUnitOfWork> CreateUnitOfWork()

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using MyPortal.Database.Models.Query.Attendance;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Attendance;
 
 namespace MyPortal.Logic.Models.Response.Attendance
 {

@@ -7,7 +7,7 @@ using MyPortal.Database.Models.Search;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IStudentRepository : IReadWriteRepository<Student>
+    public interface IStudentRepository : IReadWriteRepository<Student>, IUpdateRepository<Student>
     {
         Task<Student> GetByUserId(Guid userId);
         Task<Student> GetByPersonId(Guid personId);

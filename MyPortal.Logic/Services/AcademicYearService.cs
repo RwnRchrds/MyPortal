@@ -42,7 +42,7 @@ namespace MyPortal.Logic.Services
                     }
                 }
 
-                return BusinessMapper.Map<AcademicYearModel>(acadYear);
+                return new AcademicYearModel(acadYear);
             }
         }
 
@@ -52,7 +52,7 @@ namespace MyPortal.Logic.Services
             {
                 var acadYear = await unitOfWork.AcademicYears.GetById(academicYearId);
 
-                return BusinessMapper.Map<AcademicYearModel>(acadYear);
+                return new AcademicYearModel(acadYear);
             }
         }
 
@@ -62,7 +62,7 @@ namespace MyPortal.Logic.Services
             {
                 var acadYears = await unitOfWork.AcademicYears.GetAll();
 
-                return acadYears.Select(BusinessMapper.Map<AcademicYearModel>);
+                return acadYears.Select(y => new AcademicYearModel(y));
             }
         }
 

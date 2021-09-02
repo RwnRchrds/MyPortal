@@ -13,7 +13,7 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Attendance;
+using MyPortal.Logic.Models.Reporting;
 using MyPortal.Logic.Models.Response.Students;
 using Task = System.Threading.Tasks.Task;
 

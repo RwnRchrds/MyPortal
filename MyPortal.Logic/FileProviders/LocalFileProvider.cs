@@ -26,19 +26,21 @@ namespace MyPortal.Logic.FileProviders
             Directory.CreateDirectory(_fileStoragePath);
         }
 
-        public async Task<string> SaveFile(UploadAttachmentModel upload)
+        public async Task<Database.Models.Entity.File> SaveFile(UploadAttachmentModel upload)
         {
-            var fileName = Guid.NewGuid().ToString("N");
+            var fileId = Guid.NewGuid().ToString("N");
 
-            var path = Path.Combine(_fileStoragePath, fileName);
+            var path = Path.Combine(_fileStoragePath, fileId);
 
             byte[] encryptedData;
+            
+            // Encrypt file contents before saving
 
             using (var ms = new MemoryStream())
             {
                 await upload.File.CopyToAsync(ms);
                 var sourceData = ms.ToArray();
-                encryptedData = Encryption.Encrypt(sourceData, fileName);
+                encryptedData = Encryption.Encrypt(sourceData, fileId);
             }
 
             using (var stream = new FileStream(path, FileMode.Create))
@@ -46,7 +48,12 @@ namespace MyPortal.Logic.FileProviders
                 await stream.WriteAsync(encryptedData);
             }
 
-            return fileName;
+            return new Database.Models.Entity.File
+            {
+                FileName = upload.File.Name,
+                ContentType = upload.File.ContentType,
+                FileId = fileId
+            };
         }
 
         public void DeleteFile(string fileId)

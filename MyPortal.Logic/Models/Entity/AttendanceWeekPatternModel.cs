@@ -1,11 +1,16 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AttendanceWeekPatternModel
+    public class AttendanceWeekPatternModel : BaseModel
     {
-        public Guid Id { get; set; }
+        public AttendanceWeekPatternModel(AttendanceWeekPattern model) : base(model)
+        {
+            Description = model.Description;
+        }
 
         [Required]
         [StringLength(128)]

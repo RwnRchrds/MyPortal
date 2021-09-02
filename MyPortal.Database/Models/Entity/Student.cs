@@ -69,8 +69,6 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual Person Person { get; set; }
 
-        public virtual ExamCandidate Candidate { get; set; }
-
         public virtual SenStatus SenStatus { get; set; }
 
         public virtual SenType SenType { get; set; }
@@ -134,5 +132,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<ParentEveningAppointment> ParentEveningAppointments { get; set; }
         
         public virtual ICollection<StudentGroupMembership> StudentGroupMemberships { get; set; }
+        
+        public virtual ICollection<ExamCandidate> ExamCandidates { get; set; }
     }
 }

@@ -10,21 +10,26 @@ namespace MyPortal.Logic.Models.Entity
 {
     public class StudentModel : BaseModel
     {
-        public StudentModel(Student student)
+        public StudentModel(Student model) : base(model)
         {
-            Id = student.Id;
-            PersonId = student.PersonId;
-            AdmissionNumber = student.AdmissionNumber;
-            DateStarting = student.DateStarting;
-            DateLeaving = student.DateLeaving;
-            FreeSchoolMeals = student.FreeSchoolMeals;
-            SenStatusId = student.SenStatusId;
-            SenTypeId = student.SenTypeId;
-            EnrolmentStatusId = student.EnrolmentStatusId;
-            BoarderStatusId = student.BoarderStatusId;
-            PupilPremium = student.PupilPremium;
-            Upn = student.Upn;
-            Deleted = student.Deleted;
+            Id = model.Id;
+            PersonId = model.PersonId;
+            AdmissionNumber = model.AdmissionNumber;
+            DateStarting = model.DateStarting;
+            DateLeaving = model.DateLeaving;
+            FreeSchoolMeals = model.FreeSchoolMeals;
+            SenStatusId = model.SenStatusId;
+            SenTypeId = model.SenTypeId;
+            EnrolmentStatusId = model.EnrolmentStatusId;
+            BoarderStatusId = model.BoarderStatusId;
+            PupilPremium = model.PupilPremium;
+            Upn = model.Upn;
+            Deleted = model.Deleted;
+
+            if (model.Person != null)
+            {
+                Person = new PersonModel(model.Person);
+            }
         }
         
         public Guid PersonId { get; set; }

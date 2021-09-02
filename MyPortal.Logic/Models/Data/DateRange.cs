@@ -29,7 +29,7 @@ namespace MyPortal.Logic.Models.Data
 
         public void Extend(int? days, int? hours = null, int? minutes = null)
         {
-            End.AddDays(days ?? 0).AddHours(hours ?? 0).AddMinutes(minutes ?? 0);
+            End = End.AddDays(days ?? 0).AddHours(hours ?? 0).AddMinutes(minutes ?? 0);
         }
 
         public IEnumerable<DateTime> GetAllDates()
