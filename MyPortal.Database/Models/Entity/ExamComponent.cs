@@ -40,9 +40,6 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 10)]
         public DateTime? SittingDate { get; set; }
 
-        [Column(Order = 11)]
-        public Guid? ExamSessionId { get; set; }
-
         #endregion
 
         public virtual ExamBaseComponent BaseComponent { get; set; }

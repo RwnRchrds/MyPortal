@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IExamElementComponentRepository : IReadWriteRepository<ExamElementComponent>, IUpdateRepository<ExamElementComponent>
+    public interface IExamElementComponentRepository : IReadWriteRepository<ExamElementComponent>
     {
         
     }

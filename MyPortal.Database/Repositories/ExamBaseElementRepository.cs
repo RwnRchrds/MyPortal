@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
@@ -61,6 +62,11 @@ namespace MyPortal.Database.Repositories
         public async Task Update(ExamBaseElement entity)
         {
             var baseElement = await Context.ExamBaseElements.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (baseElement == null)
+            {
+                throw new EntityNotFoundException("Base element not found.");
+            }
 
             baseElement.LevelId = entity.LevelId;
             baseElement.QcaCodeId = entity.QcaCodeId;
