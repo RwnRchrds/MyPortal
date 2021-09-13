@@ -23,7 +23,7 @@ namespace MyPortal.Logic.Models.Entity
             MaxMark = model.MaxMark;
             Name = model.Name;
             ColumnHeading = model.ColumnHeading;
-            StudentVisible = model.StudentVisible;
+            StaffOnly = model.StaffOnly;
 
             if (model.Type != null)
             {
@@ -52,7 +52,7 @@ namespace MyPortal.Logic.Models.Entity
         [StringLength(50)]
         public string ColumnHeading { get; set; }
 
-        public bool StudentVisible { get; set; }
+        public bool StaffOnly { get; set; }
 
         public virtual AspectTypeModel Type { get; set; }
 

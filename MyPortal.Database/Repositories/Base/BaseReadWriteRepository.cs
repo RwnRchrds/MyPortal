@@ -28,7 +28,9 @@ namespace MyPortal.Database.Repositories.Base
         {
             var compiled = Compiler.Compile(query);
 
-            return await Transaction.Connection.ExecuteAsync(compiled.Sql, compiled.NamedBindings, Transaction);
+            var result = await Transaction.Connection.ExecuteAsync(compiled.Sql, compiled.NamedBindings, Transaction);
+
+            return result;
         }
 
         public void Create(TEntity entity)

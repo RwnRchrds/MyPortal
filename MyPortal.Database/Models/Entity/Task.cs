@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("Tasks")]
-    public class Task : BaseTypes.Entity
+    public class Task : BaseTypes.Entity, ISystemEntity
     {
         [Column(Order = 1)]
         public Guid TypeId { get; set; }
@@ -37,6 +38,9 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 9)]
         public bool Completed { get; set; }
+
+        [Column(Order = 10)]
+        public bool System { get; set; }
         public virtual Person AssignedTo { get; set; }
         public virtual User AssignedBy { get; set; }
         public virtual TaskType Type { get; set; }

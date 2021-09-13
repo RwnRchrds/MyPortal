@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MyPortal.Database.BaseTypes;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("Aspects")]
-    public class Aspect : LookupItem
+    public class Aspect : LookupItem, ISystemEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Aspect()
@@ -38,7 +39,10 @@ namespace MyPortal.Database.Models.Entity
         public string ColumnHeading { get; set; }
 
         [Column(Order = 7)]
-        public bool StudentVisible { get; set; }
+        public bool StaffOnly { get; set; }
+
+        [Column(Order = 8)]
+        public bool System { get; set; }
 
         public virtual AspectType Type { get; set; }
 

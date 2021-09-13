@@ -111,9 +111,9 @@ namespace MyPortal.Logic.Services
                         throw new NotFoundException("Task not found.");
                     }
 
-                    if (taskInDb.Type.System)
+                    if (taskInDb.System)
                     {
-                        throw new InvalidDataException("Cannot edit system-generated tasks.");
+                        throw new InvalidDataException("System entities cannot be modified.");
                     }
 
                     taskInDb.Title = task.Title;
@@ -134,13 +134,6 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var taskId in taskIds)
                 {
-                    var taskInDb = await unitOfWork.Tasks.GetById(taskId);
-
-                    if (taskInDb.Type.Id == TaskTypes.Homework)
-                    {
-                        throw new InvalidDataException("Please use the homework module to manage homework tasks.");
-                    }
-
                     await unitOfWork.Tasks.Delete(taskId);
                 }
 
@@ -155,6 +148,7 @@ namespace MyPortal.Logic.Services
                 var taskInDb = await unitOfWork.Tasks.GetById(taskId);
 
                 taskInDb.Completed = completed;
+                taskInDb.CompletedDate = DateTime.Now;
 
                 await unitOfWork.Tasks.Update(taskInDb);
 
