@@ -2,28 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace MyPortal.Logic.Helpers
 {
     public class MimeTypeHelper
     {
-        private static readonly Lazy<IDictionary<string, string>> _mappings = new Lazy<IDictionary<string, string>>(BuildMappings);
+        private static readonly Lazy<IDictionary<string, string>> Mappings = new Lazy<IDictionary<string, string>>(BuildMappings);
 
         private static IDictionary<string, string> BuildMappings()
         {
-            var mappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) {
-
+            var genericTypes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
                 #region Big freaking list of mime types
-            
-                // maps both ways,
-                // extension -> mime type
-                //   and
-                // mime type -> extension
-                //
-                // any mime types on left side not pre-loaded on right side, are added automatically
-                // some mime types can map to multiple extensions, so to get a deterministic mapping,
-                // add those to the dictionary specifcially
-                //
+                
                 // combination of values from Windows 7 Registry and 
                 // from C:\Windows\System32\inetsrv\config\applicationHost.config
                 // some added, including .7z and .dat
@@ -650,74 +642,21 @@ namespace MyPortal.Logic.Helpers
                 {".xtp", "application/octet-stream"},
                 {".xwd", "image/x-xwindowdump"},
                 {".z", "application/x-compress"},
-                {".zip", "application/zip"},
-
-                {"application/fsharp-script", ".fsx"},
-                {"application/msaccess", ".adp"},
-                {"application/msword", ".doc"},
-                {"application/octet-stream", ".bin"},
-                {"application/onenote", ".one"},
-                {"application/postscript", ".eps"},
-                {"application/step", ".step"},
-                {"application/vnd.ms-excel", ".xls"},
-                {"application/vnd.ms-powerpoint", ".ppt"},
-                {"application/vnd.ms-works", ".wks"},
-                {"application/vnd.visio", ".vsd"},
-                {"application/x-director", ".dir"},
-                {"application/x-shockwave-flash", ".swf"},
-                {"application/x-x509-ca-cert", ".cer"},
-                {"application/x-zip-compressed", ".zip"},
-                {"application/xhtml+xml", ".xhtml"},
-                {"application/xml", ".xml"},  // anomoly, .xml -> text/xml, but application/xml -> many thingss, but all are xml, so safest is .xml
-                {"audio/aac", ".AAC"},
-                {"audio/aiff", ".aiff"},
-                {"audio/basic", ".snd"},
-                {"audio/mid", ".midi"},
-                {"audio/wav", ".wav"},
-                {"audio/x-m4a", ".m4a"},
-                {"audio/x-mpegurl", ".m3u"},
-                {"audio/x-pn-realaudio", ".ra"},
-                {"audio/x-smd", ".smd"},
-                {"image/bmp", ".bmp"},
-                {"image/jpeg", ".jpg"},
-                {"image/pict", ".pic"},
-                {"image/png", ".png"}, //Defined in [RFC-2045], [RFC-2048]
-                {"image/x-png", ".png"}, //See https://www.w3.org/TR/PNG/#A-Media-type :"It is recommended that implementations also recognize the media type "image/x-png"."
-                {"image/tiff", ".tiff"},
-                {"image/x-macpaint", ".mac"},
-                {"image/x-quicktime", ".qti"},
-                {"message/rfc822", ".eml"},
-                {"text/calendar", ".ics"},
-                {"text/html", ".html"},
-                {"text/plain", ".txt"},
-                {"text/scriptlet", ".wsc"},
-                {"text/xml", ".xml"},
-                {"video/3gpp", ".3gp"},
-                {"video/3gpp2", ".3gp2"},
-                {"video/mp4", ".mp4"},
-                {"video/mpeg", ".mpg"},
-                {"video/quicktime", ".mov"},
-                {"video/vnd.dlna.mpeg-tts", ".m2t"},
-                {"video/x-dv", ".dv"},
-                {"video/x-la-asf", ".lsf"},
-                {"video/x-ms-asf", ".asf"},
-                {"x-world/x-vrml", ".xof"},
-
+                {".zip", "application/zip"}
                 #endregion
+            };
 
-                };
-
-            var cache = mappings.ToList();
+            var cache = genericTypes.ToList();
 
             foreach (var mapping in cache)
             {
-                if (!mappings.ContainsKey(mapping.Value))
+                if (!genericTypes.ContainsKey(mapping.Value))
                 {
-                    mappings.Add(mapping.Value, mapping.Key);
+                    genericTypes.Add(mapping.Value, mapping.Key);
                 }
             }
 
-            return mappings;
+            return genericTypes;
         }
 
         public static string GetMimeType(string extension)
@@ -734,7 +673,11 @@ namespace MyPortal.Logic.Helpers
 
             string mime;
 
-            return _mappings.Value.TryGetValue(extension, out mime) ? mime : "application/octet-stream";
+            var typeProvider = new FileExtensionContentTypeProvider();
+
+            //return typeProvider.TryGetContentType(extension, out mime) ? mime : "application/octet-stream";
+
+            return Mappings.Value.TryGetValue(extension, out mime) ? mime : "application/octet-stream";
         }
 
         public static string GetExtension(string mimeType, bool throwErrorIfNotFound = true)
@@ -751,7 +694,7 @@ namespace MyPortal.Logic.Helpers
 
             string extension;
 
-            if (_mappings.Value.TryGetValue(mimeType, out extension))
+            if (Mappings.Value.TryGetValue(mimeType, out extension))
             {
                 return extension;
             }
