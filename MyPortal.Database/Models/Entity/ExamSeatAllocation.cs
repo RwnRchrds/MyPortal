@@ -10,7 +10,10 @@ namespace MyPortal.Database.Models.Entity
         public Guid SittingId { get; set; }
 
         [Column(Order = 2)]
-        public Guid SeatId { get; set; }
+        public int SeatRow { get; set; }
+        
+        [Column(Order = 3)]
+        public int SeatColumn { get; set; }
 
         [Column(Order = 3)]
         public Guid CandidateId { get; set; }
@@ -22,7 +25,6 @@ namespace MyPortal.Database.Models.Entity
         public bool Attended { get; set; }
 
         public virtual ExamComponentSitting Sitting { get; set; }
-        public virtual ExamRoomSeat Seat { get; set; }
         public virtual ExamCandidate Candidate { get; set; }
     }
 }

@@ -106,7 +106,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<ExamQualificationLevel> ExamQualificationLevels { get; set; }
         public virtual DbSet<ExamResultEmbargo> ExamResultEmbargoes { get; set; }
         public virtual DbSet<ExamRoom> ExamRooms { get; set; }
-        public virtual DbSet<ExamRoomSeat> ExamRoomSeats { get; set; }
+        public virtual DbSet<ExamRoomSeatBlock> ExamRoomSeatBlocks { get; set; }
         public virtual DbSet<ExamSeason> ExamSeasons { get; set; }
         public virtual DbSet<ExamSeatAllocation> ExamSeatAllocations { get; set; }
         public virtual DbSet<ExamSeries> ExamSeries { get; set; }
@@ -1340,21 +1340,10 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.RoomId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
-                });
 
-                modelBuilder.Entity<ExamRoomSeat>(e =>
-                {
-                    SetIdDefaultValue(e);
-
-                    e.HasOne(x => x.ExamRoom)
-                        .WithMany(x => x.Seats)
+                    e.HasMany(x => x.SeatBlocks)
+                        .WithOne(x => x.ExamRoom)
                         .HasForeignKey(x => x.ExamRoomId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasMany(x => x.SeatAllocations)
-                        .WithOne(x => x.Seat)
-                        .HasForeignKey(x => x.SeatId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });

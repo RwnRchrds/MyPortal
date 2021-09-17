@@ -34,7 +34,7 @@ namespace MyPortal.Logic.FileProviders
 
             request.Fields = "id, name, mimeType, webViewLink";
 
-            var webViewAction = new WebAction("", "View on Web", data.WebViewLink);
+            var webViewAction = new WebAction("View on Web", data.WebViewLink);
 
             actions.Add(webViewAction);
 

@@ -2,12 +2,12 @@
 {
     public class WebAction
     {
-        public WebAction(string icon, string text, string url)
+        public WebAction(string text, string url)
         {
-            
+            Text = text;
+            Url = url;
         }
         
-        public string Icon { get; set; }
         public string Text { get; set; }
         public string Url { get; set; }
     }

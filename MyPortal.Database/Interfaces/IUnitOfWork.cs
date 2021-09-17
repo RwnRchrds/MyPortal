@@ -95,7 +95,7 @@ namespace MyPortal.Database.Interfaces
         IExamQualificationRepository ExamQualifications { get; }
         IExamResultEmbargoRepository ExamResultEmbargoes { get; }
         IExamRoomRepository ExamRooms { get; }
-        IExamRoomSeatRepository ExamRoomSeats { get; }
+        IExamRoomSeatBlockRepository ExamRoomSeatBlocks { get; }
         IExamSeasonRepository ExamSeasons { get; }
         IExamSeatAllocationRepository ExamSeatAllocations { get; }
         IExamSeriesRepository ExamSeries { get; }

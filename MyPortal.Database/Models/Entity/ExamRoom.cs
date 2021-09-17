@@ -9,7 +9,7 @@ namespace MyPortal.Database.Models.Entity
     {
         public ExamRoom()
         {
-            Seats = new HashSet<ExamRoomSeat>();
+            SeatBlocks = new HashSet<ExamRoomSeatBlock>();
         }
 
         [Column(Order = 1)]
@@ -22,7 +22,7 @@ namespace MyPortal.Database.Models.Entity
         public int Rows { get; set; }
 
         public virtual Room Room { get; set; }
-        public virtual ICollection<ExamRoomSeat> Seats { get; set; }
+        public virtual ICollection<ExamRoomSeatBlock> SeatBlocks { get; set; }
         public virtual ICollection<ExamComponentSitting> ExamComponentSittings { get; set; }
     }
 }
