@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IExclusionAppealResultRepository : IReadWriteRepository<ExclusionAppealResult>, IUpdateRepository<ExclusionAppealResult>
+    public interface IExclusionAppealResultRepository : IReadRepository<ExclusionAppealResult>
     {
 
     }

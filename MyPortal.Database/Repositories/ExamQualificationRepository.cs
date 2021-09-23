@@ -24,6 +24,11 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Qualification not found.");
             }
 
+            if (qualification.System)
+            {
+                throw new SystemEntityException("System entities cannot be modified.");
+            }
+
             qualification.JcQualificationCode = entity.JcQualificationCode;
         }
     }

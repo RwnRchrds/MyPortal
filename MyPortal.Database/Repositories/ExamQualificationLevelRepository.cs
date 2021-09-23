@@ -63,6 +63,11 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Qualification level not found.");
             }
 
+            if (level.System)
+            {
+                throw new SystemEntityException("System entities cannot be modified.");
+            }
+            
             level.JcLevelCode = entity.JcLevelCode;
         }
     }
