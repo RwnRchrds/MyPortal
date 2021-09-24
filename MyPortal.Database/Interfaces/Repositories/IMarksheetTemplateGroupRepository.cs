@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IMarksheetTemplateGroupRepository : IReadWriteRepository<MarksheetTemplateGroup>, IUpdateRepository<MarksheetTemplateGroup>
+    public interface IMarksheetTemplateGroupRepository : IReadWriteRepository<MarksheetTemplateGroup>
     {
         
     }

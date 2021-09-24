@@ -18,7 +18,7 @@ namespace MyPortal.Database.Repositories
     {
         public MedicalEventRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
-           
+            
         }
 
         protected override Query JoinRelated(Query query)

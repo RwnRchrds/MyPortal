@@ -12,6 +12,7 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 3)] 
         public Guid StudentGroupId { get; set; }
 
+        public virtual MarksheetTemplate Template { get; set; }
         public virtual StudentGroup StudentGroup { get; set; }
     }
 }

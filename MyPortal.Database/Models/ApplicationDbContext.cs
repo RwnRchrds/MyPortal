@@ -136,7 +136,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<LogNote> ProfileLogNotes { get; set; }
         public virtual DbSet<LogNoteType> ProfileLogNoteTypes { get; set; }
         public virtual DbSet<MarksheetColumn> MarksheetColumns { get; set; }
-        public virtual DbSet<MarksheetTemplate> Marksheets { get; set; }
+        public virtual DbSet<MarksheetTemplate> MarksheetTemplates { get; set; }
         public virtual DbSet<MarksheetTemplateGroup> MarksheetTemplateGroups { get; set; }
         public virtual DbSet<MedicalCondition> Conditions { get; set; }
         public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
@@ -1633,6 +1633,12 @@ namespace MyPortal.Database.Models
                     e.HasMany(x => x.Columns)
                         .WithOne(x => x.Template)
                         .HasForeignKey(x => x.TemplateId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.TemplateGroups)
+                        .WithOne(x => x.Template)
+                        .HasForeignKey(x => x.MarksheetTemplateId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
