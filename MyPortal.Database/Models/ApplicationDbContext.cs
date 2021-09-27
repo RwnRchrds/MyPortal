@@ -162,9 +162,9 @@ namespace MyPortal.Database.Models
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public virtual DbSet<RegGroup> RegGroups { get; set; }
         public virtual DbSet<ReportCard> ReportCards { get; set; }
-        public virtual DbSet<ReportCardEntry> ReportCardSubmissions { get; set; }
+        public virtual DbSet<ReportCardEntry> ReportCardEntries { get; set; }
         public virtual DbSet<ReportCardTarget> ReportCardTargets { get; set; }
-        public virtual DbSet<ReportCardTargetEntry> ReportCardTargetSubmissions { get; set; }
+        public virtual DbSet<ReportCardTargetEntry> ReportCardTargetEntries { get; set; }
         public virtual DbSet<Result> Results { get; set; }
         public virtual DbSet<ResultSet> ResultSets { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }

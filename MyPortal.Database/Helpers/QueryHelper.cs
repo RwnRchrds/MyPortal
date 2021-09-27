@@ -26,11 +26,10 @@ namespace MyPortal.Database.Helpers
             return query;
         }
 
-        public static Query FilterByStudentGroup(this Query query, Guid studentGroupId, string studentAlias)
+        public static Query JoinStudentGroups(this Query query, string studentAlias, string studentGroupAlias = "SGM")
         {
-            query.LeftJoin("StudentGroupMemberships as SGM", "SGM.StudentId", $"{studentAlias}.Id");
-
-            query.Where("SGM.StudentGroupId", studentGroupId);
+            query.LeftJoin($"StudentGroupMemberships as {studentGroupAlias}", $"{studentGroupAlias}.StudentId",
+                $"{studentAlias}.Id");
 
             return query;
         }

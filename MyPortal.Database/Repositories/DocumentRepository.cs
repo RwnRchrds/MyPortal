@@ -85,6 +85,21 @@ namespace MyPortal.Database.Repositories
             document.Description = entity.Description;
             document.TypeId = entity.TypeId;
             document.Restricted = entity.Restricted;
+        }
+
+        public async Task UpdateWithAttachment(Document entity)
+        {
+            var document = await Context.Documents.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (document == null)
+            {
+                throw new EntityNotFoundException("Document not found.");
+            }
+
+            document.Title = entity.Title;
+            document.Description = entity.Description;
+            document.TypeId = entity.TypeId;
+            document.Restricted = entity.Restricted;
             document.Attachment = entity.Attachment;
         }
     }

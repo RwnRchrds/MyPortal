@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IReportCardTargetRepository : IReadWriteRepository<ReportCardTarget>, IUpdateRepository<ReportCardTarget>
+    public interface IReportCardTargetRepository : IReadWriteRepository<ReportCardTarget>
     {
         
     }

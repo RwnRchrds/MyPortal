@@ -87,11 +87,6 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Attendance code not found.");
             }
 
-            if (code.System)
-            {
-                throw new SystemEntityException("System entities cannot be modified.");
-            }
-
             code.Code = entity.Code;
             code.Description = entity.Description;
             code.Active = entity.Active;

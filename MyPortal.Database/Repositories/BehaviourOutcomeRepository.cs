@@ -28,11 +28,6 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Behaviour outcome not found.");
             }
 
-            if (outcome.System)
-            {
-                throw new SystemEntityException("System entities cannot be modified.");
-            }
-
             outcome.Description = entity.Description;
             outcome.Active = entity.Active;
         }

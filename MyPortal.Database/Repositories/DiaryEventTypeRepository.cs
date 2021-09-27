@@ -41,11 +41,6 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Event type not found.");
             }
 
-            if (eventType.System)
-            {
-                throw new SystemEntityException("System entities cannot be modified.");
-            }
-
             eventType.Description = entity.Description;
             eventType.Active = entity.Active;
             eventType.ColourCode = entity.ColourCode;

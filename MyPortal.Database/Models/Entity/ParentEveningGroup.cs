@@ -12,11 +12,9 @@ namespace MyPortal.Database.Models.Entity
         public Guid ParentEveningId { get; set; }
 
         [Column(Order = 2)]
-        public Guid GroupTypeId { get; set; }
+        public Guid StudentGroupId { get; set; }
 
-        [Column(Order = 3)]
-        public Guid GroupId { get; set; }
-
-        public virtual ParentEvening ParentEvening { get; set; }    
+        public virtual ParentEvening ParentEvening { get; set; }
+        public virtual StudentGroup StudentGroup { get; set; }
     }
 }

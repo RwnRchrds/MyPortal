@@ -21,7 +21,7 @@ namespace MyPortal.Database.Repositories
 
             if (bcd == null)
             {
-                throw new EntityNotFoundException("Bill Charge Discount not found.");
+                throw new EntityNotFoundException("Bill charge discount not found.");
             }
 
             bcd.ChargeDiscountId = entity.ChargeDiscountId;

@@ -21,9 +21,6 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 5)]
         public DateTime EndDate { get; set; }
 
-        [Column(Order = 6)]
-        public bool AnnualLeave { get; set; }
-
         [Column(Order = 7)]
         public bool Confidential { get; set; }
 

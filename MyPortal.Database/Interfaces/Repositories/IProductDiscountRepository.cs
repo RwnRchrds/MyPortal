@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IProductDiscountRepository : IReadWriteRepository<ProductDiscount>, IUpdateRepository<ProductDiscount>
+    public interface IProductDiscountRepository : IReadWriteRepository<ProductDiscount>
     {
         
     }

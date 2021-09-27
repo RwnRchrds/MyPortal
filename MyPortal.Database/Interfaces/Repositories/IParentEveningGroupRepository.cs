@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IParentEveningGroupRepository : IReadWriteRepository<ParentEveningGroup>, IUpdateRepository<ParentEveningGroup>
+    public interface IParentEveningGroupRepository : IReadWriteRepository<ParentEveningGroup>
     {
         
     }

@@ -104,7 +104,9 @@ namespace MyPortal.Database.Repositories
             query.WhereDate("PAP.StartTime", ">=", startDate);
             query.WhereDate("PAP.EndTime", "<", endDate);
 
-            query.FilterByStudentGroup(studentGroupId, "S");
+            query.JoinStudentGroups("S");
+
+            query.Where("SGM.Id", studentGroupId);
 
             return await ExecuteQuery<PossibleAttendanceMark>(query);
         }
