@@ -185,7 +185,6 @@ namespace MyPortal.Database.Interfaces
         IStudentGroupRepository StudentGroups { get; }
         IStudentGroupSupervisorRepository StudentGroupSupervisors { get; }
         IStudentGroupSupervisorTitleRepository StudentGroupSupervisorTitles { get; }
-        IStudentGroupTypeRepository StudentGroupTypes { get; }
         IStudentRepository Students { get; }
         IStudyTopicRepository StudyTopics { get; }
         ISubjectCodeRepository SubjectCodes { get; }

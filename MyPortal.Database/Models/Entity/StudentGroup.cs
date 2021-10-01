@@ -14,22 +14,18 @@ namespace MyPortal.Database.Models.Entity
         public string Code { get; set; }
 
         [Column(Order = 4)]
-        public Guid StudentGroupTypeId { get; set; }
-        
-        [Column(Order = 5)]
         public Guid? PromoteToGroupId { get; set; }
         
-        [Column(Order = 6)]
+        [Column(Order = 5)]
         public int? MaxMembers { get; set; }
         
-        [Column(Order = 7)]
+        [Column(Order = 6)]
         [StringLength(256)]
         public string Notes { get; set; }
         
-        [Column(Order = 8)]
+        [Column(Order = 7)]
         public bool System { get; set; }
-        
-        public virtual StudentGroupType StudentGroupType { get; set; }
+
         public virtual StudentGroup PromoteToGroup { get; set; }
         public virtual ICollection<StudentGroupMembership> StudentMemberships { get; set; }
         public virtual ICollection<StudentGroupSupervisor> StudentGroupSupervisors { get; set; }

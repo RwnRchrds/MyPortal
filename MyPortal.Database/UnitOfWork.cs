@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories;
 using Task = System.Threading.Tasks.Task;
 
@@ -38,11 +39,15 @@ namespace MyPortal.Database
         private IAttendanceMarkRepository _attendanceMarks;
         private IAttendancePeriodRepository _attendancePeriods;
         private IAttendanceWeekRepository _attendanceWeeks;
+        private IAttendanceWeekPatternRepository _attendanceWeekPatterns;
         private IBasketItemRepository _basketItems;
         private IBehaviourOutcomeRepository _behaviourOutcomes;
         private IBehaviourStatusRepository _behaviourStatus;
+        private IBehaviourTargetRepository _behaviourTargets;
         private IBillItemRepository _billItems;
         private IBillRepository _bills;
+        private IBillAccountTransactionRepository _billAccountTransactions;
+        private IBillChargeDiscountRepository _billChargeDiscounts;
         private IBulletinRepository _bulletins;
         private IChargeDiscountRepository _chargeDiscounts;
         private IChargeRepository _charges;
@@ -204,6 +209,9 @@ namespace MyPortal.Database
         public IAttendanceWeekRepository AttendanceWeeks =>
             _attendanceWeeks ??= new AttendanceWeekRepository(_context, _transaction);
 
+        public IAttendanceWeekPatternRepository AttendanceWeekPatterns => _attendanceWeekPatterns ??=
+            new AttendanceWeekPatternRepository(_context, _transaction);
+
         public IBasketItemRepository BasketItems =>
             _basketItems ??= new BasketItemRepository(_context, _transaction);
 
@@ -213,9 +221,18 @@ namespace MyPortal.Database
         public IBehaviourStatusRepository BehaviourStatus =>
             _behaviourStatus ??= new BehaviourStatusRepository(_transaction);
 
+        public IBehaviourTargetRepository BehaviourTargets =>
+            _behaviourTargets ??= new BehaviourTargetRepository(_context, _transaction);
+
         public IBillItemRepository BillItems => _billItems ??= new BillItemRepository(_context, _transaction);
 
         public IBillRepository Bills => _bills ??= new BillRepository(_context, _transaction);
+
+        public IBillAccountTransactionRepository BillAccountTransactions => _billAccountTransactions ??=
+            new BillAccountTransactionRepository(_context, _transaction);
+
+        public IBillChargeDiscountRepository BillChargeDiscounts =>
+            _billChargeDiscounts ??= new BillChargeDiscountRepository(_context, _transaction);
 
         public IBulletinRepository Bulletins => _bulletins ??= new BulletinRepository(_context, _transaction);
 
@@ -578,11 +595,15 @@ namespace MyPortal.Database
             _attendanceMarks = null;
             _attendancePeriods = null;
             _attendanceWeeks = null;
+            _attendanceWeekPatterns = null;
             _basketItems = null;
             _behaviourOutcomes = null;
             _behaviourStatus = null;
+            _behaviourTargets = null;
             _billItems = null;
             _bills = null;
+            _billAccountTransactions = null;
+            _billChargeDiscounts = null;
             _bulletins = null;
             _chargeDiscounts = null;
             _charges = null;

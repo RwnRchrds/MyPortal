@@ -7,7 +7,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SubjectCodeSetRepository : BaseReadRepository<SubjectCodeSet>, ISubjectCodeSetRepository
     {
-        public SubjectCodeSetRepository(DbTransaction transaction) : base(transaction, "SubjectCodeSet")
+        public SubjectCodeSetRepository(DbTransaction transaction) : base(transaction)
         {
         }
     }

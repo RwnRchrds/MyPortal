@@ -25,9 +25,9 @@ namespace MyPortal.Database.Repositories.Base
 
         protected string TblAlias;
 
-        protected Query JoinEntity(Query query, string tblName, string alias, string column, string op = "=", string joinType = "left join")
+        protected Query JoinEntity(Query query, string tblName, string alias, string foreignKey, string op = "=", string joinType = "left join")
         {
-            query.Join($"{tblName} as {alias}", $"{alias}.Id", $"{TblAlias}.{column}", op, joinType);
+            query.Join($"{tblName} as {alias}", $"{alias}.Id", $"{TblAlias}.{foreignKey}", op, joinType);
 
             return query;
         }

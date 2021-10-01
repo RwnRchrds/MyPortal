@@ -195,7 +195,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<StudentGroupMembership> StudentGroupMemberships { get; set; }
         public virtual DbSet<StudentGroupSupervisor> StudentGroupSupervisors { get; set; }
         public virtual DbSet<StudentGroupSupervisorTitle> StudentGroupSupervisorTitles { get; set; }
-        public virtual DbSet<StudentGroupType> StudentGroupTypes { get; set; }
         public virtual DbSet<StudyTopic> StudyTopics { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<SubjectCode> SubjectCodes { get; set; }
@@ -2443,12 +2442,6 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasOne(x => x.StudentGroupType)
-                        .WithMany(x => x.StudentGroups)
-                        .HasForeignKey(x => x.StudentGroupTypeId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     e.HasOne(x => x.PromoteToGroup)
                         .WithMany(x => x.PromotionSourceGroups)
                         .HasForeignKey(x => x.PromoteToGroupId)
@@ -2478,11 +2471,6 @@ namespace MyPortal.Database.Models
                 });
 
                 modelBuilder.Entity<StudentGroupSupervisorTitle>(e =>
-                {
-                    SetIdDefaultValue(e);
-                });
-
-                modelBuilder.Entity<StudentGroupType>(e =>
                 {
                     SetIdDefaultValue(e);
                 });
