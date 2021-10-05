@@ -174,7 +174,7 @@ namespace MyPortal.Database.Interfaces
         ISessionRepository Sessions { get; }
         IStaffAbsenceRepository StaffAbsences { get; }
         IStaffAbsenceTypeRepository StaffAbsenceTypes { get; }
-        IStaffIllnessTypeRepository StaffIllnessTypeRepository { get; }
+        IStaffIllnessTypeRepository StaffIllnessTypes { get; }
         IStaffMemberRepository StaffMembers { get; }
         IStoreDiscountRepository StoreDiscounts { get; }
         IStudentAgentRelationshipRepository StudentAgentRelationships { get; }

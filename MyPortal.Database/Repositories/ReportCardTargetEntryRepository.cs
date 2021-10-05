@@ -16,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ReportCardTargetEntryRepository : BaseReadWriteRepository<ReportCardTargetEntry>, IReportCardTargetEntryRepository
     {
-        public ReportCardTargetEntryRepository(ApplicationDbContext context, DbTransaction transaction, string tblAlias = null) : base(context, transaction, tblAlias)
+        public ReportCardTargetEntryRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
         }
 

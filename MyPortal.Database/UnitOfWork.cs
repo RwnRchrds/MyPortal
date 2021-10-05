@@ -38,17 +38,17 @@ namespace MyPortal.Database
         private IAttendanceCodeRepository _attendanceCodes;
         private IAttendanceMarkRepository _attendanceMarks;
         private IAttendancePeriodRepository _attendancePeriods;
-        private IAttendanceWeekRepository _attendanceWeeks;
         private IAttendanceWeekPatternRepository _attendanceWeekPatterns;
+        private IAttendanceWeekRepository _attendanceWeeks;
         private IBasketItemRepository _basketItems;
         private IBehaviourOutcomeRepository _behaviourOutcomes;
         private IBehaviourStatusRepository _behaviourStatus;
         private IBehaviourTargetRepository _behaviourTargets;
-        private IBillItemRepository _billItems;
-        private IBillRepository _bills;
         private IBillAccountTransactionRepository _billAccountTransactions;
         private IBillChargeDiscountRepository _billChargeDiscounts;
         private IBillChargeRepository _billCharges;
+        private IBillItemRepository _billItems;
+        private IBillRepository _bills;
         private IBillStoreDiscountRepository _billStoreDiscounts;
         private IBoarderStatusRepository _boarderStatus;
         private IBulletinRepository _bulletins;
@@ -99,7 +99,21 @@ namespace MyPortal.Database
         private IExamComponentSittingRepository _examComponentSittings;
         private IExamElementComponentRepository _examElementComponents;
         private IExamElementRepository _examElements;
+        private IExamEnrolmentRepository _examEnrolments;
+        private IExamQualificationLevelRepository _examQualificationLevels;
+        private IExamQualificationRepository _examQualifications;
+        private IExamResultEmbargoRepository _examResultEmbargoes;
+        private IExamRoomRepository _examRooms;
+        private IExamRoomSeatBlockRepository _examRoomSeatBlocks;
+        private IExamSeasonRepository _examSeasons;
+        private IExamSeatAllocationRepository _examSeatAllocations;
+        private IExamSeriesRepository _examSeries;
+        private IExamSessionRepository _examSessions;
+        private IExamSpecialArrangementRepository _examSpecialArrangements;
+        private IExclusionAppealResultRepository _exclusionAppealResults;
+        private IExclusionReasonRepository _exclusionReasons;
         private IExclusionRepository _exclusions;
+        private IExclusionTypeRepository _exclusionTypes;
         private IFileRepository _files;
         private IGiftedTalentedRepository _giftedTalented;
         private IGovernanceTypeRepository _governanceTypes;
@@ -112,26 +126,49 @@ namespace MyPortal.Database
         private IIncidentRepository _incidents;
         private IIncidentTypeRepository _incidentTypes;
         private IIntakeTypeRepository _intakeTypes;
+        private ILanguageRepository _languages;
         private ILessonPlanRepository _lessonPlans;
         private ILessonPlanTemplateRepository _lessonPlanTemplates;
         private ILocalAuthorityRepository _localAuthorities;
         private ILocationRepository _locations;
         private ILogNoteRepository _logNotes;
         private ILogNoteTypeRepository _logNoteTypes;
+        private IMarksheetColumnRepository _marksheetColumns;
+        private IMarksheetTemplateGroupRepository _marksheetTemplateGroups;
+        private IMarksheetTemplateRepository _marksheetTemplates;
         private IMedicalConditionRepository _medicalConditions;
         private IMedicalEventRepository _medicalEvents;
+        private INextOfKinRelationshipTypeRepository _nextOfKinRelationshipTypes;
+        private INextOfKinRepository _nextOfKin;
         private IObservationOutcomeRepository _observationOutcomes;
         private IObservationRepository _observations;
+        private IParentEveningAppointmentRepository _parentEveningAppointments;
+        private IParentEveningBreakRepository _parentEveningBreaks;
+        private IParentEveningGroupRepository _parentEveningGroups;
+        private IParentEveningRepository _parentEvenings;
+        private IParentEveningStaffMemberRepository _parentEveningStaffMembers;
         private IPermissionRepository _permissions;
         private IPersonConditionRepository _personConditions;
         private IPersonDietaryRequirementRepository _personDietaryRequirements;
         private IPersonRepository _people;
         private IPhoneNumberRepository _phoneNumbers;
+        private IPhoneNumberTypeRepository _phoneNumberTypes;
+        private IPhotoRepository _photos;
+        private IProductDiscountRepository _productDiscounts;
         private IProductRepository _products;
         private IRefreshTokenRepository _refreshTokens;
         private IRegGroupRepository _regGroups;
+        private IRelationshipTypeRepository _relationshipTypes;
+        private IReportCardEntryRepository _reportCardEntries;
+        private IReportCardRepository _reportCards;
+        private IReportCardTargetEntryRepository _reportCardTargetEntries;
+        private IReportCardTargetRepository _reportCardTargets;
         private IResultRepository _results;
+        private IResultSetRepository _resultSets;
+        private IRoomClosureReasonRepository _roomClosureReasons;
+        private IRoomClosureRepository _roomClosures;
         private IRoleRepository _roles;
+        private IRoomRepository _rooms;
         private ISchoolPhaseRepository _schoolPhases;
         private ISchoolRepository _schools;
         private ISchoolTypeRepository _schoolTypes;
@@ -142,14 +179,24 @@ namespace MyPortal.Database
         private ISenReviewRepository _senReviews;
         private ISenReviewTypeRepository _senReviewTypes;
         private ISenStatusRepository _senStatus;
+        private ISenTypeRepository _senTypes;
         private ISessionRepository _sessions;
+        private IStaffAbsenceRepository _staffAbsences;
+        private IStaffAbsenceTypeRepository _staffAbsenceTypes;
+        private IStaffIllnessTypeRepository _staffIllnessTypes;
         private IStaffMemberRepository _staffMembers;
+        private IStoreDiscountRepository _storeDiscounts;
         private IStudentChargeDiscountRepository _studentChargeDiscounts;
         private IStudentChargeRepository _studentCharges;
         private IStudentContactRelationshipRepository _studentContactRelationships;
         private IStudentGroupRepository _studentGroups;
+        private IStudentGroupMembershipRepository _studentGroupMemberships;
+        private IStudentGroupSupervisorRepository _studentGroupSupervisors;
+        private IStudentGroupSupervisorTitleRepository _studentGroupSupervisorTitles;
         private IStudentRepository _students;
+        private IStudentAgentRelationshipRepository _studentAgentRelationships;
         private IStudyTopicRepository _studyTopics;
+        private ISubjectCodeRepository _subjectCodes;
         private ISubjectCodeSetRepository _subjectCodeSets;
         private ISubjectRepository _subjects;
         private ISubjectStaffMemberRepository _subjectStaffMembers;
@@ -163,6 +210,7 @@ namespace MyPortal.Database
         private ITrainingCourseRepository _trainingCourses;
         private IUserRepository _users;
         private IUserRoleRepository _userRoles;
+        private IVatRateRepository _vatRates;
         private IYearGroupRepository _yearGroups;
 
         public IAcademicTermRepository AcademicTerms =>
@@ -387,7 +435,45 @@ namespace MyPortal.Database
         public IExamElementRepository ExamElements =>
             _examElements ??= new ExamElementRepository(_context, _transaction);
 
+        public IExamEnrolmentRepository ExamEnrolments =>
+            _examEnrolments ??= new ExamEnrolmentRepository(_context, _transaction);
+
+        public IExamQualificationLevelRepository ExamQualificationLevels => _examQualificationLevels ??=
+            new ExamQualificationLevelRepository(_context, _transaction);
+
+        public IExamQualificationRepository ExamQualifications =>
+            _examQualifications ??= new ExamQualificationRepository(_context, _transaction);
+
+        public IExamResultEmbargoRepository ExamResultEmbargoes =>
+            _examResultEmbargoes ??= new ExamResultEmbargoRepository(_context, _transaction);
+
+        public IExamRoomRepository ExamRooms => _examRooms ??= new ExamRoomRepository(_context, _transaction);
+
+        public IExamRoomSeatBlockRepository ExamRoomSeatBlocks =>
+            _examRoomSeatBlocks ??= new ExamRoomSeatBlockRepository(_context, _transaction);
+
+        public IExamSeasonRepository ExamSeasons => _examSeasons ??= new ExamSeasonRepository(_context, _transaction);
+
+        public IExamSeatAllocationRepository ExamSeatAllocations =>
+            _examSeatAllocations ??= new ExamSeatAllocationRepository(_context, _transaction);
+
+        public IExamSeriesRepository ExamSeries => _examSeries ??= new ExamSeriesRepository(_context, _transaction);
+
+        public IExamSessionRepository ExamSessions =>
+            _examSessions ??= new ExamSessionRepository(_context, _transaction);
+
+        public IExamSpecialArrangementRepository ExamSpecialArrangements => _examSpecialArrangements ??=
+            new ExamSpecialArrangementRepository(_context, _transaction);
+
         public IExclusionRepository Exclusions => _exclusions ??= new ExclusionRepository(_context, _transaction);
+
+        public IExclusionAppealResultRepository ExclusionAppealResults =>
+            _exclusionAppealResults ??= new ExclusionAppealResultRepository(_transaction);
+
+        public IExclusionReasonRepository ExclusionReasons =>
+            _exclusionReasons ??= new ExclusionReasonRepository(_context, _transaction);
+
+        public IExclusionTypeRepository ExclusionTypes => _exclusionTypes ??= new ExclusionTypeRepository(_transaction);
 
         public IFileRepository Files => _files ??= new FileRepository(_context, _transaction);
 
@@ -419,6 +505,8 @@ namespace MyPortal.Database
 
         public IIntakeTypeRepository IntakeTypes => _intakeTypes ??= new IntakeTypeRepository(_transaction);
 
+        public ILanguageRepository Languages => _languages ??= new LanguageRepository(_transaction);
+
         public ILessonPlanRepository LessonPlans => _lessonPlans ??= new LessonPlanRepository(_context, _transaction);
 
         public ILessonPlanTemplateRepository LessonPlanTemplates =>
@@ -433,17 +521,46 @@ namespace MyPortal.Database
 
         public ILogNoteTypeRepository LogNoteTypes => _logNoteTypes ??= new LogNoteTypeRepository(_transaction);
 
+        public IMarksheetColumnRepository MarksheetColumns =>
+            _marksheetColumns ??= new MarksheetColumnRepository(_context, _transaction);
+
+        public IMarksheetTemplateGroupRepository MarksheetTemplateGroups => _marksheetTemplateGroups ??=
+            new MarksheetTemplateGroupRepository(_context, _transaction);
+
+        public IMarksheetTemplateRepository MarksheetTemplates =>
+            _marksheetTemplates ??= new MarksheetTemplateRepository(_context, _transaction);
+
         public IMedicalConditionRepository MedicalConditions =>
             _medicalConditions ??= new MedicalConditionRepository(_context, _transaction);
 
         public IMedicalEventRepository MedicalEvents =>
             _medicalEvents ??= new MedicalEventRepository(_context, _transaction);
 
+        public INextOfKinRepository NextOfKin => _nextOfKin ??= new NextOfKinRepository(_context, _transaction);
+
+        public INextOfKinRelationshipTypeRepository NextOfKinRelationshipTypes => _nextOfKinRelationshipTypes ??=
+            new NextOfKinRelationshipTypeRepository(_transaction);
+
         public IObservationOutcomeRepository ObservationOutcomes =>
             _observationOutcomes ??= new ObservationOutcomeRepository(_transaction);
 
         public IObservationRepository Observations =>
             _observations ??= new ObservationRepository(_context, _transaction);
+
+        public IParentEveningAppointmentRepository ParentEveningAppointments => _parentEveningAppointments ??=
+            new ParentEveningAppointmentRepository(_context, _transaction);
+
+        public IParentEveningBreakRepository ParentEveningBreaks =>
+            _parentEveningBreaks ??= new ParentEveningBreakRepository(_context, _transaction);
+
+        public IParentEveningGroupRepository ParentEveningGroups =>
+            _parentEveningGroups ??= new ParentEveningGroupRepository(_context, _transaction);
+
+        public IParentEveningRepository ParentEvenings =>
+            _parentEvenings ??= new ParentEveningRepository(_context, _transaction);
+
+        public IParentEveningStaffMemberRepository ParentEveningStaffMembers => _parentEveningStaffMembers ??=
+            new ParentEveningStaffMemberRepository(_context, _transaction);
 
         public IPermissionRepository Permissions => _permissions ??= new PermissionRepository(_transaction);
 
@@ -458,16 +575,48 @@ namespace MyPortal.Database
         public IPhoneNumberRepository PhoneNumbers =>
             _phoneNumbers ??= new PhoneNumberRepository(_context, _transaction);
 
+        public IPhoneNumberTypeRepository PhoneNumberTypes =>
+            _phoneNumberTypes ??= new PhoneNumberTypeRepository(_transaction);
+        
+        public IPhotoRepository Photos => _photos ??= new PhotoRepository(_context, _transaction);
+
         public IProductRepository Products => _products ??= new ProductRepository(_context, _transaction);
+
+        public IProductDiscountRepository ProductDiscounts =>
+            _productDiscounts ??= new ProductDiscountRepository(_context, _transaction);
 
         public IRefreshTokenRepository RefreshTokens =>
             _refreshTokens ??= new RefreshTokenRepository(_context, _transaction);
 
         public IRegGroupRepository RegGroups => _regGroups ??= new RegGroupRepository(_context, _transaction);
 
+        public IRelationshipTypeRepository RelationshipTypes =>
+            _relationshipTypes ??= new RelationshipTypeRepository(_transaction);
+
+        public IReportCardEntryRepository ReportCardEntries =>
+            _reportCardEntries ??= new ReportCardEntryRepository(_context, _transaction);
+
+        public IReportCardRepository ReportCards => _reportCards ??= new ReportCardRepository(_context, _transaction);
+
+        public IReportCardTargetEntryRepository ReportCardTargetEntries => _reportCardTargetEntries ??=
+            new ReportCardTargetEntryRepository(_context, _transaction);
+
+        public IReportCardTargetRepository ReportCardTargets =>
+            _reportCardTargets ??= new ReportCardTargetRepository(_context, _transaction);
+
         public IResultRepository Results => _results ??= new ResultRepository(_context, _transaction);
 
+        public IResultSetRepository ResultSets => _resultSets ??= new ResultSetRepository(_context, _transaction);
+
         public IRoleRepository Roles => _roles ??= new RoleRepository(_context, _transaction);
+
+        public IRoomRepository Rooms => _rooms ??= new RoomRepository(_context, _transaction);
+
+        public IRoomClosureReasonRepository RoomClosureReasons =>
+            _roomClosureReasons ??= new RoomClosureReasonRepository(_context, _transaction);
+
+        public IRoomClosureRepository RoomClosures =>
+            _roomClosures ??= new RoomClosureRepository(_context, _transaction);
 
         public ISchoolPhaseRepository SchoolPhases => _schoolPhases ??= new SchoolPhaseRepository(_transaction);
 
@@ -491,10 +640,27 @@ namespace MyPortal.Database
 
         public ISenStatusRepository SenStatus => _senStatus ??= new SenStatusRepository(_transaction);
 
+        public ISenTypeRepository SenTypes => _senTypes ??= new SenTypeRepository(_transaction);
+
         public ISessionRepository Sessions => _sessions ??= new SessionRepository(_context, _transaction);
 
         public IStaffMemberRepository StaffMembers =>
             _staffMembers ??= new StaffMemberRepository(_context, _transaction);
+
+        public IStaffAbsenceRepository StaffAbsences =>
+            _staffAbsences ??= new StaffAbsenceRepository(_context, _transaction);
+
+        public IStaffAbsenceTypeRepository StaffAbsenceTypes =>
+            _staffAbsenceTypes ??= new StaffAbsenceTypeRepository(_context, _transaction);
+
+        public IStaffIllnessTypeRepository StaffIllnessTypes =>
+            _staffIllnessTypes ??= new StaffIllnessTypeRepository(_context, _transaction);
+
+        public IStoreDiscountRepository StoreDiscounts =>
+            _storeDiscounts ??= new StoreDiscountRepository(_context, _transaction);
+
+        public IStudentAgentRelationshipRepository StudentAgentRelationships => _studentAgentRelationships ??=
+            new StudentAgentRelationshipRepository(_context, _transaction);
 
         public IStudentChargeRepository StudentCharges =>
             _studentCharges ??= new StudentChargeRepository(_context, _transaction);
@@ -502,7 +668,8 @@ namespace MyPortal.Database
         public IStudentContactRelationshipRepository StudentContactRelationships => _studentContactRelationships ??=
             new StudentContactRelationshipRepository(_context, _transaction);
 
-        public IStudentChargeDiscountRepository StudentChargeDiscounts { get; }
+        public IStudentChargeDiscountRepository StudentChargeDiscounts => _studentChargeDiscounts ??=
+            new StudentChargeDiscountRepository(_context, _transaction);
 
         public IStudentChargeDiscountRepository StudentDiscounts =>
             _studentChargeDiscounts ??= new StudentChargeDiscountRepository(_context, _transaction);
@@ -512,7 +679,18 @@ namespace MyPortal.Database
         public IStudentGroupRepository StudentGroups =>
             _studentGroups ??= new StudentGroupRepository(_context, _transaction);
 
+        public IStudentGroupMembershipRepository StudentGroupMemberships => _studentGroupMemberships ??=
+            new StudentGroupMembershipRepository(_context, _transaction);
+
+        public IStudentGroupSupervisorRepository StudentGroupSupervisors => _studentGroupSupervisors ??=
+            new StudentGroupSupervisorRepository(_context, _transaction);
+
+        public IStudentGroupSupervisorTitleRepository StudentGroupSupervisorTitles => _studentGroupSupervisorTitles ??=
+            new StudentGroupSupervisorTitleRepository(_context, _transaction);
+
         public IStudyTopicRepository StudyTopics => _studyTopics ??= new StudyTopicRepository(_context, _transaction);
+
+        public ISubjectCodeRepository SubjectCodes => _subjectCodes ??= new SubjectCodeRepository(_transaction);
 
         public ISubjectCodeSetRepository SubjectCodeSets =>
             _subjectCodeSets ??= new SubjectCodeSetRepository(_transaction);
@@ -547,6 +725,8 @@ namespace MyPortal.Database
 
         public IUserRepository Users => _users ??= new UserRepository(_context, _transaction);
 
+        public IVatRateRepository VatRates => _vatRates ??= new VatRateRepository(_context, _transaction);
+
         public IYearGroupRepository YearGroups => _yearGroups ??= new YearGroupRepository(_context, _transaction);
 
         public static async Task<IUnitOfWork> Create(ApplicationDbContext context)
@@ -556,7 +736,7 @@ namespace MyPortal.Database
             return unitOfWork;
         }
 
-        private async Task<DbTransaction> GetDbTransaction(ApplicationDbContext context)
+        private async Task<DbTransaction> GetDbTransaction()
         {
             var contextTransaction = await _context.Database.BeginTransactionAsync();
 
@@ -574,7 +754,7 @@ namespace MyPortal.Database
                 ResetRepositories();
             }
 
-            _transaction = await GetDbTransaction(_context);
+            _transaction = await GetDbTransaction();
         }
 
         private UnitOfWork(ApplicationDbContext context)
@@ -713,7 +893,20 @@ namespace MyPortal.Database
             _examComponents = null;
             _examComponentSittings = null;
             _examElements = null;
+            _examEnrolments = null;
+            _examQualificationLevels = null;
+            _examQualifications = null;
+            _examResultEmbargoes = null;
+            _examRooms = null;
+            _examRoomSeatBlocks = null;
+            _examSeasons = null;
+            _examSeatAllocations = null;
+            _examSeries = null;
+            _examSessions = null;
+            _examSpecialArrangements = null;
             _exclusions = null;
+            _exclusionAppealResults = null;
+            _exclusionTypes = null;
             _files = null;
             _giftedTalented = null;
             _governanceTypes = null;
@@ -726,26 +919,49 @@ namespace MyPortal.Database
             _incidents = null;
             _incidentTypes = null;
             _intakeTypes = null;
+            _languages = null;
             _lessonPlans = null;
             _lessonPlanTemplates = null;
             _localAuthorities = null;
             _locations = null;
             _logNotes = null;
             _logNoteTypes = null;
+            _marksheetColumns = null;
+            _marksheetTemplateGroups = null;
+            _marksheetTemplates = null;
             _medicalConditions = null;
             _medicalConditions = null;
+            _nextOfKin = null;
+            _nextOfKinRelationshipTypes = null;
             _observationOutcomes = null;
             _observations = null;
+            _parentEveningAppointments = null;
+            _parentEveningBreaks = null;
+            _parentEveningGroups = null;
+            _parentEvenings = null;
+            _parentEveningStaffMembers = null;
             _permissions = null;
             _personConditions = null;
             _personDietaryRequirements = null;
             _people = null;
             _phoneNumbers = null;
+            _phoneNumberTypes = null;
+            _photos = null;
             _products = null;
+            _productDiscounts = null;
             _refreshTokens = null;
             _regGroups = null;
+            _relationshipTypes = null;
+            _reportCardEntries = null;
+            _reportCards = null;
+            _reportCardTargetEntries = null;
+            _reportCardTargets = null;
             _results = null;
+            _resultSets = null;
             _roles = null;
+            _rooms = null;
+            _roomClosureReasons = null;
+            _roomClosures = null;
             _schoolPhases = null;
             _schools = null;
             _schoolTypes = null;
@@ -756,14 +972,24 @@ namespace MyPortal.Database
             _senReviews = null;
             _senReviewTypes = null;
             _senStatus = null;
+            _senTypes = null;
             _sessions = null;
+            _staffAbsences = null;
+            _staffAbsenceTypes = null;
+            _staffIllnessTypes = null;
             _staffMembers = null;
+            _storeDiscounts = null;
             _studentCharges = null;
             _studentContactRelationships = null;
             _studentChargeDiscounts = null;
+            _studentAgentRelationships = null;
             _students = null;
             _studentGroups = null;
+            _studentGroupMemberships = null;
+            _studentGroupSupervisors = null;
+            _studentGroupSupervisorTitles = null;
             _studyTopics = null;
+            _subjectCodes = null;
             _subjectCodeSets = null;
             _subjects = null;
             _subjectStaffMembers = null;
@@ -777,6 +1003,7 @@ namespace MyPortal.Database
             _trainingCourses = null;
             _userRoles = null;
             _users = null;
+            _vatRates = null;
             _yearGroups = null;
         }
     }

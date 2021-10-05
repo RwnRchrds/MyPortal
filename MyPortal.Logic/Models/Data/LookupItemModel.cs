@@ -3,7 +3,7 @@ using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Logic.Models.Data
 {
-    public class LookupItemModel : BaseModel, ILookupItem
+    public class LookupItemModel : BaseModel
     {
         public LookupItemModel(ILookupItem model) : base(model)
         {
