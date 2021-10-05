@@ -48,6 +48,9 @@ namespace MyPortal.Database
         private IBillRepository _bills;
         private IBillAccountTransactionRepository _billAccountTransactions;
         private IBillChargeDiscountRepository _billChargeDiscounts;
+        private IBillChargeRepository _billCharges;
+        private IBillStoreDiscountRepository _billStoreDiscounts;
+        private IBoarderStatusRepository _boarderStatus;
         private IBulletinRepository _bulletins;
         private IChargeDiscountRepository _chargeDiscounts;
         private IChargeRepository _charges;
@@ -67,15 +70,19 @@ namespace MyPortal.Database
         private IDetentionRepository _detentions;
         private IDetentionTypeRepository _detentionTypes;
         private IDiaryEventAttendeeRepository _diaryEventAttendees;
+        private IDiaryEventAttendeeResponseRepository _diaryEventAttendeeResponses;
         private IDiaryEventRepository _diaryEvents;
         private IDiaryEventTemplateRepository _diaryEventTemplates;
         private IDiaryEventTypeRepository _diaryEventTypes;
         private IDietaryRequirementRepository _dietaryRequirements;
         private IDirectoryRepository _directories;
+        private IDiscountRepository _discounts;
         private IDocumentRepository _documents;
         private IDocumentTypeRepository _documentTypes;
         private IEmailAddressRepository _emailAddresses;
         private IEmailAddressTypeRepository _emailAddressTypes;
+        private IEnrolmentStatusRepository _enrolmentStatus;
+        private IEthnicityRepository _ethnicities;
         private IExamAssessmentAspectRepository _examAssessmentAspects;
         private IExamAssessmentModeRepository _examAssessmentModes;
         private IExamAssessmentRepository _examAssessments;
@@ -83,6 +90,15 @@ namespace MyPortal.Database
         private IExamAwardRepository _examAwards;
         private IExamAwardSeriesRepository _examAwardSeries;
         private IExamBaseComponentRepository _examBaseComponents;
+        private IExamBaseElementRepository _examBaseElements;
+        private IExamBoardRepository _examBoards;
+        private IExamCandidateRepository _examCandidates;
+        private IExamCandidateSeriesRepository _examCandidateSeries;
+        private IExamCandidateSpecialArrangementRepository _examCandidateSpecialArrangements;
+        private IExamComponentRepository _examComponents;
+        private IExamComponentSittingRepository _examComponentSittings;
+        private IExamElementComponentRepository _examElementComponents;
+        private IExamElementRepository _examElements;
         private IExclusionRepository _exclusions;
         private IFileRepository _files;
         private IGiftedTalentedRepository _giftedTalented;
@@ -234,6 +250,13 @@ namespace MyPortal.Database
         public IBillChargeDiscountRepository BillChargeDiscounts =>
             _billChargeDiscounts ??= new BillChargeDiscountRepository(_context, _transaction);
 
+        public IBillChargeRepository BillCharges => _billCharges ??= new BillChargeRepository(_context, _transaction);
+
+        public IBillStoreDiscountRepository BillStoreDiscounts =>
+            _billStoreDiscounts ??= new BillStoreDiscountRepository(_context, _transaction);
+
+        public IBoarderStatusRepository BoarderStatus => _boarderStatus ??= new BoarderStatusRepository(_transaction);
+
         public IBulletinRepository Bulletins => _bulletins ??= new BulletinRepository(_context, _transaction);
 
         public IChargeDiscountRepository ChargeDiscounts =>
@@ -284,6 +307,9 @@ namespace MyPortal.Database
         public IDiaryEventAttendeeRepository DiaryEventAttendees =>
             _diaryEventAttendees ??= new DiaryEventAttendeeRepository(_context, _transaction);
 
+        public IDiaryEventAttendeeResponseRepository DiaryEventAttendeeResponses => _diaryEventAttendeeResponses ??=
+            new DiaryEventAttendeeResponseRepository(_transaction);
+
         public IDiaryEventRepository DiaryEvents => _diaryEvents ??= new DiaryEventRepository(_context, _transaction);
 
         public IDiaryEventTemplateRepository DiaryEventTemplates =>
@@ -297,6 +323,8 @@ namespace MyPortal.Database
 
         public IDirectoryRepository Directories => _directories ??= new DirectoryRepository(_context, _transaction);
 
+        public IDiscountRepository Discounts => _discounts ??= new DiscountRepository(_context, _transaction);
+
         public IDocumentRepository Documents => _documents ??= new DocumentRepository(_context, _transaction);
 
         public IDocumentTypeRepository DocumentTypes =>
@@ -307,6 +335,11 @@ namespace MyPortal.Database
 
         public IEmailAddressTypeRepository EmailAddressTypes =>
             _emailAddressTypes ??= new EmailAddressTypeRepository(_transaction);
+
+        public IEnrolmentStatusRepository EnrolmentStatus =>
+            _enrolmentStatus ??= new EnrolmentStatusRepository(_transaction);
+
+        public IEthnicityRepository Ethnicities => _ethnicities ??= new EthnicityRepository(_transaction);
 
         public IExamAssessmentAspectRepository ExamAssessmentAspects => _examAssessmentAspects ??=
             new ExamAssessmentAspectRepository(_context, _transaction);
@@ -327,6 +360,32 @@ namespace MyPortal.Database
 
         public IExamBaseComponentRepository ExamBaseComponents =>
             _examBaseComponents ??= new ExamBaseComponentRepository(_context, _transaction);
+
+        public IExamBaseElementRepository ExamBaseElements =>
+            _examBaseElements ??= new ExamBaseElementRepository(_context, _transaction);
+
+        public IExamBoardRepository ExamBoards => _examBoards ??= new ExamBoardRepository(_context, _transaction);
+
+        public IExamCandidateRepository ExamCandidates =>
+            _examCandidates ??= new ExamCandidateRepository(_context, _transaction);
+
+        public IExamCandidateSeriesRepository ExamCandidateSeries =>
+            _examCandidateSeries ??= new ExamCandidateSeriesRepository(_context, _transaction);
+
+        public IExamCandidateSpecialArrangementRepository ExamCandidateSpecialArrangements =>
+            _examCandidateSpecialArrangements ??= new ExamCandidateSpecialArrangementRepository(_context, _transaction);
+
+        public IExamComponentRepository ExamComponents =>
+            _examComponents ??= new ExamComponentRepository(_context, _transaction);
+
+        public IExamComponentSittingRepository ExamComponentSittings => _examComponentSittings ??=
+            new ExamComponentSittingRepository(_context, _transaction);
+
+        public IExamElementComponentRepository ExamElementComponents => _examElementComponents ??=
+            new ExamElementComponentRepository(_context, _transaction);
+
+        public IExamElementRepository ExamElements =>
+            _examElements ??= new ExamElementRepository(_context, _transaction);
 
         public IExclusionRepository Exclusions => _exclusions ??= new ExclusionRepository(_context, _transaction);
 
@@ -604,6 +663,9 @@ namespace MyPortal.Database
             _bills = null;
             _billAccountTransactions = null;
             _billChargeDiscounts = null;
+            _billCharges = null;
+            _billStoreDiscounts = null;
+            _boarderStatus = null;
             _bulletins = null;
             _chargeDiscounts = null;
             _charges = null;
@@ -623,15 +685,19 @@ namespace MyPortal.Database
             _detentions = null;
             _detentionTypes = null;
             _diaryEventAttendees = null;
+            _diaryEventAttendeeResponses = null;
             _diaryEvents = null;
             _diaryEventTemplates = null;
             _diaryEventTypes = null;
             _dietaryRequirements = null;
             _directories = null;
+            _discounts = null;
             _documents = null;
             _documentTypes = null;
             _emailAddresses = null;
             _emailAddressTypes = null;
+            _enrolmentStatus = null;
+            _ethnicities = null;
             _examAssessmentAspects = null;
             _examAssessments = null;
             _examAssessmentModes = null;
@@ -639,6 +705,14 @@ namespace MyPortal.Database
             _examAwards = null;
             _examAwardSeries = null;
             _examBaseComponents = null;
+            _examBaseElements = null;
+            _examBoards = null;
+            _examCandidates = null;
+            _examCandidateSeries = null;
+            _examCandidateSpecialArrangements = null;
+            _examComponents = null;
+            _examComponentSittings = null;
+            _examElements = null;
             _exclusions = null;
             _files = null;
             _giftedTalented = null;
