@@ -4,8 +4,8 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Data;
-using MyPortal.Logic.Models.List;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
@@ -86,9 +86,9 @@ namespace MyPortal.Logic.Models.Entity
 
         public AttendanceWeekModel Week { get; set; }
 
-        public AttendanceMarkListModel ToListModel()
+        public AttendanceMarkCollectionItemModel ToListModel()
         {
-            return new AttendanceMarkListModel
+            return new AttendanceMarkCollectionItemModel
             {
                 StudentId = StudentId,
                 WeekId = WeekId,

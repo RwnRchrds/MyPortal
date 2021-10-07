@@ -119,6 +119,7 @@ namespace MyPortal.Database.Interfaces
         IIntakeTypeRepository IntakeTypes { get; }
         ILanguageRepository Languages { get; }
         ILessonPlanRepository LessonPlans { get; }
+        ILessonPlanHomeworkItemRepository LessonPlanHomeworkItems { get; }
         ILessonPlanTemplateRepository LessonPlanTemplates { get; }
         ILocalAuthorityRepository LocalAuthorities { get; }
         ILocationRepository Locations { get; }

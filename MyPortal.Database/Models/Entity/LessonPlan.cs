@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MyPortal.Database.Interfaces;
@@ -7,8 +8,12 @@ namespace MyPortal.Database.Models.Entity
 {
     [Table("LessonPlans")]
     public class LessonPlan : BaseTypes.Entity, IDirectoryEntity, ICreatable
-
     {
+        public LessonPlan()
+        {
+            HomeworkItems = new HashSet<LessonPlanHomeworkItem>();
+        }
+        
         [Column(Order = 1)]
         public Guid StudyTopicId { get; set; }
 
@@ -24,17 +29,12 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 5)]
         [Required] [StringLength(256)] public string Title { get; set; }
 
-        [Column(Order = 6)]
-        [Required] public string LearningObjectives { get; set; }
-
         [Column(Order = 7)]
         [Required] public string PlanContent { get; set; }
-
-        [Column(Order = 8)]
-        [Required] public string Homework { get; set; }
 
         public virtual Directory Directory { get; set; }
         public virtual User CreatedBy { get; set; }
         public virtual StudyTopic StudyTopic { get; set; }
+        public virtual ICollection<LessonPlanHomeworkItem> HomeworkItems { get; set; }
     }
 }

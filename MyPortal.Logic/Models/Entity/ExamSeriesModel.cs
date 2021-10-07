@@ -1,10 +1,38 @@
 ﻿using System;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class ExamSeriesModel : BaseModel
+    public class ExamSeriesModel : BaseModel, ILoadable
     {
+        public ExamSeriesModel(ExamSeries model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(ExamSeries model)
+        {
+            ExamBoardId = model.ExamBoardId;
+            ExamSeasonId = model.ExamSeasonId;
+            SeriesCode = model.SeriesCode;
+            Code = model.Code;
+            Title = model.Title;
+
+            if (model.Season != null)
+            {
+                Season = new ExamSeasonModel(model.Season);
+            }
+
+            if (model.ExamBoard != null)
+            {
+                ExamBoard = new ExamBoardModel(model.ExamBoard);
+            }
+        }
+        
         public Guid ExamBoardId { get; set; }
         
         public Guid ExamSeasonId { get; set; }
@@ -17,5 +45,11 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual ExamSeasonModel Season { get; set; }
         public virtual ExamBoardModel ExamBoard { get; set; }
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            var model = await unitOfWork.ExamSeries.GetById(Id);
+            
+            LoadFromModel(model);
+        }
     }
 }

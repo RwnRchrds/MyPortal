@@ -128,6 +128,7 @@ namespace MyPortal.Database
         private IIntakeTypeRepository _intakeTypes;
         private ILanguageRepository _languages;
         private ILessonPlanRepository _lessonPlans;
+        private ILessonPlanHomeworkItemRepository _lessonPlanHomeworkItems;
         private ILessonPlanTemplateRepository _lessonPlanTemplates;
         private ILocalAuthorityRepository _localAuthorities;
         private ILocationRepository _locations;
@@ -508,6 +509,9 @@ namespace MyPortal.Database
         public ILanguageRepository Languages => _languages ??= new LanguageRepository(_transaction);
 
         public ILessonPlanRepository LessonPlans => _lessonPlans ??= new LessonPlanRepository(_context, _transaction);
+
+        public ILessonPlanHomeworkItemRepository LessonPlanHomeworkItems => _lessonPlanHomeworkItems ??=
+            new LessonPlanHomeworkItemRepository(_context, _transaction);
 
         public ILessonPlanTemplateRepository LessonPlanTemplates =>
             _lessonPlanTemplates ??= new LessonPlanTemplateRepository(_context, _transaction);
@@ -921,6 +925,7 @@ namespace MyPortal.Database
             _intakeTypes = null;
             _languages = null;
             _lessonPlans = null;
+            _lessonPlanHomeworkItems = null;
             _lessonPlanTemplates = null;
             _localAuthorities = null;
             _locations = null;

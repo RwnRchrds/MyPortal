@@ -11,7 +11,7 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 1)] 
         public Guid StudentGroupId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 2)]
         [StringLength(10)]
         public string ColourCode { get; set; }
 

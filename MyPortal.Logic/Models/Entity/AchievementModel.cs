@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Data;
-using MyPortal.Logic.Models.List;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity

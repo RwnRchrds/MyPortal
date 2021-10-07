@@ -1,10 +1,13 @@
 ﻿using System;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class ExamElementComponentModel : BaseModel
+    public class ExamElementComponentModel : BaseModel, ILoadable
     {
         public ExamElementComponentModel(ExamElementComponent model)
         {
@@ -32,5 +35,11 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual ExamElementModel Element { get; set; }
         public virtual ExamComponentModel Component { get; set; }
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            var model = await unitOfWork.ExamElementComponents.GetById(Id);
+            
+            LoadFromModel(model);
+        }
     }
 }

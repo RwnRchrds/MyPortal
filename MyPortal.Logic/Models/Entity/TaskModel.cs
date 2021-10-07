@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using MyPortal.Logic.Models.List;
+using MyPortal.Logic.Models.Collection;
 
 namespace MyPortal.Logic.Models.Entity
 {
@@ -28,6 +28,7 @@ namespace MyPortal.Logic.Models.Entity
         public string Description { get; set; }
 
         public bool Completed { get; set; }
+        public bool System { get; set; }
         public virtual HomeworkSubmissionModel HomeworkSubmission { get; set; }
         public virtual PersonModel AssignedTo { get; set; }
         public virtual UserModel AssignedBy { get; set; }

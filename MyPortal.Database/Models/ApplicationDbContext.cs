@@ -130,6 +130,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<IntakeType> IntakeTypes { get; set; }
         public virtual DbSet<Language> Languages { get; set; }
         public virtual DbSet<LessonPlan> LessonPlans { get; set; }
+        public virtual DbSet<LessonPlanHomeworkItem> LessonPlanHomeworkItems { get; set; }
         public virtual DbSet<LessonPlanTemplate> LessonPlanTemplates { get; set; }
         public virtual DbSet<LocalAuthority> LocalAuthorities { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
@@ -1569,6 +1570,23 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<LessonPlan>(e =>
                 {
                     SetIdDefaultValue(e);
+                });
+
+                modelBuilder.Entity<LessonPlanHomeworkItem>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasOne(x => x.HomeworkItem)
+                        .WithMany(x => x.LessonPlanHomeworkItems)
+                        .HasForeignKey(x => x.HomeworkItemId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.LessonPlan)
+                        .WithMany(x => x.HomeworkItems)
+                        .HasForeignKey(x => x.LessonPlanId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<LessonPlanTemplate>(e =>

@@ -9,8 +9,8 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.List;
 using MyPortal.Logic.Models.Reporting;
 using MyPortal.Logic.Models.Response.Attendance;
 using Task = System.Threading.Tasks.Task;
@@ -71,7 +71,7 @@ namespace MyPortal.Logic.Services
                     {
                         StudentId = possibleMark.Key,
                         StudentName = studentModel.Person.GetDisplayName(),
-                        Marks = possibleMark.Select(m => new AttendanceMarkListModel
+                        Marks = possibleMark.Select(m => new AttendanceMarkCollectionItemModel
                         {
                             StudentId = m.StudentId,
                             WeekId = m.WeekId,
@@ -89,7 +89,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Save(params AttendanceMarkListModel[] marks)
+        public async Task Save(params AttendanceMarkCollectionItemModel[] marks)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -156,7 +156,7 @@ namespace MyPortal.Logic.Services
 
         public async Task Save(params AttendanceRegisterStudentModel[] markCollections)
         {
-            var attendanceMarks = new List<AttendanceMarkListModel>();
+            var attendanceMarks = new List<AttendanceMarkCollectionItemModel>();
 
             foreach (var collection in markCollections)
             {

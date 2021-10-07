@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.List;
 using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
 using MyPortalWeb.Controllers.BaseControllers;
 

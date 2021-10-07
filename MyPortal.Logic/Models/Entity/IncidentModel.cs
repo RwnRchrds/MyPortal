@@ -1,13 +1,72 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Scaffolding;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Attributes;
-using MyPortal.Logic.Models.List;
+using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Collection;
+using MyPortal.Logic.Models.Data;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class IncidentModel
+    public class IncidentModel : BaseModel, ILoadable
     {
-        public Guid Id { get; set; }
+        public IncidentModel(Incident model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(Incident model)
+        {
+            AcademicYearId = model.AcademicYearId;
+            BehaviourTypeId = model.BehaviourTypeId;
+            StudentId = model.StudentId;
+            LocationId = model.LocationId;
+            CreatedById = model.CreatedById;
+            OutcomeId = model.OutcomeId;
+            StatusId = model.StatusId;
+            CreatedDate = model.CreatedDate;
+            Comments = model.Comments;
+            Points = model.Points;
+            Deleted = model.Deleted;
+
+            if (model.Type != null)
+            {
+                Type = new IncidentTypeModel(model.Type);
+            }
+
+            if (model.Location != null)
+            {
+                Location = new LocationModel(model.Location);
+            }
+
+            if (model.AcademicYear != null)
+            {
+                AcademicYear = new AcademicYearModel(model.AcademicYear);
+            }
+
+            if (model.CreatedBy != null)
+            {
+                CreatedBy = new UserModel(model.CreatedBy);
+            }
+
+            if (model.Student != null)
+            {
+                Student = new StudentModel(model.Student);
+            }
+
+            if (model.Outcome != null)
+            {
+                Outcome = new BehaviourOutcomeModel(model.Outcome);
+            }
+
+            if (model.Status != null)
+            {
+                Status = new BehaviourStatusModel(model.Status);
+            }
+        }
         
         public Guid AcademicYearId { get; set; }
         
@@ -16,7 +75,6 @@ namespace MyPortal.Logic.Models.Entity
         
         public Guid StudentId { get; set; }
         
-        [Required(ErrorMessage = "Location is required.")]
         public Guid? LocationId { get; set; }
         
         public Guid CreatedById { get; set; }
@@ -53,6 +111,13 @@ namespace MyPortal.Logic.Models.Entity
         public IncidentListModel ToListModel()
         {
             return new IncidentListModel(this);
+        }
+
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            var model = await unitOfWork.Incidents.GetById(Id);
+            
+            LoadFromModel(model);
         }
     }
 }

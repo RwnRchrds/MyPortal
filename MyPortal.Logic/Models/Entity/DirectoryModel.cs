@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Interfaces;
@@ -49,6 +50,18 @@ namespace MyPortal.Logic.Models.Entity
             {
                 await Parent.Load(unitOfWork, true);
             }
+        }
+
+        public async Task<DirectoryModel> GetParent(IUnitOfWork unitOfWork)
+        {
+            if (ParentId.HasValue)
+            {
+                var parent = await unitOfWork.Directories.GetById(ParentId.Value);
+
+                return new DirectoryModel(parent);
+            }
+
+            return null;
         }
     }
 }

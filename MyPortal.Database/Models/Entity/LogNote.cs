@@ -28,9 +28,6 @@ namespace MyPortal.Database.Models.Entity
         public DateTime CreatedDate { get; set; }
 
         [Column(Order = 7)]
-        public DateTime UpdatedDate { get; set; }
-
-        [Column(Order = 8)]
         public bool Deleted { get; set; }
 
         public virtual User CreatedBy { get; set; }

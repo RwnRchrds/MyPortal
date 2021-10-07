@@ -58,9 +58,9 @@ namespace MyPortal.Logic.Models.Entity
         public StaffMemberModel Teacher { get; set; }
         public RoomModel Room { get; set; }
 
-        public bool StaffChanged => TeacherId != null;
+        public bool StaffChanged => TeacherId.HasValue;
 
-        public bool RoomChanged => RoomId != null;
+        public bool RoomChanged => RoomId.HasValue;
         public async Task Load(IUnitOfWork unitOfWork)
         {
             var model = await unitOfWork.CoverArrangements.GetById(Id);
