@@ -11,7 +11,7 @@ namespace MyPortal.Logic.Models.Entity
 {
     public class AchievementModel : BaseModel, ILoadable
     {
-        public AchievementModel(Achievement model) : base(model)
+        internal AchievementModel(Achievement model) : base(model)
         {
             LoadFromModel(model);
         }

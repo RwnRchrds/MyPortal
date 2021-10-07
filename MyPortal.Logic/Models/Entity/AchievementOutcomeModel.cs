@@ -7,6 +7,11 @@ namespace MyPortal.Logic.Models.Entity
     {
         public AchievementOutcomeModel(AchievementOutcome model) : base(model)
         {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(AchievementOutcome model)
+        {
             System = model.System;
         }
         

@@ -14,7 +14,12 @@ namespace MyPortal.Logic.Models.Entity
 {
     public class AcademicYearModel : BaseModel
     {
-        public AcademicYearModel(AcademicYear model) : base(model)
+        internal AcademicYearModel(AcademicYear model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(AcademicYear model)
         {
             Name = model.Name;
             Locked = model.Locked;

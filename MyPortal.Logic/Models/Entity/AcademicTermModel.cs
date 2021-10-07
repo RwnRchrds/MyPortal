@@ -11,7 +11,7 @@ namespace MyPortal.Logic.Models.Entity
 {
     public class AcademicTermModel : BaseModel, ILoadable
     {
-        public AcademicTermModel(AcademicTerm model) : base(model)
+        internal AcademicTermModel(AcademicTerm model) : base(model)
         {
             LoadFromModel(model);
         }
