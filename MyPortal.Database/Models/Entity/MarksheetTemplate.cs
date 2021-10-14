@@ -10,6 +10,9 @@ namespace MyPortal.Database.Models.Entity
         public string Name { get; set; }
 
         [Column(Order = 2)]
+        public string Notes { get; set; }
+
+        [Column(Order = 3)]
         public bool Active { get; set; }
 
         public virtual ICollection<MarksheetTemplateGroup> TemplateGroups { get; set; }
