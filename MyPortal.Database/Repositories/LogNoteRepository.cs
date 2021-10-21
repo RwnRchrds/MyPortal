@@ -74,7 +74,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(LogNote entity)
         {
-            var logNote = await Context.ProfileLogNotes.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var logNote = await Context.LogNotes.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (logNote == null)
             {
@@ -82,7 +82,6 @@ namespace MyPortal.Database.Repositories
             }
             
             logNote.Message = entity.Message;
-            logNote.UpdatedDate = entity.UpdatedDate;
             logNote.TypeId = entity.TypeId;
         }
     }

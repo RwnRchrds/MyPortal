@@ -21,7 +21,7 @@ namespace MyPortal.Database.Models.Entity
         public bool Percentage { get; set; }
         
         [Column(Order = 6)] 
-        public int MaxUsage { get; set; }
+        public int? MaxUsage { get; set; }
 
         public virtual ICollection<ChargeDiscount> ChargeDiscounts { get; set; }
         public virtual ICollection<StoreDiscount> StoreDiscounts { get; set; }

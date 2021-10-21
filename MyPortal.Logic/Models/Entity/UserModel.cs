@@ -58,7 +58,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public string GetDisplayName(NameFormat format = NameFormat.Default, bool useLegalName = true)
         {
-            return Person != null ? Person.GetDisplayName(format, useLegalName) : UserName;
+            return Person != null ? Person.GetName(format, useLegalName) : UserName;
         }
     }
 }

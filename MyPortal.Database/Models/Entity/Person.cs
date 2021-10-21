@@ -37,15 +37,23 @@ namespace MyPortal.Database.Models.Entity
         public string Title { get; set; }
 
         [Column(Order = 3)]
+        [StringLength(256)]
+        public string PreferredFirstName { get; set; }
+        
+        [Column(Order = 4)]
+        [StringLength(256)]
+        public string PreferredLastName { get; set; }
+
+        [Column(Order = 5)]
         [Required]
         [StringLength(256)]
         public string FirstName { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 6)]
         [StringLength(256)] 
         public string MiddleName { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 7)]
         [Required]
         [StringLength(256)]
         public string LastName { get; set; }
@@ -76,7 +84,6 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 15)]
         public bool Deleted { get; set; }
-        
         
         public virtual Photo Photo { get; set; }
         public virtual Ethnicity Ethnicity { get; set; }

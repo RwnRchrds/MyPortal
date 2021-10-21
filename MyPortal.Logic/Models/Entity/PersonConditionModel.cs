@@ -2,12 +2,39 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class PersonConditionModel : BaseModel
+    public class PersonConditionModel : BaseModel, ILoadable
     {
+        public PersonConditionModel(PersonCondition model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(PersonCondition model)
+        {
+            PersonId = model.PersonId;
+            ConditionId = model.ConditionId;
+            MedicationTaken = model.MedicationTaken;
+            Medication = model.Medication;
+
+            if (model.Person != null)
+            {
+                Person = new PersonModel(model.Person);
+            }
+
+            if (model.MedicalCondition != null)
+            {
+                MedicalCondition = new MedicalConditionModel(model.MedicalCondition);
+            }
+        }
+        
         public Guid PersonId { get; set; }
 
         public Guid ConditionId { get; set; }
@@ -19,5 +46,11 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual PersonModel Person { get; set; }
         public virtual MedicalConditionModel MedicalCondition { get; set; }
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            var model = await unitOfWork.PersonConditions.GetById(Id);
+            
+            LoadFromModel(model);
+        }
     }
 }

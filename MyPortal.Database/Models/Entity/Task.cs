@@ -41,6 +41,7 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 10)]
         public bool System { get; set; }
+        
         public virtual Person AssignedTo { get; set; }
         public virtual User AssignedBy { get; set; }
         public virtual TaskType Type { get; set; }

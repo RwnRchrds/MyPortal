@@ -68,9 +68,7 @@ namespace MyPortal.Database.Repositories
 
             lessonPlan.StudyTopicId = entity.StudyTopicId;
             lessonPlan.Title = entity.Title;
-            lessonPlan.LearningObjectives = entity.LearningObjectives;
             lessonPlan.PlanContent = entity.PlanContent;
-            lessonPlan.Homework = entity.Homework;
         }
     }
 }

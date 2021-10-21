@@ -14,12 +14,19 @@ namespace MyPortal.Logic.Models.Entity
     {
         public PersonModel(Person model) : base(model)
         {
+            
+        }
+
+        private void LoadFromModel(Person model)
+        {
             Id = model.Id;
             DirectoryId = model.DirectoryId;
             Title = model.Title;
             FirstName = model.FirstName;
             MiddleName = model.MiddleName;
             LastName = model.LastName;
+            PreferredFirstName = model.PreferredFirstName;
+            PreferredLastName = model.PreferredLastName;
             PhotoId = model.PhotoId;
             NhsNumber = model.NhsNumber;
             UpdatedDate = model.UpdatedDate;
@@ -50,7 +57,13 @@ namespace MyPortal.Logic.Models.Entity
         [Required]
         [StringLength(256)]
         public string LastName { get; set; }
-
+        
+        [StringLength(256)] 
+        public string PreferredFirstName { get; set; }
+        
+        [StringLength(256)] 
+        public string PreferredLastName { get; set; }
+        
         public Guid? PhotoId { get; set; }
 
         [StringLength(10)]
@@ -76,27 +89,58 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual EthnicityModel Ethnicity { get; set; }
 
-        public string GetDisplayName(NameFormat format = NameFormat.Default)
+        public int? Age
+        {
+            get
+            {
+                var today = DateTime.Today;
+                
+                var age = today.Year - Dob?.Year;
+
+                if (age.HasValue)
+                {
+                    if (Dob.Value.Date > today.AddYears(-age.Value))
+                    {
+                        age--;
+                    }
+                }
+
+                return age;
+            }
+        }
+
+        public string GetName(NameFormat format = NameFormat.Default, bool usePreferred = false, bool includeMiddleName = true)
         {
             string name;
+
+            var firstName = usePreferred
+                ? string.IsNullOrWhiteSpace(PreferredFirstName) ? FirstName : PreferredFirstName
+                : FirstName;
+
+            var middleName = includeMiddleName ? MiddleName : "";
+
+            var lastName = usePreferred
+                ? string.IsNullOrWhiteSpace(PreferredLastName) ? LastName : PreferredLastName
+                : LastName;
+            
             switch (format)
             {
                 case NameFormat.FullName:
-                    name = $"{Title} {FirstName} {MiddleName} {LastName}";
+                    name = $"{Title} {firstName} {middleName} {lastName}";
                     break;
                 case NameFormat.FullNameAbbreviated:
                     name =
-                        $"{Title} {FirstName.Substring(0, 1)} {MiddleName?.Substring(0, 1)} {LastName}";
+                        $"{Title} {firstName.Substring(0, 1)} {middleName?.Substring(0, 1)} {lastName}";
                     break;
                 case NameFormat.FullNameNoTitle:
-                    name = $"{FirstName} {MiddleName} {LastName}";
+                    name = $"{firstName} {middleName} {lastName}";
                     break;
                 case NameFormat.Initials:
                     name =
-                        $"{FirstName.Substring(0, 1)}{MiddleName.Substring(0, 1)}{LastName.Substring(0, 1)}";
+                        $"{firstName.Substring(0, 1)}{middleName.Substring(0, 1)}{lastName.Substring(0, 1)}";
                     break;
                 default:
-                    name = $"{LastName}, {FirstName} {MiddleName}";
+                    name = $"{lastName}, {firstName} {middleName}";
                     break;
             }
 

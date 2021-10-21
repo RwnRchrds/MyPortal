@@ -134,8 +134,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<LessonPlanTemplate> LessonPlanTemplates { get; set; }
         public virtual DbSet<LocalAuthority> LocalAuthorities { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
-        public virtual DbSet<LogNote> ProfileLogNotes { get; set; }
-        public virtual DbSet<LogNoteType> ProfileLogNoteTypes { get; set; }
+        public virtual DbSet<LogNote> LogNotes { get; set; }
+        public virtual DbSet<LogNoteType> LogNoteTypes { get; set; }
         public virtual DbSet<MarksheetColumn> MarksheetColumns { get; set; }
         public virtual DbSet<MarksheetTemplate> MarksheetTemplates { get; set; }
         public virtual DbSet<MarksheetTemplateGroup> MarksheetTemplateGroups { get; set; }
