@@ -1,1 +1,0 @@
-java -jar swagger.jar generate -i http://localhost:52728/swagger/v1/swagger.json -l typescript-angular -o ./src
