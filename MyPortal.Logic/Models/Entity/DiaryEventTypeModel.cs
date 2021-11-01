@@ -9,14 +9,11 @@ namespace MyPortal.Logic.Models.Entity
         public string ColourCode { get; set; }
         
         public bool System { get; set; }
-        
-        public bool Reserved { get; set; }
 
         public DiaryEventTypeModel(DiaryEventType model) : base(model)
         {
             ColourCode = model.ColourCode;
             System = model.System;
-            Reserved = model.Reserved;
         }
     }
 }

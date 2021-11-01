@@ -32,9 +32,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual SubjectModel Subject { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.Courses.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.Courses.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

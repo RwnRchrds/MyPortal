@@ -25,10 +25,13 @@ namespace MyPortal.Database.Models.Entity
         public decimal? Mark { get; set; }
 
         [Column(Order = 7)]
-        public string Comments { get; set; }
+        public string Comment { get; set; }
 
         [Column(Order = 8)] 
         public string ColourCode { get; set; }
+        
+        [Column(Order = 9)] 
+        public string Note { get; set; }
 
         public virtual ResultSet ResultSet { get; set; }
 

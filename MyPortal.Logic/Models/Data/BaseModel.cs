@@ -11,6 +11,6 @@ namespace MyPortal.Logic.Models.Data
             Id = model.Id;
         }
 
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
     }
 }

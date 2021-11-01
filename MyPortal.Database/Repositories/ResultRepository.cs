@@ -71,7 +71,7 @@ namespace MyPortal.Database.Repositories
 
             result.GradeId = entity.GradeId;
             result.Mark = entity.Mark;
-            result.Comments = entity.Comments;
+            result.Comment = entity.Comment;
             result.ColourCode = entity.ColourCode;
         }
     }

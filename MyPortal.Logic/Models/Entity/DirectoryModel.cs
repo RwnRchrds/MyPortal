@@ -42,13 +42,16 @@ namespace MyPortal.Logic.Models.Entity
 
         public async Task Load(IUnitOfWork unitOfWork, bool deep = false)
         {
-            var model = await unitOfWork.Directories.GetById(Id);
-            
-            LoadFromModel(model);
-
-            if (deep && Parent != null)
+            if (Id.HasValue)
             {
-                await Parent.Load(unitOfWork, true);
+                var model = await unitOfWork.Directories.GetById(Id.Value);
+            
+                LoadFromModel(model);
+                
+                if (deep && Parent != null)
+                {
+                    await Parent.Load(unitOfWork, true);
+                }
             }
         }
 

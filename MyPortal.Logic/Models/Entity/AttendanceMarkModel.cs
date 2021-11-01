@@ -17,7 +17,7 @@ namespace MyPortal.Logic.Models.Entity
             LoadFromModel(model);
         }
 
-        private AttendanceMarkModel()
+        internal AttendanceMarkModel()
         {
             
         }
@@ -101,14 +101,12 @@ namespace MyPortal.Logic.Models.Entity
 
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            if (Id == Guid.Empty)
+            if (Id.HasValue)
             {
-                return;
+                var model = await unitOfWork.AttendanceMarks.GetById(Id.Value);
+            
+                LoadFromModel(model);   
             }
-            
-            var model = await unitOfWork.AttendanceMarks.GetById(Id);
-            
-            LoadFromModel(model);
         }
     }
 }

@@ -63,9 +63,12 @@ namespace MyPortal.Logic.Models.Entity
         public bool RoomChanged => RoomId.HasValue;
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.CoverArrangements.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.CoverArrangements.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

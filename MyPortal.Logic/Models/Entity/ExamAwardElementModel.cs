@@ -39,9 +39,11 @@ namespace MyPortal.Logic.Models.Entity
         
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.ExamAwardElements.GetById(Id);
-            
-            LoadFromModel(model);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.ExamAwardElements.GetById(Id.Value);
+                LoadFromModel(model);
+            }
         }
     }
 }

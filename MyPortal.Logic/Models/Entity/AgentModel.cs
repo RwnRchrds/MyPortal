@@ -55,9 +55,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual AgentTypeModel AgentType { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.Agents.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.Agents.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

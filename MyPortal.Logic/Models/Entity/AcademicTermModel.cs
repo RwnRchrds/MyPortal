@@ -41,9 +41,12 @@ namespace MyPortal.Logic.Models.Entity
         public AcademicYearModel AcademicYear { get; set; }
         public async System.Threading.Tasks.Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.AcademicTerms.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.AcademicTerms.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

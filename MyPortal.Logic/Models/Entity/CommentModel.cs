@@ -36,9 +36,12 @@ namespace MyPortal.Logic.Models.Entity
         public CommentBankModel CommentBank { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.Comments.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.Comments.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

@@ -1,13 +1,21 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Scaffolding;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class NextOfKinModel : BaseModel
+    public class NextOfKinModel : BaseModel, ILoadable
     {
         public NextOfKinModel(NextOfKin model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(NextOfKin model)
         {
             StaffMemberId = model.StaffMemberId;
             NextOfKinPersonId = model.NextOfKinPersonId;
@@ -17,8 +25,16 @@ namespace MyPortal.Logic.Models.Entity
             {
                 StaffMember = new StaffMemberModel(model.StaffMember);
             }
-            
-            if (model.)
+
+            if (model.NextOfKinPerson != null)
+            {
+                NextOfKinPerson = new PersonModel(model.NextOfKinPerson);
+            }
+
+            if (model.RelationshipType != null)
+            {
+                RelationshipType = new NextOfKinRelationshipTypeModel(model.RelationshipType);
+            }
         }
         
         public Guid StaffMemberId { get; set; }
@@ -28,5 +44,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual StaffMemberModel StaffMember { get; set; }
         public virtual PersonModel NextOfKinPerson { get; set; }
         public virtual NextOfKinRelationshipTypeModel RelationshipType { get; set; }
+        
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            var model = await unitOfWork.NextOfKin.GetById(Id);
+            
+            LoadFromModel(model);
+        }
     }
 }

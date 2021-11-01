@@ -11,7 +11,7 @@ namespace MyPortal.Logic.Models.Entity
         
         public bool TargetCompleted { get; set; }
 
-        public virtual ReportCardSubmissionModel Submission { get; set; }
+        public virtual ReportCardEntryModel Entry { get; set; }
         public virtual ReportCardTargetModel Target { get; set; }
     }
 }
