@@ -17,7 +17,10 @@ namespace MyPortal.Logic.Models.Collection
 
         public TaskListModel(TaskModel model, bool editPersonalOnly)
         {
-            Id = model.Id;
+            if (model.Id.HasValue)
+            {
+                Id = model.Id.Value;   
+            }
             DueDate = model.DueDate;
             AssignedByName = model.AssignedBy.GetDisplayName(NameFormat.FullNameAbbreviated);
             TaskTypeName = model.Type?.Description;
@@ -27,7 +30,7 @@ namespace MyPortal.Logic.Models.Collection
 
             if (model.Type != null)
             {
-                CanEdit = !model.Type.Reserved && (!editPersonalOnly || model.Type.Personal);
+                CanEdit = !model.Type.System && (!editPersonalOnly || model.Type.Personal);
             }
         }
 

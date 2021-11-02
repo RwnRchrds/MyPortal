@@ -4,7 +4,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.Collection
 {
-    public class IncidentListModel
+    public class IncidentCollectionModel
     {
         public Guid Id { get; set; }
         public string TypeName { get; set; }
@@ -14,12 +14,15 @@ namespace MyPortal.Logic.Models.Collection
         public string Comments { get; set; }
         public int Points { get; set; }
 
-        public IncidentListModel(IncidentModel model)
+        public IncidentCollectionModel(IncidentModel model)
         {
-            Id = model.Id;
+            if (model.Id.HasValue)
+            {
+                Id = model.Id.Value;   
+            }
             TypeName = model.Type.Description;
             Location = model.Location.Description;
-            RecordedBy = model.RecordedBy.GetDisplayName(NameFormat.FullNameAbbreviated);
+            RecordedBy = model.CreatedBy.GetDisplayName(NameFormat.FullNameAbbreviated);
             CreatedDate = model.CreatedDate;
             Comments = model.Comments;
             Points = model.Points;

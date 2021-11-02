@@ -4,7 +4,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.Collection
 {
-    public class LogNoteListModel
+    public class LogNoteCollectionModel
     {
         public Guid Id { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -14,9 +14,12 @@ namespace MyPortal.Logic.Models.Collection
         public string LogTypeColourCode { get; set; }
         public string Message { get; set; }
 
-        public LogNoteListModel(LogNoteModel model)
+        public LogNoteCollectionModel(LogNoteModel model)
         {
-            Id = model.Id;
+            if (model.Id.HasValue)
+            {
+                Id = model.Id.Value;   
+            }
             CreatedDate = model.CreatedDate;
             AuthorName = model.CreatedBy.GetDisplayName(NameFormat.FullNameAbbreviated);
             LogTypeName = model.LogNoteType.Description;

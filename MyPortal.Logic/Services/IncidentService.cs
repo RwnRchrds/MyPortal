@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Services
             {
                 var incidents = await unitOfWork.Incidents.GetByStudent(studentId, academicYearId);
 
-                return incidents.Select(BusinessMapper.Map<IncidentModel>);
+                return incidents.Select(i => new IncidentModel(i));
             }
         }
 
@@ -29,7 +29,7 @@ namespace MyPortal.Logic.Services
             {
                 var incident = await unitOfWork.Incidents.GetById(incidentId);
 
-                return BusinessMapper.Map<IncidentModel>(incident);
+                return new IncidentModel(incident);
             }
         }
 
@@ -53,7 +53,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateIncident(params IncidentModel[] incidents)
+        public async Task CreateIncident(params CreateIncidentModel[] incidents)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -67,7 +67,7 @@ namespace MyPortal.Logic.Services
                         LocationId = incidentModel.LocationId,
                         OutcomeId = incidentModel.OutcomeId,
                         StatusId = incidentModel.StatusId,
-                        CreatedById = incidentModel.RecordedById,
+                        CreatedById = incidentModel.CreatedById,
                         StudentId = incidentModel.StudentId,
                         Comments = incidentModel.Comments,
                         AcademicYearId = incidentModel.AcademicYearId
@@ -121,7 +121,7 @@ namespace MyPortal.Logic.Services
             {
                 var types = await unitOfWork.IncidentTypes.GetAll();
 
-                return types.Select(BusinessMapper.Map<IncidentTypeModel>).ToList();
+                return types.Select(t => new IncidentTypeModel(t)).ToList();
             }
         }
 
@@ -131,7 +131,7 @@ namespace MyPortal.Logic.Services
             {
                 var outcomes = await unitOfWork.BehaviourOutcomes.GetAll();
 
-                return outcomes.Select(BusinessMapper.Map<BehaviourOutcomeModel>).ToList();
+                return outcomes.Select(o => new BehaviourOutcomeModel(o)).ToList();
             }
         }
 
@@ -141,7 +141,7 @@ namespace MyPortal.Logic.Services
             {
                 var status = await unitOfWork.BehaviourStatus.GetAll();
 
-                return status.Select(BusinessMapper.Map<BehaviourStatusModel>).ToList();
+                return status.Select(s => new BehaviourStatusModel(s)).ToList();
             }
         }
     }

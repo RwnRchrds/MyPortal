@@ -16,9 +16,10 @@ namespace MyPortal.Logic.Services
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var houses = await unitOfWork.Houses.GetAll();
+                
+                var houseModels = houses.Select(h => new HouseModel(h)).ToList();
 
-                // TODO: Add order by
-                return houses.Select(BusinessMapper.Map<HouseModel>);
+                return houseModels.OrderBy(h => h.StudentGroup.Name).ToList();
             }
         }
     }

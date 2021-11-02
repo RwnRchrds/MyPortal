@@ -17,8 +17,9 @@ namespace MyPortal.Logic.Services
             {
                 var yearGroups = await unitOfWork.YearGroups.GetAll();
 
-                // TODO: Add order by
-                return yearGroups.Select(BusinessMapper.Map<YearGroupModel>);
+                var models = yearGroups.Select(y => new YearGroupModel(y)).ToList();
+
+                return models.OrderBy(m => m.StudentGroup.Name);
             }
         }
     }

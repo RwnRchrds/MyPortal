@@ -47,9 +47,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual ExamRoomModel Room { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.ExamComponentSittings.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.ExamComponentSittings.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

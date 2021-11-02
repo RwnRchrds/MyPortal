@@ -47,7 +47,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Staff member not found.");
                 }
 
-                return BusinessMapper.Map<StaffMemberModel>(staffMember);
+                return new StaffMemberModel(staffMember);
             }
         }
 
@@ -62,7 +62,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Staff member not found.");
                 }
 
-                return BusinessMapper.Map<StaffMemberModel>(staffMember);
+                return new StaffMemberModel(staffMember);
             }
         }
 
@@ -77,7 +77,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Staff member not found.");
                 }
 
-                return BusinessMapper.Map<StaffMemberModel>(staffMember);
+                return new StaffMemberModel(staffMember);
             }
         }
     }

@@ -65,9 +65,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual VatRateModel VatRate { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.Products.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.Products.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

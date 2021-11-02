@@ -26,7 +26,7 @@ namespace MyPortal.Logic.Models.Entity
                 StudentGroup = new StudentGroupModel(model.StudentGroup);
             }
         }
-
+        
         public Guid StudentGroupId { get; set; }
         
         [StringLength(128)]
@@ -36,9 +36,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual StudentGroupModel StudentGroup { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.Houses.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.Houses.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

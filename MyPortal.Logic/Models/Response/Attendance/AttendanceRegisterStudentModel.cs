@@ -8,11 +8,11 @@ namespace MyPortal.Logic.Models.Response.Attendance
     {
         public AttendanceRegisterStudentModel()
         {
-            Marks = new List<AttendanceMarkCollectionItemModel>();
+            Marks = new List<AttendanceMarkCollectionModel>();
         }
 
         public Guid StudentId { get; set; }
         public string StudentName { get; set; }
-        public ICollection<AttendanceMarkCollectionItemModel> Marks { get; set; }
+        public ICollection<AttendanceMarkCollectionModel> Marks { get; set; }
     }
 }

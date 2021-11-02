@@ -41,9 +41,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual ExamAssessmentModel Assessment { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.ExamBaseComponents.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.ExamBaseComponents.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

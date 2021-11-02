@@ -21,7 +21,7 @@ namespace MyPortal.Logic.Services
             {
                 var eventTypes = await unitOfWork.DiaryEventTypes.GetAll(includeReserved);
 
-                return eventTypes.Select(BusinessMapper.Map<DiaryEventTypeModel>).ToList();
+                return eventTypes.Select(t => new DiaryEventTypeModel(t)).ToList();
             }
         }
 
@@ -48,7 +48,7 @@ namespace MyPortal.Logic.Services
                 }
 
                 var events = (await unitOfWork.DiaryEvents.GetByPerson(dateRange.Start, dateRange.End, student.PersonId))
-                    .Select(BusinessMapper.Map<DiaryEventModel>).ToList();
+                    .Select(e => new DiaryEventModel(e)).ToList();
 
                 var calendarEvents = events.Select(e => new CalendarEventModel(e)).ToList();
 

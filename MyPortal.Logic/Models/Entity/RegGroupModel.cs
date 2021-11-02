@@ -41,9 +41,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual YearGroupModel YearGroup { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.RegGroups.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.RegGroups.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

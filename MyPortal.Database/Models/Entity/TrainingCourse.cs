@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MyPortal.Database.Models.Entity
 {
     [Table("TrainingCourses")]
-    public partial class TrainingCourse : BaseTypes.Entity
+    public partial class TrainingCourse : BaseTypes.LookupItem
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TrainingCourse()
@@ -13,12 +13,12 @@ namespace MyPortal.Database.Models.Entity
             Certificates = new HashSet<TrainingCertificate>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 3)]
         [Required]
         [StringLength(128)]
         public string Code { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 4)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }

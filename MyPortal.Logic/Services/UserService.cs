@@ -90,7 +90,7 @@ namespace MyPortal.Logic.Services
 
             var users = await query.ToListAsync();
 
-            return users.OrderBy(u => u.UserName).Select(BusinessMapper.Map<UserModel>);
+            return users.OrderBy(u => u.UserName).Select(u => new UserModel(u));
         }
 
         public async Task<IEnumerable<Guid>> CreateUser(params CreateUserModel[] createUserRequests)
@@ -266,7 +266,7 @@ namespace MyPortal.Logic.Services
             }
             else
             {
-                result.Success(BusinessMapper.Map<UserModel>(user));
+                result.Success(new UserModel(user));
             }
 
             return result;
@@ -308,7 +308,7 @@ namespace MyPortal.Logic.Services
             {
                 var role = await _identityServices.RoleManager.FindByNameAsync(roleName);
                 
-                roles.Add(BusinessMapper.Map<RoleModel>(role));
+                roles.Add(new RoleModel(role));
             }
 
             return roles;
@@ -344,7 +344,7 @@ namespace MyPortal.Logic.Services
                     user.Person = await unitOfWork.People.GetById(user.PersonId.Value);
                 }
 
-                return BusinessMapper.Map<UserModel>(user);
+                return new UserModel(user);
             }
         }
 

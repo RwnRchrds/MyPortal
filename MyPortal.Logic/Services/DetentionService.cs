@@ -22,7 +22,7 @@ namespace MyPortal.Logic.Services
             {
                 var detentions = await unitOfWork.Detentions.GetAll(searchOptions);
 
-                return detentions.Select(BusinessMapper.Map<DetentionModel>);
+                return detentions.Select(d => new DetentionModel(d));
             }
         }
 
@@ -32,7 +32,7 @@ namespace MyPortal.Logic.Services
             {
                 var detention = await unitOfWork.Detentions.GetById(detentionId);
 
-                return BusinessMapper.Map<DetentionModel>(detention);
+                return new DetentionModel(detention);
             }
         }
 
@@ -42,7 +42,7 @@ namespace MyPortal.Logic.Services
             {
                 var detention = await unitOfWork.Detentions.GetByIncident(incidentId);
 
-                return BusinessMapper.Map<DetentionModel>(detention);
+                return new DetentionModel(detention);
             }
         }
 

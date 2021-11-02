@@ -17,7 +17,7 @@ namespace MyPortal.Logic.Services
             {
                 var locations = await unitOfWork.Locations.GetAll();
 
-                return locations.Select(BusinessMapper.Map<LocationModel>);
+                return locations.Select(l => new LocationModel(l));
             }
         }
     }

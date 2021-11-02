@@ -1,10 +1,40 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
     public class SessionModel : BaseModel
     {
+        public SessionModel(Session model) : base(model)
+        {
+            ClassId = model.ClassId;
+            PeriodId = model.PeriodId;
+            TeacherId = model.TeacherId;
+            RoomId = model.RoomId;
+
+            if (model.Teacher != null)
+            {
+                Teacher = new StaffMemberModel(model.Teacher);
+            }
+
+            if (model.AttendancePeriod != null)
+            {
+                AttendancePeriod = new AttendancePeriodModel(model.AttendancePeriod);
+            }
+
+            if (model.Class != null)
+            {
+                Class = new ClassModel(model.Class);
+            }
+
+            if (model.Room != null)
+            {
+                Room = new RoomModel(model.Room);
+            }
+        }
+        
         public Guid ClassId { get; set; }
         
         public Guid PeriodId { get; set; }

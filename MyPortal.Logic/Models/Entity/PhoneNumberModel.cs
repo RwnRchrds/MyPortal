@@ -53,9 +53,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual PersonModel Person { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.PhoneNumbers.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.PhoneNumbers.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

@@ -12,6 +12,8 @@ namespace MyPortal.Logic.Models.Requests.Behaviour.Incidents
 
         public Guid StudentId { get; set; }
 
+        public Guid CreatedById { get; set; }
+
         [Required(ErrorMessage = "Location is required.")]
         public Guid LocationId { get; set; }
 

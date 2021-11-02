@@ -15,7 +15,7 @@ namespace MyPortal.Logic.Services
 {
     public class DocumentService : BaseService, IDocumentService
     {
-        public async Task Create(params DocumentModel[] documents)
+        public async Task Create(params CreateDocumentModel[] documents)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -80,7 +80,7 @@ namespace MyPortal.Logic.Services
             {
                 var documentTypes = await unitOfWork.DocumentTypes.Get(filter);
 
-                return documentTypes.Select(BusinessMapper.Map<DocumentTypeModel>).ToList();
+                return documentTypes.Select(t => new DocumentTypeModel(t)).ToList();
             }
         }
 
@@ -108,7 +108,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Document not found.");
                 }
 
-                return BusinessMapper.Map<DocumentModel>(document);
+                return new DocumentModel(document);
             }
         }
     }

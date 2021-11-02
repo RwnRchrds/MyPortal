@@ -37,13 +37,13 @@ namespace MyPortal.Logic.Services
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(JwtRegisteredClaimNames.NameId, userModel.Id.ToString("N")),
+                    new Claim(JwtRegisteredClaimNames.NameId, userModel.Id.Value.ToString("N")),
                     new Claim(JwtRegisteredClaimNames.UniqueName, userModel.UserName),
                     new Claim(ApplicationClaimTypes.UserType, userModel.UserType.ToString()),
                     new Claim(ApplicationClaimTypes.DisplayName, userModel.GetDisplayName(NameFormat.FullNameAbbreviated))
                 };
 
-                var roles = await unitOfWork.UserRoles.GetByUser(userModel.Id);
+                var roles = await unitOfWork.UserRoles.GetByUser(userModel.Id.Value);
 
                 claims.AddRange(roles.Select(r =>
                     new Claim(ClaimTypes.Role, r.RoleId.ToString("N"))));
@@ -124,7 +124,7 @@ namespace MyPortal.Logic.Services
         public async Task<TokenModel> GenerateToken(UserModel userModel)
         {
             var token = await GenerateAccessToken(userModel);
-            var refreshToken = await GenerateRefreshToken(userModel.Id);
+            var refreshToken = await GenerateRefreshToken(userModel.Id.Value);
 
             return new TokenModel {Token = token, RefreshToken = refreshToken};
         }
@@ -133,7 +133,7 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var userRefreshTokens = await unitOfWork.RefreshTokens.GetByUser(userModel.Id);
+                var userRefreshTokens = await unitOfWork.RefreshTokens.GetByUser(userModel.Id.Value);
 
                 var selectedRefreshToken = userRefreshTokens.FirstOrDefault(x => x.Value == tokenModel.RefreshToken);
 
@@ -149,7 +149,7 @@ namespace MyPortal.Logic.Services
 
                 var newToken = await GenerateAccessToken(userModel);
 
-                var newRefreshToken = await GenerateRefreshToken(userModel.Id);
+                var newRefreshToken = await GenerateRefreshToken(userModel.Id.Value);
 
                 var tokenResult = new TokenModel { Token = newToken, RefreshToken = newRefreshToken };
 
@@ -165,7 +165,7 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var userRefreshTokens = await unitOfWork.RefreshTokens.GetByUser(userModel.Id);
+                var userRefreshTokens = await unitOfWork.RefreshTokens.GetByUser(userModel.Id.Value);
 
                 var selectedRefreshToken = userRefreshTokens.FirstOrDefault(x => x.Value == tokenModel.RefreshToken);
 

@@ -81,7 +81,7 @@ namespace MyPortal.Logic.Services
 
                 await unitOfWork.SaveChangesAsync();
 
-                return generatedBills.Select(BusinessMapper.Map<BillModel>);
+                return generatedBills.Select(b => new BillModel(b));
             }
         }
     }

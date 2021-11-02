@@ -23,7 +23,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Attendance week not found.");
                 }
 
-                return BusinessMapper.Map<AttendanceWeekModel>(attendanceWeek);
+                return new AttendanceWeekModel(attendanceWeek);
             }
         }
 
@@ -38,7 +38,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Attendance week not found.");
                 }
 
-                return BusinessMapper.Map<AttendanceWeekModel>(week);
+                return new AttendanceWeekModel(week);
             }
         }
     }

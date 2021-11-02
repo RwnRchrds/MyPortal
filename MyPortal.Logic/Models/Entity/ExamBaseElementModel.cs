@@ -53,9 +53,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual ExamQualificationLevelModel Level { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.ExamBaseElements.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.ExamBaseElements.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

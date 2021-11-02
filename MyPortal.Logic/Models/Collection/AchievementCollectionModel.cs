@@ -4,7 +4,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.Collection
 {
-    public class AchievementDataGridModel
+    public class AchievementCollectionModel
     {
         public Guid Id { get; set; }
         public string TypeName { get; set; }
@@ -14,9 +14,12 @@ namespace MyPortal.Logic.Models.Collection
         public string Comments { get; set; }
         public int Points { get; set; }
 
-        public AchievementDataGridModel(AchievementModel model)
+        public AchievementCollectionModel(AchievementModel model)
         {
-            Id = model.Id;
+            if (model.Id.HasValue)
+            {
+                Id = model.Id.Value;   
+            }
             TypeName = model.Type.Description;
             Location = model.Location.Description;
             RecordedBy = model.CreatedBy.GetDisplayName(NameFormat.FullNameAbbreviated);

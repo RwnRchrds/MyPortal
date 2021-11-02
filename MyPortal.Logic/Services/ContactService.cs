@@ -18,7 +18,7 @@ namespace MyPortal.Logic.Services
             {
                 var students = await unitOfWork.Students.GetByContact(contactId, true);
 
-                return students.Select(BusinessMapper.Map<StudentModel>);
+                return students.Select(s => new StudentModel(s));
             }
         }
     }

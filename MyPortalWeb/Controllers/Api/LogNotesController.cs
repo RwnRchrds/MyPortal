@@ -85,20 +85,11 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                var logNote = new LogNoteModel
-                {
-                    AcademicYearId = (await Services.AcademicYears.GetCurrentAcademicYear(true)).Id,
-                        StudentId = model.StudentId,
-                    TypeId = model.TypeId,
-                    Message = model.Message
-                };
-
                 var author = await Services.Users.GetUserByPrincipal(User);
 
-                logNote.CreatedById = author.Id;
-                logNote.UpdatedById = author.Id;
+                model.CreatedById = author.Id.Value;
 
-                await Services.LogNotes.Create(logNote);
+                await Services.LogNotes.Create(model);
 
                 return Ok();
             }, PermissionValue.StudentEditStudentLogNotes);
@@ -112,17 +103,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                var logNote = new LogNoteModel
-                {
-                    Id = model.Id,
-                    TypeId = model.TypeId,
-                    Message = model.Message
-                };
-
-                var user = await Services.Users.GetUserByPrincipal(User);
-
-                logNote.UpdatedById = user.Id;
-                await Services.LogNotes.Update(logNote);
+                await Services.LogNotes.Update(model);
 
                 return Ok();
             }, PermissionValue.StudentEditStudentLogNotes);

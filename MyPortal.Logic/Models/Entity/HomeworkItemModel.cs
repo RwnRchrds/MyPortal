@@ -38,9 +38,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual DirectoryModel Directory { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.HomeworkItems.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.HomeworkItems.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

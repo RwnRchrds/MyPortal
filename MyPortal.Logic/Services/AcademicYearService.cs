@@ -174,7 +174,7 @@ namespace MyPortal.Logic.Services
             return termModel;
         }
 
-        public async Task UpdateAcademicYear(params AcademicYearModel[] academicYearModels)
+        public async Task UpdateAcademicYear(params UpdateAcademicYearModel[] academicYearModels)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

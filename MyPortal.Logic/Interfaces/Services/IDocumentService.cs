@@ -10,7 +10,7 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface IDocumentService
     {
-        Task Create(params DocumentModel[] documents);
+        Task Create(params CreateDocumentModel[] documents);
         Task Update(params UpdateDocumentModel[] documents);
         Task<IEnumerable<DocumentTypeModel>> GetTypes(DocumentTypeFilter filter);
         Task<DocumentModel> GetDocumentById(Guid documentId);

@@ -16,7 +16,7 @@ namespace MyPortal.Logic.Services
 {
     public class TaskService : BaseService, ITaskService
     {
-        public async Task Create(params TaskModel[] tasks)
+        public async Task Create(params CreateTaskModel[] tasks)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -52,7 +52,7 @@ namespace MyPortal.Logic.Services
             {
                 var taskTypes = await unitOfWork.TaskTypes.GetAll(personalOnly, activeOnly, false);
 
-                return taskTypes.Select(BusinessMapper.Map<TaskTypeModel>);
+                return taskTypes.Select(t => new TaskTypeModel(t));
             }
         }
 
@@ -94,7 +94,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Task not found.");
                 }
 
-                return BusinessMapper.Map<TaskModel>(task);
+                return new TaskModel(task);
             }
         }
 
@@ -167,7 +167,7 @@ namespace MyPortal.Logic.Services
 
                 var tasks = await unitOfWork.Tasks.GetByAssignedTo(personId, searchOptions);
 
-                return tasks.Select(BusinessMapper.Map<TaskModel>);
+                return tasks.Select(t => new TaskModel(t));
             }
         }
     }

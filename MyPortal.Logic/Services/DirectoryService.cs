@@ -8,6 +8,7 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Requests.Documents;
 using MyPortal.Logic.Models.Response.Documents;
 using Task = System.Threading.Tasks.Task;
 
@@ -26,11 +27,11 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Directory not found.");
                 }
 
-                return BusinessMapper.Map<DirectoryModel>(directory);
+                return new DirectoryModel(directory);
             }
         }
 
-        public async Task Create(params DirectoryModel[] directories)
+        public async Task Create(params CreateDirectoryModel[] directories)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -41,7 +42,7 @@ namespace MyPortal.Logic.Services
                         throw new InvalidDataException("Parent directory not specified.");
                     }
 
-                    var parentDirectory = await unitOfWork.Directories.GetById(directory.ParentId.Value);
+                    var parentDirectory = await unitOfWork.Directories.GetById(directory.ParentId);
 
                     if (parentDirectory == null)
                     {
@@ -62,7 +63,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Update(params DirectoryModel[] directories)
+        public async Task Update(params UpdateDirectoryModel[] directories)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -120,8 +121,8 @@ namespace MyPortal.Logic.Services
 
                 var files = await unitOfWork.Documents.GetByDirectory(directoryId);
 
-                children.Subdirectories = subDirs.Select(BusinessMapper.Map<DirectoryModel>);
-                children.Files = files.Select(BusinessMapper.Map<DocumentModel>);
+                children.Subdirectories = subDirs.Select(dir => new DirectoryModel(dir));
+                children.Files = files.Select(doc => new DocumentModel(doc));
 
                 return children;
             }

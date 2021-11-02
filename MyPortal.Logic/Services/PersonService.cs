@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Services
             {
                 var person = await unitOfWork.People.GetById(personId);
 
-                return BusinessMapper.Map<PersonModel>(person);
+                return new PersonModel(person);
             }
         }
 
@@ -41,7 +41,7 @@ namespace MyPortal.Logic.Services
             {
                 var people = await unitOfWork.People.GetAll(searchModel);
 
-                return people.Select(BusinessMapper.Map<PersonModel>).ToList();
+                return people.Select(p => new PersonModel(p)).ToList();
             }
         }
 
@@ -51,7 +51,7 @@ namespace MyPortal.Logic.Services
             {
                 var results = await unitOfWork.People.GetAllWithTypes(searchModel);
 
-                return results.Select(BusinessMapper.Map<PersonSearchResultModel>);
+                return results.Select(r => new PersonSearchResultModel(r)).ToList();
             }
         }
 
@@ -61,7 +61,7 @@ namespace MyPortal.Logic.Services
             {
                 var result = await unitOfWork.People.GetPersonWithTypesById(personId);
 
-                return BusinessMapper.Map<PersonSearchResultModel>(result);
+                return new PersonSearchResultModel(result);
             }
         }
 
@@ -76,7 +76,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Person not found.");
                 }
 
-                return BusinessMapper.Map<PersonModel>(person);
+                return new PersonModel(person);
             }
         }
     }

@@ -17,7 +17,7 @@ namespace MyPortal.Logic.Services
             {
                 var giftedTalented = await unitOfWork.GiftedTalented.GetByStudent(studentId);
 
-                return giftedTalented.Select(BusinessMapper.Map<GiftedTalentedModel>);
+                return giftedTalented.Select(gt => new GiftedTalentedModel(gt));
             }
         }
     }

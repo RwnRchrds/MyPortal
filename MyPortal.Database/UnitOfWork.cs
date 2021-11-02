@@ -368,7 +368,7 @@ namespace MyPortal.Database
             _diaryEventTypes ??= new DiaryEventTypeRepository(_context, _transaction);
 
         public IDietaryRequirementRepository DietaryRequirements =>
-            _dietaryRequirements ??= new DietaryRequirementRepository(_transaction);
+            _dietaryRequirements ??= new DietaryRequirementRepository(_context, _transaction);
 
         public IDirectoryRepository Directories => _directories ??= new DirectoryRepository(_context, _transaction);
 

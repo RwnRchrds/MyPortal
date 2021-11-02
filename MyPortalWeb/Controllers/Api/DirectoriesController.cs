@@ -40,7 +40,7 @@ namespace MyPortalWeb.Controllers.Api
 
                     var children = await Services.Directories.GetChildren(directoryId, userIsStaff);
 
-                    var childList = new List<DirectoryChildListModel>();
+                    var childList = new List<DirectoryChildCollectionModel>();
 
                     childList.AddRange(children.Subdirectories.Select(x => x.GetListModel()));
                     childList.AddRange(children.Files.Select(x => x.GetListModel()));
@@ -69,7 +69,7 @@ namespace MyPortalWeb.Controllers.Api
 
                 if (await Services.Directories.IsAuthorised(user, model.ParentId))
                 {
-                    var directory = new DirectoryModel
+                    var directory = new CreateDirectoryModel
                     {
                         ParentId = model.ParentId,
                         Name = model.Name,
@@ -96,7 +96,7 @@ namespace MyPortalWeb.Controllers.Api
 
                 if (await Services.Directories.IsAuthorised(user, model.Id))
                 {
-                    var directory = new DirectoryModel
+                    var directory = new UpdateDirectoryModel
                     {
                         Id = model.Id,
                         ParentId = model.ParentId,

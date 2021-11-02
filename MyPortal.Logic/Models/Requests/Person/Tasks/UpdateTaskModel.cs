@@ -17,7 +17,7 @@ namespace MyPortal.Logic.Models.Requests.Person.Tasks
 
         public string Description { get; set; }
 
-        [DateInFuture]
+        [FutureDate]
         public DateTime? DueDate { get; set; }
     }
 }

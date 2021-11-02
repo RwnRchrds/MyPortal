@@ -41,14 +41,14 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("student", Name = "ApiAchievementGetByStudent")]
-        [ProducesResponseType(typeof(AchievementDataGridModel), 200)]
+        [ProducesResponseType(typeof(AchievementCollectionModel), 200)]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             return await ProcessAsync(async () =>
             {
                 if (await AuthoriseStudent(studentId))
                 {
-                    var fromAcademicYearId = academicYearId ?? (await Services.AcademicYears.GetCurrentAcademicYear(true)).Id;
+                    var fromAcademicYearId = academicYearId ?? (await Services.AcademicYears.GetCurrentAcademicYear(true)).Id.Value;
 
                     var achievements = await Services.Achievements.GetAchievementsByStudent(studentId, fromAcademicYearId);
 
@@ -69,7 +69,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var user = await Services.Users.GetUserByPrincipal(User);
 
-                model.CreatedById = user.Id;
+                model.CreatedById = user.Id.Value;
 
                 await Services.Achievements.CreateAchievement(model);
 

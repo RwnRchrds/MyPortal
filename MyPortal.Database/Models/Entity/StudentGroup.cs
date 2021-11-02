@@ -11,19 +11,26 @@ namespace MyPortal.Database.Models.Entity
     public class StudentGroup : LookupItem, ISystemEntity
     {
         [Column(Order = 3)]
+        [Required]
+        [StringLength(50)]
         public string Code { get; set; }
-
+        
         [Column(Order = 4)]
+        [Required]
+        [StringLength(128)]
+        public string Name { get; set; }
+
+        [Column(Order = 5)]
         public Guid? PromoteToGroupId { get; set; }
         
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         public int? MaxMembers { get; set; }
         
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         [StringLength(256)]
         public string Notes { get; set; }
         
-        [Column(Order = 7)]
+        [Column(Order = 8)]
         public bool System { get; set; }
 
         public virtual StudentGroup PromoteToGroup { get; set; }

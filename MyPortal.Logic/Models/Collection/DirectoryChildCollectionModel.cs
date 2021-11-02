@@ -4,7 +4,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.Collection
 {
-    public class DirectoryChildListModel
+    public class DirectoryChildCollectionModel
     {
         public Guid Id { get; set; }
         public Guid? ParentId { get; set; }
@@ -14,9 +14,12 @@ namespace MyPortal.Logic.Models.Collection
         public string Icon { get; set; }
         public DateTime? CreatedDate { get; set; }
 
-        public DirectoryChildListModel(DirectoryModel directory)
+        public DirectoryChildCollectionModel(DirectoryModel directory)
         {
-            Id = directory.Id;
+            if (directory.Id.HasValue)
+            {
+                Id = directory.Id.Value;   
+            }
             ParentId = directory.ParentId;
             IsDirectory = true;
             Name = directory.Name;
@@ -24,9 +27,12 @@ namespace MyPortal.Logic.Models.Collection
             Type = "Directory";
         }
 
-        public DirectoryChildListModel(DocumentModel document)
+        public DirectoryChildCollectionModel(DocumentModel document)
         {
-            Id = document.Id;
+            if (document.Id.HasValue)
+            {
+                Id = document.Id.Value;
+            }
             ParentId = document.DirectoryId;
             IsDirectory = false;
             Name = document.Title;

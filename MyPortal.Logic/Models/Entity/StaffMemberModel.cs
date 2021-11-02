@@ -8,21 +8,36 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class StaffMemberModel : BaseModel
+    public class StaffMemberModel : BaseModel, ILoadable
     {
-        public StaffMemberModel(StaffMember staffMember)
+        public StaffMemberModel(StaffMember model) : base(model)
         {
-            Id = staffMember.Id;
-            LineManagerId = staffMember.LineManagerId;
-            PersonId = staffMember.PersonId;
-            Code = staffMember.Code;
-            BankName = staffMember.BankName;
-            BankAccount = staffMember.BankAccount;
-            BankSortCode = staffMember.BankSortCode;
-            NiNumber = staffMember.NiNumber;
-            Qualifications = staffMember.Qualifications;
-            TeachingStaff = staffMember.TeachingStaff;
-            Deleted = staffMember.Deleted;
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(StaffMember model)
+        {
+            Id = model.Id;
+            LineManagerId = model.LineManagerId;
+            PersonId = model.PersonId;
+            Code = model.Code;
+            BankName = model.BankName;
+            BankAccount = model.BankAccount;
+            BankSortCode = model.BankSortCode;
+            NiNumber = model.NiNumber;
+            Qualifications = model.Qualifications;
+            TeachingStaff = model.TeachingStaff;
+            Deleted = model.Deleted;
+
+            if (model.Person != null)
+            {
+                Person = new PersonModel(model.Person);
+            }
+
+            if (model.LineManager != null)
+            {
+                LineManager = new StaffMemberModel(model.LineManager);
+            }
         }
         
         public Guid? LineManagerId { get; set; }
@@ -54,8 +69,15 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual PersonModel Person { get; set; }
 
-        public virtual NextOfKinModel NextOfKin { get; set; }
-
         public virtual StaffMemberModel LineManager { get; set; }
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.StaffMembers.GetById(Id.Value);
+                
+                LoadFromModel(model);
+            }
+        }
     }
 }

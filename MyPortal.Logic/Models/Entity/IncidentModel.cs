@@ -108,16 +108,19 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual BehaviourStatusModel Status { get; set; }
 
-        public IncidentListModel ToListModel()
+        public IncidentCollectionModel ToListModel()
         {
-            return new IncidentListModel(this);
+            return new IncidentCollectionModel(this);
         }
 
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.Incidents.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.Incidents.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

@@ -48,9 +48,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual MedicalConditionModel MedicalCondition { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.PersonConditions.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.PersonConditions.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

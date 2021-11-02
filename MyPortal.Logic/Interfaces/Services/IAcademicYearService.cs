@@ -12,7 +12,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<AcademicYearModel> GetAcademicYearById(Guid academicYearId);
         Task<IEnumerable<AcademicYearModel>> GetAcademicYears();
         Task CreateAcademicYear(params CreateAcademicYearModel[] createModels);
-        Task UpdateAcademicYear(params AcademicYearModel[] academicYearModels);
+        Task UpdateAcademicYear(params UpdateAcademicYearModel[] academicYearModels);
         Task DeleteAcademicYear(params Guid[] academicYearIds);
         Task<bool> IsAcademicYearLocked(Guid academicYearId);
         CreateAcademicTermModel[] GenerateAttendanceWeeks(params CreateAcademicTermModel[] termModel);

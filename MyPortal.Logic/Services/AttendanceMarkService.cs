@@ -50,7 +50,7 @@ namespace MyPortal.Logic.Services
 
                 var codes = await unitOfWork.AttendanceCodes.GetAll(true, false);
 
-                register.Codes = codes.Select(BusinessMapper.Map<AttendanceCodeModel>).ToList();
+                register.Codes = codes.Select(c => new AttendanceCodeModel(c)).ToList();
 
                 var possibleMarks = (await unitOfWork.AttendanceMarks.GetRegisterMarks(
                     register.Metadata.CurriculumGroupId, register.Metadata.StartTime.Date,
@@ -65,13 +65,13 @@ namespace MyPortal.Logic.Services
                         throw new NotFoundException("Student not found.");
                     }
 
-                    var studentModel = BusinessMapper.Map<StudentModel>(student);
+                    var studentModel = new StudentModel(student);
 
                     var registerStudent = new AttendanceRegisterStudentModel
                     {
                         StudentId = possibleMark.Key,
-                        StudentName = studentModel.Person.GetDisplayName(),
-                        Marks = possibleMark.Select(m => new AttendanceMarkCollectionItemModel
+                        StudentName = studentModel.Person.GetName(),
+                        Marks = possibleMark.Select(m => new AttendanceMarkCollectionModel
                         {
                             StudentId = m.StudentId,
                             WeekId = m.WeekId,
@@ -89,7 +89,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Save(params AttendanceMarkCollectionItemModel[] marks)
+        public async Task Save(params AttendanceMarkCollectionModel[] marks)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -102,7 +102,7 @@ namespace MyPortal.Logic.Services
 
                     var markInDb = await GetAttendanceMark(model.StudentId, model.WeekId, model.PeriodId);
 
-                    if (markInDb != null)
+                    if (markInDb != null && markInDb.Id.HasValue)
                     {
                         markInDb.CodeId = model.CodeId;
                         markInDb.MinutesLate = model.MinutesLate ?? 0;
@@ -110,7 +110,7 @@ namespace MyPortal.Logic.Services
 
                         var updatedMark = new AttendanceMark
                         {
-                            Id = markInDb.Id,
+                            Id = markInDb.Id.Value,
                             CodeId = markInDb.CodeId,
                             StudentId = markInDb.StudentId,
                             WeekId = markInDb.WeekId,
@@ -156,7 +156,7 @@ namespace MyPortal.Logic.Services
 
         public async Task Save(params AttendanceRegisterStudentModel[] markCollections)
         {
-            var attendanceMarks = new List<AttendanceMarkCollectionItemModel>();
+            var attendanceMarks = new List<AttendanceMarkCollectionModel>();
 
             foreach (var collection in markCollections)
             {
@@ -170,12 +170,11 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var codes = (await unitOfWork.AttendanceCodes.GetAll()).Select(BusinessMapper.Map<AttendanceCodeModel>)
+                var codes = (await unitOfWork.AttendanceCodes.GetAll()).Select(c => new AttendanceCodeModel(c))
                     .ToList();
 
                 var marks =
-                    (await unitOfWork.AttendanceMarks.GetByStudent(studentId, academicYearId)).Select(BusinessMapper
-                        .Map<AttendanceMarkModel>).ToList();
+                    (await unitOfWork.AttendanceMarks.GetByStudent(studentId, academicYearId)).Select(m => new AttendanceMarkModel(m)).ToList();
 
                 var summary = new AttendanceSummary(codes, marks);
 

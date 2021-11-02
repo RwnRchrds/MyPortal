@@ -10,12 +10,6 @@ namespace MyPortal.Tests
     public class HelperTests
     {
         [Test]
-        public void Mapping_BusinessConfigurationIsValid()
-        {
-            Assert.DoesNotThrow(MappingHelper.GetConfig().ConfigurationProvider.AssertConfigurationIsValid);
-        }
-
-        [Test]
         public void Encryption_String()
         {
             var plaintext = @"*Test\pl41nt3xt*";

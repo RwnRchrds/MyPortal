@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface ITaskService
     {
-        Task Create(params TaskModel[] tasks);
+        Task Create(params CreateTaskModel[] tasks);
 
         Task Update(params UpdateTaskModel[] tasks);
 

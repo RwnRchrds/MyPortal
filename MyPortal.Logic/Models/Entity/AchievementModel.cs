@@ -95,9 +95,9 @@ namespace MyPortal.Logic.Models.Entity
 
         public StudentModel Student { get; set; }
 
-        public AchievementDataGridModel ToListModel()
+        public AchievementCollectionModel ToListModel()
         {
-            return new AchievementDataGridModel(this);
+            return new AchievementCollectionModel(this);
         }
 
         public async Task Load(IUnitOfWork unitOfWork)

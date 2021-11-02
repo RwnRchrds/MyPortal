@@ -7,5 +7,6 @@ namespace MyPortal.Logic.Interfaces.Services
     public interface IAttendanceWeekService
     {
         Task<AttendanceWeekModel> GetById(Guid attendanceWeekId);
+        Task<AttendanceWeekModel> GetByDate(DateTime date, bool throwIfNotFound = true);
     }
 }

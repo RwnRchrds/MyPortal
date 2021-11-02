@@ -38,9 +38,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual ExamSpecialArrangementModel SpecialArrangement { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.ExamCandidateSpecialArrangements.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.ExamCandidateSpecialArrangements.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

@@ -1,11 +1,33 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class SubjectModel : BaseModel
+    public class SubjectModel : BaseModel, ILoadable
     {
+        public SubjectModel(Subject model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(Subject model)
+        {
+            SubjectCodeId = model.SubjectCodeId;
+            Name = model.Name;
+            Code = model.Code;
+            Deleted = model.Deleted;
+
+            if (model.SubjectCode != null)
+            {
+                SubjectCode = new SubjectCodeModel(model.SubjectCode);
+            }
+        }
+        
         public Guid SubjectCodeId { get; set; }
 
         [Required]
@@ -19,5 +41,14 @@ namespace MyPortal.Logic.Models.Entity
         public bool Deleted { get; set; }
 
         public virtual SubjectCodeModel SubjectCode { get; set; }
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.Subjects.GetById(Id.Value);
+                
+                LoadFromModel(model);
+            }
+        }
     }
 }

@@ -14,6 +14,7 @@ using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Reporting;
+using MyPortal.Logic.Models.Requests.Student;
 using MyPortal.Logic.Models.Response.Students;
 using Task = System.Threading.Tasks.Task;
 
@@ -31,7 +32,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Student not found.");
                 }
 
-                return BusinessMapper.Map<StudentModel>(student);
+                return new StudentModel(student);
             }
         }
 
@@ -48,8 +49,8 @@ namespace MyPortal.Logic.Services
                 var attendanceCodes = await unitOfWork.AttendanceCodes.GetAll();
 
                 var attendanceSummary =
-                    new AttendanceSummary(attendanceCodes.Select(BusinessMapper.Map<AttendanceCodeModel>).ToList(),
-                        attendanceMarks.Select(BusinessMapper.Map<AttendanceMarkModel>).ToList());
+                    new AttendanceSummary(attendanceCodes.Select(c => new AttendanceCodeModel(c)).ToList(),
+                        attendanceMarks.Select(m => new AttendanceMarkModel(m)).ToList());
 
                 stats.StudentId = studentId;
                 stats.AchievementPoints = achievements;
@@ -72,7 +73,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Student not found.");
                 }
 
-                return BusinessMapper.Map<StudentModel>(student);
+                return new StudentModel(student);
             }
         }
 
@@ -87,11 +88,11 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Student not found.");
                 }
 
-                return BusinessMapper.Map<StudentModel>(student);
+                return new StudentModel(student);
             }
         }
 
-        public SelectList GetStudentStatusOptions(StudentStatus defaultStatus = StudentStatus.OnRoll)
+        public Dictionary<string, int> GetStudentStatusOptions()
         {
             var searchTypes = new Dictionary<string, int>();
 
@@ -100,7 +101,7 @@ namespace MyPortal.Logic.Services
             searchTypes.Add("Leavers", (int)StudentStatus.Leavers);
             searchTypes.Add("Future", (int)StudentStatus.Future);
 
-            return new SelectList(searchTypes, "Value", "Key", (int)defaultStatus);
+            return searchTypes;
         }
 
         public async Task<IEnumerable<StudentModel>> Get(StudentSearchOptions searchOptions)
@@ -109,15 +110,52 @@ namespace MyPortal.Logic.Services
             {
                 var students = await unitOfWork.Students.GetAll(searchOptions);
 
-                return students.Select(BusinessMapper.Map<StudentModel>).ToList();
+                return students.Select(s => new StudentModel(s)).ToList();
             }
         }
 
-        public async Task Create(StudentModel student)
+        public async Task Create(params CreateStudentModel[] students)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                unitOfWork.Students.Create(BusinessMapper.Map<Student>(student));
+                var admissionNumbers = (await unitOfWork.Students.GetAdmissionNumbers()).ToArray();
+
+                var nextAdmissionNumber = admissionNumbers.Any() ? admissionNumbers.Max() + 1 : 1;
+
+                foreach (var request in students)
+                {
+                    var createDate = DateTime.Now;
+                    var groupIds = new List<Guid>() {request.YearGroupId, request.RegGroupId};
+
+                    if (request.HouseId.HasValue)
+                    {
+                        groupIds.Add(request.HouseId.Value);
+                    }
+                    
+                    var student = new Student
+                    {
+                        AdmissionNumber = nextAdmissionNumber,
+                        DateStarting = request.DateStarting,
+                        SenStatusId = request.SenStatusId,
+                        SenTypeId = request.SenTypeId,
+                        EnrolmentStatusId = request.EnrolmentStatusId,
+                        BoarderStatusId = request.BoarderStatusId,
+                        PupilPremium = request.PupilPremium
+                    };
+
+                    foreach (var groupId in groupIds)
+                    {
+                        student.StudentGroupMemberships.Add(new StudentGroupMembership
+                        {
+                            StudentGroupId = groupId,
+                            StartDate = createDate
+                        });
+                    }
+                    
+                    unitOfWork.Students.Create(student);
+
+                    nextAdmissionNumber++;
+                }
 
                 await unitOfWork.SaveChangesAsync();
             }
@@ -159,7 +197,7 @@ namespace MyPortal.Logic.Services
                     school.EstablishmentNumber,
                     allocationYear)).Select(u => int.Parse(u.Substring(10, 3))).ToList();
 
-                var nextSerial = upnSerials.Any() ? upnSerials.Max() : 1;
+                var nextSerial = upnSerials.Any() ? upnSerials.Max() + 1 : 1;
 
                 var baseUpn =
                     $"{school.LocalAuthority.LeaCode}{school.EstablishmentNumber}{allocationYear}{nextSerial:000}";
@@ -170,14 +208,9 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Update(StudentModel student)
+        public async Task Update(params UpdateStudentModel[] student)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var studentInDb = await unitOfWork.Students.GetById(student.Id);
-
-                await unitOfWork.SaveChangesAsync();
-            }
+            // TODO
         }
     }
 }

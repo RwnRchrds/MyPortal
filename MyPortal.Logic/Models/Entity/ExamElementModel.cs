@@ -49,9 +49,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual ExamSeriesModel Series { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.ExamElements.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.ExamElements.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

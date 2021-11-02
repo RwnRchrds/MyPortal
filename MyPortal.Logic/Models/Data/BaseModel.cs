@@ -11,6 +11,11 @@ namespace MyPortal.Logic.Models.Data
             Id = model.Id;
         }
 
+        protected BaseModel()
+        {
+            
+        }
+
         public Guid? Id { get; set; }
     }
 }

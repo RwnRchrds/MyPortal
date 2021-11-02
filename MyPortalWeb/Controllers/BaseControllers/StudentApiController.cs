@@ -17,7 +17,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
                 // Students can only access resources involving themselves
                 var user = await Services.Users.GetUserByPrincipal(User);
 
-                var student = await Services.Students.GetByUserId(user.Id);
+                var student = await Services.Students.GetByUserId(user.Id.Value);
 
                 if (student.Id == requestedStudentId)
                 {

@@ -43,9 +43,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual StudentGroupModel StudentGroup { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.MarksheetTemplateGroups.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.MarksheetTemplateGroups.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

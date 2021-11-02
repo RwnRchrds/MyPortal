@@ -42,7 +42,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var user = await GetLoggedInUser();
 
-                var effectivePermissions = await Services.Users.GetPermissionValues(user.Id);
+                var effectivePermissions = await Services.Users.GetPermissionValues(user.Id.Value);
 
                 return Ok(effectivePermissions);
             });

@@ -73,16 +73,19 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual LogNoteTypeModel LogNoteType { get; set; }
 
-        public LogNoteListModel ToListModel()
+        public LogNoteCollectionModel ToListModel()
         {
-            return new LogNoteListModel(this);
+            return new LogNoteCollectionModel(this);
         }
 
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.LogNotes.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.LogNotes.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

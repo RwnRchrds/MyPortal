@@ -3,7 +3,7 @@ using System;
 
 namespace MyPortal.Logic.Models.Collection
 {    
-    public class AttendanceMarkCollectionItemModel
+    public class AttendanceMarkCollectionModel
     {
         public Guid StudentId { get; set; }
         

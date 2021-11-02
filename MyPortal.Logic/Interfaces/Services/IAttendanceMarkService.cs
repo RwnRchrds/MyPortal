@@ -13,7 +13,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<AttendanceSummary> GetAttendanceSummaryByStudent(Guid studentId, Guid academicYearId);
         Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId, bool returnNoMark = false);
         Task<AttendanceRegisterModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId);
-        Task Save(params AttendanceMarkCollectionItemModel[] marks);
+        Task Save(params AttendanceMarkCollectionModel[] marks);
         Task Delete(params Guid[] attendanceMarkIds);
     }
 }

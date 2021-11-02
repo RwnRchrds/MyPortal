@@ -78,9 +78,9 @@ namespace MyPortal.Logic.Models.Entity
         public virtual DocumentTypeModel Type { get; set; }
         public virtual FileModel Attachment { get; set; }
 
-        public DirectoryChildListModel GetListModel()
+        public DirectoryChildCollectionModel GetListModel()
         {
-            return new DirectoryChildListModel(this);
+            return new DirectoryChildCollectionModel(this);
         }
 
         public async Task Load(IUnitOfWork unitOfWork)

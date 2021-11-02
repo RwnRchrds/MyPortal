@@ -14,6 +14,7 @@ namespace MyPortal.Database.Interfaces.Repositories
         Task<IEnumerable<Student>> GetAll(StudentSearchOptions searchParams);
         Task<IEnumerable<Student>> GetGiftedTalented();
         Task<IEnumerable<Student>> GetByContact(Guid contactId, bool reportableOnly);
+        Task<IEnumerable<int>> GetAdmissionNumbers();
         Task<IEnumerable<string>> GetUpns(int leaCode, int establishmentNo, int allocationYear);
     }
 }

@@ -10,6 +10,7 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Requests.Student.LogNotes;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -27,7 +28,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Log note not found.");
                 }
 
-                return BusinessMapper.Map<LogNoteModel>(logNote);
+                return new LogNoteModel(logNote);
             }
         }
 
@@ -37,7 +38,7 @@ namespace MyPortal.Logic.Services
             {
                 var logNotes = await unitOfWork.LogNotes.GetByStudent(studentId, academicYearId);
 
-                return logNotes.OrderByDescending(n => n.CreatedDate).Select(BusinessMapper.Map<LogNoteModel>);
+                return logNotes.OrderByDescending(n => n.CreatedDate).Select(l => new LogNoteModel(l)).ToList();
             }
         }
 
@@ -47,11 +48,11 @@ namespace MyPortal.Logic.Services
             {
                 var logNoteTypes = await unitOfWork.LogNoteTypes.GetAll();
 
-                return logNoteTypes.Select(BusinessMapper.Map<LogNoteTypeModel>);
+                return logNoteTypes.Select(t => new LogNoteTypeModel(t));
             }
         }
 
-        public async Task Create(params LogNoteModel[] logNoteObjects)
+        public async Task Create(params CreateLogNoteModel[] logNoteObjects)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -67,9 +68,7 @@ namespace MyPortal.Logic.Services
                         Message = logNoteObject.Message,
                         StudentId = logNoteObject.StudentId,
                         CreatedDate = createDate,
-                        UpdatedDate = createDate,
                         CreatedById = logNoteObject.CreatedById,
-                        UpdatedById = logNoteObject.UpdatedById,
                         AcademicYearId = logNoteObject.AcademicYearId
                     };
 
@@ -80,17 +79,17 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Update(params LogNoteModel[] logNoteObjects)
+        public async Task Update(params UpdateLogNoteModel[] logNoteObjects)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 foreach (var logNoteObject in logNoteObjects)
                 {
-                    await AcademicYearModel.CheckLock(unitOfWork, logNoteObject.AcademicYearId);
+                    var logNote = await unitOfWork.LogNotes.GetById(logNoteObject.Id);
+                    
+                    await AcademicYearModel.CheckLock(unitOfWork, logNote.AcademicYearId);
 
                     var updateDate = DateTime.Now;
-
-                    var logNote = await unitOfWork.LogNotes.GetById(logNoteObject.Id);
 
                     if (logNote == null)
                     {
@@ -101,8 +100,6 @@ namespace MyPortal.Logic.Services
 
                     logNote.TypeId = logNoteObject.TypeId;
                     logNote.Message = logNoteObject.Message;
-                    logNote.UpdatedDate = updateDate;
-                    logNote.UpdatedById = logNoteObject.UpdatedById;
 
                     await unitOfWork.LogNotes.Update(logNote);
                 }

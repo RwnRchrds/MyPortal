@@ -123,6 +123,15 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery<string>(query);
         }
 
+        public async Task<IEnumerable<int>> GetAdmissionNumbers()
+        {
+            var query = new Query("Students AS S");
+
+            query.Select("S.AdmissionNumber");
+
+            return await ExecuteQuery<int>(query);
+        }
+
         public async Task<IEnumerable<Student>> GetGiftedTalented()
         {
             var query = GenerateQuery();

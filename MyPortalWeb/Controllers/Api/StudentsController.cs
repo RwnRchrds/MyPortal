@@ -26,14 +26,14 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("search")]
-        [ProducesResponseType(typeof(IEnumerable<StudentDataGridModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<StudentCollectionModel>), 200)]
         public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchOptions searchModel)
         {
             return await ProcessAsync(async () =>
             {
-                IEnumerable<StudentDataGridModel> students;
+                IEnumerable<StudentCollectionModel> students;
 
-                students = (await Services.Students.Get(searchModel)).Select(x => x.GetDataGridModel());
+                students = (await Services.Students.Get(searchModel)).Select(x => new StudentCollectionModel(x));
 
                 return Ok(students);
             }, PermissionValue.StudentViewStudentDetails);

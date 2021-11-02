@@ -41,14 +41,14 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("student", Name = "ApiIncidentGetByStudent")]
-        [ProducesResponseType(typeof(IEnumerable<IncidentListModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<IncidentCollectionModel>), 200)]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             return await ProcessAsync(async () =>
             {
                 if (await AuthoriseStudent(studentId))
                 {
-                    var fromAcademicYearId = academicYearId ?? (await Services.AcademicYears.GetCurrentAcademicYear(true)).Id;
+                    var fromAcademicYearId = academicYearId ?? (await Services.AcademicYears.GetCurrentAcademicYear(true)).Id.Value;
 
                     var incidents = await Services.Incidents.GetIncidentsByStudent(studentId, fromAcademicYearId);
 
@@ -69,18 +69,16 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var user = await Services.Users.GetUserByPrincipal(User);
 
-                var incident = new IncidentModel
+                var incident = new CreateIncidentModel
                 {
                     AcademicYearId = model.AcademicYearId,
                     StudentId = model.StudentId,
                     BehaviourTypeId = model.BehaviourTypeId,
                     Comments = model.Comments,
-                    CreatedDate = DateTime.Now,
                     LocationId = model.LocationId,
                     OutcomeId = model.OutcomeId,
                     Points = model.Points,
-                    StatusId = model.StatusId,
-                    RecordedById = user.Id
+                    StatusId = model.StatusId
                 };
 
                 await Services.Incidents.CreateIncident(incident);

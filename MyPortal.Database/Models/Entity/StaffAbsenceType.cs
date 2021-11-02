@@ -15,6 +15,9 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 3)]
         public bool System { get; set; }
+        
+        [Column(Order = 4)] 
+        public bool Authorised { get; set; }
 
         public virtual ICollection<StaffAbsence> Absences { get; set; }
     }

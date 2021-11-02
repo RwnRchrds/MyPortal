@@ -57,9 +57,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual DocumentModel SubmittedWork { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.HomeworkSubmissions.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.HomeworkSubmissions.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

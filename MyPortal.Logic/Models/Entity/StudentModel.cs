@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Scaffolding;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Interfaces;
@@ -8,9 +9,14 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class StudentModel : BaseModel
+    public class StudentModel : BaseModel, ILoadable
     {
         public StudentModel(Student model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(Student model)
         {
             Id = model.Id;
             PersonId = model.PersonId;
@@ -29,6 +35,26 @@ namespace MyPortal.Logic.Models.Entity
             if (model.Person != null)
             {
                 Person = new PersonModel(model.Person);
+            }
+
+            if (model.SenStatus != null)
+            {
+                SenStatus = new SenStatusModel(model.SenStatus);
+            }
+
+            if (model.SenType != null)
+            {
+                SenType = new SenTypeModel(model.SenType);
+            }
+
+            if (model.EnrolmentStatus != null)
+            {
+                EnrolmentStatus = new EnrolmentStatusModel(model.EnrolmentStatus);
+            }
+
+            if (model.BoarderStatus != null)
+            {
+                BoarderStatus = new BoarderStatusModel(model.BoarderStatus);
             }
         }
         
@@ -77,5 +103,14 @@ namespace MyPortal.Logic.Models.Entity
         public virtual EnrolmentStatusModel EnrolmentStatus { get; set; }
 
         public virtual BoarderStatusModel BoarderStatus { get; set; }
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.Students.GetById(Id.Value);
+                
+                LoadFromModel(model);
+            }
+        }
     }
 }

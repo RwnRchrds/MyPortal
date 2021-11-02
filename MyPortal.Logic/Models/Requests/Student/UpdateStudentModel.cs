@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using MyPortal.Logic.Models.Requests.Admin;
 using MyPortal.Logic.Models.Requests.Person;
 
 namespace MyPortal.Logic.Models.Requests.Student
 {
-    public class CreateStudentModel : CreatePersonModel
+    public class UpdateStudentModel : UpdatePersonModel
     {
+        public new Guid Id { get; set; }
+        
         public Guid? HouseId { get; set; }
         
         public Guid YearGroupId { get; set; }

@@ -191,7 +191,7 @@ namespace MyPortal.Logic.Services
 
             var roles = await query.ToListAsync();
 
-            return roles.OrderBy(r => r.Description).Select(BusinessMapper.Map<RoleModel>);
+            return roles.OrderBy(r => r.Description).Select(r => new RoleModel(r));
         }
 
         public async Task<RoleModel> GetRoleById(Guid roleId)
@@ -203,7 +203,7 @@ namespace MyPortal.Logic.Services
                 throw new NotFoundException("Role not found.");
             }
 
-            return BusinessMapper.Map<RoleModel>(role);
+            return new RoleModel(role);
         }
     }
 }

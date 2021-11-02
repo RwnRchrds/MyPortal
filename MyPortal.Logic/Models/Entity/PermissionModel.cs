@@ -37,7 +37,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual SystemAreaModel SystemArea { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var permission = await unitOfWork.Permissions.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.Permissions.GetById(Id.Value);
+            
+                LoadFromModel(model);   
+            }
         }
     }
 }

@@ -86,9 +86,9 @@ namespace MyPortal.Logic.Models.Entity
 
         public AttendanceWeekModel Week { get; set; }
 
-        public AttendanceMarkCollectionItemModel ToListModel()
+        public AttendanceMarkCollectionModel ToListModel()
         {
-            return new AttendanceMarkCollectionItemModel
+            return new AttendanceMarkCollectionModel
             {
                 StudentId = StudentId,
                 WeekId = WeekId,

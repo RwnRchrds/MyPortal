@@ -32,7 +32,7 @@ namespace MyPortalWeb.Controllers.Api
 
                 var task = await Services.Tasks.GetById(taskId);
 
-                if (await AuthoriseUpdate(task, user.Id))
+                if (await AuthoriseUpdate(task, user.Id.Value))
                 {
                     return Ok(task);
                 }
@@ -68,23 +68,13 @@ namespace MyPortalWeb.Controllers.Api
 
                 var user = await Services.Users.GetUserByPrincipal(User);
 
-                var canCreate = await AuthoriseCreate(model.AssignedToId, user.Id);
+                var canCreate = await AuthoriseCreate(model.AssignedToId, user.Id.Value);
 
                 if (canCreate)
                 {
-                    var task = new TaskModel
-                    {
-                        AssignedToId = model.AssignedToId,
-                        AssignedById = user.Id,
-                        Title = model.Title,
-                        Description = model.Description,
-                        DueDate = model.DueDate,
-                        CreatedDate = DateTime.Now,
-                        TypeId = model.TypeId,
-                        Completed = false
-                    };
+                    model.AssignedById = user.Id.Value;
 
-                    await Services.Tasks.Create(task);
+                    await Services.Tasks.Create(model);
 
                     return Ok();
                 }
@@ -102,7 +92,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var user = await Services.Users.GetUserByPrincipal(User);
 
-                var canEdit = await AuthoriseUpdate(model, user.Id);
+                var canEdit = await AuthoriseUpdate(model, user.Id.Value);
 
                 if (canEdit)
                 {
@@ -125,7 +115,7 @@ namespace MyPortalWeb.Controllers.Api
                 var user = await Services.Users.GetUserByPrincipal(User);
                 var task = await Services.Tasks.GetById(model.TaskId);
 
-                if (await AuthoriseUpdate(task, user.Id))
+                if (await AuthoriseUpdate(task, user.Id.Value))
                 {
                     await Services.Tasks.SetCompleted(model.TaskId, model.Completed);
 
@@ -161,7 +151,7 @@ namespace MyPortalWeb.Controllers.Api
                 {
                     var student = await Services.Students.GetByPersonId(personId);
 
-                    return await AuthoriseStudent(student.Id);
+                    return await AuthoriseStudent(student.Id.Value);
                 }
 
                 if (User.IsType(UserTypes.Staff))
@@ -188,7 +178,7 @@ namespace MyPortalWeb.Controllers.Api
                     }
 
                     return await UserHasPermission(PermissionValue.PeopleEditManagedStaffTasks) &&
-                           await Services.Staff.IsLineManager(taskStaffMember.Id, userStaffMember.Id);
+                           await Services.Staff.IsLineManager(taskStaffMember.Id.Value, userStaffMember.Id.Value);
                 }
             }
 

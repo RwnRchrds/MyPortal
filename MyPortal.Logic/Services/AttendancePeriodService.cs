@@ -23,7 +23,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Period not found.");
                 }
 
-                return BusinessMapper.Map<AttendancePeriodModel>(period);
+                return new AttendancePeriodModel(period);
             }
         }
     }

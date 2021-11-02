@@ -8,6 +8,9 @@ namespace MyPortal.Logic.Models.Requests.Person.Tasks
     {
         [NotEmpty]
         public Guid AssignedToId { get; set; }
+        
+        [NotEmpty] 
+        public Guid AssignedById { get; set; }
 
         [NotEmpty] 
         public Guid TypeId { get; set; }
@@ -17,7 +20,7 @@ namespace MyPortal.Logic.Models.Requests.Person.Tasks
 
         public string Description { get; set; }
 
-        [DateInFuture]
+        [FutureDate]
         public DateTime? DueDate { get; set; }
     }
 }

@@ -10,8 +10,8 @@ namespace MyPortal.Logic.Interfaces.Services
     {
         Task<DirectoryChildren> GetChildren(Guid directoryId, bool includeStaffOnly);
         Task<DirectoryModel> GetById(Guid directoryId);
-        Task Create(params DirectoryModel[] directories);
-        Task Update(params DirectoryModel[] directories);
+        Task Create(params CreateDirectoryModel[] directories);
+        Task Update(params UpdateDirectoryModel[] directories);
         Task Delete(params Guid[] directoryIds);
         Task<bool> IsAuthorised(UserModel user, Guid directoryId);
     }

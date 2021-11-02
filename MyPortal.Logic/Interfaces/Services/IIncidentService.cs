@@ -12,7 +12,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IncidentModel> GetIncidentById(Guid incidentId);
         Task<int> GetBehaviourPointsByStudent(Guid studentId, Guid academicYearId);
         Task<int> GetBehaviourCountByStudent(Guid studentId, Guid academicYearId);
-        Task CreateIncident(params IncidentModel[] incidents);
+        Task CreateIncident(params CreateIncidentModel[] incidents);
         Task UpdateIncident(params UpdateIncidentModel[] incidents);
         Task DeleteIncident(params Guid[] incidentIds);
         Task<IEnumerable<IncidentTypeModel>> GetIncidentTypes();

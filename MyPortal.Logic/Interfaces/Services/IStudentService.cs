@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Requests.Student;
 using MyPortal.Logic.Models.Response.Students;
 
 namespace MyPortal.Logic.Interfaces.Services
@@ -21,6 +22,12 @@ namespace MyPortal.Logic.Interfaces.Services
 
         Task<StudentModel> GetByPersonId(Guid personId, bool throwIfNotFound = true);
 
-        SelectList GetStudentStatusOptions(StudentStatus defaultStatus = StudentStatus.OnRoll);
+        Task Create(params CreateStudentModel[] students);
+
+        Task Update(params UpdateStudentModel[] student);
+
+        Dictionary<string, int> GetStudentStatusOptions();
+
+        Task<string> GenerateUpn();
     }
 }

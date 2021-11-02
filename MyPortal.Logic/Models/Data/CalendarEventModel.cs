@@ -10,7 +10,10 @@ namespace MyPortal.Logic.Models.Data
     {
         public CalendarEventModel(DiaryEventModel eventModel)
         {
-            Id = eventModel.Id.ToString("N");
+            if (eventModel.Id.HasValue)
+            {
+                Id = eventModel.Id.Value.ToString("N");
+            }
             AllDay = eventModel.IsAllDay;
             Start = eventModel.StartTime;
             End = eventModel.EndTime;

@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Models.Entity
 {
     public class ExamElementComponentModel : BaseModel, ILoadable
     {
-        public ExamElementComponentModel(ExamElementComponent model)
+        public ExamElementComponentModel(ExamElementComponent model) : base(model)
         {
             LoadFromModel(model);
         }
@@ -37,9 +37,12 @@ namespace MyPortal.Logic.Models.Entity
         public virtual ExamComponentModel Component { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
-            var model = await unitOfWork.ExamElementComponents.GetById(Id);
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.ExamElementComponents.GetById(Id.Value);
             
-            LoadFromModel(model);
+                LoadFromModel(model);   
+            }
         }
     }
 }

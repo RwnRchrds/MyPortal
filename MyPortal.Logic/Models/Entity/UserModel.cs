@@ -1,14 +1,22 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Enums;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class UserModel : BaseModel
+    public class UserModel : BaseModel, ILoadable
     {
         public UserModel(User model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(User model)
         {
             UserName = model.UserName;
             Email = model.Email;
@@ -59,6 +67,16 @@ namespace MyPortal.Logic.Models.Entity
         public string GetDisplayName(NameFormat format = NameFormat.Default, bool useLegalName = true)
         {
             return Person != null ? Person.GetName(format, useLegalName) : UserName;
+        }
+
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.Users.GetById(Id.Value);
+                
+                LoadFromModel(model);
+            }
         }
     }
 }

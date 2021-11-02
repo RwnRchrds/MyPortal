@@ -1,12 +1,48 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Collection;
+using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class TaskModel
+    public class TaskModel : BaseModel, ILoadable
     {
-        public Guid Id { get; set; }
+        public TaskModel(Task model) : base(model)
+        {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(Task model)
+        {
+            TypeId = model.TypeId;
+            AssignedToId = model.AssignedToId;
+            AssignedById = model.AssignedById;
+            CreatedDate = model.CreatedDate;
+            DueDate = model.DueDate;
+            CompletedDate = model.CompletedDate;
+            Title = model.Title;
+            Description = model.Description;
+            Completed = model.Completed;
+            System = model.System;
+
+            if (model.AssignedTo != null)
+            {
+                AssignedTo = new PersonModel(model.AssignedTo);
+            }
+
+            if (model.AssignedBy != null)
+            {
+                AssignedBy = new UserModel(model.AssignedBy);
+            }
+
+            if (model.Type != null)
+            {
+                Type = new TaskTypeModel(model.Type);
+            }
+        }
 
         public Guid TypeId { get; set; }
 
@@ -29,23 +65,20 @@ namespace MyPortal.Logic.Models.Entity
 
         public bool Completed { get; set; }
         public bool System { get; set; }
-        public virtual HomeworkSubmissionModel HomeworkSubmission { get; set; }
+        
         public virtual PersonModel AssignedTo { get; set; }
         public virtual UserModel AssignedBy { get; set; }
         public virtual TaskTypeModel Type { get; set; }
 
-        #region Business Logic
-
-        public bool Overdue
+        public bool Overdue => !Completed && DueDate <= DateTime.Now;
+        public async System.Threading.Tasks.Task Load(IUnitOfWork unitOfWork)
         {
-            get { return !Completed && DueDate <= DateTime.Today; }
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.Tasks.GetById(Id.Value);
+                
+                LoadFromModel(model);
+            }
         }
-
-        public TaskListModel ToListModel(bool editPersonalOnly)
-        {
-            return new TaskListModel(this, editPersonalOnly);
-        }
-        
-        #endregion
     }
 }
