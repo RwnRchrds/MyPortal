@@ -48,7 +48,7 @@ namespace MyPortal.Database.Repositories
             var bulletins = await Transaction.Connection.QueryAsync<Bulletin, User, Directory, Bulletin>(sql.Sql,
                 (bulletin, user, dir) =>
                 {
-                    bulletin.Author = user;
+                    bulletin.CreatedBy = user;
                     bulletin.Directory = dir;
 
                     return bulletin;

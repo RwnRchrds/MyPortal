@@ -18,20 +18,20 @@ namespace MyPortal.Logic.Models.Entity
 
         private void LoadFromModel(Room model)
         {
-            LocationId = model.LocationId;
+            BuildingFloorId = model.BuildingFloorId;
             Code = model.Code;
             Name = model.Name;
             MaxGroupSize = model.MaxGroupSize;
             TelephoneNo = model.TelephoneNo;
             ExcludeFromCover = model.ExcludeFromCover;
 
-            if (model.Location != null)
+            if (model.BuildingFloor != null)
             {
-                Location = new LocationModel(model.Location);
+                BuildingFloor = new BuildingFloorModel(model.BuildingFloor);
             }
         }
         
-        public Guid? LocationId { get; set; }
+        public Guid? BuildingFloorId { get; set; }
 
         [StringLength(10)]
         public string Code { get; set; }
@@ -45,7 +45,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public bool ExcludeFromCover { get; set; }
 
-        public virtual LocationModel Location { get; set; }
+        public virtual BuildingFloorModel BuildingFloor { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

@@ -16,7 +16,7 @@ namespace MyPortal.Database.Models.Entity
         }
 
         [Column(Order = 1)]
-        public Guid? LocationId { get; set; }
+        public Guid? BuildingFloorId { get; set; }
 
         [Column(Order = 2)]
         [StringLength(10)]
@@ -35,7 +35,7 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 6)]
         public bool ExcludeFromCover { get; set; }
 
-        public virtual Location Location { get; set; }
+        public virtual BuildingFloor BuildingFloor { get; set; }
 
         public virtual ICollection<ExamRoom> ExamRooms { get; set; }
 

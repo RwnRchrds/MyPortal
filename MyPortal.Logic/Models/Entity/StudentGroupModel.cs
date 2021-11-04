@@ -1,4 +1,5 @@
 ﻿using System;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Interfaces;
@@ -7,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class StudentGroupModel : BaseModel, ILoadable
+    public class StudentGroupModel : LookupItemModel, ILoadable
     {
         public StudentGroupModel(StudentGroup model) : base(model)
         {
@@ -17,7 +18,7 @@ namespace MyPortal.Logic.Models.Entity
         private void LoadFromModel(StudentGroup model)
         {
             Code = model.Code;
-            Name = model.Name;
+            Description = model.Description;
             PromoteToGroupId = model.PromoteToGroupId;
             MaxMembers = model.MaxMembers;
             Notes = model.Notes;
@@ -30,7 +31,6 @@ namespace MyPortal.Logic.Models.Entity
         }
         
         public string Code { get; set; }
-        public string Name { get; set; }
 
         public Guid? PromoteToGroupId { get; set; }
         

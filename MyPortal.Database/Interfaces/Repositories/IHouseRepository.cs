@@ -1,9 +1,12 @@
-﻿using MyPortal.Database.Models;
+﻿using System;
+using System.Threading.Tasks;
+using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IHouseRepository : IReadWriteRepository<House>, IUpdateRepository<House>
+    public interface IHouseRepository : IBaseStudentGroupRepository<House>, IUpdateRepository<House>
     {
+        
     }
 }

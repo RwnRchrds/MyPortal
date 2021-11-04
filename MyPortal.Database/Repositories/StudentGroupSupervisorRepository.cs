@@ -23,7 +23,6 @@ namespace MyPortal.Database.Repositories
         protected override Query JoinRelated(Query query)
         {
             JoinEntity(query, "StudentGroups", "SG", "StudentGroupId");
-            JoinEntity(query, "StudentGroupSupervisorTitles", "SGST", "SupervisorTitleId");
             JoinEntity(query, "StaffMembers", "SM", "SupervisorId");
 
             return query;
@@ -32,7 +31,6 @@ namespace MyPortal.Database.Repositories
         protected override Query SelectAllRelated(Query query)
         {
             query.SelectAllColumns(typeof(StudentGroup), "SG");
-            query.SelectAllColumns(typeof(StudentGroupSupervisorTitle), "SGST");
             query.SelectAllColumns(typeof(StaffMember), "SM");
 
             return query;
@@ -43,12 +41,11 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var supervisors = await Transaction.Connection
-                .QueryAsync<StudentGroupSupervisor, StudentGroup, StudentGroupSupervisorTitle, StaffMember,
+                .QueryAsync<StudentGroupSupervisor, StudentGroup, StaffMember,
                     StudentGroupSupervisor>(sql.Sql,
-                    (supervisor, group, title, staff) =>
+                    (supervisor, group, staff) =>
                     {
                         supervisor.StudentGroup = group;
-                        supervisor.SupervisorTitle = title;
                         supervisor.Supervisor = staff;
 
                         return supervisor;
@@ -66,7 +63,7 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Supervisor not found.");
             }
 
-            supervisor.SupervisorTitleId = entity.SupervisorTitleId;
+            supervisor.Title = entity.Title;
         }
     }
 }

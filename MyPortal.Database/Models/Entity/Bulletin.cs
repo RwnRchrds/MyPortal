@@ -11,10 +11,10 @@ namespace MyPortal.Database.Models.Entity
         public Guid DirectoryId { get; set; }
 
         [Column(Order = 2)]
-        public Guid AuthorId { get; set; }
+        public Guid CreatedById { get; set; }
 
         [Column(Order = 3)]
-        public DateTime CreateDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         [Column(Order = 4)]
         public DateTime? ExpireDate { get; set; }
@@ -34,7 +34,7 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 8)]
         public bool Approved { get; set; }
 
-        public virtual User Author { get; set; }
+        public virtual User CreatedBy { get; set; }
         public virtual Directory Directory { get; set; }
     }
 }

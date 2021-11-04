@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("RegGroups")]
-    public partial class RegGroup : BaseTypes.Entity
+    public partial class RegGroup : BaseTypes.Entity, IStudentGroupEntity
     {
         [Column(Order = 1)] 
         public Guid StudentGroupId { get; set; }

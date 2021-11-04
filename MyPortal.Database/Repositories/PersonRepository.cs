@@ -172,7 +172,6 @@ namespace MyPortal.Database.Repositories
             person.LastName = entity.LastName;
             person.PhotoId = entity.PhotoId;
             person.NhsNumber = entity.NhsNumber;
-            person.UpdatedDate = entity.UpdatedDate;
             person.Gender = entity.Gender;
             person.Dob = entity.Dob;
             person.Deceased = entity.Deceased;

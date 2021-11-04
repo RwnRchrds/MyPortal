@@ -51,6 +51,8 @@ namespace MyPortal.Database
         private IBillRepository _bills;
         private IBillStoreDiscountRepository _billStoreDiscounts;
         private IBoarderStatusRepository _boarderStatus;
+        private IBuildingRepository _buildings;
+        private IBuildingFloorRepository _buildingFloors;
         private IBulletinRepository _bulletins;
         private IChargeDiscountRepository _chargeDiscounts;
         private IChargeRepository _charges;
@@ -193,7 +195,6 @@ namespace MyPortal.Database
         private IStudentGroupRepository _studentGroups;
         private IStudentGroupMembershipRepository _studentGroupMemberships;
         private IStudentGroupSupervisorRepository _studentGroupSupervisors;
-        private IStudentGroupSupervisorTitleRepository _studentGroupSupervisorTitles;
         private IStudentRepository _students;
         private IStudentAgentRelationshipRepository _studentAgentRelationships;
         private IStudyTopicRepository _studyTopics;
@@ -305,6 +306,11 @@ namespace MyPortal.Database
             _billStoreDiscounts ??= new BillStoreDiscountRepository(_context, _transaction);
 
         public IBoarderStatusRepository BoarderStatus => _boarderStatus ??= new BoarderStatusRepository(_transaction);
+
+        public IBuildingRepository Buildings => _buildings ??= new BuildingRepository(_context, _transaction);
+
+        public IBuildingFloorRepository BuildingFloors =>
+            _buildingFloors ??= new BuildingFloorRepository(_context, _transaction);
 
         public IBulletinRepository Bulletins => _bulletins ??= new BulletinRepository(_context, _transaction);
 
@@ -689,9 +695,6 @@ namespace MyPortal.Database
         public IStudentGroupSupervisorRepository StudentGroupSupervisors => _studentGroupSupervisors ??=
             new StudentGroupSupervisorRepository(_context, _transaction);
 
-        public IStudentGroupSupervisorTitleRepository StudentGroupSupervisorTitles => _studentGroupSupervisorTitles ??=
-            new StudentGroupSupervisorTitleRepository(_context, _transaction);
-
         public IStudyTopicRepository StudyTopics => _studyTopics ??= new StudyTopicRepository(_context, _transaction);
 
         public ISubjectCodeRepository SubjectCodes => _subjectCodes ??= new SubjectCodeRepository(_transaction);
@@ -850,6 +853,8 @@ namespace MyPortal.Database
             _billCharges = null;
             _billStoreDiscounts = null;
             _boarderStatus = null;
+            _buildings = null;
+            _buildingFloors = null;
             _bulletins = null;
             _chargeDiscounts = null;
             _charges = null;
@@ -992,7 +997,6 @@ namespace MyPortal.Database
             _studentGroups = null;
             _studentGroupMemberships = null;
             _studentGroupSupervisors = null;
-            _studentGroupSupervisorTitles = null;
             _studyTopics = null;
             _subjectCodes = null;
             _subjectCodeSets = null;

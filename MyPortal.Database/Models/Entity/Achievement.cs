@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MyPortal.Database.Interfaces;
 
@@ -35,6 +36,7 @@ namespace MyPortal.Database.Models.Entity
         public string Comments { get; set; }
 
         [Column(Order = 10)]
+        [Range(0, int.MaxValue, ErrorMessage = "Achievement cannot have negative points.")]
         public int Points { get; set; }
 
         [Column(Order = 11)]

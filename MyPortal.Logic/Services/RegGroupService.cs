@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Services
 
                 var result = regGroups.Select(r => new RegGroupModel(r)).ToList();
 
-                return result.OrderBy(r => r.StudentGroup.Name);
+                return result.OrderBy(r => r.StudentGroup.Description);
             }
         }
     }

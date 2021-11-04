@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
@@ -12,9 +13,11 @@ namespace MyPortal.Database.Models.Entity
         public Guid DiscountId { get; set; }
 
         [Column(Order = 2)]
+        [Range(0, int.MaxValue)]
         public int MinQuantity { get; set; }
 
         [Column(Order = 3)]
+        [Range(0, int.MaxValue)]
         public int? MaxQuantity { get; set; }
 
         [Column(Order = 4)]

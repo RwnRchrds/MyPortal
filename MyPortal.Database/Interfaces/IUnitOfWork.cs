@@ -42,6 +42,8 @@ namespace MyPortal.Database.Interfaces
         IBillRepository Bills { get; }
         IBillStoreDiscountRepository BillStoreDiscounts { get; }
         IBoarderStatusRepository BoarderStatus { get; }
+        IBuildingRepository Buildings { get; }
+        IBuildingFloorRepository BuildingFloors { get; }
         IBulletinRepository Bulletins { get; }
         IChargeDiscountRepository ChargeDiscounts { get; }
         IChargeRepository Charges { get; }
@@ -185,7 +187,6 @@ namespace MyPortal.Database.Interfaces
         IStudentGroupMembershipRepository StudentGroupMemberships { get; }
         IStudentGroupRepository StudentGroups { get; }
         IStudentGroupSupervisorRepository StudentGroupSupervisors { get; }
-        IStudentGroupSupervisorTitleRepository StudentGroupSupervisorTitles { get; }
         IStudentRepository Students { get; }
         IStudyTopicRepository StudyTopics { get; }
         ISubjectCodeRepository SubjectCodes { get; }

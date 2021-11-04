@@ -17,7 +17,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class ActivityRepository : BaseReadWriteRepository<Activity>, IActivityRepository
+    public class ActivityRepository : BaseStudentGroupRepository<Activity>, IActivityRepository
     {
         public ActivityRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {

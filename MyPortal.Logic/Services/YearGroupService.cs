@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Services
 
                 var models = yearGroups.Select(y => new YearGroupModel(y)).ToList();
 
-                return models.OrderBy(m => m.StudentGroup.Name);
+                return models.OrderBy(m => m.StudentGroup.Description);
             }
         }
     }

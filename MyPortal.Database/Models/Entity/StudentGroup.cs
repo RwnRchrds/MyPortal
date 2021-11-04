@@ -14,11 +14,6 @@ namespace MyPortal.Database.Models.Entity
         [Required]
         [StringLength(50)]
         public string Code { get; set; }
-        
-        [Column(Order = 4)]
-        [Required]
-        [StringLength(128)]
-        public string Name { get; set; }
 
         [Column(Order = 5)]
         public Guid? PromoteToGroupId { get; set; }

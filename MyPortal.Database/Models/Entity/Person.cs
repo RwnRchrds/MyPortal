@@ -11,6 +11,14 @@ namespace MyPortal.Database.Models.Entity
         public const string Female = "F";
         public const string Other = "X";
         public const string Unknown = "U";
+
+        public static Dictionary<string, string> GenderLabels = new Dictionary<string, string>
+        {
+            { Male, "Male" },
+            { Female, "Female" },
+            { Other, "Other" },
+            { Unknown, "Unknown" }
+        };
     }
 
     [Table("People")]
@@ -66,7 +74,7 @@ namespace MyPortal.Database.Models.Entity
         public string NhsNumber { get; set; }
 
         [Column(Order = 10)]
-        public DateTime UpdatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         [Column(Order = 11)]
         [Required]

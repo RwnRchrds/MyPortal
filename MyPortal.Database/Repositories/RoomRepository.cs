@@ -22,14 +22,14 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "Locations", "L", "LocationId");
+            JoinEntity(query, "BuildingFloors", "BF", "BuildingFloorId");
 
             return query;
         }
 
         protected override Query SelectAllRelated(Query query)
         {
-            query.SelectAllColumns(typeof(Location), "L");
+            query.SelectAllColumns(typeof(BuildingFloor), "BF");
 
             return query;
         }
@@ -38,9 +38,9 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var rooms = await Transaction.Connection.QueryAsync<Room, Location, Room>(sql.Sql, (room, location) =>
+            var rooms = await Transaction.Connection.QueryAsync<Room, BuildingFloor, Room>(sql.Sql, (room, floor) =>
             {
-                room.Location = location;
+                room.BuildingFloor = floor;
 
                 return room;
             }, sql.NamedBindings, Transaction);
@@ -57,7 +57,7 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Room not found.");
             }
 
-            room.LocationId = entity.LocationId;
+            room.BuildingFloorId = entity.BuildingFloorId;
             room.Code = entity.Code;
             room.Name = entity.Name;
             room.MaxGroupSize = entity.MaxGroupSize;

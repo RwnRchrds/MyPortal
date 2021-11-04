@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Exceptions;
+using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -21,6 +23,48 @@ namespace MyPortal.Database.Repositories
         public StudentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
 
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "People", "P", "PersonId");
+            JoinEntity(query, "SenStatus", "SS", "SenStatusId");
+            JoinEntity(query, "SenTypes", "ST", "SenTypeId");
+            JoinEntity(query, "EnrolmentStatus", "ES", "EnrolmentStatusId");
+            JoinEntity(query, "BoarderStatus", "BS", "BoarderStatusId");
+            
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Person), "P");
+            query.SelectAllColumns(typeof(SenStatus), "SS");
+            query.SelectAllColumns(typeof(SenType), "ST");
+            query.SelectAllColumns(typeof(EnrolmentStatus), "ES");
+            query.SelectAllColumns(typeof(BoarderStatus), "BS");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Student>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var students = await Transaction.Connection
+                .QueryAsync<Student, Person, SenStatus, SenType, EnrolmentStatus, BoarderStatus, Student>(sql.Sql,
+                    (student, person, senStatus, senType, enrolmentStatus, boarderStatus) =>
+                    {
+                        student.Person = person;
+                        student.SenStatus = senStatus;
+                        student.SenType = senType;
+                        student.EnrolmentStatus = enrolmentStatus;
+                        student.BoarderStatus = boarderStatus;
+
+                        return student;
+                    }, sql.NamedBindings, Transaction);
+
+            return students;
         }
 
         private static void ApplySearch(Query query, StudentSearchOptions search)
@@ -149,8 +193,7 @@ namespace MyPortal.Database.Repositories
             {
                 throw new EntityNotFoundException("Student not found.");
             }
-
-            student.HouseId = entity.HouseId;
+            
             student.AdmissionNumber = entity.AdmissionNumber;
             student.DateStarting = entity.DateStarting;
             student.DateLeaving = entity.DateLeaving;

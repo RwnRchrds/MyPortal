@@ -18,17 +18,17 @@ namespace MyPortal.Logic.Models.Entity
         private void LoadFromModel(Bulletin model)
         {
             DirectoryId = model.DirectoryId;
-            AuthorId = model.AuthorId;
-            CreateDate = model.CreateDate;
+            CreatedById = model.CreatedById;
+            CreateDate = model.CreatedDate;
             ExpireDate = model.ExpireDate;
             Title = model.Title;
             Detail = model.Detail;
             StaffOnly = model.StaffOnly;
             Approved = model.Approved;
 
-            if (model.Author != null)
+            if (model.CreatedBy != null)
             {
-                Author = new UserModel(model.Author);
+                CreatedBy = new UserModel(model.CreatedBy);
             }
 
             if (model.Directory != null)
@@ -39,7 +39,7 @@ namespace MyPortal.Logic.Models.Entity
         
         public Guid DirectoryId { get; set; }
         
-        public Guid AuthorId { get; set; }
+        public Guid CreatedById { get; set; }
         
         public DateTime CreateDate { get; set; }
         
@@ -56,7 +56,7 @@ namespace MyPortal.Logic.Models.Entity
         
         public bool Approved { get; set; }
 
-        public UserModel Author { get; set; }
+        public UserModel CreatedBy { get; set; }
         public DirectoryModel Directory { get; set; }
         
         public async Task Load(IUnitOfWork unitOfWork)

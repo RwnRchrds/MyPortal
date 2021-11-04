@@ -14,7 +14,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class YearGroupRepository : BaseReadWriteRepository<YearGroup>, IYearGroupRepository
+    public class YearGroupRepository : BaseStudentGroupRepository<YearGroup>, IYearGroupRepository
     {
         public YearGroupRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {

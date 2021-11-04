@@ -51,6 +51,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<BillItem> BillItems { get; set; }
         public virtual DbSet<BillStoreDiscount> BillStoreDiscounts { get; set; }
         public virtual DbSet<BoarderStatus> BoarderStatuses { get; set; }
+        public virtual DbSet<Building> Buildings { get; set; }
+        public virtual DbSet<BuildingFloor> BuildingFloors { get; set; }
         public virtual DbSet<Bulletin> Bulletins { get; set; }
         public virtual DbSet<Charge> Charges { get; set; }
         public virtual DbSet<ChargeDiscount> ChargeDiscounts { get; set; }
@@ -195,7 +197,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<StudentGroup> StudentGroups { get; set; }
         public virtual DbSet<StudentGroupMembership> StudentGroupMemberships { get; set; }
         public virtual DbSet<StudentGroupSupervisor> StudentGroupSupervisors { get; set; }
-        public virtual DbSet<StudentGroupSupervisorTitle> StudentGroupSupervisorTitles { get; set; }
         public virtual DbSet<StudyTopic> StudyTopics { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<SubjectCode> SubjectCodes { get; set; }
@@ -640,9 +641,37 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+                modelBuilder.Entity<Building>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(x => x.Floors)
+                        .WithOne(x => x.Building)
+                        .HasForeignKey(x => x.BuildingId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<BuildingFloor>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(x => x.Rooms)
+                        .WithOne(x => x.BuildingFloor)
+                        .HasForeignKey(x => x.BuildingFloorId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
                 modelBuilder.Entity<Bulletin>(e => { SetIdDefaultValue(e); });
 
-                modelBuilder.Entity<Charge>(e => { SetIdDefaultValue(e); });
+                modelBuilder.Entity<Charge>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(x => x.Activities)
+                        .WithOne(x => x.Charge)
+                        .HasForeignKey(x => x.ChargeId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
 
                 modelBuilder.Entity<ChargeDiscount>(e =>
                 {
@@ -1618,11 +1647,6 @@ namespace MyPortal.Database.Models
                         .WithOne(x => x.Location)
                         .HasForeignKey(x => x.LocationId)
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasMany(x => x.Rooms)
-                        .WithOne(x => x.Location)
-                        .HasForeignKey(x => x.LocationId)
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<LogNote>(e => { SetIdDefaultValue(e); });
@@ -2488,11 +2512,6 @@ namespace MyPortal.Database.Models
                     SetIdDefaultValue(e);
                 });
 
-                modelBuilder.Entity<StudentGroupSupervisorTitle>(e =>
-                {
-                    SetIdDefaultValue(e);
-                });
-
                 modelBuilder.Entity<StudyTopic>(e =>
                 {
                     SetIdDefaultValue(e);
@@ -2667,8 +2686,8 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.Bulletins)
-                        .WithOne(x => x.Author)
-                        .HasForeignKey(x => x.AuthorId)
+                        .WithOne(x => x.CreatedBy)
+                        .HasForeignKey(x => x.CreatedById)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 

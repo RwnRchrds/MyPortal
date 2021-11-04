@@ -29,7 +29,7 @@ namespace MyPortal.Logic.Models.Entity
             PreferredLastName = model.PreferredLastName;
             PhotoId = model.PhotoId;
             NhsNumber = model.NhsNumber;
-            UpdatedDate = model.UpdatedDate;
+            CreatedDate = model.CreatedDate;
             Gender = model.Gender;
             Dob = model.Dob;
             Deceased = model.Deceased;
@@ -69,7 +69,7 @@ namespace MyPortal.Logic.Models.Entity
         [StringLength(10)]
         public string NhsNumber { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         [Required]
         [StringLength(1)]

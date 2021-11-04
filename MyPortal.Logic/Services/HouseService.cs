@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Services
                 
                 var houseModels = houses.Select(h => new HouseModel(h)).ToList();
 
-                return houseModels.OrderBy(h => h.StudentGroup.Name).ToList();
+                return houseModels.OrderBy(h => h.StudentGroup.Description).ToList();
             }
         }
     }
