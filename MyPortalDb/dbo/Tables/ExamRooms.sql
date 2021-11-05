@@ -9,6 +9,6 @@
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_ExamRooms_RoomId]
+CREATE NONCLUSTERED INDEX [IX_ExamRooms_RoomId]
     ON [dbo].[ExamRooms]([RoomId] ASC);
 

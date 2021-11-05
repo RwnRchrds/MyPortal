@@ -14,7 +14,7 @@
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_ExamAwards_AssessmentId]
+CREATE NONCLUSTERED INDEX [IX_ExamAwards_AssessmentId]
     ON [dbo].[ExamAwards]([AssessmentId] ASC);
 
 

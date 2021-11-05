@@ -2,6 +2,7 @@
     [Id]          UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
     [StudentId]   UNIQUEIDENTIFIER NOT NULL,
     [ChargeId]    UNIQUEIDENTIFIER NOT NULL,
+    [Description] NVARCHAR (MAX)   NULL,
     [StartDate]   DATETIME2 (7)    NOT NULL,
     [Recurrences] INT              NOT NULL,
     CONSTRAINT [PK_StudentCharges] PRIMARY KEY CLUSTERED ([Id] ASC),

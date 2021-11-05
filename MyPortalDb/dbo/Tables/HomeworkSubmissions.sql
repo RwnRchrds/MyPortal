@@ -4,7 +4,6 @@
     [StudentId]      UNIQUEIDENTIFIER NOT NULL,
     [TaskId]         UNIQUEIDENTIFIER NOT NULL,
     [DocumentId]     UNIQUEIDENTIFIER NULL,
-    [MaxPoints]      INT              NOT NULL,
     [PointsAchieved] INT              NOT NULL,
     [Comments]       NVARCHAR (MAX)   NULL,
     CONSTRAINT [PK_HomeworkSubmissions] PRIMARY KEY CLUSTERED ([Id] ASC),
@@ -16,8 +15,8 @@
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_HomeworkSubmissions_DocumentId]
-    ON [dbo].[HomeworkSubmissions]([DocumentId] ASC) WHERE ([DocumentId] IS NOT NULL);
+CREATE NONCLUSTERED INDEX [IX_HomeworkSubmissions_DocumentId]
+    ON [dbo].[HomeworkSubmissions]([DocumentId] ASC);
 
 
 GO
@@ -31,6 +30,6 @@ CREATE NONCLUSTERED INDEX [IX_HomeworkSubmissions_StudentId]
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_HomeworkSubmissions_TaskId]
+CREATE NONCLUSTERED INDEX [IX_HomeworkSubmissions_TaskId]
     ON [dbo].[HomeworkSubmissions]([TaskId] ASC);
 

@@ -5,6 +5,7 @@
     [MeaningId]   UNIQUEIDENTIFIER NOT NULL,
     [Active]      BIT              NOT NULL,
     [Restricted]  BIT              NOT NULL,
+    [System]      BIT              NOT NULL,
     CONSTRAINT [PK_AttendanceCodes] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_AttendanceCodes_AttendanceCodeMeanings_MeaningId] FOREIGN KEY ([MeaningId]) REFERENCES [dbo].[AttendanceCodeMeanings] ([Id])
 );

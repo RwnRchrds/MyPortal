@@ -1,11 +1,19 @@
 ﻿CREATE TABLE [dbo].[Activities] (
-    [Id]          UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
-    [Name]        NVARCHAR (128)   NULL,
-    [Description] NVARCHAR (256)   NULL,
-    [DateStarted] DATETIME2 (7)    NOT NULL,
-    [DateEnded]   DATETIME2 (7)    NULL,
-    [MaxMembers]  INT              NOT NULL,
-    [Deleted]     BIT              NOT NULL,
-    CONSTRAINT [PK_Activities] PRIMARY KEY CLUSTERED ([Id] ASC)
+    [Id]             UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
+    [StudentGroupId] UNIQUEIDENTIFIER NOT NULL,
+    [ChargeId]       UNIQUEIDENTIFIER NULL,
+    CONSTRAINT [PK_Activities] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Activities_Charges_ChargeId] FOREIGN KEY ([ChargeId]) REFERENCES [dbo].[Charges] ([Id]),
+    CONSTRAINT [FK_Activities_StudentGroups_StudentGroupId] FOREIGN KEY ([StudentGroupId]) REFERENCES [dbo].[StudentGroups] ([Id])
 );
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_Activities_ChargeId]
+    ON [dbo].[Activities]([ChargeId] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_Activities_StudentGroupId]
+    ON [dbo].[Activities]([StudentGroupId] ASC);
 

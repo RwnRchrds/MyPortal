@@ -23,6 +23,6 @@ CREATE NONCLUSTERED INDEX [IX_Agents_AgentTypeId]
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_Agents_PersonId]
+CREATE NONCLUSTERED INDEX [IX_Agents_PersonId]
     ON [dbo].[Agents]([PersonId] ASC);
 

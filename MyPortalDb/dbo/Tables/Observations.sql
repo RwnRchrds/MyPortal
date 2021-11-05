@@ -4,6 +4,7 @@
     [ObserveeId] UNIQUEIDENTIFIER NOT NULL,
     [ObserverId] UNIQUEIDENTIFIER NOT NULL,
     [OutcomeId]  UNIQUEIDENTIFIER NOT NULL,
+    [Notes]      NVARCHAR (MAX)   NULL,
     CONSTRAINT [PK_Observations] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Observations_ObservationOutcomes_OutcomeId] FOREIGN KEY ([OutcomeId]) REFERENCES [dbo].[ObservationOutcomes] ([Id]),
     CONSTRAINT [FK_Observations_StaffMembers_ObserveeId] FOREIGN KEY ([ObserveeId]) REFERENCES [dbo].[StaffMembers] ([Id]),

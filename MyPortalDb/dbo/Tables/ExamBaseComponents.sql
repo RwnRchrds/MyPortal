@@ -15,6 +15,6 @@ CREATE NONCLUSTERED INDEX [IX_ExamBaseComponents_AssessmentModeId]
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_ExamBaseComponents_ExamAssessmentId]
+CREATE NONCLUSTERED INDEX [IX_ExamBaseComponents_ExamAssessmentId]
     ON [dbo].[ExamBaseComponents]([ExamAssessmentId] ASC);
 

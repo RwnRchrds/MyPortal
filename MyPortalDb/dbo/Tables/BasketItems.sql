@@ -2,6 +2,7 @@
     [Id]        UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
     [StudentId] UNIQUEIDENTIFIER NOT NULL,
     [ProductId] UNIQUEIDENTIFIER NOT NULL,
+    [Quantity]  INT              NOT NULL,
     CONSTRAINT [PK_BasketItems] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_BasketItems_Products_ProductId] FOREIGN KEY ([ProductId]) REFERENCES [dbo].[Products] ([Id]),
     CONSTRAINT [FK_BasketItems_Students_StudentId] FOREIGN KEY ([StudentId]) REFERENCES [dbo].[Students] ([Id])

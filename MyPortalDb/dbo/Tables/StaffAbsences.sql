@@ -5,7 +5,6 @@
     [IllnessTypeId] UNIQUEIDENTIFIER NULL,
     [StartDate]     DATETIME2 (7)    NOT NULL,
     [EndDate]       DATETIME2 (7)    NOT NULL,
-    [AnnualLeave]   BIT              NOT NULL,
     [Confidential]  BIT              NOT NULL,
     [Notes]         NVARCHAR (MAX)   NULL,
     CONSTRAINT [PK_StaffAbsences] PRIMARY KEY CLUSTERED ([Id] ASC),

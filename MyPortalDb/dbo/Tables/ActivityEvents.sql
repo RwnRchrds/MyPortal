@@ -14,6 +14,6 @@ CREATE NONCLUSTERED INDEX [IX_ActivityEvents_ActivityId]
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_ActivityEvents_EventId]
+CREATE NONCLUSTERED INDEX [IX_ActivityEvents_EventId]
     ON [dbo].[ActivityEvents]([EventId] ASC);
 

@@ -10,7 +10,6 @@
     [SessionId]        UNIQUEIDENTIFIER NULL,
     [Duration]         INT              NULL,
     [SittingDate]      DATETIME2 (7)    NULL,
-    [ExamSessionId]    UNIQUEIDENTIFIER NULL,
     CONSTRAINT [PK_ExamComponents] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_ExamComponents_ExamAssessmentModes_AssessmentModeId] FOREIGN KEY ([AssessmentModeId]) REFERENCES [dbo].[ExamAssessmentModes] ([Id]),
     CONSTRAINT [FK_ExamComponents_ExamBaseComponents_BaseComponentId] FOREIGN KEY ([BaseComponentId]) REFERENCES [dbo].[ExamBaseComponents] ([Id]),

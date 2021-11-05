@@ -4,9 +4,10 @@
     [AchievementTypeId] UNIQUEIDENTIFIER NOT NULL,
     [StudentId]         UNIQUEIDENTIFIER NOT NULL,
     [LocationId]        UNIQUEIDENTIFIER NULL,
-    [RecordedById]      UNIQUEIDENTIFIER NOT NULL,
+    [CreatedById]       UNIQUEIDENTIFIER NOT NULL,
     [OutcomeId]         UNIQUEIDENTIFIER NOT NULL,
-    [CreatedDate]       DATE             NOT NULL,
+    [CreatedDate]       DATETIME2 (7)    NOT NULL,
+    [Date]              DATE             NOT NULL,
     [Comments]          NVARCHAR (MAX)   NULL,
     [Points]            INT              NOT NULL,
     [Deleted]           BIT              NOT NULL,
@@ -16,7 +17,7 @@
     CONSTRAINT [FK_Achievements_AchievementTypes_AchievementTypeId] FOREIGN KEY ([AchievementTypeId]) REFERENCES [dbo].[AchievementTypes] ([Id]),
     CONSTRAINT [FK_Achievements_Locations_LocationId] FOREIGN KEY ([LocationId]) REFERENCES [dbo].[Locations] ([Id]),
     CONSTRAINT [FK_Achievements_Students_StudentId] FOREIGN KEY ([StudentId]) REFERENCES [dbo].[Students] ([Id]),
-    CONSTRAINT [FK_Achievements_Users_RecordedById] FOREIGN KEY ([RecordedById]) REFERENCES [dbo].[Users] ([Id])
+    CONSTRAINT [FK_Achievements_Users_CreatedById] FOREIGN KEY ([CreatedById]) REFERENCES [dbo].[Users] ([Id])
 );
 
 
@@ -31,6 +32,11 @@ CREATE NONCLUSTERED INDEX [IX_Achievements_AchievementTypeId]
 
 
 GO
+CREATE NONCLUSTERED INDEX [IX_Achievements_CreatedById]
+    ON [dbo].[Achievements]([CreatedById] ASC);
+
+
+GO
 CREATE NONCLUSTERED INDEX [IX_Achievements_LocationId]
     ON [dbo].[Achievements]([LocationId] ASC);
 
@@ -38,11 +44,6 @@ CREATE NONCLUSTERED INDEX [IX_Achievements_LocationId]
 GO
 CREATE NONCLUSTERED INDEX [IX_Achievements_OutcomeId]
     ON [dbo].[Achievements]([OutcomeId] ASC);
-
-
-GO
-CREATE NONCLUSTERED INDEX [IX_Achievements_RecordedById]
-    ON [dbo].[Achievements]([RecordedById] ASC);
 
 
 GO

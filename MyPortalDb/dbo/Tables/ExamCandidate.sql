@@ -13,6 +13,6 @@
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_ExamCandidate_StudentId]
+CREATE NONCLUSTERED INDEX [IX_ExamCandidate_StudentId]
     ON [dbo].[ExamCandidate]([StudentId] ASC);
 
