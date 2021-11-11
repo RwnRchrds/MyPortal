@@ -36,9 +36,8 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(typeof(IEnumerable<StudentCollectionModel>), 200)]
         public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchOptions searchModel)
         {
-            IEnumerable<StudentCollectionModel> students;
-
-            students = (await StudentService.Get(searchModel)).Select(x => new StudentCollectionModel(x));
+            var students = (await StudentService.Get(searchModel));
+                //.Select(x => new StudentCollectionModel(x));
 
             return Ok(students);
         }

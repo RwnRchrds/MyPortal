@@ -25,6 +25,54 @@ namespace MyPortal.Database.Repositories
 
         }
 
+        private Query HouseCte
+        {
+            get
+            {
+                var query = new Query("Students as S");
+                query.LeftJoin("StudentGroupMemberships as SGM", "SGM.StudentId", "S.Id");
+                query.LeftJoin("StudentGroups as SG", "SG.Id", "SGM.StudentGroupId");
+                query.Join("Houses as H", "H.StudentGroupId", "SG.Id");
+
+                query.Select("S.Id as StudentId");
+                query.SelectAllColumns(typeof(House), "H");
+
+                return query;
+            }
+        }
+
+        private Query RegGroupCte
+        {
+            get
+            {
+                var query = new Query("Students as S");
+                query.LeftJoin("StudentGroupMemberships as SGM", "SGM.StudentId", "S.Id");
+                query.LeftJoin("StudentGroups as SG", "SG.Id", "SGM.StudentGroupId");
+                query.Join("RegGroups as R", "R.StudentGroupId", "SG.Id");
+
+                query.Select("S.Id as StudentId");
+                query.SelectAllColumns(typeof(RegGroup), "R");
+
+                return query;
+            }
+        }
+
+        private Query YearGroupCte
+        {
+            get
+            {
+                var query = new Query("Students as S");
+                query.LeftJoin("StudentGroupMemberships as SGM", "SGM.StudentId", "S.Id");
+                query.LeftJoin("StudentGroups as SG", "SG.Id", "SGM.StudentGroupId");
+                query.Join("YearGroups as Y", "Y.StudentGroupId", "SG.Id");
+
+                query.Select("S.Id as StudentId");
+                query.SelectAllColumns(typeof(YearGroup), "Y");
+
+                return query;
+            }
+        }
+
         protected override Query JoinRelated(Query query)
         {
             JoinEntity(query, "People", "P", "PersonId");
@@ -137,6 +185,13 @@ namespace MyPortal.Database.Repositories
             
             ApplySearch(query, searchParams);
             
+            return await ExecuteQuery(query);
+        }
+
+        public async Task<IEnumerable<Student>> GetAllExtended(StudentSearchOptions searchOptions)
+        {
+            var query = GenerateQuery();
+            ApplySearch(query, searchOptions);
             return await ExecuteQuery(query);
         }
 
