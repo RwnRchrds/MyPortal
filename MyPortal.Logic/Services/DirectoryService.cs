@@ -136,13 +136,8 @@ namespace MyPortal.Logic.Services
 
                 if (directory.Restricted)
                 {
-                    return user.UserType == UserTypes.Staff;
-                }
-
-                if (directory.Restricted)
-                {
-                    if (user.UserType == UserTypes.Staff || user.Person?.DirectoryId == directory.Id ||
-                        directory.ParentId != null && await IsAuthorised(user, directory.ParentId.Value))
+                    if ((user.UserType == UserTypes.Staff || user.Person?.DirectoryId == directory.Id) &&
+                        (directory.ParentId != null || await IsAuthorised(user, directory.ParentId.Value)))
                     {
                         return true;
                     }

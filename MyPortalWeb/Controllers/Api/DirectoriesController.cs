@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
 using MyPortal.Logic.Models.Response.Documents;
+using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
@@ -18,8 +20,12 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/document/directories")]
     public class DirectoriesController : BaseApiController
     {
-        public DirectoriesController(IAppServiceCollection services) : base(services)
+        private IDirectoryService _directoryService;
+
+        public DirectoriesController(IUserService userService, IRoleService roleService,
+            IDirectoryService directoryService) : base(userService, roleService)
         {
+            _directoryService = directoryService;
         }
 
         [HttpGet]
@@ -27,18 +33,17 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(typeof(DirectoryChildListWrapper), 200)]
         public async Task<IActionResult> GetChildren([FromQuery] Guid directoryId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
+                var user = await UserService.GetUserByPrincipal(User);
 
-                var user = await Services.Users.GetUserByPrincipal(User);
-
-                if (await Services.Directories.IsAuthorised(user, directoryId))
+                if (await _directoryService.IsAuthorised(user, directoryId))
                 {
-                    var directory = await Services.Directories.GetById(directoryId);
+                    var directory = await _directoryService.GetById(directoryId);
 
                     var userIsStaff = user.UserType == UserTypes.Staff;
 
-                    var children = await Services.Directories.GetChildren(directoryId, userIsStaff);
+                    var children = await _directoryService.GetChildren(directoryId, userIsStaff);
 
                     var childList = new List<DirectoryChildCollectionModel>();
 
@@ -54,8 +59,12 @@ namespace MyPortalWeb.Controllers.Api
                     return Ok(response);
                 }
 
-                return Unauthorized("Access denied.");
-            });
+                return Forbid("You do not have permission to access this directory.");
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPost]
@@ -63,11 +72,11 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(200)]
         public async Task<IActionResult> Create([FromBody] CreateDirectoryModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var user = await Services.Users.GetUserByPrincipal(User);
+                var user = await UserService.GetUserByPrincipal(User);
 
-                if (await Services.Directories.IsAuthorised(user, model.ParentId))
+                if (await _directoryService.IsAuthorised(user, model.ParentId))
                 {
                     var directory = new CreateDirectoryModel
                     {
@@ -76,13 +85,17 @@ namespace MyPortalWeb.Controllers.Api
                         Restricted = model.Restricted
                     };
 
-                    await Services.Directories.Create(directory);
+                    await _directoryService.Create(directory);
 
                     return Ok();
                 }
 
-                return Unauthorized();
-            });
+                return Forbid();
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPut]
@@ -90,11 +103,11 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(200)]
         public async Task<IActionResult> Update([FromBody] UpdateDirectoryModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var user = await Services.Users.GetUserByPrincipal(User);
+                var user = await UserService.GetUserByPrincipal(User);
 
-                if (await Services.Directories.IsAuthorised(user, model.Id))
+                if (await _directoryService.IsAuthorised(user, model.Id))
                 {
                     var directory = new UpdateDirectoryModel
                     {
@@ -104,13 +117,17 @@ namespace MyPortalWeb.Controllers.Api
                         Restricted = model.Restricted
                     };
 
-                    await Services.Directories.Update(directory);
+                    await _directoryService.Update(directory);
 
                     return Ok();
                 }
 
                 return Unauthorized();
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpDelete]
@@ -118,19 +135,23 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(200)]
         public async Task<IActionResult> Delete([FromQuery] Guid directoryId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var user = await Services.Users.GetUserByPrincipal(User);
+                var user = await UserService.GetUserByPrincipal(User);
 
-                if (await Services.Directories.IsAuthorised(user, directoryId))
+                if (await _directoryService.IsAuthorised(user, directoryId))
                 {
-                    await Services.Directories.Delete(directoryId);
+                    await _directoryService.Delete(directoryId);
 
                     return Ok();
                 }
 
                 return Unauthorized();
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
@@ -138,19 +159,23 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(typeof(DirectoryModel), 200)]
         public async Task<IActionResult> GetById([FromQuery] Guid directoryId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var user = await Services.Users.GetUserByPrincipal(User);
+                var user = await UserService.GetUserByPrincipal(User);
 
-                if (await Services.Directories.IsAuthorised(user, directoryId))
+                if (await _directoryService.IsAuthorised(user, directoryId))
                 {
-                    var directory = await Services.Directories.GetById(directoryId);
+                    var directory = _directoryService.GetById(directoryId);
 
                     return Ok(directory);
                 }
 
                 return Unauthorized("Access denied.");
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
     }
 }

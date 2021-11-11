@@ -1,12 +1,15 @@
 ﻿CREATE TABLE [dbo].[StaffMembers] (
-    [Id]            UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
-    [LineManagerId] UNIQUEIDENTIFIER NULL,
-    [PersonId]      UNIQUEIDENTIFIER NOT NULL,
-    [Code]          NVARCHAR (128)   NOT NULL,
-    [NiNumber]      NVARCHAR (128)   NULL,
-    [PostNominal]   NVARCHAR (128)   NULL,
-    [TeachingStaff] BIT              NOT NULL,
-    [Deleted]       BIT              NOT NULL,
+    [Id]             UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
+    [LineManagerId]  UNIQUEIDENTIFIER NULL,
+    [PersonId]       UNIQUEIDENTIFIER NOT NULL,
+    [Code]           NVARCHAR (128)   NOT NULL,
+    [BankName]       NVARCHAR (50)    NULL,
+    [BankAccount]    NVARCHAR (15)    NULL,
+    [BankSortCode]   NVARCHAR (10)    NULL,
+    [NiNumber]       NVARCHAR (9)     NULL,
+    [Qualifications] NVARCHAR (128)   NULL,
+    [TeachingStaff]  BIT              NOT NULL,
+    [Deleted]        BIT              NOT NULL,
     CONSTRAINT [PK_StaffMembers] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_StaffMembers_People_PersonId] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[People] ([Id]),
     CONSTRAINT [FK_StaffMembers_StaffMembers_LineManagerId] FOREIGN KEY ([LineManagerId]) REFERENCES [dbo].[StaffMembers] ([Id])
@@ -19,6 +22,6 @@ CREATE NONCLUSTERED INDEX [IX_StaffMembers_LineManagerId]
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_StaffMembers_PersonId]
+CREATE NONCLUSTERED INDEX [IX_StaffMembers_PersonId]
     ON [dbo].[StaffMembers]([PersonId] ASC);
 

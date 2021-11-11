@@ -7,28 +7,38 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour.Incidents;
+using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
 {
     [Route("api/behaviour/incidents")]
-    public class IncidentsController : StudentApiController
+    public class IncidentsController : StudentDataController
     {
-        public IncidentsController(IAppServiceCollection services) : base(services)
+        private IAcademicYearService _academicYearService;
+        private IBehaviourService _behaviourService;
+
+        public IncidentsController(IStudentService studentService, IUserService userService, IRoleService roleService,
+            IAcademicYearService academicYearService, IBehaviourService behaviourService) : base(studentService,
+            userService, roleService)
         {
+            _academicYearService = academicYearService;
+            _behaviourService = behaviourService;
         }
 
         [HttpGet]
         [Route("id", Name = "ApiIncidentGetById")]
+        [Permission(PermissionValue.BehaviourViewIncidents)]
         [ProducesResponseType(typeof(IncidentModel), 200)]
         public async Task<IActionResult> GetById(Guid incidentId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var incident = await Services.Incidents.GetIncidentById(incidentId);
+                var incident = await _behaviourService.GetIncidentById(incidentId);
 
                 if (await AuthoriseStudent(incident.StudentId))
                 {
@@ -36,85 +46,96 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            }, PermissionValue.BehaviourViewIncidents);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [Route("student", Name = "ApiIncidentGetByStudent")]
+        [Permission(PermissionValue.BehaviourViewIncidents)]
         [ProducesResponseType(typeof(IEnumerable<IncidentCollectionModel>), 200)]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
                 if (await AuthoriseStudent(studentId))
                 {
-                    var fromAcademicYearId = academicYearId ?? (await Services.AcademicYears.GetCurrentAcademicYear(true)).Id.Value;
+                    var fromAcademicYearId = academicYearId ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id.Value;
 
-                    var incidents = await Services.Incidents.GetIncidentsByStudent(studentId, fromAcademicYearId);
+                    var incidents = await _behaviourService.GetIncidentsByStudent(studentId, fromAcademicYearId);
 
                     return Ok(incidents.Select(x => x.ToListModel()));
                 }
 
                 return Forbid();
-            }, PermissionValue.BehaviourViewIncidents);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPost]
         [Authorize(Policy = Policies.UserType.Staff)]
+        [Permission(PermissionValue.BehaviourEditIncidents)]
         [Route("create", Name = "ApiIncidentCreate")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Create([FromBody] CreateIncidentModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var user = await Services.Users.GetUserByPrincipal(User);
+                var user = await UserService.GetUserByPrincipal(User);
 
-                var incident = new CreateIncidentModel
-                {
-                    AcademicYearId = model.AcademicYearId,
-                    StudentId = model.StudentId,
-                    BehaviourTypeId = model.BehaviourTypeId,
-                    Comments = model.Comments,
-                    LocationId = model.LocationId,
-                    OutcomeId = model.OutcomeId,
-                    Points = model.Points,
-                    StatusId = model.StatusId
-                };
+                model.CreatedById = user.Id.Value;
 
-                await Services.Incidents.CreateIncident(incident);
+                await _behaviourService.CreateIncident(model);
 
                 return Ok();
-            }, PermissionValue.BehaviourEditIncidents);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPut]
         [Authorize(Policy = Policies.UserType.Staff)]
+        [Permission(PermissionValue.BehaviourEditIncidents)]
         [Route("update", Name = "ApiIncidentUpdate")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Update([FromBody] UpdateIncidentModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var user = await Services.Users.GetUserByPrincipal(User);
-
-                await Services.Incidents.UpdateIncident(model);
+                await _behaviourService.UpdateIncident(model);
 
                 return Ok();
-            }, PermissionValue.BehaviourEditIncidents);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpDelete]
         [Authorize(Policy = Policies.UserType.Staff)]
+        [Permission(PermissionValue.BehaviourEditIncidents)]
         [Route("delete", Name = "ApiIncidentDelete")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Delete([FromQuery] Guid incidentId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                await Services.Incidents.DeleteIncident(incidentId);
-
+                await _behaviourService.DeleteIncident(incidentId);
                 return Ok();
-            }, PermissionValue.BehaviourEditIncidents);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
     }
 }

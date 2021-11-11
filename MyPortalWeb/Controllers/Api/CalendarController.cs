@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Database.Enums;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
+using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
@@ -13,18 +16,23 @@ namespace MyPortalWeb.Controllers.Api
     [Authorize]
     public class CalendarController : BaseApiController
     {
-        public CalendarController(IAppServiceCollection services) : base(services)
+        private ICalendarService _calendarService;
+
+        public CalendarController(IUserService userService, IRoleService roleService, ICalendarService calendarService)
+            : base(userService, roleService)
         {
+            _calendarService = calendarService;
         }
 
         [HttpGet]
         [AllowAnonymous]
         [Route("student/{studentId}")]
+        [Permission(PermissionValue.StudentViewStudentDetails)]
         [ProducesResponseType(typeof(IEnumerable<CalendarEventModel>), 200)]
         public async Task<IActionResult> GetStudentCalendarEvents([FromRoute] Guid studentId,
             [FromQuery] DateTime? dateFrom, [FromQuery] DateTime? dateTo)
         {
-            return await ProcessAsync(async () =>
+            try
             {
                 DateRange dateRange;
 
@@ -38,10 +46,14 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 var events =
-                    await Services.Calendar.GetCalendarEventsByStudent(studentId, dateRange);
+                    await _calendarService.GetCalendarEventsByStudent(studentId, dateRange);
 
                 return Ok(events);
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
     }
 }

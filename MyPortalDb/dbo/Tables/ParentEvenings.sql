@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[ParentEvenings] (
     [Id]            UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
     [EventId]       UNIQUEIDENTIFIER NOT NULL,
+    [Name]          NVARCHAR (128)   NULL,
     [BookingOpened] DATETIME2 (7)    NOT NULL,
     [BookingClosed] DATETIME2 (7)    NOT NULL,
     CONSTRAINT [PK_ParentEvenings] PRIMARY KEY CLUSTERED ([Id] ASC),
@@ -9,6 +10,6 @@
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_ParentEvenings_EventId]
+CREATE NONCLUSTERED INDEX [IX_ParentEvenings_EventId]
     ON [dbo].[ParentEvenings]([EventId] ASC);
 

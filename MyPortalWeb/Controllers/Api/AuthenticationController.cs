@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Requests.Auth;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -12,24 +13,9 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/auth")]
     public class AuthenticationController : BaseApiController
     {
-        [HttpPost]
-        [Route("login")]
-        [ProducesResponseType(typeof(TokenModel), 200)]
-        public async Task<IActionResult> Login([FromBody] LoginModel login)
+        public AuthenticationController(IUserService userService, IRoleService roleService) : base(userService,
+            roleService)
         {
-            return await ProcessAsync(async () =>
-            {
-                var loginResult = await Services.Users.Login(login);
-
-                if (loginResult.Succeeded)
-                {
-                    var tokenModel = await Services.Tokens.GenerateToken(loginResult.User);
-
-                    return Ok(tokenModel);
-                }
-
-                return Unauthorized(loginResult.ErrorMessage);
-            });
         }
 
         [HttpGet]
@@ -38,52 +24,18 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(typeof(IEnumerable<int>), 200)]
         public async Task<IActionResult> GetEffectivePermissions()
         {
-            return await ProcessAsync(async () =>
+            try
             {
                 var user = await GetLoggedInUser();
 
-                var effectivePermissions = await Services.Users.GetPermissionValues(user.Id.Value);
+                var effectivePermissions = await UserService.GetPermissionValues(user.Id.Value);
 
                 return Ok(effectivePermissions);
-            });
-        }
-
-        [HttpPost]
-        [Route("tokens/refresh")]
-        [ProducesResponseType(typeof(TokenModel), 200)]
-        public async Task<IActionResult> RefreshToken([FromBody] TokenModel tokenModel)
-        {
-            return await ProcessAsync(async () =>
+            }
+            catch (Exception e)
             {
-                var principal = Services.Tokens.GetPrincipalFromToken(tokenModel.Token);
-
-                var user = await Services.Users.GetUserByPrincipal(principal);
-
-                var newTokenModel = await Services.Tokens.RefreshToken(user, tokenModel);
-
-                return Ok(newTokenModel);
-            });
-        }
-
-        [HttpPost]
-        [Route("tokens/revoke")]
-        [ProducesResponseType(typeof(bool), 200)]
-        public async Task<IActionResult> RevokeToken([FromBody] TokenModel tokenModel)
-        {
-            return await ProcessAsync(async () =>
-            {
-                var principal = Services.Tokens.GetPrincipalFromToken(tokenModel.Token);
-
-                var user = await Services.Users.GetUserByPrincipal(principal);
-
-                var result = await Services.Tokens.RevokeToken(user, tokenModel);
-
-                return Ok(result);
-            });
-        }
-
-        public AuthenticationController(IAppServiceCollection services) : base(services)
-        {
+                return HandleException(e);
+            }
         }
     }
 }

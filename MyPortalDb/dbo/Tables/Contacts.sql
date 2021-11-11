@@ -11,6 +11,6 @@
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_Contacts_PersonId]
+CREATE NONCLUSTERED INDEX [IX_Contacts_PersonId]
     ON [dbo].[Contacts]([PersonId] ASC);
 

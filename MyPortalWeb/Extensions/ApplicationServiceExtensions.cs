@@ -4,8 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 using MyPortal.Database.Models;
 using MyPortal.Logic;
 using MyPortal.Logic.Enums;
+using MyPortal.Logic.FileProviders;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Configuration;
+using MyPortal.Logic.Services;
 
 namespace MyPortalWeb.Extensions
 {
@@ -25,7 +28,47 @@ namespace MyPortalWeb.Extensions
 
         public static void AddBusinessServices(this IServiceCollection services)
         {
-            services.AddScoped<IAppServiceCollection, AppServiceCollection>();
+            services.AddScoped<IAcademicYearService, AcademicYearService>();
+            services.AddScoped<IActivityService, ActivityService>();
+            services.AddScoped<IAddressService, AddressService>();
+            services.AddScoped<IAttendanceService, AttendanceService>();
+            services.AddScoped<IBehaviourService, BehaviourService>();
+            services.AddScoped<IBillService, BillService>();
+            services.AddScoped<ICalendarService, CalendarService>();
+            services.AddScoped<IContactService, ContactService>();
+            services.AddScoped<ICurriculumService, CurriculumService>();
+            services.AddScoped<IDirectoryService, DirectoryService>();
+            services.AddScoped<IDocumentService, DocumentService>();
+            services.AddScoped<IHouseService, HouseService>();
+            services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<ILogNoteService, LogNoteService>();
+            services.AddScoped<IPersonService, PersonService>();
+            services.AddScoped<IRegGroupService, RegGroupService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<ISchoolService, SchoolService>();
+            services.AddScoped<ISenService, SenService>();
+            services.AddScoped<IStaffMemberService, StaffMemberService>();
+            services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<ISystemSettingService, SystemSettingService>();
+            services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IYearGroupService, YearGroupService>();
+
+            if (Configuration.Instance.FileProvider == FileProvider.Local)
+            {
+                services.AddScoped<ILocalFileProvider, LocalFileProvider>();
+                services.AddScoped<IFileService, LocalFileService>();
+            }
+            else
+            {
+                if (Configuration.Instance.FileProvider == FileProvider.GoogleDrive)
+                {
+                    services.AddScoped<IHostedFileProvider, GoogleFileProvider>();
+                }
+                
+                services.AddScoped<IFileService, HostedFileService>();
+            }
         }
 
         private static void SetConfiguration(IConfiguration config)

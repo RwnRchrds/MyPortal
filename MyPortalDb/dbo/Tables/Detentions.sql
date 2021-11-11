@@ -16,7 +16,7 @@ CREATE NONCLUSTERED INDEX [IX_Detentions_DetentionTypeId]
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_Detentions_EventId]
+CREATE NONCLUSTERED INDEX [IX_Detentions_EventId]
     ON [dbo].[Detentions]([EventId] ASC);
 
 

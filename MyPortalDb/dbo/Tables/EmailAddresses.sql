@@ -7,9 +7,15 @@
     [Main]     BIT              NOT NULL,
     [Notes]    NVARCHAR (MAX)   NULL,
     CONSTRAINT [PK_EmailAddresses] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_EmailAddresses_Agencies_AgencyId] FOREIGN KEY ([AgencyId]) REFERENCES [dbo].[Agencies] ([Id]),
     CONSTRAINT [FK_EmailAddresses_EmailAddressTypes_TypeId] FOREIGN KEY ([TypeId]) REFERENCES [dbo].[EmailAddressTypes] ([Id]),
     CONSTRAINT [FK_EmailAddresses_People_PersonId] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[People] ([Id])
 );
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_EmailAddresses_AgencyId]
+    ON [dbo].[EmailAddresses]([AgencyId] ASC);
 
 
 GO

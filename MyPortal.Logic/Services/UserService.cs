@@ -28,11 +28,15 @@ namespace MyPortal.Logic.Services
 {
     public class UserService : BaseService, IUserService
     {
-        private readonly IIdentityServiceCollection _identityServices;
+        private UserManager<User> _userManager;
+        private RoleManager<Role> _roleManager;
+        private SignInManager<User> _signInManager;
 
-        public UserService(IIdentityServiceCollection identityServices)
+        public UserService(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager)
         {
-            _identityServices = identityServices;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _signInManager = signInManager;
         }
 
         public async Task<IEnumerable<PermissionModel>> GetPermissions(Guid userId)
@@ -81,7 +85,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<UserModel>> GetUsers(string usernameSearch)
         {
-            var query = _identityServices.UserManager.Users;
+            var query = _userManager.Users;
 
             if (!string.IsNullOrWhiteSpace(usernameSearch))
             {
@@ -112,7 +116,7 @@ namespace MyPortal.Logic.Services
                     CreatedDate = DateTime.Now
                 };
 
-                var result = await _identityServices.UserManager.CreateAsync(user, request.Password);
+                var result = await _userManager.CreateAsync(user, request.Password);
 
                 if (!result.Succeeded)
                 {
@@ -127,7 +131,7 @@ namespace MyPortal.Logic.Services
 
         public async Task LinkPerson(Guid userId, Guid personId)
         {
-            var user = await _identityServices.UserManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user == null)
             {
@@ -136,12 +140,12 @@ namespace MyPortal.Logic.Services
 
             user.PersonId = personId;
 
-            await _identityServices.UserManager.UpdateAsync(user);
+            await _userManager.UpdateAsync(user);
         }
 
         public async Task UnlinkPerson(Guid userId)
         {
-            var user = await _identityServices.UserManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user == null)
             {
@@ -150,14 +154,14 @@ namespace MyPortal.Logic.Services
 
             user.PersonId = null;
 
-            await _identityServices.UserManager.UpdateAsync(user);
+            await _userManager.UpdateAsync(user);
         }
 
         public async Task UpdateUser(params UpdateUserModel[] updateUserRequests)
         {
             foreach (var updateUserRequest in updateUserRequests)
             {
-                var user = await _identityServices.UserManager.FindByIdAsync(updateUserRequest.Id.ToString());
+                var user = await _userManager.FindByIdAsync(updateUserRequest.Id.ToString());
 
                 if (user == null)
                 {
@@ -166,23 +170,23 @@ namespace MyPortal.Logic.Services
 
                 user.PersonId = updateUserRequest.PersonId;
 
-                await _identityServices.UserManager.UpdateAsync(user);
+                await _userManager.UpdateAsync(user);
 
                 var selectedRoles = new List<Role>();
 
-                var existingRoleNames = await _identityServices.UserManager.GetRolesAsync(user);
+                var existingRoleNames = await _userManager.GetRolesAsync(user);
 
                 foreach (var roleId in updateUserRequest.RoleIds)
                 {
-                    selectedRoles.Add(await _identityServices.RoleManager.FindByIdAsync(roleId.ToString()));
+                    selectedRoles.Add(await _roleManager.FindByIdAsync(roleId.ToString()));
                 }
 
                 var rolesToRemove = existingRoleNames.Where(r => selectedRoles.All(s => s.Name != r));
 
                 var rolesToAdd = selectedRoles.Where(s => existingRoleNames.All(r => r != s.Name)).Select(x => x.Name);
 
-                await _identityServices.UserManager.RemoveFromRolesAsync(user, rolesToRemove);
-                await _identityServices.UserManager.AddToRolesAsync(user, rolesToAdd);
+                await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+                await _userManager.AddToRolesAsync(user, rolesToAdd);
             }
         }
 
@@ -196,22 +200,22 @@ namespace MyPortal.Logic.Services
 
                     await RemoveFromRoles(userId, userRoles.Select(ur => ur.RoleId).ToArray());
 
-                    var user = await _identityServices.UserManager.FindByIdAsync(userId.ToString());
+                    var user = await _userManager.FindByIdAsync(userId.ToString());
 
-                    await _identityServices.UserManager.DeleteAsync(user);
+                    await _userManager.DeleteAsync(user);
                 }
             }
         }
 
         public async Task SetPassword(Guid userId, string newPassword)
         {
-            var user = await _identityServices.UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
             List<IdentityError> errors = new List<IdentityError>();
 
-            foreach (var passwordValidator in _identityServices.UserManager.PasswordValidators)
+            foreach (var passwordValidator in _userManager.PasswordValidators)
             {
-                var passwordValidationResult = await passwordValidator.ValidateAsync(_identityServices.UserManager, user, newPassword);
+                var passwordValidationResult = await passwordValidator.ValidateAsync(_userManager, user, newPassword);
                 if (!passwordValidationResult.Succeeded)
                 {
                     errors.AddRange(passwordValidationResult.Errors);
@@ -224,9 +228,9 @@ namespace MyPortal.Logic.Services
                 throw new Exception(message);
             }
 
-            await _identityServices.UserManager.RemovePasswordAsync(user);
+            await _userManager.RemovePasswordAsync(user);
 
-            var setPasswordResult = await _identityServices.UserManager.AddPasswordAsync(user, newPassword);
+            var setPasswordResult = await _userManager.AddPasswordAsync(user, newPassword);
 
             if (!setPasswordResult.Succeeded)
             {
@@ -244,7 +248,7 @@ namespace MyPortal.Logic.Services
         {
             var result = new LoginResult();
 
-            var user = await _identityServices.UserManager.Users.Include(u => u.Person)
+            var user = await _userManager.Users.Include(u => u.Person)
                 .FirstOrDefaultAsync(x => x.UserName == login.Username.ToLower());
 
             if (user == null)
@@ -254,7 +258,7 @@ namespace MyPortal.Logic.Services
                 return result;
             }
 
-            var signInResult = await _identityServices.SignInManager.CheckPasswordSignInAsync(user, login.Password, false);
+            var signInResult = await _signInManager.CheckPasswordSignInAsync(user, login.Password, false);
 
             if (!signInResult.Succeeded)
             {
@@ -274,39 +278,39 @@ namespace MyPortal.Logic.Services
 
         public async Task AddToRoles(Guid userId, params Guid[] roleIds)
         {
-            var user = await _identityServices.UserManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.FindByIdAsync(userId.ToString());
 
             foreach (var roleId in roleIds)
             {
-                var role = await _identityServices.RoleManager.FindByIdAsync(roleId.ToString());
+                var role = await _roleManager.FindByIdAsync(roleId.ToString());
 
-                await _identityServices.UserManager.AddToRoleAsync(user, role.Name);
+                await _userManager.AddToRoleAsync(user, role.Name);
             }
         }
 
         public async Task RemoveFromRoles(Guid userId, params Guid[] roleIds)
         {
-            var user = await _identityServices.UserManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.FindByIdAsync(userId.ToString());
 
             foreach (var roleId in roleIds)
             {
-                var role = await _identityServices.RoleManager.FindByIdAsync(roleId.ToString());
+                var role = await _roleManager.FindByIdAsync(roleId.ToString());
 
-                await _identityServices.UserManager.RemoveFromRoleAsync(user, role.Name);
+                await _userManager.RemoveFromRoleAsync(user, role.Name);
             }
         }
 
         public async Task<IEnumerable<RoleModel>> GetUserRoles(Guid userId)
         {
-            var user = await _identityServices.UserManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.FindByIdAsync(userId.ToString());
 
-            var roleNames = await _identityServices.UserManager.GetRolesAsync(user);
+            var roleNames = await _userManager.GetRolesAsync(user);
 
             var roles = new List<RoleModel>();
 
             foreach (var roleName in roleNames)
             {
-                var role = await _identityServices.RoleManager.FindByNameAsync(roleName);
+                var role = await _roleManager.FindByNameAsync(roleName);
                 
                 roles.Add(new RoleModel(role));
             }
@@ -316,12 +320,12 @@ namespace MyPortal.Logic.Services
 
         public async Task<bool> UsernameExists(string username)
         {
-            return await _identityServices.UserManager.Users.AnyAsync(x => x.UserName == username.ToLower());
+            return await _userManager.Users.AnyAsync(x => x.UserName == username.ToLower());
         }
 
         public async Task SetUserEnabled(Guid userId, bool enabled)
         {
-            var user = await _identityServices.UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
             if (user == null)
             {
@@ -330,14 +334,14 @@ namespace MyPortal.Logic.Services
 
             user.Enabled = enabled;
 
-            await _identityServices.UserManager.UpdateAsync(user);
+            await _userManager.UpdateAsync(user);
         }
 
         public async Task<UserModel> GetUserById(Guid userId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var user = await _identityServices.UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
                 if (user.PersonId.HasValue)
                 {

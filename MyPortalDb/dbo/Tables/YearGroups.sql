@@ -1,11 +1,12 @@
 ﻿CREATE TABLE [dbo].[YearGroups] (
     [Id]                    UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
-    [Name]                  NVARCHAR (256)   NOT NULL,
-    [HeadId]                UNIQUEIDENTIFIER NULL,
+    [StudentGroupId]        UNIQUEIDENTIFIER NOT NULL,
     [CurriculumYearGroupId] UNIQUEIDENTIFIER NOT NULL,
+    [StaffMemberId]         UNIQUEIDENTIFIER NULL,
     CONSTRAINT [PK_YearGroups] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_YearGroups_CurriculumYearGroups_CurriculumYearGroupId] FOREIGN KEY ([CurriculumYearGroupId]) REFERENCES [dbo].[CurriculumYearGroups] ([Id]),
-    CONSTRAINT [FK_YearGroups_StaffMembers_HeadId] FOREIGN KEY ([HeadId]) REFERENCES [dbo].[StaffMembers] ([Id])
+    CONSTRAINT [FK_YearGroups_StaffMembers_StaffMemberId] FOREIGN KEY ([StaffMemberId]) REFERENCES [dbo].[StaffMembers] ([Id]),
+    CONSTRAINT [FK_YearGroups_StudentGroups_StudentGroupId] FOREIGN KEY ([StudentGroupId]) REFERENCES [dbo].[StudentGroups] ([Id])
 );
 
 
@@ -15,6 +16,11 @@ CREATE NONCLUSTERED INDEX [IX_YearGroups_CurriculumYearGroupId]
 
 
 GO
-CREATE NONCLUSTERED INDEX [IX_YearGroups_HeadId]
-    ON [dbo].[YearGroups]([HeadId] ASC);
+CREATE NONCLUSTERED INDEX [IX_YearGroups_StaffMemberId]
+    ON [dbo].[YearGroups]([StaffMemberId] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_YearGroups_StudentGroupId]
+    ON [dbo].[YearGroups]([StudentGroupId] ASC);
 

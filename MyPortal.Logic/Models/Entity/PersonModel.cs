@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Attributes;
@@ -10,11 +11,11 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class PersonModel : BaseModel
+    public class PersonModel : BaseModel, ILoadable
     {
         public PersonModel(Person model) : base(model)
         {
-            
+            LoadFromModel(model);
         }
 
         private void LoadFromModel(Person model)
@@ -145,6 +146,15 @@ namespace MyPortal.Logic.Models.Entity
             }
 
             return name.Replace("  ", " ").Trim();
+        }
+
+        public async Task Load(IUnitOfWork unitOfWork)
+        {
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.People.GetById(Id.Value);
+                LoadFromModel(model);
+            }
         }
     }
 }

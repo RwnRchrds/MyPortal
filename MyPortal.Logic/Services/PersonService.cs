@@ -45,7 +45,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<IEnumerable<PersonSearchResultModel>> GetWithTypes(PersonSearchOptions searchModel)
+        public async Task<IEnumerable<PersonSearchResultModel>> GetPeopleWithTypes(PersonSearchOptions searchModel)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

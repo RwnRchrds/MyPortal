@@ -9,8 +9,6 @@
 );
 
 
-
-
 GO
 CREATE NONCLUSTERED INDEX [IX_Permissions_AreaId]
     ON [dbo].[Permissions]([AreaId] ASC);

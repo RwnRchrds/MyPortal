@@ -15,8 +15,12 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/yearGroups")]
     public class YearGroupsController : BaseApiController
     {
-        public YearGroupsController(IAppServiceCollection services) : base(services)
+        private IYearGroupService _yearGroupService;
+
+        public YearGroupsController(IUserService userService, IRoleService roleService,
+            IYearGroupService yearGroupService) : base(userService, roleService)
         {
+            _yearGroupService = yearGroupService;
         }
 
         [HttpGet]
@@ -24,12 +28,16 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(typeof(IEnumerable<YearGroupModel>), 200)]
         public async Task<IActionResult> GetYearGroups()
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var yearGroups = await Services.YearGroups.GetYearGroups();
+                var yearGroups = await _yearGroupService.GetYearGroups();
 
                 return Ok(yearGroups);
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
     }
 }

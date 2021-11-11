@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +17,12 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/people")]
     public class PersonController : BaseApiController
     {
-        public PersonController(IAppServiceCollection services) : base(services)
+        private IPersonService _personService;
+
+        public PersonController(IUserService userService, IRoleService roleService, IPersonService personService) :
+            base(userService, roleService)
         {
+            _personService = personService;
         }
 
         [HttpGet]
@@ -26,12 +31,16 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(typeof(IEnumerable<PersonSearchResultModel>), 200)]
         public async Task<IActionResult> SearchPeople([FromQuery] PersonSearchOptions searchModel)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var people = await Services.People.GetWithTypes(searchModel);
+                var people = await _personService.GetPeopleWithTypes(searchModel);
 
                 return Ok(people);
-            }, PermissionValue.SystemEditUsers);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
     }
 }

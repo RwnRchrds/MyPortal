@@ -4,52 +4,35 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortalWeb.Controllers.BaseControllers
 {
     
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
-    public abstract class BaseApiController : ControllerBase, IDisposable
+    public abstract class BaseApiController : ControllerBase
     {
-        protected readonly IAppServiceCollection Services;
+        protected IUserService UserService;
+        protected IRoleService RoleService;
 
-        public BaseApiController(IAppServiceCollection services)
+        public BaseApiController(IUserService userService, IRoleService roleService)
         {
-            Services = services;
-        }
-
-        public virtual void Dispose()
-        {
-            Services.Dispose();
-        }
-
-        protected async Task<IActionResult> ProcessAsync(Func<Task<IActionResult>> method, params PermissionValue[] permissionsRequired)
-        {
-            if (await UserHasPermission(permissionsRequired))
-            {
-                try
-                {
-                    return await method.Invoke();
-                }
-                catch (Exception e)
-                {
-                    return HandleException(e);
-                }
-            }
-
-            return Forbid();
+            UserService = userService;
+            RoleService = roleService;
         }
 
         protected async Task<UserModel> GetLoggedInUser()
         {
-            return await Services.Users.GetUserByPrincipal(User);
+            return await UserService.GetUserByPrincipal(User);
         }
 
         protected async Task<bool> UserHasPermission(params PermissionValue[] permissionValues)
@@ -65,7 +48,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
             {
                 if (Guid.TryParse(roleClaim.Value, out Guid roleId))
                 {
-                    var role = await Services.Roles.GetRoleById(roleId);
+                    var role = await RoleService.GetRoleById(roleId);
 
                     var rolePermissions = new BitArray(role.Permissions);
 
@@ -82,7 +65,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
             return false;
         }
 
-        private IActionResult HandleException(Exception ex)
+        protected IActionResult HandleException(Exception ex)
         {
             HttpStatusCode statusCode;
 
@@ -104,17 +87,12 @@ namespace MyPortalWeb.Controllers.BaseControllers
                     break;
             }
 
-            switch (statusCode)
-            {
-                case HttpStatusCode.NotFound:
-                    return NotFound(message);
-                case HttpStatusCode.Unauthorized:
-                    return Unauthorized(message);
-                case HttpStatusCode.Forbidden:
-                    return Forbid(message);
-                default:
-                    return BadRequest(message);
-            }
+            return StatusCode((int) statusCode, message);
+        }
+
+        protected IActionResult Error(int statusCode, object returnObject)
+        {
+            return StatusCode(statusCode, returnObject);
         }
     }
 }
