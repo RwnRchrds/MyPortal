@@ -8,76 +8,89 @@ using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Response.Students;
+using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
     [Route("api/students")]
-    public class StudentsController : StudentApiController
+    public class StudentsController : StudentDataController
     {
-        public StudentsController(IAppServiceCollection services) : base(services)
+        private IAcademicYearService _academicYearService;
+        
+        public StudentsController(IAcademicYearService academicYearService, IStudentService studentService, IUserService userService, IRoleService roleService) :
+            base(studentService, userService, roleService)
         {
+            _academicYearService = academicYearService;
         }
 
         [HttpGet]
         [Authorize(Policy = Policies.UserType.Staff)]
+        [Permission(PermissionValue.StudentViewStudentDetails)]
         [Route("search")]
         [ProducesResponseType(typeof(IEnumerable<StudentCollectionModel>), 200)]
         public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchOptions searchModel)
         {
-            return await ProcessAsync(async () =>
-            {
-                IEnumerable<StudentCollectionModel> students;
+            var students = (await StudentService.Get(searchModel));
+                //.Select(x => new StudentCollectionModel(x));
 
-                students = (await Services.Students.Get(searchModel)).Select(x => new StudentCollectionModel(x));
-
-                return Ok(students);
-            }, PermissionValue.StudentViewStudentDetails);
+            return Ok(students);
         }
 
         [HttpGet]
         [Route("id")]
+        [Permission(PermissionValue.StudentViewStudentDetails)]
         [ProducesResponseType(typeof(StudentModel), 200)]
         public async Task<IActionResult> GetById([FromQuery] Guid studentId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
                 if (await AuthoriseStudent(studentId))
                 {
-                    var student = await Services.Students.GetById(studentId);
+                    var student = await StudentService.GetById(studentId);
 
                     return Ok(student);
                 }
 
                 return Forbid();
-            }, PermissionValue.StudentViewStudentDetails);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [Route("stats")]
+        [Permission(PermissionValue.StudentViewStudentDetails)]
         [ProducesResponseType(typeof(StudentStatsModel), 200)]
         public async Task<IActionResult> GetStatsById([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
                 if (await AuthoriseStudent(studentId))
                 {
                     if (academicYearId == null || academicYearId == Guid.Empty)
                     {
-                        academicYearId = (await Services.AcademicYears.GetCurrentAcademicYear()).Id;
+                        academicYearId = (await _academicYearService.GetCurrentAcademicYear()).Id;
                     }
 
-                    var studentStats = await Services.Students.GetStatsById(studentId, academicYearId.Value);
+                    var studentStats = await StudentService.GetStatsById(studentId, academicYearId.Value);
 
                     return Ok(studentStats);
                 }
 
                 return Forbid();
-            }, PermissionValue.StudentViewStudentDetails);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
     }
 }

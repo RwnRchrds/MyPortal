@@ -22,18 +22,18 @@ namespace MyPortal.Logic.Services
 {
     public class RoleService : BaseService, IRoleService
     {
-        private readonly IIdentityServiceCollection _identityServices;
+        private RoleManager<Role> _roleManager;
 
-        public RoleService(IIdentityServiceCollection identityServices)
+        public RoleService(RoleManager<Role> roleManager)
         {
-            _identityServices = identityServices;
+            _roleManager = roleManager;
         }
 
         public async Task<TreeNode> GetPermissionsTree(Guid roleId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var role = await _identityServices.RoleManager.FindByIdAsync(roleId.ToString());
+                var role = await _roleManager.FindByIdAsync(roleId.ToString());
 
                 var systemAreas = (await unitOfWork.SystemAreas.GetAll()).ToList();
 
@@ -114,7 +114,7 @@ namespace MyPortal.Logic.Services
                     Description = request.Description
                 };
 
-                var result = await _identityServices.RoleManager.CreateAsync(role);
+                var result = await _roleManager.CreateAsync(role);
 
                 if (!result.Succeeded)
                 {
@@ -124,7 +124,7 @@ namespace MyPortal.Logic.Services
 
                 if (request.Permissions != null && request.Permissions.Any())
                 {
-                    role = await _identityServices.RoleManager.FindByNameAsync(request.Name);
+                    role = await _roleManager.FindByNameAsync(request.Name);
 
                     await SetPermissions(role.Id, request.Permissions);
                 }
@@ -139,7 +139,7 @@ namespace MyPortal.Logic.Services
         {
             foreach (var request in requests)
             {
-                var roleInDb = await _identityServices.RoleManager.FindByIdAsync(request.Id.ToString());
+                var roleInDb = await _roleManager.FindByIdAsync(request.Id.ToString());
 
                 if (roleInDb.System)
                 {
@@ -149,7 +149,7 @@ namespace MyPortal.Logic.Services
                 roleInDb.Name = request.Name;
                 roleInDb.Description = request.Description;
 
-                await _identityServices.RoleManager.UpdateAsync(roleInDb);
+                await _roleManager.UpdateAsync(roleInDb);
 
                 if (request.PermissionValues != null)
                 {
@@ -168,21 +168,21 @@ namespace MyPortal.Logic.Services
 
                     await unitOfWork.SaveChangesAsync();
 
-                    var roleInDb = await _identityServices.RoleManager.FindByIdAsync(roleId.ToString());
+                    var roleInDb = await _roleManager.FindByIdAsync(roleId.ToString());
 
                     if (roleInDb.System)
                     {
                         throw new LogicException("Cannot delete a system role.");
                     }
 
-                    await _identityServices.RoleManager.DeleteAsync(roleInDb);
+                    await _roleManager.DeleteAsync(roleInDb);
                 }
             }
         }
 
         public async Task<IEnumerable<RoleModel>> GetRoles(string roleName)
         {
-            var query = _identityServices.RoleManager.Roles;
+            var query = _roleManager.Roles;
 
             if (!string.IsNullOrWhiteSpace(roleName))
             {
@@ -196,7 +196,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<RoleModel> GetRoleById(Guid roleId)
         {
-            var role = await _identityServices.RoleManager.FindByIdAsync(roleId.ToString());
+            var role = await _roleManager.FindByIdAsync(roleId.ToString());
 
             if (role == null)
             {

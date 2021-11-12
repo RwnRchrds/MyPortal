@@ -8,16 +8,18 @@ using MyPortal.Logic.Interfaces.Services;
 
 namespace MyPortalWeb.Controllers.BaseControllers
 {
-    public abstract class StudentApiController : BaseApiController
+    public abstract class StudentDataController : BaseApiController
     {
+        protected IStudentService StudentService;
+        
         protected async Task<bool> AuthoriseStudent(Guid requestedStudentId)
         {
             if (User.IsType(UserTypes.Student))
             {
                 // Students can only access resources involving themselves
-                var user = await Services.Users.GetUserByPrincipal(User);
+                var user = await UserService.GetUserByPrincipal(User);
 
-                var student = await Services.Students.GetByUserId(user.Id.Value);
+                var student = await StudentService.GetByUserId(user.Id.Value);
 
                 if (student.Id == requestedStudentId)
                 {
@@ -38,8 +40,9 @@ namespace MyPortalWeb.Controllers.BaseControllers
             return false;
         }
 
-        protected StudentApiController(IAppServiceCollection services) : base(services)
+        protected StudentDataController(IStudentService studentService, IUserService userService, IRoleService roleService) : base(userService, roleService)
         {
+            StudentService = studentService;
         }
     }
 }

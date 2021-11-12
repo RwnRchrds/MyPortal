@@ -2,6 +2,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -11,6 +12,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Logic;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortalWeb.Services;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortalWeb.Extensions
@@ -19,7 +21,7 @@ namespace MyPortalWeb.Extensions
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
         {
-            services.AddIdentityCore<User>(opt =>
+            services.AddIdentity<User, Role>(opt =>
                 {
                     opt.Password = new PasswordOptions
                     {
@@ -31,38 +33,37 @@ namespace MyPortalWeb.Extensions
                         RequiredUniqueChars = 1
                     };
                 })
-                .AddRoles<Role>()
-                .AddRoleManager<RoleManager<Role>>()
-                .AddSignInManager<SignInManager<User>>()
-                .AddRoleValidator<RoleValidator<Role>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(options =>
                 {
+                    options.Authority = "https://localhost:5001";
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey =
-                            new SymmetricSecurityKey(
-                                Encoding.ASCII.GetBytes(config.GetSection("MyPortal:TokenKey").Value)),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnAuthenticationFailed = c =>
-                        {
-                            if (c.Exception is SecurityTokenExpiredException)
-                            {
-                                c.Response.Headers.Add("Token-Expired", "true");
-                            }
-
-                            return Task.CompletedTask;
-                        }
+                        ValidateAudience = false,
+                        ValidTypes = new[] { "at+jwt" }
                     };
                 });
+
+            services.AddIdentityServer(options =>
+                {
+                    
+                })
+                .AddAspNetIdentity<User>()
+                .AddProfileService<ProfileService>()
+                .AddInMemoryApiScopes(Config.ApiScopes)
+                .AddInMemoryClients(Config.Clients)
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext =
+                        builder => builder.UseSqlServer(Configuration.Instance.ConnectionString);
+                })
+                .AddDeveloperSigningCredential();
 
             services.AddAuthorization(options =>
             {
@@ -73,8 +74,15 @@ namespace MyPortalWeb.Extensions
                 options.AddPolicy(Policies.UserType.Parent,
                     policy => policy.RequireClaim(ApplicationClaimTypes.UserType, UserTypes.Parent.ToString()));
             });
-
-            services.AddScoped<IIdentityServiceCollection, IdentityServiceCollection>();
+            
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = 401;    
+                    return Task.CompletedTask;
+                };
+            });
 
             return services;
         }

@@ -10,6 +10,7 @@ using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin.Roles;
+using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 using MyPortalWeb.Models;
 
@@ -19,86 +20,119 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/roles")]
     public class RolesController : BaseApiController
     {
-        public RolesController(IAppServiceCollection services) : base(services)
+        private IRoleService _roleService;
+
+        public RolesController(IUserService userService, IRoleService roleService) : base(userService, roleService)
         {
+            _roleService = roleService;
         }
 
         [HttpPost]
         [Route("create")]
+        [Permission(PermissionValue.SystemEditGroups)]
         [ProducesResponseType(typeof(NewEntityResponse), 200)]
         public async Task<IActionResult> CreateRole([FromBody] CreateRoleModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var newId = (await Services.Roles.Create(model)).FirstOrDefault();
+                var newId = (await _roleService.Create(model)).FirstOrDefault();
 
                 return Ok(new NewEntityResponse {Id = newId});
-            }, PermissionValue.SystemEditGroups);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPut]
         [Route("update")]
+        [Permission(PermissionValue.SystemEditGroups)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                await Services.Roles.Update(model);
+                await _roleService.Update(model);
 
                 return Ok();
-            }, PermissionValue.SystemEditGroups);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpDelete]
         [Route("delete/{roleId}")]
+        [Permission(PermissionValue.SystemEditGroups)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> DeleteRole([FromRoute] Guid roleId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                await Services.Roles.Delete(roleId);
+                await _roleService.Delete(roleId);
 
                 return Ok();
-            }, PermissionValue.SystemEditGroups);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [Route("get")]
+        [Permission(PermissionValue.SystemViewGroups)]
         [ProducesResponseType(typeof(IEnumerable<RoleModel>), 200)]
         public async Task<IActionResult> GetRoles([FromQuery] string roleName)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                IEnumerable<RoleModel> roles = await Services.Roles.GetRoles(roleName);
+                IEnumerable<RoleModel> roles = await _roleService.GetRoles(roleName);
 
                 return Ok(roles);
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [Route("get/id/{roleId}")]
+        [Permission(PermissionValue.SystemViewGroups)]
         [ProducesResponseType(typeof(RoleModel), 200)]
         public async Task<IActionResult> GetRoleById([FromRoute] Guid roleId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var role = await Services.Roles.GetRoleById(roleId);
+                var role = await _roleService.GetRoleById(roleId);
 
                 return Ok(role);
-            }, PermissionValue.SystemViewGroups);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [Route("permissions/role/{roleId}")]
+        [Permission(PermissionValue.SystemViewGroups)]
         [ProducesResponseType(typeof(TreeNode), 200)]
         public async Task<IActionResult> GetPermissionsTree([FromRoute] Guid roleId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var permissionsTree = await Services.Roles.GetPermissionsTree(roleId);
+                var permissionsTree = await _roleService.GetPermissionsTree(roleId);
 
                 return Ok(permissionsTree);
-            }, PermissionValue.SystemViewGroups);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
     }
 }

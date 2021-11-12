@@ -9,26 +9,35 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Student.LogNotes;
+using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
     [Route("api/student/logNotes")]
-    public class LogNotesController : StudentApiController
+    public class LogNotesController : StudentDataController
     {
-        public LogNotesController(IAppServiceCollection services) : base(services)
+        private ILogNoteService _logNoteService;
+        private IAcademicYearService _academicYearService;
+
+        public LogNotesController(IStudentService studentService, IUserService userService, IRoleService roleService,
+            ILogNoteService logNoteService, IAcademicYearService academicYearService) : base(studentService,
+            userService, roleService)
         {
+            _logNoteService = logNoteService;
+            _academicYearService = academicYearService;
         }
 
         [HttpGet]
         [Route("id")]
+        [Permission(PermissionValue.StudentViewStudentLogNotes)]
         [ProducesResponseType(typeof(LogNoteModel), 200)]
         public async Task<IActionResult> GetById([FromQuery] Guid logNoteId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var logNote = await Services.LogNotes.GetById(logNoteId);
+                var logNote = await _logNoteService.GetById(logNoteId);
 
                 if (await AuthoriseStudent(logNote.StudentId))
                 {
@@ -36,7 +45,11 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            }, PermissionValue.StudentViewStudentLogNotes);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
@@ -44,29 +57,34 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(typeof(IEnumerable<LogNoteTypeModel>), 200)]
         public async Task<IActionResult> GetTypes()
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var logNoteTypes = await Services.LogNotes.GetTypes();
+                var logNoteTypes = await _logNoteService.GetTypes();
 
                 return Ok(logNoteTypes);
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [Route("student")]
+        [Permission(PermissionValue.StudentViewStudentLogNotes)]
         [ProducesResponseType(typeof(IEnumerable<LogNoteModel>), 200)]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
                 if (await AuthoriseStudent(studentId))
                 {
                     if (academicYearId == null || academicYearId == Guid.Empty)
                     {
-                        academicYearId = (await Services.AcademicYears.GetCurrentAcademicYear(true)).Id;
+                        academicYearId = (await _academicYearService.GetCurrentAcademicYear(true)).Id;
                     }
 
-                    var logNotes = await Services.LogNotes.GetByStudent(studentId, academicYearId.Value);
+                    var logNotes = await _logNoteService.GetByStudent(studentId, academicYearId.Value);
 
                     var result = logNotes;
 
@@ -74,53 +92,73 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            }, PermissionValue.StudentViewStudentLogNotes);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPost]
         [Authorize(Policy = Policies.UserType.Staff)]
+        [Permission(PermissionValue.StudentEditStudentLogNotes)]
         [Route("create")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Create([FromBody] CreateLogNoteModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var author = await Services.Users.GetUserByPrincipal(User);
+                var author = await UserService.GetUserByPrincipal(User);
 
                 model.CreatedById = author.Id.Value;
 
-                await Services.LogNotes.Create(model);
+                await _logNoteService.Create(model);
 
                 return Ok();
-            }, PermissionValue.StudentEditStudentLogNotes);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPut]
         [Authorize(Policy = Policies.UserType.Staff)]
+        [Permission(PermissionValue.StudentEditStudentLogNotes)]
         [Route("update")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Update([FromBody] UpdateLogNoteModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                await Services.LogNotes.Update(model);
+                await _logNoteService.Update(model);
 
                 return Ok();
-            }, PermissionValue.StudentEditStudentLogNotes);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpDelete]
         [Authorize(Policy = Policies.UserType.Staff)]
+        [Permission(PermissionValue.StudentEditStudentLogNotes)]
         [Route("delete")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Delete([FromQuery] Guid logNoteId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                await Services.LogNotes.Delete(logNoteId);
+                await _logNoteService.Delete(logNoteId);
 
                 return Ok();
-            }, PermissionValue.StudentEditStudentLogNotes);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

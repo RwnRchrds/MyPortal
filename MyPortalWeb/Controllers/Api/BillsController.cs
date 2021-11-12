@@ -1,8 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Database.Enums;
+using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
+using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
@@ -10,21 +16,31 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/bills")]
     public class BillsController : BaseApiController
     {
-        public BillsController(IAppServiceCollection services) : base(services)
+        private IBillService _billService;
+
+        public BillsController(IUserService userService, IRoleService roleService, IBillService billService) : base(
+            userService, roleService)
         {
+            _billService = billService;
         }
 
         [HttpGet]
         [Route("generate")]
+        [Authorize(Policy = Policies.UserType.Staff)]
+        [Permission(PermissionValue.FinanceEditBills)]
         [ProducesResponseType(typeof(IEnumerable<BillModel>), 200)]
         public async Task<IActionResult> GenerateChargeBills()
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var generatedBills = await Services.Bills.GenerateChargeBills();
+                var generatedBills = await _billService.GenerateChargeBills();
 
                 return Ok(generatedBills);
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
     }
 }

@@ -15,10 +15,19 @@ using MyPortalWeb.Models.Requests;
 namespace MyPortalWeb.Controllers.Api
 {
     [Route("api/tasks")]
-    public class TasksController : StudentApiController
+    public class TasksController : StudentDataController
     {
-        public TasksController(IAppServiceCollection services) : base(services)
+        private ITaskService _taskService;
+        private IPersonService _personService;
+        private IStaffMemberService _staffMemberService;
+
+        public TasksController(IStudentService studentService, IUserService userService, IRoleService roleService,
+            ITaskService taskService, IPersonService personService, IStaffMemberService staffMemberService) : base(
+            studentService, userService, roleService)
         {
+            _taskService = taskService;
+            _personService = personService;
+            _staffMemberService = staffMemberService;
         }
 
         [HttpGet]
@@ -26,11 +35,11 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(typeof(TaskModel), 200)]
         public async Task<IActionResult> GetById([FromQuery] Guid taskId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var user = await Services.Users.GetUserByPrincipal(User);
+                var user = await UserService.GetUserByPrincipal(User);
 
-                var task = await Services.Tasks.GetById(taskId);
+                var task = await _taskService.GetById(taskId);
 
                 if (await AuthoriseUpdate(task, user.Id.Value))
                 {
@@ -38,7 +47,12 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         [HttpGet]
@@ -46,12 +60,16 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(typeof(IEnumerable<TaskTypeModel>), 200)]
         public async Task<IActionResult> GetTaskTypes([FromQuery] bool personal = false)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var taskTypes = await Services.Tasks.GetTypes(personal);
+                var taskTypes = await _taskService.GetTypes(personal);
 
                 return Ok(taskTypes);
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPost]
@@ -59,14 +77,14 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(200)]
         public async Task<IActionResult> Create([FromForm] CreateTaskModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
                 if (TaskTypes.IsReserved(model.TypeId))
                 {
                     return BadRequest("This task type cannot be created manually.");
                 }
 
-                var user = await Services.Users.GetUserByPrincipal(User);
+                var user = await UserService.GetUserByPrincipal(User);
 
                 var canCreate = await AuthoriseCreate(model.AssignedToId, user.Id.Value);
 
@@ -74,13 +92,17 @@ namespace MyPortalWeb.Controllers.Api
                 {
                     model.AssignedById = user.Id.Value;
 
-                    await Services.Tasks.Create(model);
+                    await _taskService.Create(model);
 
                     return Ok();
                 }
 
                 return Forbid();
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPut]
@@ -88,21 +110,25 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(200)]
         public async Task<IActionResult> Update([FromForm] UpdateTaskModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var user = await Services.Users.GetUserByPrincipal(User);
+                var user = await UserService.GetUserByPrincipal(User);
 
                 var canEdit = await AuthoriseUpdate(model, user.Id.Value);
 
                 if (canEdit)
                 {
-                    await Services.Tasks.Update(model);
+                    await _taskService.Update(model);
 
                     return Ok();
                 }
 
                 return Forbid();
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPut]
@@ -110,20 +136,24 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(200)]
         public async Task<IActionResult> ToggleCompleted([FromBody] TaskToggleRequestModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var user = await Services.Users.GetUserByPrincipal(User);
-                var task = await Services.Tasks.GetById(model.TaskId);
+                var user = await UserService.GetUserByPrincipal(User);
+                var task = await _taskService.GetById(model.TaskId);
 
                 if (await AuthoriseUpdate(task, user.Id.Value))
                 {
-                    await Services.Tasks.SetCompleted(model.TaskId, model.Completed);
+                    await _taskService.SetCompleted(model.TaskId, model.Completed);
 
                     return Ok();
                 }
 
                 return Forbid();
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpDelete]
@@ -131,25 +161,27 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(200)]
         public async Task<IActionResult> Delete([FromQuery] Guid taskId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var user = await Services.Users.GetUserByPrincipal(User);
-
-                await Services.Tasks.Delete(taskId);
+                await _taskService.Delete(taskId);
 
                 return Ok();
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         private async Task<bool> AuthoriseCreate(Guid personId, Guid userId)
         {
-            var personInDb = await Services.People.GetPersonWithTypes(personId);
+            var personInDb = await _personService.GetPersonWithTypes(personId);
 
             if (personInDb.PersonTypes.IsStudent)
             {
                 if (User.IsType(UserTypes.Student))
                 {
-                    var student = await Services.Students.GetByPersonId(personId);
+                    var student = await StudentService.GetByPersonId(personId);
 
                     return await AuthoriseStudent(student.Id.Value);
                 }
@@ -167,8 +199,8 @@ namespace MyPortalWeb.Controllers.Api
                     return true;
                 }
 
-                var taskStaffMember = await Services.Staff.GetByPersonId(personId, false);
-                var userStaffMember = await Services.Staff.GetByUserId(userId, false);
+                var taskStaffMember = await _staffMemberService.GetByPersonId(personId, false);
+                var userStaffMember = await _staffMemberService.GetByUserId(userId, false);
 
                 if (userStaffMember != null && taskStaffMember != null)
                 {
@@ -178,7 +210,7 @@ namespace MyPortalWeb.Controllers.Api
                     }
 
                     return await UserHasPermission(PermissionValue.PeopleEditManagedStaffTasks) &&
-                           await Services.Staff.IsLineManager(taskStaffMember.Id.Value, userStaffMember.Id.Value);
+                           await _staffMemberService.IsLineManager(taskStaffMember.Id.Value, userStaffMember.Id.Value);
                 }
             }
 
@@ -192,12 +224,12 @@ namespace MyPortalWeb.Controllers.Api
             //    return false;
             //}
 
-            //if (await Services.Tasks.IsTaskOwner(model.Id, userId))
+            //if (await _taskService.IsTaskOwner(model.Id, userId))
             //{
             //    return true;
             //}
 
-            //var personInDb = await Services.People.GetPersonWithTypes(model.AssignedToId);
+            //var personInDb = await _personService.GetPersonWithTypes(model.AssignedToId);
 
             //if (personInDb.PersonTypes.IsStudent)
             //{

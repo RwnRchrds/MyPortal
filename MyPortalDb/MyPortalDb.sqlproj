@@ -22,7 +22,7 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
-    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultCollation>Latin1_General_CI_AS</DefaultCollation>
     <DefaultFilegroup>PRIMARY</DefaultFilegroup>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -61,13 +61,46 @@
     <Folder Include="Scripts" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
-    <Folder Include="dbo\Views" />
+    <Folder Include="dbo\Views\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Script.SeedSystemData.sql" />
     <PostDeploy Include="Scripts\Script.PostDeployment.sql" />
   </ItemGroup>
   <ItemGroup>
+    <Build Include="dbo\Tables\CurriculumYearGroups.sql" />
+    <Build Include="dbo\Tables\MarksheetTemplateGroups.sql" />
+    <Build Include="dbo\Tables\SenStatus.sql" />
+    <Build Include="dbo\Tables\DetentionTypes.sql" />
+    <Build Include="dbo\Tables\ParentEveningAppointments.sql" />
+    <Build Include="dbo\Tables\SenTypes.sql" />
+    <Build Include="dbo\Tables\StudentGroupMemberships.sql" />
+    <Build Include="dbo\Tables\ExamRooms.sql" />
+    <Build Include="dbo\Tables\BillAccountTransactions.sql" />
+    <Build Include="dbo\Tables\SubjectCodes.sql" />
+    <Build Include="dbo\Tables\DiaryEventAttendeeResponses.sql" />
+    <Build Include="dbo\Tables\StaffAbsenceTypes.sql" />
+    <Build Include="dbo\Tables\RoomClosures.sql" />
+    <Build Include="dbo\Tables\ParentEveningBreaks.sql" />
+    <Build Include="dbo\Tables\DiaryEventTypes.sql" />
+    <Build Include="dbo\Tables\Achievements.sql" />
+    <Build Include="dbo\Tables\Permissions.sql" />
+    <Build Include="dbo\Tables\StaffIllnessTypes.sql" />
+    <Build Include="dbo\Tables\BillChargeDiscounts.sql" />
+    <Build Include="dbo\Tables\DietaryRequirements.sql" />
+    <Build Include="dbo\Tables\CoverArrangements.sql" />
+    <Build Include="dbo\Tables\StudentGroups.sql" />
+    <Build Include="dbo\Tables\CommunicationLogs.sql" />
+    <Build Include="dbo\Tables\Products.sql" />
+    <Build Include="dbo\Tables\BillCharges.sql" />
+    <Build Include="dbo\Tables\Directories.sql" />
+    <Build Include="dbo\Tables\SubjectCodeSets.sql" />
+    <Build Include="dbo\Tables\Bulletins.sql" />
+    <Build Include="dbo\Tables\Houses.sql" />
+    <Build Include="dbo\Tables\AttendanceWeeks.sql" />
+    <Build Include="dbo\Tables\Discounts.sql" />
+    <Build Include="dbo\Tables\LessonPlanHomeworkItems.sql" />
+    <Build Include="dbo\Tables\SubjectStaffMemberRoles.sql" />
     <Build Include="dbo\Tables\BillItems.sql" />
     <Build Include="dbo\Tables\DocumentTypes.sql" />
     <Build Include="dbo\Tables\SystemAreas.sql" />
@@ -77,13 +110,16 @@
     <Build Include="dbo\Tables\BillStoreDiscounts.sql" />
     <Build Include="dbo\Tables\EmailAddressTypes.sql" />
     <Build Include="dbo\Tables\SystemSettings.sql" />
+    <Build Include="dbo\Tables\DeviceCodes.sql" />
     <Build Include="dbo\Tables\EnrolmentStatus.sql" />
     <Build Include="dbo\Tables\ProductTypeDiscounts.sql" />
     <Build Include="dbo\Tables\TaskTypes.sql" />
     <Build Include="dbo\Tables\Observations.sql" />
+    <Build Include="dbo\Tables\Keys.sql" />
     <Build Include="dbo\Tables\ExamCandidateSeries.sql" />
     <Build Include="dbo\Tables\Incidents.sql" />
     <Build Include="dbo\Tables\Ethnicities.sql" />
+    <Build Include="dbo\Tables\PersistedGrants.sql" />
     <Build Include="dbo\Tables\TrainingCertificateStatus.sql" />
     <Build Include="dbo\Tables\ExamBaseComponents.sql" />
     <Build Include="dbo\Tables\ExamAssessmentModes.sql" />
@@ -238,39 +274,6 @@
     <Build Include="dbo\Tables\StudentContactRelationships.sql" />
     <Build Include="dbo\Tables\RegGroups.sql" />
     <Build Include="dbo\Tables\DiaryEvents.sql" />
-    <Build Include="dbo\Tables\CurriculumYearGroups.sql" />
-    <Build Include="dbo\Tables\MarksheetTemplateGroups.sql" />
-    <Build Include="dbo\Tables\SenStatus.sql" />
-    <Build Include="dbo\Tables\DetentionTypes.sql" />
-    <Build Include="dbo\Tables\ParentEveningAppointments.sql" />
-    <Build Include="dbo\Tables\SenTypes.sql" />
-    <Build Include="dbo\Tables\StudentGroupMemberships.sql" />
-    <Build Include="dbo\Tables\ExamRooms.sql" />
-    <Build Include="dbo\Tables\BillAccountTransactions.sql" />
-    <Build Include="dbo\Tables\SubjectCodes.sql" />
-    <Build Include="dbo\Tables\DiaryEventAttendeeResponses.sql" />
-    <Build Include="dbo\Tables\StaffAbsenceTypes.sql" />
-    <Build Include="dbo\Tables\RoomClosures.sql" />
-    <Build Include="dbo\Tables\ParentEveningBreaks.sql" />
-    <Build Include="dbo\Tables\DiaryEventTypes.sql" />
-    <Build Include="dbo\Tables\Achievements.sql" />
-    <Build Include="dbo\Tables\Permissions.sql" />
-    <Build Include="dbo\Tables\StaffIllnessTypes.sql" />
-    <Build Include="dbo\Tables\BillChargeDiscounts.sql" />
-    <Build Include="dbo\Tables\DietaryRequirements.sql" />
-    <Build Include="dbo\Tables\CoverArrangements.sql" />
-    <Build Include="dbo\Tables\StudentGroups.sql" />
-    <Build Include="dbo\Tables\CommunicationLogs.sql" />
-    <Build Include="dbo\Tables\Products.sql" />
-    <Build Include="dbo\Tables\BillCharges.sql" />
-    <Build Include="dbo\Tables\Directories.sql" />
-    <Build Include="dbo\Tables\SubjectCodeSets.sql" />
-    <Build Include="dbo\Tables\Bulletins.sql" />
-    <Build Include="dbo\Tables\Houses.sql" />
-    <Build Include="dbo\Tables\AttendanceWeeks.sql" />
-    <Build Include="dbo\Tables\Discounts.sql" />
-    <Build Include="dbo\Tables\LessonPlanHomeworkItems.sql" />
-    <Build Include="dbo\Tables\SubjectStaffMemberRoles.sql" />
     <Build Include="dbo\Views\AttendancePeriods_PossibleAttendancePeriods.sql" />
     <Build Include="dbo\Views\Sessions_Metadata.sql" />
     <Build Include="dbo\Views\People_FullNameAbbreviated.sql" />

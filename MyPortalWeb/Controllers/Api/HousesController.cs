@@ -15,8 +15,11 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/houses")]
     public class HousesController : BaseApiController
     {
-        public HousesController(IAppServiceCollection services) : base(services)
+        private IHouseService _houseService;
+
+        public HousesController(IUserService userService, IRoleService roleService, IHouseService houseService) : base(userService, roleService)
         {
+            _houseService = houseService;
         }
 
         [HttpGet]
@@ -24,12 +27,16 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(typeof(IEnumerable<HouseModel>), 200)]
         public async Task<IActionResult> GetHouses()
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var houses = await Services.Houses.GetHouses();
+                var houses = await _houseService.GetHouses();
 
                 return Ok(houses);
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
     }
 }

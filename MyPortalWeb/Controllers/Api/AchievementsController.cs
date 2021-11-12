@@ -6,29 +6,39 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
+using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
     [Route("api/behaviour/achievements")]
-    public class AchievementsController : StudentApiController
+    public class AchievementsController : StudentDataController
     {
-        public AchievementsController(IAppServiceCollection services) : base(services)
+        private IBehaviourService _behaviourService;
+        private IAcademicYearService _academicYearService;
+
+        public AchievementsController(IStudentService studentService, IUserService userService,
+            IRoleService roleService, IBehaviourService behaviourService, IAcademicYearService academicYearService)
+            : base(studentService, userService, roleService)
         {
+            _behaviourService = behaviourService;
+            _academicYearService = academicYearService;
         }
 
         [HttpGet]
         [Route("id", Name = "ApiAchievementGetById")]
+        [Permission(PermissionValue.BehaviourViewAchievements)]
         [ProducesResponseType(typeof(AchievementModel), 200)]
         public async Task<IActionResult> GetById([FromQuery] Guid achievementId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var achievement = await Services.Achievements.GetAchievementById(achievementId);
+                var achievement = await _behaviourService.GetAchievementById(achievementId);
 
                 if (await AuthoriseStudent(achievement.StudentId))
                 {
@@ -36,73 +46,98 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            }, PermissionValue.BehaviourViewAchievements);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [Route("student", Name = "ApiAchievementGetByStudent")]
+        [Permission(PermissionValue.BehaviourViewAchievements)]
         [ProducesResponseType(typeof(AchievementCollectionModel), 200)]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
                 if (await AuthoriseStudent(studentId))
                 {
-                    var fromAcademicYearId = academicYearId ?? (await Services.AcademicYears.GetCurrentAcademicYear(true)).Id.Value;
+                    var fromAcademicYearId = academicYearId ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id.Value;
 
-                    var achievements = await Services.Achievements.GetAchievementsByStudent(studentId, fromAcademicYearId);
+                    var achievements = await _behaviourService.GetAchievementsByStudent(studentId, fromAcademicYearId);
 
                     return Ok(achievements.Select(x => x.ToListModel()));
                 }
 
                 return Forbid();
-            }, PermissionValue.BehaviourViewAchievements);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         [HttpPost]
         [Authorize(Policy = Policies.UserType.Staff)]
+        [Permission(PermissionValue.BehaviourEditAchievements)]
         [Route("create", Name = "ApiAchievementCreate")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Create([FromBody] CreateAchievementModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var user = await Services.Users.GetUserByPrincipal(User);
+                var user = await UserService.GetUserByPrincipal(User);
 
                 model.CreatedById = user.Id.Value;
 
-                await Services.Achievements.CreateAchievement(model);
+                await _behaviourService.CreateAchievement(model);
 
                 return Ok();
-            }, PermissionValue.BehaviourEditAchievements);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPut]
         [Authorize(Policy = Policies.UserType.Staff)]
+        [Permission(PermissionValue.BehaviourEditAchievements)]
         [Route("update", Name = "ApiAchievementUpdate")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Update([FromBody] UpdateAchievementModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                await Services.Achievements.UpdateAchievement(model);
+                await _behaviourService.UpdateAchievement(model);
 
                 return Ok();
-            }, PermissionValue.BehaviourEditAchievements);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpDelete]
         [Authorize(Policy = Policies.UserType.Staff)]
+        [Permission(PermissionValue.BehaviourEditAchievements)]
         [Route("delete", Name = "ApiAchievementDelete")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Delete([FromQuery] Guid achievementId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                await Services.Achievements.DeleteAchievement(achievementId);
+                await _behaviourService.DeleteAchievement(achievementId);
 
                 return Ok();
-            }, PermissionValue.BehaviourEditAchievements);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
     }
 }

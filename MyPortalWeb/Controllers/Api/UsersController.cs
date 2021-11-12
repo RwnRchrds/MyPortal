@@ -10,6 +10,7 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin.Users;
+using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 using MyPortalWeb.Models;
 
@@ -19,7 +20,7 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/user")]
     public class UsersController : BaseApiController
     {
-        public UsersController(IAppServiceCollection services) : base(services)
+        public UsersController(IUserService userService, IRoleService roleService) : base(userService, roleService)
         {
         }
 
@@ -34,46 +35,61 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPost]
         [Route("create")]
+        [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(typeof(NewEntityResponse), 200)]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var userId = (await Services.Users.CreateUser(model)).FirstOrDefault();
+                var userId = (await UserService.CreateUser(model)).FirstOrDefault();
 
                 return Ok(new NewEntityResponse {Id = userId});
-            }, PermissionValue.SystemEditUsers);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [Route("get")]
+        [Permission(PermissionValue.SystemViewUsers)]
         [ProducesResponseType(typeof(IEnumerable<UserModel>), 200)]
         public async Task<IActionResult> GetUsers([FromQuery] string username)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                var users = await Services.Users.GetUsers(username);
+                var users = await UserService.GetUsers(username);
 
                 return Ok(users);
-            }, PermissionValue.SystemViewUsers);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [Route("get/id/{userId}")]
+        [Permission(PermissionValue.SystemViewUsers)]
         [ProducesResponseType(typeof(UserModel), 200)]
         public async Task<IActionResult> GetUserById([FromRoute] Guid userId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
                 if (await AuthoriseUser(userId))
                 {
-                    var user = await Services.Users.GetUserById(userId);
+                    var user = await UserService.GetUserById(userId);
 
                     return Ok(user);
                 }
 
                 return Forbid();
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
@@ -81,30 +97,39 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(typeof(IEnumerable<RoleModel>), 200)]
         public async Task<IActionResult> GetUserRoles([FromRoute] Guid userId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
                 if (await AuthoriseUser(userId))
                 {
-                    var roles = await Services.Users.GetUserRoles(userId);
+                    var roles = await UserService.GetUserRoles(userId);
 
                     return Ok(roles);
                 }
 
                 return Forbid();
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPut]
         [Route("update")]
+        [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                await Services.Users.UpdateUser(model);
+                await UserService.UpdateUser(model);
 
                 return Ok();
-            }, PermissionValue.SystemEditUsers);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpDelete]
@@ -112,12 +137,16 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(200)]
         public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                await Services.Users.DeleteUser(userId);
+                await UserService.DeleteUser(userId);
 
                 return Ok();
-            }, PermissionValue.SystemEditUsers);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPut]
@@ -125,30 +154,39 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(200)]
         public async Task<IActionResult> SetPassword(SetPasswordModel request)
         {
-            return await ProcessAsync(async () =>
+            try
             {
                 if (await AuthoriseUser(request.UserId, true))
                 {
-                    await Services.Users.SetPassword(request.UserId, request.NewPassword);
+                    await UserService.SetPassword(request.UserId, request.NewPassword);
 
                     return Ok();
                 }
 
                 return Forbid();
-            });
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPut]
         [Route("setEnabled")]
+        [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> SetEnabled(SetUserEnabledModel model)
         {
-            return await ProcessAsync(async () =>
+            try
             {
-                await Services.Users.SetUserEnabled(model.UserId, model.Enabled);
+                await UserService.SetUserEnabled(model.UserId, model.Enabled);
 
                 return Ok(model.Enabled);
-            }, PermissionValue.SystemEditUsers);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
     }
 }

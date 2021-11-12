@@ -17,7 +17,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class AttendanceMarkService : BaseService, IAttendanceMarkService
+    public class AttendanceService : BaseService, IAttendanceService
     {
         public async Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId,
             bool returnNoMark = false)
@@ -89,7 +89,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Save(params AttendanceMarkCollectionModel[] marks)
+        public async Task UpdateAttendanceMarks(params AttendanceMarkCollectionModel[] marks)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -154,7 +154,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Save(params AttendanceRegisterStudentModel[] markCollections)
+        public async Task UpdateAttendanceMarks(params AttendanceRegisterStudentModel[] markCollections)
         {
             var attendanceMarks = new List<AttendanceMarkCollectionModel>();
 
@@ -163,7 +163,7 @@ namespace MyPortal.Logic.Services
                 attendanceMarks.AddRange(collection.Marks);
             }
 
-            await Save(attendanceMarks.ToArray());
+            await UpdateAttendanceMarks(attendanceMarks.ToArray());
         }
 
         public async Task<AttendanceSummary> GetAttendanceSummaryByStudent(Guid studentId, Guid academicYearId)
@@ -179,6 +179,51 @@ namespace MyPortal.Logic.Services
                 var summary = new AttendanceSummary(codes, marks);
 
                 return summary;
+            }
+        }
+        
+        public async Task<AttendancePeriodModel> GetPeriodById(Guid periodId)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var period = await unitOfWork.AttendancePeriods.GetById(periodId);
+
+                if (period == null)
+                {
+                    throw new NotFoundException("Period not found.");
+                }
+
+                return new AttendancePeriodModel(period);
+            }
+        }
+        
+        public async Task<AttendanceWeekModel> GetWeekById(Guid attendanceWeekId)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var attendanceWeek = await unitOfWork.AttendanceWeeks.GetById(attendanceWeekId);
+
+                if (attendanceWeek == null)
+                {
+                    throw new NotFoundException("Attendance week not found.");
+                }
+
+                return new AttendanceWeekModel(attendanceWeek);
+            }
+        }
+
+        public async Task<AttendanceWeekModel> GetWeekByDate(DateTime date, bool throwIfNotFound = true)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var week = await unitOfWork.AttendanceWeeks.GetByDate(date);
+
+                if (week == null && throwIfNotFound)
+                {
+                    throw new NotFoundException("Attendance week not found.");
+                }
+
+                return new AttendanceWeekModel(week);
             }
         }
     }

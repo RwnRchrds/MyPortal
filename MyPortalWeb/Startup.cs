@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MyPortalWeb.Extensions;
+using MyPortalWeb.Middleware;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace MyPortalWeb
@@ -44,7 +45,7 @@ namespace MyPortalWeb
                 {
                     Version = "3.1.0",
                     Title = "MyPortal",
-                    Description = "MyPortal Master Web Service"
+                    Description = "MyPortal API"
                 });
 
                 //var filePath = Path.Combine("MyPortalWeb.xml");
@@ -76,7 +77,9 @@ namespace MyPortalWeb
             app.UseCors(b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthentication();
+            app.UseIdentityServer();
             app.UseAuthorization();
+            app.UseMiddleware<PermissionMiddleware>();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
