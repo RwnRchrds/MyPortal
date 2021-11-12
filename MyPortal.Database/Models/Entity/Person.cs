@@ -5,22 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models.Entity
 {
-    public static class Gender
-    {
-        public const string Male = "M";
-        public const string Female = "F";
-        public const string Other = "X";
-        public const string Unknown = "U";
-
-        public static Dictionary<string, string> GenderLabels = new Dictionary<string, string>
-        {
-            { Male, "Male" },
-            { Female, "Female" },
-            { Other, "Other" },
-            { Unknown, "Unknown" }
-        };
-    }
-
     [Table("People")]
     public class Person : BaseTypes.Entity
     {

@@ -12,6 +12,7 @@ using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Reporting;
 using MyPortal.Logic.Models.Requests.Student;
@@ -111,6 +112,16 @@ namespace MyPortal.Logic.Services
                 var students = await unitOfWork.Students.GetAll(searchOptions);
 
                 return students.Select(s => new StudentModel(s)).ToList();
+            }
+        }
+
+        public async Task<IEnumerable<StudentCollectionModel>> Search(StudentSearchOptions searchOptions)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var students = await unitOfWork.Students.SearchAll(searchOptions);
+
+                return students.Select(s => new StudentCollectionModel(s)).ToList();
             }
         }
 

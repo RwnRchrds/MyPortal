@@ -23,7 +23,8 @@ namespace MyPortalWeb
                     RequireClientSecret = false,
                     ClientName = "MyPortal Web App",
                     AllowAccessTokensViaBrowser = true,
-                    AllowOfflineAccess = true
+                    AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.OneTimeOnly
                 }
             };
     }

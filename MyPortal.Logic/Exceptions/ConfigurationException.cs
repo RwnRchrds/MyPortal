@@ -4,12 +4,8 @@ using System.Text;
 
 namespace MyPortal.Logic.Exceptions
 {
-    public class ConfigurationException : Exception
+    public class ConfigurationException : LogicException
     {
-        public ConfigurationException()
-        {
-        }
-
         public ConfigurationException(string message) : base(message)
         {
         }

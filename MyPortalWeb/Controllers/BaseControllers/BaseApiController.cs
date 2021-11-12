@@ -12,6 +12,7 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
+using MyPortalWeb.Models.Response;
 
 namespace MyPortalWeb.Controllers.BaseControllers
 {
@@ -82,17 +83,22 @@ namespace MyPortalWeb.Controllers.BaseControllers
                 case UnauthorisedException u:
                     statusCode = HttpStatusCode.Forbidden;
                     break;
-                default:
+                case InvalidDataException i:
                     statusCode = HttpStatusCode.BadRequest;
+                    break;
+                default:
+                    statusCode = HttpStatusCode.InternalServerError;
                     break;
             }
 
-            return StatusCode((int) statusCode, message);
+            return Error((int) statusCode, message);
         }
 
-        protected IActionResult Error(int statusCode, object returnObject)
+        protected IActionResult Error(int statusCode, string errorMessage)
         {
-            return StatusCode(statusCode, returnObject);
+            var error = new ErrorResponseModel(errorMessage);
+            
+            return StatusCode(statusCode, error);
         }
     }
 }

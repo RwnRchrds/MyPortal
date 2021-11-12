@@ -5,21 +5,9 @@ using System.Text;
 
 namespace MyPortal.Logic.Exceptions
 {
-    public class ConnectionStringException : Exception
+    public class ConnectionStringException : ConfigurationException
     {
-        public ConnectionStringException()
-        {
-        }
-
-        protected ConnectionStringException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-
         public ConnectionStringException(string message) : base(message)
-        {
-        }
-
-        public ConnectionStringException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

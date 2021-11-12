@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.Query.Student;
 using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -35,7 +37,7 @@ namespace MyPortal.Database.Repositories
                 query.Join("Houses as H", "H.StudentGroupId", "SG.Id");
 
                 query.Select("S.Id as StudentId");
-                query.SelectAllColumns(typeof(House), "H");
+                query.Select("SG.Description as HouseName");
 
                 return query;
             }
@@ -51,7 +53,7 @@ namespace MyPortal.Database.Repositories
                 query.Join("RegGroups as R", "R.StudentGroupId", "SG.Id");
 
                 query.Select("S.Id as StudentId");
-                query.SelectAllColumns(typeof(RegGroup), "R");
+                query.Select("SG.Description as RegGroupName");
 
                 return query;
             }
@@ -67,7 +69,7 @@ namespace MyPortal.Database.Repositories
                 query.Join("YearGroups as Y", "Y.StudentGroupId", "SG.Id");
 
                 query.Select("S.Id as StudentId");
-                query.SelectAllColumns(typeof(YearGroup), "Y");
+                query.Select("SG.Description as YearGroupName");
 
                 return query;
             }
@@ -115,19 +117,22 @@ namespace MyPortal.Database.Repositories
             return students;
         }
 
-        private static void ApplySearch(Query query, StudentSearchOptions search)
+        private static void ApplySearch(Query query, StudentSearchOptions search, string studentAlias = null, string personAlias = null)
         {
+            studentAlias = string.IsNullOrWhiteSpace(studentAlias) ? "S" : studentAlias;
+            personAlias = string.IsNullOrWhiteSpace(personAlias) ? "P" : personAlias;
+            
             switch (search.Status)
             {
                 case StudentStatus.OnRoll:
                     query.Where(q =>
-                        q.WhereNull("Student.DateLeaving").OrWhereDate("Student.DateLeaving", ">", DateTime.Today));
+                        q.WhereNull($"{studentAlias}.DateLeaving").OrWhereDate($"{studentAlias}.DateLeaving", ">", DateTime.Today));
                     break;
                 case StudentStatus.Leavers:
-                    query.WhereDate("Student.DateLeaving", "<=", DateTime.Today);
+                    query.WhereDate($"{studentAlias}.DateLeaving", "<=", DateTime.Today);
                     break;
                 case StudentStatus.Future:
-                    query.WhereDate("Student.DateStarting", ">", DateTime.Today);
+                    query.WhereDate($"{studentAlias}.DateStarting", ">", DateTime.Today);
                     break;
                 default:
                     break;
@@ -135,29 +140,29 @@ namespace MyPortal.Database.Repositories
 
             if (!string.IsNullOrWhiteSpace(search.FirstName))
             {
-                query.WhereStarts( "StudentPerson.FirstName", search.FirstName.Trim());
+                query.WhereStarts( $"{personAlias}.FirstName", search.FirstName.Trim());
             }
 
             if (!string.IsNullOrWhiteSpace(search.LastName))
             {
-                query.WhereStarts("StudentPerson.LastName", search.LastName.Trim());
+                query.WhereStarts($"{personAlias}.LastName", search.LastName.Trim());
             }
 
             if (!string.IsNullOrWhiteSpace(search.Gender))
             {
-                query.Where("StudentPerson.Gender", search.Gender);
+                query.Where($"{personAlias}.Gender", search.Gender);
             }
 
             if (search.Dob != null)
             {
-                query.WhereDate("StudentPerson.Dob", search.Dob.Value);
+                query.WhereDate($"{personAlias}.Dob", search.Dob.Value);
             }
 
             // TODO: Add filter for student group
 
             if (search.SenStatusId != null)
             {
-                query.Where("Student.SenStatusId", search.SenStatusId.Value);
+                query.Where($"{studentAlias}.SenStatusId", search.SenStatusId.Value);
             }
         }
 
@@ -188,11 +193,22 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
-        public async Task<IEnumerable<Student>> GetAllExtended(StudentSearchOptions searchOptions)
+        public async Task<IEnumerable<StudentSearchResult>> SearchAll(StudentSearchOptions searchOptions)
         {
-            var query = GenerateQuery();
+            var query = GenerateEmptyQuery();
+            query.With("StudentHouse", HouseCte);
+            query.With("StudentRegGroup", RegGroupCte);
+            query.With("StudentYearGroup", YearGroupCte);
+
+            query.LeftJoin("People as P", "P.Id", "S.PersonId");
+            query.LeftJoin("StudentHouse as SH", "SH.StudentId", "S.Id");
+            query.LeftJoin("StudentRegGroup as SR", "SR.StudentId", "S.Id");
+            query.LeftJoin("StudentYearGroup as SY", "SY.StudentId", "S.Id");
+
+            query.Select("S.Id", "P.FirstName", "P.PreferredFirstName", "P.MiddleName", "P.LastName",
+                "P.PreferredLastName", "P.Gender", "SH.HouseName", "SR.RegGroupName", "SY.YearGroupName");
             ApplySearch(query, searchOptions);
-            return await ExecuteQuery(query);
+            return await ExecuteQuery<StudentSearchResult>(query);
         }
 
         public async Task<IEnumerable<Student>> GetByContact(Guid contactId, bool reportableOnly)

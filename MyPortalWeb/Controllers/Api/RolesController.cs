@@ -13,6 +13,7 @@ using MyPortal.Logic.Models.Requests.Admin.Roles;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 using MyPortalWeb.Models;
+using MyPortalWeb.Models.Response;
 
 namespace MyPortalWeb.Controllers.Api
 {
@@ -30,14 +31,14 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPost]
         [Route("create")]
         [Permission(PermissionValue.SystemEditGroups)]
-        [ProducesResponseType(typeof(NewEntityResponse), 200)]
+        [ProducesResponseType(typeof(NewEntityResponseModel), 200)]
         public async Task<IActionResult> CreateRole([FromBody] CreateRoleModel model)
         {
             try
             {
                 var newId = (await _roleService.Create(model)).FirstOrDefault();
 
-                return Ok(new NewEntityResponse {Id = newId});
+                return Ok(new NewEntityResponseModel {Id = newId});
             }
             catch (Exception e)
             {

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Constants;
 
 namespace MyPortal.Logic.Attributes
 {

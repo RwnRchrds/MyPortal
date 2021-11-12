@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Search;
+using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Student;
 using MyPortal.Logic.Models.Response.Students;
@@ -13,6 +14,7 @@ namespace MyPortal.Logic.Interfaces.Services
     public interface IStudentService
     {
         Task<IEnumerable<StudentModel>> Get(StudentSearchOptions searchModel);
+        Task<IEnumerable<StudentCollectionModel>> Search(StudentSearchOptions searchOptions);
 
         Task<StudentStatsModel> GetStatsById(Guid studentId, Guid academicYearId);
 

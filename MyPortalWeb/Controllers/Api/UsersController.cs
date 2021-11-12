@@ -13,6 +13,7 @@ using MyPortal.Logic.Models.Requests.Admin.Users;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 using MyPortalWeb.Models;
+using MyPortalWeb.Models.Response;
 
 namespace MyPortalWeb.Controllers.Api
 { 
@@ -36,14 +37,14 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPost]
         [Route("create")]
         [Permission(PermissionValue.SystemEditUsers)]
-        [ProducesResponseType(typeof(NewEntityResponse), 200)]
+        [ProducesResponseType(typeof(NewEntityResponseModel), 200)]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserModel model)
         {
             try
             {
                 var userId = (await UserService.CreateUser(model)).FirstOrDefault();
 
-                return Ok(new NewEntityResponse {Id = userId});
+                return Ok(new NewEntityResponseModel {Id = userId});
             }
             catch (Exception e)
             {

@@ -33,7 +33,7 @@ namespace MyPortal.Database.Repositories
             sql.Where("AT.StartDate", "<=", dateToday);
             sql.Where("AT.EndDate", ">=", dateToday);
 
-            sql.GroupByEntityColumns(typeof(AcademicYear), "AcademicYear");
+            sql.GroupByEntityColumns(typeof(AcademicYear), TblAlias);
 
             return await ExecuteQueryFirstOrDefault(sql);
         }
