@@ -320,7 +320,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<bool> UsernameExists(string username)
         {
-            return await _userManager.Users.AnyAsync(x => x.UserName == username.ToLower());
+            return await _userManager.Users.AnyAsync(x => x.NormalizedUserName == username.ToUpper());
         }
 
         public async Task SetUserEnabled(Guid userId, bool enabled)

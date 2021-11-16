@@ -51,7 +51,6 @@ namespace MyPortalWeb.Extensions
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<ISystemSettingService, SystemSettingService>();
             services.AddScoped<ITaskService, TaskService>();
-            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IYearGroupService, YearGroupService>();
 

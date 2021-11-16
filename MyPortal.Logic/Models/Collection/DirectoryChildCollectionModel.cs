@@ -11,7 +11,6 @@ namespace MyPortal.Logic.Models.Collection
         public bool IsDirectory { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
-        public string Icon { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public DirectoryChildCollectionModel(DirectoryModel directory)
@@ -23,7 +22,6 @@ namespace MyPortal.Logic.Models.Collection
             ParentId = directory.ParentId;
             IsDirectory = true;
             Name = directory.Name;
-            Icon = Icons.Files.Directory;
             Type = "Directory";
         }
 
@@ -38,7 +36,6 @@ namespace MyPortal.Logic.Models.Collection
             Name = document.Title;
             CreatedDate = document.CreatedDate;
             Type = document.Type.Description;
-            Icon = Icons.Files.File;
         }
     }
 }

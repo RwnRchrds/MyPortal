@@ -7,6 +7,7 @@ using MyPortal.Database.Enums;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Person.Tasks;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -41,7 +42,7 @@ namespace MyPortalWeb.Controllers.Api
 
                 var task = await _taskService.GetById(taskId);
 
-                if (await AuthoriseUpdate(task, user.Id.Value))
+                if (await AuthorisePerson(task.AssignedToId, user.Id.Value))
                 {
                     return Ok(task);
                 }
@@ -86,7 +87,7 @@ namespace MyPortalWeb.Controllers.Api
 
                 var user = await UserService.GetUserByPrincipal(User);
 
-                var canCreate = await AuthoriseCreate(model.AssignedToId, user.Id.Value);
+                var canCreate = await AuthorisePerson(model.AssignedToId, user.Id.Value);
 
                 if (canCreate)
                 {
@@ -113,8 +114,9 @@ namespace MyPortalWeb.Controllers.Api
             try
             {
                 var user = await UserService.GetUserByPrincipal(User);
+                var task = await _taskService.GetById(model.Id);
 
-                var canEdit = await AuthoriseUpdate(model, user.Id.Value);
+                var canEdit = await AuthorisePerson(task.AssignedToId, user.Id.Value);
 
                 if (canEdit)
                 {
@@ -141,7 +143,7 @@ namespace MyPortalWeb.Controllers.Api
                 var user = await UserService.GetUserByPrincipal(User);
                 var task = await _taskService.GetById(model.TaskId);
 
-                if (await AuthoriseUpdate(task, user.Id.Value))
+                if (await AuthorisePerson(task.AssignedToId, user.Id.Value))
                 {
                     await _taskService.SetCompleted(model.TaskId, model.Completed);
 
@@ -173,7 +175,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        private async Task<bool> AuthoriseCreate(Guid personId, Guid userId)
+        private async Task<bool> AuthorisePerson(Guid personId, Guid userId)
         {
             var personInDb = await _personService.GetPersonWithTypes(personId);
 
@@ -215,67 +217,6 @@ namespace MyPortalWeb.Controllers.Api
             }
 
             return false;
-        }
-
-        private async Task<bool> AuthoriseUpdate(UpdateTaskModel model, Guid userId)
-        {
-            //if (TaskTypes.IsReserved(model.TypeId))
-            //{
-            //    return false;
-            //}
-
-            //if (await _taskService.IsTaskOwner(model.Id, userId))
-            //{
-            //    return true;
-            //}
-
-            //var personInDb = await _personService.GetPersonWithTypes(model.AssignedToId);
-
-            //if (personInDb.PersonTypes.IsStudent)
-            //{
-            //    return User.IsType(UserTypes.Staff);
-            //}
-
-            //if (personInDb.PersonTypes.IsStaff)
-            //{
-            //    if (await UserHasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
-            //    {
-            //        return true;
-            //    }
-
-            //    var taskStaffMember = await Services.Staff.GetByPersonId(model.AssignedToId, false);
-
-            //    var userStaffMember = await Services.Staff.GetByUserId(userId, false);
-
-            //    if (userStaffMember != null && taskStaffMember != null &&
-            //        await UserHasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
-            //        await Services.Staff.IsLineManager(taskStaffMember.Id, userStaffMember.Id))
-            //    {
-            //        return true;
-            //    }
-            //}
-
-            //return false;
-
-            return true;
-        }
-
-        private async Task<bool> AuthoriseUpdate(TaskModel model, Guid userId)
-        {
-            //var updateModel = new UpdateTaskModel
-            //{
-            //    AssignedToId = model.AssignedToId,
-            //    Description = model.Description,
-            //    TypeId = model.TypeId,
-            //    Title = model.Title,
-            //    DueDate = model.DueDate,
-            //    Completed = model.Completed,
-            //    Id = model.Id
-            //};
-
-            //return await AuthoriseUpdate(updateModel, userId);
-
-            return true;
         }
     }
 }

@@ -104,7 +104,7 @@ namespace MyPortal.Logic.Helpers
             if (!Validator.TryValidateObject(model, validationContext, results, true))
             {
                 var errors = results.Select(x => x.ErrorMessage).ToArray();
-                var message = errors.Aggregate("", (current, error) => $"{current}{Environment.NewLine}{error}");
+                var message = string.Join(Environment.NewLine, errors);
                 throw new InvalidDataException(message);
             }
         }
