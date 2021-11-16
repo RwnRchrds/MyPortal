@@ -27,7 +27,7 @@ namespace MyPortal.Database.Repositories
 
         }
 
-        private Query HouseCte
+        private static Query HouseCte
         {
             get
             {
@@ -38,12 +38,13 @@ namespace MyPortal.Database.Repositories
 
                 query.Select("S.Id as StudentId");
                 query.Select("SG.Description as HouseName");
+                query.Select("H.Id as HouseId");
 
                 return query;
             }
         }
 
-        private Query RegGroupCte
+        private static Query RegGroupCte
         {
             get
             {
@@ -54,12 +55,13 @@ namespace MyPortal.Database.Repositories
 
                 query.Select("S.Id as StudentId");
                 query.Select("SG.Description as RegGroupName");
+                query.Select("R.Id as RegGroupId");
 
                 return query;
             }
         }
 
-        private Query YearGroupCte
+        private static Query YearGroupCte
         {
             get
             {
@@ -70,6 +72,7 @@ namespace MyPortal.Database.Repositories
 
                 query.Select("S.Id as StudentId");
                 query.Select("SG.Description as YearGroupName");
+                query.Select("Y.Id as YearGroupId");
 
                 return query;
             }
@@ -117,16 +120,43 @@ namespace MyPortal.Database.Repositories
             return students;
         }
 
-        private static void ApplySearch(Query query, StudentSearchOptions search, string studentAlias = null, string personAlias = null)
+        private static void ApplySearch(Query query, StudentSearchOptions search, string studentAlias,
+            string personAlias, string studentHouseAlias = null, string studentRegGroupAlias = null,
+            string studentYearGroupAlias = null)
         {
-            studentAlias = string.IsNullOrWhiteSpace(studentAlias) ? "S" : studentAlias;
-            personAlias = string.IsNullOrWhiteSpace(personAlias) ? "P" : personAlias;
-            
+            if (string.IsNullOrWhiteSpace(studentHouseAlias))
+            {
+                studentHouseAlias = "SH";
+                
+                query.With("StudentHouse", HouseCte);
+                query.LeftJoin($"StudentHouse as {studentHouseAlias}", $"{studentHouseAlias}.StudentId",
+                    $"{studentAlias}.Id");
+            }
+
+            if (string.IsNullOrWhiteSpace(studentRegGroupAlias))
+            {
+                studentRegGroupAlias = "SR";
+
+                query.With("StudentRegGroup", RegGroupCte);
+                query.LeftJoin($"StudentRegGroup as {studentRegGroupAlias}", $"{studentRegGroupAlias}.StudentId",
+                    $"{studentAlias}.Id");
+            }
+
+            if (string.IsNullOrWhiteSpace(studentYearGroupAlias))
+            {
+                studentYearGroupAlias = "SY";
+
+                query.With("StudentYearGroup", YearGroupCte);
+                query.LeftJoin($"StudentYearGroup as {studentYearGroupAlias}", $"{studentYearGroupAlias}.StudentId",
+                    $"{studentAlias}.Id");
+            }
+
             switch (search.Status)
             {
                 case StudentStatus.OnRoll:
                     query.Where(q =>
-                        q.WhereNull($"{studentAlias}.DateLeaving").OrWhereDate($"{studentAlias}.DateLeaving", ">", DateTime.Today));
+                        q.WhereNull($"{studentAlias}.DateLeaving")
+                            .OrWhereDate($"{studentAlias}.DateLeaving", ">", DateTime.Today));
                     break;
                 case StudentStatus.Leavers:
                     query.WhereDate($"{studentAlias}.DateLeaving", "<=", DateTime.Today);
@@ -140,7 +170,7 @@ namespace MyPortal.Database.Repositories
 
             if (!string.IsNullOrWhiteSpace(search.FirstName))
             {
-                query.WhereStarts( $"{personAlias}.FirstName", search.FirstName.Trim());
+                query.WhereStarts($"{personAlias}.FirstName", search.FirstName.Trim());
             }
 
             if (!string.IsNullOrWhiteSpace(search.LastName))
@@ -157,12 +187,25 @@ namespace MyPortal.Database.Repositories
             {
                 query.WhereDate($"{personAlias}.Dob", search.Dob.Value);
             }
-
-            // TODO: Add filter for student group
-
+            
             if (search.SenStatusId != null)
             {
                 query.Where($"{studentAlias}.SenStatusId", search.SenStatusId.Value);
+            }
+            
+            if (search.HouseId.HasValue)
+            {
+                query.Where($"{studentHouseAlias}.HouseId", search.HouseId.Value);
+            }
+
+            if (search.RegGroupId.HasValue)
+            {
+                query.Where($"{studentRegGroupAlias}.RegGroupId", search.RegGroupId.Value);
+            }
+
+            if (search.YearGroupId.HasValue)
+            {
+                query.Where($"{studentYearGroupAlias}.YearGroupId", search.YearGroupId.Value);
             }
         }
 
@@ -188,7 +231,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
             
-            ApplySearch(query, searchParams);
+            ApplySearch(query, searchParams, TblAlias, "P");
             
             return await ExecuteQuery(query);
         }
@@ -207,7 +250,7 @@ namespace MyPortal.Database.Repositories
 
             query.Select("S.Id", "P.FirstName", "P.PreferredFirstName", "P.MiddleName", "P.LastName",
                 "P.PreferredLastName", "P.Gender", "SH.HouseName", "SR.RegGroupName", "SY.YearGroupName");
-            ApplySearch(query, searchOptions);
+            ApplySearch(query, searchOptions, TblAlias, "P", "SH", "SR", "SY");
             return await ExecuteQuery<StudentSearchResult>(query);
         }
 

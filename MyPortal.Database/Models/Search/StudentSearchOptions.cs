@@ -7,7 +7,7 @@ namespace MyPortal.Database.Models.Search
     {
         public StudentSearchOptions()
         {
-            Status = StudentStatus.Any;
+            Status = StudentStatus.OnRoll;
         }
 
         public StudentStatus Status { get; set; }
