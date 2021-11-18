@@ -13,6 +13,8 @@ namespace MyPortal.Logic.Models.Entity
             PeriodId = model.PeriodId;
             TeacherId = model.TeacherId;
             RoomId = model.RoomId;
+            StartDate = model.StartDate;
+            EndDate = model.EndDate;
 
             if (model.Teacher != null)
             {
@@ -42,6 +44,10 @@ namespace MyPortal.Logic.Models.Entity
         public Guid TeacherId { get; set; }
         
         public Guid? RoomId { get; set; }
+        
+        public DateTime StartDate { get; set; }
+        
+        public DateTime EndDate { get; set; }
 
         public virtual StaffMemberModel Teacher { get; set; }
         

@@ -17,6 +17,12 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 4)] 
         public Guid? RoomId { get; set; }
+        
+        [Column(Order = 5)] 
+        public DateTime StartDate { get; set; }
+        
+        [Column(Order = 6)] 
+        public DateTime EndDate { get; set; }
 
         public virtual StaffMember Teacher { get; set; }
         
