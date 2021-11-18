@@ -52,7 +52,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateEmptyQuery(typeof(User), "User");
 
-            query.Where("User.UserName", username);
+            query.Where($"{TblAlias}.UserName", username);
 
             query.AsCount();
 
@@ -65,7 +65,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Where("User.UserName", username);
+            query.Where($"{TblAlias}.UserName", username);
 
             return await ExecuteQueryFirstOrDefault(query);
         }

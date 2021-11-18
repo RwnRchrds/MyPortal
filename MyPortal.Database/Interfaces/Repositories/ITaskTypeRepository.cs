@@ -9,6 +9,6 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface ITaskTypeRepository : IReadWriteRepository<TaskType>, IUpdateRepository<TaskType>
     {
-        Task<IEnumerable<TaskType>> GetAll(bool personal, bool active, bool includeReserved);
+        Task<IEnumerable<TaskType>> GetAll(bool personalOnly, bool activeOnly, bool includeSystem);
     }
 }

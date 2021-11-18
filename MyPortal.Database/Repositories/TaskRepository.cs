@@ -60,7 +60,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Where("Task.AssignedToId", personId);
+            query.Where($"{TblAlias}.AssignedToId", personId);
 
             if (searchOptions != null)
             {
@@ -74,17 +74,18 @@ namespace MyPortal.Database.Repositories
         {
             if (searchOptions.Status == TaskStatus.Overdue)
             {
-                query.WhereDate("Task.DueDate", "<", DateTime.Today);
+                query.Where($"{TblAlias}.Completed", false);
+                query.Where($"{TblAlias}.DueDate", "<", DateTime.Today);
             }
 
             else if (searchOptions.Status == TaskStatus.Active)
             {
-                query.Where(q => q.Where("Task.Completed", false).OrWhereDate("Task.DueDate", ">=", DateTime.Today));
+                query.Where($"{TblAlias}.Completed", false);
             }
 
             else if (searchOptions.Status == TaskStatus.Completed)
             {
-                query.Where("Task.Completed", true);
+                query.Where($"{TblAlias}.Completed", true);
             }
         }
 

@@ -32,6 +32,9 @@ namespace MyPortal.Database.Repositories
         {
             var query = new Query("UserRoles as UR").SelectAllColumns(typeof(UserRole), "UR");
 
+            query.LeftJoin("Users as U", "U.Id", "UR.UserId");
+            query.LeftJoin("Roles as R", "R.Id", "UR.RoleId");
+
             return query;
         }
 
@@ -53,7 +56,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Where("User.Id", userId);
+            query.Where($"U.Id", userId);
 
             return await ExecuteQuery(query);
         }

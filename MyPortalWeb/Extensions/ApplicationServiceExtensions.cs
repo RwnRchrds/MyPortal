@@ -78,8 +78,6 @@ namespace MyPortalWeb.Extensions
 
             Configuration.Instance.InstallLocation = config["MyPortal:InstallLocation"];
 
-            Configuration.Instance.TokenKey = config["MyPortal:TokenKey"];
-
             switch (config["FileProvider:ProviderName"])
             {
                 case "Google":

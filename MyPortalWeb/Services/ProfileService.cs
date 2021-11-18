@@ -13,14 +13,12 @@ namespace MyPortalWeb.Services
 {
     public class ProfileService : IProfileService
     {
-        protected UserManager<User> _userManager;
-        private readonly RoleManager<Role> _roleManager;
+        private readonly UserManager<User> _userManager;
         private readonly IUserService _userService;
 
-        public ProfileService(UserManager<User> userManager, RoleManager<Role> roleManager, IUserService userService)
+        public ProfileService(UserManager<User> userManager, IUserService userService)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
             _userService = userService;
         }
 
@@ -32,7 +30,7 @@ namespace MyPortalWeb.Services
 
             var claims = new List<Claim>
             {
-                new Claim(ApplicationClaimTypes.UserType, user.UserType.ToString())
+                new (ApplicationClaimTypes.UserType, user.UserType.ToString())
             };
 
             foreach (var role in roles)

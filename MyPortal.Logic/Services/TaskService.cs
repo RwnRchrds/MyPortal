@@ -41,11 +41,6 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<bool> CanAssign(Guid userId, Guid personId)
-        {
-            return true;
-        }
-
         public async Task<IEnumerable<TaskTypeModel>> GetTypes(bool personalOnly, bool activeOnly = true)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

@@ -38,6 +38,8 @@ namespace MyPortalWeb.Middleware
                     await context.Response.WriteAsync("You do not have permission to access this resource.");
                 }
             }
+
+            await _next(context);
         }
         
         protected async Task<bool> UserHasPermission(IRoleService roleService, ClaimsPrincipal user, PermissionValue[] permissionValues)

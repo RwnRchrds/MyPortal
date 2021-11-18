@@ -18,13 +18,21 @@ namespace MyPortal.Database.Repositories
 
         }
 
-        public async Task<IEnumerable<TaskType>> GetAll(bool personal, bool active, bool includeReserved)
+        public async Task<IEnumerable<TaskType>> GetAll(bool personalOnly, bool activeOnly, bool includeSystem)
         {
             var query = GenerateQuery();
 
-            query.Where("TaskType.Personal", personal);
-            query.Where("Personal.Active", active);
-            query.Where("Personal.Reserved", includeReserved);
+            if (personalOnly)
+            {
+                query.Where($"{TblAlias}.Personal", true);   
+            }
+
+            if (activeOnly)
+            {
+                query.Where($"{TblAlias}.Active", true);
+            }
+            
+            query.Where($"{TblAlias}.System", includeSystem);
 
             return await ExecuteQuery(query);
         }

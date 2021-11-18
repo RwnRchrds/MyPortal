@@ -13,7 +13,6 @@ namespace MyPortal.Logic
         public static Configuration Instance = new Configuration();
 
         private string _installLocation;
-        private string _tokenKey;
         private string _connectionString;
         private FileProvider _fileProvider;
         private GoogleConfig _googleConfig;
@@ -29,12 +28,6 @@ namespace MyPortal.Logic
         {
             get { return _installLocation; }
             set { _installLocation = value; }
-        }
-
-        public string TokenKey
-        {
-            get { return _tokenKey; }
-            set { _tokenKey = value; }
         }
 
         public string ConnectionString

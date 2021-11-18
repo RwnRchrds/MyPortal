@@ -43,7 +43,7 @@ namespace MyPortal.Logic.Services
 
                 if (metadata == null || metadata.AttendanceWeekId == Guid.Empty)
                 {
-                    throw new NotFoundException("Failed to load register.");
+                    throw new NotFoundException("Register not found.");
                 }
 
                 var register = new AttendanceRegisterModel(metadata);

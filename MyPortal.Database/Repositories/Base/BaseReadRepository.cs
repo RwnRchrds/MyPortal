@@ -101,7 +101,7 @@ namespace MyPortal.Database.Repositories.Base
         {
             var query = GenerateQuery();
 
-            query.Where($"{TblAlias}.Id", "=", id);
+            query.Where($"{TblAlias}.Id", id);
 
             return (await ExecuteQuery(query)).SingleOrDefault();
         }

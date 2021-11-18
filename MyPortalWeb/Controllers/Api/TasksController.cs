@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
+using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -32,9 +35,9 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("id")]
+        [Route("id/{taskId}")]
         [ProducesResponseType(typeof(TaskModel), 200)]
-        public async Task<IActionResult> GetById([FromQuery] Guid taskId)
+        public async Task<IActionResult> GetById([FromRoute] Guid taskId)
         {
             try
             {
@@ -42,7 +45,7 @@ namespace MyPortalWeb.Controllers.Api
 
                 var task = await _taskService.GetById(taskId);
 
-                if (await AuthorisePerson(task.AssignedToId, user.Id.Value))
+                if (await AuthorisePerson(task.AssignedToId, user.Id.Value, false))
                 {
                     return Ok(task);
                 }
@@ -51,8 +54,31 @@ namespace MyPortalWeb.Controllers.Api
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                return HandleException(e);
+            }
+        }
+
+        [HttpGet]
+        [Route("person/{personId}")]
+        [ProducesResponseType(typeof(IEnumerable<TaskModel>), 200)]
+        public async Task<IActionResult> GetByPerson([FromRoute] Guid personId, [FromQuery] TaskSearchOptions searchOptions)
+        {
+            try
+            {
+                var user = await UserService.GetUserByPrincipal(User);
+
+                if (await AuthorisePerson(personId, user.Id.Value, false))
+                {
+                    var tasks = (await _taskService.GetByPerson(personId, searchOptions)).ToArray();
+
+                    return Ok(tasks);
+                }
+
+                return Error(HttpStatusCode.Forbidden, "You do not have permission to access this resource.");
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
             }
         }
 
@@ -76,18 +102,18 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPost]
         [Route("create")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Create([FromForm] CreateTaskModel model)
+        public async Task<IActionResult> Create([FromBody] CreateTaskModel model)
         {
             try
             {
                 if (TaskTypes.IsReserved(model.TypeId))
                 {
-                    return BadRequest("This task type cannot be created manually.");
+                    return Error(HttpStatusCode.BadRequest, "Tasks of this type cannot be created manually.");
                 }
 
                 var user = await UserService.GetUserByPrincipal(User);
 
-                var canCreate = await AuthorisePerson(model.AssignedToId, user.Id.Value);
+                var canCreate = await AuthorisePerson(model.AssignedToId, user.Id.Value, true);
 
                 if (canCreate)
                 {
@@ -109,14 +135,14 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPut]
         [Route("update")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Update([FromForm] UpdateTaskModel model)
+        public async Task<IActionResult> Update([FromBody] UpdateTaskModel model)
         {
             try
             {
                 var user = await UserService.GetUserByPrincipal(User);
                 var task = await _taskService.GetById(model.Id);
 
-                var canEdit = await AuthorisePerson(task.AssignedToId, user.Id.Value);
+                var canEdit = await AuthorisePerson(task.AssignedToId, user.Id.Value, true);
 
                 if (canEdit)
                 {
@@ -143,7 +169,7 @@ namespace MyPortalWeb.Controllers.Api
                 var user = await UserService.GetUserByPrincipal(User);
                 var task = await _taskService.GetById(model.TaskId);
 
-                if (await AuthorisePerson(task.AssignedToId, user.Id.Value))
+                if (await AuthorisePerson(task.AssignedToId, user.Id.Value, true))
                 {
                     await _taskService.SetCompleted(model.TaskId, model.Completed);
 
@@ -175,7 +201,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        private async Task<bool> AuthorisePerson(Guid personId, Guid userId)
+        private async Task<bool> AuthorisePerson(Guid personId, Guid userId, bool edit)
         {
             var personInDb = await _personService.GetPersonWithTypes(personId);
 
@@ -183,20 +209,24 @@ namespace MyPortalWeb.Controllers.Api
             {
                 if (User.IsType(UserTypes.Student))
                 {
-                    var student = await StudentService.GetByPersonId(personId);
+                    if (await UserHasPermission(PermissionValue.StudentViewStudentTasks))
+                    {
+                        var student = await StudentService.GetByPersonId(personId);
 
-                    return await AuthoriseStudent(student.Id.Value);
+                        return await AuthoriseStudent(student.Id.Value);
+                    }
                 }
 
-                if (User.IsType(UserTypes.Staff))
+                else if (User.IsType(UserTypes.Staff))
                 {
-                    return true;
+                    return await UserHasPermission(PermissionValue.StudentViewStudentTasks);
                 }
             }
 
-            if (personInDb.PersonTypes.IsStaff)
+            else if (personInDb.PersonTypes.IsStaff)
             {
-                if (await UserHasPermission(PermissionValue.PeopleEditAllStaffTasks))
+                if (edit && await UserHasPermission(PermissionValue.PeopleEditAllStaffTasks) ||
+                    await UserHasPermission(PermissionValue.PeopleViewAllStaffTasks))
                 {
                     return true;
                 }
@@ -211,7 +241,8 @@ namespace MyPortalWeb.Controllers.Api
                         return true;
                     }
 
-                    return await UserHasPermission(PermissionValue.PeopleEditManagedStaffTasks) &&
+                    return (edit && await UserHasPermission(PermissionValue.PeopleEditManagedStaffTasks) ||
+                            await UserHasPermission(PermissionValue.PeopleViewManagedStaffTasks)) &&
                            await _staffMemberService.IsLineManager(taskStaffMember.Id.Value, userStaffMember.Id.Value);
                 }
             }

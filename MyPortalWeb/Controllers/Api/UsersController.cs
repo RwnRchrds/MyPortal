@@ -18,7 +18,7 @@ using MyPortalWeb.Models.Response;
 namespace MyPortalWeb.Controllers.Api
 { 
     [Authorize]
-    [Route("api/user")]
+    [Route("api/users")]
     public class UsersController : BaseApiController
     {
         public UsersController(IUserService userService, IRoleService roleService) : base(userService, roleService)

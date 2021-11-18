@@ -100,5 +100,10 @@ namespace MyPortalWeb.Controllers.BaseControllers
             
             return StatusCode(statusCode, error);
         }
+
+        protected IActionResult Error(HttpStatusCode statusCode, string errorMessage)
+        {
+            return Error((int)statusCode, errorMessage);
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace MyPortal.Database.Repositories
         protected override Query JoinRelated(Query query)
         {
             JoinEntity(query, "Ethnicities", "E", "EthnicityId");
-            JoinEntity(query, "Directory", "D", "DirectoryId");
+            JoinEntity(query, "Directories", "D", "DirectoryId");
             JoinEntity(query, "Photos", "PH", "PhotoId");
 
             return query;
@@ -64,7 +64,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Where("Person.UserId", userId);
+            query.Where($"{TblAlias}.UserId", userId);
 
             return (await ExecuteQuery(query)).FirstOrDefault();
         }
@@ -75,22 +75,22 @@ namespace MyPortal.Database.Repositories
             {
                 if (!string.IsNullOrWhiteSpace(search.FirstName))
                 {
-                    query.WhereStarts("Person.FirstName", search.FirstName);
+                    query.WhereStarts($"{TblAlias}.FirstName", search.FirstName);
                 }
 
                 if (!string.IsNullOrWhiteSpace(search.LastName))
                 {
-                    query.WhereStarts("Person.LastName", search.LastName);
+                    query.WhereStarts($"{TblAlias}.LastName", search.LastName);
                 }
 
                 if (!string.IsNullOrWhiteSpace(search.Gender))
                 {
-                    query.Where("Person.Gender", search.Gender);
+                    query.Where($"{TblAlias}.Gender", search.Gender);
                 }
 
                 if (search.Dob != null)
                 {
-                    query.WhereDate("Person.Dob", search.Dob);
+                    query.WhereDate($"{TblAlias}.Dob", search.Dob);
                 }
             }
 
@@ -98,13 +98,13 @@ namespace MyPortal.Database.Repositories
             {
                 query.LeftJoin("Users as U", "U.PersonId", $"{TblAlias}.Id");
                 query.LeftJoin("Students AS S", "S.PersonId", $"{TblAlias}.Id");
-                query.LeftJoin("StaffMembers AS ST", "ST.PersonId", $"{TblAlias}.Id");
+                query.LeftJoin("StaffMembers AS SM", "SM.PersonId", $"{TblAlias}.Id");
                 query.LeftJoin("Contacts AS C", "C.PersonId", $"{TblAlias}.Id");
                 
-                query.SelectRaw("CASE WHEN [User].[Id] IS NULL THEN 0 ELSE 1 END AS IsUser");
-                query.SelectRaw("CASE WHEN [Student].[Id] IS NULL THEN 0 ELSE 1 END AS IsStudent");
-                query.SelectRaw("CASE WHEN [StaffMember].[Id] IS NULL THEN 0 ELSE 1 END AS IsStaff");
-                query.SelectRaw("CASE WHEN [Contact].[Id] IS NULL THEN 0 ELSE 1 END AS IsContact");
+                query.SelectRaw("CASE WHEN [U].[Id] IS NULL THEN 0 ELSE 1 END AS IsUser");
+                query.SelectRaw("CASE WHEN [S].[Id] IS NULL THEN 0 ELSE 1 END AS IsStudent");
+                query.SelectRaw("CASE WHEN [SM].[Id] IS NULL THEN 0 ELSE 1 END AS IsStaff");
+                query.SelectRaw("CASE WHEN [C].[Id] IS NULL THEN 0 ELSE 1 END AS IsContact");
             }
         }
 
@@ -112,7 +112,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Where("Person.Id", personId);
+            query.Where($"{TblAlias}.Id", personId);
 
             ApplySearch(query, null, true);
 
