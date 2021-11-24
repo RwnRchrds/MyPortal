@@ -11,5 +11,7 @@ namespace MyPortal.Logic.Interfaces.Services
     {
         Task<IEnumerable<StudentModel>> GetReportableStudents(Guid contactId);
         Task CreateContact(params CreateContactModel[] models);
+        Task UpdateContact(params UpdateContactModel[] models);
+        Task DeleteContact(params Guid[] contactIds);
     }
 }

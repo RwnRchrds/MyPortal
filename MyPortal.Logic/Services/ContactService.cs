@@ -40,31 +40,47 @@ namespace MyPortal.Logic.Services
                         NiNumber = model.NiNumber,
                         PlaceOfWork = model.PlaceOfWork,
                         ParentalBallot = model.ParentalBallot,
-                        Person = new Person
-                        {
-                            FirstName = model.FirstName,
-                            PreferredFirstName = model.PreferredFirstName,
-                            LastName = model.PreferredLastName,
-                            PreferredLastName = model.PreferredLastName,
-                            MiddleName = model.MiddleName,
-                            Title = model.Title,
-                            NhsNumber = model.NhsNumber,
-                            CreatedDate = createDate,
-                            Deleted = false,
-                            Gender = model.Gender,
-                            Dob = model.Dob,
-                            EthnicityId = model.EthnicityId,
-                            Directory = new Directory
-                            {
-                                Name = "person-root"
-                            }
-                        }
+                        Person = PersonHelper.CreatePerson(model)
                     };
                     
                     unitOfWork.Contacts.Create(contact);
                 }
 
                 await unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateContact(params UpdateContactModel[] models)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                foreach (var model in models)
+                {
+                    var contact = await unitOfWork.Contacts.GetById(model.Id);
+
+                    contact.JobTitle = model.JobTitle;
+                    contact.NiNumber = model.NiNumber;
+                    contact.PlaceOfWork = model.PlaceOfWork;
+                    contact.ParentalBallot = model.ParentalBallot;
+                    
+                    PersonHelper.UpdatePerson(contact.Person, model);
+
+                    await unitOfWork.People.Update(contact.Person);
+                    await unitOfWork.Contacts.Update(contact);
+                }
+
+                await unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteContact(params Guid[] contactIds)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                foreach (var contactId in contactIds)
+                {
+                    await unitOfWork.Contacts.Delete(contactId);
+                }
             }
         }
     }

@@ -26,7 +26,7 @@ namespace MyPortal.Logic.Interfaces.Services
 
         Task Create(params CreateStudentModel[] students);
 
-        Task Update(params UpdateStudentModel[] student);
+        Task Update(params UpdateStudentModel[] models);
 
         Dictionary<string, int> GetStudentStatusOptions();
 

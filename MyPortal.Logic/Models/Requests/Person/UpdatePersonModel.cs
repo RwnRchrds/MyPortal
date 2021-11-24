@@ -40,5 +40,7 @@ namespace MyPortal.Logic.Models.Requests.Person
         public DateTime? Deceased { get; set; }
         
         public Guid? EthnicityId { get; set; }
+
+        public Guid? PhotoId { get; set; }
     }
 }

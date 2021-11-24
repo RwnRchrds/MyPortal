@@ -14,6 +14,7 @@ namespace MyPortal.Logic.Models.Requests.Student
         public Guid RegGroupId { get; set; }
 
         public DateTime? DateStarting { get; set; }
+        public DateTime? DateLeaving { get; set; }
 
         public Guid? SenStatusId { get; set; }
         
@@ -24,5 +25,6 @@ namespace MyPortal.Logic.Models.Requests.Student
         public Guid? BoarderStatusId { get; set; }
         
         public bool PupilPremium { get; set; }
+        public string Upn { get; set; }
     }
 }

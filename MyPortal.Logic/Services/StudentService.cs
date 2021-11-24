@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Scaffolding;
 using MyPortal.Database;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Interfaces;
@@ -151,7 +152,8 @@ namespace MyPortal.Logic.Services
                         SenTypeId = request.SenTypeId,
                         EnrolmentStatusId = request.EnrolmentStatusId,
                         BoarderStatusId = request.BoarderStatusId,
-                        PupilPremium = request.PupilPremium
+                        PupilPremium = request.PupilPremium,
+                        Person = PersonHelper.CreatePerson(request)
                     };
 
                     foreach (var groupId in groupIds)
@@ -219,9 +221,31 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Update(params UpdateStudentModel[] student)
+        public async Task Update(params UpdateStudentModel[] models)
         {
-            // TODO
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                foreach (var model in models)
+                {
+                    var student = await unitOfWork.Students.GetById(model.Id);
+
+                    student.DateStarting = model.DateStarting;
+                    student.DateLeaving = model.DateLeaving;
+                    student.SenStatusId = model.SenStatusId;
+                    student.SenTypeId = model.SenTypeId;
+                    student.EnrolmentStatusId = model.EnrolmentStatusId;
+                    student.BoarderStatusId = model.BoarderStatusId;
+                    student.PupilPremium = model.PupilPremium;
+                    student.Upn = model.Upn;
+                    
+                    PersonHelper.UpdatePerson(student.Person, model);
+
+                    await unitOfWork.People.Update(student.Person);
+                    await unitOfWork.Students.Update(student);
+                }
+
+                await unitOfWork.SaveChangesAsync();
+            }
         }
     }
 }
