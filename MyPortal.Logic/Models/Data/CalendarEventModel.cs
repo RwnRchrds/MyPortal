@@ -19,8 +19,7 @@ namespace MyPortal.Logic.Models.Data
             End = eventModel.EndTime;
             Title = eventModel.Subject;
             Display = CalendarDisplayModes.Auto;
-            BackgroundColor = eventModel.EventType.ColourCode;
-            Editable = false;
+            Color = eventModel.EventType.ColourCode;
         }
 
         public CalendarEventModel(SessionMetadata sessionMetadata, string colour)
@@ -30,7 +29,7 @@ namespace MyPortal.Logic.Models.Data
             End = sessionMetadata.EndTime;
             Title = $"{sessionMetadata.ClassCode}";
             Display = CalendarDisplayModes.Auto;
-            BackgroundColor = colour;
+            Color = colour;
             if (sessionMetadata.RoomId.HasValue && !string.IsNullOrWhiteSpace(sessionMetadata.RoomName))
             {
                 ExtendedProps = new
@@ -42,15 +41,30 @@ namespace MyPortal.Logic.Models.Data
         }
 
         public string Id { get; set; }
+        public string GroupId { get; set; }
         public bool AllDay { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
+        
+        #region Recurring Events
+        
+        public int[] DaysOfWeek { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public DateTime StartRecur { get; set; }
+        public DateTime EndRecur { get; set; }
+        
+        #endregion
+        
         public string Title { get; set; }
         public string Url { get; set; }
+        public bool Interactive { get; set; }
         public string[] ClassNames { get; set; }
+        public string[] ResourceIds { get; set; }
         public bool Editable { get; set; }
+        public bool Overlap { get; set; }
         public string Display { get; set; }
-        public string BackgroundColor { get; set; }
+        public string Color { get; set; }
         public object ExtendedProps { get; set; }
     }
 

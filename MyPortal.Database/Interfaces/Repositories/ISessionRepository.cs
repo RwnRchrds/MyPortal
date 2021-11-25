@@ -12,7 +12,7 @@ namespace MyPortal.Database.Interfaces.Repositories
         Task<IEnumerable<SessionMetadata>> GetMetadata(Guid sessionId, DateTime dateFrom, DateTime dateTo);
         Task<SessionMetadata> GetMetadata(Guid sessionId, Guid attendanceWeekId);
         Task<IEnumerable<SessionMetadata>> GetMetadataByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo);
-        Task<IEnumerable<SessionMetadata>> GetMetadataByStaffMember(Guid staffMember, DateTime dateFrom,
+        Task<IEnumerable<SessionMetadata>> GetMetadataByStaffMember(Guid staffMemberId, DateTime dateFrom,
             DateTime dateTo);
     }
 }

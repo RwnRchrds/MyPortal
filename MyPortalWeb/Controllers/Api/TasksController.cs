@@ -19,18 +19,16 @@ using MyPortalWeb.Models.Requests;
 namespace MyPortalWeb.Controllers.Api
 {
     [Route("api/tasks")]
-    public class TasksController : StudentDataController
+    public class TasksController : PersonalDataController
     {
         private ITaskService _taskService;
-        private IPersonService _personService;
         private IStaffMemberService _staffMemberService;
 
         public TasksController(IStudentService studentService, IUserService userService, IRoleService roleService,
             ITaskService taskService, IPersonService personService, IStaffMemberService staffMemberService) : base(
-            studentService, userService, roleService)
+            studentService, personService, userService, roleService)
         {
             _taskService = taskService;
-            _personService = personService;
             _staffMemberService = staffMemberService;
         }
 
@@ -45,7 +43,7 @@ namespace MyPortalWeb.Controllers.Api
 
                 var task = await _taskService.GetById(taskId);
 
-                if (await AuthorisePerson(task.AssignedToId, user.Id.Value, false))
+                if (await AuthorisePersonTasks(task.AssignedToId, user.Id.Value, false))
                 {
                     return Ok(task);
                 }
@@ -67,14 +65,14 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var user = await UserService.GetUserByPrincipal(User);
 
-                if (await AuthorisePerson(personId, user.Id.Value, false))
+                if (await AuthorisePersonTasks(personId, user.Id.Value, false))
                 {
                     var tasks = (await _taskService.GetByPerson(personId, searchOptions)).ToArray();
 
                     return Ok(tasks);
                 }
 
-                return Error(HttpStatusCode.Forbidden, "You do not have permission to access this resource.");
+                return Error(HttpStatusCode.Forbidden, PermissionMessage);
             }
             catch (Exception e)
             {
@@ -113,7 +111,7 @@ namespace MyPortalWeb.Controllers.Api
 
                 var user = await UserService.GetUserByPrincipal(User);
 
-                var canCreate = await AuthorisePerson(model.AssignedToId, user.Id.Value, true);
+                var canCreate = await AuthorisePersonTasks(model.AssignedToId, user.Id.Value, true);
 
                 if (canCreate)
                 {
@@ -142,7 +140,7 @@ namespace MyPortalWeb.Controllers.Api
                 var user = await UserService.GetUserByPrincipal(User);
                 var task = await _taskService.GetById(model.Id);
 
-                var canEdit = await AuthorisePerson(task.AssignedToId, user.Id.Value, true);
+                var canEdit = await AuthorisePersonTasks(task.AssignedToId, user.Id.Value, true);
 
                 if (canEdit)
                 {
@@ -169,7 +167,7 @@ namespace MyPortalWeb.Controllers.Api
                 var user = await UserService.GetUserByPrincipal(User);
                 var task = await _taskService.GetById(model.TaskId);
 
-                if (await AuthorisePerson(task.AssignedToId, user.Id.Value, true))
+                if (await AuthorisePersonTasks(task.AssignedToId, user.Id.Value, true))
                 {
                     await _taskService.SetCompleted(model.TaskId, model.Completed);
 
@@ -201,9 +199,9 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        private async Task<bool> AuthorisePerson(Guid personId, Guid userId, bool edit)
+        private async Task<bool> AuthorisePersonTasks(Guid personId, Guid userId, bool edit)
         {
-            var personInDb = await _personService.GetPersonWithTypes(personId);
+            var personInDb = await PersonService.GetPersonWithTypes(personId);
 
             if (personInDb.PersonTypes.IsStudent)
             {
@@ -213,7 +211,7 @@ namespace MyPortalWeb.Controllers.Api
                     {
                         var student = await StudentService.GetByPersonId(personId);
 
-                        return await AuthoriseStudent(student.Id.Value);
+                        return await AuthorisePerson(student.PersonId, personInDb);
                     }
                 }
 

@@ -21,6 +21,9 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 5)]
         public bool Attended { get; set; }
 
+        [Column(Order = 6)]
+        public bool CanEdit { get; set; }
+
         public virtual DiaryEvent Event { get; set; }
         public virtual Person Person { get; set; }
         public virtual DiaryEventAttendeeResponse Response { get; set; }

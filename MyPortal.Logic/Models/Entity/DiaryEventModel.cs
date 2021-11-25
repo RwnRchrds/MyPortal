@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Interfaces;
@@ -25,7 +27,6 @@ namespace MyPortal.Logic.Models.Entity
             StartTime = model.StartTime;
             EndTime = model.EndTime;
             IsAllDay = model.IsAllDay;
-            IsBlock = model.IsBlock;
             IsPublic = model.IsPublic;
 
             if (model.EventType != null)
@@ -37,6 +38,23 @@ namespace MyPortal.Logic.Models.Entity
             {
                 Room = new RoomModel(model.Room);
             }
+        }
+
+        internal async Task<bool> CanEdit(IUnitOfWork unitOfWork, Guid personId)
+        {
+            if (Id.HasValue)
+            {
+                var attendees = await unitOfWork.DiaryEventAttendees.GetByEvent(Id.Value);
+
+                var attendeePerson = attendees.FirstOrDefault(a => a.PersonId == personId);
+
+                if (attendeePerson != null)
+                {
+                    return attendeePerson.CanEdit;
+                }
+            }
+
+            return false;
         }
         
         public Guid EventTypeId { get; set; }
@@ -58,9 +76,7 @@ namespace MyPortal.Logic.Models.Entity
         public DateTime EndTime { get; set; }
         
         public bool IsAllDay { get; set; }
-        
-        public bool IsBlock { get; set; }
-        
+
         public bool IsPublic { get; set; }
 
         public virtual DiaryEventTypeModel EventType { get; set; }

@@ -60,31 +60,38 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.WhereDate("DiaryEvent.StartTime", ">=", firstDate.Date);
-            query.WhereDate("DiaryEvent.EndTime", "<", lastDate.Date.AddDays(1));
+            query.WhereDate($"{TblAlias}.StartTime", ">=", firstDate.Date);
+            query.WhereDate($"{TblAlias}.EndTime", "<", lastDate.Date.AddDays(1));
 
             if (!includePrivateEvents)
             {
-                query.WhereTrue("DiaryEvent.IsPublic");
+                query.WhereTrue($"{TblAlias}.IsPublic");
             }
 
             return await ExecuteQuery(query);
         }
 
-        public async Task<IEnumerable<DiaryEvent>> GetByPerson(DateTime firstDate, DateTime lastDate, Guid personId, bool includeDeclined = false)
+        public async Task<IEnumerable<DiaryEvent>> GetByPerson(DateTime firstDate, DateTime lastDate, Guid personId, bool includeDeclined = false, bool includePublic = false)
         {
             var query = GenerateQuery();
 
-            query.LeftJoin("DiaryEventAttendees as A", "A.EventId", "DiaryEvent.Id");
+            query.LeftJoin("DiaryEventAttendees as A", "A.EventId", $"{TblAlias}.Id");
             
-            query.WhereDate("DiaryEvent.StartTime", ">=", firstDate.Date);
-            query.WhereDate("DiaryEvent.EndTime", "<", lastDate.Date.AddDays(1));
+            query.WhereDate($"{TblAlias}.StartTime", ">=", firstDate.Date);
+            query.WhereDate($"{TblAlias}.EndTime", "<", lastDate.Date.AddDays(1));
 
-            query.Where("A.PersonId", personId);
+            if (includePublic)
+            {
+                query.Where(q => q.Where("A.PersonId", personId).OrWhereTrue($"{TblAlias}.Public"));
+            }
+            else
+            {
+                query.Where("A.PersonId", personId);
+            }
 
             if (!includeDeclined)
             {
-                query.Where(q => q.Where("A.ResponseId", "<>", AttendeeResponses.Declined).WhereFalse("A.Required"));
+                query.Where(q => q.Where("A.ResponseId", "<>", AttendeeResponses.Declined).OrWhereTrue("A.Required"));
             }
 
             return await ExecuteQuery(query);
@@ -107,7 +114,6 @@ namespace MyPortal.Database.Repositories
             diaryEvent.StartTime = entity.StartTime;
             diaryEvent.EndTime = entity.EndTime;
             diaryEvent.IsAllDay = entity.IsAllDay;
-            diaryEvent.IsBlock = entity.IsBlock;
             diaryEvent.IsPublic = entity.IsPublic;
         }
     }

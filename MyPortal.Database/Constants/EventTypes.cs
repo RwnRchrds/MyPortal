@@ -12,5 +12,6 @@ namespace MyPortal.Database.Constants
         public static Guid Ppa = Guid.Parse("84E9DDA4-1BCB-4A2F-8082-FCE51DD04F27");
         public static Guid SchoolHoliday = Guid.Parse("84E9DDA4-1BCB-4A2F-8082-FCE51DD04F28");
         public static Guid TeacherTraining = Guid.Parse("84E9DDA4-1BCB-4A2F-8082-FCE51DD04F29");
+        public static Guid ParentEveningAppointment = Guid.Parse("84E9DDA4-1BCB-4A2F-8082-FCE51DD04F2B");
     }
 }

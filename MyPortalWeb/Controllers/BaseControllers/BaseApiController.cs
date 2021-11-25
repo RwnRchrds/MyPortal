@@ -36,6 +36,8 @@ namespace MyPortalWeb.Controllers.BaseControllers
             return await UserService.GetUserByPrincipal(User);
         }
 
+        protected string PermissionMessage => "You do not have permission to access this resource.";
+
         protected async Task<bool> UserHasPermission(params PermissionValue[] permissionValues)
         {
             if (!permissionValues.Any())

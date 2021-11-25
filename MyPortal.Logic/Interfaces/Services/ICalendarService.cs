@@ -10,6 +10,6 @@ namespace MyPortal.Logic.Interfaces.Services
     {
         Task<IEnumerable<DiaryEventTypeModel>> GetEventTypes(bool includeReserved = false);
 
-        Task<IEnumerable<CalendarEventModel>> GetCalendarEventsByStudent(Guid studentId, DateRange dateRange);
+        Task<IEnumerable<CalendarEventModel>> GetCalendarEventsByPerson(Guid personId, DateRange dateRange);
     }
 }

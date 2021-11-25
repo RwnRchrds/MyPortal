@@ -42,9 +42,6 @@ namespace MyPortal.Database.Models.Entity
         public bool IsAllDay { get; set; }
 
         [Column(Order = 9)]
-        public bool IsBlock { get; set; }
-
-        [Column(Order = 10)]
         public bool IsPublic { get; set; }
         
         

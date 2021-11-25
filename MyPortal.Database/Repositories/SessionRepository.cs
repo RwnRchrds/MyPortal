@@ -59,9 +59,17 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery<SessionMetadata>(query);
         }
 
-        public async Task<IEnumerable<SessionMetadata>> GetMetadataByStaffMember(Guid staffMember, DateTime dateFrom, DateTime dateTo)
+        public async Task<IEnumerable<SessionMetadata>> GetMetadataByStaffMember(Guid staffMemberId, DateTime dateFrom, DateTime dateTo)
         {
-            return null;
+            var query = new Query("Sessions_Metadata AS SM");
+
+            query.LeftJoin("StaffMembers AS S", "S.Id", "SM.TeacherId");
+            
+            query.Where("S.Id", staffMemberId);
+            query.WhereDate("SM.StartTime", ">=", dateFrom);
+            query.WhereDate("SM.EndTime", "<=", dateTo);
+            
+            return await ExecuteQuery<SessionMetadata>(query);
         }
 
         public async Task Update(Session entity)

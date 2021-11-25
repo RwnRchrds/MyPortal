@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
@@ -67,6 +68,16 @@ namespace MyPortal.Database.Repositories
             appointment.Start = entity.Start;
             appointment.End = entity.End;
             appointment.Attended = entity.Attended;
+        }
+
+        public async Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByStaffMember(Guid staffMemberId, DateTime fromDate, DateTime toDate)
+        {
+            return null;
+        }
+
+        public async Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByContact(Guid contactId, DateTime fromDate, DateTime toDate)
+        {
+            return null;
         }
     }
 }

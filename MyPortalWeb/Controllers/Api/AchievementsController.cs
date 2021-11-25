@@ -17,14 +17,14 @@ namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
     [Route("api/behaviour/achievements")]
-    public class AchievementsController : StudentDataController
+    public class AchievementsController : PersonalDataController
     {
         private IBehaviourService _behaviourService;
         private IAcademicYearService _academicYearService;
 
-        public AchievementsController(IStudentService studentService, IUserService userService,
+        public AchievementsController(IStudentService studentService, IPersonService personService, IUserService userService,
             IRoleService roleService, IBehaviourService behaviourService, IAcademicYearService academicYearService)
-            : base(studentService, userService, roleService)
+            : base(studentService, personService, userService, roleService)
         {
             _behaviourService = behaviourService;
             _academicYearService = academicYearService;
@@ -40,12 +40,14 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var achievement = await _behaviourService.GetAchievementById(achievementId);
 
-                if (await AuthoriseStudent(achievement.StudentId))
+                var student = await StudentService.GetById(achievement.StudentId);
+
+                if (await AuthorisePerson(student.PersonId))
                 {
                     return Ok(achievement);
                 }
 
-                return Forbid();
+                return Error(403, PermissionMessage);
             }
             catch (Exception e)
             {
@@ -61,7 +63,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (await AuthoriseStudent(studentId))
+                var student = await StudentService.GetById(studentId);
+                
+                if (await AuthorisePerson(student.PersonId))
                 {
                     var fromAcademicYearId = academicYearId ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id.Value;
 
@@ -70,7 +74,7 @@ namespace MyPortalWeb.Controllers.Api
                     return Ok(achievements.Select(x => x.ToListModel()));
                 }
 
-                return Forbid();
+                return Error(403, PermissionMessage);
             }
             catch (Exception e)
             {

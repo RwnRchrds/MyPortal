@@ -19,12 +19,13 @@ namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
     [Route("api/students")]
-    public class StudentsController : StudentDataController
+    public class StudentsController : PersonalDataController
     {
         private IAcademicYearService _academicYearService;
-        
-        public StudentsController(IAcademicYearService academicYearService, IStudentService studentService, IUserService userService, IRoleService roleService) :
-            base(studentService, userService, roleService)
+
+        public StudentsController(IAcademicYearService academicYearService, IStudentService studentService,
+            IPersonService personService, IUserService userService, IRoleService roleService) :
+            base(studentService, personService, userService, roleService)
         {
             _academicYearService = academicYearService;
         }
@@ -49,14 +50,14 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (await AuthoriseStudent(studentId))
+                var student = await StudentService.GetById(studentId);
+                
+                if (await AuthorisePerson(student.PersonId))
                 {
-                    var student = await StudentService.GetById(studentId);
-
                     return Ok(student);
                 }
 
-                return Forbid();
+                return Error(403, PermissionMessage);
             }
             catch (Exception e)
             {
@@ -72,7 +73,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (await AuthoriseStudent(studentId))
+                var student = await StudentService.GetById(studentId);
+                
+                if (await AuthorisePerson(student.PersonId))
                 {
                     if (academicYearId == null || academicYearId == Guid.Empty)
                     {
@@ -84,7 +87,7 @@ namespace MyPortalWeb.Controllers.Api
                     return Ok(studentStats);
                 }
 
-                return Forbid();
+                return Error(403, PermissionMessage);
             }
             catch (Exception e)
             {

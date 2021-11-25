@@ -21,6 +21,7 @@ namespace MyPortal.Logic.Models.Entity
             ResponseId = model.ResponseId;
             Required = model.Required;
             Attended = model.Attended;
+            CanEdit = model.CanEdit;
 
             if (model.Event != null)
             {
@@ -46,6 +47,8 @@ namespace MyPortal.Logic.Models.Entity
         public Guid? ResponseId { get; set; }
         
         public bool Required { get; set; }
+
+        public bool CanEdit { get; set; }
         
         public bool Attended { get; set; }
 

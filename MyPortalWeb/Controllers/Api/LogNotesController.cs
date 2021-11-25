@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -16,14 +17,15 @@ namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
     [Route("api/student/logNotes")]
-    public class LogNotesController : StudentDataController
+    public class LogNotesController : PersonalDataController
     {
         private ILogNoteService _logNoteService;
         private IAcademicYearService _academicYearService;
 
-        public LogNotesController(IStudentService studentService, IUserService userService, IRoleService roleService,
+        public LogNotesController(IStudentService studentService, IPersonService personService,
+            IUserService userService, IRoleService roleService,
             ILogNoteService logNoteService, IAcademicYearService academicYearService) : base(studentService,
-            userService, roleService)
+            personService, userService, roleService)
         {
             _logNoteService = logNoteService;
             _academicYearService = academicYearService;
@@ -39,7 +41,9 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var logNote = await _logNoteService.GetById(logNoteId);
 
-                if (await AuthoriseStudent(logNote.StudentId))
+                var student = await StudentService.GetById(logNote.StudentId);
+
+                if (await AuthorisePerson(student.PersonId))
                 {
                     return Ok(logNote);
                 }
@@ -77,7 +81,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (await AuthoriseStudent(studentId))
+                var student = await StudentService.GetById(studentId);
+
+                if (await AuthorisePerson(student.PersonId))
                 {
                     if (academicYearId == null || academicYearId == Guid.Empty)
                     {

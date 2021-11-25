@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -17,13 +18,15 @@ using MyPortalWeb.Controllers.BaseControllers;
 namespace MyPortalWeb.Controllers.Api
 {
     [Route("api/behaviour/incidents")]
-    public class IncidentsController : StudentDataController
+    public class IncidentsController : PersonalDataController
     {
         private IAcademicYearService _academicYearService;
         private IBehaviourService _behaviourService;
 
-        public IncidentsController(IStudentService studentService, IUserService userService, IRoleService roleService,
+        public IncidentsController(IStudentService studentService, IPersonService personService,
+            IUserService userService, IRoleService roleService,
             IAcademicYearService academicYearService, IBehaviourService behaviourService) : base(studentService,
+            personService,
             userService, roleService)
         {
             _academicYearService = academicYearService;
@@ -39,13 +42,15 @@ namespace MyPortalWeb.Controllers.Api
             try
             {
                 var incident = await _behaviourService.GetIncidentById(incidentId);
+                
+                var student = await StudentService.GetById(incident.StudentId);
 
-                if (await AuthoriseStudent(incident.StudentId))
+                if (await AuthorisePerson(student.PersonId))
                 {
                     return Ok(incident);
                 }
 
-                return Forbid();
+                return Error(403, PermissionMessage);
             }
             catch (Exception e)
             {
@@ -61,7 +66,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (await AuthoriseStudent(studentId))
+                var student = await StudentService.GetById(studentId);
+                
+                if (await AuthorisePerson(student.PersonId))
                 {
                     var fromAcademicYearId = academicYearId ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id.Value;
 
