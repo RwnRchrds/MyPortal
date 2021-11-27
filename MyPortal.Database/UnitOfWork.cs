@@ -99,6 +99,7 @@ namespace MyPortal.Database
         private IExamCandidateSpecialArrangementRepository _examCandidateSpecialArrangements;
         private IExamComponentRepository _examComponents;
         private IExamComponentSittingRepository _examComponentSittings;
+        private IExamDateRepository _examDates;
         private IExamElementComponentRepository _examElementComponents;
         private IExamElementRepository _examElements;
         private IExamEnrolmentRepository _examEnrolments;
@@ -435,6 +436,8 @@ namespace MyPortal.Database
 
         public IExamComponentSittingRepository ExamComponentSittings => _examComponentSittings ??=
             new ExamComponentSittingRepository(_context, _transaction);
+
+        public IExamDateRepository ExamDates => _examDates ??= new ExamDateRepository(_context, _transaction);
 
         public IExamElementComponentRepository ExamElementComponents => _examElementComponents ??=
             new ExamElementComponentRepository(_context, _transaction);
@@ -901,6 +904,7 @@ namespace MyPortal.Database
             _examCandidateSpecialArrangements = null;
             _examComponents = null;
             _examComponentSittings = null;
+            _examDates = null;
             _examElements = null;
             _examEnrolments = null;
             _examQualificationLevels = null;

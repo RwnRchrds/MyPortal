@@ -9,11 +9,8 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 0)]
         [Key]
         public string Name { get; set; }
-        
-        [Column(Order = 1)]
-        public string Type { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 1)]
         public string Setting { get; set; }
     }
 }

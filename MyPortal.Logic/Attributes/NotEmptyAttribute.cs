@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MyPortal.Logic.Attributes
 {
-    public class NotEmptyAttribute : ValidationAttribute
+    internal class NotEmptyAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {

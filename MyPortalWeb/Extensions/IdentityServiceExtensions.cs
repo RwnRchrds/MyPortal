@@ -11,6 +11,7 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Identity;
 using MyPortal.Logic.Interfaces;
 using MyPortalWeb.Services;
 using Task = System.Threading.Tasks.Task;
@@ -33,8 +34,9 @@ namespace MyPortalWeb.Extensions
                         RequiredUniqueChars = 1
                     };
                 })
+                .AddSignInManager<ApplicationSignInManager>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            
+
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -42,7 +44,7 @@ namespace MyPortalWeb.Extensions
                 })
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = "https://localhost:5001";
+                    options.Authority = "https://localhost:44313";
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateAudience = false,

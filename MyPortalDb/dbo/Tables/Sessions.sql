@@ -4,12 +4,16 @@
     [PeriodId]  UNIQUEIDENTIFIER NOT NULL,
     [TeacherId] UNIQUEIDENTIFIER NOT NULL,
     [RoomId]    UNIQUEIDENTIFIER NULL,
+    [StartDate] DATETIME2 (7)    NOT NULL,
+    [EndDate]   DATETIME2 (7)    NOT NULL,
     CONSTRAINT [PK_Sessions] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Sessions_AttendancePeriods_PeriodId] FOREIGN KEY ([PeriodId]) REFERENCES [dbo].[AttendancePeriods] ([Id]),
     CONSTRAINT [FK_Sessions_Classes_ClassId] FOREIGN KEY ([ClassId]) REFERENCES [dbo].[Classes] ([Id]),
     CONSTRAINT [FK_Sessions_Rooms_RoomId] FOREIGN KEY ([RoomId]) REFERENCES [dbo].[Rooms] ([Id]),
     CONSTRAINT [FK_Sessions_StaffMembers_TeacherId] FOREIGN KEY ([TeacherId]) REFERENCES [dbo].[StaffMembers] ([Id])
 );
+
+
 
 
 GO

@@ -5,11 +5,14 @@
     [ResponseId] UNIQUEIDENTIFIER NULL,
     [Required]   BIT              NOT NULL,
     [Attended]   BIT              NOT NULL,
+    [CanEdit]    BIT              NOT NULL,
     CONSTRAINT [PK_DiaryEventAttendees] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_DiaryEventAttendees_DiaryEventAttendeeResponses_ResponseId] FOREIGN KEY ([ResponseId]) REFERENCES [dbo].[DiaryEventAttendeeResponses] ([Id]),
     CONSTRAINT [FK_DiaryEventAttendees_DiaryEvents_EventId] FOREIGN KEY ([EventId]) REFERENCES [dbo].[DiaryEvents] ([Id]),
     CONSTRAINT [FK_DiaryEventAttendees_People_PersonId] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[People] ([Id])
 );
+
+
 
 
 GO

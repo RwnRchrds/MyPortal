@@ -13,6 +13,6 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 3)]
         public TimeSpan StartTime { get; set; }
 
-        public virtual ICollection<ExamComponent> Components { get; set; }
+        public virtual ICollection<ExamDate> ExamDates { get; set; }
     }
 }

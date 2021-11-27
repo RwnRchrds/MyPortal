@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace MyPortal.Logic.Attributes
 {
-    public class ColourCodeAttribute : ValidationAttribute
+    internal class ColourCodeAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {

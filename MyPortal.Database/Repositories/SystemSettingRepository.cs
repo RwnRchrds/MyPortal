@@ -26,11 +26,11 @@ namespace MyPortal.Database.Repositories
 
         public async Task<SystemSetting> Get(string name)
         {
-            var query = new Query("SystemSettings as SystemSetting");
+            var query = new Query("SystemSettings as SS");
 
-            query.Select("SystemSetting.Name, SystemSetting.Type, SystemSetting.Setting");
+            query.Select("SS.Name, SS.Setting");
 
-            query.Where("SystemSetting.Name", name);
+            query.Where("SS.Name", name);
 
             var sql = new SqlServerCompiler().Compile(query);
 

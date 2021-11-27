@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MyPortal.Logic.Attributes
 {
-    public class CurrencyAttribute : ValidationAttribute
+    internal class CurrencyAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {

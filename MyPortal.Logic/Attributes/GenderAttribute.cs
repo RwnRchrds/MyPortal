@@ -5,7 +5,7 @@ using MyPortal.Logic.Constants;
 
 namespace MyPortal.Logic.Attributes
 {
-    public class GenderAttribute : ValidationAttribute
+    internal class GenderAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {

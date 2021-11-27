@@ -20,14 +20,10 @@ namespace MyPortal.Logic.Models.Entity
             BaseComponentId = model.BaseComponentId;
             ExamSeriesId = model.ExamSeriesId;
             AssessmentModeId = model.AssessmentModeId;
+            ExamDateId = model.ExamDateId;
             DateDue = model.DateDue;
             DateSubmitted = model.DateSubmitted;
-            IsTimetabled = model.IsTimetabled;
             MaximumMark = model.MaximumMark;
-            SessionId = model.SessionId;
-            Duration = model.Duration;
-            SittingDate = model.SittingDate;
-            ExamSessionId = model.SessionId;
 
             if (model.BaseComponent != null)
             {
@@ -44,9 +40,9 @@ namespace MyPortal.Logic.Models.Entity
                 AssessmentMode = new ExamAssessmentModeModel(model.AssessmentMode);
             }
 
-            if (model.Session != null)
+            if (model.ExamDate != null)
             {
-                Session = new ExamSessionModel(model.Session);
+                ExamDate = new ExamDateModel(model.ExamDate);
             }
         }
 
@@ -56,38 +52,25 @@ namespace MyPortal.Logic.Models.Entity
         
         public Guid AssessmentModeId { get; set; }
 
+        public Guid? ExamDateId { get; set; }
+
         
         public DateTime? DateDue { get; set; }
 
         
         public DateTime? DateSubmitted { get; set; }
 
-        
-        public bool IsTimetabled { get; set; }
+
+        public bool IsTimetabled => ExamDateId.HasValue;
 
         
         public int MaximumMark { get; set; }
-        
-        #region Examination Specific Data
-
-        
-        public Guid? SessionId { get; set; }
-
-        
-        public int? Duration { get; set; }
-
-        
-        public DateTime? SittingDate { get; set; }
-
-        
-        public Guid? ExamSessionId { get; set; }
-
-        #endregion
 
         public virtual ExamBaseComponentModel BaseComponent { get; set; }
         public virtual ExamSeriesModel Series { get; set; }
         public virtual ExamAssessmentModeModel AssessmentMode { get; set; }
-        public virtual ExamSessionModel Session { get; set; }
+        public virtual ExamDateModel ExamDate { get; set; }
+        
         public async Task Load(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

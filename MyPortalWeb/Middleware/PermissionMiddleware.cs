@@ -7,6 +7,7 @@ using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using MyPortal.Database.Enums;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortalWeb.Attributes;
 
@@ -28,7 +29,8 @@ namespace MyPortalWeb.Middleware
 
             if (attribute != null)
             {
-                if (context.User.IsAuthenticated() && await UserHasPermission(roleService, context.User, attribute.Permissions))
+                if (context.User.IsAuthenticated() &&
+                    await context.User.HasPermission(roleService, attribute.Requirement, attribute.Permissions))
                 {
                     await _next(context);
                 }
@@ -36,39 +38,14 @@ namespace MyPortalWeb.Middleware
                 {
                     context.Response.StatusCode = 403;
                     await context.Response.WriteAsync("You do not have permission to access this resource.");
+                    return;
                 }
             }
 
-            await _next(context);
-        }
-        
-        protected async Task<bool> UserHasPermission(IRoleService roleService, ClaimsPrincipal user, PermissionValue[] permissionValues)
-        {
-            if (!permissionValues.Any())
+            if (!context.Response.HasStarted)
             {
-                return true;
+                await _next(context);
             }
-
-            var roleClaims = user.FindAll(c => c.Type == ClaimTypes.Role);
-
-            foreach (var roleClaim in roleClaims)
-            {
-                if (Guid.TryParse(roleClaim.Value, out Guid roleId))
-                {
-                    var role = await roleService.GetRoleById(roleId);
-
-                    var rolePermissions = new BitArray(role.Permissions);
-
-                    foreach (var permissionValue in permissionValues)
-                    {
-                        if (rolePermissions[(int) permissionValue])
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
         }
     }
 }

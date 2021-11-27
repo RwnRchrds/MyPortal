@@ -6,7 +6,7 @@ using MyPortal.Logic.Helpers;
 
 namespace MyPortal.Logic.Attributes
 {
-    public class UpnAttribute : ValidationAttribute
+    internal class UpnAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {

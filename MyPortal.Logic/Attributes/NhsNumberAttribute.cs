@@ -3,7 +3,7 @@ using MyPortal.Logic.Helpers;
 
 namespace MyPortal.Logic.Attributes
 {
-    public class NhsNumberAttribute : ValidationAttribute
+    internal class NhsNumberAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {

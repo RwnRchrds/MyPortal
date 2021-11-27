@@ -90,6 +90,7 @@ namespace MyPortal.Database.Interfaces
         IExamCandidateSpecialArrangementRepository ExamCandidateSpecialArrangements { get; }
         IExamComponentRepository ExamComponents { get; }
         IExamComponentSittingRepository ExamComponentSittings { get; }
+        IExamDateRepository ExamDates { get; }
         IExamElementComponentRepository ExamElementComponents { get; }
         IExamElementRepository ExamElements { get; }
         IExamEnrolmentRepository ExamEnrolments { get; }

@@ -1,4 +1,6 @@
-﻿SELECT        S.Id AS SessionId, S.StartDate, S.EndDate, PAP.AttendanceWeekId, PAP.PeriodId, C.Id AS ClassId, C.CurriculumGroupId AS CurriculumGroupId, PAP.StartTime, PAP.EndTime, P.Name AS PeriodName, C.Code AS ClassCode, CO.Description AS CourseDescription,
+﻿CREATE VIEW [dbo].[Sessions_Metadata]
+AS
+SELECT        S.Id AS SessionId, S.StartDate, S.EndDate, PAP.AttendanceWeekId, PAP.PeriodId, C.Id AS ClassId, C.CurriculumGroupId AS CurriculumGroupId, PAP.StartTime, PAP.EndTime, P.Name AS PeriodName, C.Code AS ClassCode, CO.Description AS CourseDescription,
               CASE WHEN CA.Id IS NOT NULL THEN CSM.Id ELSE SM.Id END AS TeacherId, CASE WHEN CA.Id IS NOT NULL THEN CNA.Name ELSE FNA.Name END AS TeacherName, CASE WHEN CA.Id IS NOT NULL
                                                                                                                                                                         THEN CR.Id ELSE R.Id END AS RoomId, CASE WHEN CA.Id IS NOT NULL THEN CR.Name ELSE R.Name END AS RoomName, CASE WHEN CA.Id IS NOT NULL THEN 1 ELSE 0 END AS IsCover
 FROM            dbo.Sessions AS S LEFT OUTER JOIN

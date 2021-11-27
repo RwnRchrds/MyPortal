@@ -17,7 +17,7 @@ namespace MyPortal.Logic.Constants
             { Unknown, "Unknown" }
         };
 
-        public static string GetGenderLabel(string gender)
+        internal static string GetGenderLabel(string gender)
         {
             var result = GenderLabels.TryGetValue(gender, out string genderLabel);
 

@@ -9,7 +9,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Attributes
 {
-    public class RequiredIfGradeAspectAttribute : ValidationAttribute
+    internal class RequiredIfGradeAspectAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {

@@ -104,7 +104,7 @@ namespace MyPortal.Logic.Services
             {
                 if (await UsernameExists(request.Username))
                 {
-                    throw new LogicException("Username is already in use.");
+                    throw new LogicException("The username is already in use.");
                 }
 
                 var user = new User

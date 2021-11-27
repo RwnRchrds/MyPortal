@@ -14,6 +14,7 @@ namespace MyPortal.Logic
 
         private string _installLocation;
         private string _connectionString;
+        private bool _isSetUp;
         private FileProvider _fileProvider;
         private GoogleConfig _googleConfig;
 
@@ -28,6 +29,12 @@ namespace MyPortal.Logic
         {
             get { return _installLocation; }
             set { _installLocation = value; }
+        }
+
+        public bool IsSetUp
+        {
+            get { return _isSetUp; }
+            set { _isSetUp = value; }
         }
 
         public string ConnectionString

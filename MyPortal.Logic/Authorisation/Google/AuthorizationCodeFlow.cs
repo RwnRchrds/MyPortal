@@ -6,7 +6,7 @@ using Google.Apis.Auth.OAuth2.Requests;
 
 namespace MyPortal.Logic.Authorisation.Google
 {
-    public class AuthorizationCodeFlow : GoogleAuthorizationCodeFlow
+    internal class AuthorizationCodeFlow : GoogleAuthorizationCodeFlow
     {
         public AuthorizationCodeFlow(Initializer initializer) : base(initializer)
         {

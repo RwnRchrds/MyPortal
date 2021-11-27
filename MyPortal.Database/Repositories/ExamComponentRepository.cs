@@ -25,7 +25,7 @@ namespace MyPortal.Database.Repositories
             JoinEntity(query, "ExamBaseComponents", "EBC", "BaseComponentId");
             JoinEntity(query, "ExamSeries", "ES", "ExamSeriesId");
             JoinEntity(query, "ExamAssessmentModes", "EAM", "AssessmentModeId");
-            JoinEntity(query, "ExamSessions", "S", "SessionId");
+            JoinEntity(query, "ExamDates", "ED", "ExamDateId");
 
             return query;
         }
@@ -35,7 +35,7 @@ namespace MyPortal.Database.Repositories
             query.SelectAllColumns(typeof(ExamBaseComponent), "EBC");
             query.SelectAllColumns(typeof(ExamSeries), "ES");
             query.SelectAllColumns(typeof(ExamAssessmentMode), "EAM");
-            query.SelectAllColumns(typeof(ExamSession), "S");
+            query.SelectAllColumns(typeof(ExamDate), "ED");
 
             return query;
         }
@@ -45,14 +45,14 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var components = await Transaction.Connection
-                .QueryAsync<ExamComponent, ExamBaseComponent, ExamSeries, ExamAssessmentMode, ExamSession,
+                .QueryAsync<ExamComponent, ExamBaseComponent, ExamSeries, ExamAssessmentMode, ExamDate,
                     ExamComponent>(sql.Sql,
-                    (component, baseComponent, series, mode, session) =>
+                    (component, baseComponent, series, mode, date) =>
                     {
                         component.BaseComponent = baseComponent;
                         component.Series = series;
                         component.AssessmentMode = mode;
-                        component.Session = session;
+                        component.ExamDate = date;
 
                         return component;
                     }, sql.NamedBindings, Transaction);
@@ -72,11 +72,7 @@ namespace MyPortal.Database.Repositories
             component.AssessmentModeId = entity.AssessmentModeId;
             component.DateDue = entity.DateDue;
             component.DateSubmitted = entity.DateSubmitted;
-            component.IsTimetabled = entity.IsTimetabled;
             component.MaximumMark = entity.MaximumMark;
-            component.SessionId = entity.SessionId;
-            component.Duration = entity.Duration;
-            component.SittingDate = entity.SittingDate;
         }
     }
 }

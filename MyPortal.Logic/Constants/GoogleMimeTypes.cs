@@ -5,7 +5,7 @@ using MyPortal.Logic.Helpers;
 
 namespace MyPortal.Logic.Constants
 {
-    public class GoogleMimeTypes
+    internal class GoogleMimeTypes
     {
         public const string GoogleDocs = "application/vnd.google-apps.document";
         public const string GoogleDrawing = "application/vnd.google-apps.drawing";
@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Constants
         public const string GoogleSites = "application/vnd.google-apps.site";
         public const string GoogleSheets = "application/vnd.google-apps.spreadsheet";
 
-        public static List<string> GetAll()
+        internal static List<string> GetAll()
         {
             return new List<string>
             {
@@ -37,7 +37,7 @@ namespace MyPortal.Logic.Constants
             };
         }
 
-        public static string GetExportMimeType(string mimeType)
+        internal static string GetExportMimeType(string mimeType)
         {
             switch (mimeType)
             {
@@ -52,7 +52,7 @@ namespace MyPortal.Logic.Constants
             }
         }
 
-        public static string GetExtension(string mimeType, bool alternative)
+        internal static string GetExtension(string mimeType, bool alternative)
         {
             if (alternative)
             {

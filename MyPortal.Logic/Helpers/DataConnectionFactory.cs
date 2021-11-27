@@ -11,7 +11,7 @@ using MyPortal.Logic.Exceptions;
 
 namespace MyPortal.Logic.Helpers
 {
-    public class DataConnectionFactory
+    internal class DataConnectionFactory
     {
         private static ApplicationDbContext CreateContext()
         {

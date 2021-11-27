@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Enums;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
@@ -37,35 +39,15 @@ namespace MyPortalWeb.Controllers.BaseControllers
         }
 
         protected string PermissionMessage => "You do not have permission to access this resource.";
+        
+        protected async Task<bool> UserHasPermission(PermissionRequirement requirement, params PermissionValue[] permissionValues)
+        {
+            return await User.HasPermission(RoleService, requirement, permissionValues);
+        }
 
         protected async Task<bool> UserHasPermission(params PermissionValue[] permissionValues)
         {
-            if (!permissionValues.Any())
-            {
-                return true;
-            }
-
-            var roleClaims = User.FindAll(c => c.Type == ClaimTypes.Role);
-
-            foreach (var roleClaim in roleClaims)
-            {
-                if (Guid.TryParse(roleClaim.Value, out Guid roleId))
-                {
-                    var role = await RoleService.GetRoleById(roleId);
-
-                    var rolePermissions = new BitArray(role.Permissions);
-
-                    foreach (var permissionValue in permissionValues)
-                    {
-                        if (rolePermissions[(int) permissionValue])
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            return false;
+            return await User.HasPermission(RoleService, PermissionRequirement.RequireAny, permissionValues);
         }
 
         protected IActionResult HandleException(Exception ex)

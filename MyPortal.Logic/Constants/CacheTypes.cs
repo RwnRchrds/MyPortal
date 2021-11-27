@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MyPortal.Logic.Constants
 {
-    public static class CacheTypes
+    internal static class CacheTypes
     {
         public const string RolePermission = "system.role.permission";
     }

@@ -1,14 +1,9 @@
 ﻿using System;
 using MyPortal.Database.Enums;
+using MyPortal.Logic.Enums;
 
 namespace MyPortalWeb.Attributes
 {
-    public enum PermissionRequirement
-    {
-        RequireAny,
-        RequireAll
-    }
-    
     [AttributeUsage(AttributeTargets.Method)]
     public class PermissionAttribute : Attribute
     {

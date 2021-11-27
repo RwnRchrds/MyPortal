@@ -6,9 +6,9 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Logic.Extensions
 {
-    public static class QueryableExtensions
+    internal static class QueryableExtensions
     {
-        public static IQueryable<T> Active<T>(this IQueryable<T> collection) where T : LookupItem
+        internal static IQueryable<T> WhereActive<T>(this IQueryable<T> collection) where T : LookupItem
         {
             return collection.Where(x => x.Active);
         }

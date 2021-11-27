@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyPortal.Database.Models;
 using MyPortal.Logic;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.FileProviders;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Configuration;
@@ -76,7 +78,7 @@ namespace MyPortalWeb.Extensions
 
             Configuration.Instance.ConnectionString = connectionString;
 
-            Configuration.Instance.InstallLocation = config["MyPortal:InstallLocation"];
+            Configuration.Instance.InstallLocation = Environment.CurrentDirectory;
 
             switch (config["FileProvider:ProviderName"])
             {

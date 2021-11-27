@@ -101,6 +101,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<ExamCandidateSpecialArrangement> ExamCandidateSpecialArrangements { get; set; }
         public virtual DbSet<ExamComponent> ExamComponents { get; set; }
         public virtual DbSet<ExamComponentSitting> ExamComponentSittings { get; set; }
+        public virtual DbSet<ExamDate> ExamDates { get; set; }
         public virtual DbSet<ExamElement> ExamElements { get; set; }
         public virtual DbSet<ExamElementComponent> ExamElementComponents { get; set; }
         public virtual DbSet<ExamEnrolment> ExamEnrolments { get; set; }
@@ -1277,11 +1278,6 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.ExamSeriesId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasOne(x => x.Session)
-                        .WithMany(x => x.Components)
-                        .HasForeignKey(x => x.SessionId)
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<ExamComponentSitting>(e =>
@@ -1298,6 +1294,22 @@ namespace MyPortal.Database.Models
                         .WithOne(x => x.Sitting)
                         .HasForeignKey(x => x.SittingId)
                         .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<ExamDate>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasOne(x => x.Session)
+                        .WithMany(x => x.ExamDates)
+                        .HasForeignKey(x => x.SessionId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.ExamComponents)
+                        .WithOne(x => x.ExamDate)
+                        .HasForeignKey(x => x.ExamDateId)
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

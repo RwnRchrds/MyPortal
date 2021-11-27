@@ -45,7 +45,7 @@ namespace MyPortalWeb.Services
         {
             var user = await _userManager.GetUserAsync(context.Subject);
         
-            context.IsActive = (user != null) && user.Enabled;
+            context.IsActive = (user != null);
         }
     }
 }

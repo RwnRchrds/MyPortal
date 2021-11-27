@@ -9,11 +9,11 @@ using Google.Apis.Util.Store;
 
 namespace MyPortal.Logic.Authorisation.Google
 {
-    public class WebAuthorizationBroker : GoogleWebAuthorizationBroker
+    internal class WebAuthorizationBroker : GoogleWebAuthorizationBroker
     {
-        public static string RedirectUri;
+        internal static string RedirectUri;
 
-        public static async Task<UserCredential> AuthorizeAsync(
+        internal static async Task<UserCredential> AuthorizeAsync(
             ClientSecrets clientSecrets,
             IEnumerable<string> scopes,
             string user,

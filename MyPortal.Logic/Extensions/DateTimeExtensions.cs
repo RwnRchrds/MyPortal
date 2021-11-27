@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace MyPortal.Logic.Extensions
 {
-    public static class DateTimeExtensions
+    internal static class DateTimeExtensions
     {
-        public static DateTime GetDayOfWeek(this DateTime dateTime, DayOfWeek dayOfWeek)
+        internal static DateTime GetDayOfWeek(this DateTime dateTime, DayOfWeek dayOfWeek)
         {
             int diff = (7 + (dateTime.DayOfWeek - DayOfWeek.Monday)) % 7;
 
@@ -22,7 +22,7 @@ namespace MyPortal.Logic.Extensions
             return monday.AddDays(counter);
         }
 
-        public static IEnumerable<DateTime> GetAllDates(DateTime startDate, DateTime endDate)
+        internal static IEnumerable<DateTime> GetAllDates(DateTime startDate, DateTime endDate)
         {
             var dates = new List<DateTime>();
 
@@ -34,7 +34,7 @@ namespace MyPortal.Logic.Extensions
             return dates.OrderBy(x => x).ToList();
         }
 
-        public static bool IsWeekday(this DateTime dateTime)
+        internal static bool IsWeekday(this DateTime dateTime)
         {
             return dateTime.DayOfWeek != DayOfWeek.Saturday && dateTime.DayOfWeek != DayOfWeek.Sunday;
         }
