@@ -58,10 +58,10 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="Scripts" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
     <Folder Include="dbo\Views\" />
+    <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Script.SeedSystemData.sql" />
@@ -277,5 +277,9 @@
     <Build Include="dbo\Views\AttendancePeriods_PossibleAttendancePeriods.sql" />
     <Build Include="dbo\Views\Sessions_Metadata.sql" />
     <Build Include="dbo\Views\People_FullNameAbbreviated.sql" />
+    <Build Include="dbo\Tables\ExamDates.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Script.IdentityServer.sql" />
   </ItemGroup>
 </Project>

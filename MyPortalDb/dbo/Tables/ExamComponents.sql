@@ -1,21 +1,20 @@
-﻿CREATE TABLE [dbo].[ExamComponents] (
+CREATE TABLE [dbo].[ExamComponents] (
     [Id]               UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
     [BaseComponentId]  UNIQUEIDENTIFIER NOT NULL,
     [ExamSeriesId]     UNIQUEIDENTIFIER NOT NULL,
     [AssessmentModeId] UNIQUEIDENTIFIER NOT NULL,
+    [ExamDateId]       UNIQUEIDENTIFIER NULL,
     [DateDue]          DATETIME2 (7)    NULL,
     [DateSubmitted]    DATETIME2 (7)    NULL,
-    [IsTimetabled]     BIT              NOT NULL,
     [MaximumMark]      INT              NOT NULL,
-    [SessionId]        UNIQUEIDENTIFIER NULL,
-    [Duration]         INT              NULL,
-    [SittingDate]      DATETIME2 (7)    NULL,
     CONSTRAINT [PK_ExamComponents] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_ExamComponents_ExamAssessmentModes_AssessmentModeId] FOREIGN KEY ([AssessmentModeId]) REFERENCES [dbo].[ExamAssessmentModes] ([Id]),
     CONSTRAINT [FK_ExamComponents_ExamBaseComponents_BaseComponentId] FOREIGN KEY ([BaseComponentId]) REFERENCES [dbo].[ExamBaseComponents] ([Id]),
-    CONSTRAINT [FK_ExamComponents_ExamSeries_ExamSeriesId] FOREIGN KEY ([ExamSeriesId]) REFERENCES [dbo].[ExamSeries] ([Id]),
-    CONSTRAINT [FK_ExamComponents_ExamSessions_SessionId] FOREIGN KEY ([SessionId]) REFERENCES [dbo].[ExamSessions] ([Id])
+    CONSTRAINT [FK_ExamComponents_ExamDates_ExamDateId] FOREIGN KEY ([ExamDateId]) REFERENCES [dbo].[ExamDates] ([Id]),
+    CONSTRAINT [FK_ExamComponents_ExamSeries_ExamSeriesId] FOREIGN KEY ([ExamSeriesId]) REFERENCES [dbo].[ExamSeries] ([Id])
 );
+
+
 
 
 GO
@@ -34,6 +33,6 @@ CREATE NONCLUSTERED INDEX [IX_ExamComponents_ExamSeriesId]
 
 
 GO
-CREATE NONCLUSTERED INDEX [IX_ExamComponents_SessionId]
-    ON [dbo].[ExamComponents]([SessionId] ASC);
+CREATE NONCLUSTERED INDEX [IX_ExamComponents_ExamDateId]
+    ON [dbo].[ExamComponents]([ExamDateId] ASC);
 

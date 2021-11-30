@@ -123,12 +123,12 @@ USING (VALUES
            ('gSchoolLogoId', null),
            ('iDbVersion', '1000')
 )
-    AS Source(Name, Type, Setting)
+    AS Source(Name, Setting)
 ON Target.Name = Source.Name
 
 WHEN NOT MATCHED THEN
-    INSERT (Name, Type, Setting)
-    VALUES (Name, Type, Setting);
+    INSERT (Name, Setting)
+    VALUES (Name, Setting);
 
 --[AspNetPermissions]
 MERGE INTO [dbo].[Permissions] AS Target
@@ -2888,7 +2888,7 @@ USING (VALUES
            ('84E9DDA4-1BCB-4A2F-8082-FCE51DD04F27','PPA', '1', '#24d653', 1),
            ('84E9DDA4-1BCB-4A2F-8082-FCE51DD04F28','School Holiday', '1', '#c300ff', 1),
            ('84E9DDA4-1BCB-4A2F-8082-FCE51DD04F29','Teacher Training', '1', '#ff9500', 1),
-            ('84E9DDA4-1BCB-4A2F-8082-FCE51DD04F2B', 'Parent Evening', '1', '#d10486', 1),
+           ('84E9DDA4-1BCB-4A2F-8082-FCE51DD04F2B', 'Parent Evening', '1', '#d10486', 1),
            ('84E9DDA4-1BCB-4A2F-8082-FCE51DD04F2A','General', '1', '#c9c9c9', 0)
 )
     AS Source (Id, Description, Active, ColourCode, System)
