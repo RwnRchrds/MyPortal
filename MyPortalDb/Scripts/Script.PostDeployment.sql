@@ -11,5 +11,4 @@ Post-Deployment Script Template
 */
 
 --Other Scripts
-:r .\Script.IdentityServer.sql
 :r .\Script.SeedSystemData.sql

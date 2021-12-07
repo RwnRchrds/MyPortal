@@ -68,7 +68,9 @@ namespace MyPortal.Database.Repositories
             }
 
             addressPerson.AddressId = entity.AddressId;
+            addressPerson.PersonId = entity.PersonId;
             addressPerson.AddressTypeId = entity.AddressTypeId;
+            addressPerson.Main = entity.Main;
         }
     }
 }

@@ -120,7 +120,12 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Achievement not found.");
             }
 
+            achievement.AcademicYearId = entity.AcademicYearId;
             achievement.AchievementTypeId = entity.AchievementTypeId;
+            achievement.StudentId = entity.StudentId;
+            achievement.LocationId = entity.LocationId;
+            achievement.CreatedById = entity.CreatedById;
+            achievement.Date = entity.Date;
             achievement.Comments = entity.Comments;
             achievement.LocationId = entity.LocationId;
             achievement.OutcomeId = entity.OutcomeId;

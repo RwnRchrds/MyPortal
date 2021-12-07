@@ -41,7 +41,7 @@ namespace MyPortal.Database.Repositories
             {
                 throw new EntityNotFoundException("Achievement type not found.");
             }
-
+            
             achievementType.Description = entity.Description;
             achievementType.DefaultPoints = entity.DefaultPoints;
             achievementType.Active = entity.Active;

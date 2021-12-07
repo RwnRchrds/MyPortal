@@ -59,7 +59,10 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Academic term not found.");
             }
 
+            term.AcademicYearId = entity.AcademicYearId;
             term.Name = entity.Name;
+            term.StartDate = entity.StartDate;
+            term.EndDate = entity.EndDate;
         }
 
         public async Task<IEnumerable<AcademicTerm>> GetByAcademicYear(Guid academicYearId)

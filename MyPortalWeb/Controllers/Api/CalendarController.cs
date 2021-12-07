@@ -8,6 +8,7 @@ using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Requests.Calendar;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -54,6 +55,24 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Error(403, PermissionMessage);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        [HttpPost]
+        [Route("create")]
+        [Permission(PermissionValue.SchoolEditSchoolDiary)]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> CreateEvent([FromBody] CreateEventModel model)
+        {
+            try
+            {
+                await _calendarService.CreateEvent(model);
+
+                return Ok();
             }
             catch (Exception e)
             {
