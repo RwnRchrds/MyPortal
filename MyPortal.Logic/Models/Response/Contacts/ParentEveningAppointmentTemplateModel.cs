@@ -11,6 +11,7 @@ namespace MyPortal.Logic.Models.Response.Contacts
             StaffMemberId = staffMemberId;
             StartTime = start;
             EndTime = end;
+            Available = true;
         }
 
         public DateRange GetDateRange()
@@ -22,7 +23,6 @@ namespace MyPortal.Logic.Models.Response.Contacts
         public Guid StaffMemberId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public bool Break { get; set; }
-        public bool Occupied { get; set; }
+        public bool Available { get; set; }
     }
 }
