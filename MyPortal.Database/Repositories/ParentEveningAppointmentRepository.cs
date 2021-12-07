@@ -73,7 +73,12 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByStaffMember(Guid parentEveningId,
             Guid staffMemberId)
         {
-            return null;
+            var query = GenerateQuery();
+
+            query.Where("PESM.ParentEveningId", parentEveningId);
+            query.Where("PESM.StaffMemberId", staffMemberId);
+
+            return await ExecuteQuery(query);
         }
         
         public async Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByContact(Guid parentEveningId, Guid contactId)

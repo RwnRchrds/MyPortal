@@ -37,10 +37,10 @@ namespace MyPortal.Logic.Services
 
                 var appointments =
                     (await unitOfWork.ParentEveningAppointments.GetAppointmentsByStaffMember(parentEveningId,
-                        staffMemberId)).ToArray();
+                        staffMemberId))?.ToArray();
 
                 var breaks =
-                    (await unitOfWork.ParentEveningBreaks.GetBreaksByStaffMember(parentEveningId, staffMemberId))
+                    (await unitOfWork.ParentEveningBreaks.GetBreaksByStaffMember(parentEveningId, staffMemberId))?
                     .ToArray();
 
                 var from = pesm.AvailableFrom.HasValue ? pesm.AvailableFrom.Value : parentEvening.Event.StartTime;
@@ -51,17 +51,17 @@ namespace MyPortal.Logic.Services
 
                 foreach (var startTime in allStartTimes)
                 {
-                    var template = new ParentEveningAppointmentTemplateModel(staffMemberId, startTime,
+                    var template = new ParentEveningAppointmentTemplateModel(pesm.ParentEveningId, pesm.StaffMemberId, startTime,
                         startTime.AddMinutes(pesm.AppointmentLength));
 
                     var templateRange = template.GetDateRange();
 
-                    if (appointments.Any(a => templateRange.Overlaps(new DateRange(a.Start, a.End))))
+                    if (appointments != null && appointments.Any(a => templateRange.Overlaps(new DateRange(a.Start, a.End))))
                     {
                         template.Occupied = true;
                     }
 
-                    if (breaks.Any(b => templateRange.Overlaps(new DateRange(b.Start, b.End))))
+                    if (breaks != null && breaks.Any(b => templateRange.Overlaps(new DateRange(b.Start, b.End))))
                     {
                         template.Break = true;
                     }

@@ -42,7 +42,7 @@ namespace MyPortal.Logic.Helpers
                     break;
             }
 
-            for (var dt = startDate; dt <= endDate; increment.Invoke(dt))
+            for (var dt = startDate; dt <= endDate; dt = increment.Invoke(dt))
             {
                 instances.Add(dt);
             }

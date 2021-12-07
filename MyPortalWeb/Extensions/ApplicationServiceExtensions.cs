@@ -44,6 +44,7 @@ namespace MyPortalWeb.Extensions
             services.AddScoped<IHouseService, HouseService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ILogNoteService, LogNoteService>();
+            services.AddScoped<IParentEveningService, ParentEveningService>();
             services.AddScoped<IPersonService, PersonService>();
             services.AddScoped<IRegGroupService, RegGroupService>();
             services.AddScoped<IRoleService, RoleService>();

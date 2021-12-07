@@ -69,7 +69,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Where($"{TblAlias}.ParentEvningId", parentEveningId);
+            query.Where($"{TblAlias}.ParentEveningId", parentEveningId);
             query.Where($"{TblAlias}.StaffMemberId", staffMemberId);
 
             return await ExecuteQueryFirstOrDefault(query);
