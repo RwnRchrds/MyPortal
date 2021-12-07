@@ -38,9 +38,9 @@ namespace MyPortal.Logic.Models.Entity
         
         public Guid StaffMemberId { get; set; }
         
-        public DateTime AvailableFrom { get; set; }
+        public DateTime? AvailableFrom { get; set; }
         
-        public DateTime AvailableTo { get; set; }
+        public DateTime? AvailableTo { get; set; }
         
         public int AppointmentLength { get; set; }
         

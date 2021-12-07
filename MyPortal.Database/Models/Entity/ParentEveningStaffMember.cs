@@ -14,10 +14,10 @@ namespace MyPortal.Database.Models.Entity
         public Guid StaffMemberId { get; set; }
 
         [Column(Order = 3)]
-        public DateTime AvailableFrom { get; set; }
+        public DateTime? AvailableFrom { get; set; }
 
         [Column(Order = 4)]
-        public DateTime AvailableTo { get; set; }
+        public DateTime? AvailableTo { get; set; }
 
         [Column(Order = 5)]
         public int AppointmentLength { get; set; }

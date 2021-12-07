@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
@@ -52,9 +55,39 @@ namespace MyPortal.Database.Repositories
             return staffMembers;
         }
 
+        public async Task<IEnumerable<ParentEveningStaffMember>> GetLinkedParentEveningsByStaffMember(
+            Guid staffMemberId)
+        {
+            var query = GenerateQuery();
+
+            query.Where($"{TblAlias}.StaffMemberId");
+
+            return await ExecuteQuery(query);
+        }
+
+        public async Task<ParentEveningStaffMember> GetInstanceByStaffMember(Guid parentEveningId, Guid staffMemberId)
+        {
+            var query = GenerateQuery();
+
+            query.Where($"{TblAlias}.ParentEvningId", parentEveningId);
+            query.Where($"{TblAlias}.StaffMemberId", staffMemberId);
+
+            return await ExecuteQueryFirstOrDefault(query);
+        }
+
         public async Task Update(ParentEveningStaffMember entity)
         {
-            throw new System.NotImplementedException();
+            var pesm = await Context.ParentEveningStaffMembers.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (pesm == null)
+            {
+                throw new EntityNotFoundException("Parent evening staff member not found.");
+            }
+
+            pesm.AvailableFrom = entity.AvailableFrom;
+            pesm.AvailableTo = entity.AvailableTo;
+            pesm.AppointmentLength = entity.AppointmentLength;
+            pesm.BreakLimit = entity.BreakLimit;
         }
     }
 }

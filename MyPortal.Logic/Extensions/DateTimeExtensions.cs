@@ -22,18 +22,6 @@ namespace MyPortal.Logic.Extensions
             return monday.AddDays(counter);
         }
 
-        internal static IEnumerable<DateTime> GetAllDates(DateTime startDate, DateTime endDate)
-        {
-            var dates = new List<DateTime>();
-
-            for (var dt = startDate; dt <= endDate; dt = dt.AddDays(1))
-            {
-                dates.Add(dt);
-            }
-
-            return dates.OrderBy(x => x).ToList();
-        }
-
         internal static bool IsWeekday(this DateTime dateTime)
         {
             return dateTime.DayOfWeek != DayOfWeek.Saturday && dateTime.DayOfWeek != DayOfWeek.Sunday;

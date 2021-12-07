@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Extensions;
+using MyPortal.Logic.Helpers;
 
 namespace MyPortal.Logic.Models.Data
 {
@@ -27,6 +29,11 @@ namespace MyPortal.Logic.Models.Data
             return End - Start;
         }
 
+        public bool Overlaps(DateRange dateRange)
+        {
+            return Start < dateRange.End && dateRange.Start < End;
+        }
+
         public void Extend(int? days, int? hours = null, int? minutes = null)
         {
             End = End.AddDays(days ?? 0).AddHours(hours ?? 0).AddMinutes(minutes ?? 0);
@@ -34,7 +41,7 @@ namespace MyPortal.Logic.Models.Data
 
         public IEnumerable<DateTime> GetAllDates()
         {
-            return DateTimeExtensions.GetAllDates(Start, End);
+            return DateTimeHelper.GetAllInstances(Start, End);
         }
 
         public Tuple<DateTime, DateTime> ToTuple()

@@ -58,17 +58,20 @@ namespace MyPortalWeb.Controllers.BaseControllers
 
             switch (ex)
             {
-                case NotFoundException n:
+                case NotFoundException:
                     statusCode = HttpStatusCode.NotFound;
                     break;
-                case SecurityTokenException s:
+                case SecurityTokenException:
                     statusCode = HttpStatusCode.Unauthorized;
                     break;
-                case UnauthorisedException u:
+                case UnauthorisedException:
                     statusCode = HttpStatusCode.Forbidden;
                     break;
-                case InvalidDataException i:
+                case InvalidDataException:
                     statusCode = HttpStatusCode.BadRequest;
+                    break;
+                case NotImplementedException:
+                    statusCode = HttpStatusCode.NotImplemented;
                     break;
                 default:
                     statusCode = HttpStatusCode.InternalServerError;

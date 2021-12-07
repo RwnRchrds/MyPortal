@@ -134,7 +134,7 @@ namespace MyPortal.Logic.Services
                         model.StartDate < currentWeekBeginning.GetDayOfWeek(DayOfWeek.Sunday) &&
                         model.StartDate.DayOfWeek != DayOfWeek.Monday)
                     {
-                        var daysBeforeStart = DateTimeExtensions.GetAllDates(currentWeekBeginning, model.StartDate.AddDays(-1));
+                        var daysBeforeStart = DateTimeHelper.GetAllInstances(currentWeekBeginning, model.StartDate.AddDays(-1));
 
                         schoolHolidays.AddRange(daysBeforeStart);
                     }
@@ -143,7 +143,7 @@ namespace MyPortal.Logic.Services
                         model.EndDate >= currentWeekBeginning.GetDayOfWeek(DayOfWeek.Monday) &&
                         model.EndDate.DayOfWeek != DayOfWeek.Sunday)
                     {
-                        var daysAfterEnd = DateTimeExtensions.GetAllDates(model.EndDate.AddDays(1),
+                        var daysAfterEnd = DateTimeHelper.GetAllInstances(model.EndDate.AddDays(1),
                             currentWeekBeginning.GetDayOfWeek(DayOfWeek.Sunday));
 
                         schoolHolidays.AddRange(daysAfterEnd);

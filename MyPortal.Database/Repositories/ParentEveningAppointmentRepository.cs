@@ -70,6 +70,17 @@ namespace MyPortal.Database.Repositories
             appointment.Attended = entity.Attended;
         }
 
+        public async Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByStaffMember(Guid parentEveningId,
+            Guid staffMemberId)
+        {
+            return null;
+        }
+        
+        public async Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByContact(Guid parentEveningId, Guid contactId)
+        {
+            return null;
+        }
+
         public async Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByStaffMember(Guid staffMemberId, DateTime fromDate, DateTime toDate)
         {
             return null;

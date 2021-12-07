@@ -23,7 +23,7 @@ namespace MyPortal.Logic.Helpers
             return new ApplicationDbContext(options);
         }
 
-        internal static SqlConnection CreateConnection()
+        private static SqlConnection CreateConnection()
         {
             CheckConnectionString();
 

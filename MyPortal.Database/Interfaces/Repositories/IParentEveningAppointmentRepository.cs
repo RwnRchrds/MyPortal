@@ -10,7 +10,13 @@ namespace MyPortal.Database.Interfaces.Repositories
         Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByStaffMember(Guid staffMemberId, DateTime fromDate,
             DateTime toDate);
 
+        Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByStaffMember(Guid parentEveningId,
+            Guid staffMemberId);
+
         Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByContact(Guid contactId, DateTime fromDate,
             DateTime toDate);
+
+        Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByContact(Guid parentEveningId,
+            Guid contactId);
     }
 }

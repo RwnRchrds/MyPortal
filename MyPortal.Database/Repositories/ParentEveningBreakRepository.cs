@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
@@ -48,6 +49,17 @@ namespace MyPortal.Database.Repositories
                     }, sql.NamedBindings, Transaction);
 
             return eveBreaks;
+        }
+
+        public async Task<IEnumerable<ParentEveningBreak>> GetBreaksByStaffMember(Guid parentEveningId,
+            Guid staffMemberId)
+        {
+            var query = GenerateQuery();
+
+            query.Where("PESM.ParentEveningId", parentEveningId);
+            query.Where("PESM.StaffMemberId", staffMemberId);
+
+            return await ExecuteQuery(query);
         }
 
         public async Task Update(ParentEveningBreak entity)
