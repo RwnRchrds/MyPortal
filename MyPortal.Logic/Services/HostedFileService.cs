@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
@@ -15,7 +16,7 @@ namespace MyPortal.Logic.Services
     {
         private readonly IHostedFileProvider _fileProvider;
 
-        public HostedFileService(IHostedFileProvider fileProvider)
+        public HostedFileService(ClaimsPrincipal user, IHostedFileProvider fileProvider) : base(user) 
         {
             _fileProvider = fileProvider;
         }

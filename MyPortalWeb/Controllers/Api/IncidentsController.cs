@@ -94,10 +94,6 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var user = await UserService.GetUserByPrincipal(User);
-
-                model.CreatedById = user.Id.Value;
-
                 await _behaviourService.CreateIncident(model);
 
                 return Ok();

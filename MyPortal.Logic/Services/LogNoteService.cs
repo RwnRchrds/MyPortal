@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database;
 using MyPortal.Database.Interfaces;
@@ -54,11 +55,13 @@ namespace MyPortal.Logic.Services
 
         public async Task Create(params CreateLogNoteModel[] logNoteObjects)
         {
+            var user = await GetCurrentUser();
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 foreach (var logNoteObject in logNoteObjects)
                 {
-                    await AcademicYearModel.CheckLock(unitOfWork, logNoteObject.AcademicYearId);
+                    await AcademicHelper.IsAcademicYearLocked(logNoteObject.AcademicYearId, true);
 
                     var createDate = DateTime.Now;
 
@@ -68,7 +71,7 @@ namespace MyPortal.Logic.Services
                         Message = logNoteObject.Message,
                         StudentId = logNoteObject.StudentId,
                         CreatedDate = createDate,
-                        CreatedById = logNoteObject.CreatedById,
+                        CreatedById = user.Id.Value,
                         AcademicYearId = logNoteObject.AcademicYearId
                     };
 
@@ -87,7 +90,7 @@ namespace MyPortal.Logic.Services
                 {
                     var logNote = await unitOfWork.LogNotes.GetById(logNoteObject.Id);
                     
-                    await AcademicYearModel.CheckLock(unitOfWork, logNote.AcademicYearId);
+                    await AcademicHelper.IsAcademicYearLocked(logNote.AcademicYearId, true);
 
                     var updateDate = DateTime.Now;
 
@@ -95,8 +98,6 @@ namespace MyPortal.Logic.Services
                     {
                         throw new NotFoundException("Log note not found.");
                     }
-
-                    await AcademicYearModel.CheckLock(unitOfWork, logNote.AcademicYearId);
 
                     logNote.TypeId = logNoteObject.TypeId;
                     logNote.Message = logNoteObject.Message;
@@ -116,13 +117,17 @@ namespace MyPortal.Logic.Services
                 {
                     var logNote = await GetById(logNoteId);
 
-                    await AcademicYearModel.CheckLock(unitOfWork, logNote.AcademicYearId);
+                    await AcademicHelper.IsAcademicYearLocked(logNote.AcademicYearId, true);
 
                     await unitOfWork.LogNotes.Delete(logNoteId);
                 }
 
                 await unitOfWork.SaveChangesAsync();
             }
+        }
+
+        public LogNoteService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

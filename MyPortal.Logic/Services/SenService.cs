@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Logic.Helpers;
@@ -19,6 +20,10 @@ namespace MyPortal.Logic.Services
 
                 return giftedTalented.Select(gt => new GiftedTalentedModel(gt));
             }
+        }
+
+        public SenService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

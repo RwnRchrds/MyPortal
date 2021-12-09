@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,8 @@ namespace MyPortalWeb.Extensions
 
         public static void AddBusinessServices(this IServiceCollection services)
         {
+            services.AddTransient(s => s.GetService<HttpContext>()?.User);
+            
             services.AddScoped<IAcademicYearService, AcademicYearService>();
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IAddressService, AddressService>();

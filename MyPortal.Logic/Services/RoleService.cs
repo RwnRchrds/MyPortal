@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ namespace MyPortal.Logic.Services
     {
         private RoleManager<Role> _roleManager;
 
-        public RoleService(RoleManager<Role> roleManager)
+        public RoleService(ClaimsPrincipal user, RoleManager<Role> roleManager) : base(user)
         {
             _roleManager = roleManager;
         }

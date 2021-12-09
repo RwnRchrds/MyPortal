@@ -16,6 +16,7 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Authentication;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -28,15 +29,17 @@ namespace MyPortal.Logic.Services
 {
     public class UserService : BaseService, IUserService
     {
-        private UserManager<User> _userManager;
-        private RoleManager<Role> _roleManager;
-        private SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IUserClaimsPrincipalFactory<User> _claimsPrincipalFactory;
 
-        public UserService(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager)
+        public UserService(ClaimsPrincipal user, UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager, IUserClaimsPrincipalFactory<User> claimsPrincipalFactory) : base(user)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
+            _claimsPrincipalFactory = claimsPrincipalFactory;
         }
 
         public async Task<IEnumerable<PermissionModel>> GetPermissions(Guid userId)
@@ -244,6 +247,12 @@ namespace MyPortal.Logic.Services
             }
         }
 
+        /// <summary>
+        /// Login method to use for 3rd party logins.
+        /// MyPortal Web App and Mobile App(s) should use the API /connect/token endpoint to authenticate.
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
         public async Task<LoginResult> Login(LoginModel login)
         {
             var result = new LoginResult();
@@ -270,7 +279,8 @@ namespace MyPortal.Logic.Services
             }
             else
             {
-                result.Success(new UserModel(user));
+                var principal = await _claimsPrincipalFactory.CreateAsync(user);
+                result.Success(principal);
             }
 
             return result;
@@ -354,19 +364,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal)
         {
-            var nameId = principal.Claims.FirstOrDefault(c => c.Type.Contains(JwtRegisteredClaimNames.NameId));
-
-            if (nameId == null)
-            {
-                throw new SecurityTokenException("User ID could not be retrieved from token.");
-            }
-
-            var tokenValid = Guid.TryParse(nameId.Value, out var userId);
-
-            if (!tokenValid)
-            {
-                throw new SecurityTokenException("User ID could not be retrieved from token.");
-            }
+            var userId = principal.GetUserId();
 
             return await GetUserById(userId);
         }

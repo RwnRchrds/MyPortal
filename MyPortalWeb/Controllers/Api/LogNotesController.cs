@@ -114,10 +114,6 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var author = await UserService.GetUserByPrincipal(User);
-
-                model.CreatedById = author.Id.Value;
-
                 await _logNoteService.Create(model);
 
                 return Ok();

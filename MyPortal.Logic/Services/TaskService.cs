@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Models.Search;
@@ -164,6 +165,10 @@ namespace MyPortal.Logic.Services
 
                 return tasks.Select(t => new TaskModel(t));
             }
+        }
+
+        public TaskService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

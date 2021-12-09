@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Scaffolding;
@@ -246,6 +247,10 @@ namespace MyPortal.Logic.Services
 
                 await unitOfWork.SaveChangesAsync();
             }
+        }
+
+        public StudentService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

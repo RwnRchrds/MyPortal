@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
@@ -73,6 +74,10 @@ namespace MyPortal.Logic.Services
             }
 
             return templates;
+        }
+
+        public ParentEveningService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

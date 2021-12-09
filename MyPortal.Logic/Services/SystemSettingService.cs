@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
@@ -32,6 +33,10 @@ namespace MyPortal.Logic.Services
 
                 return Convert.ToInt32(databaseVersion.Setting);
             }
+        }
+
+        public SystemSettingService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

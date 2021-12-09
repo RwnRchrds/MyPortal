@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
@@ -78,6 +79,10 @@ namespace MyPortal.Logic.Services
 
                 return new PersonModel(person);
             }
+        }
+
+        public PersonService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database;
@@ -83,6 +84,10 @@ namespace MyPortal.Logic.Services
 
                 return generatedBills.Select(b => new BillModel(b));
             }
+        }
+
+        public BillService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

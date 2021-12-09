@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
@@ -17,7 +18,7 @@ namespace MyPortal.Logic.Services
     {
         private readonly ILocalFileProvider _fileProvider;
 
-        public LocalFileService(ILocalFileProvider fileProvider)
+        public LocalFileService(ClaimsPrincipal user, ILocalFileProvider fileProvider) : base(user)
         {
             _fileProvider = fileProvider;
         }

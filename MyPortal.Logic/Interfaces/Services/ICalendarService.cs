@@ -14,5 +14,9 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IEnumerable<CalendarEventModel>> GetCalendarEventsByPerson(Guid personId, DateRange dateRange);
 
         Task CreateEvent(params CreateEventModel[] models);
+
+        Task UpdateEvent(params UpdateEventModel[] models);
+
+        Task CreateOrUpdateEventAttendees(params UpdateAttendeesModel[] models);
     }
 }

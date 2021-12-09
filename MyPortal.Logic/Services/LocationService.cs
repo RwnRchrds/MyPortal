@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
@@ -19,6 +20,10 @@ namespace MyPortal.Logic.Services
 
                 return locations.Select(l => new LocationModel(l));
             }
+        }
+
+        public LocationService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database;
 using MyPortal.Database.Constants;
@@ -147,6 +148,10 @@ namespace MyPortal.Logic.Services
 
                 return true;
             }
+        }
+
+        public DirectoryService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

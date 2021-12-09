@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database;
 using MyPortal.Database.Constants;
@@ -62,11 +63,13 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateAchievement(params CreateAchievementModel[] requests)
         {
+            var user = await GetCurrentUser();
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 foreach (var request in requests)
                 {
-                    await AcademicYearModel.CheckLock(unitOfWork, request.AcademicYearId);
+                    await AcademicHelper.IsAcademicYearLocked(request.AcademicYearId, true);
 
                     var model = new Achievement
                     {
@@ -77,7 +80,7 @@ namespace MyPortal.Logic.Services
                         Comments = request.Comments,
                         OutcomeId = request.OutcomeId,
                         Points = request.Points,
-                        CreatedById = request.CreatedById,
+                        CreatedById = user.Id.Value,
                         CreatedDate = DateTime.Now
                     };
 
@@ -101,7 +104,7 @@ namespace MyPortal.Logic.Services
                         throw new NotFoundException("Achievement not found.");
                     }
 
-                    await AcademicYearModel.CheckLock(unitOfWork, achievementInDb.AcademicYearId);
+                    await AcademicHelper.IsAcademicYearLocked(achievementInDb.AcademicYearId, true);
 
                     achievementInDb.AchievementTypeId = request.AchievementTypeId;
                     achievementInDb.LocationId = request.LocationId;
@@ -124,7 +127,7 @@ namespace MyPortal.Logic.Services
                 {
                     var achievement = await GetAchievementById(achievementId);
 
-                    await AcademicYearModel.CheckLock(unitOfWork, achievement.AcademicYearId);
+                    await AcademicHelper.IsAcademicYearLocked(achievement.AcademicYearId, true);
 
                     await unitOfWork.Achievements.Delete(achievementId);
                 }
@@ -195,6 +198,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateIncident(params CreateIncidentModel[] incidents)
         {
+            var user = await GetCurrentUser();
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 foreach (var incidentModel in incidents)
@@ -207,7 +212,7 @@ namespace MyPortal.Logic.Services
                         LocationId = incidentModel.LocationId,
                         OutcomeId = incidentModel.OutcomeId,
                         StatusId = incidentModel.StatusId,
-                        CreatedById = incidentModel.CreatedById,
+                        CreatedById = user.Id.Value,
                         StudentId = incidentModel.StudentId,
                         Comments = incidentModel.Comments,
                         AcademicYearId = incidentModel.AcademicYearId
@@ -406,6 +411,10 @@ namespace MyPortal.Logic.Services
 
                 await unitOfWork.SaveChangesAsync();
             }
+        }
+
+        public BehaviourService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

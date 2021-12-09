@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration.EnvironmentVariables;
 using MyPortal.Database;
@@ -82,6 +83,10 @@ namespace MyPortal.Logic.Services
                     await unitOfWork.Contacts.Delete(contactId);
                 }
             }
+        }
+
+        public ContactService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

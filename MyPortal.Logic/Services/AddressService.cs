@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
@@ -18,6 +19,10 @@ namespace MyPortal.Logic.Services
 
                 return addresses.Select(a => new AddressModel(a)).ToList();
             }
+        }
+
+        public AddressService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

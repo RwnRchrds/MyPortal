@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
@@ -21,6 +22,10 @@ namespace MyPortal.Logic.Services
 
                 return models.OrderBy(m => m.StudentGroup.Description);
             }
+        }
+
+        public YearGroupService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Filters;
@@ -17,6 +18,8 @@ namespace MyPortal.Logic.Services
     {
         public async Task Create(params CreateDocumentModel[] documents)
         {
+            var user = await GetCurrentUser();
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 foreach (var document in documents)
@@ -37,7 +40,7 @@ namespace MyPortal.Logic.Services
                             Description = document.Description,
                             CreatedDate = DateTime.Today,
                             DirectoryId = document.DirectoryId,
-                            CreatedById = document.CreatedById,
+                            CreatedById = user.Id.Value,
                             Deleted = false,
                             Restricted = document.Restricted
                         };
@@ -110,6 +113,10 @@ namespace MyPortal.Logic.Services
 
                 return new DocumentModel(document);
             }
+        }
+
+        public DocumentService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

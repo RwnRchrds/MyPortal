@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
@@ -79,6 +80,10 @@ namespace MyPortal.Logic.Services
 
                 return new StaffMemberModel(staffMember);
             }
+        }
+
+        public StaffMemberService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

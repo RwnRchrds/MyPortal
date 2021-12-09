@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database;
 using MyPortal.Database.Constants;
@@ -115,6 +116,7 @@ namespace MyPortal.Logic.Services
         public async Task CreateEvent(params CreateEventModel[] models)
         {
             var eventTypes = (await GetEventTypes()).ToArray();
+            var user = await GetCurrentUser();
 
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork()) 
             {
@@ -145,11 +147,107 @@ namespace MyPortal.Logic.Services
                         IsPublic = model.IsPublic
                     };
 
+                    if (user.PersonId.HasValue)
+                    {
+                        diaryEvent.Attendees.Add(new DiaryEventAttendee
+                        {
+                            PersonId = user.PersonId.Value,
+                            Required = true,
+                            ResponseId = AttendeeResponses.Accepted,
+                            CanEdit = true
+                        });
+                    }
+
                     unitOfWork.DiaryEvents.Create(diaryEvent);
                 }
 
                 await unitOfWork.SaveChangesAsync();
             }
+        }
+
+        public async Task UpdateEvent(params UpdateEventModel[] models)
+        {
+            var eventTypes = (await GetEventTypes()).ToArray();
+
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                foreach (var model in models)
+                {
+                    var eventInDb = await unitOfWork.DiaryEvents.GetById(model.Id);
+
+                    if (eventInDb.EventType.System)
+                    {
+                        throw new SystemEntityException("Events of this type cannot be updated manually.");
+                    }
+
+                    var eventType = eventTypes.FirstOrDefault(t => t.Id == model.EventTypeId);
+
+                    if (eventType == null)
+                    {
+                        throw new NotFoundException("Event type not found.");
+                    }
+
+                    eventInDb.EventTypeId = model.EventTypeId;
+                    eventInDb.RoomId = model.RoomId;
+                    eventInDb.Subject = model.Subject;
+                    eventInDb.Description = model.Description;
+                    eventInDb.Location = model.Location;
+                    eventInDb.StartTime = model.StartTime;
+                    eventInDb.EndTime = model.EndTime;
+                    eventInDb.IsAllDay = model.IsAllDay;
+                    eventInDb.IsPublic = model.IsPublic;
+
+                    await unitOfWork.DiaryEvents.Update(eventInDb);
+                }
+
+                await unitOfWork.SaveChangesAsync();
+            }
+        }
+        
+        public async Task CreateOrUpdateEventAttendees(params UpdateAttendeesModel[] models)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                foreach (var model in models)
+                {
+                    var attendees = (await unitOfWork.DiaryEventAttendees.GetByEvent(model.EventId)).ToArray();
+
+                    foreach (var attendee in model.Attendees)
+                    {
+                        var existingAttendee = attendees.FirstOrDefault(a => a.PersonId == attendee.PersonId);
+
+                        if (existingAttendee != null)
+                        {
+                            existingAttendee.Required = attendee.Required;
+                            existingAttendee.CanEdit = attendee.CanEdit;
+                            existingAttendee.Attended = attendee.Attended;
+                            existingAttendee.ResponseId = attendee.ResponseId;
+
+                            await unitOfWork.DiaryEventAttendees.Update(existingAttendee);
+                        }
+                        else
+                        {
+                            var newAttendee = new DiaryEventAttendee
+                            {
+                                EventId = model.EventId,
+                                PersonId = attendee.PersonId,
+                                Required = attendee.Required,
+                                CanEdit = attendee.CanEdit,
+                                ResponseId = attendee.ResponseId,
+                                Attended = attendee.Attended
+                            };
+                            
+                            unitOfWork.DiaryEventAttendees.Create(newAttendee);
+                        }
+                    }
+                }
+
+                await unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        public CalendarService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

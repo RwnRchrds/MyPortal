@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Helpers;
@@ -16,6 +17,10 @@ namespace MyPortal.Logic.Services
 
                 return localSchoolName;
             }
+        }
+
+        public SchoolService(ClaimsPrincipal user) : base(user)
+        {
         }
     }
 }

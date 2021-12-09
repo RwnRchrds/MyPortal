@@ -30,13 +30,5 @@ namespace MyPortal.Logic.Models.Entity
         public string Name { get; set; }
 
         public bool Locked { get; set; }
-
-        public static async Task CheckLock(IUnitOfWork unitOfWork, Guid academicYearId)
-        {
-            if (await unitOfWork.AcademicYears.IsLocked(academicYearId))
-            {
-                throw new LogicException("This academic year is locked and cannot be modified.");
-            }
-        }
     }
 }
