@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Services
 {
     public class SchoolService : BaseService, ISchoolService
     {
-        public async Task<string> GetLocalSchoolName()
+        private async Task<string> GetLocalSchoolNameFromDb()
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -17,6 +17,14 @@ namespace MyPortal.Logic.Services
 
                 return localSchoolName;
             }
+        }
+
+        public async Task<string> GetLocalSchoolName()
+        {
+            var localSchoolName =
+                await CacheHelper.StringCache.GetOrCreate(CacheKeys.LocalSchoolName, GetLocalSchoolNameFromDb);
+
+            return localSchoolName;
         }
 
         public SchoolService(ClaimsPrincipal user) : base(user)

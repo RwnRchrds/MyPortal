@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MyPortal.Logic.Helpers
 {
-    public class Encryption
+    internal class Encryption
     {
         private const int Keysize = 128;
         private const int DerivationIterations = 10000;

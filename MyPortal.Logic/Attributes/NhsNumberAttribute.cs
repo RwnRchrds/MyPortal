@@ -12,10 +12,7 @@ namespace MyPortal.Logic.Attributes
                 return ValidationResult.Success;
             }
 
-            else
-            {
-                return new ValidationResult("NHS number is invalid.");
-            }
+            return new ValidationResult("NHS number is invalid.");
         }
     }
 }

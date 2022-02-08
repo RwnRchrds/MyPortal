@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace MyPortal.Logic.Helpers
 {
-    public class MathHelper
+    internal class MathHelper
     {
         public static double Percent(double amount, double total, int decimalPlaces)
         {

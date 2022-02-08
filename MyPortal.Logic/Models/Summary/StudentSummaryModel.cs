@@ -1,11 +1,9 @@
 ﻿using System;
 using MyPortal.Database.Models.Query.Student;
-using MyPortal.Logic.Helpers;
-using MyPortal.Logic.Models.Entity;
 
-namespace MyPortal.Logic.Models.Collection
+namespace MyPortal.Logic.Models.Summary
 {
-    public class StudentCollectionModel
+    public class StudentSummaryModel
     {
         public Guid Id { get; set; }
         public string FirstName { get; set; }
@@ -15,7 +13,7 @@ namespace MyPortal.Logic.Models.Collection
         public string RegGroupName { get; set; }
         public string YearGroupName { get; set; }
 
-        public StudentCollectionModel(StudentSearchResult searchResult)
+        public StudentSummaryModel(StudentSearchResult searchResult)
         {
             Id = searchResult.Id;
             FirstName = string.IsNullOrWhiteSpace(searchResult.PreferredFirstName)

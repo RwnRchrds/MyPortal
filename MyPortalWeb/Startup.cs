@@ -24,9 +24,6 @@ namespace MyPortalWeb
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // Enable memory caching
-            services.AddMemoryCache();
-
             services.AddApplicationServices(Configuration);
 
             services.AddControllers();

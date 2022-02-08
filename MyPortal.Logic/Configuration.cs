@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.Data.SqlClient;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Models.Configuration;
 
+[assembly:InternalsVisibleTo("MyPortal.Tests")]
 namespace MyPortal.Logic
 {
     public class Configuration

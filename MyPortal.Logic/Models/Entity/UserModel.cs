@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Enums;
@@ -64,9 +65,23 @@ namespace MyPortal.Logic.Models.Entity
 
         public PersonModel Person { get; set; }
 
-        public string GetDisplayName(NameFormat format = NameFormat.Default, bool useLegalName = true)
+        public string GetDisplayName(NameFormat format = NameFormat.Default, bool usePreferred = false, bool includeMiddleName = true)
         {
-            return Person != null ? Person.GetName(format, useLegalName) : UserName;
+            return Person != null ? Person.GetName(format, usePreferred, includeMiddleName) : UserName;
+        }
+
+        public async Task<string> GetProfileImageAsBase64(IUnitOfWork unitOfWork)
+        {
+            if (Person != null)
+            {
+                await Person.Load(unitOfWork);
+            }
+            else
+            {
+                return null;
+            }
+
+            return Person.Photo != null ? Convert.ToBase64String(Person.Photo.Data) : null;
         }
 
         public async Task Load(IUnitOfWork unitOfWork)

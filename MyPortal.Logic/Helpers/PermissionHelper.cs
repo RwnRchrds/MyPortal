@@ -7,7 +7,7 @@ using MyPortal.Database.Enums;
 
 namespace MyPortal.Logic.Helpers
 {
-    public class PermissionHelper
+    internal class PermissionHelper
     {
         public static BitArray CreatePermissionArray()
         {

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using MyPortal.Logic.Models.Collection;
+using MyPortal.Logic.Models.Summary;
 
 namespace MyPortal.Logic.Models.Response.Attendance
 {
@@ -8,11 +8,11 @@ namespace MyPortal.Logic.Models.Response.Attendance
     {
         public AttendanceRegisterStudentModel()
         {
-            Marks = new List<AttendanceMarkCollectionModel>();
+            Marks = new List<AttendanceMarkSummaryModel>();
         }
 
         public Guid StudentId { get; set; }
         public string StudentName { get; set; }
-        public ICollection<AttendanceMarkCollectionModel> Marks { get; set; }
+        public ICollection<AttendanceMarkSummaryModel> Marks { get; set; }
     }
 }

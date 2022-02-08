@@ -1,10 +1,9 @@
 ﻿using System;
-using MyPortal.Logic.Constants;
 using MyPortal.Logic.Models.Entity;
 
-namespace MyPortal.Logic.Models.Collection
+namespace MyPortal.Logic.Models.Summary
 {
-    public class DirectoryChildCollectionModel
+    public class DirectoryChildSummaryModel
     {
         public Guid Id { get; set; }
         public Guid? ParentId { get; set; }
@@ -13,7 +12,7 @@ namespace MyPortal.Logic.Models.Collection
         public string Type { get; set; }
         public DateTime? CreatedDate { get; set; }
 
-        public DirectoryChildCollectionModel(DirectoryModel directory)
+        public DirectoryChildSummaryModel(DirectoryModel directory)
         {
             if (directory.Id.HasValue)
             {
@@ -25,7 +24,7 @@ namespace MyPortal.Logic.Models.Collection
             Type = "Directory";
         }
 
-        public DirectoryChildCollectionModel(DocumentModel document)
+        public DirectoryChildSummaryModel(DocumentModel document)
         {
             if (document.Id.HasValue)
             {

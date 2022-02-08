@@ -124,6 +124,8 @@ namespace MyPortal.Database.Repositories
             string personAlias, string studentHouseAlias = null, string studentRegGroupAlias = null,
             string studentYearGroupAlias = null)
         {
+            // Insert CTEs needed for search
+
             if (string.IsNullOrWhiteSpace(studentHouseAlias))
             {
                 studentHouseAlias = "SH";
@@ -151,62 +153,7 @@ namespace MyPortal.Database.Repositories
                     $"{studentAlias}.Id");
             }
 
-            switch (search.Status)
-            {
-                case StudentStatus.OnRoll:
-                    query.Where(q =>
-                        q.WhereNull($"{studentAlias}.DateLeaving")
-                            .OrWhereDate($"{studentAlias}.DateLeaving", ">", DateTime.Today));
-                    break;
-                case StudentStatus.Leavers:
-                    query.WhereDate($"{studentAlias}.DateLeaving", "<=", DateTime.Today);
-                    break;
-                case StudentStatus.Future:
-                    query.WhereDate($"{studentAlias}.DateStarting", ">", DateTime.Today);
-                    break;
-                default:
-                    break;
-            }
-
-            if (!string.IsNullOrWhiteSpace(search.FirstName))
-            {
-                query.WhereStarts($"{personAlias}.FirstName", search.FirstName.Trim());
-            }
-
-            if (!string.IsNullOrWhiteSpace(search.LastName))
-            {
-                query.WhereStarts($"{personAlias}.LastName", search.LastName.Trim());
-            }
-
-            if (!string.IsNullOrWhiteSpace(search.Gender))
-            {
-                query.Where($"{personAlias}.Gender", search.Gender);
-            }
-
-            if (search.Dob != null)
-            {
-                query.WhereDate($"{personAlias}.Dob", search.Dob.Value);
-            }
-            
-            if (search.SenStatusId != null)
-            {
-                query.Where($"{studentAlias}.SenStatusId", search.SenStatusId.Value);
-            }
-            
-            if (search.HouseId.HasValue)
-            {
-                query.Where($"{studentHouseAlias}.HouseId", search.HouseId.Value);
-            }
-
-            if (search.RegGroupId.HasValue)
-            {
-                query.Where($"{studentRegGroupAlias}.RegGroupId", search.RegGroupId.Value);
-            }
-
-            if (search.YearGroupId.HasValue)
-            {
-                query.Where($"{studentYearGroupAlias}.YearGroupId", search.YearGroupId.Value);
-            }
+            search.ApplySearch(query, studentAlias, personAlias, studentHouseAlias, studentRegGroupAlias, studentYearGroupAlias);
         }
 
         public async Task<Student> GetByUserId(Guid userId)

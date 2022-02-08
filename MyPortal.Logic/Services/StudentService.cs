@@ -14,11 +14,11 @@ using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Reporting;
 using MyPortal.Logic.Models.Requests.Student;
 using MyPortal.Logic.Models.Response.Students;
+using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -117,13 +117,13 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<IEnumerable<StudentCollectionModel>> Search(StudentSearchOptions searchOptions)
+        public async Task<IEnumerable<StudentSummaryModel>> Search(StudentSearchOptions searchOptions)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var students = await unitOfWork.Students.SearchAll(searchOptions);
 
-                return students.Select(s => new StudentCollectionModel(s)).ToList();
+                return students.Select(s => new StudentSummaryModel(s)).ToList();
             }
         }
 

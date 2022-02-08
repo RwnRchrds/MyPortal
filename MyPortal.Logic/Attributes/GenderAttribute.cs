@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Attributes
                 }
             }
             
-            return new ValidationResult("Value must be a valid gender option.");
+            return new ValidationResult("Gender is invalid.");
         }
     }
 }

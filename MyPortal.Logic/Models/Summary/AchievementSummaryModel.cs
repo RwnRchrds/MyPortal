@@ -2,9 +2,9 @@
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Entity;
 
-namespace MyPortal.Logic.Models.Collection
+namespace MyPortal.Logic.Models.Summary
 {
-    public class IncidentCollectionModel
+    public class AchievementSummaryModel
     {
         public Guid Id { get; set; }
         public string TypeName { get; set; }
@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Models.Collection
         public string Comments { get; set; }
         public int Points { get; set; }
 
-        public IncidentCollectionModel(IncidentModel model)
+        public AchievementSummaryModel(AchievementModel model)
         {
             if (model.Id.HasValue)
             {

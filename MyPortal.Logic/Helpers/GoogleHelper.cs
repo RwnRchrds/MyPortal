@@ -5,13 +5,13 @@ using MyPortal.Logic.Models.Configuration;
 
 namespace MyPortal.Logic.Helpers
 {
-    public class GoogleHelper
+    internal class GoogleHelper
     {
         private GoogleConfig _google;
 
         public GoogleHelper(GoogleConfig google)
         {
-            _google = google ?? throw new ConfigurationException(@"The google configuration has not been added.");
+            _google = google ?? throw new ConfigurationException(@"The Google Workspace configuration has not been added.");
         }
 
         public BaseClientService.Initializer GetInitializer(string accountName = null, params string[] scopes)

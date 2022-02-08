@@ -4,8 +4,8 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
@@ -52,7 +52,7 @@ namespace MyPortal.Logic.Models.Entity
             }
         }
 
-        public static AttendanceMarkModel NoMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
+        internal static AttendanceMarkModel NoMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
             return new AttendanceMarkModel
             {
@@ -86,9 +86,9 @@ namespace MyPortal.Logic.Models.Entity
 
         public AttendanceWeekModel Week { get; set; }
 
-        public AttendanceMarkCollectionModel ToListModel()
+        public AttendanceMarkSummaryModel ToListModel()
         {
-            return new AttendanceMarkCollectionModel
+            return new AttendanceMarkSummaryModel
             {
                 StudentId = StudentId,
                 WeekId = WeekId,

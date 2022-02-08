@@ -15,6 +15,7 @@ using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Authentication;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
@@ -23,6 +24,7 @@ using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin.Users;
 using MyPortal.Logic.Models.Requests.Auth;
+using MyPortal.Logic.Models.Response.Users;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -44,12 +46,9 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<PermissionModel>> GetPermissions(Guid userId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var permissionValues = await GetPermissionValues(userId);
+            var permissionValues = await GetPermissionValues(userId);
 
-                return new List<PermissionModel>();
-            }
+            return new List<PermissionModel>();
         }
 
         public async Task<IEnumerable<int>> GetPermissionValues(Guid userId)
@@ -84,6 +83,23 @@ namespace MyPortal.Logic.Services
 
                 return permissionValues;
             }
+        }
+
+        public async Task<UserInfoResponseModel> GetUserInfo(Guid userId)
+        {
+            var response = new UserInfoResponseModel();
+
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var user = await unitOfWork.Users.GetById(userId);
+                var userModel = new UserModel(user);
+
+                response.DisplayName = userModel.GetDisplayName(NameFormat.FullNameNoTitle, true, false);
+                response.ProfileImage = await userModel.GetProfileImageAsBase64(unitOfWork);
+                response.Permissions = (await GetPermissionValues(userId)).ToArray();
+            }
+
+            return response;
         }
 
         public async Task<IEnumerable<UserModel>> GetUsers(string usernameSearch)

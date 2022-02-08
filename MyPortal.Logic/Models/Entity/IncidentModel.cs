@@ -5,8 +5,8 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
@@ -108,9 +108,9 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual BehaviourStatusModel Status { get; set; }
 
-        public IncidentCollectionModel ToListModel()
+        public IncidentSummaryModel ToListModel()
         {
-            return new IncidentCollectionModel(this);
+            return new IncidentSummaryModel(this);
         }
 
         public async Task Load(IUnitOfWork unitOfWork)

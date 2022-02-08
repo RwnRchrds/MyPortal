@@ -60,6 +60,19 @@ namespace MyPortal.Database.Repositories
             return people;
         }
 
+        protected virtual void IncludePersonTypes(Query query)
+        {
+            query.LeftJoin("Users as U", "U.PersonId", $"{TblAlias}.Id");
+            query.LeftJoin("Students AS S", "S.PersonId", $"{TblAlias}.Id");
+            query.LeftJoin("StaffMembers AS SM", "SM.PersonId", $"{TblAlias}.Id");
+            query.LeftJoin("Contacts AS C", "C.PersonId", $"{TblAlias}.Id");
+
+            query.SelectRaw("CASE WHEN [U].[Id] IS NULL THEN 0 ELSE 1 END AS IsUser");
+            query.SelectRaw("CASE WHEN [S].[Id] IS NULL THEN 0 ELSE 1 END AS IsStudent");
+            query.SelectRaw("CASE WHEN [SM].[Id] IS NULL THEN 0 ELSE 1 END AS IsStaff");
+            query.SelectRaw("CASE WHEN [C].[Id] IS NULL THEN 0 ELSE 1 END AS IsContact");
+        }
+
         public async Task<Person> GetByUserId(Guid userId)
         {
             var query = GenerateQuery();
@@ -69,52 +82,13 @@ namespace MyPortal.Database.Repositories
             return (await ExecuteQuery(query)).FirstOrDefault();
         }
 
-        private void ApplySearch(Query query, PersonSearchOptions search, bool includePersonTypes)
-        {
-            if (search != null)
-            {
-                if (!string.IsNullOrWhiteSpace(search.FirstName))
-                {
-                    query.WhereStarts($"{TblAlias}.FirstName", search.FirstName);
-                }
-
-                if (!string.IsNullOrWhiteSpace(search.LastName))
-                {
-                    query.WhereStarts($"{TblAlias}.LastName", search.LastName);
-                }
-
-                if (!string.IsNullOrWhiteSpace(search.Gender))
-                {
-                    query.Where($"{TblAlias}.Gender", search.Gender);
-                }
-
-                if (search.Dob != null)
-                {
-                    query.WhereDate($"{TblAlias}.Dob", search.Dob);
-                }
-            }
-
-            if (includePersonTypes)
-            {
-                query.LeftJoin("Users as U", "U.PersonId", $"{TblAlias}.Id");
-                query.LeftJoin("Students AS S", "S.PersonId", $"{TblAlias}.Id");
-                query.LeftJoin("StaffMembers AS SM", "SM.PersonId", $"{TblAlias}.Id");
-                query.LeftJoin("Contacts AS C", "C.PersonId", $"{TblAlias}.Id");
-                
-                query.SelectRaw("CASE WHEN [U].[Id] IS NULL THEN 0 ELSE 1 END AS IsUser");
-                query.SelectRaw("CASE WHEN [S].[Id] IS NULL THEN 0 ELSE 1 END AS IsStudent");
-                query.SelectRaw("CASE WHEN [SM].[Id] IS NULL THEN 0 ELSE 1 END AS IsStaff");
-                query.SelectRaw("CASE WHEN [C].[Id] IS NULL THEN 0 ELSE 1 END AS IsContact");
-            }
-        }
-
         public async Task<PersonSearchResult> GetPersonWithTypesById(Guid personId)
         {
             var query = GenerateQuery();
 
             query.Where($"{TblAlias}.Id", personId);
 
-            ApplySearch(query, null, true);
+            IncludePersonTypes(query);
 
             return (await ExecuteQueryWithTypes(query)).FirstOrDefault();
         }
@@ -123,7 +97,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
             
-            ApplySearch(query, searchParams, false);
+            searchParams.ApplySearch(query, TblAlias);
 
             return await ExecuteQuery(query);
         }
@@ -132,7 +106,9 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            ApplySearch(query, searchParams, true);
+            searchParams.ApplySearch(query, TblAlias);
+
+            IncludePersonTypes(query);
 
             return await ExecuteQueryWithTypes(query);
         }

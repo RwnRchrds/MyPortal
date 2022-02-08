@@ -20,7 +20,7 @@ namespace MyPortal.Database.Repositories
             
         }
 
-        public async Task<IEnumerable<AchievementType>> GetRecorded(Guid academicYearId)
+        public async Task<IEnumerable<AchievementType>> GetTypesWithRecordedAchievementsByYear(Guid academicYearId)
         {
             var query = GenerateQuery();
 

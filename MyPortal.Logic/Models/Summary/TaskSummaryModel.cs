@@ -2,9 +2,9 @@
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Entity;
 
-namespace MyPortal.Logic.Models.Collection
+namespace MyPortal.Logic.Models.Summary
 {
-    public class TaskListModel
+    public class TaskSummaryModel
     {
         public Guid Id { get; set; }
         public DateTime? DueDate { get; set; }
@@ -15,7 +15,7 @@ namespace MyPortal.Logic.Models.Collection
         public bool Completed { get; set; }
         public bool CanEdit { get; set; }
 
-        public TaskListModel(TaskModel model, bool editPersonalOnly)
+        public TaskSummaryModel(TaskModel model, bool editPersonalOnly)
         {
             if (model.Id.HasValue)
             {

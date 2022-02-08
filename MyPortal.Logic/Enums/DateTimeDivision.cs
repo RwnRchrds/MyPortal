@@ -1,6 +1,6 @@
 ﻿namespace MyPortal.Logic.Enums
 {
-    public enum DateTimeDivision
+    internal enum DateTimeDivision
     {
         Year,
         Month,

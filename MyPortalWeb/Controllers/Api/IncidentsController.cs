@@ -9,9 +9,9 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour.Incidents;
+using MyPortal.Logic.Models.Summary;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -50,7 +50,7 @@ namespace MyPortalWeb.Controllers.Api
                     return Ok(incident);
                 }
 
-                return Error(403, PermissionMessage);
+                return PermissionError();
             }
             catch (Exception e)
             {
@@ -61,7 +61,7 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Route("student", Name = "ApiIncidentGetByStudent")]
         [Permission(PermissionValue.BehaviourViewIncidents)]
-        [ProducesResponseType(typeof(IEnumerable<IncidentCollectionModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<IncidentSummaryModel>), 200)]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             try

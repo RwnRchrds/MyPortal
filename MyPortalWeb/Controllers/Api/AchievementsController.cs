@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,9 +8,9 @@ using MyPortal.Database.Enums;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
+using MyPortal.Logic.Models.Summary;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -47,7 +48,7 @@ namespace MyPortalWeb.Controllers.Api
                     return Ok(achievement);
                 }
 
-                return Error(403, PermissionMessage);
+                return PermissionError();
             }
             catch (Exception e)
             {
@@ -58,7 +59,7 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Route("student", Name = "ApiAchievementGetByStudent")]
         [Permission(PermissionValue.BehaviourViewAchievements)]
-        [ProducesResponseType(typeof(AchievementCollectionModel), 200)]
+        [ProducesResponseType(typeof(AchievementSummaryModel), 200)]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             try
@@ -74,7 +75,7 @@ namespace MyPortalWeb.Controllers.Api
                     return Ok(achievements.Select(x => x.ToListModel()));
                 }
 
-                return Error(403, PermissionMessage);
+                return PermissionError();
             }
             catch (Exception e)
             {

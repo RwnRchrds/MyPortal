@@ -6,6 +6,7 @@ using MyPortal.Logic.Authentication;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin.Users;
 using MyPortal.Logic.Models.Requests.Auth;
+using MyPortal.Logic.Models.Response.Users;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Interfaces.Services
@@ -29,5 +30,6 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IEnumerable<UserModel>> GetUsers(string usernameSearch);
         Task<IEnumerable<PermissionModel>> GetPermissions(Guid userId);
         Task<IEnumerable<int>> GetPermissionValues(Guid userId);
+        Task<UserInfoResponseModel> GetUserInfo(Guid userId);
     }
 }

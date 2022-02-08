@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity

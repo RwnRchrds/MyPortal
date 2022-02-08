@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortalWeb.Controllers.BaseControllers;
+using MyPortalWeb.Models.Response;
 
 namespace MyPortalWeb.Controllers.Api
 {
@@ -29,7 +30,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var schoolName = await _schoolService.GetLocalSchoolName();
 
-                return Ok(schoolName);
+                return Ok(new StringResponseModel(schoolName));
             }
             catch (Exception e)
             {

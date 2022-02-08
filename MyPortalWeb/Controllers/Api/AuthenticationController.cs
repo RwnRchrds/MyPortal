@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Requests.Auth;
+using MyPortal.Logic.Models.Response.Users;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
@@ -20,17 +21,17 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Authorize]
-        [Route("permissions")]
-        [ProducesResponseType(typeof(IEnumerable<int>), 200)]
-        public async Task<IActionResult> GetEffectivePermissions()
+        [Route("userInfo")]
+        [ProducesResponseType(typeof(UserInfoResponseModel), 200)]
+        public async Task<IActionResult> GetUserInfo()
         {
             try
             {
                 var user = await GetLoggedInUser();
 
-                var effectivePermissions = await UserService.GetPermissionValues(user.Id.Value);
+                var userInfo = await UserService.GetUserInfo(user.Id.Value);
 
-                return Ok(effectivePermissions);
+                return Ok(userInfo);
             }
             catch (Exception e)
             {

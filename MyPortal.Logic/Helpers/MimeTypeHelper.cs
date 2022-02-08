@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.StaticFiles;
 
 namespace MyPortal.Logic.Helpers
 {
-    public class MimeTypeHelper
+    internal class MimeTypeHelper
     {
         private static readonly Lazy<IDictionary<string, string>> Mappings = new Lazy<IDictionary<string, string>>(BuildMappings);
 

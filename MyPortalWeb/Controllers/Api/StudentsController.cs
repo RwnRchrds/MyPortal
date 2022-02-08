@@ -9,9 +9,9 @@ using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Response.Students;
+using MyPortal.Logic.Models.Summary;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -34,7 +34,7 @@ namespace MyPortalWeb.Controllers.Api
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.StudentViewStudentDetails)]
         [Route("search")]
-        [ProducesResponseType(typeof(IEnumerable<StudentCollectionModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<StudentSummaryModel>), 200)]
         public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchOptions searchModel)
         {
             var students = (await StudentService.Search(searchModel)).ToList();
@@ -57,7 +57,7 @@ namespace MyPortalWeb.Controllers.Api
                     return Ok(student);
                 }
 
-                return Error(403, PermissionMessage);
+                return PermissionError();
             }
             catch (Exception e)
             {
@@ -87,7 +87,7 @@ namespace MyPortalWeb.Controllers.Api
                     return Ok(studentStats);
                 }
 
-                return Error(403, PermissionMessage);
+                return PermissionError();
             }
             catch (Exception e)
             {

@@ -4,8 +4,8 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
@@ -73,9 +73,9 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual LogNoteTypeModel LogNoteType { get; set; }
 
-        public LogNoteCollectionModel ToListModel()
+        public LogNoteSummaryModel ToListModel()
         {
-            return new LogNoteCollectionModel(this);
+            return new LogNoteSummaryModel(this);
         }
 
         public async Task Load(IUnitOfWork unitOfWork)

@@ -2,9 +2,9 @@
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Entity;
 
-namespace MyPortal.Logic.Models.Collection
+namespace MyPortal.Logic.Models.Summary
 {
-    public class LogNoteCollectionModel
+    public class LogNoteSummaryModel
     {
         public Guid Id { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Models.Collection
         public string LogTypeColourCode { get; set; }
         public string Message { get; set; }
 
-        public LogNoteCollectionModel(LogNoteModel model)
+        public LogNoteSummaryModel(LogNoteModel model)
         {
             if (model.Id.HasValue)
             {

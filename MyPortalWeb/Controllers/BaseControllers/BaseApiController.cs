@@ -81,6 +81,11 @@ namespace MyPortalWeb.Controllers.BaseControllers
             return Error((int) statusCode, message);
         }
 
+        protected IActionResult PermissionError()
+        {
+            return Error(HttpStatusCode.Forbidden, PermissionMessage);
+        }
+
         protected IActionResult Error(int statusCode, string errorMessage)
         {
             var error = new ErrorResponseModel(errorMessage);

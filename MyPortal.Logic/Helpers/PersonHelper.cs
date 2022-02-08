@@ -5,7 +5,7 @@ using MyPortal.Logic.Models.Requests.Person;
 
 namespace MyPortal.Logic.Helpers
 {
-    public static class PersonHelper
+    internal static class PersonHelper
     {
         public static Person CreatePerson(CreatePersonModel model)
         {

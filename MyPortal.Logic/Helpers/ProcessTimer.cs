@@ -2,7 +2,7 @@
 
 namespace MyPortal.Logic.Helpers
 {
-    public class ProcessTimer : IDisposable
+    internal class ProcessTimer : IDisposable
     {
         private string _name;
         private DateTime _start;

@@ -70,7 +70,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<string> GetLocalSchoolName()
         {
-            var query = new Query(TblName).Select($"{TblAlias}.Name");
+            var query = GenerateEmptyQuery().Select($"{TblAlias}.Name");
 
             query.Where($"{TblAlias}.Local", true);
 

@@ -1,9 +1,9 @@
 ﻿
 using System;
 
-namespace MyPortal.Logic.Models.Collection
+namespace MyPortal.Logic.Models.Summary
 {    
-    public class AttendanceMarkCollectionModel
+    public class AttendanceMarkSummaryModel
     {
         public Guid StudentId { get; set; }
         

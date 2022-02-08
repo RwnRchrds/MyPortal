@@ -54,7 +54,7 @@ namespace MyPortalWeb.Controllers.Api
                     return Ok(events);
                 }
 
-                return Error(403, PermissionMessage);
+                return PermissionError();
             }
             catch (Exception e)
             {

@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Collection;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
 using MyPortal.Logic.Models.Response.Documents;
+using MyPortal.Logic.Models.Summary;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -45,7 +45,7 @@ namespace MyPortalWeb.Controllers.Api
 
                     var children = await _directoryService.GetChildren(directoryId, userIsStaff);
 
-                    var childList = new List<DirectoryChildCollectionModel>();
+                    var childList = new List<DirectoryChildSummaryModel>();
 
                     childList.AddRange(children.Subdirectories.Select(x => x.GetListModel()));
                     childList.AddRange(children.Files.Select(x => x.GetListModel()));
