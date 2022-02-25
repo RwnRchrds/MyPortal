@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace MyPortal.Database.Models.Query.Attendance
+namespace MyPortal.Database.Models.QueryResults.Attendance
 {
     public class PossibleAttendanceMark
     {

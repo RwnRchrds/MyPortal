@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyPortal.Database.Models.Query.Student
+namespace MyPortal.Database.Models.QueryResults.Student
 {
     public class StudentSearchResult
     {

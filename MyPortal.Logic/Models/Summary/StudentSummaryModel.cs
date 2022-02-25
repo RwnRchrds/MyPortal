@@ -1,5 +1,5 @@
 ﻿using System;
-using MyPortal.Database.Models.Query.Student;
+using MyPortal.Database.Models.QueryResults.Student;
 
 namespace MyPortal.Logic.Models.Summary
 {

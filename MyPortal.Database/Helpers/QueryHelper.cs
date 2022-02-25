@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Models.Filters;
 using SqlKata;
 
 namespace MyPortal.Database.Helpers
@@ -30,6 +31,14 @@ namespace MyPortal.Database.Helpers
         {
             query.LeftJoin($"StudentGroupMemberships as {studentGroupAlias}", $"{studentGroupAlias}.StudentId",
                 $"{studentAlias}.Id");
+
+            return query;
+        }
+
+        public static Query Limit(this Query query, PageFilter filter)
+        {
+            query.Skip(filter.Skip);
+            query.Take(filter.Take);
 
             return query;
         }

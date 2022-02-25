@@ -34,6 +34,8 @@ namespace MyPortal.Database.Repositories
 
             query.LeftJoin("Users as U", "U.Id", "UR.UserId");
             query.LeftJoin("Roles as R", "R.Id", "UR.RoleId");
+            query.SelectAllColumns(typeof(User), "U");
+            query.SelectAllColumns(typeof(Role), "R");
 
             return query;
         }

@@ -1,4 +1,4 @@
-﻿namespace MyPortal.Database.Models.Query.Person
+﻿namespace MyPortal.Database.Models.QueryResults.Person
 {
     public class PersonSearchResult
     {

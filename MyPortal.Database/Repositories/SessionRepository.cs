@@ -10,7 +10,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Models.Query.Attendance;
+using MyPortal.Database.Models.QueryResults.Attendance;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
 using Task = System.Threading.Tasks.Task;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using MyPortal.Database.Models.Query.Attendance;
+using MyPortal.Database.Models.QueryResults.Attendance;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.Response.Attendance

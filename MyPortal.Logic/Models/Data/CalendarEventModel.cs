@@ -1,6 +1,6 @@
 ﻿using System;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Models.Query.Attendance;
+using MyPortal.Database.Models.QueryResults.Attendance;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.Data

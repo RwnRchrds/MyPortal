@@ -1,4 +1,4 @@
-﻿using MyPortal.Database.Models.Query.Person;
+﻿using MyPortal.Database.Models.QueryResults.Person;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.Response.People

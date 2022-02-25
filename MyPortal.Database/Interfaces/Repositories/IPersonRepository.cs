@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Models.Query;
-using MyPortal.Database.Models.Query.Person;
+using MyPortal.Database.Models.QueryResults.Person;
 using MyPortal.Database.Models.Search;
 
 namespace MyPortal.Database.Interfaces.Repositories

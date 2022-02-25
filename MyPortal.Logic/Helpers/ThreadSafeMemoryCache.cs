@@ -17,7 +17,7 @@ namespace MyPortal.Logic.Helpers
         {
             if (!_cache.TryGetValue(key, out TItem cacheEntry))
             {
-                return default(TItem);
+                return default;
             }
 
             return cacheEntry;
