@@ -11,6 +11,8 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Enums;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Identity;
 using MyPortal.Logic.Interfaces;
 using MyPortalWeb.Services;
@@ -63,7 +65,20 @@ namespace MyPortalWeb.Extensions
                 .AddOperationalStore(options =>
                 {
                     options.ConfigureDbContext =
-                        builder => builder.UseSqlServer(Configuration.Instance.ConnectionString);
+                        builder =>
+                        {
+                            switch (Configuration.Instance.DatabaseProvider)
+                            {
+                                case DatabaseProvider.MsSqlServer:
+                                    builder.UseSqlServer(Configuration.Instance.ConnectionString);
+                                    break;
+                                case DatabaseProvider.MySql:
+                                    builder.UseMySQL(Configuration.Instance.ConnectionString);
+                                    break;
+                                default:
+                                    throw new ConfigurationException("A database provider has not been set.");
+                            }
+                        };
                 })
                 .AddDeveloperSigningCredential();
 

@@ -1,38 +1,61 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyPortal.Database.Models;
-using MyPortal.Logic;
 using MyPortal.Logic.Enums;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.FileProviders;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Configuration;
 using MyPortal.Logic.Services;
 
-namespace MyPortalWeb.Extensions
+namespace MyPortal.Logic.Extensions
 {
-    public static class ApplicationServiceExtensions
+    public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddMyPortal(this IServiceCollection services, IConfiguration config)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    config.GetConnectionString("MyPortal")));
-
-            // MyPortal Configuration Settings
             SetConfiguration(config);
+
+            services.AddApplicationDbContext();
+            services.AddBusinessServices();
 
             return services;
         }
 
-        public static void AddBusinessServices(this IServiceCollection services)
+        private static IServiceCollection AddApplicationDbContext(this IServiceCollection services)
+        {
+            Configuration.CheckConfiguration();
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                switch (Configuration.Instance.DatabaseProvider)
+                {
+                    case DatabaseProvider.MsSqlServer:
+                        options.UseSqlServer(Configuration.Instance.ConnectionString);
+                        break;
+                    case DatabaseProvider.MySql:
+                        options.UseMySQL(Configuration.Instance.ConnectionString);
+                        break;
+                    default:
+                        throw new ConfigurationException("A database provider has not been set.");
+                }
+            });
+
+            return services;
+        }
+
+        private static IServiceCollection AddBusinessServices(this IServiceCollection services)
         {
             services.AddTransient(s => s.GetService<HttpContext>()?.User);
-            
+
             services.AddScoped<IAcademicYearService, AcademicYearService>();
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IAddressService, AddressService>();
@@ -71,16 +94,19 @@ namespace MyPortalWeb.Extensions
                 {
                     services.AddScoped<IHostedFileProvider, GoogleFileProvider>();
                 }
-                
+
                 services.AddScoped<IFileService, HostedFileService>();
             }
+
+            return services;
         }
 
         private static void SetConfiguration(IConfiguration config)
         {
-            var connectionString = config.GetConnectionString("MyPortal");
+            var databaseProvider = config["Database:Provider"];
+            var connectionString = config["Database:ConnectionString"];
 
-            Configuration.Instance.ConnectionString = connectionString;
+            Configuration.CreateInstance(databaseProvider, connectionString);
 
             Configuration.Instance.InstallLocation = Environment.CurrentDirectory;
 

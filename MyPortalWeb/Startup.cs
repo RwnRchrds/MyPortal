@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using MyPortal.Logic.Extensions;
 using MyPortalWeb.Extensions;
 using MyPortalWeb.Middleware;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -24,14 +25,12 @@ namespace MyPortalWeb
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplicationServices(Configuration);
+            services.AddMyPortal(Configuration);
 
             services.AddControllers();
             services.AddCors();
 
             services.AddIdentityServices(Configuration);
-
-            services.AddBusinessServices();
 
 #if DEBUG
             services.AddSwaggerGen(c =>
