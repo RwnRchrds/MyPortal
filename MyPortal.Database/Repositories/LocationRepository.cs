@@ -1,6 +1,7 @@
 ﻿using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
+using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -26,7 +27,7 @@ namespace MyPortal.Database.Repositories
 
             if (location.System)
             {
-                throw new SystemEntityException("System entities cannot be modified.");
+                throw ExceptionHelper.UpdateSystemEntityException;
             }
 
             location.Description = entity.Description;

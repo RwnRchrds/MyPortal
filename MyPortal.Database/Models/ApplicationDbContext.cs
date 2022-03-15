@@ -23,7 +23,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<AchievementOutcome> AchievementOutcomes { get; set; }
         public virtual DbSet<AchievementType> AchievementTypes { get; set; }
         public virtual DbSet<Activity> Activities { get; set; }
-        public virtual DbSet<ActivityEvent> ActivityEvents { get; set; }
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<AddressPerson> AddressPersons { get; set; }
         public virtual DbSet<AddressType> AddressTypes { get; set; }
@@ -34,7 +33,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Aspect> Aspects { get; set; }
         public virtual DbSet<AspectType> AspectTypes { get; set; }
         public virtual DbSet<AttendanceCode> AttendanceCodes { get; set; }
-        public virtual DbSet<AttendanceCodeMeaning> AttendanceCodeMeanings { get; set; }
+        public virtual DbSet<AttendanceCodeType> AttendanceCodeMeanings { get; set; }
         public virtual DbSet<AttendanceMark> AttendanceMarks { get; set; }
         public virtual DbSet<AttendancePeriod> AttendancePeriods { get; set; }
         public virtual DbSet<AttendanceWeek> AttendanceWeeks { get; set; }
@@ -302,26 +301,9 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasMany(x => x.Events)
-                        .WithOne(x => x.Activity)
-                        .HasForeignKey(x => x.ActivityId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     e.HasOne(x => x.StudentGroup)
                         .WithMany(x => x.Activities)
                         .HasForeignKey(x => x.StudentGroupId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-                modelBuilder.Entity<ActivityEvent>(e =>
-                {
-                    SetIdDefaultValue(e);
-
-                    e.HasOne(x => x.Event)
-                        .WithMany(x => x.ActivityEvents)
-                        .HasForeignKey(x => x.EventId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -452,12 +434,12 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<AttendanceCodeMeaning>(e =>
+                modelBuilder.Entity<AttendanceCodeType>(e =>
                 {
                     SetIdDefaultValue(e);
 
                     e.HasMany(acm => acm.Codes)
-                        .WithOne(ac => ac.CodeMeaning)
+                        .WithOne(ac => ac.CodeType)
                         .HasForeignKey(ac => ac.MeaningId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
@@ -667,11 +649,6 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<Charge>(e =>
                 {
                     SetIdDefaultValue(e);
-
-                    e.HasMany(x => x.Activities)
-                        .WithOne(x => x.Charge)
-                        .HasForeignKey(x => x.ChargeId)
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<ChargeDiscount>(e =>

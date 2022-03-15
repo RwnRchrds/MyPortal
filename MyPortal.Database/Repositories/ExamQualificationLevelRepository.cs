@@ -65,7 +65,7 @@ namespace MyPortal.Database.Repositories
 
             if (level.System)
             {
-                throw new SystemEntityException("System entities cannot be modified.");
+                throw ExceptionHelper.UpdateSystemEntityException;
             }
             
             level.JcLevelCode = entity.JcLevelCode;

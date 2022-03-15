@@ -32,7 +32,7 @@ namespace MyPortal.Database.Repositories
 
         protected override Query SelectAllRelated(Query query)
         {
-            query.SelectAllColumns(typeof(AttendanceCodeMeaning), "ACM");
+            query.SelectAllColumns(typeof(AttendanceCodeType), "ACM");
 
             return query;
         }
@@ -41,10 +41,10 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var codes = await Transaction.Connection.QueryAsync<AttendanceCode, AttendanceCodeMeaning, AttendanceCode>(sql.Sql,
+            var codes = await Transaction.Connection.QueryAsync<AttendanceCode, AttendanceCodeType, AttendanceCode>(sql.Sql,
                 (code, meaning) =>
                 {
-                    code.CodeMeaning = meaning;
+                    code.CodeType = meaning;
 
                     return code;
                 }, sql.NamedBindings, Transaction);

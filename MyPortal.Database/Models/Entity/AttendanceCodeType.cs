@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models.Entity
 {
-    [Table("AttendanceCodeMeanings")]
-    public class AttendanceCodeMeaning : BaseTypes.Entity
+    [Table("AttendanceCodeTypes")]
+    public class AttendanceCodeType : BaseTypes.Entity
     {
-        public AttendanceCodeMeaning()
+        public AttendanceCodeType()
         {
             Codes = new HashSet<AttendanceCode>();
         }

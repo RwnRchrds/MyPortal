@@ -1939,7 +1939,7 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active, QualificationId, DefaultGradeSetId, JcLevelCode, System)
     VALUES (Id, Description, 1, QualificationId, DefaultGradeSetId, JcLevelCode, 1);
 
-MERGE INTO [dbo].[AttendanceCodeMeanings] AS Target
+MERGE INTO [dbo].[AttendanceCodeTypes] AS Target
 USING (VALUES
            ('59036717-D349-46D3-B8A6-60FFA9263DB3', 'Present'),
            ('59036718-D349-46D3-B8A6-60FFA9263DB3', 'Authorised Absence'),

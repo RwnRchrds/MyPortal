@@ -5,9 +5,9 @@ using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AttendanceCodeMeaningModel : BaseModel
+    public class AttendanceCodeTypeModel : BaseModel
     {
-        public AttendanceCodeMeaningModel(AttendanceCodeMeaning model) : base(model)
+        public AttendanceCodeTypeModel(AttendanceCodeType model) : base(model)
         {
             Description = model.Description;
         }

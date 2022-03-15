@@ -100,6 +100,8 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var task in tasks)
                 {
+                    ValidationHelper.ValidateModel(task);
+
                     var taskInDb = await unitOfWork.Tasks.GetById(task.Id);
 
                     if (taskInDb == null)
@@ -109,7 +111,7 @@ namespace MyPortal.Logic.Services
 
                     if (taskInDb.System)
                     {
-                        throw new InvalidDataException("System entities cannot be modified.");
+                        throw new LogicException("System entities cannot be modified.");
                     }
 
                     taskInDb.Title = task.Title;

@@ -25,13 +25,14 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 4)]
         public bool Active { get; set; }
 
+        // TODO: Add permission for using restricted codes
         [Column(Order = 5)]
         public bool Restricted { get; set; }
         
         [Column(Order = 6)]
         public bool System { get; set; }
 
-        public virtual AttendanceCodeMeaning CodeMeaning { get; set; }
+        public virtual AttendanceCodeType CodeType { get; set; }
 
         public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }
     }

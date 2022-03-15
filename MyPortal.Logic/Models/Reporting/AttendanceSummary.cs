@@ -34,23 +34,23 @@ namespace MyPortal.Logic.Models.Reporting
                     throw new Exception($"Code not found for attendance code ID '{mark.CodeId}'.");
                 }
 
-                if (code.Id == AttendanceMeanings.Present)
+                if (code.Id == AttendanceCodeTypes.Present)
                 {
                     Present++;
                 }
-                else if (code.Id == AttendanceMeanings.ApprovedEdActivity)
+                else if (code.Id == AttendanceCodeTypes.ApprovedEdActivity)
                 {
                     ApprovedEdActivity++;
                 }
-                else if (code.Id == AttendanceMeanings.AuthorisedAbsence)
+                else if (code.Id == AttendanceCodeTypes.AuthorisedAbsence)
                 {
                     AuthorisedAbsence++;
                 }
-                else if (code.Id == AttendanceMeanings.UnauthorisedAbsence)
+                else if (code.Id == AttendanceCodeTypes.UnauthorisedAbsence)
                 {
                     UnauthorisedAbsence++;
                 }
-                else if (code.Id == AttendanceMeanings.AttendanceNotRequired)
+                else if (code.Id == AttendanceCodeTypes.AttendanceNotRequired)
                 {
                     NotRequired++;
                 }

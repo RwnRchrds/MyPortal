@@ -7,6 +7,7 @@ using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using MyPortal.Database.Exceptions;
+using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
@@ -35,6 +36,11 @@ namespace MyPortal.Database.Repositories.Base
 
         public void Create(TEntity entity)
         {
+            if (entity is IReadOnlyEntity)
+            {
+
+            }
+
             var result = Context.Set<TEntity>().Add(entity);
         }
 
@@ -45,7 +51,7 @@ namespace MyPortal.Database.Repositories.Base
             switch (entity)
             {
                 case ISystemEntity {System: true}:
-                    throw new SystemEntityException("System entities cannot be deleted.");
+                    throw ExceptionHelper.DeleteSystemEntityException;
                 case ISoftDeleteEntity softDeleteObject:
                     softDeleteObject.Deleted = true;
                     break;

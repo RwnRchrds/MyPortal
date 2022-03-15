@@ -72,7 +72,7 @@ namespace MyPortal.Database.Repositories
 
             if (documentType.System)
             {
-                throw new SystemEntityException("System entities cannot be modified.");
+                throw ExceptionHelper.UpdateSystemEntityException;
             }
 
             documentType.Description = entity.Description;

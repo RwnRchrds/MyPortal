@@ -23,9 +23,9 @@ namespace MyPortal.Logic.Models.Entity
             Active = model.Active;
             Restricted = model.Restricted;
 
-            if (model.CodeMeaning != null)
+            if (model.CodeType != null)
             {
-                CodeMeaning = new AttendanceCodeMeaningModel(model.CodeMeaning);
+                CodeType = new AttendanceCodeTypeModel(model.CodeType);
             }
         }
         
@@ -43,7 +43,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public bool Restricted { get; set; }
 
-        public virtual AttendanceCodeMeaningModel CodeMeaning { get; set; }
+        public virtual AttendanceCodeTypeModel CodeType { get; set; }
         
         public async Task Load(IUnitOfWork unitOfWork)
         {

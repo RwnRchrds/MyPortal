@@ -10,10 +10,7 @@ namespace MyPortal.Database.Models.Entity
     public class Activity : BaseTypes.Entity, IStudentGroupEntity
     {
         public Guid StudentGroupId { get; set; }
-        public Guid? ChargeId { get; set; }
 
         public virtual StudentGroup StudentGroup { get; set; }
-        public virtual Charge Charge { get; set; }
-        public virtual ICollection<ActivityEvent> Events { get; set; }
     }
 }

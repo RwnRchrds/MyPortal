@@ -24,7 +24,6 @@ namespace MyPortal.Database
         private IAchievementOutcomeRepository _achievementOutcomes;
         private IAchievementRepository _achievements;
         private IAchievementTypeRepository _achievementTypes;
-        private IActivityEventRepository _activityEvents;
         private IActivityRepository _activities;
         private IAddressPersonRepository _addressPersons;
         private IAddressRepository _addresses;
@@ -233,9 +232,6 @@ namespace MyPortal.Database
 
         public IAchievementTypeRepository AchievementTypes =>
             _achievementTypes ??= new AchievementTypeRepository(_context, _transaction);
-
-        public IActivityEventRepository ActivityEvents =>
-            _activityEvents ??= new ActivityEventRepository(_context, _transaction);
 
         public IActivityRepository Activities =>
             _activities ??= new ActivityRepository(_context, _transaction);
@@ -829,7 +825,6 @@ namespace MyPortal.Database
             _achievementOutcomes = null;
             _achievements = null;
             _achievementTypes = null;
-            _activityEvents = null;
             _activities = null;
             _addressPersons = null;
             _addressTypes = null;

@@ -70,7 +70,7 @@ namespace MyPortal.Database.Repositories
 
             if (gradeSet.System)
             {
-                throw new SystemEntityException("System entities cannot be modified.");
+                throw ExceptionHelper.UpdateSystemEntityException;
             }
 
             grade.Code = entity.Code;

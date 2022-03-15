@@ -20,7 +20,7 @@ namespace MyPortal.Database.Models.Entity
         [Range(0, int.MaxValue)]
         public int? MaxQuantity { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public bool Auto { get; set; }
 
         public virtual Discount Discount { get; set; }
