@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using MyPortal.Logic.Exceptions;
 
@@ -14,6 +15,7 @@ namespace MyPortal.Logic.Helpers
                 {
                     if (throwException)
                     {
+                        Path.GetExtension("");
                         throw new LogicException("This academic year is locked and cannot be modified.");
                     }
                     

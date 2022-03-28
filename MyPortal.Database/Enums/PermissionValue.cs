@@ -51,6 +51,7 @@ namespace MyPortal.Database.Enums
 
         AttendanceViewAttendanceMarks = 26,
         AttendanceEditAttendanceMarks = 27,
+        AttendanceUseRestrictedCodes = 124,
 
         #endregion
 
@@ -120,7 +121,7 @@ namespace MyPortal.Database.Enums
         PeopleEditManagedStaffDocuments = 68,
         PeopleEditOwnStaffDocuments = 69,
         PeopleViewAllStaffPerformanceDetails = 70,
-        PeopleViewManagesStaffPerformanceDetails = 71,
+        PeopleViewManagedStaffPerformanceDetails = 71,
         PeopleViewOwnStaffPerformanceDetails = 72,
         PeopleEditAllStaffPerformanceDetails = 73,
         PeopleEditManagedStaffPerformanceDetails = 74,
