@@ -35,7 +35,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (await AuthorisePerson(personId))
+                if (await CanAccessPerson(personId))
                 {
                     DateRange dateRange;
 
@@ -70,7 +70,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                await _calendarService.CreateEvent(model);
+                var user = await GetLoggedInUser();
+                
+                await _calendarService.CreateEvent(user.Id.Value, model);
 
                 return Ok();
             }

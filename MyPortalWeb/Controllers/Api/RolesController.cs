@@ -83,7 +83,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("get")]
+        [Route("")]
         [Permission(PermissionValue.SystemViewGroups)]
         [ProducesResponseType(typeof(IEnumerable<RoleModel>), 200)]
         public async Task<IActionResult> GetRoles([FromQuery] string roleName)
@@ -101,7 +101,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("get/id/{roleId}")]
+        [Route("roleId")]
         [Permission(PermissionValue.SystemViewGroups)]
         [ProducesResponseType(typeof(RoleModel), 200)]
         public async Task<IActionResult> GetRoleById([FromRoute] Guid roleId)

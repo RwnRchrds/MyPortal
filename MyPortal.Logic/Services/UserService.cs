@@ -36,7 +36,7 @@ namespace MyPortal.Logic.Services
         private readonly SignInManager<User> _signInManager;
         private readonly IUserClaimsPrincipalFactory<User> _claimsPrincipalFactory;
 
-        public UserService(ClaimsPrincipal user, UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager, IUserClaimsPrincipalFactory<User> claimsPrincipalFactory) : base(user)
+        public UserService(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager, IUserClaimsPrincipalFactory<User> claimsPrincipalFactory)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -44,14 +44,42 @@ namespace MyPortal.Logic.Services
             _claimsPrincipalFactory = claimsPrincipalFactory;
         }
 
-        public async Task<IEnumerable<PermissionModel>> GetPermissions(Guid userId)
+        public async Task<IEnumerable<PermissionModel>> GetPermissionsByUser(Guid userId)
         {
-            var permissionValues = await GetPermissionValues(userId);
+            var permissionValues = await GetPermissionValuesByUser(userId);
 
-            return new List<PermissionModel>();
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var permissions = await unitOfWork.Permissions.GetPermissionsByValues(permissionValues);
+
+                return permissions.Select(p => new PermissionModel(p)).ToList();
+            }
         }
 
-        public async Task<IEnumerable<int>> GetPermissionValues(Guid userId)
+        public async Task<bool> UserHasPermission(Guid userId, PermissionRequirement requirement,
+            params PermissionValue[] permissionValues)
+        {
+            var userPermValues = (await GetPermissionValuesByUser(userId)).ToList();
+
+            foreach (var permissionValue in permissionValues)
+            {
+                if (userPermValues.Contains((int)permissionValue))
+                {
+                    if (requirement == PermissionRequirement.RequireAny)
+                    {
+                        return true;
+                    }
+                }
+                else if (requirement == PermissionRequirement.RequireAll)
+                {
+                    return false;
+                }
+            }
+
+            return requirement == PermissionRequirement.RequireAll;
+        }
+
+        public async Task<IEnumerable<int>> GetPermissionValuesByUser(Guid userId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -96,7 +124,7 @@ namespace MyPortal.Logic.Services
 
                 response.DisplayName = userModel.GetDisplayName(NameFormat.FullNameNoTitle, true, false);
                 response.ProfileImage = await userModel.GetProfileImageAsBase64(unitOfWork);
-                response.Permissions = (await GetPermissionValues(userId)).ToArray();
+                response.Permissions = (await GetPermissionValuesByUser(userId)).ToArray();
             }
 
             return response;

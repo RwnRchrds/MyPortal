@@ -84,9 +84,5 @@ namespace MyPortal.Logic.Services
                 }
             }
         }
-
-        public ContactService(ClaimsPrincipal user) : base(user)
-        {
-        }
     }
 }

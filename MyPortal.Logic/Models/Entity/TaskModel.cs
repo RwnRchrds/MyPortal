@@ -25,6 +25,7 @@ namespace MyPortal.Logic.Models.Entity
             Title = model.Title;
             Description = model.Description;
             Completed = model.Completed;
+            AllowEdit = model.AllowEdit;
             System = model.System;
 
             if (model.AssignedTo != null)
@@ -63,6 +64,9 @@ namespace MyPortal.Logic.Models.Entity
         public string Description { get; set; }
 
         public bool Completed { get; set; }
+
+        // Allow the assignee to edit the task
+        public bool AllowEdit { get; set; }
         public bool System { get; set; }
         
         public virtual PersonModel AssignedTo { get; set; }

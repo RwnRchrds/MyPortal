@@ -53,7 +53,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("get")]
+        [Route("")]
         [Permission(PermissionValue.SystemViewUsers)]
         [ProducesResponseType(typeof(IEnumerable<UserModel>), 200)]
         public async Task<IActionResult> GetUsers([FromQuery] string username)
@@ -71,7 +71,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("get/id/{userId}")]
+        [Route("{userId}")]
         [Permission(PermissionValue.SystemViewUsers)]
         [ProducesResponseType(typeof(UserModel), 200)]
         public async Task<IActionResult> GetUserById([FromRoute] Guid userId)
@@ -94,7 +94,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("roles/get/{userId}")]
+        [Route("roles/user/{userId}")]
         [ProducesResponseType(typeof(IEnumerable<RoleModel>), 200)]
         public async Task<IActionResult> GetUserRoles([FromRoute] Guid userId)
         {

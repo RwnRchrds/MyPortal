@@ -34,9 +34,5 @@ namespace MyPortal.Logic.Services
                 return Convert.ToInt32(databaseVersion.Setting);
             }
         }
-
-        public SystemSettingService(ClaimsPrincipal user) : base(user)
-        {
-        }
     }
 }

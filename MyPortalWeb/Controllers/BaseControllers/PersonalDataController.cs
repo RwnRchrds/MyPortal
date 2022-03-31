@@ -16,12 +16,9 @@ namespace MyPortalWeb.Controllers.BaseControllers
         protected IStudentService StudentService;
         protected IPersonService PersonService;
         
-        protected async Task<bool> AuthorisePerson(Guid requestedPersonId, PersonSearchResultModel person = null)
+        protected async Task<bool> CanAccessPerson(Guid requestedPersonId)
         {
-            if (person == null)
-            {
-                person = await PersonService.GetPersonWithTypes(requestedPersonId);   
-            }
+            var person = await PersonService.GetPersonWithTypes(requestedPersonId);
 
             if (person == null)
             {

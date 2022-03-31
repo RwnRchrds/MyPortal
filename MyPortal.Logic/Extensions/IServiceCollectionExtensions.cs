@@ -65,14 +65,13 @@ namespace MyPortal.Logic.Extensions
             services.AddScoped<ICalendarService, CalendarService>();
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<ICurriculumService, CurriculumService>();
-            services.AddScoped<IDirectoryService, DirectoryService>();
             services.AddScoped<IDocumentService, DocumentService>();
-            services.AddScoped<IHouseService, HouseService>();
+            services.AddScoped<IExamService, ExamService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ILogNoteService, LogNoteService>();
             services.AddScoped<IParentEveningService, ParentEveningService>();
+            services.AddScoped<IPastoralService, PastoralService>();
             services.AddScoped<IPersonService, PersonService>();
-            services.AddScoped<IRegGroupService, RegGroupService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<ISchoolService, SchoolService>();
             services.AddScoped<ISenService, SenService>();
@@ -81,7 +80,6 @@ namespace MyPortal.Logic.Extensions
             services.AddScoped<ISystemSettingService, SystemSettingService>();
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IYearGroupService, YearGroupService>();
 
             if (Configuration.Instance.FileProvider == FileProvider.Local)
             {

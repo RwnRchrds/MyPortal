@@ -58,6 +58,8 @@ namespace MyPortal.Logic.Models.Entity
 
         public UserModel CreatedBy { get; set; }
         public DirectoryModel Directory { get; set; }
+
+        public bool Expired => ExpireDate <= DateTime.Now;
         
         public async Task Load(IUnitOfWork unitOfWork)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using MyPortal.Database.Models.QueryResults.Person;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
@@ -66,6 +67,16 @@ namespace MyPortal.Logic.Services
             }
         }
 
+        public async Task<PersonSearchResultModel> GetPersonWithTypesByDirectory(Guid directoryId)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var result = await unitOfWork.People.GetPersonWithTypesByDirectoryId(directoryId);
+
+                return new PersonSearchResultModel(result);
+            }
+        }
+
         public async Task<PersonModel> GetByUserId(Guid userId, bool throwIfNotFound = true)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
@@ -79,10 +90,6 @@ namespace MyPortal.Logic.Services
 
                 return new PersonModel(person);
             }
-        }
-
-        public PersonService(ClaimsPrincipal user) : base(user)
-        {
         }
     }
 }

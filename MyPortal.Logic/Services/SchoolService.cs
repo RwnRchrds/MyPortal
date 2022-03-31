@@ -1,9 +1,12 @@
-﻿using System.Security.Claims;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Services
 {
@@ -25,10 +28,6 @@ namespace MyPortal.Logic.Services
                 await CacheHelper.StringCache.GetOrCreate(CacheKeys.LocalSchoolName, GetLocalSchoolNameFromDb);
 
             return localSchoolName;
-        }
-
-        public SchoolService(ClaimsPrincipal user) : base(user)
-        {
         }
     }
 }

@@ -8,6 +8,6 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IPermissionRepository : IReadRepository<Permission>
     {
-        
+        Task<IEnumerable<Permission>> GetPermissionsByValues(IEnumerable<int> permissionValues);
     }
 }

@@ -103,9 +103,8 @@ namespace MyPortal.Logic.Services
                             {
                                 Description = "School Holiday",
                                 EventTypeId = EventTypes.SchoolHoliday,
-                                IsAllDay = true,
                                 StartTime = schoolHoliday.Date,
-                                EndTime = schoolHoliday.Date
+                                EndTime = schoolHoliday.GetEndOfDay()
                             });
                         }
 
@@ -212,10 +211,6 @@ namespace MyPortal.Logic.Services
             {
                 return await unitOfWork.AcademicYears.IsLocked(academicYearId);
             }
-        }
-
-        public AcademicYearService(ClaimsPrincipal user) : base(user)
-        {
         }
     }
 }

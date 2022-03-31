@@ -227,9 +227,5 @@ namespace MyPortal.Logic.Services
                 return new AttendanceWeekModel(week);
             }
         }
-
-        public AttendanceService(ClaimsPrincipal user) : base(user)
-        {
-        }
     }
 }

@@ -21,9 +21,5 @@ namespace MyPortal.Logic.Services
                 return giftedTalented.Select(gt => new GiftedTalentedModel(gt));
             }
         }
-
-        public SenService(ClaimsPrincipal user) : base(user)
-        {
-        }
     }
 }

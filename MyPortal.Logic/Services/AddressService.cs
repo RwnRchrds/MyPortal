@@ -20,9 +20,5 @@ namespace MyPortal.Logic.Services
                 return addresses.Select(a => new AddressModel(a)).ToList();
             }
         }
-
-        public AddressService(ClaimsPrincipal user) : base(user)
-        {
-        }
     }
 }

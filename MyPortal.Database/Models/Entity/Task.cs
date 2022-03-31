@@ -38,8 +38,11 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 9)]
         public bool Completed { get; set; }
-
+        
         [Column(Order = 10)]
+        public bool AllowEdit { get; set; }
+
+        [Column(Order = 11)]
         public bool System { get; set; }
         
         public virtual Person AssignedTo { get; set; }

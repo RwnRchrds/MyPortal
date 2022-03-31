@@ -16,7 +16,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<AchievementModel> GetAchievementById(Guid achievementId);
         Task<int> GetAchievementPointsByStudent(Guid studentId, Guid academicYearId);
         Task<int> GetAchievementCountByStudent(Guid studentId, Guid academicYearId);
-        Task CreateAchievement(params CreateAchievementModel[] achievements);
+        Task CreateAchievement(Guid userId, params CreateAchievementModel[] achievements);
         Task UpdateAchievement(params UpdateAchievementModel[] achievements);
         Task DeleteAchievement(params Guid[] achievementIds);
         Task<IEnumerable<AchievementTypeModel>> GetAchievementTypes();
@@ -28,7 +28,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IncidentModel> GetIncidentById(Guid incidentId);
         Task<int> GetBehaviourPointsByStudent(Guid studentId, Guid academicYearId);
         Task<int> GetBehaviourCountByStudent(Guid studentId, Guid academicYearId);
-        Task CreateIncident(params CreateIncidentModel[] incidents);
+        Task CreateIncident(Guid userId, params CreateIncidentModel[] incidents);
         Task UpdateIncident(params UpdateIncidentModel[] incidents);
         Task DeleteIncident(params Guid[] incidentIds);
         Task<IEnumerable<IncidentTypeModel>> GetIncidentTypes();
@@ -40,9 +40,9 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IEnumerable<DetentionModel>> Get(DetentionSearchOptions searchOptions);
         Task<DetentionModel> GetById(Guid detentionId);
         Task<DetentionModel> GetByIncident(Guid incidentId);
-        Task Create(params CreateDetentionRequest[] detentionModels);
-        Task Update(params UpdateDetentionRequest[] detentionModels);
-        Task Delete(params Guid[] detentionIds);
+        Task CreateDetention(params CreateDetentionRequest[] detentionModels);
+        Task UpdateDetention(params UpdateDetentionRequest[] detentionModels);
+        Task DeleteDetention(params Guid[] detentionIds);
         Task AddStudent(Guid detentionId, Guid incidentId);
         Task RemoveStudent(Guid incidentDetentionId);
         #endregion

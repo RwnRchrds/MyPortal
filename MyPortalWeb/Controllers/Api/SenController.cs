@@ -12,7 +12,7 @@ using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
 {
-    [Route("api/SEND")]
+    [Route("api/send")]
     public class SenController : BaseApiController
     {
         private ISenService _senService;

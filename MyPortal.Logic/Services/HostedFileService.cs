@@ -16,7 +16,7 @@ namespace MyPortal.Logic.Services
     {
         private readonly IHostedFileProvider _fileProvider;
 
-        public HostedFileService(ClaimsPrincipal user, IHostedFileProvider fileProvider) : base(user) 
+        public HostedFileService(IHostedFileProvider fileProvider) 
         {
             _fileProvider = fileProvider;
         }

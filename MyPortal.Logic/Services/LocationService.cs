@@ -21,9 +21,5 @@ namespace MyPortal.Logic.Services
                 return locations.Select(l => new LocationModel(l));
             }
         }
-
-        public LocationService(ClaimsPrincipal user) : base(user)
-        {
-        }
     }
 }

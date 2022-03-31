@@ -113,13 +113,14 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateEvent(params CreateEventModel[] models)
+        public async Task CreateEvent(Guid userId, params CreateEventModel[] models)
         {
             var eventTypes = (await GetEventTypes()).ToArray();
-            var user = await GetCurrentUser();
 
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork()) 
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
+                var user = await unitOfWork.Users.GetById(userId);
+                
                 foreach (var model in models)
                 {
                     var eventType = eventTypes.FirstOrDefault(t => t.Id == model.EventTypeId);
@@ -143,7 +144,6 @@ namespace MyPortal.Logic.Services
                         Location = model.Location,
                         StartTime = model.StartTime,
                         EndTime = model.EndTime,
-                        IsAllDay = model.IsAllDay,
                         IsPublic = model.IsPublic
                     };
 
@@ -194,7 +194,6 @@ namespace MyPortal.Logic.Services
                     eventInDb.Location = model.Location;
                     eventInDb.StartTime = model.StartTime;
                     eventInDb.EndTime = model.EndTime;
-                    eventInDb.IsAllDay = model.IsAllDay;
                     eventInDb.IsPublic = model.IsPublic;
 
                     await unitOfWork.DiaryEvents.Update(eventInDb);
@@ -244,10 +243,6 @@ namespace MyPortal.Logic.Services
 
                 await unitOfWork.SaveChangesAsync();
             }
-        }
-
-        public CalendarService(ClaimsPrincipal user) : base(user)
-        {
         }
     }
 }

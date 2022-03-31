@@ -8,7 +8,9 @@ using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
@@ -61,10 +63,8 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateAchievement(params CreateAchievementModel[] requests)
+        public async Task CreateAchievement(Guid userId, params CreateAchievementModel[] requests)
         {
-            var user = await GetCurrentUser();
-            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 foreach (var request in requests)
@@ -80,7 +80,7 @@ namespace MyPortal.Logic.Services
                         Comments = request.Comments,
                         OutcomeId = request.OutcomeId,
                         Points = request.Points,
-                        CreatedById = user.Id.Value,
+                        CreatedById = userId,
                         CreatedDate = DateTime.Now
                     };
 
@@ -196,10 +196,8 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateIncident(params CreateIncidentModel[] incidents)
+        public async Task CreateIncident(Guid userId, params CreateIncidentModel[] incidents)
         {
-            var user = await GetCurrentUser();
-            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 foreach (var incidentModel in incidents)
@@ -212,7 +210,7 @@ namespace MyPortal.Logic.Services
                         LocationId = incidentModel.LocationId,
                         OutcomeId = incidentModel.OutcomeId,
                         StatusId = incidentModel.StatusId,
-                        CreatedById = user.Id.Value,
+                        CreatedById = userId,
                         StudentId = incidentModel.StudentId,
                         Comments = incidentModel.Comments,
                         AcademicYearId = incidentModel.AcademicYearId
@@ -320,7 +318,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Create(params CreateDetentionRequest[] detentionModels)
+        public async Task CreateDetention(params CreateDetentionRequest[] detentionModels)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -341,13 +339,39 @@ namespace MyPortal.Logic.Services
                     };
 
                     unitOfWork.Detentions.Create(detention);
+
+                    
+                    DateTime? nextOccurrence = model.StartTime.GetNextOccurrence(model.Frequency);
+                    TimeSpan duration = model.EndTime - model.StartTime;
+                    
+                    while (nextOccurrence != null && nextOccurrence.Value < model.LastOccurrence)
+                    {
+                        var nextDetention = new Detention
+                        {
+                            DetentionTypeId = model.DetentionTypeId,
+                            SupervisorId = model.SameSupervisor ? model.SupervisorId : null,
+                            Event = new DiaryEvent
+                            {
+                                StartTime = nextOccurrence.Value,
+                                EndTime = nextOccurrence.Value.Add(duration),
+                                RoomId = model.RoomId,
+                                EventTypeId = EventTypes.Detention,
+                                Subject = "Detention"
+                            }
+                        };
+                        
+                        unitOfWork.Detentions.Create(nextDetention);
+                        await unitOfWork.BatchSaveChangesAsync();
+
+                        nextOccurrence = nextOccurrence.Value.GetNextOccurrence(model.Frequency);
+                    }
                 }
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task Update(params UpdateDetentionRequest[] detentionModels)
+        public async Task UpdateDetention(params UpdateDetentionRequest[] detentionModels)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -367,7 +391,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Delete(params Guid[] detentionIds)
+        public async Task DeleteDetention(params Guid[] detentionIds)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -411,10 +435,6 @@ namespace MyPortal.Logic.Services
 
                 await unitOfWork.SaveChangesAsync();
             }
-        }
-
-        public BehaviourService(ClaimsPrincipal user) : base(user)
-        {
         }
     }
 }

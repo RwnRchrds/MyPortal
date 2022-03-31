@@ -1,17 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Enums;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class DiaryEventModel : BaseModel, ILoadable
+    public class DiaryEventModel : BaseModel, ILoadable, ICloneable
     {
+        private DateTime _startTime;
+        private DateTime _endTime;
+
+        private DiaryEventModel()
+        {
+            
+        }
+        
         public DiaryEventModel(DiaryEvent model) : base(model)
         {
             LoadFromModel(model);
@@ -26,7 +37,6 @@ namespace MyPortal.Logic.Models.Entity
             Location = model.Location;
             StartTime = model.StartTime;
             EndTime = model.EndTime;
-            IsAllDay = model.IsAllDay;
             IsPublic = model.IsPublic;
 
             if (model.EventType != null)
@@ -38,6 +48,50 @@ namespace MyPortal.Logic.Models.Entity
             {
                 Room = new RoomModel(model.Room);
             }
+        }
+
+        public IEnumerable<DiaryEventModel> CreateSeries(EventFrequency frequency, DateTime endDate)
+        {
+            var series = new List<DiaryEventModel>();
+            
+            series.Add(this);
+
+            DateTime? nextStartTime = StartTime.GetNextOccurrence(frequency);
+            TimeSpan duration = EndTime - StartTime;
+
+            while (nextStartTime.HasValue && nextStartTime <= endDate)
+            {
+                var newEvent = (DiaryEventModel) Clone();
+                newEvent.StartTime = nextStartTime.Value;
+                newEvent.EndTime = nextStartTime.Value.Add(duration);
+                series.Add(newEvent);
+
+                nextStartTime = nextStartTime.Value.GetNextOccurrence(frequency);
+            }
+
+            return series;
+        }
+
+        public IEnumerable<DiaryEventModel> CreateSeries(WeeklyPatternModel weeklyPattern, DateTime endDate)
+        {
+            var series = new List<DiaryEventModel>();
+            
+            series.Add(this);
+
+            DateTime? nextStartTime = StartTime.GetNextOccurrence(weeklyPattern);
+            TimeSpan duration = EndTime - StartTime;
+
+            while (nextStartTime.HasValue && nextStartTime <= endDate)
+            {
+                var newEvent = (DiaryEventModel)Clone();
+                newEvent.StartTime = nextStartTime.Value;
+                newEvent.EndTime = nextStartTime.Value.Add(duration);
+                series.Add(newEvent);
+
+                nextStartTime = nextStartTime.Value.GetNextOccurrence(weeklyPattern);
+            }
+
+            return series;
         }
 
         internal async Task<bool> CanEdit(IUnitOfWork unitOfWork, Guid personId)
@@ -70,12 +124,20 @@ namespace MyPortal.Logic.Models.Entity
         
         [StringLength(256)]
         public string Location { get; set; }
-        
-        public DateTime StartTime { get; set; }
-        
-        public DateTime EndTime { get; set; }
-        
-        public bool IsAllDay { get; set; }
+
+        public DateTime StartTime
+        {
+            get => _startTime;
+            set => _startTime = value;
+        }
+
+        public DateTime EndTime
+        {
+            get => _endTime;
+            set => _endTime = value;
+        }
+
+        public bool IsAllDay => (_startTime - _endTime).Ticks == (TimeSpan.TicksPerDay - 1);
 
         public bool IsPublic { get; set; }
 
@@ -89,6 +151,21 @@ namespace MyPortal.Logic.Models.Entity
             
                 LoadFromModel(model);   
             }
+        }
+
+        public object Clone()
+        {
+            return new DiaryEventModel
+            {
+                EventTypeId = EventTypeId,
+                RoomId = RoomId,
+                Subject = Subject,
+                Description = Description,
+                Location = Location,
+                StartTime = StartTime,
+                EndTime = EndTime,
+                IsPublic = IsPublic
+            };
         }
     }
 }

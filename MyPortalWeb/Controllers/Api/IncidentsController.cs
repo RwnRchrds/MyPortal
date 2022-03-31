@@ -34,10 +34,10 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("id", Name = "ApiIncidentGetById")]
+        [Route("{incidentId}", Name = "ApiIncidentGetById")]
         [Permission(PermissionValue.BehaviourViewIncidents)]
         [ProducesResponseType(typeof(IncidentModel), 200)]
-        public async Task<IActionResult> GetById(Guid incidentId)
+        public async Task<IActionResult> GetById([FromRoute] Guid incidentId)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace MyPortalWeb.Controllers.Api
                 
                 var student = await StudentService.GetById(incident.StudentId);
 
-                if (await AuthorisePerson(student.PersonId))
+                if (await CanAccessPerson(student.PersonId))
                 {
                     return Ok(incident);
                 }
@@ -59,16 +59,16 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("student", Name = "ApiIncidentGetByStudent")]
+        [Route("student/{studentId}", Name = "ApiIncidentGetByStudent")]
         [Permission(PermissionValue.BehaviourViewIncidents)]
         [ProducesResponseType(typeof(IEnumerable<IncidentSummaryModel>), 200)]
-        public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
+        public async Task<IActionResult> GetByStudent([FromRoute] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             try
             {
                 var student = await StudentService.GetById(studentId);
                 
-                if (await AuthorisePerson(student.PersonId))
+                if (await CanAccessPerson(student.PersonId))
                 {
                     var fromAcademicYearId = academicYearId ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id.Value;
 
@@ -94,7 +94,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                await _behaviourService.CreateIncident(model);
+                var user = await GetLoggedInUser();
+                
+                await _behaviourService.CreateIncident(user.Id.Value, model);
 
                 return Ok();
             }
@@ -126,10 +128,9 @@ namespace MyPortalWeb.Controllers.Api
         [HttpDelete]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.BehaviourEditIncidents)]
-        [Route("delete", Name = "ApiIncidentDelete")]
+        [Route("delete/{incidentId}", Name = "ApiIncidentDelete")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Delete([FromQuery] Guid incidentId)
-        {
+        public async Task<IActionResult> Delete([FromRoute] Guid incidentId) {
             try
             {
                 await _behaviourService.DeleteIncident(incidentId);

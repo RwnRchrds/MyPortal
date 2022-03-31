@@ -113,7 +113,6 @@ namespace MyPortal.Database.Repositories
             diaryEvent.Location = entity.Location;
             diaryEvent.StartTime = entity.StartTime;
             diaryEvent.EndTime = entity.EndTime;
-            diaryEvent.IsAllDay = entity.IsAllDay;
             diaryEvent.IsPublic = entity.IsPublic;
         }
     }

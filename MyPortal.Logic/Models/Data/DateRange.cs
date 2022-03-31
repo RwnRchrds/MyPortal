@@ -31,7 +31,7 @@ namespace MyPortal.Logic.Models.Data
 
         public bool Overlaps(DateRange dateRange)
         {
-            return Start < dateRange.End && dateRange.Start < End;
+            return Start < dateRange.End || End > dateRange.Start;
         }
 
         public void Extend(int? days, int? hours = null, int? minutes = null)

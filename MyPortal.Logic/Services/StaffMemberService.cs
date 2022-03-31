@@ -81,9 +81,5 @@ namespace MyPortal.Logic.Services
                 return new StaffMemberModel(staffMember);
             }
         }
-
-        public StaffMemberService(ClaimsPrincipal user) : base(user)
-        {
-        }
     }
 }

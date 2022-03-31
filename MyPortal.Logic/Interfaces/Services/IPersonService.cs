@@ -14,6 +14,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<PersonModel> GetById(Guid personId);
         Dictionary<string, string> GetGenderOptions();
         Task<PersonSearchResultModel> GetPersonWithTypes(Guid personId);
+        Task<PersonSearchResultModel> GetPersonWithTypesByDirectory(Guid directoryId);
         Task<IEnumerable<PersonSearchResultModel>> GetPeopleWithTypes(PersonSearchOptions searchModel);
     }
 }

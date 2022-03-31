@@ -111,7 +111,7 @@ namespace MyPortal.Logic.Services
 
                     if (taskInDb.System)
                     {
-                        throw new LogicException("System entities cannot be modified.");
+                        throw new LogicException("Tasks of this type cannot be updated manually.");
                     }
 
                     taskInDb.Title = task.Title;
@@ -167,10 +167,6 @@ namespace MyPortal.Logic.Services
 
                 return tasks.Select(t => new TaskModel(t));
             }
-        }
-
-        public TaskService(ClaimsPrincipal user) : base(user)
-        {
         }
     }
 }

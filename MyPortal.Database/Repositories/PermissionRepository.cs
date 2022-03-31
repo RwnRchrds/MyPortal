@@ -45,5 +45,14 @@ namespace MyPortal.Database.Repositories
 
             return permissions;
         }
+
+        public async Task<IEnumerable<Permission>> GetPermissionsByValues(IEnumerable<int> permissionValues)
+        {
+            var query = GenerateQuery();
+
+            query.WhereIn($"{TblAlias}.Value", permissionValues);
+
+            return await ExecuteQuery(query);
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace MyPortal.Logic.Services
     {
         private readonly ILocalFileProvider _fileProvider;
 
-        public LocalFileService(ClaimsPrincipal user, ILocalFileProvider fileProvider) : base(user)
+        public LocalFileService(ILocalFileProvider fileProvider)
         {
             _fileProvider = fileProvider;
         }

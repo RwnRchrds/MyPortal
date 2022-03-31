@@ -32,7 +32,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("id")]
+        [Route("{logNoteId}")]
         [Permission(PermissionValue.StudentViewStudentLogNotes)]
         [ProducesResponseType(typeof(LogNoteModel), 200)]
         public async Task<IActionResult> GetById([FromQuery] Guid logNoteId)
@@ -43,7 +43,7 @@ namespace MyPortalWeb.Controllers.Api
 
                 var student = await StudentService.GetById(logNote.StudentId);
 
-                if (await AuthorisePerson(student.PersonId))
+                if (await CanAccessPerson(student.PersonId))
                 {
                     return Ok(logNote);
                 }
@@ -74,16 +74,16 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("student")]
+        [Route("student/{studentId}")]
         [Permission(PermissionValue.StudentViewStudentLogNotes)]
         [ProducesResponseType(typeof(IEnumerable<LogNoteModel>), 200)]
-        public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
+        public async Task<IActionResult> GetByStudent([FromRoute] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             try
             {
                 var student = await StudentService.GetById(studentId);
 
-                if (await AuthorisePerson(student.PersonId))
+                if (await CanAccessPerson(student.PersonId))
                 {
                     if (academicYearId == null || academicYearId == Guid.Empty)
                     {
@@ -114,7 +114,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                await _logNoteService.Create(model);
+                var user = await GetLoggedInUser();
+                
+                await _logNoteService.Create(user.Id.Value, model);
 
                 return Ok();
             }

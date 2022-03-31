@@ -32,10 +32,10 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("id", Name = "ApiAchievementGetById")]
+        [Route("{achievementId}", Name = "ApiAchievementGetById")]
         [Permission(PermissionValue.BehaviourViewAchievements)]
         [ProducesResponseType(typeof(AchievementModel), 200)]
-        public async Task<IActionResult> GetById([FromQuery] Guid achievementId)
+        public async Task<IActionResult> GetById([FromRoute] Guid achievementId)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace MyPortalWeb.Controllers.Api
 
                 var student = await StudentService.GetById(achievement.StudentId);
 
-                if (await AuthorisePerson(student.PersonId))
+                if (await CanAccessPerson(student.PersonId))
                 {
                     return Ok(achievement);
                 }
@@ -57,16 +57,16 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("student", Name = "ApiAchievementGetByStudent")]
+        [Route("student/{studentId}", Name = "ApiAchievementGetByStudent")]
         [Permission(PermissionValue.BehaviourViewAchievements)]
         [ProducesResponseType(typeof(AchievementSummaryModel), 200)]
-        public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
+        public async Task<IActionResult> GetByStudent([FromRoute] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             try
             {
                 var student = await StudentService.GetById(studentId);
                 
-                if (await AuthorisePerson(student.PersonId))
+                if (await CanAccessPerson(student.PersonId))
                 {
                     var fromAcademicYearId = academicYearId ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id.Value;
 
@@ -93,7 +93,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                await _behaviourService.CreateAchievement(model);
+                var user = await GetLoggedInUser();
+                
+                await _behaviourService.CreateAchievement(user.Id.Value, model);
 
                 return Ok();
             }
@@ -125,9 +127,9 @@ namespace MyPortalWeb.Controllers.Api
         [HttpDelete]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.BehaviourEditAchievements)]
-        [Route("delete", Name = "ApiAchievementDelete")]
+        [Route("delete/{achievementId}", Name = "ApiAchievementDelete")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Delete([FromQuery] Guid achievementId)
+        public async Task<IActionResult> Delete([FromRoute] Guid achievementId)
         {
             try
             {
