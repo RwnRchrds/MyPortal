@@ -25,7 +25,6 @@ namespace MyPortal.Logic.Models.Entity
             CreatedById = model.CreatedById;
             CreatedDate = model.CreatedDate;
             Restricted = model.Restricted;
-            Confidential = model.Confidential;
             Deleted = model.Deleted;
             FileId = model.FileId;
 
@@ -51,8 +50,6 @@ namespace MyPortal.Logic.Models.Entity
         }
 
         public Guid? FileId { get; set; }
-
-        public bool Confidential { get; set; }
 
         public Guid TypeId { get; set; }
 

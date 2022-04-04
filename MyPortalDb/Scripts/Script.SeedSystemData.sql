@@ -360,11 +360,8 @@ USING (VALUES
 ('F9F0F415-B47C-4C53-B897-D5964FBC6376', '3426F5C5-FF48-EA11-AEC3-10604B88AE3D', 'Staff', 'Staff Settings', 121),
 ('F9F0F415-B47C-4C53-B897-D5964FBC6377', '3426F5C5-FF48-EA11-AEC3-10604B88AE3D', 'SEN', 'SEN Settings', 122),
 
---System -> Documents
-('F9F0F415-B47C-4C53-B897-D5964FBC637B', '3426F5C5-FF48-EA11-AEC3-10604B88AE3E', 'View Confidential', 'View Confidential Documents', 123),
-
 --Attendance -> Attendance Codes
-('F9F0F415-B47C-4C53-B897-D5964FBC637C', '3426F5C5-FF48-EA11-AEC3-10604B88AE16', 'Use Restricted', 'Use Restricted Attendance Codes', 124)
+('F9F0F415-B47C-4C53-B897-D5964FBC637C', '3426F5C5-FF48-EA11-AEC3-10604B88AE16', 'Use Restricted', 'Use Restricted Attendance Codes', 123)
 )
     AS Source (Id, AreaId, ShortDescription, FullDescription, Value)
 ON Target.Id = Source.Id

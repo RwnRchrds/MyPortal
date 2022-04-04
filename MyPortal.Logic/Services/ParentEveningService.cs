@@ -75,9 +75,5 @@ namespace MyPortal.Logic.Services
 
             return templates;
         }
-
-        public ParentEveningService(ClaimsPrincipal user) : base(user)
-        {
-        }
     }
 }

@@ -38,15 +38,11 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 7)]
         public DateTime EndTime { get; set; }
 
-        [Column(Order = 8)]
-        public bool IsAllDay { get; set; }
-
         [Column(Order = 9)]
         public bool IsPublic { get; set; }
         
         
         public virtual DiaryEventType EventType { get; set; }
-
         public virtual Room Room { get; set; }
         public virtual ICollection<Detention> Detentions { get; set; }
         public virtual ICollection<ParentEvening> ParentEvenings { get; set; }

@@ -44,16 +44,16 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("id")]
+        [Route("{studentId}")]
         [Permission(PermissionValue.StudentViewStudentDetails)]
         [ProducesResponseType(typeof(StudentModel), 200)]
-        public async Task<IActionResult> GetById([FromQuery] Guid studentId)
+        public async Task<IActionResult> GetById([FromRoute] Guid studentId)
         {
             try
             {
                 var student = await StudentService.GetById(studentId);
                 
-                if (await AuthorisePerson(student.PersonId))
+                if (await CanAccessPerson(student.PersonId))
                 {
                     return Ok(student);
                 }
@@ -67,16 +67,16 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("stats")]
+        [Route("stats/{studentId}")]
         [Permission(PermissionValue.StudentViewStudentDetails)]
         [ProducesResponseType(typeof(StudentStatsModel), 200)]
-        public async Task<IActionResult> GetStatsById([FromQuery] Guid studentId, [FromQuery] Guid? academicYearId)
+        public async Task<IActionResult> GetStatsById([FromRoute] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             try
             {
                 var student = await StudentService.GetById(studentId);
                 
-                if (await AuthorisePerson(student.PersonId))
+                if (await CanAccessPerson(student.PersonId))
                 {
                     if (academicYearId == null || academicYearId == Guid.Empty)
                     {

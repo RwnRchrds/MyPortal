@@ -42,10 +42,6 @@ namespace MyPortal.Database.Models.Entity
         // Only visible to staff users who have access to the directory
         [Column(Order = 8)]
         public bool Restricted { get; set; }
-        
-        // Only visible to people who have the ViewConfidentialDocuments permission
-        [Column(Order = 9)] 
-        public bool Confidential { get; set; }
 
         [Column(Order = 10)]
         public bool Deleted { get; set; }

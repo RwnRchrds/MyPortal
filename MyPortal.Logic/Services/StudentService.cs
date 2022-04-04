@@ -248,9 +248,5 @@ namespace MyPortal.Logic.Services
                 await unitOfWork.SaveChangesAsync();
             }
         }
-
-        public StudentService(ClaimsPrincipal user) : base(user)
-        {
-        }
     }
 }

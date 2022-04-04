@@ -53,10 +53,8 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Create(params CreateLogNoteModel[] logNoteObjects)
+        public async Task Create(Guid userId, params CreateLogNoteModel[] logNoteObjects)
         {
-            var user = await GetCurrentUser();
-            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 foreach (var logNoteObject in logNoteObjects)
@@ -71,7 +69,7 @@ namespace MyPortal.Logic.Services
                         Message = logNoteObject.Message,
                         StudentId = logNoteObject.StudentId,
                         CreatedDate = createDate,
-                        CreatedById = user.Id.Value,
+                        CreatedById = userId,
                         AcademicYearId = logNoteObject.AcademicYearId
                     };
 
@@ -124,10 +122,6 @@ namespace MyPortal.Logic.Services
 
                 await unitOfWork.SaveChangesAsync();
             }
-        }
-
-        public LogNoteService(ClaimsPrincipal user) : base(user)
-        {
         }
     }
 }

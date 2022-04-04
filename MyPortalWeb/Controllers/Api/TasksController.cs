@@ -4,15 +4,19 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Person.Tasks;
 using MyPortalWeb.Controllers.BaseControllers;
+using MyPortalWeb.Models;
 using MyPortalWeb.Models.Requests;
 
 namespace MyPortalWeb.Controllers.Api
@@ -32,22 +36,22 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("id/{taskId}")]
+        [Route("{taskId}")]
         [ProducesResponseType(typeof(TaskModel), 200)]
         public async Task<IActionResult> GetById([FromRoute] Guid taskId)
         {
             try
             {
-                var user = await UserService.GetUserByPrincipal(User);
-
                 var task = await _taskService.GetById(taskId);
 
-                if (await AuthorisePersonTasks(task.AssignedToId, user.Id.Value, false))
+                var accessResponse = await GetPermissionsForTasksPerson(task.AssignedToId, false);
+
+                if (accessResponse.CanAccess || accessResponse.IsOwner)
                 {
                     return Ok(task);
                 }
 
-                return Forbid();
+                return Error(HttpStatusCode.Forbidden, PermissionMessage);
             }
             catch (Exception e)
             {
@@ -62,9 +66,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var user = await UserService.GetUserByPrincipal(User);
+                var accessResponse = await GetPermissionsForTasksPerson(personId, false);
 
-                if (await AuthorisePersonTasks(personId, user.Id.Value, false))
+                if (accessResponse.CanAccess || accessResponse.IsOwner)
                 {
                     var tasks = (await _taskService.GetByPerson(personId, searchOptions)).ToArray();
 
@@ -108,11 +112,11 @@ namespace MyPortalWeb.Controllers.Api
                     return Error(HttpStatusCode.BadRequest, "Tasks of this type cannot be created manually.");
                 }
 
-                var user = await UserService.GetUserByPrincipal(User);
+                var user = await GetLoggedInUser();
 
-                var canCreate = await AuthorisePersonTasks(model.AssignedToId, user.Id.Value, true);
+                var accessResponse = await GetPermissionsForTasksPerson(model.AssignedToId, true);
 
-                if (canCreate)
+                if (accessResponse.CanAccess || accessResponse.IsOwner)
                 {
                     model.AssignedById = user.Id.Value;
 
@@ -121,7 +125,7 @@ namespace MyPortalWeb.Controllers.Api
                     return Ok();
                 }
 
-                return Forbid();
+                return Error(HttpStatusCode.Forbidden, "You do not have permission to create tasks for this person.");
             }
             catch (Exception e)
             {
@@ -136,19 +140,14 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var user = await UserService.GetUserByPrincipal(User);
-                var task = await _taskService.GetById(model.Id);
-
-                var canEdit = await AuthorisePersonTasks(task.AssignedToId, user.Id.Value, true);
-
-                if (canEdit)
+                if (await CanUpdateTask(model.Id))
                 {
                     await _taskService.Update(model);
 
-                    return Ok();
+                    return Ok();   
                 }
 
-                return Forbid();
+                return Error(HttpStatusCode.Forbidden, "You do not have permission to access this task");
             }
             catch (Exception e)
             {
@@ -163,17 +162,14 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var user = await UserService.GetUserByPrincipal(User);
-                var task = await _taskService.GetById(model.TaskId);
-
-                if (await AuthorisePersonTasks(task.AssignedToId, user.Id.Value, true))
+                if (await CanUpdateTask(model.TaskId))
                 {
                     await _taskService.SetCompleted(model.TaskId, model.Completed);
 
                     return Ok();
                 }
 
-                return Forbid();
+                return Error(HttpStatusCode.Forbidden, "You do not have permission to edit this task.");
             }
             catch (Exception e)
             {
@@ -182,15 +178,20 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpDelete]
-        [Route("delete")]
+        [Route("delete/{taskId}")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Delete([FromQuery] Guid taskId)
+        public async Task<IActionResult> Delete([FromRoute] Guid taskId)
         {
             try
             {
-                await _taskService.Delete(taskId);
+                if (await CanUpdateTask(taskId))
+                {
+                    await _taskService.Delete(taskId);
 
-                return Ok();
+                    return Ok();
+                }
+
+                return Error(HttpStatusCode.Forbidden, "You do not have permission to delete this task.");
             }
             catch (Exception e)
             {
@@ -198,53 +199,91 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        private async Task<bool> AuthorisePersonTasks(Guid personId, Guid userId, bool edit)
+        private async Task<bool> CanUpdateTask(Guid taskId)
         {
-            var personInDb = await PersonService.GetPersonWithTypes(personId);
+            var user = await GetLoggedInUser();
+            var task = await _taskService.GetById(taskId);
 
-            if (personInDb.PersonTypes.IsStudent)
+            var accessResponse = await GetPermissionsForTasksPerson(task.AssignedToId, true);
+
+            if (accessResponse.CanAccess)
             {
-                if (User.IsType(UserTypes.Student))
-                {
-                    if (await UserHasPermission(PermissionValue.StudentViewStudentTasks))
-                    {
-                        var student = await StudentService.GetByPersonId(personId);
-
-                        return await AuthorisePerson(student.PersonId, personInDb);
-                    }
-                }
-
-                else if (User.IsType(UserTypes.Staff))
-                {
-                    return await UserHasPermission(PermissionValue.StudentViewStudentTasks);
-                }
+                return true;
             }
 
-            else if (personInDb.PersonTypes.IsStaff)
+            if (accessResponse.IsOwner)
             {
-                if (edit && await UserHasPermission(PermissionValue.PeopleEditAllStaffTasks) ||
-                    await UserHasPermission(PermissionValue.PeopleViewAllStaffTasks))
-                {
-                    return true;
-                }
-
-                var taskStaffMember = await _staffMemberService.GetByPersonId(personId, false);
-                var userStaffMember = await _staffMemberService.GetByUserId(userId, false);
-
-                if (userStaffMember != null && taskStaffMember != null)
-                {
-                    if (taskStaffMember.Id == userStaffMember.Id)
-                    {
-                        return true;
-                    }
-
-                    return (edit && await UserHasPermission(PermissionValue.PeopleEditManagedStaffTasks) ||
-                            await UserHasPermission(PermissionValue.PeopleViewManagedStaffTasks)) &&
-                           await _staffMemberService.IsLineManager(taskStaffMember.Id.Value, userStaffMember.Id.Value);
-                }
+                return task.AssignedById == user.Id.Value || task.AllowEdit;
             }
 
             return false;
+        }
+
+        private async Task<TaskAccessResponse> GetPermissionsForTasksPerson(Guid personId, bool edit)
+        {
+            var response = new TaskAccessResponse();
+            
+            var user = await GetLoggedInUser();
+            
+            if (user.PersonId.Value == personId)
+            {
+                response.IsOwner = true;
+            }
+
+            var person = await PersonService.GetPersonWithTypes(personId);
+
+            if (person.PersonTypes.IsStaff)
+            {
+                var allStaffPermission =
+                    edit ? PermissionValue.PeopleEditAllStaffTasks : PermissionValue.PeopleViewAllStaffTasks;
+                var managedStaffPermission =
+                    edit ? PermissionValue.PeopleEditManagedStaffTasks : PermissionValue.PeopleViewManagedStaffTasks;
+                
+                if (await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
+                        allStaffPermission))
+                {
+                    response.CanAccess = true;
+                }
+
+                if (await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
+                        managedStaffPermission))
+                {
+                    if (user.PersonId.HasValue)
+                    {
+                        var staffMember = await _staffMemberService.GetByPersonId(person.Person.Id.Value);
+                        var userPerson = await _staffMemberService.GetByPersonId(user.PersonId.Value);
+
+                        if (staffMember != null && userPerson != null)
+                        {
+                            if (await _staffMemberService.IsLineManager(staffMember.Id.Value, userPerson.Id.Value))
+                            {
+                                response.CanAccess = true;
+                            }
+                        }
+                    }
+
+                }
+            }
+            
+            if (person.PersonTypes.IsContact)
+            {
+                var contactPermission =
+                    edit ? PermissionValue.PeopleEditContactTasks : PermissionValue.PeopleViewContactTasks;
+
+                response.CanAccess =
+                    await User.HasPermission(RoleService, PermissionRequirement.RequireAll, contactPermission);
+            }
+
+            if (person.PersonTypes.IsStudent)
+            {
+                var studentPermission =
+                    edit ? PermissionValue.StudentEditStudentTasks : PermissionValue.StudentViewStudentTasks;
+
+                response.CanAccess =
+                    await User.HasPermission(RoleService, PermissionRequirement.RequireAll, studentPermission);
+            }
+
+            return response;
         }
     }
 }

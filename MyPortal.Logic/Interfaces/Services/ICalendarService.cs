@@ -13,7 +13,7 @@ namespace MyPortal.Logic.Interfaces.Services
 
         Task<IEnumerable<CalendarEventModel>> GetCalendarEventsByPerson(Guid personId, DateRange dateRange);
 
-        Task CreateEvent(params CreateEventModel[] models);
+        Task CreateEvent(Guid userId, params CreateEventModel[] models);
 
         Task UpdateEvent(params UpdateEventModel[] models);
 

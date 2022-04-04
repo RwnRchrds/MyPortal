@@ -85,9 +85,5 @@ namespace MyPortal.Logic.Services
                 return generatedBills.Select(b => new BillModel(b));
             }
         }
-
-        public BillService(ClaimsPrincipal user) : base(user)
-        {
-        }
     }
 }

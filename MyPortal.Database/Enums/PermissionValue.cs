@@ -51,7 +51,7 @@ namespace MyPortal.Database.Enums
 
         AttendanceViewAttendanceMarks = 26,
         AttendanceEditAttendanceMarks = 27,
-        AttendanceUseRestrictedCodes = 124,
+        AttendanceUseRestrictedCodes = 123,
 
         #endregion
 
@@ -83,12 +83,6 @@ namespace MyPortal.Database.Enums
         CurriculumViewStudyTopics = 46,
         CurriculumEditStudyTopics = 47,
 
-        #endregion
-        
-        #region Documents
-        
-        ViewConfidentialDocuments = 123,
-        
         #endregion
 
         #region Finance

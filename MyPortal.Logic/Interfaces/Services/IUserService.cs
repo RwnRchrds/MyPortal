@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using MyPortal.Database.Enums;
 using MyPortal.Logic.Authentication;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin.Users;
 using MyPortal.Logic.Models.Requests.Auth;
@@ -28,8 +30,11 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal);
         Task<IEnumerable<RoleModel>> GetUserRoles(Guid userId);
         Task<IEnumerable<UserModel>> GetUsers(string usernameSearch);
-        Task<IEnumerable<PermissionModel>> GetPermissions(Guid userId);
-        Task<IEnumerable<int>> GetPermissionValues(Guid userId);
+        Task<IEnumerable<PermissionModel>> GetPermissionsByUser(Guid userId);
+        Task<IEnumerable<int>> GetPermissionValuesByUser(Guid userId);
+
+        Task<bool> UserHasPermission(Guid userId, PermissionRequirement requirement,
+            params PermissionValue[] permissionValues);
         Task<UserInfoResponseModel> GetUserInfo(Guid userId);
     }
 }

@@ -88,7 +88,14 @@ namespace MyPortal.Database.Repositories
 
             query.Where($"{TblAlias}.Id", personId);
 
-            IncludePersonTypes(query);
+            return (await ExecuteQueryWithTypes(query)).FirstOrDefault();
+        }
+
+        public async Task<PersonSearchResult> GetPersonWithTypesByDirectoryId(Guid directoryId)
+        {
+            var query = GenerateQuery();
+
+            query.Where($"{TblAlias}.DirectoryId", directoryId);
 
             return (await ExecuteQueryWithTypes(query)).FirstOrDefault();
         }
@@ -108,13 +115,13 @@ namespace MyPortal.Database.Repositories
 
             searchParams.ApplySearch(query, TblAlias);
 
-            IncludePersonTypes(query);
-
             return await ExecuteQueryWithTypes(query);
         }
 
         protected async Task<IEnumerable<PersonSearchResult>> ExecuteQueryWithTypes(Query query)
         {
+            IncludePersonTypes(query);
+            
             var sql = Compiler.Compile(query);
             
             var people = await Transaction.Connection.QueryAsync<Person, Ethnicity, Directory, Photo, PersonTypeIndicator, PersonSearchResult>(sql.Sql,
