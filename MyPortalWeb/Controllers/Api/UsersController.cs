@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -78,14 +79,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (await AuthoriseUser(userId))
-                {
-                    var user = await UserService.GetUserById(userId);
+                var user = await UserService.GetUserById(userId);
 
-                    return Ok(user);
-                }
-
-                return Forbid();
+                return Ok(user);
             }
             catch (Exception e)
             {
@@ -107,7 +103,7 @@ namespace MyPortalWeb.Controllers.Api
                     return Ok(roles);
                 }
 
-                return Forbid();
+                return PermissionError();
             }
             catch (Exception e)
             {
@@ -135,6 +131,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpDelete]
         [Route("delete/{userId}")]
+        [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
         {
