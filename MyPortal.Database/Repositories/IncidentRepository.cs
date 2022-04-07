@@ -28,9 +28,6 @@ namespace MyPortal.Database.Repositories
             JoinEntity(query, "Locations", "L", "LocationId");
             JoinEntity(query, "AcademicYears", "AY", "AcademicYearId");
             JoinEntity(query, "Users", "U", "CreatedById");
-            JoinEntity(query, "Students", "S", "StudentId");
-            JoinEntity(query, "BehaviourOutcomes", "BO", "OutcomeId");
-            JoinEntity(query, "BehaviourStatus", "BS", "StatusId");
 
             return query;
         }
@@ -41,8 +38,6 @@ namespace MyPortal.Database.Repositories
             query.SelectAllColumns(typeof(Location), "L");
             query.SelectAllColumns(typeof(AcademicYear), "AY");
             query.SelectAllColumns(typeof(User), "U");
-            query.SelectAllColumns(typeof(BehaviourOutcome), "BO");
-            query.SelectAllColumns(typeof(BehaviourStatus), "BS");
 
             return query;
         }
@@ -54,8 +49,7 @@ namespace MyPortal.Database.Repositories
             var incidents = await Transaction.Connection.QueryAsync(sql.Sql,
                 new[]
                 {
-                    typeof(Incident), typeof(IncidentType), typeof(Location), typeof(AcademicYear), typeof(User),
-                    typeof(BehaviourOutcome), typeof(BehaviourStatus)
+                    typeof(Incident), typeof(IncidentType), typeof(Location), typeof(AcademicYear), typeof(User)
                 },
                 objects =>
                 {
@@ -64,8 +58,6 @@ namespace MyPortal.Database.Repositories
                     var location = objects[2] as Location;
                     var academicYear = objects[3] as AcademicYear;
                     var user = objects[4] as User;
-                    var outcome = objects[5] as BehaviourOutcome;
-                    var status = objects[6] as BehaviourStatus;
 
                     if (incident != null)
                     {
@@ -73,8 +65,6 @@ namespace MyPortal.Database.Repositories
                         incident.Location = location;
                         incident.AcademicYear = academicYear;
                         incident.CreatedBy = user;
-                        incident.Outcome = outcome;
-                        incident.Status = status;
                     }
 
                     return incident;
@@ -83,35 +73,35 @@ namespace MyPortal.Database.Repositories
             return incidents;
         }
 
-        public async Task<IEnumerable<Incident>> GetByStudent(Guid studentId, Guid academicYearId)
-        {
-            var query = GenerateQuery();
+        // public async Task<IEnumerable<Incident>> GetByStudent(Guid studentId, Guid academicYearId)
+        // {
+        //     var query = GenerateQuery();
+        //
+        //     query.Where("Student.Id", studentId);
+        //     query.Where("AcademicYear.Id", academicYearId);
+        //
+        //     return await ExecuteQuery(query);
+        // }
 
-            query.Where("Student.Id", studentId);
-            query.Where("AcademicYear.Id", academicYearId);
-
-            return await ExecuteQuery(query);
-        }
-
-        public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
-        {
-            var query = GenerateQuery().AsCount();
-
-            query.Where("Incident.StudentId", studentId);
-            query.Where("Incident.AcademicYearId", academicYearId);
-
-            return await ExecuteQueryIntResult(query) ?? 0;
-        }
-
-        public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
-        {
-            var query = new Query(TblName).AsSum("Incident.Points");
-
-            query.Where("Incident.StudentId", studentId);
-            query.Where("Incident.AcademicYearId", academicYearId);
-
-            return await ExecuteQueryIntResult(query) ?? 0;
-        }
+        // public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
+        // {
+        //     var query = GenerateQuery().AsCount();
+        //
+        //     query.Where("Incident.StudentId", studentId);
+        //     query.Where("Incident.AcademicYearId", academicYearId);
+        //
+        //     return await ExecuteQueryIntResult(query) ?? 0;
+        // }
+        
+        // public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
+        // {
+        //     var query = new Query(TblName).AsSum("Incident.Points");
+        //
+        //     query.Where("Incident.StudentId", studentId);
+        //     query.Where("Incident.AcademicYearId", academicYearId);
+        //
+        //     return await ExecuteQueryIntResult(query) ?? 0;
+        // }
 
         public async Task Update(Incident entity)
         {
@@ -125,10 +115,6 @@ namespace MyPortal.Database.Repositories
             incident.Comments = entity.Comments;
             incident.BehaviourTypeId = entity.BehaviourTypeId;
             incident.LocationId = entity.LocationId;
-            incident.OutcomeId = entity.OutcomeId;
-            incident.StatusId = entity.StatusId;
-            incident.Comments = entity.Comments;
-            incident.Points = entity.Points;
         }
     }
 }

@@ -46,7 +46,7 @@ namespace MyPortalWeb.Extensions
                 })
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = "https://localhost:44313";
+                    options.Authority = config["MyPortal:Url"];
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateAudience = false,

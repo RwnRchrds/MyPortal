@@ -11,19 +11,19 @@ namespace MyPortal.Logic.Models.Entity
 {
     public class IncidentDetentionModel : BaseModel, ILoadable
     {
-        public IncidentDetentionModel(IncidentDetention model) : base(model)
+        public IncidentDetentionModel(StudentIncidentDetention model) : base(model)
         {
             LoadFromModel(model);
         }
 
-        private void LoadFromModel(IncidentDetention model)
+        private void LoadFromModel(StudentIncidentDetention model)
         {
-            IncidentId = model.IncidentId;
+            StudentIncidentId = model.StudentIncidentId;
             DetentionId = model.DetentionId;
 
-            if (model.Incident != null)
+            if (model.StudentIncident != null)
             {
-                Incident = new IncidentModel(model.Incident);
+                Incident = new StudentIncidentModel(model.StudentIncident);
             }
 
             if (model.Detention != null)
@@ -32,11 +32,11 @@ namespace MyPortal.Logic.Models.Entity
             }
         }
         
-        public Guid IncidentId { get; set; }
+        public Guid StudentIncidentId { get; set; }
 
         public Guid DetentionId { get; set; }
 
-        public virtual IncidentModel Incident { get; set; }
+        public virtual StudentIncidentModel Incident { get; set; }
         public virtual DetentionModel Detention { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {

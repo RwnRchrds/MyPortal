@@ -17,6 +17,7 @@ using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
 using MyPortal.Logic.Models.Requests.Behaviour.Detentions;
 using MyPortal.Logic.Models.Requests.Behaviour.Incidents;
+using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -156,23 +157,32 @@ namespace MyPortal.Logic.Services
             }
         }
         
-        public async Task<IEnumerable<IncidentModel>> GetIncidentsByStudent(Guid studentId, Guid academicYearId)
+        public async Task<IEnumerable<StudentIncidentSummaryModel>> GetIncidentsByStudent(Guid studentId, Guid academicYearId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var incidents = await unitOfWork.Incidents.GetByStudent(studentId, academicYearId);
+                var incidents = await unitOfWork.StudentIncidents.GetByStudent(studentId, academicYearId);
 
-                return incidents.Select(i => new IncidentModel(i));
+                var models = incidents.Select(i => new StudentIncidentModel(i));
+
+                var results = new List<StudentIncidentSummaryModel>();
+
+                foreach (var model in models)
+                {
+                    results.Add(await model.ToListModel(unitOfWork));
+                }
+
+                return results;
             }
         }
 
-        public async Task<IncidentModel> GetIncidentById(Guid incidentId)
+        public async Task<StudentIncidentModel> GetIncidentById(Guid incidentId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var incident = await unitOfWork.Incidents.GetById(incidentId);
+                var incident = await unitOfWork.StudentIncidents.GetById(incidentId);
 
-                return new IncidentModel(incident);
+                return new StudentIncidentModel(incident);
             }
         }
 
@@ -180,7 +190,7 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var points = await unitOfWork.Incidents.GetPointsByStudent(studentId, academicYearId);
+                var points = await unitOfWork.StudentIncidents.GetPointsByStudent(studentId, academicYearId);
 
                 return points;
             }
@@ -190,7 +200,7 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var count = await unitOfWork.Incidents.GetCountByStudent(studentId, academicYearId);
+                var count = await unitOfWork.StudentIncidents.GetCountByStudent(studentId, academicYearId);
 
                 return count;
             }
@@ -202,21 +212,24 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var incidentModel in incidents)
                 {
-                    var incident = new Incident
+                    var studentIncident = new StudentIncident
                     {
                         Points = incidentModel.Points,
-                        CreatedDate = DateTime.Now,
-                        BehaviourTypeId = incidentModel.BehaviourTypeId,
-                        LocationId = incidentModel.LocationId,
                         OutcomeId = incidentModel.OutcomeId,
                         StatusId = incidentModel.StatusId,
-                        CreatedById = userId,
                         StudentId = incidentModel.StudentId,
-                        Comments = incidentModel.Comments,
-                        AcademicYearId = incidentModel.AcademicYearId
+                        Incident = new Incident
+                        {
+                            CreatedDate = DateTime.Now,
+                            BehaviourTypeId = incidentModel.BehaviourTypeId,
+                            LocationId = incidentModel.LocationId,
+                            CreatedById = userId,
+                            Comments = incidentModel.Comments,
+                            AcademicYearId = incidentModel.AcademicYearId,
+                        }
                     };
 
-                    unitOfWork.Incidents.Create(incident);
+                    unitOfWork.StudentIncidents.Create(studentIncident);
                 }
 
                 await unitOfWork.SaveChangesAsync();
@@ -229,16 +242,16 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var incidentModel in incidents)
                 {
-                    var incidentInDb = await unitOfWork.Incidents.GetById(incidentModel.Id);
+                    var studentIncidentInDb = await unitOfWork.StudentIncidents.GetById(incidentModel.Id);
 
-                    incidentInDb.Points = incidentModel.Points;
-                    incidentInDb.BehaviourTypeId = incidentModel.BehaviourTypeId;
-                    incidentInDb.LocationId = incidentModel.LocationId;
-                    incidentInDb.OutcomeId = incidentModel.OutcomeId;
-                    incidentInDb.StatusId = incidentModel.StatusId;
-                    incidentInDb.Comments = incidentModel.Comments;
+                    studentIncidentInDb.Points = incidentModel.Points;
+                    studentIncidentInDb.Incident.BehaviourTypeId = incidentModel.BehaviourTypeId;
+                    studentIncidentInDb.Incident.LocationId = incidentModel.LocationId;
+                    studentIncidentInDb.OutcomeId = incidentModel.OutcomeId;
+                    studentIncidentInDb.StatusId = incidentModel.StatusId;
+                    studentIncidentInDb.Incident.Comments = incidentModel.Comments;
 
-                    await unitOfWork.Incidents.Update(incidentInDb);
+                    await unitOfWork.StudentIncidents.Update(studentIncidentInDb);
                 }
 
                 await unitOfWork.SaveChangesAsync();
@@ -265,6 +278,16 @@ namespace MyPortal.Logic.Services
                 var types = await unitOfWork.IncidentTypes.GetAll();
 
                 return types.Select(t => new IncidentTypeModel(t)).ToList();
+            }
+        }
+
+        public async Task<IEnumerable<BehaviourRoleTypeModel>> GetRoleTypes()
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var roleTypes = await unitOfWork.BehaviourRoleTypes.GetAll();
+
+                return roleTypes.Select(r => new BehaviourRoleTypeModel(r)).ToList();
             }
         }
 
@@ -404,14 +427,86 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task AddStudent(Guid detentionId, Guid incidentId)
+        public async Task<IEnumerable<StudentIncidentSummaryModel>> GetInvolvedStudentsByIncident(Guid incidentId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var incidentDetention = new IncidentDetention
+                var involvedStudents =
+                    (await unitOfWork.StudentIncidents.GetByIncident(incidentId)).Select(s =>
+                        new StudentIncidentModel(s)).ToList();
+
+                var results = new List<StudentIncidentSummaryModel>();
+
+                foreach (var involvedStudent in involvedStudents)
+                {
+                    await involvedStudent.Student.Load(unitOfWork);
+                    await involvedStudent.Incident.Load(unitOfWork);
+                    
+                    results.Add(new StudentIncidentSummaryModel(involvedStudent));
+                }
+
+                return results;
+            }
+        }
+
+        public async Task AddStudentToIncident(params AddToIncidentModel[] models)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                foreach (var model in models)
+                {
+                    var studentIncident = new StudentIncident
+                    {
+                        IncidentId = model.IncidentId,
+                        OutcomeId = model.OutcomeId,
+                        StatusId = model.StatusId,
+                        RoleTypeId = model.RoleTypeId,
+                        StudentId = model.StudentId,
+                        Points = model.Points
+                    };
+
+                    unitOfWork.StudentIncidents.Create(studentIncident);
+                }
+
+                await unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        public async Task RemoveStudentFromIncident(params Guid[] studentIncidentIds)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                foreach (var studentIncidentId in studentIncidentIds)
+                {
+                    var studentIncident = await unitOfWork.StudentIncidents.GetById(studentIncidentId);
+
+                    if (studentIncident == null)
+                    {
+                        throw new NotFoundException("Student incident not found.");
+                    }
+
+                    var studentCount = await unitOfWork.StudentIncidents.GetCountByIncident(studentIncident.IncidentId);
+
+                    if (studentCount < 2)
+                    {
+                        throw new LogicException("Cannot remove the only student from incident.");
+                    }
+
+                    await unitOfWork.StudentIncidents.Delete(studentIncidentId);
+                }
+
+                await unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        public async Task AddToDetention(Guid detentionId, Guid studentIncidentId)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var incidentDetention = new StudentIncidentDetention
                 {
                     DetentionId = detentionId,
-                    IncidentId = incidentId
+                    StudentIncidentId = studentIncidentId
                 };
 
                 unitOfWork.IncidentDetentions.Create(incidentDetention);
@@ -420,7 +515,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task RemoveStudent(Guid incidentDetentionId)
+        public async Task RemoveFromDetention(Guid incidentDetentionId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

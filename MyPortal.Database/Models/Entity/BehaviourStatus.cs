@@ -10,6 +10,6 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 3)]
         public bool Resolved { get; set; }
 
-        public virtual ICollection<Incident> Incidents { get; set; }
+        public virtual ICollection<StudentIncident> StudentIncidents { get; set; }
     }
 }

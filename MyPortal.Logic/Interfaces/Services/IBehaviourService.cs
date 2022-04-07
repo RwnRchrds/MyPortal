@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
 using MyPortal.Logic.Models.Requests.Behaviour.Detentions;
 using MyPortal.Logic.Models.Requests.Behaviour.Incidents;
+using MyPortal.Logic.Models.Summary;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
@@ -24,16 +27,20 @@ namespace MyPortal.Logic.Interfaces.Services
         #endregion
         
         #region Incidents
-        Task<IEnumerable<IncidentModel>> GetIncidentsByStudent(Guid studentId, Guid academicYearId);
-        Task<IncidentModel> GetIncidentById(Guid incidentId);
+        Task<IEnumerable<StudentIncidentSummaryModel>> GetIncidentsByStudent(Guid studentId, Guid academicYearId);
+        Task<StudentIncidentModel> GetIncidentById(Guid incidentId);
         Task<int> GetBehaviourPointsByStudent(Guid studentId, Guid academicYearId);
         Task<int> GetBehaviourCountByStudent(Guid studentId, Guid academicYearId);
         Task CreateIncident(Guid userId, params CreateIncidentModel[] incidents);
         Task UpdateIncident(params UpdateIncidentModel[] incidents);
         Task DeleteIncident(params Guid[] incidentIds);
+        Task AddStudentToIncident(params AddToIncidentModel[] models);
         Task<IEnumerable<IncidentTypeModel>> GetIncidentTypes();
+        Task<IEnumerable<BehaviourRoleTypeModel>> GetRoleTypes();
         Task<IEnumerable<BehaviourOutcomeModel>> GetIncidentOutcomes();
         Task<IEnumerable<BehaviourStatusModel>> GetBehaviourStatus();
+        Task RemoveStudentFromIncident(params Guid[] studentIncidentIds);
+        Task<IEnumerable<StudentIncidentSummaryModel>> GetInvolvedStudentsByIncident(Guid incidentId);
         #endregion
         
         #region Detentions
@@ -43,8 +50,8 @@ namespace MyPortal.Logic.Interfaces.Services
         Task CreateDetention(params CreateDetentionRequest[] detentionModels);
         Task UpdateDetention(params UpdateDetentionRequest[] detentionModels);
         Task DeleteDetention(params Guid[] detentionIds);
-        Task AddStudent(Guid detentionId, Guid incidentId);
-        Task RemoveStudent(Guid incidentDetentionId);
+        Task AddToDetention(Guid detentionId, Guid incidentId);
+        Task RemoveFromDetention(Guid incidentDetentionId);
         #endregion
     }
 }

@@ -3,7 +3,7 @@ using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface ILoadable
+    internal interface ILoadable
     {
         Task Load(IUnitOfWork unitOfWork);
     }

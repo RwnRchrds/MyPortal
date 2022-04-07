@@ -8,10 +8,6 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IIncidentRepository : IReadWriteRepository<Incident>, IUpdateRepository<Incident>
     {
-        Task<IEnumerable<Incident>> GetByStudent(Guid studentId, Guid academicYearId);
-
-        Task<int> GetCountByStudent(Guid studentId, Guid academicYearId);
-
-        Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId);
+        
     }
 }

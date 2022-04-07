@@ -22,5 +22,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task UpdateDirectory(params UpdateDirectoryModel[] directories);
         Task DeleteDirectory(params Guid[] directoryIds);
         Task<bool> DirectoryIsPrivate(Guid directoryId);
+        Task<bool> DirectoryIsPublic(Guid directoryId);
+        Task<bool> DirectoryIsRestricted(Guid directoryId);
     }
 }

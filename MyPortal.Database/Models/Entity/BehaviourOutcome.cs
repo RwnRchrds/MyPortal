@@ -10,12 +10,12 @@ namespace MyPortal.Database.Models.Entity
     {
         public BehaviourOutcome()
         {
-            Incidents = new HashSet<Incident>();
+            StudentIncidents = new HashSet<StudentIncident>();
         }
 
         [Column(Order = 3)]
         public bool System { get; set; }
 
-        public virtual ICollection<Incident> Incidents { get; set; }
+        public virtual ICollection<StudentIncident> StudentIncidents { get; set; }
     }
 }

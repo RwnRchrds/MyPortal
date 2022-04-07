@@ -45,20 +45,30 @@ namespace MyPortalWeb.Controllers.Api
         {
             var user = await GetLoggedInUser();
 
-            var directory = await _documentService.GetDirectoryById(directoryId);
-
-            if (directory.Restricted)
+            if (await _documentService.DirectoryIsRestricted(directoryId))
             {
-                if (user.UserType != UserTypes.Staff || directory.ParentId != null &&
-                    !await CanAccessDirectory(directory.ParentId.Value, edit))
+                if (user.UserType != UserTypes.Staff)
                 {
                     return false;
                 }
             }
 
-            if (await _documentService.DirectoryIsPrivate(directory.Id.Value))
+            if (await _documentService.DirectoryIsPublic(directoryId))
             {
-                var dirOwner = await _personService.GetPersonWithTypesByDirectory(directory.Id.Value);
+                var publicPermission =
+                    edit ? PermissionValue.SchoolEditSchoolDocuments : PermissionValue.SchoolViewSchoolDocuments;
+
+                if (await User.HasPermission(RoleService, PermissionRequirement.RequireAll, publicPermission))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            if (await _documentService.DirectoryIsPrivate(directoryId))
+            {
+                var dirOwner = await _personService.GetPersonWithTypesByDirectory(directoryId);
 
                 if (dirOwner.PersonTypes.IsStaff)
                 {

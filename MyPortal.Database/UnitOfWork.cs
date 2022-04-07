@@ -41,6 +41,7 @@ namespace MyPortal.Database
         private IAttendanceWeekRepository _attendanceWeeks;
         private IBasketItemRepository _basketItems;
         private IBehaviourOutcomeRepository _behaviourOutcomes;
+        private IBehaviourRoleTypeRepository _behaviourRoleTypes;
         private IBehaviourStatusRepository _behaviourStatus;
         private IBehaviourTargetRepository _behaviourTargets;
         private IBillAccountTransactionRepository _billAccountTransactions;
@@ -195,6 +196,7 @@ namespace MyPortal.Database
         private IStudentGroupRepository _studentGroups;
         private IStudentGroupMembershipRepository _studentGroupMemberships;
         private IStudentGroupSupervisorRepository _studentGroupSupervisors;
+        private IStudentIncidentRepository _studentIncidents;
         private IStudentRepository _students;
         private IStudentAgentRelationshipRepository _studentAgentRelationships;
         private IStudyTopicRepository _studyTopics;
@@ -280,6 +282,9 @@ namespace MyPortal.Database
 
         public IBehaviourOutcomeRepository BehaviourOutcomes =>
             _behaviourOutcomes ??= new BehaviourOutcomeRepository(_context, _transaction);
+
+        public IBehaviourRoleTypeRepository BehaviourRoleTypes =>
+            _behaviourRoleTypes ??= new BehaviourRoleTypeRepository(_context, _transaction);
 
         public IBehaviourStatusRepository BehaviourStatus =>
             _behaviourStatus ??= new BehaviourStatusRepository(_transaction);
@@ -694,6 +699,9 @@ namespace MyPortal.Database
         public IStudentGroupSupervisorRepository StudentGroupSupervisors => _studentGroupSupervisors ??=
             new StudentGroupSupervisorRepository(_context, _transaction);
 
+        public IStudentIncidentRepository StudentIncidents =>
+            _studentIncidents ??= new StudentIncidentRepository(_context, _transaction);
+
         public IStudyTopicRepository StudyTopics => _studyTopics ??= new StudyTopicRepository(_context, _transaction);
 
         public ISubjectCodeRepository SubjectCodes => _subjectCodes ??= new SubjectCodeRepository(_transaction);
@@ -842,6 +850,7 @@ namespace MyPortal.Database
             _attendanceWeekPatterns = null;
             _basketItems = null;
             _behaviourOutcomes = null;
+            _behaviourRoleTypes = null;
             _behaviourStatus = null;
             _behaviourTargets = null;
             _billItems = null;
@@ -996,6 +1005,7 @@ namespace MyPortal.Database
             _studentGroups = null;
             _studentGroupMemberships = null;
             _studentGroupSupervisors = null;
+            _studentIncidents = null;
             _studyTopics = null;
             _subjectCodes = null;
             _subjectCodeSets = null;

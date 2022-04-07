@@ -22,14 +22,10 @@ namespace MyPortal.Logic.Models.Entity
         {
             AcademicYearId = model.AcademicYearId;
             BehaviourTypeId = model.BehaviourTypeId;
-            StudentId = model.StudentId;
             LocationId = model.LocationId;
             CreatedById = model.CreatedById;
-            OutcomeId = model.OutcomeId;
-            StatusId = model.StatusId;
             CreatedDate = model.CreatedDate;
             Comments = model.Comments;
-            Points = model.Points;
             Deleted = model.Deleted;
 
             if (model.Type != null)
@@ -51,47 +47,21 @@ namespace MyPortal.Logic.Models.Entity
             {
                 CreatedBy = new UserModel(model.CreatedBy);
             }
-
-            if (model.Student != null)
-            {
-                Student = new StudentModel(model.Student);
-            }
-
-            if (model.Outcome != null)
-            {
-                Outcome = new BehaviourOutcomeModel(model.Outcome);
-            }
-
-            if (model.Status != null)
-            {
-                Status = new BehaviourStatusModel(model.Status);
-            }
         }
         
         public Guid AcademicYearId { get; set; }
         
         [Required(ErrorMessage = "Behaviour type is required.")]
         public Guid BehaviourTypeId { get; set; }
-        
-        public Guid StudentId { get; set; }
-        
+
         public Guid? LocationId { get; set; }
         
         public Guid CreatedById { get; set; }
-        
-        public Guid? OutcomeId { get; set; }
-        
-        [Required(ErrorMessage = "Status is required.")]
-        public Guid StatusId { get; set; }
 
         public DateTime CreatedDate { get; set; }
         
         public string Comments { get; set; }
-        
-        [Required(ErrorMessage = "Points is required.")]
-        [Range(0, int.MaxValue, ErrorMessage = "Points cannot be negative.")]
-        public int Points { get; set; }
-        
+
         public bool Deleted { get; set; }
 
         public virtual IncidentTypeModel Type { get; set; }
@@ -100,18 +70,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual AcademicYearModel AcademicYear { get; set; }
 
-        public virtual UserModel CreatedBy { get; set; } 
-
-        public virtual StudentModel Student { get; set; }
-
-        public virtual BehaviourOutcomeModel Outcome { get; set; }
-
-        public virtual BehaviourStatusModel Status { get; set; }
-
-        public IncidentSummaryModel ToListModel()
-        {
-            return new IncidentSummaryModel(this);
-        }
+        public virtual UserModel CreatedBy { get; set; }
 
         public async Task Load(IUnitOfWork unitOfWork)
         {

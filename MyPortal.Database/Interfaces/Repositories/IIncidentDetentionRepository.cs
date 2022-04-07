@@ -5,8 +5,8 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IIncidentDetentionRepository : IReadWriteRepository<IncidentDetention>
+    public interface IIncidentDetentionRepository : IReadWriteRepository<StudentIncidentDetention>
     {
-        Task<IncidentDetention> Get(Guid detentionId, Guid studentId);
+        Task<StudentIncidentDetention> Get(Guid detentionId, Guid studentId);
     }
 }

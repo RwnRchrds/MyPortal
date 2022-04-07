@@ -32,6 +32,7 @@ namespace MyPortal.Database.Interfaces
         IAttendanceWeekRepository AttendanceWeeks { get; }
         IBasketItemRepository BasketItems { get; }
         IBehaviourOutcomeRepository BehaviourOutcomes { get; }
+        IBehaviourRoleTypeRepository BehaviourRoleTypes { get; }
         IBehaviourStatusRepository BehaviourStatus { get; }
         IBehaviourTargetRepository BehaviourTargets { get; }
         IBillAccountTransactionRepository BillAccountTransactions { get; }
@@ -187,6 +188,7 @@ namespace MyPortal.Database.Interfaces
         IStudentGroupMembershipRepository StudentGroupMemberships { get; }
         IStudentGroupRepository StudentGroups { get; }
         IStudentGroupSupervisorRepository StudentGroupSupervisors { get; }
+        IStudentIncidentRepository StudentIncidents { get; }
         IStudentRepository Students { get; }
         IStudyTopicRepository StudyTopics { get; }
         ISubjectCodeRepository SubjectCodes { get; }

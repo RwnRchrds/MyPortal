@@ -40,6 +40,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<AttendanceWeekPattern> AttendanceWeekPatterns { get; set; }
         public virtual DbSet<BasketItem> BasketItems { get; set; }
         public virtual DbSet<BehaviourOutcome> BehaviourOutcomes { get; set; }
+        public virtual DbSet<BehaviourRoleType> BehaviourRoleTypes { get; set; }
         public virtual DbSet<BehaviourStatus> BehaviourStatus { get; set; }
         public virtual DbSet<BehaviourTarget> BehaviourTargets { get; set; }
         public virtual DbSet<Bill> Bills { get; set; }
@@ -127,7 +128,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<HomeworkSubmission> HomeworkSubmissions { get; set; }
         public virtual DbSet<House> Houses { get; set; }
         public virtual DbSet<Incident> Incidents { get; set; }
-        public virtual DbSet<IncidentDetention> IncidentDetentions { get; set; }
+        public virtual DbSet<StudentIncidentDetention> IncidentDetentions { get; set; }
         public virtual DbSet<IncidentType> IncidentTypes { get; set; }
         public virtual DbSet<IntakeType> IntakeTypes { get; set; }
         public virtual DbSet<Language> Languages { get; set; }
@@ -197,6 +198,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<StudentGroup> StudentGroups { get; set; }
         public virtual DbSet<StudentGroupMembership> StudentGroupMemberships { get; set; }
         public virtual DbSet<StudentGroupSupervisor> StudentGroupSupervisors { get; set; }
+        public virtual DbSet<StudentIncident> StudentIncidents { get; set; }
         public virtual DbSet<StudyTopic> StudyTopics { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<SubjectCode> SubjectCodes { get; set; }
@@ -504,7 +506,7 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasMany(x => x.Incidents)
+                    e.HasMany(x => x.StudentIncidents)
                         .WithOne(x => x.Outcome)
                         .HasForeignKey(x => x.OutcomeId)
                         .IsRequired()
@@ -515,7 +517,7 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasMany(x => x.Incidents)
+                    e.HasMany(x => x.StudentIncidents)
                         .WithOne(x => x.Status)
                         .HasForeignKey(x => x.StatusId)
                         .IsRequired()
@@ -1546,14 +1548,14 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasMany(x => x.Detentions)
+                    e.HasMany(x => x.InvolvedStudents)
                         .WithOne(x => x.Incident)
                         .HasForeignKey(x => x.IncidentId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<IncidentDetention>(e =>
+                modelBuilder.Entity<StudentIncidentDetention>(e =>
                 {
                     SetIdDefaultValue(e);
                 });
@@ -2331,7 +2333,7 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasMany(x => x.Incidents)
+                    e.HasMany(x => x.StudentIncidents)
                         .WithOne(x => x.Student)
                         .HasForeignKey(x => x.StudentId)
                         .IsRequired()
@@ -2499,6 +2501,17 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<StudentGroupSupervisor>(e =>
                 {
                     SetIdDefaultValue(e);
+                });
+
+                modelBuilder.Entity<StudentIncident>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(x => x.LinkedDetentions)
+                        .WithOne(x => x.StudentIncident)
+                        .HasForeignKey(x => x.StudentIncidentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<StudyTopic>(e =>

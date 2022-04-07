@@ -8,19 +8,11 @@ namespace MyPortal.Database.Models.Entity
     [Table("Incidents")]
     public class Incident : BaseTypes.Entity, ICreatable
     {
-        public Incident()
-        {
-            Detentions = new HashSet<IncidentDetention>();
-        }
-
         [Column(Order = 1)]
         public Guid AcademicYearId { get; set; }
 
         [Column(Order = 2)]
         public Guid BehaviourTypeId { get; set; }
-
-        [Column(Order = 3)]
-        public Guid StudentId { get; set; }
 
         [Column(Order = 4)]
         public Guid? LocationId { get; set; }
@@ -28,20 +20,11 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 5)]
         public Guid CreatedById { get; set; }
 
-        [Column(Order = 6)]
-        public Guid? OutcomeId { get; set; }
-
-        [Column(Order = 7)]
-        public Guid StatusId { get; set; }
-
         [Column(Order = 8, TypeName = "date")]
         public DateTime CreatedDate { get; set; }
 
         [Column(Order = 9)]
         public string Comments { get; set; }
-
-        [Column(Order = 10)]
-        public int Points { get; set; }
 
         [Column(Order = 11)]
         public bool Deleted { get; set; }
@@ -52,14 +35,8 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual AcademicYear AcademicYear { get; set; }
 
-        public virtual User CreatedBy { get; set; } 
+        public virtual User CreatedBy { get; set; }
 
-        public virtual Student Student { get; set; }
-
-        public virtual BehaviourOutcome Outcome { get; set; }
-
-        public virtual BehaviourStatus Status { get; set; }
-
-        public virtual ICollection<IncidentDetention> Detentions { get; set; }
+        public virtual ICollection<StudentIncident> InvolvedStudents { get; set; }
     }
 }

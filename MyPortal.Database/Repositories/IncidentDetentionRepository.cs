@@ -12,7 +12,7 @@ using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class IncidentDetentionRepository : BaseReadWriteRepository<IncidentDetention>, IIncidentDetentionRepository
+    public class IncidentDetentionRepository : BaseReadWriteRepository<StudentIncidentDetention>, IIncidentDetentionRepository
     {
         public IncidentDetentionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
@@ -21,7 +21,7 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "Incidents", "I", "IncidentId");
+            JoinEntity(query, "StudentIncidents", "SI", "StudentIncidentId");
             JoinEntity(query, "Detentions", "D", "DetentionId");
 
             return query;
@@ -29,22 +29,22 @@ namespace MyPortal.Database.Repositories
 
         protected override Query SelectAllRelated(Query query)
         {
-            query.SelectAllColumns(typeof(Incident), "I");
+            query.SelectAllColumns(typeof(StudentIncident), "SI");
             query.SelectAllColumns(typeof(Detention), "D");
 
             return query;
         }
 
-        protected override async Task<IEnumerable<IncidentDetention>> ExecuteQuery(Query query)
+        protected override async Task<IEnumerable<StudentIncidentDetention>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
             var incidentDetentions =
-                await Transaction.Connection.QueryAsync<IncidentDetention, Incident, Detention, IncidentDetention>(
+                await Transaction.Connection.QueryAsync<StudentIncidentDetention, StudentIncident, Detention, StudentIncidentDetention>(
                     sql.Sql,
                     (incidentDetention, incident, detention) =>
                     {
-                        incidentDetention.Incident = incident;
+                        incidentDetention.StudentIncident = incident;
                         incidentDetention.Detention = detention;
 
                         return incidentDetention;
@@ -53,7 +53,7 @@ namespace MyPortal.Database.Repositories
             return incidentDetentions;
         }
 
-        public async Task<IncidentDetention> Get(Guid detentionId, Guid studentId)
+        public async Task<StudentIncidentDetention> Get(Guid detentionId, Guid studentId)
         {
             var query = GenerateQuery();
 

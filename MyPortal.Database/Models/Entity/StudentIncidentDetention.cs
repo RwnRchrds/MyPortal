@@ -3,16 +3,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models.Entity
 {
-    [Table("IncidentDetentions")]
-    public class IncidentDetention : BaseTypes.Entity
+    [Table("StudentIncidentDetentions")]
+    public class StudentIncidentDetention : BaseTypes.Entity
     {
         [Column(Order = 1)]
-        public Guid IncidentId { get; set; }
+        public Guid StudentIncidentId { get; set; }
 
         [Column(Order = 2)]
         public Guid DetentionId { get; set; }
 
-        public virtual Incident Incident { get; set; }
+        public virtual StudentIncident StudentIncident { get; set; }
         public virtual Detention Detention { get; set; }
     }
 }
