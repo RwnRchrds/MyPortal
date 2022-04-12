@@ -61,7 +61,7 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Route("achievements/student/{studentId}", Name = "ApiAchievementGetByStudent")]
         [Permission(PermissionValue.BehaviourViewAchievements)]
-        [ProducesResponseType(typeof(IEnumerable<AchievementSummaryModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<StudentAchievementSummaryModel>), 200)]
         public async Task<IActionResult> GetAchievementsByStudent([FromRoute] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             try
@@ -74,7 +74,7 @@ namespace MyPortalWeb.Controllers.Api
 
                     var achievements = await _behaviourService.GetAchievementsByStudent(studentId, fromAcademicYearId);
 
-                    return Ok(achievements.Select(x => x.ToListModel()));
+                    return Ok(achievements);
                 }
 
                 return PermissionError();

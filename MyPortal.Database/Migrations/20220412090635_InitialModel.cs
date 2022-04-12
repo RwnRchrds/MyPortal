@@ -162,6 +162,20 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BehaviourRoleTypes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false),
+                    DefaultPoints = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BehaviourRoleTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BehaviourStatus",
                 columns: table => new
                 {
@@ -349,6 +363,7 @@ namespace MyPortal.Database.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     ParentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Private = table.Column<bool>(type: "bit", nullable: false),
                     Restricted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -2174,10 +2189,10 @@ namespace MyPortal.Database.Migrations
                     PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     BankName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    NiNumber = table.Column<string>(type: "nvarchar(9)", maxLength: 9, nullable: true),
                     BankAccount = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    Qualifications = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     BankSortCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    NiNumber = table.Column<string>(type: "nvarchar(9)", maxLength: 9, nullable: true),
+                    Qualifications = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     TeachingStaff = table.Column<bool>(type: "bit", nullable: false),
                     Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -2437,7 +2452,6 @@ namespace MyPortal.Database.Migrations
                     Location = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsAllDay = table.Column<bool>(type: "bit", nullable: false),
                     IsPublic = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -3238,14 +3252,11 @@ namespace MyPortal.Database.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     AcademicYearId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AchievementTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OutcomeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Date = table.Column<DateTime>(type: "date", nullable: false),
                     Comments = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Points = table.Column<int>(type: "int", nullable: false),
                     Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -3258,12 +3269,6 @@ namespace MyPortal.Database.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Achievements_AchievementOutcomes_OutcomeId",
-                        column: x => x.OutcomeId,
-                        principalTable: "AchievementOutcomes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Achievements_AchievementTypes_AchievementTypeId",
                         column: x => x.AchievementTypeId,
                         principalTable: "AchievementTypes",
@@ -3273,12 +3278,6 @@ namespace MyPortal.Database.Migrations
                         name: "FK_Achievements_Locations_LocationId",
                         column: x => x.LocationId,
                         principalTable: "Locations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Achievements_Students_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -3333,7 +3332,6 @@ namespace MyPortal.Database.Migrations
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
                     Restricted = table.Column<bool>(type: "bit", nullable: false),
-                    Confidential = table.Column<bool>(type: "bit", nullable: false),
                     Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -3372,14 +3370,10 @@ namespace MyPortal.Database.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     AcademicYearId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BehaviourTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OutcomeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
                     Comments = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Points = table.Column<int>(type: "int", nullable: false),
                     Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -3392,18 +3386,6 @@ namespace MyPortal.Database.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Incidents_BehaviourOutcomes_OutcomeId",
-                        column: x => x.OutcomeId,
-                        principalTable: "BehaviourOutcomes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Incidents_BehaviourStatus_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "BehaviourStatus",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Incidents_IncidentTypes_BehaviourTypeId",
                         column: x => x.BehaviourTypeId,
                         principalTable: "IncidentTypes",
@@ -3413,12 +3395,6 @@ namespace MyPortal.Database.Migrations
                         name: "FK_Incidents_Locations_LocationId",
                         column: x => x.LocationId,
                         principalTable: "Locations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Incidents_Students_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -3519,6 +3495,7 @@ namespace MyPortal.Database.Migrations
                     Title = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Completed = table.Column<bool>(type: "bit", nullable: false),
+                    AllowEdit = table.Column<bool>(type: "bit", nullable: false),
                     System = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -4221,6 +4198,86 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StudentAchievements",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AchievementId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OutcomeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Points = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentAchievements", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentAchievements_AchievementOutcomes_OutcomeId",
+                        column: x => x.OutcomeId,
+                        principalTable: "AchievementOutcomes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StudentAchievements_Achievements_AchievementId",
+                        column: x => x.AchievementId,
+                        principalTable: "Achievements",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StudentAchievements_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentIncidents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IncidentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OutcomeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Points = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentIncidents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentIncidents_BehaviourOutcomes_OutcomeId",
+                        column: x => x.OutcomeId,
+                        principalTable: "BehaviourOutcomes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StudentIncidents_BehaviourRoleTypes_RoleTypeId",
+                        column: x => x.RoleTypeId,
+                        principalTable: "BehaviourRoleTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StudentIncidents_BehaviourStatus_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "BehaviourStatus",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StudentIncidents_Incidents_IncidentId",
+                        column: x => x.IncidentId,
+                        principalTable: "Incidents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StudentIncidents_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "HomeworkSubmissions",
                 columns: table => new
                 {
@@ -4404,31 +4461,6 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "IncidentDetentions",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    IncidentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DetentionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IncidentDetentions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_IncidentDetentions_Detentions_DetentionId",
-                        column: x => x.DetentionId,
-                        principalTable: "Detentions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_IncidentDetentions_Incidents_IncidentId",
-                        column: x => x.IncidentId,
-                        principalTable: "Incidents",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ParentEveningGroup",
                 columns: table => new
                 {
@@ -4504,6 +4536,31 @@ namespace MyPortal.Database.Migrations
                         name: "FK_ReportCardTargetEntries_ReportCardTargets_TargetId",
                         column: x => x.TargetId,
                         principalTable: "ReportCardTargets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentIncidentDetentions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentIncidentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DetentionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentIncidentDetentions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentIncidentDetentions_Detentions_DetentionId",
+                        column: x => x.DetentionId,
+                        principalTable: "Detentions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StudentIncidentDetentions_StudentIncidents_StudentIncidentId",
+                        column: x => x.StudentIncidentId,
+                        principalTable: "StudentIncidents",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -4833,16 +4890,6 @@ namespace MyPortal.Database.Migrations
                 name: "IX_Achievements_LocationId",
                 table: "Achievements",
                 column: "LocationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Achievements_OutcomeId",
-                table: "Achievements",
-                column: "OutcomeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Achievements_StudentId",
-                table: "Achievements",
-                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Activities_StudentGroupId",
@@ -5500,16 +5547,6 @@ namespace MyPortal.Database.Migrations
                 column: "StudentGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IncidentDetentions_DetentionId",
-                table: "IncidentDetentions",
-                column: "DetentionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_IncidentDetentions_IncidentId",
-                table: "IncidentDetentions",
-                column: "IncidentId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Incidents_AcademicYearId",
                 table: "Incidents",
                 column: "AcademicYearId");
@@ -5528,21 +5565,6 @@ namespace MyPortal.Database.Migrations
                 name: "IX_Incidents_LocationId",
                 table: "Incidents",
                 column: "LocationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Incidents_OutcomeId",
-                table: "Incidents",
-                column: "OutcomeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Incidents_StatusId",
-                table: "Incidents",
-                column: "StatusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Incidents_StudentId",
-                table: "Incidents",
-                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LessonPlanHomeworkItems_HomeworkItemId",
@@ -6017,6 +6039,21 @@ namespace MyPortal.Database.Migrations
                 column: "DiscountId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StudentAchievements_AchievementId",
+                table: "StudentAchievements",
+                column: "AchievementId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentAchievements_OutcomeId",
+                table: "StudentAchievements",
+                column: "OutcomeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentAchievements_StudentId",
+                table: "StudentAchievements",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StudentAgentRelationships_AgentId",
                 table: "StudentAgentRelationships",
                 column: "AgentId");
@@ -6090,6 +6127,41 @@ namespace MyPortal.Database.Migrations
                 name: "IX_StudentGroupSupervisors_SupervisorId",
                 table: "StudentGroupSupervisors",
                 column: "SupervisorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentIncidentDetentions_DetentionId",
+                table: "StudentIncidentDetentions",
+                column: "DetentionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentIncidentDetentions_StudentIncidentId",
+                table: "StudentIncidentDetentions",
+                column: "StudentIncidentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentIncidents_IncidentId",
+                table: "StudentIncidents",
+                column: "IncidentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentIncidents_OutcomeId",
+                table: "StudentIncidents",
+                column: "OutcomeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentIncidents_RoleTypeId",
+                table: "StudentIncidents",
+                column: "RoleTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentIncidents_StatusId",
+                table: "StudentIncidents",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentIncidents_StudentId",
+                table: "StudentIncidents",
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_BoarderStatusId",
@@ -6237,9 +6309,6 @@ namespace MyPortal.Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Achievements");
-
-            migrationBuilder.DropTable(
                 name: "Activities");
 
             migrationBuilder.DropTable(
@@ -6333,9 +6402,6 @@ namespace MyPortal.Database.Migrations
                 name: "Houses");
 
             migrationBuilder.DropTable(
-                name: "IncidentDetentions");
-
-            migrationBuilder.DropTable(
                 name: "Languages");
 
             migrationBuilder.DropTable(
@@ -6420,6 +6486,9 @@ namespace MyPortal.Database.Migrations
                 name: "StaffAbsences");
 
             migrationBuilder.DropTable(
+                name: "StudentAchievements");
+
+            migrationBuilder.DropTable(
                 name: "StudentAgentRelationships");
 
             migrationBuilder.DropTable(
@@ -6436,6 +6505,9 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "StudentGroupSupervisors");
+
+            migrationBuilder.DropTable(
+                name: "StudentIncidentDetentions");
 
             migrationBuilder.DropTable(
                 name: "SubjectStaffMembers");
@@ -6460,12 +6532,6 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserTokens");
-
-            migrationBuilder.DropTable(
-                name: "AchievementOutcomes");
-
-            migrationBuilder.DropTable(
-                name: "AchievementTypes");
 
             migrationBuilder.DropTable(
                 name: "AddressTypes");
@@ -6526,12 +6592,6 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tasks");
-
-            migrationBuilder.DropTable(
-                name: "Detentions");
-
-            migrationBuilder.DropTable(
-                name: "Incidents");
 
             migrationBuilder.DropTable(
                 name: "HomeworkItems");
@@ -6621,6 +6681,12 @@ namespace MyPortal.Database.Migrations
                 name: "StaffIllnessTypes");
 
             migrationBuilder.DropTable(
+                name: "AchievementOutcomes");
+
+            migrationBuilder.DropTable(
+                name: "Achievements");
+
+            migrationBuilder.DropTable(
                 name: "Agents");
 
             migrationBuilder.DropTable(
@@ -6631,6 +6697,12 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "RelationshipTypes");
+
+            migrationBuilder.DropTable(
+                name: "Detentions");
+
+            migrationBuilder.DropTable(
+                name: "StudentIncidents");
 
             migrationBuilder.DropTable(
                 name: "SubjectStaffMemberRoles");
@@ -6669,15 +6741,6 @@ namespace MyPortal.Database.Migrations
                 name: "TaskTypes");
 
             migrationBuilder.DropTable(
-                name: "DetentionTypes");
-
-            migrationBuilder.DropTable(
-                name: "BehaviourOutcomes");
-
-            migrationBuilder.DropTable(
-                name: "BehaviourStatus");
-
-            migrationBuilder.DropTable(
                 name: "StudyTopics");
 
             migrationBuilder.DropTable(
@@ -6693,16 +6756,10 @@ namespace MyPortal.Database.Migrations
                 name: "CurriculumYearGroups");
 
             migrationBuilder.DropTable(
-                name: "StaffMembers");
-
-            migrationBuilder.DropTable(
                 name: "AttendancePeriods");
 
             migrationBuilder.DropTable(
                 name: "AttendanceWeeks");
-
-            migrationBuilder.DropTable(
-                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "BehaviourTargets");
@@ -6712,6 +6769,9 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspectTypes");
+
+            migrationBuilder.DropTable(
+                name: "AchievementTypes");
 
             migrationBuilder.DropTable(
                 name: "Agencies");
@@ -6724,6 +6784,24 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "Discounts");
+
+            migrationBuilder.DropTable(
+                name: "DetentionTypes");
+
+            migrationBuilder.DropTable(
+                name: "StaffMembers");
+
+            migrationBuilder.DropTable(
+                name: "BehaviourOutcomes");
+
+            migrationBuilder.DropTable(
+                name: "BehaviourRoleTypes");
+
+            migrationBuilder.DropTable(
+                name: "BehaviourStatus");
+
+            migrationBuilder.DropTable(
+                name: "Incidents");
 
             migrationBuilder.DropTable(
                 name: "CurriculumGroups");
@@ -6753,9 +6831,6 @@ namespace MyPortal.Database.Migrations
                 name: "AttendanceWeekPatterns");
 
             migrationBuilder.DropTable(
-                name: "IncidentTypes");
-
-            migrationBuilder.DropTable(
                 name: "Students");
 
             migrationBuilder.DropTable(
@@ -6763,6 +6838,12 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "AgencyTypes");
+
+            migrationBuilder.DropTable(
+                name: "IncidentTypes");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "CurriculumBlocks");
@@ -6807,13 +6888,13 @@ namespace MyPortal.Database.Migrations
                 name: "EnrolmentStatus");
 
             migrationBuilder.DropTable(
-                name: "People");
-
-            migrationBuilder.DropTable(
                 name: "SenStatus");
 
             migrationBuilder.DropTable(
                 name: "SenTypes");
+
+            migrationBuilder.DropTable(
+                name: "People");
 
             migrationBuilder.DropTable(
                 name: "ExamBoards");

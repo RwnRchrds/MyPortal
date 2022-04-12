@@ -24,23 +24,32 @@ namespace MyPortal.Logic.Services
 {
     public class BehaviourService : BaseService, IBehaviourService
     {
-        public async Task<IEnumerable<AchievementModel>> GetAchievementsByStudent(Guid studentId, Guid academicYearId)
+        public async Task<IEnumerable<StudentAchievementSummaryModel>> GetAchievementsByStudent(Guid studentId, Guid academicYearId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var achievements = await unitOfWork.Achievements.GetByStudent(studentId, academicYearId);
+                var achievements =
+                    (await unitOfWork.StudentAchievements.GetByStudent(studentId, academicYearId)).Select(a =>
+                        new StudentAchievementModel(a));
 
-                return achievements.Select(a => new AchievementModel(a)).ToList();
+                var summaries = new List<StudentAchievementSummaryModel>();
+
+                foreach (var achievementModel in achievements)
+                {
+                    summaries.Add(await StudentAchievementSummaryModel.GetSummary(unitOfWork, achievementModel));
+                }
+
+                return summaries;
             }
         }
 
-        public async Task<AchievementModel> GetAchievementById(Guid achievementId)
+        public async Task<StudentAchievementModel> GetAchievementById(Guid achievementId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var achievement = await unitOfWork.Achievements.GetById(achievementId);
+                var achievement = await unitOfWork.StudentAchievements.GetById(achievementId);
 
-                return new AchievementModel(achievement);
+                return new StudentAchievementModel(achievement);
             }
         }
 
@@ -48,7 +57,7 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var points = await unitOfWork.Achievements.GetPointsByStudent(studentId, academicYearId);
+                var points = await unitOfWork.StudentAchievements.GetPointsByStudent(studentId, academicYearId);
 
                 return points;
             }
@@ -58,7 +67,7 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var count = await unitOfWork.Achievements.GetCountByStudent(studentId, academicYearId);
+                var count = await unitOfWork.StudentAchievements.GetCountByStudent(studentId, academicYearId);
 
                 return count;
             }
@@ -68,24 +77,29 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
+                var now = DateTime.Now;
+                
                 foreach (var request in requests)
                 {
                     await AcademicHelper.IsAcademicYearLocked(request.AcademicYearId, true);
 
-                    var model = new Achievement
+                    var model = new StudentAchievement
                     {
-                        AcademicYearId = request.AcademicYearId,
-                        AchievementTypeId = request.AchievementTypeId,
-                        LocationId = request.LocationId,
                         StudentId = request.StudentId,
-                        Comments = request.Comments,
                         OutcomeId = request.OutcomeId,
                         Points = request.Points,
-                        CreatedById = userId,
-                        CreatedDate = DateTime.Now
+                        Achievement = new Achievement
+                        {
+                            AcademicYearId = request.AcademicYearId,
+                            AchievementTypeId = request.AchievementTypeId,
+                            LocationId = request.LocationId,
+                            Comments = request.Comments,
+                            CreatedById = userId,
+                            CreatedDate = now
+                        }
                     };
 
-                    unitOfWork.Achievements.Create(model);
+                    unitOfWork.StudentAchievements.Create(model);
                 }
 
                 await unitOfWork.SaveChangesAsync();
@@ -98,22 +112,22 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var request in requests)
                 {
-                    var achievementInDb = await unitOfWork.Achievements.GetById(request.Id);
+                    var achievementInDb = await unitOfWork.StudentAchievements.GetById(request.Id);
 
                     if (achievementInDb == null)
                     {
                         throw new NotFoundException("Achievement not found.");
                     }
 
-                    await AcademicHelper.IsAcademicYearLocked(achievementInDb.AcademicYearId, true);
+                    await AcademicHelper.IsAcademicYearLocked(achievementInDb.Achievement.AcademicYearId, true);
 
-                    achievementInDb.AchievementTypeId = request.AchievementTypeId;
-                    achievementInDb.LocationId = request.LocationId;
+                    achievementInDb.Achievement.AchievementTypeId = request.AchievementTypeId;
+                    achievementInDb.Achievement.LocationId = request.LocationId;
                     achievementInDb.OutcomeId = request.OutcomeId;
-                    achievementInDb.Comments = request.Comments;
+                    achievementInDb.Achievement.Comments = request.Comments;
                     achievementInDb.Points = request.Points;
 
-                    await unitOfWork.Achievements.Update(achievementInDb);
+                    await unitOfWork.StudentAchievements.Update(achievementInDb);
                 }
 
                 await unitOfWork.SaveChangesAsync();
@@ -128,7 +142,7 @@ namespace MyPortal.Logic.Services
                 {
                     var achievement = await GetAchievementById(achievementId);
 
-                    await AcademicHelper.IsAcademicYearLocked(achievement.AcademicYearId, true);
+                    await AcademicHelper.IsAcademicYearLocked(achievement.Achievement.AcademicYearId, true);
 
                     await unitOfWork.Achievements.Delete(achievementId);
                 }
@@ -169,7 +183,7 @@ namespace MyPortal.Logic.Services
 
                 foreach (var model in models)
                 {
-                    results.Add(await model.ToListModel(unitOfWork));
+                    results.Add(await StudentIncidentSummaryModel.GetSummary(unitOfWork, model));
                 }
 
                 return results;
@@ -439,10 +453,7 @@ namespace MyPortal.Logic.Services
 
                 foreach (var involvedStudent in involvedStudents)
                 {
-                    await involvedStudent.Student.Load(unitOfWork);
-                    await involvedStudent.Incident.Load(unitOfWork);
-                    
-                    results.Add(new StudentIncidentSummaryModel(involvedStudent));
+                    results.Add(await StudentIncidentSummaryModel.GetSummary(unitOfWork, involvedStudent));
                 }
 
                 return results;

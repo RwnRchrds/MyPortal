@@ -45,7 +45,7 @@ namespace MyPortal.Logic.Services
             {
                 var stats = new StudentStatsModel();
 
-                var achievements = await unitOfWork.Achievements.GetPointsByStudent(studentId, academicYearId);
+                var achievements = await unitOfWork.StudentAchievements.GetPointsByStudent(studentId, academicYearId);
                 var incidents = await unitOfWork.StudentIncidents.GetPointsByStudent(studentId, academicYearId);
                 var attendanceMarks = await unitOfWork.AttendanceMarks.GetByStudent(studentId, academicYearId);
                 var exclusions = await unitOfWork.Exclusions.GetCountByStudent(studentId);

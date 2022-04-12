@@ -20,10 +20,10 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(128)]
         public string Name { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public DateTime BookingOpened { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public DateTime BookingClosed { get; set; } 
 
         public virtual DiaryEvent Event { get; set; }

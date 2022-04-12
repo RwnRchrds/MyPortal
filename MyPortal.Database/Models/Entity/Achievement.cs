@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MyPortal.Database.Interfaces;
@@ -14,18 +15,12 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 2)]
         public Guid AchievementTypeId { get; set; }
 
-        [Column(Order = 3)]
-        public Guid StudentId { get; set; }
-
         [Column(Order = 4)]
         public Guid? LocationId { get; set; }
 
         [Column(Order = 5)]
         public Guid CreatedById { get; set; }
 
-        [Column(Order = 6)]
-        public Guid? OutcomeId { get; set; }
-        
         [Column(Order = 7)] 
         public DateTime CreatedDate { get; set; }
 
@@ -34,10 +29,6 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 9)]
         public string Comments { get; set; }
-
-        [Column(Order = 10)]
-        [Range(0, int.MaxValue, ErrorMessage = "Achievement cannot have negative points.")]
-        public int Points { get; set; }
 
         [Column(Order = 11)]
         public bool Deleted { get; set; }
@@ -50,8 +41,6 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual User CreatedBy { get; set; }
 
-        public virtual Student Student { get; set; }
-
-        public virtual AchievementOutcome Outcome { get; set; }
+        public virtual ICollection<StudentAchievement> InvolvedStudents { get; set; }
     }
 }

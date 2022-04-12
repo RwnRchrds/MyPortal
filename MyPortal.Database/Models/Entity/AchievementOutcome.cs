@@ -10,12 +10,12 @@ namespace MyPortal.Database.Models.Entity
     {
         public AchievementOutcome()
         {
-            Achievements = new HashSet<Achievement>();
+            StudentAchievements = new HashSet<StudentAchievement>();
         }
 
         [Column (Order = 3)]
         public bool System { get; set; }
 
-        public virtual ICollection<Achievement> Achievements { get; set; }
+        public virtual ICollection<StudentAchievement> StudentAchievements { get; set; }
     }
 }

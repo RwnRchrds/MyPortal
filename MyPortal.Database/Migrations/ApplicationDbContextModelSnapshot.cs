@@ -146,19 +146,6 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(4);
 
-                    b.Property<Guid?>("OutcomeId")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(6);
-
-                    b.Property<int>("Points")
-                        .HasColumnType("int")
-                        .HasColumnOrder(10);
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(3);
-
                     b.HasKey("Id");
 
                     b.HasIndex("AcademicYearId");
@@ -168,10 +155,6 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("LocationId");
-
-                    b.HasIndex("OutcomeId");
-
-                    b.HasIndex("StudentId");
 
                     b.ToTable("Achievements");
                 });
@@ -520,7 +503,7 @@ namespace MyPortal.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(8);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -544,15 +527,15 @@ namespace MyPortal.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)")
-                        .HasColumnOrder(6);
+                        .HasColumnOrder(7);
 
                     b.Property<bool>("StaffOnly")
                         .HasColumnType("bit")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(9);
 
                     b.Property<bool>("System")
                         .HasColumnType("bit")
-                        .HasColumnOrder(8);
+                        .HasColumnOrder(10);
 
                     b.Property<Guid>("TypeId")
                         .HasColumnType("uniqueidentifier")
@@ -753,7 +736,7 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<Guid>("AcademicTermId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(3);
+                        .HasColumnOrder(2);
 
                     b.Property<DateTime>("Beginning")
                         .HasColumnType("date")
@@ -765,7 +748,7 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<Guid>("WeekPatternId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(2);
+                        .HasColumnOrder(1);
 
                     b.HasKey("Id");
 
@@ -849,6 +832,32 @@ namespace MyPortal.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BehaviourOutcomes");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BehaviourRoleType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(0);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(2);
+
+                    b.Property<int>("DefaultPoints")
+                        .HasColumnType("int")
+                        .HasColumnOrder(3);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnOrder(1);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BehaviourRoleTypes");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.BehaviourStatus", b =>
@@ -1031,7 +1040,7 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("CustomerReceived")
                         .HasColumnType("bit")
-                        .HasColumnOrder(4);
+                        .HasColumnOrder(5);
 
                     b.Property<decimal>("GrossAmount")
                         .HasColumnType("decimal(18,2)")
@@ -1047,7 +1056,7 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("Refunded")
                         .HasColumnType("bit")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(6);
 
                     b.HasKey("Id");
 
@@ -1759,10 +1768,6 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(1);
 
-                    b.Property<bool>("IsAllDay")
-                        .HasColumnType("bit")
-                        .HasColumnOrder(8);
-
                     b.Property<bool>("IsPublic")
                         .HasColumnType("bit")
                         .HasColumnOrder(9);
@@ -1975,6 +1980,10 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(1);
 
+                    b.Property<bool>("Private")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(3);
+
                     b.Property<bool>("Restricted")
                         .HasColumnType("bit")
                         .HasColumnOrder(4);
@@ -2033,10 +2042,6 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(0)
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<bool>("Confidential")
-                        .HasColumnType("bit")
-                        .HasColumnOrder(9);
 
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier")
@@ -3063,15 +3068,15 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit")
-                        .HasColumnOrder(4);
+                        .HasColumnOrder(5);
 
                     b.Property<bool>("Attended")
                         .HasColumnType("bit")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(6);
 
                     b.Property<Guid>("CandidateId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(3);
+                        .HasColumnOrder(4);
 
                     b.Property<int>("SeatColumn")
                         .HasColumnType("int")
@@ -3628,23 +3633,6 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(4);
 
-                    b.Property<Guid?>("OutcomeId")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(6);
-
-                    b.Property<int>("Points")
-                        .HasColumnType("int")
-                        .HasColumnOrder(10);
-
-                    b.Property<Guid>("StatusId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(7);
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(3);
-
                     b.HasKey("Id");
 
                     b.HasIndex("AcademicYearId");
@@ -3655,38 +3643,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.HasIndex("OutcomeId");
-
-                    b.HasIndex("StatusId");
-
-                    b.HasIndex("StudentId");
-
                     b.ToTable("Incidents");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.IncidentDetention", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(0)
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<Guid>("DetentionId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(2);
-
-                    b.Property<Guid>("IncidentId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(1);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DetentionId");
-
-                    b.HasIndex("IncidentId");
-
-                    b.ToTable("IncidentDetentions");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.IncidentType", b =>
@@ -4295,11 +4252,11 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<DateTime>("BookingClosed")
                         .HasColumnType("datetime2")
-                        .HasColumnOrder(3);
+                        .HasColumnOrder(4);
 
                     b.Property<DateTime>("BookingOpened")
                         .HasColumnType("datetime2")
-                        .HasColumnOrder(2);
+                        .HasColumnOrder(3);
 
                     b.Property<Guid>("EventId")
                         .HasColumnType("uniqueidentifier")
@@ -5887,7 +5844,7 @@ namespace MyPortal.Database.Migrations
                     b.Property<string>("BankAccount")
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(6);
 
                     b.Property<string>("BankName")
                         .HasMaxLength(50)
@@ -5897,7 +5854,7 @@ namespace MyPortal.Database.Migrations
                     b.Property<string>("BankSortCode")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)")
-                        .HasColumnOrder(6);
+                        .HasColumnOrder(7);
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -5907,7 +5864,7 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(11);
 
                     b.Property<Guid?>("LineManagerId")
                         .HasColumnType("uniqueidentifier")
@@ -5916,7 +5873,7 @@ namespace MyPortal.Database.Migrations
                     b.Property<string>("NiNumber")
                         .HasMaxLength(9)
                         .HasColumnType("nvarchar(9)")
-                        .HasColumnOrder(4);
+                        .HasColumnOrder(8);
 
                     b.Property<Guid>("PersonId")
                         .HasColumnType("uniqueidentifier")
@@ -5925,11 +5882,11 @@ namespace MyPortal.Database.Migrations
                     b.Property<string>("Qualifications")
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(9);
 
                     b.Property<bool>("TeachingStaff")
                         .HasColumnType("bit")
-                        .HasColumnOrder(6);
+                        .HasColumnOrder(10);
 
                     b.HasKey("Id");
 
@@ -6044,6 +6001,42 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Students");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentAchievement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(0)
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("AchievementId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(2);
+
+                    b.Property<Guid?>("OutcomeId")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(3);
+
+                    b.Property<int>("Points")
+                        .HasColumnType("int")
+                        .HasColumnOrder(4);
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(1);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AchievementId");
+
+                    b.HasIndex("OutcomeId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentAchievements");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentAgentRelationship", b =>
                 {
                     b.Property<Guid>("Id")
@@ -6093,11 +6086,11 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<int>("Recurrences")
                         .HasColumnType("int")
-                        .HasColumnOrder(4);
+                        .HasColumnOrder(5);
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2")
-                        .HasColumnOrder(3);
+                        .HasColumnOrder(4);
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier")
@@ -6292,6 +6285,79 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("SupervisorId");
 
                     b.ToTable("StudentGroupSupervisors");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentIncident", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(0)
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("IncidentId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(2);
+
+                    b.Property<Guid?>("OutcomeId")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(4);
+
+                    b.Property<int>("Points")
+                        .HasColumnType("int")
+                        .HasColumnOrder(6);
+
+                    b.Property<Guid>("RoleTypeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(3);
+
+                    b.Property<Guid>("StatusId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(5);
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(1);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IncidentId");
+
+                    b.HasIndex("OutcomeId");
+
+                    b.HasIndex("RoleTypeId");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentIncidents");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentIncidentDetention", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(0)
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("DetentionId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(2);
+
+                    b.Property<Guid>("StudentIncidentId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(1);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DetentionId");
+
+                    b.HasIndex("StudentIncidentId");
+
+                    b.ToTable("StudentIncidentDetentions");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.StudyTopic", b =>
@@ -6525,6 +6591,10 @@ namespace MyPortal.Database.Migrations
                         .HasColumnOrder(0)
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("AllowEdit")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(10);
+
                     b.Property<Guid?>("AssignedById")
                         .IsRequired()
                         .HasColumnType("uniqueidentifier")
@@ -6557,7 +6627,7 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("System")
                         .HasColumnType("bit")
-                        .HasColumnOrder(10);
+                        .HasColumnOrder(11);
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -6978,27 +7048,11 @@ namespace MyPortal.Database.Migrations
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MyPortal.Database.Models.Entity.AchievementOutcome", "Outcome")
-                        .WithMany("Achievements")
-                        .HasForeignKey("OutcomeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
-                        .WithMany("Achievements")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("AcademicYear");
 
                     b.Navigation("CreatedBy");
 
                     b.Navigation("Location");
-
-                    b.Navigation("Outcome");
-
-                    b.Navigation("Student");
 
                     b.Navigation("Type");
                 });
@@ -8255,56 +8309,13 @@ namespace MyPortal.Database.Migrations
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MyPortal.Database.Models.Entity.BehaviourOutcome", "Outcome")
-                        .WithMany("Incidents")
-                        .HasForeignKey("OutcomeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Entity.BehaviourStatus", "Status")
-                        .WithMany("Incidents")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
-                        .WithMany("Incidents")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("AcademicYear");
 
                     b.Navigation("CreatedBy");
 
                     b.Navigation("Location");
 
-                    b.Navigation("Outcome");
-
-                    b.Navigation("Status");
-
-                    b.Navigation("Student");
-
                     b.Navigation("Type");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.IncidentDetention", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Entity.Detention", "Detention")
-                        .WithMany("Incidents")
-                        .HasForeignKey("DetentionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Entity.Incident", "Incident")
-                        .WithMany("Detentions")
-                        .HasForeignKey("IncidentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Detention");
-
-                    b.Navigation("Incident");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.LessonPlan", b =>
@@ -9186,6 +9197,33 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("SenType");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentAchievement", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.Achievement", "Achievement")
+                        .WithMany("InvolvedStudents")
+                        .HasForeignKey("AchievementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.AchievementOutcome", "Outcome")
+                        .WithMany("StudentAchievements")
+                        .HasForeignKey("OutcomeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
+                        .WithMany("StudentAchievements")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Achievement");
+
+                    b.Navigation("Outcome");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentAgentRelationship", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Entity.Agent", "Agent")
@@ -9324,6 +9362,68 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("StudentGroup");
 
                     b.Navigation("Supervisor");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentIncident", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.Incident", "Incident")
+                        .WithMany("InvolvedStudents")
+                        .HasForeignKey("IncidentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.BehaviourOutcome", "Outcome")
+                        .WithMany("StudentIncidents")
+                        .HasForeignKey("OutcomeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.BehaviourRoleType", "RoleType")
+                        .WithMany()
+                        .HasForeignKey("RoleTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.BehaviourStatus", "Status")
+                        .WithMany("StudentIncidents")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
+                        .WithMany("StudentIncidents")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Incident");
+
+                    b.Navigation("Outcome");
+
+                    b.Navigation("RoleType");
+
+                    b.Navigation("Status");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentIncidentDetention", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.Detention", "Detention")
+                        .WithMany("Incidents")
+                        .HasForeignKey("DetentionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.StudentIncident", "StudentIncident")
+                        .WithMany("LinkedDetentions")
+                        .HasForeignKey("StudentIncidentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Detention");
+
+                    b.Navigation("StudentIncident");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.StudyTopic", b =>
@@ -9556,9 +9656,14 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("BillAccountTransactions");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Achievement", b =>
+                {
+                    b.Navigation("InvolvedStudents");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Entity.AchievementOutcome", b =>
                 {
-                    b.Navigation("Achievements");
+                    b.Navigation("StudentAchievements");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.AchievementType", b =>
@@ -9649,12 +9754,12 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.BehaviourOutcome", b =>
                 {
-                    b.Navigation("Incidents");
+                    b.Navigation("StudentIncidents");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.BehaviourStatus", b =>
                 {
-                    b.Navigation("Incidents");
+                    b.Navigation("StudentIncidents");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.BehaviourTarget", b =>
@@ -10020,7 +10125,7 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Incident", b =>
                 {
-                    b.Navigation("Detentions");
+                    b.Navigation("InvolvedStudents");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.IncidentType", b =>
@@ -10299,8 +10404,6 @@ namespace MyPortal.Database.Migrations
                 {
                     b.Navigation("AccountTransactions");
 
-                    b.Navigation("Achievements");
-
                     b.Navigation("AgentRelationships");
 
                     b.Navigation("AttendanceMarks");
@@ -10321,8 +10424,6 @@ namespace MyPortal.Database.Migrations
 
                     b.Navigation("HomeworkSubmissions");
 
-                    b.Navigation("Incidents");
-
                     b.Navigation("MedicalEvents");
 
                     b.Navigation("ParentEveningAppointments");
@@ -10337,9 +10438,13 @@ namespace MyPortal.Database.Migrations
 
                     b.Navigation("SenProvisions");
 
+                    b.Navigation("StudentAchievements");
+
                     b.Navigation("StudentContacts");
 
                     b.Navigation("StudentGroupMemberships");
+
+                    b.Navigation("StudentIncidents");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentGroup", b =>
@@ -10363,6 +10468,11 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("StudentMemberships");
 
                     b.Navigation("YearGroups");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentIncident", b =>
+                {
+                    b.Navigation("LinkedDetentions");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.StudyTopic", b =>

@@ -28,9 +28,7 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("Locations as L", "L.Id", $"{TblAlias}.LocationId");
             query.LeftJoin("AcademicYears as AY", "AY.Id", $"{TblAlias}.AcademicYearId");
             query.LeftJoin("Users as U", "U.Id", $"{TblAlias}.CreatedById");
-            query.LeftJoin("Student as S", "S.Id", $"{TblAlias}.StudentId");
-            query.LeftJoin("AchievementOutcomes as AO", "AO.Id", $"{TblAlias}.OutcomeId");
-            
+
             return query;
         }
 
@@ -40,8 +38,6 @@ namespace MyPortal.Database.Repositories
             query.SelectAllColumns(typeof(Location), "L");
             query.SelectAllColumns(typeof(AcademicYear), "AY");
             query.SelectAllColumns(typeof(User), "U");
-            query.SelectAllColumns(typeof(Student), "S");
-            query.SelectAllColumns(typeof(AchievementOutcome), "AO");
 
             return query;
         }
@@ -51,64 +47,19 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var achievements = await Transaction.Connection
-                .QueryAsync<Achievement, AchievementType, Location, AcademicYear, User, Student, Achievement>(
+                .QueryAsync<Achievement, AchievementType, Location, AcademicYear, User, Achievement>(
                     sql.Sql,
-                    (achievement, type, location, year, user, student) =>
+                    (achievement, type, location, year, user) =>
                     {
                         achievement.Type = type;
                         achievement.Location = location;
                         achievement.AcademicYear = year;
                         achievement.CreatedBy = user;
-                        achievement.Student = student;
 
                         return achievement;
                     }, sql.NamedBindings, Transaction);
 
             return achievements;
-        }
-
-        public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
-        {
-            var sql = GenerateEmptyQuery().AsCount();
-
-            sql.Where($"{TblAlias}.StudentId", "=", studentId);
-            sql.Where($"{TblAlias}.AcademicYearId", "=", academicYearId);
-
-            return await ExecuteQueryIntResult(sql) ?? 0;
-        }
-
-        public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
-        {
-            var sql = GenerateEmptyQuery().AsSum("Achievement.Points");
-            sql.Where($"{TblAlias}.StudentId", studentId);
-            sql.Where($"{TblAlias}.AcademicYearId", academicYearId);
-
-            return await ExecuteQueryIntResult(sql) ?? 0;
-        }
-
-        public async Task<IEnumerable<Achievement>> GetByStudent(Guid studentId, Guid academicYearId)
-        {
-            var query = GenerateQuery();
-
-            query.Where($"{TblAlias}.StudentId" ,"=", studentId);
-            query.Where($"{TblAlias}.AcademicYearId", "=", academicYearId);
-
-            return await ExecuteQuery(query);
-        }
-
-        public async Task<int> GetPointsToday()
-        {
-            var sql = GenerateEmptyQuery().AsSum($"{TblAlias}.Points");
-
-            var dateToday = DateTime.Today;
-
-            sql.WhereDatePart("day", $"{TblAlias}.CreatedDate", "=", dateToday.Day);
-
-            sql.WhereDatePart("month", $"{TblAlias}.CreatedDate", "=", dateToday.Month);
-
-            sql.WhereDatePart("year", $"{TblAlias}.CreatedDate", "=", dateToday.Year);
-
-            return await ExecuteQueryIntResult(sql) ?? 0;
         }
 
         public async Task Update(Achievement entity)
@@ -122,14 +73,11 @@ namespace MyPortal.Database.Repositories
 
             achievement.AcademicYearId = entity.AcademicYearId;
             achievement.AchievementTypeId = entity.AchievementTypeId;
-            achievement.StudentId = entity.StudentId;
             achievement.LocationId = entity.LocationId;
             achievement.CreatedById = entity.CreatedById;
             achievement.Date = entity.Date;
             achievement.Comments = entity.Comments;
             achievement.LocationId = entity.LocationId;
-            achievement.OutcomeId = entity.OutcomeId;
-            achievement.Points = entity.Points;
         }
     }
 }

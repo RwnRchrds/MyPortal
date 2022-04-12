@@ -190,6 +190,7 @@ namespace MyPortal.Database
         private IStaffIllnessTypeRepository _staffIllnessTypes;
         private IStaffMemberRepository _staffMembers;
         private IStoreDiscountRepository _storeDiscounts;
+        private IStudentAchievementRepository _studentAchievements;
         private IStudentChargeDiscountRepository _studentChargeDiscounts;
         private IStudentChargeRepository _studentCharges;
         private IStudentContactRelationshipRepository _studentContactRelationships;
@@ -673,6 +674,9 @@ namespace MyPortal.Database
         public IStoreDiscountRepository StoreDiscounts =>
             _storeDiscounts ??= new StoreDiscountRepository(_context, _transaction);
 
+        public IStudentAchievementRepository StudentAchievements =>
+            _studentAchievements ??= new StudentAchievementRepository(_context, _transaction);
+
         public IStudentAgentRelationshipRepository StudentAgentRelationships => _studentAgentRelationships ??=
             new StudentAgentRelationshipRepository(_context, _transaction);
 
@@ -997,6 +1001,7 @@ namespace MyPortal.Database
             _staffIllnessTypes = null;
             _staffMembers = null;
             _storeDiscounts = null;
+            _studentAchievements = null;
             _studentCharges = null;
             _studentContactRelationships = null;
             _studentChargeDiscounts = null;

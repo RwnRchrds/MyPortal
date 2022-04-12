@@ -18,10 +18,10 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 4)]
         public decimal GrossAmount { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public bool CustomerReceived { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         public bool Refunded { get; set; }
 
         public virtual Bill Bill { get; set; }

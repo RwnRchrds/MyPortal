@@ -86,8 +86,6 @@ public class StudentIncidentModel : BaseModel, ILoadable
     
     internal async Task<StudentIncidentSummaryModel> ToListModel(IUnitOfWork unitOfWork)
     {
-        await Incident.Load(unitOfWork);
-        await Student.Load(unitOfWork);
-        return new StudentIncidentSummaryModel(this);
+        return await StudentIncidentSummaryModel.GetSummary(unitOfWork, this);
     }
 }

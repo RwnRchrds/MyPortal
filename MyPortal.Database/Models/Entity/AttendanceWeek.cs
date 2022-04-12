@@ -13,10 +13,10 @@ namespace MyPortal.Database.Models.Entity
             AttendanceMarks = new HashSet<AttendanceMark>();
         }
 
-        [Column(Order = 2)]
+        [Column(Order = 1)]
         public Guid WeekPatternId { get; set; }
 
-        [Column(Order = 3)] 
+        [Column(Order = 2)] 
         public Guid AcademicTermId { get; set; }
 
         [Column(Order = 3, TypeName = "date")]

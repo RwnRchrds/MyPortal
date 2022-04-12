@@ -191,6 +191,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<StaffMember> StaffMembers { get; set; }
         public virtual DbSet<StoreDiscount> StoreDiscounts { get; set; }
         public virtual DbSet<Student> Students { get; set; }
+        public virtual DbSet<StudentAchievement> StudentAchievements { get; set; }
         public virtual DbSet<StudentAgentRelationship> StudentAgentRelationships { get; set; }
         public virtual DbSet<StudentCharge> StudentCharges { get; set; }
         public virtual DbSet<StudentContactRelationship> StudentContactRelationships { get; set; }
@@ -281,7 +282,7 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasMany(ao => ao.Achievements)
+                    e.HasMany(ao => ao.StudentAchievements)
                         .WithOne(a => a.Outcome)
                         .HasForeignKey(a => a.OutcomeId)
                         .IsRequired()
@@ -2327,7 +2328,7 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasMany(x => x.Achievements)
+                    e.HasMany(x => x.StudentAchievements)
                         .WithOne(x => x.Student)
                         .HasForeignKey(x => x.StudentId)
                         .IsRequired()
@@ -2407,6 +2408,17 @@ namespace MyPortal.Database.Models
 
                     e.Property(x => x.Upn)
                         .IsUnicode(false);
+                });
+
+                modelBuilder.Entity<StudentAchievement>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasOne(x => x.Achievement)
+                        .WithMany(x => x.InvolvedStudents)
+                        .HasForeignKey(x => x.AchievementId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<StudentAgentRelationship>(e =>

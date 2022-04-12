@@ -15,13 +15,13 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 3)]
         public int SeatColumn { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid CandidateId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public bool Active { get; set; }
 
-        [Column(Order = 5)] 
+        [Column(Order = 6)] 
         public bool Attended { get; set; }
 
         public virtual ExamComponentSitting Sitting { get; set; }

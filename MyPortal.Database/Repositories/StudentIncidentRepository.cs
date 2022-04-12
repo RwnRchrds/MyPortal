@@ -88,7 +88,7 @@ public class StudentIncidentRepository : BaseReadWriteRepository<StudentIncident
     {
         var query = GenerateQuery().AsCount();
     
-        query.Where("I.StudentId", studentId);
+        query.Where($"{TblAlias}.StudentId", studentId);
         query.Where("I.AcademicYearId", academicYearId);
     
         return await ExecuteQueryIntResult(query) ?? 0;
@@ -105,7 +105,7 @@ public class StudentIncidentRepository : BaseReadWriteRepository<StudentIncident
 
     public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
     {
-        var query = new Query(TblName).AsSum("Incident.Points");
+        var query = GenerateEmptyQuery().AsSum($"{TblAlias}.Points");
     
         query.Where("I.StudentId", studentId);
         query.Where("I.AcademicYearId", academicYearId);

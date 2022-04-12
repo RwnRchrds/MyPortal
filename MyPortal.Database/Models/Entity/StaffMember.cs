@@ -39,26 +39,26 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(50)]
         public string BankName { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         [StringLength(15)]
         public string BankAccount { get; set; }
         
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         [StringLength(10)]
         public string BankSortCode { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 8)]
         [StringLength(9)]
         public string NiNumber { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 9)]
         [StringLength(128)]
         public string Qualifications { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 10)]
         public bool TeachingStaff { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 11)]
         public bool Deleted { get; set; }
 
         public virtual Person Person { get; set; }

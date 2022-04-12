@@ -20,10 +20,10 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 3)] 
         public string Description { get; set; }
 
-        [Column(Order = 3)] 
+        [Column(Order = 4)] 
         public DateTime StartDate { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public int Recurrences { get; set; }
 
         public virtual Student Student { get; set; }

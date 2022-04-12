@@ -181,6 +181,7 @@ namespace MyPortal.Database.Interfaces
         IStaffIllnessTypeRepository StaffIllnessTypes { get; }
         IStaffMemberRepository StaffMembers { get; }
         IStoreDiscountRepository StoreDiscounts { get; }
+        IStudentAchievementRepository StudentAchievements { get; }
         IStudentAgentRelationshipRepository StudentAgentRelationships { get; }
         IStudentChargeDiscountRepository StudentChargeDiscounts { get; }
         IStudentChargeRepository StudentCharges { get; }

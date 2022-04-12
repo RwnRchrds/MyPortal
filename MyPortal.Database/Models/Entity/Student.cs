@@ -14,7 +14,7 @@ namespace MyPortal.Database.Models.Entity
         {
             Results = new HashSet<Result>();
             AttendanceMarks = new HashSet<AttendanceMark>();
-            Achievements = new HashSet<Achievement>();
+            StudentAchievements = new HashSet<StudentAchievement>();
             StudentIncidents = new HashSet<StudentIncident>();
             FinanceBasketItems = new HashSet<BasketItem>();
             Bills = new HashSet<Bill>();
@@ -81,7 +81,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Achievement> Achievements { get; set; }
+        public virtual ICollection<StudentAchievement> StudentAchievements { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StudentIncident> StudentIncidents { get; set; }

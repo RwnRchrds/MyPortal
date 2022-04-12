@@ -28,20 +28,20 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 6, TypeName = "decimal(10,2)")]
         public decimal? MaxMark { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 8)]
         [Required]
         [StringLength(50)]
         public string ColumnHeading { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 9)]
         public bool StaffOnly { get; set; }
 
-        [Column(Order = 8)]
+        [Column(Order = 10)]
         public bool System { get; set; }
 
         public virtual AspectType Type { get; set; }

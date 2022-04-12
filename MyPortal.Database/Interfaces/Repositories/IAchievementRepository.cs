@@ -8,9 +8,6 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IAchievementRepository : IReadWriteRepository<Achievement>, IUpdateRepository<Achievement>
     {
-        Task<int> GetCountByStudent(Guid studentId, Guid academicYearId);
-        Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId);
-        Task<IEnumerable<Achievement>> GetByStudent(Guid studentId, Guid academicYearId);
-        Task<int> GetPointsToday();
+
     }
 }

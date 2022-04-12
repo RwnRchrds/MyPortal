@@ -15,8 +15,8 @@ namespace MyPortal.Logic.Interfaces.Services
     public interface IBehaviourService
     {
         #region Achievements
-        Task<IEnumerable<AchievementModel>> GetAchievementsByStudent(Guid studentId, Guid academicYearId);
-        Task<AchievementModel> GetAchievementById(Guid achievementId);
+        Task<IEnumerable<StudentAchievementSummaryModel>> GetAchievementsByStudent(Guid studentId, Guid academicYearId);
+        Task<StudentAchievementModel> GetAchievementById(Guid achievementId);
         Task<int> GetAchievementPointsByStudent(Guid studentId, Guid academicYearId);
         Task<int> GetAchievementCountByStudent(Guid studentId, Guid academicYearId);
         Task CreateAchievement(Guid userId, params CreateAchievementModel[] achievements);

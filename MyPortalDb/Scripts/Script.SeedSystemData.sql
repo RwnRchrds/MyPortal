@@ -2866,17 +2866,17 @@ WHEN NOT MATCHED THEN
 
 MERGE INTO [dbo].[Directories] AS Target
 USING (VALUES
-           ('B5DBF3AE-D9A9-4502-AE16-E437BED14F38', NULL, 'root', 0)
+           ('B5DBF3AE-D9A9-4502-AE16-E437BED14F38', NULL, 'root', 0, 0)
 )
-    AS Source (Id, ParentId, Name, Restricted)
+    AS Source (Id, ParentId, Name, Restricted, Private)
 ON Target.Id = Source.Id
 
 WHEN MATCHED THEN
-    UPDATE SET ParentId = Source.ParentId, Name = Source.Name, Restricted = Source.Restricted
+    UPDATE SET ParentId = Source.ParentId, Name = Source.Name, Restricted = Source.Restricted, Private = Source.Private
 
 WHEN NOT MATCHED THEN
-    INSERT (Id, ParentId, Name, Restricted)
-    VALUES (Id, ParentId, Name, Restricted);
+    INSERT (Id, ParentId, Name, Restricted, Private)
+    VALUES (Id, ParentId, Name, Restricted, Private);
 
 MERGE INTO [dbo].[DiaryEventTypes] AS Target
 USING (VALUES
