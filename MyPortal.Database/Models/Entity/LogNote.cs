@@ -26,8 +26,12 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 6)]
         public DateTime CreatedDate { get; set; }
+        
+        // Only visible to staff users
+        [Column(Order = 7)] 
+        public bool Restricted { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 8)]
         public bool Deleted { get; set; }
 
         public virtual User CreatedBy { get; set; }

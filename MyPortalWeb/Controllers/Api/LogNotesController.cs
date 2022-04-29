@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
@@ -41,6 +44,16 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var logNote = await _logNoteService.GetById(logNoteId);
 
+                if (logNote.Restricted)
+                {
+                    var viewRestricted = User.IsType(UserTypes.Staff);
+
+                    if (!viewRestricted)
+                    {
+                        return PermissionError();
+                    }
+                }
+
                 var student = await StudentService.GetById(logNote.StudentId);
 
                 if (await CanAccessPerson(student.PersonId))
@@ -48,7 +61,7 @@ namespace MyPortalWeb.Controllers.Api
                     return Ok(logNote);
                 }
 
-                return Forbid();
+                return PermissionError();
             }
             catch (Exception e)
             {
@@ -90,14 +103,16 @@ namespace MyPortalWeb.Controllers.Api
                         academicYearId = (await _academicYearService.GetCurrentAcademicYear(true)).Id;
                     }
 
-                    var logNotes = await _logNoteService.GetByStudent(studentId, academicYearId.Value);
+                    var viewRestricted = User.IsType(UserTypes.Staff);
+
+                    var logNotes = await _logNoteService.GetByStudent(studentId, academicYearId.Value, viewRestricted);
 
                     var result = logNotes;
 
                     return Ok(result);
                 }
 
-                return Forbid();
+                return PermissionError();
             }
             catch (Exception e)
             {

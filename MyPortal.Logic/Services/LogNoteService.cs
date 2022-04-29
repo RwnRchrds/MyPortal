@@ -33,11 +33,11 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<IEnumerable<LogNoteModel>> GetByStudent(Guid studentId, Guid academicYearId)
+        public async Task<IEnumerable<LogNoteModel>> GetByStudent(Guid studentId, Guid academicYearId, bool includeRestricted)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var logNotes = await unitOfWork.LogNotes.GetByStudent(studentId, academicYearId);
+                var logNotes = await unitOfWork.LogNotes.GetByStudent(studentId, academicYearId, includeRestricted);
 
                 return logNotes.OrderByDescending(n => n.CreatedDate).Select(l => new LogNoteModel(l)).ToList();
             }

@@ -161,7 +161,7 @@ namespace MyPortalWeb.Controllers.Api
                     return Ok();
                 }
 
-                return Forbid();
+                return PermissionError();
             }
             catch (Exception e)
             {

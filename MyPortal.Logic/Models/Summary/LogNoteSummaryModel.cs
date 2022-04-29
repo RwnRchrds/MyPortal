@@ -13,6 +13,7 @@ namespace MyPortal.Logic.Models.Summary
         public string LogTypeIcon { get; set; }
         public string LogTypeColourCode { get; set; }
         public string Message { get; set; }
+        public bool Restricted { get; set; }
 
         public LogNoteSummaryModel(LogNoteModel model)
         {
@@ -26,6 +27,7 @@ namespace MyPortal.Logic.Models.Summary
             LogTypeIcon = model.LogNoteType.IconClass;
             LogTypeColourCode = model.LogNoteType.ColourCode;
             Message = model.Message;
+            Restricted = model.Restricted;
         }
     }
 }

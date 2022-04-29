@@ -25,6 +25,7 @@ namespace MyPortal.Logic.Models.Entity
             AcademicYearId = model.AcademicYearId;
             Message = model.Message;
             CreatedDate = model.CreatedDate;
+            Restricted = model.Restricted;
             Deleted = model.Deleted;
 
             if (model.CreatedBy != null)
@@ -62,6 +63,8 @@ namespace MyPortal.Logic.Models.Entity
         public string Message { get; set; }
 
         public DateTime CreatedDate { get; set; }
+
+        public bool Restricted { get; set; }
 
         public bool Deleted { get; set; }
 

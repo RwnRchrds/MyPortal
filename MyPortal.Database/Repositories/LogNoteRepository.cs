@@ -62,12 +62,17 @@ namespace MyPortal.Database.Repositories
             return logNotes;
         }
 
-        public Task<IEnumerable<LogNote>> GetByStudent(Guid studentId, Guid academicYearId)
+        public Task<IEnumerable<LogNote>> GetByStudent(Guid studentId, Guid academicYearId, bool includeRestricted)
         {
             var query = GenerateQuery();
 
             query.Where($"{TblAlias}.StudentId", studentId);
             query.Where($"{TblAlias}.AcademicYearId", academicYearId);
+
+            if (!includeRestricted)
+            {
+                query.Where($"{TblAlias}.Restricted", false);
+            }
 
             return ExecuteQuery(query);
         }
@@ -83,6 +88,7 @@ namespace MyPortal.Database.Repositories
             
             logNote.Message = entity.Message;
             logNote.TypeId = entity.TypeId;
+            logNote.Restricted = entity.Restricted;
         }
     }
 }

@@ -8,6 +8,6 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface ILogNoteRepository : IReadWriteRepository<LogNote>, IUpdateRepository<LogNote>
     {
-        Task<IEnumerable<LogNote>> GetByStudent(Guid studentId, Guid academicYearId);
+        Task<IEnumerable<LogNote>> GetByStudent(Guid studentId, Guid academicYearId, bool includeRestricted);
     }
 }
