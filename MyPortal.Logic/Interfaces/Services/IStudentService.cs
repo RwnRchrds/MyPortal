@@ -24,9 +24,9 @@ namespace MyPortal.Logic.Interfaces.Services
 
         Task<StudentModel> GetByPersonId(Guid personId, bool throwIfNotFound = true);
 
-        Task Create(params CreateStudentModel[] students);
+        Task CreateStudent(params CreateStudentModel[] students);
 
-        Task Update(params UpdateStudentModel[] models);
+        Task UpdateStudent(params UpdateStudentModel[] models);
 
         Dictionary<string, int> GetStudentStatusOptions();
 

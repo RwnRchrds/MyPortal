@@ -127,7 +127,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Create(params CreateStudentModel[] students)
+        public async Task CreateStudent(params CreateStudentModel[] students)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -222,7 +222,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Update(params UpdateStudentModel[] models)
+        public async Task UpdateStudent(params UpdateStudentModel[] models)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

@@ -3896,12 +3896,16 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(8);
 
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnOrder(5);
+
+                    b.Property<bool>("Restricted")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(7);
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier")
@@ -3910,9 +3914,6 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("TypeId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(1);
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -3923,8 +3924,6 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("StudentId");
 
                     b.HasIndex("TypeId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("LogNotes");
                 });
@@ -8390,10 +8389,6 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Entity.User", null)
-                        .WithMany("LogNotesUpdated")
-                        .HasForeignKey("UserId");
-
                     b.Navigation("AcademicYear");
 
                     b.Navigation("CreatedBy");
@@ -10546,8 +10541,6 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("LessonPlans");
 
                     b.Navigation("LogNotesCreated");
-
-                    b.Navigation("LogNotesUpdated");
 
                     b.Navigation("MedicalEvents");
 

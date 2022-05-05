@@ -3416,8 +3416,8 @@ namespace MyPortal.Database.Migrations
                     AcademicYearId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Deleted = table.Column<bool>(type: "bit", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    Restricted = table.Column<bool>(type: "bit", nullable: false),
+                    Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -3446,11 +3446,6 @@ namespace MyPortal.Database.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_LogNotes_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -5610,11 +5605,6 @@ namespace MyPortal.Database.Migrations
                 name: "IX_LogNotes_TypeId",
                 table: "LogNotes",
                 column: "TypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LogNotes_UserId",
-                table: "LogNotes",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MarksheetColumns_AspectId",

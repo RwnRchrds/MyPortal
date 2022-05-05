@@ -14,7 +14,6 @@ namespace MyPortal.Database.Models.Entity
         {
             UserRoles = new HashSet<UserRole>();
             LogNotesCreated = new HashSet<LogNote>();
-            LogNotesUpdated = new HashSet<LogNote>();
             Documents = new HashSet<Document>();
             MedicalEvents = new HashSet<MedicalEvent>();
             Incidents = new HashSet<Incident>();
@@ -43,8 +42,6 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<UserRole> UserRoles { get; set; }
 
         public virtual ICollection<LogNote> LogNotesCreated { get; set; }
-
-        public virtual ICollection<LogNote> LogNotesUpdated { get; set; }
 
         public virtual ICollection<Document> Documents { get; set; }
 
