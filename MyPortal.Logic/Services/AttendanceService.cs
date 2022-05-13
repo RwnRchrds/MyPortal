@@ -142,7 +142,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Delete(params Guid[] attendanceMarkIds)
+        public async Task DeleteAttendanceMarks(params Guid[] attendanceMarkIds)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

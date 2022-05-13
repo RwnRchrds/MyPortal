@@ -46,7 +46,7 @@ namespace MyPortal.Logic.Services
                             DirectoryId = document.DirectoryId,
                             CreatedById = userId,
                             Deleted = false,
-                            Restricted = document.Restricted
+                            Private = document.Private
                         };
 
                         unitOfWork.Documents.Create(docToAdd);
@@ -71,7 +71,7 @@ namespace MyPortal.Logic.Services
 
                     documentInDb.Title = document.Title;
                     documentInDb.Description = document.Description;
-                    documentInDb.Restricted = document.Restricted;
+                    documentInDb.Private = document.Private;
                     documentInDb.TypeId = document.TypeId;
 
                     await unitOfWork.Documents.Update(documentInDb);
@@ -151,7 +151,7 @@ namespace MyPortal.Logic.Services
                     {
                         ParentId = directory.ParentId,
                         Name = directory.Name,
-                        Restricted = directory.Restricted
+                        Private = directory.Private
                     };
 
                     unitOfWork.Directories.Create(dirToAdd);
@@ -174,7 +174,7 @@ namespace MyPortal.Logic.Services
                         dirInDb.Name = directory.Name;
                     }
 
-                    dirInDb.Restricted = directory.Restricted;
+                    dirInDb.Private = directory.Private;
 
                     // Cannot move root directories or remove parent from child directories
                     if (dirInDb.ParentId != null && directory.ParentId != null)
@@ -238,7 +238,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Directory not found.");
                 }
 
-                if (dir.Restricted)
+                if (dir.Private)
                 {
                     return true;
                 }

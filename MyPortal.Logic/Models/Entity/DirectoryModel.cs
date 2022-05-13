@@ -22,7 +22,7 @@ namespace MyPortal.Logic.Models.Entity
         {
             ParentId = model.ParentId;
             Name = model.Name;
-            Restricted = model.Restricted;
+            Private = model.Private;
 
             if (model.Parent != null)
             {
@@ -36,7 +36,7 @@ namespace MyPortal.Logic.Models.Entity
         [StringLength(128)]
         public string Name { get; set; }
 
-        public bool Restricted { get; set; } 
+        public bool Private { get; set; } 
 
         public virtual DirectoryModel Parent { get; set; }
 

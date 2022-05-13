@@ -41,7 +41,7 @@ namespace MyPortal.Database.Models.Entity
 
         // Only visible to staff users who have access to the directory
         [Column(Order = 8)]
-        public bool Restricted { get; set; }
+        public bool Private { get; set; }
 
         [Column(Order = 10)]
         public bool Deleted { get; set; }

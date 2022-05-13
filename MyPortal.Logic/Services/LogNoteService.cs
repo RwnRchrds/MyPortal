@@ -18,7 +18,7 @@ namespace MyPortal.Logic.Services
 {
     public class LogNoteService : BaseService, ILogNoteService
     {
-        public async Task<LogNoteModel> GetById(Guid logNoteId)
+        public async Task<LogNoteModel> GetLogNoteById(Guid logNoteId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -33,7 +33,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<IEnumerable<LogNoteModel>> GetByStudent(Guid studentId, Guid academicYearId, bool includeRestricted)
+        public async Task<IEnumerable<LogNoteModel>> GetLogNotesByStudent(Guid studentId, Guid academicYearId, bool includeRestricted)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -43,7 +43,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<IEnumerable<LogNoteTypeModel>> GetTypes()
+        public async Task<IEnumerable<LogNoteTypeModel>> GetLogNoteTypes()
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -53,7 +53,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Create(Guid userId, params CreateLogNoteModel[] logNoteObjects)
+        public async Task CreateLogNote(Guid userId, params CreateLogNoteModel[] logNoteObjects)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -80,7 +80,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Update(params UpdateLogNoteModel[] logNoteObjects)
+        public async Task UpdateLogNote(params UpdateLogNoteModel[] logNoteObjects)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -107,13 +107,13 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Delete(params Guid[] logNoteIds)
+        public async Task DeleteLogNote(params Guid[] logNoteIds)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 foreach (var logNoteId in logNoteIds)
                 {
-                    var logNote = await GetById(logNoteId);
+                    var logNote = await GetLogNoteById(logNoteId);
 
                     await AcademicHelper.IsAcademicYearLocked(logNote.AcademicYearId, true);
 

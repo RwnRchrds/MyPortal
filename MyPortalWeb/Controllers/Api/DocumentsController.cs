@@ -151,7 +151,7 @@ namespace MyPortalWeb.Controllers.Api
 
             if (await CanAccessDirectory(document.DirectoryId, edit))
             {
-                if (document.Restricted)
+                if (document.Private)
                 {
                     return user.UserType == UserTypes.Staff;
                 }

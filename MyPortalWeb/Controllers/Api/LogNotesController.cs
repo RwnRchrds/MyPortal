@@ -42,9 +42,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var logNote = await _logNoteService.GetById(logNoteId);
+                var logNote = await _logNoteService.GetLogNoteById(logNoteId);
 
-                if (logNote.Restricted)
+                if (logNote.Private)
                 {
                     var viewRestricted = User.IsType(UserTypes.Staff);
 
@@ -76,7 +76,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var logNoteTypes = await _logNoteService.GetTypes();
+                var logNoteTypes = await _logNoteService.GetLogNoteTypes();
 
                 return Ok(logNoteTypes);
             }
@@ -105,7 +105,7 @@ namespace MyPortalWeb.Controllers.Api
 
                     var viewRestricted = User.IsType(UserTypes.Staff);
 
-                    var logNotes = await _logNoteService.GetByStudent(studentId, academicYearId.Value, viewRestricted);
+                    var logNotes = await _logNoteService.GetLogNotesByStudent(studentId, academicYearId.Value, viewRestricted);
 
                     var result = logNotes;
 
@@ -131,7 +131,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var user = await GetLoggedInUser();
                 
-                await _logNoteService.Create(user.Id.Value, model);
+                await _logNoteService.CreateLogNote(user.Id.Value, model);
 
                 return Ok();
             }
@@ -150,7 +150,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                await _logNoteService.Update(model);
+                await _logNoteService.UpdateLogNote(model);
 
                 return Ok();
             }
@@ -169,7 +169,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                await _logNoteService.Delete(logNoteId);
+                await _logNoteService.DeleteLogNote(logNoteId);
 
                 return Ok();
             }

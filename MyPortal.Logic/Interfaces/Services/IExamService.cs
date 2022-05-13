@@ -6,5 +6,6 @@ namespace MyPortal.Logic.Interfaces.Services;
 
 public interface IExamService
 {
-    Task CreateResultEmbargo(params CreateResultEmbargoModel[] models);
+    Task CreateResultEmbargo(params ResultEmbargoRequestModel[] models);
+    Task UpdateResultEmbargo(params ResultEmbargoRequestModel[] models);
 }

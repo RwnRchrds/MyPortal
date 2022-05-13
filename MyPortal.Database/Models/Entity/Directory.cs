@@ -22,13 +22,9 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(128)]
         public string Name { get; set; }
 
-        // Belongs to a Person
+        // Only visible to staff users
         [Column(Order = 3)]
         public bool Private { get; set; }
-
-        // Only visible to staff users
-        [Column(Order = 4)]
-        public bool Restricted { get; set; } 
 
         public virtual Directory Parent { get; set; }
         public virtual ICollection<Agency> Agencies { get; set; }

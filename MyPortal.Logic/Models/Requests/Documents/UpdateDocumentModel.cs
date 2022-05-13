@@ -16,6 +16,6 @@ namespace MyPortal.Logic.Models.Requests.Documents
 
         public string Description { get; set; }
 
-        public bool Restricted { get; set; }
+        public bool Private { get; set; }
     }
 }

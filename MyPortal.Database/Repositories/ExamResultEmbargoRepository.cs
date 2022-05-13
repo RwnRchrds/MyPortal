@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
@@ -60,6 +61,15 @@ namespace MyPortal.Database.Repositories
             }
             
             embargo.EndTime = entity.EndTime;
+        }
+
+        public async Task<ExamResultEmbargo> GetByResultSetId(Guid resultSetId)
+        {
+            var query = GenerateQuery();
+
+            query.Where($"{TblAlias}.ResultSetId", resultSetId);
+
+            return await ExecuteQueryFirstOrDefault(query);
         }
     }
 }

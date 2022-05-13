@@ -11,7 +11,7 @@ namespace MyPortal.Logic.Services;
 
 public class ExamService : BaseService, IExamService
 {
-    public async Task CreateResultEmbargo(params CreateResultEmbargoModel[] models)
+    public async Task CreateResultEmbargo(params ResultEmbargoRequestModel[] models)
     {
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
@@ -29,6 +29,33 @@ public class ExamService : BaseService, IExamService
                 };
                 
                 unitOfWork.ExamResultEmbargoes.Create(embargo);
+            }
+
+            await unitOfWork.SaveChangesAsync();
+        }
+    }
+
+    public async Task UpdateResultEmbargo(params ResultEmbargoRequestModel[] models)
+    {
+        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        {
+            foreach (var model in models)
+            {
+                if (model.EndDate < DateTime.Now)
+                {
+                    throw new LogicException("End date cannot be in the past.");
+                }
+
+                var embargoInDb = await unitOfWork.ExamResultEmbargoes.GetByResultSetId(model.ResultSetId);
+
+                if (embargoInDb == null)
+                {
+                    throw new NotFoundException("Exam result embargo not found.");
+                }
+
+                embargoInDb.EndTime = model.EndDate;
+
+                await unitOfWork.ExamResultEmbargoes.Update(embargoInDb);
             }
 
             await unitOfWork.SaveChangesAsync();

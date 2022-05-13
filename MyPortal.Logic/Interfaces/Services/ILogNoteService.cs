@@ -8,11 +8,11 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface ILogNoteService
     {
-        Task<LogNoteModel> GetById(Guid logNoteId);
-        Task<IEnumerable<LogNoteModel>> GetByStudent(Guid studentId, Guid academicYearId, bool includeRestricted);
-        Task<IEnumerable<LogNoteTypeModel>> GetTypes();
-        Task Create(Guid userId, params CreateLogNoteModel[] logNoteObjects);
-        Task Update(params UpdateLogNoteModel[] logNoteObjects);
-        Task Delete(params Guid[] logNoteIds);
+        Task<LogNoteModel> GetLogNoteById(Guid logNoteId);
+        Task<IEnumerable<LogNoteModel>> GetLogNotesByStudent(Guid studentId, Guid academicYearId, bool includeRestricted);
+        Task<IEnumerable<LogNoteTypeModel>> GetLogNoteTypes();
+        Task CreateLogNote(Guid userId, params CreateLogNoteModel[] logNoteObjects);
+        Task UpdateLogNote(params UpdateLogNoteModel[] logNoteObjects);
+        Task DeleteLogNote(params Guid[] logNoteIds);
     }
 }

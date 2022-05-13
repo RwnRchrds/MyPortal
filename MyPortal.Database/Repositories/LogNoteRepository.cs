@@ -88,7 +88,7 @@ namespace MyPortal.Database.Repositories
             
             logNote.Message = entity.Message;
             logNote.TypeId = entity.TypeId;
-            logNote.Restricted = entity.Restricted;
+            logNote.Private = entity.Private;
         }
     }
 }

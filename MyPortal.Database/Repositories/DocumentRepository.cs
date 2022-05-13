@@ -84,7 +84,7 @@ namespace MyPortal.Database.Repositories
             document.Title = entity.Title;
             document.Description = entity.Description;
             document.TypeId = entity.TypeId;
-            document.Restricted = entity.Restricted;
+            document.Private = entity.Private;
         }
 
         public async Task UpdateWithAttachment(Document entity)
@@ -99,7 +99,7 @@ namespace MyPortal.Database.Repositories
             document.Title = entity.Title;
             document.Description = entity.Description;
             document.TypeId = entity.TypeId;
-            document.Restricted = entity.Restricted;
+            document.Private = entity.Private;
             document.Attachment = entity.Attachment;
         }
     }

@@ -75,7 +75,7 @@ namespace MyPortal.Database.Repositories
             }
 
             directory.Name = entity.Name;
-            directory.Restricted = entity.Restricted;
+            directory.Private = entity.Private;
         }
     }
 }

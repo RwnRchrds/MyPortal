@@ -29,7 +29,7 @@ namespace MyPortal.Database.Models.Entity
         
         // Only visible to staff users
         [Column(Order = 7)] 
-        public bool Restricted { get; set; }
+        public bool Private { get; set; }
 
         [Column(Order = 8)]
         public bool Deleted { get; set; }
