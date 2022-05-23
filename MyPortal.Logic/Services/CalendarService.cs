@@ -113,7 +113,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateEvent(Guid userId, params CreateEventModel[] models)
+        public async Task CreateEvent(Guid userId, params CreateEventRequestModel[] models)
         {
             var eventTypes = (await GetEventTypes()).ToArray();
 
@@ -165,7 +165,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task UpdateEvent(params UpdateEventModel[] models)
+        public async Task UpdateEvent(params UpdateEventRequestModel[] models)
         {
             var eventTypes = (await GetEventTypes()).ToArray();
 
@@ -203,7 +203,7 @@ namespace MyPortal.Logic.Services
             }
         }
         
-        public async Task CreateOrUpdateEventAttendees(params UpdateAttendeesModel[] models)
+        public async Task CreateOrUpdateEventAttendees(params UpdateEventAttendeesRequestModel[] models)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

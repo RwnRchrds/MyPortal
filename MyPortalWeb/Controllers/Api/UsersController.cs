@@ -39,7 +39,7 @@ namespace MyPortalWeb.Controllers.Api
         [Route("create")]
         [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(typeof(NewEntityResponseModel), 200)]
-        public async Task<IActionResult> CreateUser([FromBody] CreateUserModel model)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestModel model)
         {
             try
             {
@@ -115,7 +115,7 @@ namespace MyPortalWeb.Controllers.Api
         [Route("update")]
         [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserModel model)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequestModel model)
         {
             try
             {
@@ -150,7 +150,7 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPut]
         [Route("setPassword")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> SetPassword(SetPasswordModel request)
+        public async Task<IActionResult> SetPassword(SetPasswordRequestModel request)
         {
             try
             {
@@ -173,7 +173,7 @@ namespace MyPortalWeb.Controllers.Api
         [Route("setEnabled")]
         [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(typeof(bool), 200)]
-        public async Task<IActionResult> SetEnabled(SetUserEnabledModel model)
+        public async Task<IActionResult> SetEnabled(SetUserEnabledRequestModel model)
         {
             try
             {

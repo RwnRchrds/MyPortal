@@ -9,9 +9,9 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface ITaskService
     {
-        Task Create(params CreateTaskModel[] tasks);
+        Task Create(params CreateTaskRequestModel[] tasks);
 
-        Task Update(params UpdateTaskModel[] tasks);
+        Task Update(params UpdateTaskRequestModel[] tasks);
 
         Task Delete(params Guid[] taskIds);
 

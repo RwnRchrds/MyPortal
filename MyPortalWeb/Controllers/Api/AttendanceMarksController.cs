@@ -28,7 +28,7 @@ namespace MyPortalWeb.Controllers.Api
         [Route("register/{attendanceWeekId}/{sessionId}")]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.AttendanceViewAttendanceMarks)]
-        [ProducesResponseType(typeof(AttendanceRegisterModel), 200)]
+        [ProducesResponseType(typeof(AttendanceRegisterResponseModel), 200)]
         public async Task<IActionResult> GetRegister([FromRoute] Guid attendanceWeekId, [FromRoute] Guid sessionId)
         {
             try

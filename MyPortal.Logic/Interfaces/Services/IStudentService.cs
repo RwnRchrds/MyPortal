@@ -16,7 +16,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IEnumerable<StudentModel>> Get(StudentSearchOptions searchModel);
         Task<IEnumerable<StudentSummaryModel>> Search(StudentSearchOptions searchOptions);
 
-        Task<StudentStatsModel> GetStatsById(Guid studentId, Guid academicYearId);
+        Task<StudentStatsResponseModel> GetStatsById(Guid studentId, Guid academicYearId);
 
         Task<StudentModel> GetById(Guid studentId);
 
@@ -24,9 +24,9 @@ namespace MyPortal.Logic.Interfaces.Services
 
         Task<StudentModel> GetByPersonId(Guid personId, bool throwIfNotFound = true);
 
-        Task CreateStudent(params CreateStudentModel[] students);
+        Task CreateStudent(params CreateStudentRequestModel[] students);
 
-        Task UpdateStudent(params UpdateStudentModel[] models);
+        Task UpdateStudent(params UpdateStudentRequestModel[] models);
 
         Dictionary<string, int> GetStudentStatusOptions();
 

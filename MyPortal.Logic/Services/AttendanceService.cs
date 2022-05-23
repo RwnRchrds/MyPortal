@@ -36,7 +36,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<AttendanceRegisterModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId)
+        public async Task<AttendanceRegisterResponseModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -47,7 +47,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Register not found.");
                 }
 
-                var register = new AttendanceRegisterModel(metadata);
+                var register = new AttendanceRegisterResponseModel(metadata);
 
                 var codes = await unitOfWork.AttendanceCodes.GetAll(true, false);
 
@@ -68,7 +68,7 @@ namespace MyPortal.Logic.Services
 
                     var studentModel = new StudentModel(student);
 
-                    var registerStudent = new AttendanceRegisterStudentModel
+                    var registerStudent = new AttendanceRegisterStudentResponseModel
                     {
                         StudentId = possibleMark.Key,
                         StudentName = studentModel.Person.GetName(),
@@ -155,7 +155,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task UpdateAttendanceMarks(params AttendanceRegisterStudentModel[] markCollections)
+        public async Task UpdateAttendanceMarks(params AttendanceRegisterStudentResponseModel[] markCollections)
         {
             var attendanceMarks = new List<AttendanceMarkSummaryModel>();
 

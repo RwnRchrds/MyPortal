@@ -103,24 +103,24 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPost]
         [Route("create")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Create([FromBody] CreateTaskModel model)
+        public async Task<IActionResult> Create([FromBody] CreateTaskRequestModel requestModel)
         {
             try
             {
-                if (TaskTypes.IsReserved(model.TypeId))
+                if (TaskTypes.IsReserved(requestModel.TypeId))
                 {
                     return Error(HttpStatusCode.BadRequest, "Tasks of this type cannot be created manually.");
                 }
 
                 var user = await GetLoggedInUser();
 
-                var accessResponse = await GetPermissionsForTasksPerson(model.AssignedToId, true);
+                var accessResponse = await GetPermissionsForTasksPerson(requestModel.AssignedToId, true);
 
                 if (accessResponse.CanAccess || accessResponse.IsOwner)
                 {
-                    model.AssignedById = user.Id.Value;
+                    requestModel.AssignedById = user.Id.Value;
 
-                    await _taskService.Create(model);
+                    await _taskService.Create(requestModel);
 
                     return Ok();
                 }
@@ -136,13 +136,13 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPut]
         [Route("update")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Update([FromBody] UpdateTaskModel model)
+        public async Task<IActionResult> Update([FromBody] UpdateTaskRequestModel requestModel)
         {
             try
             {
-                if (await CanUpdateTask(model.Id))
+                if (await CanUpdateTask(requestModel.Id))
                 {
-                    await _taskService.Update(model);
+                    await _taskService.Update(requestModel);
 
                     return Ok();   
                 }

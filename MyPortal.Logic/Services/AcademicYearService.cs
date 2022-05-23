@@ -67,7 +67,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateAcademicYear(params CreateAcademicYearModel[] createModels)
+        public async Task CreateAcademicYear(params CreateAcademicYearRequestModel[] createModels)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -118,11 +118,11 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public CreateAcademicTermModel[] GenerateAttendanceWeeks(params CreateAcademicTermModel[] termModel)
+        public CreateAcademicTermRequestModel[] GenerateAttendanceWeeks(params CreateAcademicTermRequestModel[] termModel)
         {
             foreach (var model in termModel)
             {
-                var attendanceWeeks = new List<CreateAttendanceWeekModel>();
+                var attendanceWeeks = new List<CreateAttendanceWeekRequestModel>();
                 var schoolHolidays = new List<DateTime>();
                 var weekPatterns = model.WeekPatterns.OrderBy(p => p.Order).ToArray();
                 int patternIndex = 0;
@@ -149,7 +149,7 @@ namespace MyPortal.Logic.Services
                         schoolHolidays.AddRange(daysAfterEnd);
                     }
 
-                    attendanceWeeks.Add(new CreateAttendanceWeekModel
+                    attendanceWeeks.Add(new CreateAttendanceWeekRequestModel
                     {
                         WeekBeginning = currentWeekBeginning,
                         WeekPatternId = weekPatterns[patternIndex].WeekPatternId
@@ -174,7 +174,7 @@ namespace MyPortal.Logic.Services
             return termModel;
         }
 
-        public async Task UpdateAcademicYear(params UpdateAcademicYearModel[] academicYearModels)
+        public async Task UpdateAcademicYear(params UpdateAcademicYearRequestModel[] academicYearModels)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

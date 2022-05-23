@@ -5,7 +5,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.Data
 {
-    // Calendar event data model for use with FullCalendar
+    // Calendar event data requestModel for use with FullCalendar
     public class CalendarEventModel
     {
         public CalendarEventModel(DiaryEventModel eventModel)

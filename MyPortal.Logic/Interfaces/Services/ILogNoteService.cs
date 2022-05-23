@@ -11,8 +11,8 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<LogNoteModel> GetLogNoteById(Guid logNoteId);
         Task<IEnumerable<LogNoteModel>> GetLogNotesByStudent(Guid studentId, Guid academicYearId, bool includeRestricted);
         Task<IEnumerable<LogNoteTypeModel>> GetLogNoteTypes();
-        Task CreateLogNote(Guid userId, params CreateLogNoteModel[] logNoteObjects);
-        Task UpdateLogNote(params UpdateLogNoteModel[] logNoteObjects);
+        Task CreateLogNote(Guid userId, params CreateLogNoteRequestModel[] logNoteObjects);
+        Task UpdateLogNote(params UpdateLogNoteRequestModel[] logNoteObjects);
         Task DeleteLogNote(params Guid[] logNoteIds);
     }
 }

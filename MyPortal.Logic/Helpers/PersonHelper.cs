@@ -7,7 +7,7 @@ namespace MyPortal.Logic.Helpers
 {
     internal static class PersonHelper
     {
-        public static Person CreatePerson(CreatePersonModel model)
+        public static Person CreatePerson(CreatePersonRequestModel model)
         {
             var createDate = DateTime.Now;
 
@@ -32,20 +32,20 @@ namespace MyPortal.Logic.Helpers
             };
         }
 
-        public static void UpdatePerson(Person person, UpdatePersonModel model)
+        public static void UpdatePerson(Person person, UpdatePersonRequestModel requestModel)
         {
-            person.FirstName = model.FirstName;
-            person.PreferredFirstName = model.PreferredFirstName;
-            person.LastName = model.LastName;
-            person.PreferredLastName = model.PreferredLastName;
-            person.MiddleName = model.MiddleName;
-            person.Title = model.Title;
-            person.NhsNumber = model.NhsNumber;
-            person.Gender = model.Gender;
-            person.Dob = model.Dob;
-            person.EthnicityId = model.EthnicityId;
-            person.Deceased = model.Deceased;
-            person.PhotoId = model.PhotoId;
+            person.FirstName = requestModel.FirstName;
+            person.PreferredFirstName = requestModel.PreferredFirstName;
+            person.LastName = requestModel.LastName;
+            person.PreferredLastName = requestModel.PreferredLastName;
+            person.MiddleName = requestModel.MiddleName;
+            person.Title = requestModel.Title;
+            person.NhsNumber = requestModel.NhsNumber;
+            person.Gender = requestModel.Gender;
+            person.Dob = requestModel.Dob;
+            person.EthnicityId = requestModel.EthnicityId;
+            person.Deceased = requestModel.Deceased;
+            person.PhotoId = requestModel.PhotoId;
         }
     }
 }

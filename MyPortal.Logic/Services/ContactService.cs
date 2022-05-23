@@ -27,7 +27,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateContact(params CreateContactModel[] models)
+        public async Task CreateContact(params CreateContactRequestModel[] models)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -51,7 +51,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task UpdateContact(params UpdateContactModel[] models)
+        public async Task UpdateContact(params UpdateContactRequestRequestModel[] models)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

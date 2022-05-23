@@ -12,9 +12,9 @@ namespace MyPortal.Logic.Interfaces.Services
     {
         Task<AttendanceSummary> GetAttendanceSummaryByStudent(Guid studentId, Guid academicYearId);
         Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId, bool returnNoMark = false);
-        Task<AttendanceRegisterModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId);
+        Task<AttendanceRegisterResponseModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId);
         Task UpdateAttendanceMarks(params AttendanceMarkSummaryModel[] marks);
-        Task UpdateAttendanceMarks(params AttendanceRegisterStudentModel[] markCollections);
+        Task UpdateAttendanceMarks(params AttendanceRegisterStudentResponseModel[] markCollections);
         Task DeleteAttendanceMarks(params Guid[] attendanceMarkIds);
         Task<AttendancePeriodModel> GetPeriodById(Guid periodId);
         Task<AttendanceWeekModel> GetWeekById(Guid attendanceWeekId);

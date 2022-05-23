@@ -6,7 +6,6 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
-using MyPortal.Logic.Models.Response.Behaviour;
 using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
 
@@ -72,7 +71,7 @@ public class StudentIncidentModel : BaseModel, ILoadable
     public BehaviourOutcomeModel Outcome { get; set; }
     public BehaviourStatusModel Status { get; set; }
     
-    public BehaviourInvolvedStudentModel[] InvolvedStudents { get; set; }
+    public BehaviourInvolvedStudentSummaryModel[] InvolvedStudents { get; set; }
 
     public async Task Load(IUnitOfWork unitOfWork)
     {

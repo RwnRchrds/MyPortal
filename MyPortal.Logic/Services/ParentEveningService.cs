@@ -14,10 +14,10 @@ namespace MyPortal.Logic.Services
 {
     public class ParentEveningService : BaseService, IParentEveningService
     {
-        public async Task<IEnumerable<ParentEveningAppointmentTemplateModel>> GetAppointmentTemplatesByStaffMember(
+        public async Task<IEnumerable<ParentEveningAppointmentTemplateResponseModel>> GetAppointmentTemplatesByStaffMember(
             Guid parentEveningId, Guid staffMemberId)
         {
-            var templates = new List<ParentEveningAppointmentTemplateModel>();
+            var templates = new List<ParentEveningAppointmentTemplateResponseModel>();
             
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -52,7 +52,7 @@ namespace MyPortal.Logic.Services
 
                 foreach (var startTime in allStartTimes)
                 {
-                    var template = new ParentEveningAppointmentTemplateModel(pesm.ParentEveningId, pesm.StaffMemberId, startTime,
+                    var template = new ParentEveningAppointmentTemplateResponseModel(pesm.ParentEveningId, pesm.StaffMemberId, startTime,
                         startTime.AddMinutes(pesm.AppointmentLength));
 
                     var templateRange = template.GetDateRange();

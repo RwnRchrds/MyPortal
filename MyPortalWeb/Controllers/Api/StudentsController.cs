@@ -69,7 +69,7 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Route("stats/{studentId}")]
         [Permission(PermissionValue.StudentViewStudentDetails)]
-        [ProducesResponseType(typeof(StudentStatsModel), 200)]
+        [ProducesResponseType(typeof(StudentStatsResponseModel), 200)]
         public async Task<IActionResult> GetStatsById([FromRoute] Guid studentId, [FromQuery] Guid? academicYearId)
         {
             try

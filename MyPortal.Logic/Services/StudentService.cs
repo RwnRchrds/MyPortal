@@ -39,11 +39,11 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<StudentStatsModel> GetStatsById(Guid studentId, Guid academicYearId)
+        public async Task<StudentStatsResponseModel> GetStatsById(Guid studentId, Guid academicYearId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var stats = new StudentStatsModel();
+                var stats = new StudentStatsResponseModel();
 
                 var achievements = await unitOfWork.StudentAchievements.GetPointsByStudent(studentId, academicYearId);
                 var incidents = await unitOfWork.StudentIncidents.GetPointsByStudent(studentId, academicYearId);
@@ -127,7 +127,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateStudent(params CreateStudentModel[] students)
+        public async Task CreateStudent(params CreateStudentRequestModel[] students)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -222,7 +222,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task UpdateStudent(params UpdateStudentModel[] models)
+        public async Task UpdateStudent(params UpdateStudentRequestModel[] models)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

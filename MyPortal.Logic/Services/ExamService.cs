@@ -19,7 +19,7 @@ public class ExamService : BaseService, IExamService
             {
                 if (model.EndDate < DateTime.Now)
                 {
-                    throw new LogicException("End date cannot be in the past.");
+                    throw new InvalidDataException("End date cannot be in the past.");
                 }
 
                 var embargo = new ExamResultEmbargo
@@ -43,7 +43,7 @@ public class ExamService : BaseService, IExamService
             {
                 if (model.EndDate < DateTime.Now)
                 {
-                    throw new LogicException("End date cannot be in the past.");
+                    throw new InvalidDataException("End date cannot be in the past.");
                 }
 
                 var embargoInDb = await unitOfWork.ExamResultEmbargoes.GetByResultSetId(model.ResultSetId);

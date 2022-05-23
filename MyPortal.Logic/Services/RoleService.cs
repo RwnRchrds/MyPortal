@@ -103,7 +103,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<IEnumerable<Guid>> Create(params CreateRoleModel[] requests)
+        public async Task<IEnumerable<Guid>> Create(params CreateRoleRequestModel[] requests)
         {
             var newIds = new List<Guid>();
 
@@ -136,7 +136,7 @@ namespace MyPortal.Logic.Services
             return newIds;
         }
 
-        public async Task Update(params UpdateRoleModel[] requests)
+        public async Task Update(params UpdateRoleRequestModel[] requests)
         {
             foreach (var request in requests)
             {

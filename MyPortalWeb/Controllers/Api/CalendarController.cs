@@ -66,7 +66,7 @@ namespace MyPortalWeb.Controllers.Api
         [Route("create")]
         [Permission(PermissionValue.SchoolEditSchoolDiary)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> CreateEvent([FromBody] CreateEventModel model)
+        public async Task<IActionResult> CreateEvent([FromBody] CreateEventRequestModel model)
         {
             try
             {

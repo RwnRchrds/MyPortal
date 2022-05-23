@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
@@ -73,6 +74,19 @@ namespace MyPortal.Database.Repositories
             result.Mark = entity.Mark;
             result.Comment = entity.Comment;
             result.ColourCode = entity.ColourCode;
+        }
+
+        public async Task<Result> Get(Guid studentId, Guid aspectId, Guid resultSetId)
+        {
+            var query = GenerateQuery();
+
+            query.Where($"{TblAlias}.StudentId", studentId);
+            query.Where($"{TblAlias}.AspectId", aspectId);
+            query.Where($"{TblAlias}.ResultSetId", resultSetId);
+
+            var result = await ExecuteQueryFirstOrDefault(query);
+
+            return result;
         }
     }
 }

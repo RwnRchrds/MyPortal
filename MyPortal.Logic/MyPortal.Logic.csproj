@@ -27,4 +27,9 @@
     <None Remove="Models\Requests\Admissions\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Requests\School\" />
+    <Folder Include="Models\Response\Behaviour\" />
+  </ItemGroup>
+
 </Project>

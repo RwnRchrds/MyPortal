@@ -10,8 +10,8 @@ namespace MyPortal.Logic.Interfaces.Services
     public interface IContactService
     {
         Task<IEnumerable<StudentModel>> GetReportableStudents(Guid contactId);
-        Task CreateContact(params CreateContactModel[] models);
-        Task UpdateContact(params UpdateContactModel[] models);
+        Task CreateContact(params CreateContactRequestModel[] models);
+        Task UpdateContact(params UpdateContactRequestRequestModel[] models);
         Task DeleteContact(params Guid[] contactIds);
     }
 }

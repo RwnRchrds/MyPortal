@@ -26,11 +26,11 @@ namespace MyPortalWeb.Controllers.Api
         [Route("create")]
         [Permission(PermissionValue.CurriculumAcademicStructure)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> CreateAcademicYear([FromBody] CreateAcademicYearModel model)
+        public async Task<IActionResult> CreateAcademicYear([FromBody] CreateAcademicYearRequestModel requestModel)
         {
             try
             {
-                await _academicYearService.CreateAcademicYear(model);
+                await _academicYearService.CreateAcademicYear(requestModel);
 
                 return Ok();
             }
@@ -43,12 +43,12 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPost]
         [Route("generate")]
         [Permission(PermissionValue.CurriculumAcademicStructure)]
-        [ProducesResponseType(typeof(CreateAcademicTermModel), 200)]
-        public async Task<IActionResult> GenerateAttendanceWeeks([FromBody] CreateAcademicTermModel model)  
+        [ProducesResponseType(typeof(CreateAcademicTermRequestModel), 200)]
+        public async Task<IActionResult> GenerateAttendanceWeeks([FromBody] CreateAcademicTermRequestModel requestModel)  
         {
             try
             {
-                var generatedModel = _academicYearService.GenerateAttendanceWeeks(model);
+                var generatedModel = _academicYearService.GenerateAttendanceWeeks(requestModel);
 
                 return Ok(generatedModel);
             }

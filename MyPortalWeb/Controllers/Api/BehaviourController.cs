@@ -91,7 +91,7 @@ namespace MyPortalWeb.Controllers.Api
         [Permission(PermissionValue.BehaviourEditAchievements)]
         [Route("achievements/create", Name = "ApiAchievementCreate")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> CreateAchievement([FromBody] CreateAchievementModel model)
+        public async Task<IActionResult> CreateAchievement([FromBody] CreateAchievementRequestModel model)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace MyPortalWeb.Controllers.Api
         [Permission(PermissionValue.BehaviourEditAchievements)]
         [Route("achievements/update", Name = "ApiAchievementUpdate")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateAchievement([FromBody] UpdateAchievementModel model)
+        public async Task<IActionResult> UpdateAchievement([FromBody] UpdateAchievementRequestModel model)
         {
             try
             {
@@ -202,7 +202,7 @@ namespace MyPortalWeb.Controllers.Api
         [Permission(PermissionValue.BehaviourEditIncidents)]
         [Route("incidents/create", Name = "ApiIncidentCreate")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Create([FromBody] CreateIncidentModel model)
+        public async Task<IActionResult> Create([FromBody] CreateIncidentRequestModel model)
         {
             try
             {
@@ -223,11 +223,11 @@ namespace MyPortalWeb.Controllers.Api
         [Permission(PermissionValue.BehaviourEditIncidents)]
         [Route("incidents/update", Name = "ApiIncidentUpdate")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Update([FromBody] UpdateIncidentModel model)
+        public async Task<IActionResult> Update([FromBody] UpdateIncidentRequestModel requestModel)
         {
             try
             {
-                await _behaviourService.UpdateIncident(model);
+                await _behaviourService.UpdateIncident(requestModel);
 
                 return Ok();
             }

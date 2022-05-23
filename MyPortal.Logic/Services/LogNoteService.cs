@@ -53,7 +53,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateLogNote(Guid userId, params CreateLogNoteModel[] logNoteObjects)
+        public async Task CreateLogNote(Guid userId, params CreateLogNoteRequestModel[] logNoteObjects)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -80,7 +80,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task UpdateLogNote(params UpdateLogNoteModel[] logNoteObjects)
+        public async Task UpdateLogNote(params UpdateLogNoteRequestModel[] logNoteObjects)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

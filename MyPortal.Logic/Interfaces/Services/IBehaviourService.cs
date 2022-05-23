@@ -19,8 +19,8 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<StudentAchievementModel> GetAchievementById(Guid achievementId);
         Task<int> GetAchievementPointsByStudent(Guid studentId, Guid academicYearId);
         Task<int> GetAchievementCountByStudent(Guid studentId, Guid academicYearId);
-        Task CreateAchievement(Guid userId, params CreateAchievementModel[] achievements);
-        Task UpdateAchievement(params UpdateAchievementModel[] achievements);
+        Task CreateAchievement(Guid userId, params CreateAchievementRequestModel[] achievements);
+        Task UpdateAchievement(params UpdateAchievementRequestModel[] achievements);
         Task DeleteAchievement(params Guid[] achievementIds);
         Task<IEnumerable<AchievementTypeModel>> GetAchievementTypes();
         Task<IEnumerable<AchievementOutcomeModel>> GetAchievementOutcomes();    
@@ -31,10 +31,10 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<StudentIncidentModel> GetIncidentById(Guid incidentId);
         Task<int> GetBehaviourPointsByStudent(Guid studentId, Guid academicYearId);
         Task<int> GetBehaviourCountByStudent(Guid studentId, Guid academicYearId);
-        Task CreateIncident(Guid userId, params CreateIncidentModel[] incidents);
-        Task UpdateIncident(params UpdateIncidentModel[] incidents);
+        Task CreateIncident(Guid userId, params CreateIncidentRequestModel[] incidents);
+        Task UpdateIncident(params UpdateIncidentRequestModel[] incidents);
         Task DeleteIncident(params Guid[] incidentIds);
-        Task AddStudentToIncident(params AddToIncidentModel[] models);
+        Task AddStudentToIncident(params AddStudentToIncidentRequestModel[] models);
         Task<IEnumerable<IncidentTypeModel>> GetIncidentTypes();
         Task<IEnumerable<BehaviourRoleTypeModel>> GetRoleTypes();
         Task<IEnumerable<BehaviourOutcomeModel>> GetIncidentOutcomes();
@@ -47,8 +47,8 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IEnumerable<DetentionModel>> Get(DetentionSearchOptions searchOptions);
         Task<DetentionModel> GetById(Guid detentionId);
         Task<DetentionModel> GetByIncident(Guid incidentId);
-        Task CreateDetention(params CreateDetentionRequest[] detentionModels);
-        Task UpdateDetention(params UpdateDetentionRequest[] detentionModels);
+        Task CreateDetention(params CreateDetentionRequestModel[] detentionModels);
+        Task UpdateDetention(params UpdateDetentionRequestModel[] detentionModels);
         Task DeleteDetention(params Guid[] detentionIds);
         Task AddToDetention(Guid detentionId, Guid incidentId);
         Task RemoveFromDetention(Guid incidentDetentionId);

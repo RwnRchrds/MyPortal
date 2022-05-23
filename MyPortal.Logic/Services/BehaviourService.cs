@@ -73,7 +73,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateAchievement(Guid userId, params CreateAchievementModel[] requests)
+        public async Task CreateAchievement(Guid userId, params CreateAchievementRequestModel[] requests)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -106,7 +106,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task UpdateAchievement(params UpdateAchievementModel[] requests)
+        public async Task UpdateAchievement(params UpdateAchievementRequestModel[] requests)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -220,7 +220,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateIncident(Guid userId, params CreateIncidentModel[] incidents)
+        public async Task CreateIncident(Guid userId, params CreateIncidentRequestModel[] incidents)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -250,7 +250,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task UpdateIncident(params UpdateIncidentModel[] incidents)
+        public async Task UpdateIncident(params UpdateIncidentRequestModel[] incidents)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -355,7 +355,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateDetention(params CreateDetentionRequest[] detentionModels)
+        public async Task CreateDetention(params CreateDetentionRequestModel[] detentionModels)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -408,7 +408,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task UpdateDetention(params UpdateDetentionRequest[] detentionModels)
+        public async Task UpdateDetention(params UpdateDetentionRequestModel[] detentionModels)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -460,7 +460,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task AddStudentToIncident(params AddToIncidentModel[] models)
+        public async Task AddStudentToIncident(params AddStudentToIncidentRequestModel[] models)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

@@ -11,15 +11,15 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface IDocumentService
     {
-        Task CreateDocument(Guid userId, params CreateDocumentModel[] documents);
-        Task UpdateDocument(params UpdateDocumentModel[] documents);
+        Task CreateDocument(Guid userId, params CreateDocumentRequestModel[] documents);
+        Task UpdateDocument(params UpdateDocumentRequestModel[] documents);
         Task<IEnumerable<DocumentTypeModel>> GetTypes(DocumentTypeFilter filter);
         Task<DocumentModel> GetDocumentById(Guid documentId);
         Task DeleteDocument(params Guid[] documentIds);
-        Task<DirectoryChildren> GetDirectoryChildren(Guid directoryId, bool includeRestricted);
+        Task<DirectoryChildrenResponseModel> GetDirectoryChildren(Guid directoryId, bool includeRestricted);
         Task<DirectoryModel> GetDirectoryById(Guid directoryId);
-        Task CreateDirectory(params CreateDirectoryModel[] directories);
-        Task UpdateDirectory(params UpdateDirectoryModel[] directories);
+        Task CreateDirectory(params CreateDirectoryRequestModel[] directories);
+        Task UpdateDirectory(params UpdateDirectoryRequestModel[] directories);
         Task DeleteDirectory(params Guid[] directoryIds);
         Task<bool> DirectoryIsPrivate(Guid directoryId);
         Task<bool> DirectoryIsPublic(Guid directoryId);

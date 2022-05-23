@@ -17,7 +17,7 @@ namespace MyPortal.Logic.Services
 {
     public class TaskService : BaseService, ITaskService
     {
-        public async Task Create(params CreateTaskModel[] tasks)
+        public async Task Create(params CreateTaskRequestModel[] tasks)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -94,7 +94,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Update(params UpdateTaskModel[] tasks)
+        public async Task Update(params UpdateTaskRequestModel[] tasks)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

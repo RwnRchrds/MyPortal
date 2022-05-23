@@ -125,13 +125,13 @@ namespace MyPortalWeb.Controllers.Api
         [Permission(PermissionValue.StudentEditStudentLogNotes)]
         [Route("create")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Create([FromBody] CreateLogNoteModel model)
+        public async Task<IActionResult> Create([FromBody] CreateLogNoteRequestModel requestModel)
         {
             try
             {
                 var user = await GetLoggedInUser();
                 
-                await _logNoteService.CreateLogNote(user.Id.Value, model);
+                await _logNoteService.CreateLogNote(user.Id.Value, requestModel);
 
                 return Ok();
             }
@@ -146,11 +146,11 @@ namespace MyPortalWeb.Controllers.Api
         [Permission(PermissionValue.StudentEditStudentLogNotes)]
         [Route("update")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Update([FromBody] UpdateLogNoteModel model)
+        public async Task<IActionResult> Update([FromBody] UpdateLogNoteRequestModel requestModel)
         {
             try
             {
-                await _logNoteService.UpdateLogNote(model);
+                await _logNoteService.UpdateLogNote(requestModel);
 
                 return Ok();
             }

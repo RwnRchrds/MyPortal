@@ -32,7 +32,7 @@ namespace MyPortalWeb.Controllers.Api
         [Route("create")]
         [Permission(PermissionValue.SystemEditGroups)]
         [ProducesResponseType(typeof(NewEntityResponseModel), 200)]
-        public async Task<IActionResult> CreateRole([FromBody] CreateRoleModel model)
+        public async Task<IActionResult> CreateRole([FromBody] CreateRoleRequestModel model)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace MyPortalWeb.Controllers.Api
         [Route("update")]
         [Permission(PermissionValue.SystemEditGroups)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleModel model)
+        public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleRequestModel model)
         {
             try
             {

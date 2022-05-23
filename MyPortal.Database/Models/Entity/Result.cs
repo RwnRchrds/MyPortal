@@ -24,12 +24,14 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 6, TypeName = "decimal(10,2)")]
         public decimal? Mark { get; set; }
 
+        // Used for comment result types
         [Column(Order = 7)]
         public string Comment { get; set; }
 
         [Column(Order = 8)] 
         public string ColourCode { get; set; }
         
+        // Used to add notes/comments to results
         [Column(Order = 9)] 
         public string Note { get; set; }
 

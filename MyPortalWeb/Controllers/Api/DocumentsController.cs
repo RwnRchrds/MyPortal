@@ -187,7 +187,7 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPost]
         [Route("create")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> CreateDocument([FromBody] CreateDocumentModel model)
+        public async Task<IActionResult> CreateDocument([FromBody] CreateDocumentRequestModel model)
         {
             try
             {
@@ -212,15 +212,15 @@ namespace MyPortalWeb.Controllers.Api
         [Route("file/upload")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> UploadFile([FromBody] UploadAttachmentModel model)
+        public async Task<IActionResult> UploadFile([FromBody] UploadAttachmentRequestModel requestModel)
         {
             try
             {
                 if (_fileService is LocalFileService localFileService)
                 {
-                    if (await CanAccessDocument(model.DocumentId, true))
+                    if (await CanAccessDocument(requestModel.DocumentId, true))
                     {
-                        await localFileService.UploadFileToDocument(model);
+                        await localFileService.UploadFileToDocument(requestModel);
 
                         return Ok();
                     }
@@ -241,15 +241,15 @@ namespace MyPortalWeb.Controllers.Api
         [Route("file/linkHosted")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> LinkHostedFile([FromBody] LinkHostedFileModel model)
+        public async Task<IActionResult> LinkHostedFile([FromBody] LinkHostedFileRequestModel requestModel)
         {
             try
             {
                 if (_fileService is HostedFileService hostedFileService)
                 {
-                    if (await CanAccessDocument(model.DocumentId, true))
+                    if (await CanAccessDocument(requestModel.DocumentId, true))
                     {
-                        await hostedFileService.AttachFileToDocument(model.DocumentId, model.FileId);
+                        await hostedFileService.AttachFileToDocument(requestModel.DocumentId, requestModel.FileId);
 
                         return Ok();
                     }
@@ -291,7 +291,7 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPut]
         [Route("update")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateDocument([FromBody] UpdateDocumentModel model)
+        public async Task<IActionResult> UpdateDocument([FromBody] UpdateDocumentRequestModel model)
         {
             try
             {
@@ -384,7 +384,7 @@ namespace MyPortalWeb.Controllers.Api
         
         [HttpGet]
         [Route("directories/children/{directoryId}")]
-        [ProducesResponseType(typeof(DirectoryChildListWrapper), 200)]
+        [ProducesResponseType(typeof(DirectoryChildListWrapperResponseModel), 200)]
         public async Task<IActionResult> GetDirectoryChildren([FromRoute] Guid directoryId)
         {
             try
@@ -403,7 +403,7 @@ namespace MyPortalWeb.Controllers.Api
                     childList.AddRange(children.Subdirectories.Select(x => x.GetListModel()));
                     childList.AddRange(children.Files.Select(x => x.GetListModel()));
 
-                    var response = new DirectoryChildListWrapper
+                    var response = new DirectoryChildListWrapperResponseModel
                     {
                         Directory = directory,
                         Children = childList
@@ -423,13 +423,13 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPost]
         [Route("directories/create")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> CreateDirectory([FromBody] CreateDirectoryModel model)
+        public async Task<IActionResult> CreateDirectory([FromBody] CreateDirectoryRequestModel requestModel)
         {
             try
             {
-                if (await CanAccessDirectory(model.ParentId, true))
+                if (await CanAccessDirectory(requestModel.ParentId, true))
                 {
-                    await _documentService.CreateDirectory(model);
+                    await _documentService.CreateDirectory(requestModel);
 
                     return Ok();
                 }
@@ -445,13 +445,13 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPut]
         [Route("directories/update")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Update([FromBody] UpdateDirectoryModel model)
+        public async Task<IActionResult> Update([FromBody] UpdateDirectoryRequestModel requestModel)
         {
             try
             {
-                if (await CanAccessDirectory(model.Id, true))
+                if (await CanAccessDirectory(requestModel.Id, true))
                 {
-                    await _documentService.UpdateDirectory(model);
+                    await _documentService.UpdateDirectory(requestModel);
 
                     return Ok();
                 }

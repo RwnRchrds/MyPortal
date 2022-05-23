@@ -144,7 +144,7 @@ namespace MyPortal.Logic.Services
             return users.OrderBy(u => u.UserName).Select(u => new UserModel(u));
         }
 
-        public async Task<IEnumerable<Guid>> CreateUser(params CreateUserModel[] createUserRequests)
+        public async Task<IEnumerable<Guid>> CreateUser(params CreateUserRequestModel[] createUserRequests)
         {
             var newIds = new List<Guid>();
             foreach (var request in createUserRequests)
@@ -204,7 +204,7 @@ namespace MyPortal.Logic.Services
             await _userManager.UpdateAsync(user);
         }
 
-        public async Task UpdateUser(params UpdateUserModel[] updateUserRequests)
+        public async Task UpdateUser(params UpdateUserRequestModel[] updateUserRequests)
         {
             foreach (var updateUserRequest in updateUserRequests)
             {
@@ -297,7 +297,7 @@ namespace MyPortal.Logic.Services
         /// </summary>
         /// <param name="login"></param>
         /// <returns></returns>
-        public async Task<LoginResult> Login(LoginModel login)
+        public async Task<LoginResult> Login(LoginRequestModel login)
         {
             var result = new LoginResult();
 

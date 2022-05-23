@@ -22,7 +22,7 @@ namespace MyPortal.Logic.Services
         private readonly IUserService _userService;
         private readonly IStaffMemberService _staffMemberService;
 
-        public async Task CreateDocument(Guid userId, params CreateDocumentModel[] documents)
+        public async Task CreateDocument(Guid userId, params CreateDocumentRequestModel[] documents)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -61,7 +61,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task UpdateDocument(params UpdateDocumentModel[] documents)
+        public async Task UpdateDocument(params UpdateDocumentRequestModel[] documents)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -134,7 +134,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateDirectory(params CreateDirectoryModel[] directories)
+        public async Task CreateDirectory(params CreateDirectoryRequestModel[] directories)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -161,7 +161,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task UpdateDirectory(params UpdateDirectoryModel[] directories)
+        public async Task UpdateDirectory(params UpdateDirectoryRequestModel[] directories)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -202,7 +202,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<DirectoryChildren> GetDirectoryChildren(Guid directoryId, bool includeRestricted)
+        public async Task<DirectoryChildrenResponseModel> GetDirectoryChildren(Guid directoryId, bool includeRestricted)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -213,7 +213,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Directory not found.");
                 }
 
-                var children = new DirectoryChildren();
+                var children = new DirectoryChildrenResponseModel();
 
                 var subDirs =
                     await unitOfWork.Directories.GetSubdirectories(directoryId, includeRestricted);
