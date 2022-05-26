@@ -25,15 +25,15 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("generate")]
+        [Route("generate/{chargeBillingPeriodId}")]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.FinanceEditBills)]
         [ProducesResponseType(typeof(IEnumerable<BillModel>), 200)]
-        public async Task<IActionResult> GenerateChargeBills()
+        public async Task<IActionResult> GenerateChargeBills([FromRoute] Guid chargeBillingPeriodId)
         {
             try
             {
-                var generatedBills = await _billService.GenerateChargeBills();
+                var generatedBills = await _billService.GenerateChargeBills(chargeBillingPeriodId);
 
                 return Ok(generatedBills);
             }

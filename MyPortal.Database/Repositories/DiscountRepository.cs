@@ -27,7 +27,7 @@ namespace MyPortal.Database.Repositories
             discount.Name = entity.Name;
             discount.Amount = entity.Amount;
             discount.Percentage = entity.Percentage;
-            discount.MaxUsage = entity.MaxUsage;
+            discount.BlockOtherDiscounts = entity.BlockOtherDiscounts;
         }
     }
 }

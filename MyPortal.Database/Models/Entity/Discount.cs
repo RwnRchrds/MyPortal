@@ -20,11 +20,12 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 5)]
         public bool Percentage { get; set; }
         
+        // Specify whether this discount can be combined with other discounts
         [Column(Order = 6)] 
-        public int? MaxUsage { get; set; }
+        public bool BlockOtherDiscounts { get; set; }
 
+        public virtual ICollection<BillDiscount> BillDiscounts { get; set; }
         public virtual ICollection<ChargeDiscount> ChargeDiscounts { get; set; }
-        public virtual ICollection<StoreDiscount> StoreDiscounts { get; set; }
-        public virtual ICollection<ProductDiscount> ProductDiscounts { get; set; }
+        public virtual ICollection<StoreDiscount> ProductDiscounts { get; set; }
     }
 }

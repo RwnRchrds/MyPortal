@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models.Entity
@@ -18,15 +19,15 @@ namespace MyPortal.Database.Models.Entity
         public Guid ChargeId { get; set; }
         
         [Column(Order = 3)] 
-        public string Description { get; set; }
-
+        public Guid ChargeBillingPeriodId { get; set; }
+        
         [Column(Order = 4)] 
-        public DateTime StartDate { get; set; }
-
-        [Column(Order = 5)]
-        public int Recurrences { get; set; }
+        public string Description { get; set; }
 
         public virtual Student Student { get; set; }
         public virtual Charge Charge { get; set; }
+        public virtual ChargeBillingPeriod ChargeBillingPeriod { get; set; }
+
+        public virtual ICollection<BillStudentCharge> BillStudentCharges { get; set; }
     }
 }

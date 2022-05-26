@@ -29,11 +29,7 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 6)] 
         public bool Variable { get; set; }
 
-        [Column(Order = 7)]
-        public int DefaultRecurrences { get; set; }
-
         public virtual ICollection<StudentCharge> StudentCharges { get; set; }
-        public virtual ICollection<BillCharge> BillCharges { get; set; }
         public virtual ICollection<ChargeDiscount> ChargeDiscounts { get; set; }
     }
 }

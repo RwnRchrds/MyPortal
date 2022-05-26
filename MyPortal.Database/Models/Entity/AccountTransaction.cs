@@ -18,8 +18,7 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 2, TypeName = "decimal(10,2)")]
         public decimal Amount { get; set; }
 
-        public bool Credit { get; set; }
-
+        [Column(Order = 3)]
         public DateTime Date { get; set; } 
 
         public virtual Student Student { get; set; }

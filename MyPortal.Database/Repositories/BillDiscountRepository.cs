@@ -14,16 +14,16 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class BillChargeDiscountRepository : BaseReadWriteRepository<BillChargeDiscount>, IBillChargeDiscountRepository
+    public class BillDiscountRepository : BaseReadWriteRepository<BillDiscount>, IBillDiscountRepository
     {
-        public BillChargeDiscountRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public BillDiscountRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
         }
 
         protected override Query JoinRelated(Query query)
         {
             JoinEntity(query, "Bills", "B", "BillId");
-            JoinEntity(query, "ChargeDiscounts", "CD", "ChargeDiscountId");
+            JoinEntity(query, "Discounts", "D", "DiscountId");
 
             return query;
         }
@@ -31,30 +31,30 @@ namespace MyPortal.Database.Repositories
         protected override Query SelectAllRelated(Query query)
         {
             query.SelectAllColumns(typeof(Bill), "B");
-            query.SelectAllColumns(typeof(ChargeDiscount), "CD");
+            query.SelectAllColumns(typeof(ChargeDiscount), "D");
 
             return query;
         }
 
-        protected override async Task<IEnumerable<BillChargeDiscount>> ExecuteQuery(Query query)
+        protected override async Task<IEnumerable<BillDiscount>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
             var discounts =
-                await Transaction.Connection.QueryAsync<BillChargeDiscount, Bill, ChargeDiscount, BillChargeDiscount>(
+                await Transaction.Connection.QueryAsync<BillDiscount, Bill, Discount, BillDiscount>(
                     sql.Sql,
-                    (bcd, bill, chargeDiscount) =>
+                    (bd, bill, discount) =>
                     {
-                        bcd.Bill = bill;
-                        bcd.ChargeDiscount = chargeDiscount;
+                        bd.Bill = bill;
+                        bd.Discount = discount;
 
-                        return bcd;
+                        return bd;
                     }, sql.NamedBindings, Transaction);
 
             return discounts;
         }
 
-        public async Task Update(BillChargeDiscount entity)
+        public async Task Update(BillDiscount entity)
         {
             var bcd = await Context.BillChargeDiscounts.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
@@ -63,7 +63,7 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Bill charge discount not found.");
             }
 
-            bcd.ChargeDiscountId = entity.ChargeDiscountId;
+            bcd.DiscountId = entity.DiscountId;
             bcd.GrossAmount = entity.GrossAmount;
         }
     }

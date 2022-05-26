@@ -11,14 +11,17 @@ namespace MyPortal.Database.Models.Entity
     {
         public Bill()
         {
-            BillDiscounts = new HashSet<BillChargeDiscount>();
-            BillCharges = new HashSet<BillCharge>();
+            BillChargeDiscounts = new HashSet<BillDiscount>();
+            BillStudentCharges = new HashSet<BillStudentCharge>();
             BillItems = new HashSet<BillItem>();
             AccountTransactions = new HashSet<BillAccountTransaction>();
         }
         
         [Column(Order = 1)]
         public Guid StudentId { get; set; }
+        
+        [Column(Order = 2)] 
+        public Guid? ChargeBillingPeriodId { get; set; }
 
         [Column(Order = 2)]
         public DateTime CreatedDate { get; set; }
@@ -31,9 +34,9 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual Student Student { get; set; }
 
-        public virtual ICollection<BillChargeDiscount> BillDiscounts { get; set; }
-        public virtual ICollection<BillStoreDiscount> BillStoreDiscounts { get; set; }
-        public virtual ICollection<BillCharge> BillCharges { get; set; }    
+        public virtual ChargeBillingPeriod ChargeBillingPeriod { get; set; }
+        public virtual ICollection<BillDiscount> BillChargeDiscounts { get; set; }
+        public virtual ICollection<BillStudentCharge> BillStudentCharges { get; set; }    
         public virtual ICollection<BillItem> BillItems { get; set; }
         public virtual ICollection<BillAccountTransaction> AccountTransactions { get; set; }
     }

@@ -33,7 +33,6 @@ namespace MyPortal.Database.Repositories
             charge.Amount = entity.Amount;
             charge.Description = entity.Description;
             charge.Active = entity.Active;
-            charge.DefaultRecurrences = entity.DefaultRecurrences;
             charge.Variable = entity.Variable;
         }
     }

@@ -5,7 +5,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IBillChargeDiscountRepository : IReadWriteRepository<BillChargeDiscount>, IUpdateRepository<BillChargeDiscount>
+    public interface IBillStudentChargeRepository : IReadWriteRepository<BillStudentCharge>
     {
     }
 }

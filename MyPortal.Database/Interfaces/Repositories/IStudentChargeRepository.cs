@@ -8,6 +8,6 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IStudentChargeRepository : IReadWriteRepository<StudentCharge>, IUpdateRepository<StudentCharge>
     {
-        Task<IEnumerable<StudentCharge>> GetOutstanding();
+        Task<IEnumerable<StudentCharge>> GetOutstandingByBillingPeriod(Guid chargeBillingPeriodId);
     }
 }

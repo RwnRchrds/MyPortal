@@ -15,6 +15,68 @@ namespace MyPortal.Logic.Services;
 
 public class AssessmentService : BaseService, IAssessmentService
 {
+    public async Task CreateAspect(params CreateAspectRequestModel[] models)
+    {
+        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        {
+            foreach (var model in models)
+            {
+                if (model.TypeId == AspectTypes.Grade && model.GradeSetId == null)
+                {
+                    throw new InvalidDataException($"A grade set was not provided for {model.Name}.");
+                }
+
+                if (model.TypeId == AspectTypes.MarkDecimal || model.TypeId == AspectTypes.MarkInteger)
+                {
+                    if (model.MinMark == null)
+                    {
+                        throw new InvalidDataException($"A minimum mark was not provided for {model.Name}");
+                    }
+
+                    if (model.MaxMark == null)
+                    {
+                        throw new InvalidDataException($"A maximum mark was not provided for {model.Name}");
+                    }
+                }
+
+                var aspect = new Aspect
+                {
+                    TypeId = model.TypeId,
+                    GradeSetId = model.GradeSetId,
+                    MinMark = model.MinMark,
+                    MaxMark = model.MaxMark,
+                    Name = model.Name,
+                    ColumnHeading = model.ColumnHeading,
+                    StaffOnly = model.StaffOnly
+                };
+
+                unitOfWork.Aspects.Create(aspect);
+            }
+
+            await unitOfWork.SaveChangesAsync();
+        }
+    }
+
+    public async Task DeleteAspect(params Guid[] aspectIds)
+    {
+        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        {
+            foreach (var aspectId in aspectIds)
+            {
+                var aspect = await unitOfWork.Aspects.GetById(aspectId);
+
+                if (aspect == null)
+                {
+                    throw new NotFoundException("Aspect not found.");
+                }
+
+                await unitOfWork.Aspects.Delete(aspectId);
+            }
+
+            await unitOfWork.SaveChangesAsync();
+        }
+    }
+
     public async Task CreateOrUpdateResult(params CreateOrUpdateResultRequestModel[] models)
     {
         List<Aspect> cachedAspects = new List<Aspect>();
@@ -25,18 +87,32 @@ public class AssessmentService : BaseService, IAssessmentService
         {
             foreach (var model in models)
             {
-                Aspect aspect = cachedAspects.FirstOrDefault(x => x.Id == model.AspectId) ?? await unitOfWork.Aspects.GetById(model.AspectId);
+                Aspect aspect = cachedAspects.FirstOrDefault(x => x.Id == model.AspectId);
 
                 if (aspect == null)
                 {
-                    throw new NotFoundException("Aspect not found.");
+                    aspect = await unitOfWork.Aspects.GetById(model.AspectId);
+
+                    if (aspect == null)
+                    {
+                        throw new NotFoundException("Aspect not found.");
+                    }
+                    
+                    cachedAspects.Add(aspect);
                 }
 
-                ResultSet resultSet = cachedResultSets.FirstOrDefault(x => x.Id == model.ResultSetId) ?? await unitOfWork.ResultSets.GetById(model.ResultSetId);
+                ResultSet resultSet = cachedResultSets.FirstOrDefault(x => x.Id == model.ResultSetId);
 
                 if (resultSet == null)
                 {
-                    throw new NotFoundException("Result set not found.");
+                    resultSet = await unitOfWork.ResultSets.GetById(model.ResultSetId);
+                    
+                    if (resultSet == null)
+                    {
+                        throw new NotFoundException("Result set not found.");
+                    }
+                    
+                    cachedResultSets.Add(resultSet);
                 }
 
                 if (!resultSet.Active)
@@ -77,12 +153,18 @@ public class AssessmentService : BaseService, IAssessmentService
                     
                     Grade grade = null;
 
-                    grade = cachedGrades.FirstOrDefault(x => x.Id == model.GradeId) ??
-                            await unitOfWork.Grades.GetById(model.GradeId.Value);
+                    grade = cachedGrades.FirstOrDefault(x => x.Id == model.GradeId);
 
                     if (grade == null)
                     {
-                        throw new NotFoundException("Grade not found.");
+                        grade = await unitOfWork.Grades.GetById(model.GradeId.Value);
+
+                        if (grade == null)
+                        {
+                            throw new NotFoundException("Grade not found.");   
+                        }
+                        
+                        cachedGrades.Add(grade);
                     }
 
                     result.GradeId = model.GradeId.Value;
@@ -98,6 +180,16 @@ public class AssessmentService : BaseService, IAssessmentService
                     result.Mark = aspect.TypeId == AspectTypes.MarkInteger
                         ? Convert.ToInt32(model.Mark.Value)
                         : model.Mark.Value;
+                }
+
+                if (aspect.TypeId == AspectTypes.Comment)
+                {
+                    if (!string.IsNullOrWhiteSpace(result.Comment))
+                    {
+                        throw new InvalidDataException("A comment was not provided.");
+                    }
+                    
+                    result.Comment = model.Comment;
                 }
 
                 if (createNewResult)

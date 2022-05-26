@@ -36,11 +36,10 @@ namespace MyPortal.Database.Interfaces
         IBehaviourStatusRepository BehaviourStatus { get; }
         IBehaviourTargetRepository BehaviourTargets { get; }
         IBillAccountTransactionRepository BillAccountTransactions { get; }
-        IBillChargeDiscountRepository BillChargeDiscounts { get; }
-        IBillChargeRepository BillCharges { get; }
+        IBillDiscountRepository BillDiscounts { get; }
+        IBillStudentChargeRepository BillStudentCharges { get; }
         IBillItemRepository BillItems { get; }
         IBillRepository Bills { get; }
-        IBillStoreDiscountRepository BillStoreDiscounts { get; }
         IBoarderStatusRepository BoarderStatus { get; }
         IBuildingRepository Buildings { get; }
         IBuildingFloorRepository BuildingFloors { get; }
@@ -149,7 +148,6 @@ namespace MyPortal.Database.Interfaces
         IPhoneNumberRepository PhoneNumbers { get; }
         IPhoneNumberTypeRepository PhoneNumberTypes { get; }
         IPhotoRepository Photos { get; }
-        IProductDiscountRepository ProductDiscounts { get; }
         IProductRepository Products { get; }
         IRefreshTokenRepository RefreshTokens { get; }
         IRegGroupRepository RegGroups { get; }

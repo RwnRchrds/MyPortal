@@ -45,11 +45,10 @@ namespace MyPortal.Database
         private IBehaviourStatusRepository _behaviourStatus;
         private IBehaviourTargetRepository _behaviourTargets;
         private IBillAccountTransactionRepository _billAccountTransactions;
-        private IBillChargeDiscountRepository _billChargeDiscounts;
-        private IBillChargeRepository _billCharges;
+        private IBillDiscountRepository _billDiscounts;
+        private IBillStudentChargeRepository _billStudentCharges;
         private IBillItemRepository _billItems;
         private IBillRepository _bills;
-        private IBillStoreDiscountRepository _billStoreDiscounts;
         private IBoarderStatusRepository _boarderStatus;
         private IBuildingRepository _buildings;
         private IBuildingFloorRepository _buildingFloors;
@@ -158,7 +157,6 @@ namespace MyPortal.Database
         private IPhoneNumberRepository _phoneNumbers;
         private IPhoneNumberTypeRepository _phoneNumberTypes;
         private IPhotoRepository _photos;
-        private IProductDiscountRepository _productDiscounts;
         private IProductRepository _products;
         private IRefreshTokenRepository _refreshTokens;
         private IRegGroupRepository _regGroups;
@@ -300,13 +298,10 @@ namespace MyPortal.Database
         public IBillAccountTransactionRepository BillAccountTransactions => _billAccountTransactions ??=
             new BillAccountTransactionRepository(_context, _transaction);
 
-        public IBillChargeDiscountRepository BillChargeDiscounts =>
-            _billChargeDiscounts ??= new BillChargeDiscountRepository(_context, _transaction);
+        public IBillDiscountRepository BillDiscounts =>
+            _billDiscounts ??= new BillDiscountRepository(_context, _transaction);
 
-        public IBillChargeRepository BillCharges => _billCharges ??= new BillChargeRepository(_context, _transaction);
-
-        public IBillStoreDiscountRepository BillStoreDiscounts =>
-            _billStoreDiscounts ??= new BillStoreDiscountRepository(_context, _transaction);
+        public IBillStudentChargeRepository BillStudentCharges => _billStudentCharges ??= new BillStudentStudentChargeRepository(_context, _transaction);
 
         public IBoarderStatusRepository BoarderStatus => _boarderStatus ??= new BoarderStatusRepository(_transaction);
 
@@ -597,9 +592,6 @@ namespace MyPortal.Database
 
         public IProductRepository Products => _products ??= new ProductRepository(_context, _transaction);
 
-        public IProductDiscountRepository ProductDiscounts =>
-            _productDiscounts ??= new ProductDiscountRepository(_context, _transaction);
-
         public IRefreshTokenRepository RefreshTokens =>
             _refreshTokens ??= new RefreshTokenRepository(_context, _transaction);
 
@@ -860,9 +852,8 @@ namespace MyPortal.Database
             _billItems = null;
             _bills = null;
             _billAccountTransactions = null;
-            _billChargeDiscounts = null;
-            _billCharges = null;
-            _billStoreDiscounts = null;
+            _billDiscounts = null;
+            _billStudentCharges = null;
             _boarderStatus = null;
             _buildings = null;
             _buildingFloors = null;
@@ -970,7 +961,6 @@ namespace MyPortal.Database
             _phoneNumberTypes = null;
             _photos = null;
             _products = null;
-            _productDiscounts = null;
             _refreshTokens = null;
             _regGroups = null;
             _relationshipTypes = null;

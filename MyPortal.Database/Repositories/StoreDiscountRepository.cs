@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.Common;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,8 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
+            JoinEntity(query, "Products", "P", "ProductId");
+            JoinEntity(query, "ProductTypes", "PT", "ProductTypeId");
             JoinEntity(query, "Discounts", "D", "DiscountId");
 
             return query;
@@ -29,25 +32,30 @@ namespace MyPortal.Database.Repositories
 
         protected override Query SelectAllRelated(Query query)
         {
+            query.SelectAllColumns(typeof(Product), "P");
+            query.SelectAllColumns(typeof(ProductType), "PT");
             query.SelectAllColumns(typeof(Discount), "D");
 
             return query;
         }
-        
+
         protected override async Task<IEnumerable<StoreDiscount>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            var storeDiscounts = await Transaction.Connection.QueryAsync<StoreDiscount, Discount, StoreDiscount>(
-                sql.Sql,
-                (sd, discount) =>
-                {
-                    sd.Discount = discount;
+            var discounts =
+                await Transaction.Connection.QueryAsync<StoreDiscount, Product, ProductType, Discount, StoreDiscount>(
+                    sql.Sql,
+                    (pd, product, productType, discount) =>
+                    {
+                        pd.Product = product;
+                        pd.ProductType = productType;
+                        pd.Discount = discount;
 
-                    return sd;
-                }, sql.NamedBindings, Transaction);
+                        return pd;
+                    }, sql.NamedBindings, Transaction);
 
-            return storeDiscounts;
+            return discounts;
         }
 
         public async Task Update(StoreDiscount entity)
@@ -59,10 +67,10 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Store discount not found.");
             }
 
-            storeDiscount.DiscountId = entity.DiscountId;
-            storeDiscount.MinQuantity = entity.MinQuantity;
-            storeDiscount.MaxQuantity = entity.MaxQuantity;
-            storeDiscount.Auto = entity.Auto;
+            storeDiscount.ApplyTo = entity.ApplyTo;
+            storeDiscount.ApplyToCart = entity.ApplyToCart;
+            storeDiscount.ProductId = entity.ProductId;
+            storeDiscount.ProductTypeId = entity.ProductTypeId;
         }
     }
 }

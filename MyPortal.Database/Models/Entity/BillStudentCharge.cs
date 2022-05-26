@@ -1,20 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
+using System.Text;
 
 namespace MyPortal.Database.Models.Entity
 {
-    public class BillStoreDiscount : BaseTypes.Entity
+    [Table("BillCharges")]
+    public class BillStudentCharge : BaseTypes.Entity
     {
         [Column(Order = 1)]
         public Guid BillId { get; set; }
-        
+
         [Column(Order = 2)]
-        public Guid StoreDiscountId { get; set; }
-        
+        public Guid StudentChargeId { get; set; }
+
         [Column(Order = 3, TypeName = "decimal(10,2)")]
         public decimal GrossAmount { get; set; }
 
+        [Column(Order = 4)]
+        public bool Refunded { get; set; } 
+
         public virtual Bill Bill { get; set; }
-        public virtual StoreDiscount StoreDiscount { get; set; }
+        public virtual StudentCharge StudentCharge { get; set; }
     }
 }

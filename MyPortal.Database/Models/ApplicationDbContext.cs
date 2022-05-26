@@ -44,17 +44,17 @@ namespace MyPortal.Database.Models
         public virtual DbSet<BehaviourStatus> BehaviourStatus { get; set; }
         public virtual DbSet<BehaviourTarget> BehaviourTargets { get; set; }
         public virtual DbSet<Bill> Bills { get; set; }
-        public virtual DbSet<BillCharge> BillCharges { get; set; }
-        public virtual DbSet<BillChargeDiscount> BillChargeDiscounts { get; set; }
-        public virtual DbSet<StudentChargeDiscount> StudentChargeDiscounts { get; set; }
+        public virtual DbSet<BillStudentCharge> BillCharges { get; set; }
+        public virtual DbSet<BillDiscount> BillChargeDiscounts { get; set; }
+        public virtual DbSet<BillDiscount> BillDiscounts { get; set; }
         public virtual DbSet<BillAccountTransaction> BillAccountTransactions { get; set; }
         public virtual DbSet<BillItem> BillItems { get; set; }
-        public virtual DbSet<BillStoreDiscount> BillStoreDiscounts { get; set; }
         public virtual DbSet<BoarderStatus> BoarderStatuses { get; set; }
         public virtual DbSet<Building> Buildings { get; set; }
         public virtual DbSet<BuildingFloor> BuildingFloors { get; set; }
         public virtual DbSet<Bulletin> Bulletins { get; set; }
         public virtual DbSet<Charge> Charges { get; set; }
+        public virtual DbSet<ChargeBillingPeriod> ChargeBillingPeriods { get; set; }
         public virtual DbSet<ChargeDiscount> ChargeDiscounts { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
@@ -159,10 +159,9 @@ namespace MyPortal.Database.Models
         public virtual DbSet<PhoneNumber> PhoneNumbers { get; set; }
         public virtual DbSet<PhoneNumberType> PhoneNumberTypes { get; set; }
         public virtual DbSet<Photo> Photos { get; set; }
-        public virtual DbSet<ProductDiscount> ProductDiscounts { get; set; }
+        public virtual DbSet<StoreDiscount> ProductDiscounts { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductType> ProductTypes { get; set; }
-        public virtual DbSet<ProductTypeDiscount> ProductTypeDiscounts { get; set; }
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public virtual DbSet<RegGroup> RegGroups { get; set; }
         public virtual DbSet<ReportCard> ReportCards { get; set; }
@@ -194,6 +193,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<StudentAchievement> StudentAchievements { get; set; }
         public virtual DbSet<StudentAgentRelationship> StudentAgentRelationships { get; set; }
         public virtual DbSet<StudentCharge> StudentCharges { get; set; }
+        public virtual DbSet<StudentChargeDiscount> StudentChargeDiscounts { get; set; }
         public virtual DbSet<StudentContactRelationship> StudentContactRelationships { get; set; }
         public virtual DbSet<StudentContactRelationship> StudentContacts { get; set; }
         public virtual DbSet<StudentGroup> StudentGroups { get; set; }
@@ -564,58 +564,41 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<BillCharge>(e =>
+                modelBuilder.Entity<BillStudentCharge>(e =>
                 {
                     SetIdDefaultValue(e);
 
                     e.HasOne(x => x.Bill)
-                        .WithMany(x => x.BillCharges)
+                        .WithMany(x => x.BillStudentCharges)
                         .HasForeignKey(x => x.BillId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasOne(x => x.Charge)
-                        .WithMany(x => x.BillCharges)
-                        .HasForeignKey(x => x.ChargeId)
+                    e.HasOne(x => x.StudentCharge)
+                        .WithMany(x => x.BillStudentCharges)
+                        .HasForeignKey(x => x.StudentChargeId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<BillChargeDiscount>(e =>
+                modelBuilder.Entity<BillDiscount>(e =>
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasOne(x => x.ChargeDiscount)
-                        .WithMany(x => x.BillChargeDiscounts)
-                        .HasForeignKey(x => x.ChargeDiscountId)
+                    e.HasOne(x => x.Discount)
+                        .WithMany(x => x.BillDiscounts)
+                        .HasForeignKey(x => x.DiscountId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasOne(x => x.Bill)
-                        .WithMany(x => x.BillDiscounts)
+                        .WithMany(x => x.BillChargeDiscounts)
                         .HasForeignKey(x => x.BillId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<BillItem>(e => { SetIdDefaultValue(e); });
-
-                modelBuilder.Entity<BillStoreDiscount>(e =>
-                {
-                    SetIdDefaultValue(e);
-
-                    e.HasOne(x => x.StoreDiscount)
-                        .WithMany(x => x.BillStoreDiscounts)
-                        .HasForeignKey(x => x.StoreDiscountId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasOne(x => x.Bill)
-                        .WithMany(x => x.BillStoreDiscounts)
-                        .HasForeignKey(x => x.BillId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
 
                 modelBuilder.Entity<BoarderStatus>(e =>
                 {
@@ -652,6 +635,22 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<Charge>(e =>
                 {
                     SetIdDefaultValue(e);
+                });
+
+                modelBuilder.Entity<ChargeBillingPeriod>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(x => x.StudentCharges)
+                        .WithOne(x => x.ChargeBillingPeriod)
+                        .HasForeignKey(x => x.ChargeBillingPeriodId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Bills)
+                        .WithOne(x => x.ChargeBillingPeriod)
+                        .HasForeignKey(x => x.ChargeBillingPeriodId)
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<ChargeDiscount>(e =>
@@ -1904,7 +1903,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<ProductDiscount>(e =>
+                modelBuilder.Entity<StoreDiscount>(e =>
                 {
                     SetIdDefaultValue(e);
 
@@ -1930,11 +1929,6 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.ProductTypeId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-                modelBuilder.Entity<ProductTypeDiscount>(e =>
-                {
-                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<RefreshToken>(e =>
@@ -2298,18 +2292,6 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<StoreDiscount>(e =>
                 {
                     SetIdDefaultValue(e);
-
-                    e.HasMany(d => d.ProductDiscounts)
-                        .WithOne(d => d.StoreDiscount)
-                        .HasForeignKey(d => d.StoreDiscountId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasMany(d => d.ProductTypeDiscounts)
-                        .WithOne(d => d.StoreDiscount)
-                        .HasForeignKey(d => d.StoreDiscountId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<Student>(e =>
@@ -2478,7 +2460,7 @@ namespace MyPortal.Database.Models
 
                     e.HasOne(x => x.ChargeDiscount)
                         .WithMany(x => x.StudentChargeDiscounts)
-                        .HasForeignKey(x => x.DiscountId)
+                        .HasForeignKey(x => x.ChargeDiscountId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models.Entity
@@ -26,6 +27,7 @@ namespace MyPortal.Database.Models.Entity
 
         // Used for comment result types
         [Column(Order = 7)]
+        [StringLength(1000)]
         public string Comment { get; set; }
 
         [Column(Order = 8)] 

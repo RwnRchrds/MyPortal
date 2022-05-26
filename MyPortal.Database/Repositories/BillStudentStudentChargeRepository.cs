@@ -11,16 +11,16 @@ using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class BillChargeRepository : BaseReadWriteRepository<BillCharge>, IBillChargeRepository
+    public class BillStudentStudentChargeRepository : BaseReadWriteRepository<BillStudentCharge>, IBillStudentChargeRepository
     {
-        public BillChargeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public BillStudentStudentChargeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
         }
 
         protected override Query JoinRelated(Query query)
         {
             JoinEntity(query, "Bills", "B", "BillId");
-            JoinEntity(query, "Charges", "C", "ChargeId");
+            JoinEntity(query, "StudentCharges", "SC", "StudentChargeId");
 
             return query;
         }
@@ -28,20 +28,20 @@ namespace MyPortal.Database.Repositories
         protected override Query SelectAllRelated(Query query)
         {
             query.SelectAllColumns(typeof(Bill), "B");
-            query.SelectAllColumns(typeof(Charge), "C");
+            query.SelectAllColumns(typeof(StudentCharge), "SC");
 
             return query;
         }
 
-        protected override async Task<IEnumerable<BillCharge>> ExecuteQuery(Query query)
+        protected override async Task<IEnumerable<BillStudentCharge>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            var billCharges = await Transaction.Connection.QueryAsync<BillCharge, Bill, Charge, BillCharge>(sql.Sql,
-                (bc, bill, charge) =>
+            var billCharges = await Transaction.Connection.QueryAsync<BillStudentCharge, Bill, StudentCharge, BillStudentCharge>(sql.Sql,
+                (bc, bill, studentCharge) =>
                 {
                     bc.Bill = bill;
-                    bc.Charge = charge;
+                    bc.StudentCharge = studentCharge;
 
                     return bc;
                 }, sql.NamedBindings, Transaction);

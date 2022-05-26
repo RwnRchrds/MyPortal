@@ -11,12 +11,7 @@ namespace MyPortal.Logic.Attributes
         {
             if (value is Guid guid)
             {
-                if (guid != Guid.Empty)
-                {
-                    return ValidationResult.Success;
-                }
-
-                return new ValidationResult("Value cannot be empty.");
+                return guid == Guid.Empty ? new ValidationResult("Value cannot be empty.") : ValidationResult.Success;
             }
 
             return ValidationResult.Success;

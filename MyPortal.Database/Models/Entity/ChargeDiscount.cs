@@ -18,8 +18,7 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual Charge Charge { get; set; }
         public virtual Discount Discount { get; set; }
-        
+
         public virtual ICollection<StudentChargeDiscount> StudentChargeDiscounts { get; set; }
-        public virtual ICollection<BillChargeDiscount> BillChargeDiscounts { get; set; }
     }
 }

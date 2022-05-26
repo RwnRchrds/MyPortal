@@ -22,18 +22,16 @@ namespace MyPortal.Logic.Services
 {
     public class BillService : BaseService, IBillService
     {
-        public async Task<IEnumerable<BillModel>> GenerateChargeBills()
+        public async Task<IEnumerable<BillModel>> GenerateChargeBills(Guid chargeBillingPeriodId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var hasSetting = int.TryParse((await unitOfWork.SystemSettings.Get(SystemSettings.BillPaymentPeriodLength)).Setting, out int paymentPeriodLength);
+                // TODO: Get from database
+                ChargeBillingPeriod chargeBillingPeriod = new ChargeBillingPeriod();
 
-                if (!hasSetting)
-                {
-                    throw new LogicException("Bill payment period length not defined.");
-                }
-
-                var billableStudents = (await unitOfWork.StudentCharges.GetOutstanding()).GroupBy(sc => sc.StudentId);
+                var billableStudents =
+                    (await unitOfWork.StudentCharges.GetOutstandingByBillingPeriod(chargeBillingPeriodId)).GroupBy(sc =>
+                        sc.StudentId);
 
                 var generatedBills = new List<Bill>();
 
@@ -43,35 +41,31 @@ namespace MyPortal.Logic.Services
                     {
                         CreatedDate = DateTime.Now,
                         StudentId = billableStudent.Key,
-                        DueDate = DateTime.Today.AddMonths(paymentPeriodLength)
+                        DueDate = chargeBillingPeriod.EndDate
                     };
 
-                    foreach (var charge in billableStudent)
+                    // TODO: Get by student
+                    var chargeDiscounts = new List<ChargeDiscount>();
+
+                    foreach (var studentCharge in billableStudent)
                     {
-                        bill.BillCharges.Add(new BillCharge
+                        bill.BillStudentCharges.Add(new BillStudentCharge
                         {
-                            ChargeId = charge.ChargeId,
-                            GrossAmount = charge.Charge.Amount
+                            StudentChargeId = studentCharge.Id,
+                            GrossAmount = studentCharge.Charge.Amount
                         });
 
-                        var chargeInDb = await unitOfWork.StudentCharges.GetById(charge.ChargeId);
-                        chargeInDb.Recurrences--;
-                    }
+                        
+                        // Check for discounts and apply
+                        var applicableDiscounts = chargeDiscounts
+                            .Where(cd => cd.ChargeId == studentCharge.ChargeId).ToArray();
 
-                    var studentDiscounts = await unitOfWork.StudentChargeDiscounts.GetByStudent(billableStudent.Key);
-
-                    foreach (var studentDiscount in studentDiscounts)
-                    {
-                        var applicableChargeIds =
-                            (await unitOfWork.ChargeDiscounts.GetByDiscount(studentDiscount.DiscountId)).Select(x =>
-                                x.ChargeId);
-
-                        if (bill.BillCharges.Any(c => applicableChargeIds.Contains(c.ChargeId)))
+                        foreach (var chargeDiscount in applicableDiscounts)
                         {
-                            bill.BillDiscounts.Add(new BillChargeDiscount
+                            bill.BillChargeDiscounts.Add(new BillDiscount
                             {
-                                ChargeDiscountId = studentDiscount.DiscountId,
-                                GrossAmount = studentDiscount.ChargeDiscount.Discount.Amount,
+                                DiscountId = chargeDiscount.DiscountId,
+                                GrossAmount = chargeDiscount.Discount.Percentage ? studentCharge.Charge.Amount * (100 / chargeDiscount.Discount.Amount) : chargeDiscount.Discount.Amount
                             });
                         }
                     }
@@ -80,6 +74,8 @@ namespace MyPortal.Logic.Services
                     generatedBills.Add(bill);
                 }
 
+                // TODO: Do we want to immediately write these to the database?
+                // Might be better to let the user review the bills first before saving
                 await unitOfWork.SaveChangesAsync();
 
                 return generatedBills.Select(b => new BillModel(b));
