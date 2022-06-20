@@ -16,9 +16,12 @@ namespace MyPortal.Database.Models.Entity
         public Guid StudentChargeId { get; set; }
 
         [Column(Order = 3, TypeName = "decimal(10,2)")]
-        public decimal GrossAmount { get; set; }
+        public decimal NetAmount { get; set; }
+        
+        [Column(Order = 4)] 
+        public decimal VatAmount { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public bool Refunded { get; set; } 
 
         public virtual Bill Bill { get; set; }

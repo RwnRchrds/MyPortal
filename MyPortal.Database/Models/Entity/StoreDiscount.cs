@@ -24,7 +24,7 @@ namespace MyPortal.Database.Models.Entity
         // E.g. If the user has 3 apples in their basket but you only want to apply discount to 1 of them
         // For example, in a BOGOF situaton where you apply 100% discount to one of the 2 items
         // null for all
-        [Column(Order = 3)] 
+        [Column(Order = 4)] 
         public int? ApplyTo { get; set; }
 
         public virtual Product Product { get; set; }

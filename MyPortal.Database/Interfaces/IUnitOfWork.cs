@@ -44,6 +44,7 @@ namespace MyPortal.Database.Interfaces
         IBuildingRepository Buildings { get; }
         IBuildingFloorRepository BuildingFloors { get; }
         IBulletinRepository Bulletins { get; }
+        IChargeBillingPeriodRepository ChargeBillingPeriods { get; }
         IChargeDiscountRepository ChargeDiscounts { get; }
         IChargeRepository Charges { get; }
         IClassRepository Classes { get; }

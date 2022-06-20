@@ -21,7 +21,7 @@ namespace MyPortal.Logic.Models.Entity
             BillId = model.BillId;
             ProductId = model.ProductId;
             Quantity = model.Quantity;
-            GrossAmount = model.GrossAmount;
+            NetAmount = model.NetAmount;
             CustomerReceived = model.CustomerReceived;
             Refunded = model.Refunded;
 
@@ -42,7 +42,9 @@ namespace MyPortal.Logic.Models.Entity
 
         public int Quantity { get; set; }
 
-        public decimal GrossAmount { get; set; }
+        public decimal NetAmount { get; set; }
+        
+        public decimal VatAmount { get; set; }
 
         public bool CustomerReceived { get; set; }
 

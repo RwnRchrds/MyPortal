@@ -16,12 +16,15 @@ namespace MyPortal.Database.Models.Entity
         public int Quantity { get; set; }
 
         [Column(Order = 4)]
-        public decimal GrossAmount { get; set; }
-
-        [Column(Order = 5)]
-        public bool CustomerReceived { get; set; }
+        public decimal NetAmount { get; set; }
+        
+        [Column(Order = 5)] 
+        public decimal VatAmount { get; set; }
 
         [Column(Order = 6)]
+        public bool CustomerReceived { get; set; }
+
+        [Column(Order = 7)]
         public bool Refunded { get; set; }
 
         public virtual Bill Bill { get; set; }

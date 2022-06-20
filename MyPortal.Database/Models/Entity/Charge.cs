@@ -16,19 +16,23 @@ namespace MyPortal.Database.Models.Entity
         }
 
         [Column(Order = 3)]
+        public Guid VatRateId { get; set; }
+
+        [Column(Order = 4)]
         [StringLength(64)]
         public string Code { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [Column(Order = 5, TypeName = "decimal(10,2)")]
+        [Column(Order = 6, TypeName = "decimal(10,2)")]
         public decimal Amount { get; set; }
 
-        [Column(Order = 6)] 
+        [Column(Order = 7)] 
         public bool Variable { get; set; }
 
+        public virtual VatRate VatRate { get; set; }
         public virtual ICollection<StudentCharge> StudentCharges { get; set; }
         public virtual ICollection<ChargeDiscount> ChargeDiscounts { get; set; }
     }

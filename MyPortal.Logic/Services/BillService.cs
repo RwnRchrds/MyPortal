@@ -1,22 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
-using MyPortal.Database;
-using MyPortal.Database.Constants;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Repositories;
-using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
@@ -26,8 +15,7 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                // TODO: Get from database
-                ChargeBillingPeriod chargeBillingPeriod = new ChargeBillingPeriod();
+                ChargeBillingPeriod chargeBillingPeriod = await unitOfWork.ChargeBillingPeriods.GetById(chargeBillingPeriodId);
 
                 var billableStudents =
                     (await unitOfWork.StudentCharges.GetOutstandingByBillingPeriod(chargeBillingPeriodId)).GroupBy(sc =>
@@ -43,16 +31,17 @@ namespace MyPortal.Logic.Services
                         StudentId = billableStudent.Key,
                         DueDate = chargeBillingPeriod.EndDate
                     };
-
-                    // TODO: Get by student
-                    var chargeDiscounts = new List<ChargeDiscount>();
+                    
+                    var chargeDiscounts =
+                        (await unitOfWork.ChargeDiscounts.GetByStudent(billableStudent.Key)).ToArray();
 
                     foreach (var studentCharge in billableStudent)
                     {
                         bill.BillStudentCharges.Add(new BillStudentCharge
                         {
                             StudentChargeId = studentCharge.Id,
-                            GrossAmount = studentCharge.Charge.Amount
+                            NetAmount = studentCharge.Charge.Amount,
+                            VatAmount = studentCharge.Charge.Amount * studentCharge.Charge.VatRate.Value
                         });
 
                         

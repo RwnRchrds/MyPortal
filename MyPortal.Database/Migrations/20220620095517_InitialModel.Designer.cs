@@ -12,7 +12,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220505153450_InitialModel")]
+    [Migration("20220620095517_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -91,11 +91,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("decimal(10,2)")
                         .HasColumnOrder(2);
 
-                    b.Property<bool>("Credit")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(3);
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier")
@@ -920,23 +918,29 @@ namespace MyPortal.Database.Migrations
                         .HasColumnOrder(0)
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<Guid?>("ChargeBillingPeriodId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(2);
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2")
-                        .HasColumnOrder(2);
+                        .HasColumnOrder(3);
 
                     b.Property<bool?>("Dispatched")
                         .HasColumnType("bit")
-                        .HasColumnOrder(4);
+                        .HasColumnOrder(5);
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2")
-                        .HasColumnOrder(3);
+                        .HasColumnOrder(4);
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(1);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ChargeBillingPeriodId");
 
                     b.HasIndex("StudentId");
 
@@ -966,7 +970,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("BillAccountTransactions");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillCharge", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillDiscount", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -978,40 +982,7 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(1);
 
-                    b.Property<Guid>("ChargeId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(2);
-
-                    b.Property<decimal>("GrossAmount")
-                        .HasColumnType("decimal(10,2)")
-                        .HasColumnOrder(3);
-
-                    b.Property<bool>("Refunded")
-                        .HasColumnType("bit")
-                        .HasColumnOrder(4);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BillId");
-
-                    b.HasIndex("ChargeId");
-
-                    b.ToTable("BillCharges");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillChargeDiscount", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(0)
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<Guid>("BillId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(1);
-
-                    b.Property<Guid>("ChargeDiscountId")
+                    b.Property<Guid>("DiscountId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(2);
 
@@ -1023,9 +994,9 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("BillId");
 
-                    b.HasIndex("ChargeDiscountId");
+                    b.HasIndex("DiscountId");
 
-                    b.ToTable("BillChargeDiscounts");
+                    b.ToTable("BillDiscounts");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.BillItem", b =>
@@ -1042,9 +1013,9 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("CustomerReceived")
                         .HasColumnType("bit")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(6);
 
-                    b.Property<decimal>("GrossAmount")
+                    b.Property<decimal>("NetAmount")
                         .HasColumnType("decimal(18,2)")
                         .HasColumnOrder(4);
 
@@ -1058,7 +1029,11 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("Refunded")
                         .HasColumnType("bit")
-                        .HasColumnOrder(6);
+                        .HasColumnOrder(7);
+
+                    b.Property<decimal>("VatAmount")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnOrder(5);
 
                     b.HasKey("Id");
 
@@ -1069,7 +1044,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("BillItems");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillStoreDiscount", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillStudentCharge", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1081,21 +1056,29 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(1);
 
-                    b.Property<decimal>("GrossAmount")
+                    b.Property<decimal>("NetAmount")
                         .HasColumnType("decimal(10,2)")
                         .HasColumnOrder(3);
 
-                    b.Property<Guid>("StoreDiscountId")
+                    b.Property<bool>("Refunded")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(5);
+
+                    b.Property<Guid>("StudentChargeId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(2);
+
+                    b.Property<decimal>("VatAmount")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnOrder(4);
 
                     b.HasKey("Id");
 
                     b.HasIndex("BillId");
 
-                    b.HasIndex("StoreDiscountId");
+                    b.HasIndex("StudentChargeId");
 
-                    b.ToTable("BillStoreDiscounts");
+                    b.ToTable("BillCharges");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.BoarderStatus", b =>
@@ -1242,16 +1225,12 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(10,2)")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(6);
 
                     b.Property<string>("Code")
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)")
-                        .HasColumnOrder(3);
-
-                    b.Property<int>("DefaultRecurrences")
-                        .HasColumnType("int")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(4);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1262,15 +1241,46 @@ namespace MyPortal.Database.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)")
-                        .HasColumnOrder(4);
+                        .HasColumnOrder(5);
 
                     b.Property<bool>("Variable")
                         .HasColumnType("bit")
-                        .HasColumnOrder(6);
+                        .HasColumnOrder(7);
+
+                    b.Property<Guid>("VatRateId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(3);
 
                     b.HasKey("Id");
 
+                    b.HasIndex("VatRateId");
+
                     b.ToTable("Charges");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ChargeBillingPeriod", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(0)
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(3);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(1);
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(2);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChargeBillingPeriods");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.ChargeDiscount", b =>
@@ -1986,10 +1996,6 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("bit")
                         .HasColumnOrder(3);
 
-                    b.Property<bool>("Restricted")
-                        .HasColumnType("bit")
-                        .HasColumnOrder(4);
-
                     b.HasKey("Id");
 
                     b.HasIndex("ParentId");
@@ -2013,15 +2019,15 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("decimal(10,2)")
                         .HasColumnOrder(4);
 
+                    b.Property<bool>("BlockOtherDiscounts")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(6);
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)")
                         .HasColumnOrder(1);
-
-                    b.Property<int?>("MaxUsage")
-                        .HasColumnType("int")
-                        .HasColumnOrder(6);
 
                     b.Property<string>("Name")
                         .HasMaxLength(128)
@@ -2070,7 +2076,7 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(3);
 
-                    b.Property<bool>("Restricted")
+                    b.Property<bool>("Private")
                         .HasColumnType("bit")
                         .HasColumnOrder(8);
 
@@ -3905,7 +3911,7 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnOrder(5);
 
-                    b.Property<bool>("Restricted")
+                    b.Property<bool>("Private")
                         .HasColumnType("bit")
                         .HasColumnOrder(7);
 
@@ -4728,36 +4734,6 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.ProductDiscount", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(0)
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<Guid?>("DiscountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(1);
-
-                    b.Property<Guid>("StoreDiscountId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(2);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DiscountId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("StoreDiscountId");
-
-                    b.ToTable("ProductDiscounts");
-                });
-
             modelBuilder.Entity("MyPortal.Database.Models.Entity.ProductType", b =>
                 {
                     b.Property<Guid>("Id")
@@ -4782,31 +4758,6 @@ namespace MyPortal.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductTypes");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.ProductTypeDiscount", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(0)
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<Guid>("ProductTypeId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(2);
-
-                    b.Property<Guid>("StoreDiscountId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(1);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductTypeId");
-
-                    b.HasIndex("StoreDiscountId");
-
-                    b.ToTable("ProductTypeDiscounts");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.RefreshToken", b =>
@@ -5051,7 +5002,8 @@ namespace MyPortal.Database.Migrations
                         .HasColumnOrder(8);
 
                     b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
                         .HasColumnOrder(7);
 
                     b.Property<DateTime>("Date")
@@ -5114,6 +5066,10 @@ namespace MyPortal.Database.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)")
                         .HasColumnOrder(3);
+
+                    b.Property<bool>("Released")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(4);
 
                     b.HasKey("Id");
 
@@ -5906,25 +5862,34 @@ namespace MyPortal.Database.Migrations
                         .HasColumnOrder(0)
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<bool>("Auto")
-                        .HasColumnType("bit")
-                        .HasColumnOrder(5);
+                    b.Property<int?>("ApplyTo")
+                        .HasColumnType("int")
+                        .HasColumnOrder(4);
+
+                    b.Property<bool>("ApplyToCart")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("DiscountId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(1);
-
-                    b.Property<int?>("MaxQuantity")
-                        .HasColumnType("int")
                         .HasColumnOrder(3);
 
-                    b.Property<int>("MinQuantity")
-                        .HasColumnType("int")
+                    b.Property<Guid?>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(1);
+
+                    b.Property<Guid?>("ProductTypeId")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(2);
 
                     b.HasKey("Id");
 
                     b.HasIndex("DiscountId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductTypeId");
 
                     b.ToTable("StoreDiscounts");
                 });
@@ -6077,20 +6042,16 @@ namespace MyPortal.Database.Migrations
                         .HasColumnOrder(0)
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<Guid>("ChargeBillingPeriodId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(3);
+
                     b.Property<Guid>("ChargeId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(2);
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnOrder(3);
-
-                    b.Property<int>("Recurrences")
-                        .HasColumnType("int")
-                        .HasColumnOrder(5);
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2")
                         .HasColumnOrder(4);
 
                     b.Property<Guid>("StudentId")
@@ -6098,6 +6059,8 @@ namespace MyPortal.Database.Migrations
                         .HasColumnOrder(1);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ChargeBillingPeriodId");
 
                     b.HasIndex("ChargeId");
 
@@ -6114,7 +6077,7 @@ namespace MyPortal.Database.Migrations
                         .HasColumnOrder(0)
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<Guid>("DiscountId")
+                    b.Property<Guid>("ChargeDiscountId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(2);
 
@@ -6124,7 +6087,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DiscountId");
+                    b.HasIndex("ChargeDiscountId");
 
                     b.HasIndex("StudentId");
 
@@ -7264,11 +7227,18 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Bill", b =>
                 {
+                    b.HasOne("MyPortal.Database.Models.Entity.ChargeBillingPeriod", "ChargeBillingPeriod")
+                        .WithMany("Bills")
+                        .HasForeignKey("ChargeBillingPeriodId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
                         .WithMany("Bills")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("ChargeBillingPeriod");
 
                     b.Navigation("Student");
                 });
@@ -7292,42 +7262,23 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("Bill");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillCharge", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillDiscount", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Entity.Bill", "Bill")
-                        .WithMany("BillCharges")
-                        .HasForeignKey("BillId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Entity.Charge", "Charge")
-                        .WithMany("BillCharges")
-                        .HasForeignKey("ChargeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Bill");
-
-                    b.Navigation("Charge");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillChargeDiscount", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Entity.Bill", "Bill")
-                        .WithMany("BillDiscounts")
-                        .HasForeignKey("BillId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Entity.ChargeDiscount", "ChargeDiscount")
                         .WithMany("BillChargeDiscounts")
-                        .HasForeignKey("ChargeDiscountId")
+                        .HasForeignKey("BillId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.Discount", "Discount")
+                        .WithMany("BillDiscounts")
+                        .HasForeignKey("DiscountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Bill");
 
-                    b.Navigation("ChargeDiscount");
+                    b.Navigation("Discount");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.BillItem", b =>
@@ -7349,23 +7300,23 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillStoreDiscount", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BillStudentCharge", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Entity.Bill", "Bill")
-                        .WithMany("BillStoreDiscounts")
+                        .WithMany("BillStudentCharges")
                         .HasForeignKey("BillId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Entity.StoreDiscount", "StoreDiscount")
-                        .WithMany("BillStoreDiscounts")
-                        .HasForeignKey("StoreDiscountId")
+                    b.HasOne("MyPortal.Database.Models.Entity.StudentCharge", "StudentCharge")
+                        .WithMany("BillStudentCharges")
+                        .HasForeignKey("StudentChargeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Bill");
 
-                    b.Navigation("StoreDiscount");
+                    b.Navigation("StudentCharge");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.BuildingFloor", b =>
@@ -7396,6 +7347,17 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("CreatedBy");
 
                     b.Navigation("Directory");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Charge", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.VatRate", "VatRate")
+                        .WithMany()
+                        .HasForeignKey("VatRateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("VatRate");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.ChargeDiscount", b =>
@@ -8716,48 +8678,6 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("VatRate");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.ProductDiscount", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Entity.Discount", null)
-                        .WithMany("ProductDiscounts")
-                        .HasForeignKey("DiscountId");
-
-                    b.HasOne("MyPortal.Database.Models.Entity.Product", "Product")
-                        .WithMany("ProductDiscounts")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Entity.StoreDiscount", "StoreDiscount")
-                        .WithMany("ProductDiscounts")
-                        .HasForeignKey("StoreDiscountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("StoreDiscount");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.ProductTypeDiscount", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Entity.ProductType", "ProductType")
-                        .WithMany("ProductTypeDiscounts")
-                        .HasForeignKey("ProductTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Entity.StoreDiscount", "StoreDiscount")
-                        .WithMany("ProductTypeDiscounts")
-                        .HasForeignKey("StoreDiscountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ProductType");
-
-                    b.Navigation("StoreDiscount");
-                });
-
             modelBuilder.Entity("MyPortal.Database.Models.Entity.RefreshToken", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Entity.User", "User")
@@ -9147,12 +9067,28 @@ namespace MyPortal.Database.Migrations
             modelBuilder.Entity("MyPortal.Database.Models.Entity.StoreDiscount", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Entity.Discount", "Discount")
-                        .WithMany("StoreDiscounts")
+                        .WithMany("ProductDiscounts")
                         .HasForeignKey("DiscountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MyPortal.Database.Models.Entity.Product", "Product")
+                        .WithMany("ProductDiscounts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.ProductType", "ProductType")
+                        .WithMany("ProductTypeDiscounts")
+                        .HasForeignKey("ProductTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Discount");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ProductType");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Student", b =>
@@ -9250,6 +9186,12 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentCharge", b =>
                 {
+                    b.HasOne("MyPortal.Database.Models.Entity.ChargeBillingPeriod", "ChargeBillingPeriod")
+                        .WithMany("StudentCharges")
+                        .HasForeignKey("ChargeBillingPeriodId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("MyPortal.Database.Models.Entity.Charge", "Charge")
                         .WithMany("StudentCharges")
                         .HasForeignKey("ChargeId")
@@ -9264,6 +9206,8 @@ namespace MyPortal.Database.Migrations
 
                     b.Navigation("Charge");
 
+                    b.Navigation("ChargeBillingPeriod");
+
                     b.Navigation("Student");
                 });
 
@@ -9271,7 +9215,7 @@ namespace MyPortal.Database.Migrations
                 {
                     b.HasOne("MyPortal.Database.Models.Entity.ChargeDiscount", "ChargeDiscount")
                         .WithMany("StudentChargeDiscounts")
-                        .HasForeignKey("DiscountId")
+                        .HasForeignKey("ChargeDiscountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -9768,13 +9712,11 @@ namespace MyPortal.Database.Migrations
                 {
                     b.Navigation("AccountTransactions");
 
-                    b.Navigation("BillCharges");
-
-                    b.Navigation("BillDiscounts");
+                    b.Navigation("BillChargeDiscounts");
 
                     b.Navigation("BillItems");
 
-                    b.Navigation("BillStoreDiscounts");
+                    b.Navigation("BillStudentCharges");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.BoarderStatus", b =>
@@ -9794,17 +9736,20 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Charge", b =>
                 {
-                    b.Navigation("BillCharges");
-
                     b.Navigation("ChargeDiscounts");
+
+                    b.Navigation("StudentCharges");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.ChargeBillingPeriod", b =>
+                {
+                    b.Navigation("Bills");
 
                     b.Navigation("StudentCharges");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.ChargeDiscount", b =>
                 {
-                    b.Navigation("BillChargeDiscounts");
-
                     b.Navigation("StudentChargeDiscounts");
                 });
 
@@ -9916,11 +9861,11 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Discount", b =>
                 {
+                    b.Navigation("BillDiscounts");
+
                     b.Navigation("ChargeDiscounts");
 
                     b.Navigation("ProductDiscounts");
-
-                    b.Navigation("StoreDiscounts");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Document", b =>
@@ -10388,15 +10333,6 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("SupervisedDetentions");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.StoreDiscount", b =>
-                {
-                    b.Navigation("BillStoreDiscounts");
-
-                    b.Navigation("ProductDiscounts");
-
-                    b.Navigation("ProductTypeDiscounts");
-                });
-
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Student", b =>
                 {
                     b.Navigation("AccountTransactions");
@@ -10442,6 +10378,11 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("StudentGroupMemberships");
 
                     b.Navigation("StudentIncidents");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentCharge", b =>
+                {
+                    b.Navigation("BillStudentCharges");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentGroup", b =>

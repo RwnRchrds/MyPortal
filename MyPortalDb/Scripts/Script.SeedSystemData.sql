@@ -2872,11 +2872,11 @@ USING (VALUES
 ON Target.Id = Source.Id
 
 WHEN MATCHED THEN
-    UPDATE SET ParentId = Source.ParentId, Name = Source.Name, Restricted = Source.Restricted, Private = Source.Private
+    UPDATE SET ParentId = Source.ParentId, Name = Source.Name, Private = Source.Private
 
 WHEN NOT MATCHED THEN
-    INSERT (Id, ParentId, Name, Restricted, Private)
-    VALUES (Id, ParentId, Name, Restricted, Private);
+    INSERT (Id, ParentId, Name, Private)
+    VALUES (Id, ParentId, Name, Private);
 
 MERGE INTO [dbo].[DiaryEventTypes] AS Target
 USING (VALUES

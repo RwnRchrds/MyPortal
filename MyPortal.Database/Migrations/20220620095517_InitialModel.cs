@@ -230,21 +230,17 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Charges",
+                name: "ChargeBillingPeriods",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Active = table.Column<bool>(type: "bit", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    Variable = table.Column<bool>(type: "bit", nullable: false),
-                    DefaultRecurrences = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Charges", x => x.Id);
+                    table.PrimaryKey("PK_ChargeBillingPeriods", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -363,8 +359,7 @@ namespace MyPortal.Database.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     ParentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Private = table.Column<bool>(type: "bit", nullable: false),
-                    Restricted = table.Column<bool>(type: "bit", nullable: false)
+                    Private = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -387,7 +382,7 @@ namespace MyPortal.Database.Migrations
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Percentage = table.Column<bool>(type: "bit", nullable: false),
-                    MaxUsage = table.Column<int>(type: "int", nullable: true)
+                    BlockOtherDiscounts = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -827,7 +822,8 @@ namespace MyPortal.Database.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Released = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1318,52 +1314,6 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ChargeDiscounts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    ChargeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChargeDiscounts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ChargeDiscounts_Charges_ChargeId",
-                        column: x => x.ChargeId,
-                        principalTable: "Charges",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ChargeDiscounts_Discounts_DiscountId",
-                        column: x => x.DiscountId,
-                        principalTable: "Discounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StoreDiscounts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    DiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MinQuantity = table.Column<int>(type: "int", nullable: false),
-                    MaxQuantity = table.Column<int>(type: "int", nullable: true),
-                    Auto = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StoreDiscounts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_StoreDiscounts_Discounts_DiscountId",
-                        column: x => x.DiscountId,
-                        principalTable: "Discounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ExamAssessments",
                 columns: table => new
                 {
@@ -1739,6 +1689,30 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Charges",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false),
+                    VatRateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
+                    Amount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    Variable = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Charges", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Charges_VatRates_VatRateId",
+                        column: x => x.VatRateId,
+                        principalTable: "VatRates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -1823,31 +1797,6 @@ namespace MyPortal.Database.Migrations
                         column: x => x.LocationId,
                         principalTable: "Locations",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductTypeDiscounts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    StoreDiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProductTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductTypeDiscounts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductTypeDiscounts_ProductTypes_ProductTypeId",
-                        column: x => x.ProductTypeId,
-                        principalTable: "ProductTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProductTypeDiscounts_StoreDiscounts_StoreDiscountId",
-                        column: x => x.StoreDiscountId,
-                        principalTable: "StoreDiscounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -2410,32 +2359,60 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductDiscounts",
+                name: "ChargeDiscounts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    ChargeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChargeDiscounts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ChargeDiscounts_Charges_ChargeId",
+                        column: x => x.ChargeId,
+                        principalTable: "Charges",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ChargeDiscounts_Discounts_DiscountId",
+                        column: x => x.DiscountId,
+                        principalTable: "Discounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StoreDiscounts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StoreDiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ProductTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ApplyTo = table.Column<int>(type: "int", nullable: true),
+                    ApplyToCart = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductDiscounts", x => x.Id);
+                    table.PrimaryKey("PK_StoreDiscounts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductDiscounts_Discounts_DiscountId",
+                        name: "FK_StoreDiscounts_Discounts_DiscountId",
                         column: x => x.DiscountId,
                         principalTable: "Discounts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProductDiscounts_Products_ProductId",
+                        name: "FK_StoreDiscounts_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ProductDiscounts_StoreDiscounts_StoreDiscountId",
-                        column: x => x.StoreDiscountId,
-                        principalTable: "StoreDiscounts",
+                        name: "FK_StoreDiscounts_ProductTypes_ProductTypeId",
+                        column: x => x.ProductTypeId,
+                        principalTable: "ProductTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -2770,7 +2747,6 @@ namespace MyPortal.Database.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    Credit = table.Column<bool>(type: "bit", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -2857,6 +2833,7 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ChargeBillingPeriodId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Dispatched = table.Column<bool>(type: "bit", nullable: true)
@@ -2864,6 +2841,12 @@ namespace MyPortal.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Bills", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bills_ChargeBillingPeriods_ChargeBillingPeriodId",
+                        column: x => x.ChargeBillingPeriodId,
+                        principalTable: "ChargeBillingPeriods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Bills_Students_StudentId",
                         column: x => x.StudentId,
@@ -2981,7 +2964,7 @@ namespace MyPortal.Database.Migrations
                     Date = table.Column<DateTime>(type: "date", nullable: false),
                     GradeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Mark = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Comment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     ColourCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -3130,44 +3113,24 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StudentChargeDiscounts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StudentChargeDiscounts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_StudentChargeDiscounts_ChargeDiscounts_DiscountId",
-                        column: x => x.DiscountId,
-                        principalTable: "ChargeDiscounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_StudentChargeDiscounts_Students_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Students",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "StudentCharges",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ChargeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Recurrences = table.Column<int>(type: "int", nullable: false)
+                    ChargeBillingPeriodId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StudentCharges", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentCharges_ChargeBillingPeriods_ChargeBillingPeriodId",
+                        column: x => x.ChargeBillingPeriodId,
+                        principalTable: "ChargeBillingPeriods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_StudentCharges_Charges_ChargeId",
                         column: x => x.ChargeId,
@@ -3331,7 +3294,7 @@ namespace MyPortal.Database.Migrations
                     Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
-                    Restricted = table.Column<bool>(type: "bit", nullable: false),
+                    Private = table.Column<bool>(type: "bit", nullable: false),
                     Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -3416,7 +3379,7 @@ namespace MyPortal.Database.Migrations
                     AcademicYearId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Restricted = table.Column<bool>(type: "bit", nullable: false),
+                    Private = table.Column<bool>(type: "bit", nullable: false),
                     Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -3804,6 +3767,31 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StudentChargeDiscounts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ChargeDiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentChargeDiscounts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudentChargeDiscounts_ChargeDiscounts_ChargeDiscountId",
+                        column: x => x.ChargeDiscountId,
+                        principalTable: "ChargeDiscounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StudentChargeDiscounts_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Detentions",
                 columns: table => new
                 {
@@ -3968,54 +3956,27 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BillChargeDiscounts",
+                name: "BillDiscounts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     BillId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ChargeDiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GrossAmount = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BillChargeDiscounts", x => x.Id);
+                    table.PrimaryKey("PK_BillDiscounts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BillChargeDiscounts_Bills_BillId",
+                        name: "FK_BillDiscounts_Bills_BillId",
                         column: x => x.BillId,
                         principalTable: "Bills",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_BillChargeDiscounts_ChargeDiscounts_ChargeDiscountId",
-                        column: x => x.ChargeDiscountId,
-                        principalTable: "ChargeDiscounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BillCharges",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    BillId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ChargeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GrossAmount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    Refunded = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BillCharges", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BillCharges_Bills_BillId",
-                        column: x => x.BillId,
-                        principalTable: "Bills",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_BillCharges_Charges_ChargeId",
-                        column: x => x.ChargeId,
-                        principalTable: "Charges",
+                        name: "FK_BillDiscounts_Discounts_DiscountId",
+                        column: x => x.DiscountId,
+                        principalTable: "Discounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -4028,7 +3989,8 @@ namespace MyPortal.Database.Migrations
                     BillId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    GrossAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    NetAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    VatAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CustomerReceived = table.Column<bool>(type: "bit", nullable: false),
                     Refunded = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -4045,32 +4007,6 @@ namespace MyPortal.Database.Migrations
                         name: "FK_BillItems_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BillStoreDiscounts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    BillId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StoreDiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GrossAmount = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BillStoreDiscounts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BillStoreDiscounts_Bills_BillId",
-                        column: x => x.BillId,
-                        principalTable: "Bills",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_BillStoreDiscounts_StoreDiscounts_StoreDiscountId",
-                        column: x => x.StoreDiscountId,
-                        principalTable: "StoreDiscounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -4188,6 +4124,34 @@ namespace MyPortal.Database.Migrations
                         name: "FK_ReportCardTargets_ReportCards_ReportCardId",
                         column: x => x.ReportCardId,
                         principalTable: "ReportCards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BillCharges",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    BillId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StudentChargeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    NetAmount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    VatAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Refunded = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BillCharges", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BillCharges_Bills_BillId",
+                        column: x => x.BillId,
+                        principalTable: "Bills",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_BillCharges_StudentCharges_StudentChargeId",
+                        column: x => x.StudentChargeId,
+                        principalTable: "StudentCharges",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -5007,24 +4971,24 @@ namespace MyPortal.Database.Migrations
                 column: "BillId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BillChargeDiscounts_BillId",
-                table: "BillChargeDiscounts",
-                column: "BillId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BillChargeDiscounts_ChargeDiscountId",
-                table: "BillChargeDiscounts",
-                column: "ChargeDiscountId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_BillCharges_BillId",
                 table: "BillCharges",
                 column: "BillId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BillCharges_ChargeId",
+                name: "IX_BillCharges_StudentChargeId",
                 table: "BillCharges",
-                column: "ChargeId");
+                column: "StudentChargeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BillDiscounts_BillId",
+                table: "BillDiscounts",
+                column: "BillId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BillDiscounts_DiscountId",
+                table: "BillDiscounts",
+                column: "DiscountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BillItems_BillId",
@@ -5037,19 +5001,14 @@ namespace MyPortal.Database.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bills_ChargeBillingPeriodId",
+                table: "Bills",
+                column: "ChargeBillingPeriodId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bills_StudentId",
                 table: "Bills",
                 column: "StudentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BillStoreDiscounts_BillId",
-                table: "BillStoreDiscounts",
-                column: "BillId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BillStoreDiscounts_StoreDiscountId",
-                table: "BillStoreDiscounts",
-                column: "StoreDiscountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BuildingFloors_BuildingId",
@@ -5075,6 +5034,11 @@ namespace MyPortal.Database.Migrations
                 name: "IX_ChargeDiscounts_DiscountId",
                 table: "ChargeDiscounts",
                 column: "DiscountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Charges_VatRateId",
+                table: "Charges",
+                column: "VatRateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Classes_CourseId",
@@ -5767,21 +5731,6 @@ namespace MyPortal.Database.Migrations
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductDiscounts_DiscountId",
-                table: "ProductDiscounts",
-                column: "DiscountId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductDiscounts_ProductId",
-                table: "ProductDiscounts",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductDiscounts_StoreDiscountId",
-                table: "ProductDiscounts",
-                column: "StoreDiscountId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Products_ProductTypeId",
                 table: "Products",
                 column: "ProductTypeId");
@@ -5790,16 +5739,6 @@ namespace MyPortal.Database.Migrations
                 name: "IX_Products_VatRateId",
                 table: "Products",
                 column: "VatRateId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductTypeDiscounts_ProductTypeId",
-                table: "ProductTypeDiscounts",
-                column: "ProductTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductTypeDiscounts_StoreDiscountId",
-                table: "ProductTypeDiscounts",
-                column: "StoreDiscountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RegGroups_StaffMemberId",
@@ -6029,6 +5968,16 @@ namespace MyPortal.Database.Migrations
                 column: "DiscountId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StoreDiscounts_ProductId",
+                table: "StoreDiscounts",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StoreDiscounts_ProductTypeId",
+                table: "StoreDiscounts",
+                column: "ProductTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StudentAchievements_AchievementId",
                 table: "StudentAchievements",
                 column: "AchievementId");
@@ -6059,14 +6008,19 @@ namespace MyPortal.Database.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentChargeDiscounts_DiscountId",
+                name: "IX_StudentChargeDiscounts_ChargeDiscountId",
                 table: "StudentChargeDiscounts",
-                column: "DiscountId");
+                column: "ChargeDiscountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentChargeDiscounts_StudentId",
                 table: "StudentChargeDiscounts",
                 column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentCharges_ChargeBillingPeriodId",
+                table: "StudentCharges",
+                column: "ChargeBillingPeriodId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentCharges_ChargeId",
@@ -6314,16 +6268,13 @@ namespace MyPortal.Database.Migrations
                 name: "BillAccountTransactions");
 
             migrationBuilder.DropTable(
-                name: "BillChargeDiscounts");
-
-            migrationBuilder.DropTable(
                 name: "BillCharges");
 
             migrationBuilder.DropTable(
-                name: "BillItems");
+                name: "BillDiscounts");
 
             migrationBuilder.DropTable(
-                name: "BillStoreDiscounts");
+                name: "BillItems");
 
             migrationBuilder.DropTable(
                 name: "Bulletins");
@@ -6440,12 +6391,6 @@ namespace MyPortal.Database.Migrations
                 name: "PhoneNumbers");
 
             migrationBuilder.DropTable(
-                name: "ProductDiscounts");
-
-            migrationBuilder.DropTable(
-                name: "ProductTypeDiscounts");
-
-            migrationBuilder.DropTable(
                 name: "RegGroups");
 
             migrationBuilder.DropTable(
@@ -6476,6 +6421,9 @@ namespace MyPortal.Database.Migrations
                 name: "StaffAbsences");
 
             migrationBuilder.DropTable(
+                name: "StoreDiscounts");
+
+            migrationBuilder.DropTable(
                 name: "StudentAchievements");
 
             migrationBuilder.DropTable(
@@ -6483,9 +6431,6 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "StudentChargeDiscounts");
-
-            migrationBuilder.DropTable(
-                name: "StudentCharges");
 
             migrationBuilder.DropTable(
                 name: "StudentContactRelationships");
@@ -6531,6 +6476,9 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "AccountTransactions");
+
+            migrationBuilder.DropTable(
+                name: "StudentCharges");
 
             migrationBuilder.DropTable(
                 name: "Bills");
@@ -6617,12 +6565,6 @@ namespace MyPortal.Database.Migrations
                 name: "PhoneNumberTypes");
 
             migrationBuilder.DropTable(
-                name: "Products");
-
-            migrationBuilder.DropTable(
-                name: "StoreDiscounts");
-
-            migrationBuilder.DropTable(
                 name: "YearGroups");
 
             migrationBuilder.DropTable(
@@ -6671,6 +6613,9 @@ namespace MyPortal.Database.Migrations
                 name: "StaffIllnessTypes");
 
             migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
                 name: "AchievementOutcomes");
 
             migrationBuilder.DropTable(
@@ -6710,6 +6655,9 @@ namespace MyPortal.Database.Migrations
                 name: "AttendanceCodeTypes");
 
             migrationBuilder.DropTable(
+                name: "ChargeBillingPeriods");
+
+            migrationBuilder.DropTable(
                 name: "Classes");
 
             migrationBuilder.DropTable(
@@ -6737,12 +6685,6 @@ namespace MyPortal.Database.Migrations
                 name: "ParentEvenings");
 
             migrationBuilder.DropTable(
-                name: "ProductTypes");
-
-            migrationBuilder.DropTable(
-                name: "VatRates");
-
-            migrationBuilder.DropTable(
                 name: "CurriculumYearGroups");
 
             migrationBuilder.DropTable(
@@ -6759,6 +6701,9 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspectTypes");
+
+            migrationBuilder.DropTable(
+                name: "ProductTypes");
 
             migrationBuilder.DropTable(
                 name: "AchievementTypes");
@@ -6828,6 +6773,9 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "AgencyTypes");
+
+            migrationBuilder.DropTable(
+                name: "VatRates");
 
             migrationBuilder.DropTable(
                 name: "IncidentTypes");

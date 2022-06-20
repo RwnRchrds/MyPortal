@@ -23,13 +23,13 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 2)] 
         public Guid? ChargeBillingPeriodId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public DateTime CreatedDate { get; set; }
 
-        [Column(Order = 3)] 
+        [Column(Order = 4)] 
         public DateTime DueDate { get; set; }
 
-        [Column(Order = 4)] 
+        [Column(Order = 5)] 
         public bool? Dispatched { get; set; }
 
         public virtual Student Student { get; set; }

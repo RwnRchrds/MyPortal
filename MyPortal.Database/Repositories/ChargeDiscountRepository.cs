@@ -58,7 +58,22 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<ChargeDiscount>> GetByDiscount(Guid discountId)
         {
-            throw new NotImplementedException();
+            var query = GenerateQuery();
+
+            query.Where($"{TblAlias}.DiscountId", discountId);
+
+            return await ExecuteQuery(query);
+        }
+
+        public async Task<IEnumerable<ChargeDiscount>> GetByStudent(Guid studentId)
+        {
+            var query = GenerateQuery();
+
+            query.Join("StudentChargeDiscounts as SCD", "SCD.ChargeDiscountId", $"{TblAlias}.Id");
+
+            query.Where("SCD.StudentId", studentId);
+
+            return await ExecuteQuery(query);
         }
     }
 }

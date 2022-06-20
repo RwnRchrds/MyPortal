@@ -53,6 +53,7 @@ namespace MyPortal.Database
         private IBuildingRepository _buildings;
         private IBuildingFloorRepository _buildingFloors;
         private IBulletinRepository _bulletins;
+        private IChargeBillingPeriodRepository _chargeBillingPeriods;
         private IChargeDiscountRepository _chargeDiscounts;
         private IChargeRepository _charges;
         private IClassRepository _classes;
@@ -311,6 +312,9 @@ namespace MyPortal.Database
             _buildingFloors ??= new BuildingFloorRepository(_context, _transaction);
 
         public IBulletinRepository Bulletins => _bulletins ??= new BulletinRepository(_context, _transaction);
+
+        public IChargeBillingPeriodRepository ChargeBillingPeriods =>
+            _chargeBillingPeriods ??= new ChargeBillingPeriodRepository(_context, _transaction);
 
         public IChargeDiscountRepository ChargeDiscounts =>
             _chargeDiscounts ??= new ChargeDiscountRepository(_context, _transaction);
@@ -858,6 +862,7 @@ namespace MyPortal.Database
             _buildings = null;
             _buildingFloors = null;
             _bulletins = null;
+            _chargeBillingPeriods = null;
             _chargeDiscounts = null;
             _charges = null;
             _classes = null;
