@@ -154,6 +154,7 @@ namespace MyPortal.Database.Enums
         SchoolEditSchoolDocuments = 97,
         SchoolViewSchoolBulletins = 98,
         SchoolEditSchoolBulletins = 99,
+        SchoolApproveSchoolBulletins = 124,
 
         #endregion
 

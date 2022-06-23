@@ -12,6 +12,7 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
 using Task = System.Threading.Tasks.Task;
@@ -57,21 +58,37 @@ namespace MyPortal.Database.Repositories
             return bulletins;
         }
 
-        public async Task<IEnumerable<Bulletin>> GetApproved()
+        public async Task<IEnumerable<Bulletin>> GetBulletins(BulletinSearchOptions searchOptions)
         {
             var query = GenerateQuery();
 
-            query.Where($"{TblAlias}.Approved", "=", true);
+            if (!string.IsNullOrWhiteSpace(searchOptions.SearchText))
+            {
+                query.Where(q =>
+                    q.WhereContainsWord($"{TblAlias}.Title", searchOptions.SearchText)
+                        .OrWhereContainsWord($"{TblAlias}.Summary", searchOptions.SearchText));
+            }
 
-            return await ExecuteQuery(query);
-        }
+            if (!searchOptions.IncludeStaffOnly)
+            {
+                query.Where($"{TblAlias}.StaffOnly", false);
+            }
 
-        public async Task<IEnumerable<Bulletin>> GetStudent()
-        {
-            var query = GenerateQuery();
+            if (!searchOptions.IncludeExpired)
+            {
+                query.Where(q =>
+                    q.WhereNull($"{TblAlias}.ExpireDate").OrWhere($"{TblAlias}.ExpireDate", ">", DateTime.Now));
+            }
 
-            query.Where($"{TblAlias}.Approved", "=", true);
-            query.Where($"{TblAlias}.ShowStudents", "=", true);
+            if (!searchOptions.IncludeUnapproved)
+            {
+                query.Where($"{TblAlias}.Approved", true);
+            }
+            
+            if (searchOptions.IncludeCreatedBy.HasValue)
+            {
+                query.OrWhere($"{TblAlias}.CreatedById", searchOptions.IncludeCreatedBy.Value);
+            }
 
             return await ExecuteQuery(query);
         }
@@ -98,7 +115,7 @@ namespace MyPortal.Database.Repositories
             bulletin.Detail = entity.Detail;
             bulletin.ExpireDate = entity.ExpireDate;
             bulletin.Approved = entity.Approved;
-            bulletin.StaffOnly = entity.StaffOnly;
+            bulletin.Private = entity.Private;
         }
     }
 }

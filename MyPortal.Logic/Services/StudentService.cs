@@ -25,7 +25,7 @@ namespace MyPortal.Logic.Services
 {
     public class StudentService : BaseService, IStudentService
     {
-        public async Task<StudentModel> GetById(Guid studentId)
+        public async Task<StudentModel> GetStudentById(Guid studentId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -65,7 +65,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<StudentModel> GetByUserId(Guid userId, bool throwNotFound = true)
+        public async Task<StudentModel> GetStudentByUserId(Guid userId, bool throwNotFound = true)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -80,7 +80,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<StudentModel> GetByPersonId(Guid personId, bool throwIfNotFound = true)
+        public async Task<StudentModel> GetStudentByPersonId(Guid personId, bool throwIfNotFound = true)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -107,7 +107,7 @@ namespace MyPortal.Logic.Services
             return searchTypes;
         }
 
-        public async Task<IEnumerable<StudentModel>> Get(StudentSearchOptions searchOptions)
+        public async Task<IEnumerable<StudentModel>> GetStudents(StudentSearchOptions searchOptions)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -117,7 +117,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<IEnumerable<StudentSummaryModel>> Search(StudentSearchOptions searchOptions)
+        public async Task<IEnumerable<StudentSummaryModel>> SearchStudents(StudentSearchOptions searchOptions)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

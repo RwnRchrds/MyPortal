@@ -133,7 +133,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("update")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Update([FromBody] UpdateTaskRequestModel requestModel)
@@ -155,7 +155,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("toggle")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> ToggleCompleted([FromBody] TaskToggleRequestModel model)

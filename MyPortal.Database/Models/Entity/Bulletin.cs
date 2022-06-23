@@ -21,7 +21,7 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 5)]
         [Required]
-        [StringLength(128)]
+        [StringLength(50)]
         public string Title { get; set; }
 
         [Column(Order = 6)]
@@ -29,7 +29,7 @@ namespace MyPortal.Database.Models.Entity
         public string Detail { get; set; }
             
         [Column(Order = 7)]
-        public bool StaffOnly { get; set; }
+        public bool Private { get; set; }
 
         [Column(Order = 8)]
         public bool Approved { get; set; }

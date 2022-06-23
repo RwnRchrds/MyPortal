@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -39,13 +40,12 @@ namespace MyPortalWeb
 
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Version = "3.1.0",
+                    Version = "1.0.0",
                     Title = "MyPortal",
                     Description = "MyPortal API"
                 });
 
-                //var filePath = Path.Combine("MyPortalWeb.xml");
-                //c.IncludeXmlComments(filePath);
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
 #endif
         }

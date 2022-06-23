@@ -26,5 +26,5 @@ public class CreateAspectRequestModel
     [StringLength(50)]
     public string ColumnHeading { get; set; }
     
-    public bool StaffOnly { get; set; }
+    public bool Private { get; set; }
 }

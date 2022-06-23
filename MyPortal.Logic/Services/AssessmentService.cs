@@ -47,7 +47,7 @@ public class AssessmentService : BaseService, IAssessmentService
                     MaxMark = model.MaxMark,
                     Name = model.Name,
                     ColumnHeading = model.ColumnHeading,
-                    StaffOnly = model.StaffOnly
+                    Private = model.Private
                 };
 
                 unitOfWork.Aspects.Create(aspect);

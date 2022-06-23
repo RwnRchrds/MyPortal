@@ -41,7 +41,7 @@ namespace MyPortalWeb.Controllers.Api
             _staffMemberService = staffMemberService;
         }
 
-        public async Task<bool> CanAccessDirectory(Guid directoryId, bool edit)
+        private async Task<bool> CanAccessDirectory(Guid directoryId, bool edit)
         {
             var user = await GetLoggedInUser();
 
@@ -143,7 +143,7 @@ namespace MyPortalWeb.Controllers.Api
             return true;
         }
         
-        public async Task<bool> CanAccessDocument(Guid documentId, bool edit)
+        private async Task<bool> CanAccessDocument(Guid documentId, bool edit)
         {
             var user = await GetLoggedInUser();
             
@@ -288,7 +288,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("update")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> UpdateDocument([FromBody] UpdateDocumentRequestModel model)
@@ -442,7 +442,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("directories/update")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Update([FromBody] UpdateDirectoryRequestModel requestModel)

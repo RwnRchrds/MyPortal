@@ -111,7 +111,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("update")]
         [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(200)]
@@ -147,7 +147,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("setPassword")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> SetPassword(SetPasswordRequestModel request)
@@ -169,7 +169,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("setEnabled")]
         [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(typeof(bool), 200)]

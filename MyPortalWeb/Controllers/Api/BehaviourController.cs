@@ -43,7 +43,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var achievement = await _behaviourService.GetAchievementById(achievementId);
 
-                var student = await StudentService.GetById(achievement.StudentId);
+                var student = await StudentService.GetStudentById(achievement.StudentId);
 
                 if (await CanAccessPerson(student.PersonId))
                 {
@@ -66,7 +66,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var student = await StudentService.GetById(studentId);
+                var student = await StudentService.GetStudentById(studentId);
                 
                 if (await CanAccessPerson(student.PersonId))
                 {
@@ -107,7 +107,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.BehaviourEditAchievements)]
         [Route("achievements/update", Name = "ApiAchievementUpdate")]
@@ -155,7 +155,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var incident = await _behaviourService.GetIncidentById(incidentId);
                 
-                var student = await StudentService.GetById(incident.StudentId);
+                var student = await StudentService.GetStudentById(incident.StudentId);
 
                 if (await CanAccessPerson(student.PersonId))
                 {
@@ -178,7 +178,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var student = await StudentService.GetById(studentId);
+                var student = await StudentService.GetStudentById(studentId);
                 
                 if (await CanAccessPerson(student.PersonId))
                 {
@@ -218,7 +218,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.BehaviourEditIncidents)]
         [Route("incidents/update", Name = "ApiIncidentUpdate")]

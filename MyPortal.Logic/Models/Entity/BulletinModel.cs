@@ -23,7 +23,7 @@ namespace MyPortal.Logic.Models.Entity
             ExpireDate = model.ExpireDate;
             Title = model.Title;
             Detail = model.Detail;
-            StaffOnly = model.StaffOnly;
+            Private = model.Private;
             Approved = model.Approved;
 
             if (model.CreatedBy != null)
@@ -52,7 +52,7 @@ namespace MyPortal.Logic.Models.Entity
         [Required]
         public string Detail { get; set; }
         
-        public bool StaffOnly { get; set; }
+        public bool Private { get; set; }
         
         public bool Approved { get; set; }
 

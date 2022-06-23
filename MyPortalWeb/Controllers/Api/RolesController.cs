@@ -46,7 +46,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("update")]
         [Permission(PermissionValue.SystemEditGroups)]
         [ProducesResponseType(200)]

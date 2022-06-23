@@ -39,7 +39,7 @@ namespace MyPortal.Database.Models.Entity
         public string ColumnHeading { get; set; }
 
         [Column(Order = 9)]
-        public bool StaffOnly { get; set; }
+        public bool Private { get; set; }
 
         [Column(Order = 10)]
         public bool System { get; set; }

@@ -35,6 +35,20 @@ namespace MyPortal.Database.Helpers
             return query;
         }
 
+        public static Query WhereContainsWord(this Query query, string column, string searchText)
+        {
+            return query.Where(q =>
+                q.WhereLike(column, $"% {searchText} %").OrWhereLike(column, $"% {searchText}")
+                    .OrWhereLike(column, $"{searchText} %").OrWhere(column, searchText));
+        }
+        
+        public static Query OrWhereContainsWord(this Query query, string column, string searchText)
+        {
+            return query.OrWhere(q =>
+                q.WhereLike(column, $"% {searchText} %").OrWhereLike(column, $"% {searchText}")
+                    .OrWhereLike(column, $"{searchText} %").OrWhere(column, searchText));
+        }
+
         public static Query Limit(this Query query, PageFilter filter)
         {
             query.Skip(filter.Skip);

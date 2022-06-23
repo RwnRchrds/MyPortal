@@ -83,7 +83,7 @@ namespace MyPortal.Database.Repositories
                 aspect.MaxMark = null;
             }
 
-            aspect.StaffOnly = entity.StaffOnly;
+            aspect.Private = entity.Private;
             aspect.Active = entity.Active;
             aspect.Description = entity.Description;
             aspect.Name = entity.Name;

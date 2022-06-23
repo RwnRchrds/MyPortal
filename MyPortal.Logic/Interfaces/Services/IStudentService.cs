@@ -13,16 +13,16 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface IStudentService
     {
-        Task<IEnumerable<StudentModel>> Get(StudentSearchOptions searchModel);
-        Task<IEnumerable<StudentSummaryModel>> Search(StudentSearchOptions searchOptions);
+        Task<IEnumerable<StudentModel>> GetStudents(StudentSearchOptions searchModel);
+        Task<IEnumerable<StudentSummaryModel>> SearchStudents(StudentSearchOptions searchOptions);
 
         Task<StudentStatsResponseModel> GetStatsById(Guid studentId, Guid academicYearId);
 
-        Task<StudentModel> GetById(Guid studentId);
+        Task<StudentModel> GetStudentById(Guid studentId);
 
-        Task<StudentModel> GetByUserId(Guid userId, bool throwIfNotFound = true);
+        Task<StudentModel> GetStudentByUserId(Guid userId, bool throwIfNotFound = true);
 
-        Task<StudentModel> GetByPersonId(Guid personId, bool throwIfNotFound = true);
+        Task<StudentModel> GetStudentByPersonId(Guid personId, bool throwIfNotFound = true);
 
         Task CreateStudent(params CreateStudentRequestModel[] students);
 

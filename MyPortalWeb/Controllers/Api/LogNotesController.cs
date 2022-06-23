@@ -54,7 +54,7 @@ namespace MyPortalWeb.Controllers.Api
                     }
                 }
 
-                var student = await StudentService.GetById(logNote.StudentId);
+                var student = await StudentService.GetStudentById(logNote.StudentId);
 
                 if (await CanAccessPerson(student.PersonId))
                 {
@@ -94,7 +94,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var student = await StudentService.GetById(studentId);
+                var student = await StudentService.GetStudentById(studentId);
 
                 if (await CanAccessPerson(student.PersonId))
                 {
@@ -141,7 +141,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.StudentEditStudentLogNotes)]
         [Route("update")]

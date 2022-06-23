@@ -38,7 +38,7 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(typeof(IEnumerable<StudentSummaryModel>), 200)]
         public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchOptions searchModel)
         {
-            var students = (await StudentService.Search(searchModel)).ToList();
+            var students = (await StudentService.SearchStudents(searchModel)).ToList();
 
             return Ok(students);
         }
@@ -51,7 +51,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var student = await StudentService.GetById(studentId);
+                var student = await StudentService.GetStudentById(studentId);
                 
                 if (await CanAccessPerson(student.PersonId))
                 {
@@ -74,7 +74,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var student = await StudentService.GetById(studentId);
+                var student = await StudentService.GetStudentById(studentId);
                 
                 if (await CanAccessPerson(student.PersonId))
                 {
