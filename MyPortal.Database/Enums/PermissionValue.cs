@@ -93,6 +93,10 @@ namespace MyPortal.Database.Enums
         FinanceEditProducts = 51,
         FinanceViewBills = 52,
         FinanceEditBills = 53,
+        FinanceViewCharges = 125,
+        FinanceEditCharges = 126,
+        FinanceViewDiscounts = 127,
+        FinanceEditDiscounts = 128,
 
         #endregion
 
