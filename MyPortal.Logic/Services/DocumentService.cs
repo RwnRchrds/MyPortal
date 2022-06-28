@@ -227,32 +227,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<bool> DirectoryIsRestricted(Guid directoryId)
-        {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var dir = await unitOfWork.Directories.GetById(directoryId);
-
-                if (dir == null)
-                {
-                    throw new NotFoundException("Directory not found.");
-                }
-
-                if (dir.Private)
-                {
-                    return true;
-                }
-
-                if (dir.ParentId == null)
-                {
-                    return false;
-                }
-
-                return await DirectoryIsRestricted(dir.ParentId.Value);
-            }
-        }
-
-        public async Task<bool> DirectoryIsPrivate(Guid directoryId)
+        public async Task<bool> IsPrivateDirectory(Guid directoryId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -273,11 +248,11 @@ namespace MyPortal.Logic.Services
                     return false;
                 }
 
-                return await DirectoryIsPrivate(dir.ParentId.Value);
+                return await IsPrivateDirectory(dir.ParentId.Value);
             }
         }
 
-        public async Task<bool> DirectoryIsPublic(Guid directoryId)
+        public async Task<bool> IsSchoolDirectory(Guid directoryId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -298,7 +273,7 @@ namespace MyPortal.Logic.Services
                     return false;
                 }
 
-                return await DirectoryIsPublic(dir.ParentId.Value);
+                return await IsSchoolDirectory(dir.ParentId.Value);
             }
         }
     }

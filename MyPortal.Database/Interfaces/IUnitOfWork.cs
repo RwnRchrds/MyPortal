@@ -24,7 +24,7 @@ namespace MyPortal.Database.Interfaces
         IAgentTypeRepository AgentTypes { get; }
         IAspectRepository Aspects { get; }
         IAspectTypeRepository AspectTypes { get; }
-        IAttendanceCodeMeaningRepository AttendanceCodeMeanings { get; }
+        IAttendanceCodeTypeRepository AttendanceCodeTypes { get; }
         IAttendanceCodeRepository AttendanceCodes { get; }
         IAttendanceMarkRepository AttendanceMarks { get; }
         IAttendancePeriodRepository AttendancePeriods { get; }

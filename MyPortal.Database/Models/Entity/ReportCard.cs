@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("ReportCards")]
-    public class ReportCard : BaseTypes.Entity
+    public class ReportCard : BaseTypes.Entity, IActivatable
     {
         [Column(Order = 1)] 
         public Guid StudentId { get; set; }

@@ -21,8 +21,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task CreateDirectory(params CreateDirectoryRequestModel[] directories);
         Task UpdateDirectory(params UpdateDirectoryRequestModel[] directories);
         Task DeleteDirectory(params Guid[] directoryIds);
-        Task<bool> DirectoryIsPrivate(Guid directoryId);
-        Task<bool> DirectoryIsPublic(Guid directoryId);
-        Task<bool> DirectoryIsRestricted(Guid directoryId);
+        Task<bool> IsPrivateDirectory(Guid directoryId);
+        Task<bool> IsSchoolDirectory(Guid directoryId);
     }
 }

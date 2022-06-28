@@ -33,7 +33,7 @@ namespace MyPortal.Database
         private IAgentTypeRepository _agentTypes;
         private IAspectRepository _aspects;
         private IAspectTypeRepository _aspectTypes;
-        private IAttendanceCodeMeaningRepository _attendanceCodeMeanings;
+        private IAttendanceCodeTypeRepository _attendanceCodeTypes;
         private IAttendanceCodeRepository _attendanceCodes;
         private IAttendanceMarkRepository _attendanceMarks;
         private IAttendancePeriodRepository _attendancePeriods;
@@ -259,8 +259,8 @@ namespace MyPortal.Database
         public IAspectTypeRepository AspectTypes =>
             _aspectTypes ??= new AspectTypeRepository(_transaction);
 
-        public IAttendanceCodeMeaningRepository AttendanceCodeMeanings =>
-            _attendanceCodeMeanings ??= new AttendanceCodeMeaningRepository(_transaction);
+        public IAttendanceCodeTypeRepository AttendanceCodeTypes =>
+            _attendanceCodeTypes ??= new AttendanceCodeTypeRepository(_transaction);
 
         public IAttendanceCodeRepository AttendanceCodes =>
             _attendanceCodes = new AttendanceCodeRepository(_context, _transaction);
@@ -842,7 +842,7 @@ namespace MyPortal.Database
             _agentTypes = null;
             _aspects = null;
             _aspectTypes = null;
-            _attendanceCodeMeanings = null;
+            _attendanceCodeTypes = null;
             _attendanceCodes = null;
             _attendanceMarks = null;
             _attendancePeriods = null;

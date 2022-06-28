@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("Permissions")]
-    public class Permission : BaseTypes.Entity
+    public class Permission : BaseTypes.Entity, IReadOnlyEntity
     {
         public Permission()
         {

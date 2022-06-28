@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("MarksheetTemplates")]
-    public class MarksheetTemplate : BaseTypes.Entity
+    public class MarksheetTemplate : BaseTypes.Entity, IActivatable
     {
         [Column(Order = 1)] 
         public string Name { get; set; }

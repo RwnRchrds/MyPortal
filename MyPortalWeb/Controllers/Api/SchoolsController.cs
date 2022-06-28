@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Search;
+using MyPortal.Logic.Constants;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -62,12 +63,16 @@ namespace MyPortalWeb.Controllers.Api
                 if (!await UserHasPermission(PermissionValue.SchoolApproveSchoolBulletins))
                 {
                     searchOptions.IncludeUnapproved = false;
+                    searchOptions.IncludeExpired = false;
                 }
 
                 if (searchOptions.IncludeCreatedBy.HasValue)
                 {
                     var user = await GetLoggedInUser();
-                    searchOptions.IncludeCreatedBy = user.Id.Value;
+                    if (user.Id.HasValue)
+                    {
+                        searchOptions.IncludeCreatedBy = user.Id.Value;
+                    }
                 }
 
                 var bulletins = await _schoolService.GetBulletins(searchOptions);
@@ -82,6 +87,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPost]
         [Route("local/bulletins/create")]
+        [Authorize(Policies.UserType.Staff)]
         [Permission(PermissionValue.SchoolEditSchoolBulletins)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> CreateBulletin([FromBody] CreateBulletinRequestModel model)
@@ -99,6 +105,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPost]
         [Route("local/bulletins/update")]
+        [Authorize(Policies.UserType.Staff)]
         [Permission(PermissionValue.SchoolEditSchoolBulletins)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> UpdateBulletin([FromBody] UpdateBulletinRequestModel model)
@@ -116,6 +123,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPost]
         [Route("local/bulletins/approve")]
+        [Authorize(Policies.UserType.Staff)]
         [Permission(PermissionValue.SchoolApproveSchoolBulletins)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> ApproveBulletin([FromBody] ApproveBulletinRequestModel model)
@@ -133,6 +141,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpDelete]
         [Route("local/bulletins/delete/{bulletinId}")]
+        [Authorize(Policies.UserType.Staff)]
         [Permission(PermissionValue.SchoolEditSchoolBulletins)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> DeleteBulletin([FromRoute] Guid bulletinId)

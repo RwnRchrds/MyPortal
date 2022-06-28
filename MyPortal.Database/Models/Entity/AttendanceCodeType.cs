@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("AttendanceCodeTypes")]
-    public class AttendanceCodeType : BaseTypes.Entity
+    public class AttendanceCodeType : BaseTypes.Entity, IReadOnlyEntity
     {
         public AttendanceCodeType()
         {

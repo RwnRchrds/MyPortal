@@ -7,7 +7,7 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models.Entity
 {
     [Table("Documents")]
-    public class Document : BaseTypes.Entity, ICreatable
+    public class Document : BaseTypes.Entity, ICreatable, IDirectoryEntity, ISoftDeleteEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Document()

@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("ExamBoards")]
-    public class ExamBoard : BaseTypes.Entity
+    public class ExamBoard : BaseTypes.Entity, IActivatable
     {
         // TODO: Populate Data
 

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("ExamSeatAllocations")]
-    public class ExamSeatAllocation : BaseTypes.Entity
+    public class ExamSeatAllocation : BaseTypes.Entity, IActivatable
     {
         [Column(Order = 1)]
         public Guid SittingId { get; set; }

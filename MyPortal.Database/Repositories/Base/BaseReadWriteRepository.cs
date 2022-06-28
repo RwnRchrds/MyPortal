@@ -38,7 +38,7 @@ namespace MyPortal.Database.Repositories.Base
         {
             if (entity is IReadOnlyEntity)
             {
-
+                throw ExceptionHelper.UpdateSystemEntityException;
             }
 
             var result = Context.Set<TEntity>().Add(entity);
@@ -50,6 +50,7 @@ namespace MyPortal.Database.Repositories.Base
 
             switch (entity)
             {
+                case IReadOnlyEntity:
                 case ISystemEntity {System: true}:
                     throw ExceptionHelper.DeleteSystemEntityException;
                 case ISoftDeleteEntity softDeleteObject:

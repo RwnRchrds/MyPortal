@@ -22,7 +22,7 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(128)]
         public string Name { get; set; }
 
-        // Only visible to staff users
+        // Only visible to staff users and the owner
         [Column(Order = 3)]
         public bool Private { get; set; }
 

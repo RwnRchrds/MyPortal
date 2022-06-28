@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("Bulletins")]
-    public class Bulletin : BaseTypes.Entity
+    public class Bulletin : BaseTypes.Entity, IDirectoryEntity, ICreatable
     {
         [Column(Order = 1)]
         public Guid DirectoryId { get; set; }

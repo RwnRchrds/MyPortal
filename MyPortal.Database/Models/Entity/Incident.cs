@@ -6,7 +6,7 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models.Entity
 {
     [Table("Incidents")]
-    public class Incident : BaseTypes.Entity, ICreatable
+    public class Incident : BaseTypes.Entity, ICreatable, ISoftDeleteEntity
     {
         [Column(Order = 1)]
         public Guid AcademicYearId { get; set; }

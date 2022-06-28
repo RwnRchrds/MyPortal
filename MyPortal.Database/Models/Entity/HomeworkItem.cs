@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("HomeworkItems")]
-    public class HomeworkItem : BaseTypes.Entity
+    public class HomeworkItem : BaseTypes.Entity, IDirectoryEntity
     {
         public HomeworkItem()
         {

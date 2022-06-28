@@ -5,9 +5,9 @@ using MyPortal.Database.Repositories.Base;
 
 namespace MyPortal.Database.Repositories
 {
-    public class AttendanceCodeMeaningRepository : BaseReadRepository<AttendanceCodeType>, IAttendanceCodeMeaningRepository
+    public class AttendanceCodeTypeRepository : BaseReadRepository<AttendanceCodeType>, IAttendanceCodeTypeRepository
     {
-        public AttendanceCodeMeaningRepository(DbTransaction transaction) : base(transaction)
+        public AttendanceCodeTypeRepository(DbTransaction transaction) : base(transaction)
         {
         }
     }
