@@ -44,18 +44,6 @@ namespace MyPortal.Logic.Services
             _claimsPrincipalFactory = claimsPrincipalFactory;
         }
 
-        public async Task<IEnumerable<PermissionModel>> GetPermissionsByUser(Guid userId)
-        {
-            var permissionValues = await GetPermissionValuesByUser(userId);
-
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var permissions = await unitOfWork.Permissions.GetPermissionsByValues(permissionValues);
-
-                return permissions.Select(p => new PermissionModel(p)).ToList();
-            }
-        }
-
         public async Task<bool> UserHasPermission(Guid userId, PermissionRequirement requirement,
             params PermissionValue[] permissionValues)
         {

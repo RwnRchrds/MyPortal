@@ -152,7 +152,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<ParentEveningAppointment> ParentEveningAppointments { get; set; }
         public virtual DbSet<ParentEveningBreak> ParentEveningBreaks { get; set; }
         public virtual DbSet<ParentEveningStaffMember> ParentEveningStaffMembers { get; set; }
-        public virtual DbSet<Permission> Permissions { get; set; }
         public virtual DbSet<Person> People { get; set; }
         public virtual DbSet<PersonCondition> PersonConditions { get; set; }
         public virtual DbSet<PersonDietaryRequirement> PersonDietaryRequirements { get; set; }
@@ -206,7 +205,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<SubjectCodeSet> SubjectCodeSets { get; set; }
         public virtual DbSet<SubjectStaffMember> SubjectStaffMembers { get; set; }
         public virtual DbSet<SubjectStaffMemberRole> SubjectStaffMemberRoles { get; set; }
-        public virtual DbSet<SystemArea> SystemAreas { get; set; }
         public virtual DbSet<SystemSetting> SystemSettings { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
         public virtual DbSet<TaskType> TaskTypes { get; set; }
@@ -1789,17 +1787,6 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Permission>(e =>
-                {
-                    SetIdDefaultValue(e);
-
-                    e.HasOne(x => x.SystemArea)
-                        .WithMany(x => x.Permissions)
-                        .HasForeignKey(x => x.AreaId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
                 modelBuilder.Entity<Person>(e =>
                 {
                     SetIdDefaultValue(e);
@@ -2577,16 +2564,6 @@ namespace MyPortal.Database.Models
                         .WithOne(x => x.Role)
                         .HasForeignKey(x => x.RoleId)
                         .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-                modelBuilder.Entity<SystemArea>(e =>
-                {
-                    SetIdDefaultValue(e);
-                    
-                    e.HasMany(x => x.SubAreas)
-                        .WithOne(x => x.Parent)
-                        .HasForeignKey(x => x.ParentId)
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

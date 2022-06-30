@@ -142,7 +142,6 @@ namespace MyPortal.Database.Interfaces
         IParentEveningGroupRepository ParentEveningGroups { get; }
         IParentEveningRepository ParentEvenings { get; }
         IParentEveningStaffMemberRepository ParentEveningStaffMembers { get; }
-        IPermissionRepository Permissions { get; }
         IPersonConditionRepository PersonConditions { get; }
         IPersonDietaryRequirementRepository PersonDietaryRequirements { get; }
         IPersonRepository People { get; }
@@ -196,7 +195,6 @@ namespace MyPortal.Database.Interfaces
         ISubjectRepository Subjects { get; }
         ISubjectStaffMemberRepository SubjectStaffMembers { get; }
         ISubjectStaffMemberRoleRepository SubjectStaffMemberRoles { get; }
-        ISystemAreaRepository SystemAreas { get; }
         ISystemSettingRepository SystemSettings { get; }
         ITaskRepository Tasks { get; }
         ITaskTypeRepository TaskTypes { get; }

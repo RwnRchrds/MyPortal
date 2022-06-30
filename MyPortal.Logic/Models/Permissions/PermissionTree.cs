@@ -56,11 +56,45 @@ namespace MyPortal.Logic.Models.Permissions
             {
                 ChildAreas = new List<SystemArea>
                 {
-                    new ("ass-asp", "Aspects"),
-                    new ("ass-exm", "Exams"),
-                    new ("ass-grd", "Grade Sets"),
-                    new ("ass-mks", "Marksheets"),
-
+                    new ("ass-asp", "Aspects")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View", "View Aspects", PermissionValue.AssessmentViewAspects),
+                            new ("Edit", "Edit Aspects", PermissionValue.AssessmentEditAspects)
+                        }
+                    },
+                    new ("ass-exm", "Exams")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View Basedata", "View Exam Basedata", PermissionValue.AssessmentViewExamBaseData),
+                            new ("Edit Basedata", "Edit Exam Basedata", PermissionValue.AssessmentEditExamBaseData),
+                            new ("Run Assistant", "Run Exam Assistant", PermissionValue.AssessmentRunExamAsst)
+                        }
+                    },
+                    new ("ass-grd", "Grade Sets")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View", "View Grade Sets", PermissionValue.AssessmentViewGradeSets),
+                            new ("Edit", "Edit Grade Sets", PermissionValue.AssessmentEditGradeSets)
+                        }
+                    },
+                    new ("ass-mks", "Marksheets")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View Templates", "View Marksheet Templates", PermissionValue.AssessmentViewMarksheetTemplates),
+                            new ("Edit Templates", "Edit Marksheet Templates", PermissionValue.AssessmentEditMarksheetTemplates),
+                            new ("View Own", "View Own Marksheets", PermissionValue.AssessmentViewOwnMarksheets),
+                            new ("View All", "View All Marksheets", PermissionValue.AssessmentViewAllMarksheets),
+                            new ("Edit Own", "Edit Own Marksheets", PermissionValue.AssessmentUpdateOwnMarksheets),
+                            new ("Edit All", "Edit All Marksheets", PermissionValue.AssessmentUpdateAllMarksheets)
+                        }
+                    },
+                    new ("ass-rss", "Result Sets"),
+                    new ("ass-res", "Results")
                 }
             },
             new SystemArea("att", "Attendance"),

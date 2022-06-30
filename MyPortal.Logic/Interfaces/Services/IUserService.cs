@@ -30,7 +30,6 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal);
         Task<IEnumerable<RoleModel>> GetUserRoles(Guid userId);
         Task<IEnumerable<UserModel>> GetUsers(string usernameSearch);
-        Task<IEnumerable<PermissionModel>> GetPermissionsByUser(Guid userId);
         Task<IEnumerable<int>> GetPermissionValuesByUser(Guid userId);
 
         Task<bool> UserHasPermission(Guid userId, PermissionRequirement requirement,

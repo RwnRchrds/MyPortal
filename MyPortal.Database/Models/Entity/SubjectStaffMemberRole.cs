@@ -13,6 +13,7 @@ namespace MyPortal.Database.Models.Entity
             StaffMembers = new HashSet<SubjectStaffMember>();
         }
 
+        public bool SubjectLeader { get; set; }
         public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

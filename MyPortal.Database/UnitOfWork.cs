@@ -151,7 +151,6 @@ namespace MyPortal.Database
         private IParentEveningGroupRepository _parentEveningGroups;
         private IParentEveningRepository _parentEvenings;
         private IParentEveningStaffMemberRepository _parentEveningStaffMembers;
-        private IPermissionRepository _permissions;
         private IPersonConditionRepository _personConditions;
         private IPersonDietaryRequirementRepository _personDietaryRequirements;
         private IPersonRepository _people;
@@ -205,7 +204,6 @@ namespace MyPortal.Database
         private ISubjectRepository _subjects;
         private ISubjectStaffMemberRepository _subjectStaffMembers;
         private ISubjectStaffMemberRoleRepository _subjectStaffMemberRoles;
-        private ISystemAreaRepository _systemAreas;
         private ISystemSettingRepository _systemSettings;
         private ITaskRepository _tasks;
         private ITaskTypeRepository _taskTypes;
@@ -576,8 +574,6 @@ namespace MyPortal.Database
         public IParentEveningStaffMemberRepository ParentEveningStaffMembers => _parentEveningStaffMembers ??=
             new ParentEveningStaffMemberRepository(_context, _transaction);
 
-        public IPermissionRepository Permissions => _permissions ??= new PermissionRepository(_transaction);
-
         public IPersonConditionRepository PersonConditions =>
             _personConditions ??= new PersonConditionRepository(_context, _transaction);
 
@@ -716,8 +712,6 @@ namespace MyPortal.Database
 
         public ISubjectStaffMemberRoleRepository SubjectStaffMemberRoles => _subjectStaffMemberRoles ??=
             new SubjectStaffMemberRoleRepository(_context, _transaction);
-
-        public ISystemAreaRepository SystemAreas => _systemAreas ??= new SystemAreaRepository(_transaction);
 
         public ISystemSettingRepository SystemSettings =>
             _systemSettings ??= new SystemSettingRepository(_context, _transaction);
@@ -958,7 +952,6 @@ namespace MyPortal.Database
             _parentEveningGroups = null;
             _parentEvenings = null;
             _parentEveningStaffMembers = null;
-            _permissions = null;
             _personConditions = null;
             _personDietaryRequirements = null;
             _people = null;
@@ -1012,7 +1005,6 @@ namespace MyPortal.Database
             _subjects = null;
             _subjectStaffMembers = null;
             _subjectStaffMemberRoles = null;
-            _systemAreas = null;
             _systemSettings = null;
             _tasks = null;
             _taskTypes = null;
