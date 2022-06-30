@@ -527,7 +527,7 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasColumnOrder(7);
 
-                    b.Property<bool>("StaffOnly")
+                    b.Property<bool>("Private")
                         .HasColumnType("bit")
                         .HasColumnOrder(9);
 
@@ -1190,14 +1190,14 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnOrder(4);
 
-                    b.Property<bool>("StaffOnly")
+                    b.Property<bool>("Private")
                         .HasColumnType("bit")
                         .HasColumnOrder(7);
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnOrder(5);
 
                     b.HasKey("Id");

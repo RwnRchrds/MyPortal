@@ -13,8 +13,6 @@
 );
 
 
-
-
 GO
 CREATE NONCLUSTERED INDEX [IX_DiaryEventAttendees_EventId]
     ON [dbo].[DiaryEventAttendees]([EventId] ASC);

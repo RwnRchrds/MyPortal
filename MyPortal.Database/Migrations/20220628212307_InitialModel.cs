@@ -1367,7 +1367,7 @@ namespace MyPortal.Database.Migrations
                     MaxMark = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     ColumnHeading = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    StaffOnly = table.Column<bool>(type: "bit", nullable: false),
+                    Private = table.Column<bool>(type: "bit", nullable: false),
                     System = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -3260,9 +3260,9 @@ namespace MyPortal.Database.Migrations
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Title = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Detail = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StaffOnly = table.Column<bool>(type: "bit", nullable: false),
+                    Private = table.Column<bool>(type: "bit", nullable: false),
                     Approved = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

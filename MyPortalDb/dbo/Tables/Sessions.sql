@@ -14,8 +14,6 @@
 );
 
 
-
-
 GO
 CREATE NONCLUSTERED INDEX [IX_Sessions_ClassId]
     ON [dbo].[Sessions]([ClassId] ASC);

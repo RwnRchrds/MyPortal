@@ -16,6 +16,7 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Permissions;
 using MyPortal.Logic.Models.Requests.Admin.Roles;
 using Task = System.Threading.Tasks.Task;
 
@@ -36,45 +37,7 @@ namespace MyPortal.Logic.Services
             {
                 var role = await _roleManager.FindByIdAsync(roleId.ToString());
 
-                var systemAreas = (await unitOfWork.SystemAreas.GetAll()).ToList();
-
-                var permissions = (await unitOfWork.Permissions.GetAll()).ToList();
-
-                var existingPermissions = new BitArray(role.Permissions);
-
-                var root = TreeNode.CreateRoot("#", "MyPortal");
-
-                foreach (var systemArea in systemAreas.Where(a => a.ParentId == null))
-                {
-                    // Load System Areas
-                    root.Children.Add(new TreeNode
-                    {
-                        Id = systemArea.Id.ToString("N"),
-                        State = TreeNodeState.Default,
-                        Text = systemArea.Description,
-
-                        // Load Subareas
-                        Children = systemAreas.Where(x => x.ParentId.HasValue && x.ParentId.Value == systemArea.Id).Select(sa => new TreeNode
-                        {
-                            Id = sa.Id.ToString("N"),
-                            Text = sa.Description,
-                            State = TreeNodeState.Default,
-
-                            // Load Permissions
-                            Children = permissions.Where(x => x.AreaId == sa.Id).Select(p => new TreeNode
-                            {
-                                Id = p.Value.ToString(),
-                                Text = p.ShortDescription,
-                                State = new TreeNodeState
-                                {
-                                    Opened = false,
-                                    Disabled = false,
-                                    Selected = existingPermissions[p.Value]
-                                }
-                            }).ToList()
-                        }).ToList()
-                    });
-                }
+                var root = PermissionTree.Create(role.Permissions);
 
                 root.SetEnabled(!role.System);
 

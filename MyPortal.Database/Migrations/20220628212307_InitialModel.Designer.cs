@@ -12,7 +12,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220620095517_InitialModel")]
+    [Migration("20220628212307_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -529,7 +529,7 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasColumnOrder(7);
 
-                    b.Property<bool>("StaffOnly")
+                    b.Property<bool>("Private")
                         .HasColumnType("bit")
                         .HasColumnOrder(9);
 
@@ -1192,14 +1192,14 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnOrder(4);
 
-                    b.Property<bool>("StaffOnly")
+                    b.Property<bool>("Private")
                         .HasColumnType("bit")
                         .HasColumnOrder(7);
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnOrder(5);
 
                     b.HasKey("Id");

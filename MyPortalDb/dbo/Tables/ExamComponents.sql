@@ -1,4 +1,4 @@
-CREATE TABLE [dbo].[ExamComponents] (
+﻿CREATE TABLE [dbo].[ExamComponents] (
     [Id]               UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
     [BaseComponentId]  UNIQUEIDENTIFIER NOT NULL,
     [ExamSeriesId]     UNIQUEIDENTIFIER NOT NULL,
@@ -15,8 +15,6 @@ CREATE TABLE [dbo].[ExamComponents] (
 );
 
 
-
-
 GO
 CREATE NONCLUSTERED INDEX [IX_ExamComponents_AssessmentModeId]
     ON [dbo].[ExamComponents]([AssessmentModeId] ASC);
@@ -28,11 +26,11 @@ CREATE NONCLUSTERED INDEX [IX_ExamComponents_BaseComponentId]
 
 
 GO
-CREATE NONCLUSTERED INDEX [IX_ExamComponents_ExamSeriesId]
-    ON [dbo].[ExamComponents]([ExamSeriesId] ASC);
+CREATE NONCLUSTERED INDEX [IX_ExamComponents_ExamDateId]
+    ON [dbo].[ExamComponents]([ExamDateId] ASC);
 
 
 GO
-CREATE NONCLUSTERED INDEX [IX_ExamComponents_ExamDateId]
-    ON [dbo].[ExamComponents]([ExamDateId] ASC);
+CREATE NONCLUSTERED INDEX [IX_ExamComponents_ExamSeriesId]
+    ON [dbo].[ExamComponents]([ExamSeriesId] ASC);
 

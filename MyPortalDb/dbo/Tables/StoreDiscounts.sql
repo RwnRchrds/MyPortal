@@ -1,15 +1,28 @@
 ﻿CREATE TABLE [dbo].[StoreDiscounts] (
-    [Id]          UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
-    [DiscountId]  UNIQUEIDENTIFIER NOT NULL,
-    [MinQuantity] INT              NOT NULL,
-    [MaxQuantity] INT              NULL,
-    [Auto]        BIT              NOT NULL,
+    [Id]            UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
+    [ProductId]     UNIQUEIDENTIFIER NOT NULL,
+    [ProductTypeId] UNIQUEIDENTIFIER NOT NULL,
+    [DiscountId]    UNIQUEIDENTIFIER NOT NULL,
+    [ApplyTo]       INT              NULL,
+    [ApplyToCart]   BIT              NOT NULL,
     CONSTRAINT [PK_StoreDiscounts] PRIMARY KEY CLUSTERED ([Id] ASC),
-    CONSTRAINT [FK_StoreDiscounts_Discounts_DiscountId] FOREIGN KEY ([DiscountId]) REFERENCES [dbo].[Discounts] ([Id]) ON DELETE CASCADE
+    CONSTRAINT [FK_StoreDiscounts_Discounts_DiscountId] FOREIGN KEY ([DiscountId]) REFERENCES [dbo].[Discounts] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_StoreDiscounts_Products_ProductId] FOREIGN KEY ([ProductId]) REFERENCES [dbo].[Products] ([Id]),
+    CONSTRAINT [FK_StoreDiscounts_ProductTypes_ProductTypeId] FOREIGN KEY ([ProductTypeId]) REFERENCES [dbo].[ProductTypes] ([Id])
 );
 
 
 GO
 CREATE NONCLUSTERED INDEX [IX_StoreDiscounts_DiscountId]
     ON [dbo].[StoreDiscounts]([DiscountId] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_StoreDiscounts_ProductId]
+    ON [dbo].[StoreDiscounts]([ProductId] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_StoreDiscounts_ProductTypeId]
+    ON [dbo].[StoreDiscounts]([ProductTypeId] ASC);
 

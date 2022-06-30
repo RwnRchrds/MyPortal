@@ -9,6 +9,7 @@
     [Title]         NVARCHAR (128)   NOT NULL,
     [Description]   NVARCHAR (256)   NULL,
     [Completed]     BIT              NOT NULL,
+    [AllowEdit]     BIT              NOT NULL,
     [System]        BIT              NOT NULL,
     CONSTRAINT [PK_Tasks] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Tasks_People_AssignedToId] FOREIGN KEY ([AssignedToId]) REFERENCES [dbo].[People] ([Id]),

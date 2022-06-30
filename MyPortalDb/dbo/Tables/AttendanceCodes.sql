@@ -7,7 +7,7 @@
     [Restricted]  BIT              NOT NULL,
     [System]      BIT              NOT NULL,
     CONSTRAINT [PK_AttendanceCodes] PRIMARY KEY CLUSTERED ([Id] ASC),
-    CONSTRAINT [FK_AttendanceCodes_AttendanceCodeMeanings_MeaningId] FOREIGN KEY ([MeaningId]) REFERENCES [dbo].[AttendanceCodeMeanings] ([Id])
+    CONSTRAINT [FK_AttendanceCodes_AttendanceCodeTypes_MeaningId] FOREIGN KEY ([MeaningId]) REFERENCES [dbo].[AttendanceCodeTypes] ([Id])
 );
 
 

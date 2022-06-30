@@ -1,14 +1,19 @@
 ﻿CREATE TABLE [dbo].[StudentCharges] (
-    [Id]          UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
-    [StudentId]   UNIQUEIDENTIFIER NOT NULL,
-    [ChargeId]    UNIQUEIDENTIFIER NOT NULL,
-    [Description] NVARCHAR (MAX)   NULL,
-    [StartDate]   DATETIME2 (7)    NOT NULL,
-    [Recurrences] INT              NOT NULL,
+    [Id]                    UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
+    [StudentId]             UNIQUEIDENTIFIER NOT NULL,
+    [ChargeId]              UNIQUEIDENTIFIER NOT NULL,
+    [ChargeBillingPeriodId] UNIQUEIDENTIFIER NOT NULL,
+    [Description]           NVARCHAR (MAX)   NULL,
     CONSTRAINT [PK_StudentCharges] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_StudentCharges_ChargeBillingPeriods_ChargeBillingPeriodId] FOREIGN KEY ([ChargeBillingPeriodId]) REFERENCES [dbo].[ChargeBillingPeriods] ([Id]),
     CONSTRAINT [FK_StudentCharges_Charges_ChargeId] FOREIGN KEY ([ChargeId]) REFERENCES [dbo].[Charges] ([Id]),
     CONSTRAINT [FK_StudentCharges_Students_StudentId] FOREIGN KEY ([StudentId]) REFERENCES [dbo].[Students] ([Id])
 );
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_StudentCharges_ChargeBillingPeriodId]
+    ON [dbo].[StudentCharges]([ChargeBillingPeriodId] ASC);
 
 
 GO

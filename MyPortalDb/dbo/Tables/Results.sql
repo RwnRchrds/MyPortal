@@ -6,7 +6,7 @@
     [Date]        DATE             NOT NULL,
     [GradeId]     UNIQUEIDENTIFIER NULL,
     [Mark]        DECIMAL (10, 2)  NULL,
-    [Comment]     NVARCHAR (MAX)   NULL,
+    [Comment]     NVARCHAR (1000)  NULL,
     [ColourCode]  NVARCHAR (MAX)   NULL,
     [Note]        NVARCHAR (MAX)   NULL,
     CONSTRAINT [PK_Results] PRIMARY KEY CLUSTERED ([Id] ASC),

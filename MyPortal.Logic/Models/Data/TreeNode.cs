@@ -9,6 +9,7 @@ namespace MyPortal.Logic.Models.Data
         public TreeNode()
         {
             Children = new HashSet<TreeNode>();
+            State = TreeNodeState.Default;
         }
 
         public string Id { get; set; }

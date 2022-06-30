@@ -6,14 +6,13 @@
     [AcademicYearId] UNIQUEIDENTIFIER NOT NULL,
     [Message]        NVARCHAR (MAX)   NOT NULL,
     [CreatedDate]    DATETIME2 (7)    NOT NULL,
+    [Private]        BIT              NOT NULL,
     [Deleted]        BIT              NOT NULL,
-    [UserId]         UNIQUEIDENTIFIER NULL,
     CONSTRAINT [PK_LogNotes] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_LogNotes_AcademicYears_AcademicYearId] FOREIGN KEY ([AcademicYearId]) REFERENCES [dbo].[AcademicYears] ([Id]),
     CONSTRAINT [FK_LogNotes_LogNoteTypes_TypeId] FOREIGN KEY ([TypeId]) REFERENCES [dbo].[LogNoteTypes] ([Id]),
     CONSTRAINT [FK_LogNotes_Students_StudentId] FOREIGN KEY ([StudentId]) REFERENCES [dbo].[Students] ([Id]),
-    CONSTRAINT [FK_LogNotes_Users_CreatedById] FOREIGN KEY ([CreatedById]) REFERENCES [dbo].[Users] ([Id]),
-    CONSTRAINT [FK_LogNotes_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [dbo].[Users] ([Id])
+    CONSTRAINT [FK_LogNotes_Users_CreatedById] FOREIGN KEY ([CreatedById]) REFERENCES [dbo].[Users] ([Id])
 );
 
 
@@ -35,9 +34,4 @@ CREATE NONCLUSTERED INDEX [IX_LogNotes_StudentId]
 GO
 CREATE NONCLUSTERED INDEX [IX_LogNotes_TypeId]
     ON [dbo].[LogNotes]([TypeId] ASC);
-
-
-GO
-CREATE NONCLUSTERED INDEX [IX_LogNotes_UserId]
-    ON [dbo].[LogNotes]([UserId] ASC);
 

@@ -4,5 +4,3 @@
     CONSTRAINT [PK_SystemSettings] PRIMARY KEY CLUSTERED ([Name] ASC)
 );
 
-
-
