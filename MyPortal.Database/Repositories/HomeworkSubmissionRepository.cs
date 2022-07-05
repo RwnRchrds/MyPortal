@@ -71,7 +71,7 @@ namespace MyPortal.Database.Repositories
             {
                 throw new EntityNotFoundException("Homework submission not found.");
             }
-
+            
             homeworkSubmission.DocumentId = entity.DocumentId;
             homeworkSubmission.PointsAchieved = entity.PointsAchieved;
         }

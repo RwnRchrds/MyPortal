@@ -67,139 +67,129 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateAcademicYear(params CreateAcademicYearRequestModel[] createModels)
+        public async Task CreateAcademicYear(CreateAcademicYearRequestModel model)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var model in createModels)
+                var academicYear = new AcademicYear
                 {
-                    var academicYear = new AcademicYear
+                    Name = model.Name
+                };
+
+                foreach (var termModel in model.AcademicTerms)
+                {
+                    var term = new AcademicTerm
                     {
-                        Name = model.Name
+                        Name = termModel.Name,
+                        StartDate = termModel.StartDate,
+                        EndDate = termModel.EndDate
                     };
 
-                    foreach (var termModel in model.AcademicTerms)
+                    foreach (var attendanceWeek in termModel.AttendanceWeeks)
                     {
-                        var term = new AcademicTerm
+                        term.AttendanceWeeks.Add(new AttendanceWeek
                         {
-                            Name = termModel.Name,
-                            StartDate = termModel.StartDate,
-                            EndDate = termModel.EndDate
-                        };
+                            Beginning = attendanceWeek.WeekBeginning,
+                            WeekPatternId = attendanceWeek.WeekPatternId,
+                            IsNonTimetable = attendanceWeek.NonTimetable
+                        });
+                    }
 
-                        foreach (var attendanceWeek in termModel.AttendanceWeeks)
+                    foreach (var schoolHoliday in termModel.Holidays)
+                    {
+                        unitOfWork.DiaryEvents.Create(new DiaryEvent
                         {
-                            term.AttendanceWeeks.Add(new AttendanceWeek
-                            {
-                                Beginning = attendanceWeek.WeekBeginning,
-                                WeekPatternId = attendanceWeek.WeekPatternId,
-                                IsNonTimetable = attendanceWeek.NonTimetable
-                            });
-                        }
-
-                        foreach (var schoolHoliday in termModel.Holidays)
-                        {
-                            unitOfWork.DiaryEvents.Create(new DiaryEvent
-                            {
-                                Description = "School Holiday",
-                                EventTypeId = EventTypes.SchoolHoliday,
-                                StartTime = schoolHoliday.Date,
-                                EndTime = schoolHoliday.GetEndOfDay()
-                            });
-                        }
-
-                        academicYear.AcademicTerms.Add(term);
+                            Description = "School Holiday",
+                            EventTypeId = EventTypes.SchoolHoliday,
+                            StartTime = schoolHoliday.Date,
+                            EndTime = schoolHoliday.GetEndOfDay()
+                        });
                     }
 
-                    unitOfWork.AcademicYears.Create(academicYear);
-
-                    await unitOfWork.SaveChangesAsync();
-                }
-            }
-        }
-
-        public CreateAcademicTermRequestModel[] GenerateAttendanceWeeks(params CreateAcademicTermRequestModel[] termModel)
-        {
-            foreach (var model in termModel)
-            {
-                var attendanceWeeks = new List<CreateAttendanceWeekRequestModel>();
-                var schoolHolidays = new List<DateTime>();
-                var weekPatterns = model.WeekPatterns.OrderBy(p => p.Order).ToArray();
-                int patternIndex = 0;
-                DateTime currentWeekBeginning = model.StartDate.GetDayOfWeek(DayOfWeek.Monday);
-
-                while (currentWeekBeginning <= model.EndDate.GetDayOfWeek(DayOfWeek.Monday))
-                {
-                    if (model.StartDate >= currentWeekBeginning &&
-                        model.StartDate < currentWeekBeginning.GetDayOfWeek(DayOfWeek.Sunday) &&
-                        model.StartDate.DayOfWeek != DayOfWeek.Monday)
-                    {
-                        var daysBeforeStart = DateTimeHelper.GetAllInstances(currentWeekBeginning, model.StartDate.AddDays(-1));
-
-                        schoolHolidays.AddRange(daysBeforeStart);
-                    }
-
-                    if (model.EndDate <= currentWeekBeginning.GetDayOfWeek(DayOfWeek.Sunday) &&
-                        model.EndDate >= currentWeekBeginning.GetDayOfWeek(DayOfWeek.Monday) &&
-                        model.EndDate.DayOfWeek != DayOfWeek.Sunday)
-                    {
-                        var daysAfterEnd = DateTimeHelper.GetAllInstances(model.EndDate.AddDays(1),
-                            currentWeekBeginning.GetDayOfWeek(DayOfWeek.Sunday));
-
-                        schoolHolidays.AddRange(daysAfterEnd);
-                    }
-
-                    attendanceWeeks.Add(new CreateAttendanceWeekRequestModel
-                    {
-                        WeekBeginning = currentWeekBeginning,
-                        WeekPatternId = weekPatterns[patternIndex].WeekPatternId
-                    });
-
-                    if (patternIndex == weekPatterns.Length - 1)
-                    {
-                        patternIndex = 0;
-                    }
-                    else
-                    {
-                        patternIndex++;
-                    }
-
-                    currentWeekBeginning = currentWeekBeginning.AddDays(7);
+                    academicYear.AcademicTerms.Add(term);
                 }
 
-                model.AttendanceWeeks = attendanceWeeks.ToArray();
-                model.Holidays = schoolHolidays.ToArray();
-            }
-
-            return termModel;
-        }
-
-        public async Task UpdateAcademicYear(params UpdateAcademicYearRequestModel[] academicYearModels)
-        {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                foreach (var academicYearModel in academicYearModels)
-                {
-                    var academicYearInDb = await unitOfWork.AcademicYears.GetById(academicYearModel.Id);
-
-                    academicYearInDb.Name = academicYearModel.Name;
-                    academicYearInDb.Locked = academicYearModel.Locked;
-
-                    await unitOfWork.AcademicYears.Update(academicYearInDb);
-                }
+                unitOfWork.AcademicYears.Create(academicYear);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task DeleteAcademicYear(params Guid[] academicYearIds)
+        public CreateAcademicTermRequestModel GenerateAttendanceWeeks(CreateAcademicTermRequestModel model)
+        {
+            // TODO: This should be moved to the web app
+            var attendanceWeeks = new List<CreateAttendanceWeekRequestModel>();
+            var schoolHolidays = new List<DateTime>();
+            var weekPatterns = model.WeekPatterns.OrderBy(p => p.Order).ToArray();
+            int patternIndex = 0;
+            DateTime currentWeekBeginning = model.StartDate.GetDayOfWeek(DayOfWeek.Monday);
+
+            while (currentWeekBeginning <= model.EndDate.GetDayOfWeek(DayOfWeek.Monday))
+            {
+                if (model.StartDate >= currentWeekBeginning &&
+                    model.StartDate < currentWeekBeginning.GetDayOfWeek(DayOfWeek.Sunday) &&
+                    model.StartDate.DayOfWeek != DayOfWeek.Monday)
+                {
+                    var daysBeforeStart =
+                        DateTimeHelper.GetAllInstances(currentWeekBeginning, model.StartDate.AddDays(-1));
+
+                    schoolHolidays.AddRange(daysBeforeStart);
+                }
+
+                if (model.EndDate <= currentWeekBeginning.GetDayOfWeek(DayOfWeek.Sunday) &&
+                    model.EndDate >= currentWeekBeginning.GetDayOfWeek(DayOfWeek.Monday) &&
+                    model.EndDate.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    var daysAfterEnd = DateTimeHelper.GetAllInstances(model.EndDate.AddDays(1),
+                        currentWeekBeginning.GetDayOfWeek(DayOfWeek.Sunday));
+
+                    schoolHolidays.AddRange(daysAfterEnd);
+                }
+
+                attendanceWeeks.Add(new CreateAttendanceWeekRequestModel
+                {
+                    WeekBeginning = currentWeekBeginning,
+                    WeekPatternId = weekPatterns[patternIndex].WeekPatternId
+                });
+
+                if (patternIndex == weekPatterns.Length - 1)
+                {
+                    patternIndex = 0;
+                }
+                else
+                {
+                    patternIndex++;
+                }
+
+                currentWeekBeginning = currentWeekBeginning.AddDays(7);
+            }
+
+            model.AttendanceWeeks = attendanceWeeks.ToArray();
+            model.Holidays = schoolHolidays.ToArray();
+
+            return model;
+        }
+
+        public async Task UpdateAcademicYear(UpdateAcademicYearRequestModel model)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var academicYearId in academicYearIds)
-                {
-                    await unitOfWork.AcademicYears.Delete(academicYearId);
-                }
+                var academicYearInDb = await unitOfWork.AcademicYears.GetById(model.Id);
+
+                academicYearInDb.Name = model.Name;
+                academicYearInDb.Locked = model.Locked;
+
+                await unitOfWork.AcademicYears.Update(academicYearInDb);
+
+                await unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteAcademicYear(Guid academicYearId)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                await unitOfWork.AcademicYears.Delete(academicYearId);
 
                 await unitOfWork.SaveChangesAsync();
             }

@@ -61,7 +61,7 @@ namespace MyPortal.Database.Repositories.Base
             return result.FirstOrDefault();
         }
 
-        protected Query GenerateQuery(bool includeSoftDeleted = false)
+        protected virtual Query GenerateQuery(bool includeSoftDeleted = false)
         {
             var query = new Query($"{TblName} as {TblAlias}").SelectAllColumns(typeof(TEntity), TblAlias);
             

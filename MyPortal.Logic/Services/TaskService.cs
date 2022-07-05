@@ -72,7 +72,7 @@ namespace MyPortal.Logic.Services
 
                 if (person != null && task.AssignedToId == person.Id)
                 {
-                    return true;
+                    return task.AllowEdit;
                 }
 
                 return false;
@@ -144,6 +144,11 @@ namespace MyPortal.Logic.Services
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var taskInDb = await unitOfWork.Tasks.GetById(taskId);
+
+                if (taskInDb.System)
+                {
+                    throw new LogicException("Tasks of this type cannot be updated manually.");
+                }
 
                 taskInDb.Completed = completed;
                 taskInDb.CompletedDate = DateTime.Now;

@@ -93,12 +93,87 @@ namespace MyPortal.Logic.Models.Permissions
                             new ("Edit All", "Edit All Marksheets", PermissionValue.AssessmentUpdateAllMarksheets)
                         }
                     },
-                    new ("ass-rss", "Result Sets"),
+                    new ("ass-rss", "Result Sets")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new Permission("View", "View Result Sets", PermissionValue.AssessmentViewResultSets),
+                            new Permission("Edit", "Edit Result Sets", PermissionValue.AssessmentEditResultSets)
+                        }
+                    },
                     new ("ass-res", "Results")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new Permission("View", "View Results", PermissionValue.AssessmentViewResults),
+                            new Permission("Edit", "Edit Results", PermissionValue.AssessmentEditResults),
+                            new Permission("View Embargoed", "View Embargoed Results", PermissionValue.AssessmentViewEmbargoedResults)
+                        }
+                    }
                 }
             },
-            new SystemArea("att", "Attendance"),
-            new SystemArea("beh", "Behaviour"),
+            new SystemArea("att", "Attendance")
+            {
+                ChildAreas = new List<SystemArea>
+                {
+                    new SystemArea("att-mrk", "Attendance Marks")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new Permission("View", "View Attendance Marks", PermissionValue.AttendanceViewAttendanceMarks),
+                            new Permission("Edit", "Edit Attendance Marks", PermissionValue.AttendanceEditAttendanceMarks),
+                            new Permission("Use Restricted", "Use Restricted Codes", PermissionValue.AttendanceUseRestrictedCodes)
+                        }
+                    }
+                }
+            },
+            new SystemArea("beh", "Behaviour")
+            {
+                ChildAreas = new List<SystemArea>
+                {
+                    new ("beh-ach", "Achievements")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View", "View Achievements", PermissionValue.BehaviourViewAchievements),
+                            new ("Edit", "Edit Achievements", PermissionValue.BehaviourEditAchievements)
+                        }
+                    },
+                    new ("beh-inc", "Incidents")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View", "View Incidents", PermissionValue.BehaviourViewIncidents),
+                            new ("Edit", "Edit Incidents", PermissionValue.BehaviourEditIncidents)
+                        }
+                    },
+                    new ("beh-det", "Detentions")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View", "View Detentions", PermissionValue.BehaviourViewDetentions),
+                            new ("Edit", "Edit Detentions", PermissionValue.BehaviourEditDetentions)
+                        }
+                    },
+                    new ("beh-exc", "Exclusions")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View", "View Exclusions", PermissionValue.BehaviourViewExclusions),
+                            new ("Edit", "Edit Exclusions", PermissionValue.BehaviourEditExclusions)
+                        }
+                    },
+                    new ("beh-rep", "Report Cards")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View", "View Report Cards", PermissionValue.BehaviourViewReportCards),
+                            new ("Edit", "Edit Report Cards", PermissionValue.BehaviourEditReportCards),
+                            new ("Add/Remove", "Add/Remove Report Cards", PermissionValue.BehaviourAddRemoveReportCards)
+                        }
+                    }
+                }
+            },
             new SystemArea("cur", "Curriculum"),
             new SystemArea("fin", "Finance"),
             new SystemArea("peo", "People"),
@@ -106,11 +181,6 @@ namespace MyPortal.Logic.Models.Permissions
             new SystemArea("sch", "School"),
             new SystemArea("stu", "Student"),
             new SystemArea("sys", "System")
-        };
-
-        private static List<Permission> _permissions = new List<Permission>
-        {
-
         };
 
         public static TreeNode Create(byte[] permissions)

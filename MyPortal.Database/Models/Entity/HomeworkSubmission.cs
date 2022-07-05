@@ -1,10 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {
     [Table("HomeworkSubmissions")]
-    public class HomeworkSubmission : BaseTypes.Entity
+    public class HomeworkSubmission : BaseTypes.Entity, ITaskEntity
     {
         [Column(Order = 1)]
         public Guid HomeworkId { get; set; }

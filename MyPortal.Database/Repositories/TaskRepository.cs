@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -19,6 +21,33 @@ namespace MyPortal.Database.Repositories
         public TaskRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
            
+        }
+
+        protected override Query GenerateQuery(bool includeSoftDeleted = false)
+        {
+            var query = new Query($"{TblName} as {TblAlias}");
+
+            query.LeftJoin("HomeworkSubmissions as HS", "T.Id", "HS.TaskId");
+            query.LeftJoin("HomeworkItems as HI", "HS.HomeworkId", "HI.Id");
+
+            query.Select($"{TblAlias}.Id");
+            query.Select($"{TblAlias}.TypeId");
+            query.Select($"{TblAlias}.Id");
+            query.Select($"{TblAlias}.AssignedToId");
+            query.Select($"{TblAlias}.AssignedById");
+            query.Select($"{TblAlias}.CreatedDate");
+            query.Select($"{TblAlias}.DueDate");
+            query.Select($"{TblAlias}.CompletedDate");
+            query.SelectRaw($"COALESCE({TblAlias}.Title, HI.Title) as [Title]");
+            query.SelectRaw($"COALESCE({TblAlias}.Description, HI.Description) as [Description]");
+            query.Select($"{TblAlias}.Completed");
+            query.Select($"{TblAlias}.AllowEdit");
+            query.Select($"{TblAlias}.System");
+            
+            JoinRelated(query);
+            SelectAllRelated(query);
+
+            return query;
         }
 
         protected override Query JoinRelated(Query query)

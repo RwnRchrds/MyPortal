@@ -11,12 +11,10 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<AcademicYearModel> GetCurrentAcademicYear(bool getLatestIfNull = false);
         Task<AcademicYearModel> GetAcademicYearById(Guid academicYearId);
         Task<IEnumerable<AcademicYearModel>> GetAcademicYears();
-        Task CreateAcademicYear(params CreateAcademicYearRequestModel[] createModels);
-        Task UpdateAcademicYear(params UpdateAcademicYearRequestModel[] academicYearModels);
-        Task DeleteAcademicYear(params Guid[] academicYearIds);
+        Task CreateAcademicYear(CreateAcademicYearRequestModel model);
+        Task UpdateAcademicYear(UpdateAcademicYearRequestModel model);
+        Task DeleteAcademicYear(Guid academicYearId);
         Task<bool> IsAcademicYearLocked(Guid academicYearId);
-        CreateAcademicTermRequestModel[] GenerateAttendanceWeeks(params CreateAcademicTermRequestModel[] termModel);
-
-
+        CreateAcademicTermRequestModel GenerateAttendanceWeeks(CreateAcademicTermRequestModel model);
     }
 }

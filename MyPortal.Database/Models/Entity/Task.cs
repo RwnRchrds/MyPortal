@@ -28,7 +28,6 @@ namespace MyPortal.Database.Models.Entity
         public DateTime? CompletedDate { get; set; }
 
         [Column(Order = 7)]
-        [Required]
         [StringLength(128)]
         public string Title { get; set; }
 
