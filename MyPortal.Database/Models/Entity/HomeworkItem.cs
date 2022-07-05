@@ -31,8 +31,7 @@ namespace MyPortal.Database.Models.Entity
         
         [Column(Order = 5)] 
         public int MaxPoints { get; set; }
-        
-        
+
         public virtual Directory Directory { get; set; }
         public virtual ICollection<HomeworkSubmission> Submissions { get; set; }
         public virtual ICollection<LessonPlanHomeworkItem> LessonPlanHomeworkItems { get; set; }
