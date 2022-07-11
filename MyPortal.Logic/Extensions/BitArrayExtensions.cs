@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Extensions
     {
         public static byte[] ToBytes(this BitArray bitArray)
         {
-            double bitCount = (double)(bitArray.Length - 1) / 8;
+            double bitCount = (double)bitArray.Length / 8;
             int bytesRequired = Convert.ToInt32(Math.Ceiling(bitCount));
             byte[] bytes = new byte[bytesRequired];
             bitArray.CopyTo(bytes, 0);

@@ -75,5 +75,27 @@ namespace MyPortal.Database.Repositories
             homeworkSubmission.DocumentId = entity.DocumentId;
             homeworkSubmission.PointsAchieved = entity.PointsAchieved;
         }
+
+        public async Task<IEnumerable<HomeworkSubmission>> GetHomeworkSubmissionsByStudent(Guid studentId)
+        {
+            var query = GenerateQuery();
+
+            query.Where("S.Id", studentId);
+
+            return await ExecuteQuery(query);
+        }
+
+        public async Task<IEnumerable<HomeworkSubmission>> GetHomeworkSubmissionsByStudentGroup(Guid studentGroupId)
+        {
+            var now = DateTime.Now;
+            
+            var query = GenerateQuery();
+
+            query.JoinStudentGroups("S", "SGM");
+
+            query.WhereStudentGroup("SGM", studentGroupId, now);
+
+            return await ExecuteQuery(query);
+        }
     }
 }

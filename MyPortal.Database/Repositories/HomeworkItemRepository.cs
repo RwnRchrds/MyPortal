@@ -11,6 +11,7 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
 using Task = System.Threading.Tasks.Task;
@@ -64,6 +65,36 @@ namespace MyPortal.Database.Repositories
             homeworkItem.Title = entity.Title;
             homeworkItem.Description = entity.Description;
             homeworkItem.SubmitOnline = entity.SubmitOnline;
+        }
+
+        public async Task<IEnumerable<HomeworkItem>> GetHomework(HomeworkSearchOptions searchOptions)
+        {
+            var query = GenerateQuery();
+
+            query.LeftJoin("LessonPlanHomeworkItems as LPHI", "HI.Id", "LPHI.HomeworkItemId");
+            query.LeftJoin("LessonPlans as LP", "LPHI.LessonPlanId", "LP.Id");
+            query.LeftJoin("StudyTopics as ST", "LP.StudyTopicId", "ST.Id");
+            query.LeftJoin("Courses as C", "S.CourseId", "C.Id");
+            query.LeftJoin("Subjects as S", "C.SubjectId", "S.Id");
+
+            if (searchOptions.CourseId.HasValue)
+            {
+                query.Where("C.Id", searchOptions.CourseId);
+            }
+            // No point having subject as an additional filter - course is more specific
+            else if (searchOptions.SubjectId.HasValue)
+            {
+                query.Where("S.Id", searchOptions.SubjectId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchOptions.SearchText))
+            {
+                query.Where(q =>
+                    q.WhereContainsWord("HI.Title", searchOptions.SearchText)
+                        .OrWhereContainsWord("HI.Description", searchOptions.SearchText));
+            }
+
+            return await ExecuteQuery(query);
         }
     }
 }

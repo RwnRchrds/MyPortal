@@ -176,6 +176,8 @@ namespace MyPortal.Database.Enums
         StudentEditStudentDocuments = 109,
         StudentViewMedicalEvents = 110,
         StudentEditMedicalEvents = 111,
+        StudentViewFinanceDetails = 129,
+        StudentEditFinanceDetails = 130,
 
         #endregion
 

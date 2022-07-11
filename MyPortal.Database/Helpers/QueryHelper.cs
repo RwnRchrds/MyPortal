@@ -27,10 +27,22 @@ namespace MyPortal.Database.Helpers
             return query;
         }
 
-        public static Query JoinStudentGroups(this Query query, string studentAlias, string studentGroupAlias = "SGM")
+        public static Query JoinStudentGroups(this Query query, string studentAlias, string studentGroupMembershipAlias)
         {
-            query.LeftJoin($"StudentGroupMemberships as {studentGroupAlias}", $"{studentGroupAlias}.StudentId",
+            query.LeftJoin($"StudentGroupMemberships as {studentGroupMembershipAlias}", $"{studentGroupMembershipAlias}.StudentId",
                 $"{studentAlias}.Id");
+
+            return query;
+        }
+
+        public static Query WhereStudentGroup(this Query query, string studentGroupMembershipAlias,
+            Guid studentGroupId, DateTime runAsDate)
+        {
+            query.Where($"{studentGroupMembershipAlias}.StudentGroupId", studentGroupId);
+            query.Where($"{studentGroupMembershipAlias}.StartDate", "<=", runAsDate);
+            query.Where(q =>
+                q.WhereNull($"{studentGroupMembershipAlias}.EndDate")
+                    .OrWhere($"{studentGroupMembershipAlias}.EndDate", ">=", runAsDate));
 
             return query;
         }

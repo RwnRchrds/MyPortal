@@ -101,12 +101,12 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin($"{TblName} AS M", "M.StudentId", "S.Id");
             query.CrossJoin("AttendancePeriods_PossibleAttendancePeriods AS PAP");
 
-            query.WhereDate("PAP.StartTime", ">=", startDate);
-            query.WhereDate("PAP.EndTime", "<", endDate);
+            query.Where("PAP.StartTime", ">=", startDate);
+            query.Where("PAP.EndTime", "<", endDate);
 
-            query.JoinStudentGroups("S");
+            query.JoinStudentGroups("S", "SGM");
 
-            query.Where("SGM.Id", studentGroupId);
+            query.WhereStudentGroup("SGM", studentGroupId, startDate);
 
             return await ExecuteQuery<PossibleAttendanceMark>(query);
         }

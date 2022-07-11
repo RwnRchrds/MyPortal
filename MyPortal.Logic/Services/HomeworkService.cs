@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Curriculum.Homework;
+using Task = MyPortal.Database.Models.Entity.Task;
 
 namespace MyPortal.Logic.Services;
 
@@ -83,6 +89,37 @@ public class HomeworkService : BaseService, IHomeworkService
             await unitOfWork.HomeworkItems.Delete(homeworkId);
 
             await unitOfWork.SaveChangesAsync();
+        }
+    }
+
+    public async Task<IEnumerable<HomeworkSubmissionModel>> GetSubmissionsByStudent(Guid studentId)
+    {
+        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        {
+            var submissions = await unitOfWork.HomeworkSubmissions.GetHomeworkSubmissionsByStudent(studentId);
+
+            return submissions.Select(s => new HomeworkSubmissionModel(s));
+        }
+    }
+
+    public async Task<IEnumerable<HomeworkSubmissionModel>> GetSubmissionsByStudentGroup(Guid studentGroupId)
+    {
+        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        {
+            var submissions = await unitOfWork.HomeworkSubmissions.GetHomeworkSubmissionsByStudentGroup(studentGroupId);
+
+            return submissions.Select(s => new HomeworkSubmissionModel(s));
+        }
+    }
+
+    public async Task<IEnumerable<HomeworkItemModel>> GetHomework(HomeworkSearchOptions searchOptions)
+    {
+        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        {
+            var homeworkItems =
+                (await unitOfWork.HomeworkItems.GetHomework(searchOptions)).Select(hi => new HomeworkItemModel(hi));
+
+            return homeworkItems;
         }
     }
 
