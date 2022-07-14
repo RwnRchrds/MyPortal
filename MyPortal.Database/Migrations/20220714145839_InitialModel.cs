@@ -1029,30 +1029,12 @@ namespace MyPortal.Database.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false),
+                    SubjectLeader = table.Column<bool>(type: "bit", nullable: false),
                     System = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SubjectStaffMemberRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SystemAreas",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ParentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SystemAreas", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SystemAreas_SystemAreas_ParentId",
-                        column: x => x.ParentId,
-                        principalTable: "SystemAreas",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1297,8 +1279,8 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     DirectoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     SubmitOnline = table.Column<bool>(type: "bit", nullable: false),
                     MaxPoints = table.Column<int>(type: "int", nullable: false)
                 },
@@ -1663,27 +1645,6 @@ namespace MyPortal.Database.Migrations
                         name: "FK_SubjectCodes_SubjectCodeSets_SubjectCodeSetId",
                         column: x => x.SubjectCodeSetId,
                         principalTable: "SubjectCodeSets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Permissions",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    AreaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ShortDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FullDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Value = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Permissions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Permissions_SystemAreas_AreaId",
-                        column: x => x.AreaId,
-                        principalTable: "SystemAreas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -3450,7 +3411,7 @@ namespace MyPortal.Database.Migrations
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CompletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Title = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Completed = table.Column<bool>(type: "bit", nullable: false),
                     AllowEdit = table.Column<bool>(type: "bit", nullable: false),
@@ -5691,11 +5652,6 @@ namespace MyPortal.Database.Migrations
                 column: "PhotoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Permissions_AreaId",
-                table: "Permissions",
-                column: "AreaId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PersonConditions_ConditionId",
                 table: "PersonConditions",
                 column: "ConditionId");
@@ -6163,11 +6119,6 @@ namespace MyPortal.Database.Migrations
                 column: "SubjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SystemAreas_ParentId",
-                table: "SystemAreas",
-                column: "ParentId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Tasks_AssignedById",
                 table: "Tasks",
                 column: "AssignedById");
@@ -6379,9 +6330,6 @@ namespace MyPortal.Database.Migrations
                 name: "ParentEveningGroup");
 
             migrationBuilder.DropTable(
-                name: "Permissions");
-
-            migrationBuilder.DropTable(
                 name: "PersonConditions");
 
             migrationBuilder.DropTable(
@@ -6551,9 +6499,6 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "ParentEveningStaffMembers");
-
-            migrationBuilder.DropTable(
-                name: "SystemAreas");
 
             migrationBuilder.DropTable(
                 name: "MedicalConditions");

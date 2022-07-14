@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MyPortal.Logic.Enums;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.Summary;
@@ -15,7 +17,7 @@ public class BulletinSummaryModel
     public string CreatedByName { get; set; }
     public DateTime? ExpireDate { get; set; }
 
-    public BulletinSummaryModel(BulletinModel bulletin)
+    private BulletinSummaryModel(BulletinModel bulletin)
     {
         Id = bulletin.Id.Value;
         DirectoryId = bulletin.DirectoryId;

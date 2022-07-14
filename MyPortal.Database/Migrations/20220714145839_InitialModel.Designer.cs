@@ -12,7 +12,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220628212307_InitialModel")]
+    [Migration("20220714145839_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -3505,7 +3505,8 @@ namespace MyPortal.Database.Migrations
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
                         .HasColumnOrder(3);
 
                     b.Property<Guid>("DirectoryId")
@@ -3521,7 +3522,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnOrder(4);
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)")
                         .HasColumnOrder(2);
 
                     b.HasKey("Id");
@@ -4409,37 +4412,6 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("StaffMemberId");
 
                     b.ToTable("ParentEveningStaffMembers");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.Permission", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(0)
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<Guid>("AreaId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(1);
-
-                    b.Property<string>("FullDescription")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnOrder(3);
-
-                    b.Property<string>("ShortDescription")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnOrder(2);
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int")
-                        .HasColumnOrder(4);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AreaId");
-
-                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Person", b =>
@@ -6499,37 +6471,15 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasColumnOrder(1);
 
+                    b.Property<bool>("SubjectLeader")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("System")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
                     b.ToTable("SubjectStaffMemberRoles");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.SystemArea", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(0)
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)")
-                        .HasColumnOrder(1);
-
-                    b.Property<Guid?>("ParentId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(2);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("SystemAreas");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.SystemSetting", b =>
@@ -6594,7 +6544,6 @@ namespace MyPortal.Database.Migrations
                         .HasColumnOrder(11);
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)")
                         .HasColumnOrder(7);
@@ -8560,17 +8509,6 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("StaffMember");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.Permission", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Entity.SystemArea", "SystemArea")
-                        .WithMany("Permissions")
-                        .HasForeignKey("AreaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("SystemArea");
-                });
-
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Person", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Entity.Directory", "Directory")
@@ -9425,16 +9363,6 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("StaffMember");
 
                     b.Navigation("Subject");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.SystemArea", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Entity.SystemArea", "Parent")
-                        .WithMany("SubAreas")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Task", b =>
@@ -10440,13 +10368,6 @@ namespace MyPortal.Database.Migrations
             modelBuilder.Entity("MyPortal.Database.Models.Entity.SubjectStaffMemberRole", b =>
                 {
                     b.Navigation("StaffMembers");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.SystemArea", b =>
-                {
-                    b.Navigation("Permissions");
-
-                    b.Navigation("SubAreas");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Task", b =>

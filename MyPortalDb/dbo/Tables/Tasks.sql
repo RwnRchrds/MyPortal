@@ -6,7 +6,7 @@
     [CreatedDate]   DATETIME2 (7)    NOT NULL,
     [DueDate]       DATETIME2 (7)    NULL,
     [CompletedDate] DATETIME2 (7)    NULL,
-    [Title]         NVARCHAR (128)   NOT NULL,
+    [Title]         NVARCHAR (128)   NULL,
     [Description]   NVARCHAR (256)   NULL,
     [Completed]     BIT              NOT NULL,
     [AllowEdit]     BIT              NOT NULL,
