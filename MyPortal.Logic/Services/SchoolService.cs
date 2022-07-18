@@ -12,6 +12,7 @@ using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.School.Bulletins;
+using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -43,6 +44,16 @@ namespace MyPortal.Logic.Services
                 var bulletins = await unitOfWork.Bulletins.GetBulletins(searchOptions);
 
                 return bulletins.Select(b => new BulletinModel(b));
+            }
+        }
+
+        public async Task<IEnumerable<BulletinSummaryModel>> GetBulletinSummaries(BulletinSearchOptions searchOptions)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var bulletins = await unitOfWork.Bulletins.GetBulletinMetadata(searchOptions);
+
+                return bulletins.Select(b => new BulletinSummaryModel(b));
             }
         }
 

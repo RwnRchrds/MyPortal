@@ -12,6 +12,7 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.QueryResults.School;
 using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -56,6 +57,27 @@ namespace MyPortal.Database.Repositories
                 }, sql.NamedBindings, Transaction);
 
             return bulletins;
+        }
+
+        public async Task<IEnumerable<BulletinMetadata>> GetBulletinMetadata(BulletinSearchOptions searchOptions)
+        {
+            var query = new Query();
+
+            query.Select($"{TblAlias}.Id");
+            query.Select($"{TblAlias}.DirectoryId");
+            query.Select($"{TblAlias}.CreatedById");
+            query.Select($"D.DisplayName as CreatedByName");
+            query.Select($"{TblAlias}.CreatedDate");
+            query.Select($"{TblAlias}.ExpireDate");
+            query.Select($"{TblAlias}.Title");
+            query.Select($"{TblAlias}.Detail");
+            query.Select($"{TblAlias}.Private");
+            query.Select($"{TblAlias}.Approved");
+
+            query.FromRaw($@"Bulletins as {TblAlias}
+CROSS APPLY GetDisplayName({TblAlias}.CreatedById, 2, 1, 1) D");
+
+            return await ExecuteQuery<BulletinMetadata>(query);
         }
 
         public async Task<IEnumerable<Bulletin>> GetBulletins(BulletinSearchOptions searchOptions)

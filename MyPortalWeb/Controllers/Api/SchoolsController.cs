@@ -12,6 +12,7 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.School.Bulletins;
+using MyPortal.Logic.Models.Summary;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 using MyPortalWeb.Models.Response;
@@ -22,6 +23,30 @@ namespace MyPortalWeb.Controllers.Api
     public class SchoolsController : BaseApiController
     {
         private ISchoolService _schoolService;
+
+        private async Task SetBulletinSearchOptions(BulletinSearchOptions searchOptions)
+        {
+            if (!User.IsType(UserTypes.Staff))
+            {
+                searchOptions.IncludeStaffOnly = false;
+                searchOptions.IncludeUnapproved = false;
+                searchOptions.IncludeExpired = false;
+            }
+            if (!await UserHasPermission(PermissionValue.SchoolApproveSchoolBulletins))
+            {
+                searchOptions.IncludeUnapproved = false;
+                searchOptions.IncludeExpired = false;
+            }
+
+            if (searchOptions.IncludeCreatedBy.HasValue)
+            {
+                var user = await GetLoggedInUser();
+                if (user.Id.HasValue)
+                {
+                    searchOptions.IncludeCreatedBy = user.Id.Value;
+                }
+            }
+        }
 
         public SchoolsController(IUserService userService, IRoleService roleService, ISchoolService schoolService) :
             base(userService, roleService)
@@ -54,28 +79,28 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (!User.IsType(UserTypes.Staff))
-                {
-                    searchOptions.IncludeStaffOnly = false;
-                    searchOptions.IncludeUnapproved = false;
-                    searchOptions.IncludeExpired = false;
-                }
-                if (!await UserHasPermission(PermissionValue.SchoolApproveSchoolBulletins))
-                {
-                    searchOptions.IncludeUnapproved = false;
-                    searchOptions.IncludeExpired = false;
-                }
-
-                if (searchOptions.IncludeCreatedBy.HasValue)
-                {
-                    var user = await GetLoggedInUser();
-                    if (user.Id.HasValue)
-                    {
-                        searchOptions.IncludeCreatedBy = user.Id.Value;
-                    }
-                }
+                await SetBulletinSearchOptions(searchOptions);
 
                 var bulletins = await _schoolService.GetBulletins(searchOptions);
+
+                return Ok(bulletins);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        [HttpGet]
+        [Route("local/bulletins/summary")]
+        [ProducesResponseType(typeof(IEnumerable<BulletinSummaryModel>), 200)]
+        public async Task<IActionResult> GetSchoolBulletinSummaries([FromQuery] BulletinSearchOptions searchOptions)
+        {
+            try
+            {
+                await SetBulletinSearchOptions(searchOptions);
+
+                var bulletins = await _schoolService.GetBulletinSummaries(searchOptions);
 
                 return Ok(bulletins);
             }

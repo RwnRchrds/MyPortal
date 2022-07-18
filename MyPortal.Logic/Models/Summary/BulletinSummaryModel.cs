@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MyPortal.Database.Models.QueryResults.School;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Models.Entity;
@@ -15,17 +16,19 @@ public class BulletinSummaryModel
     public bool Private { get; set; }
     public bool Approved { get; set; }
     public string CreatedByName { get; set; }
+    public DateTime CreatedDate { get; set; }
     public DateTime? ExpireDate { get; set; }
 
-    private BulletinSummaryModel(BulletinModel bulletin)
+    public BulletinSummaryModel(BulletinMetadata metadata)
     {
-        Id = bulletin.Id.Value;
-        DirectoryId = bulletin.DirectoryId;
-        Title = bulletin.Title;
-        Detail = bulletin.Detail;
-        Private = bulletin.Private;
-        Approved = bulletin.Approved;
-        CreatedByName = bulletin.CreatedBy.GetDisplayName(NameFormat.FullNameAbbreviated);
-        ExpireDate = bulletin.ExpireDate;
+        Id = metadata.Id;
+        DirectoryId = metadata.DirectoryId;
+        Title = metadata.Title;
+        Detail = metadata.Detail;
+        Private = metadata.Private;
+        Approved = metadata.Approved;
+        CreatedByName = metadata.CreatedByName;
+        CreatedDate = metadata.CreatedDate;
+        ExpireDate = metadata.ExpireDate;
     }
 }
