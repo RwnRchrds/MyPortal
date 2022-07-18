@@ -74,27 +74,8 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("local/bulletins")]
-        [ProducesResponseType(typeof(IEnumerable<BulletinModel>), 200)]
-        public async Task<IActionResult> GetSchoolBulletins([FromQuery] BulletinSearchOptions searchOptions)
-        {
-            try
-            {
-                await SetBulletinSearchOptions(searchOptions);
-
-                var bulletins = await _schoolService.GetBulletins(searchOptions);
-
-                return Ok(bulletins);
-            }
-            catch (Exception e)
-            {
-                return HandleException(e);
-            }
-        }
-
-        [HttpGet]
-        [Route("local/bulletins/summary")]
         [ProducesResponseType(typeof(IEnumerable<BulletinSummaryModel>), 200)]
-        public async Task<IActionResult> GetSchoolBulletinSummaries([FromQuery] BulletinSearchOptions searchOptions)
+        public async Task<IActionResult> GetSchoolBulletins([FromQuery] BulletinSearchOptions searchOptions)
         {
             try
             {
