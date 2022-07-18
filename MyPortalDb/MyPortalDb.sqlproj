@@ -280,5 +280,8 @@
     <Build Include="dbo\Functions\GetName_FullNameNoTitle.sql" />
     <Build Include="dbo\Functions\GetName_Initials.sql" />
     <Build Include="dbo\Functions\GetDisplayName.sql" />
+    <Build Include="dbo\Tables\PersistedGrants.sql" />
+    <Build Include="dbo\Tables\Keys.sql" />
+    <Build Include="dbo\Tables\DeviceCodes.sql" />
   </ItemGroup>
 </Project>
