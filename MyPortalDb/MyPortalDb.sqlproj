@@ -63,6 +63,7 @@
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
     <Folder Include="dbo\Functions\" />
+    <Folder Include="dbo\Views" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Script.SeedSystemData.sql" />
@@ -280,5 +281,7 @@
     <Build Include="dbo\Functions\GetName_FullNameNoTitle.sql" />
     <Build Include="dbo\Functions\GetName_Initials.sql" />
     <Build Include="dbo\Functions\GetDisplayName.sql" />
+    <Build Include="dbo\Views\Sessions_Metadata.sql" />
+    <Build Include="dbo\Views\AttendancePeriods_PossibleAttendancePeriods.sql" />
   </ItemGroup>
 </Project>

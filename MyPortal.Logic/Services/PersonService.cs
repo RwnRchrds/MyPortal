@@ -88,7 +88,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Person not found.");
                 }
 
-                return new PersonModel(person);
+                return person != null ? new PersonModel(person) : null;
             }
         }
     }

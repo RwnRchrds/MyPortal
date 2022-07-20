@@ -12,6 +12,8 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.Filters;
+using MyPortal.Database.Models.Paging;
 using MyPortal.Database.Models.QueryResults.School;
 using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
@@ -25,6 +27,37 @@ namespace MyPortal.Database.Repositories
         public BulletinRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
        
+        }
+
+        private void ApplySearch(Query query, BulletinSearchOptions searchOptions)
+        {
+            if (!string.IsNullOrWhiteSpace(searchOptions.SearchText))
+            {
+                query.Where(q =>
+                    q.WhereContainsWord($"{TblAlias}.Title", searchOptions.SearchText)
+                        .OrWhereContainsWord($"{TblAlias}.Summary", searchOptions.SearchText));
+            }
+
+            if (!searchOptions.IncludeStaffOnly)
+            {
+                query.Where($"{TblAlias}.StaffOnly", false);
+            }
+
+            if (!searchOptions.IncludeExpired)
+            {
+                query.Where(q =>
+                    q.WhereNull($"{TblAlias}.ExpireDate").OrWhere($"{TblAlias}.ExpireDate", ">", DateTime.Now));
+            }
+
+            if (!searchOptions.IncludeUnapproved)
+            {
+                query.Where($"{TblAlias}.Approved", true);
+            }
+            
+            if (searchOptions.IncludeCreatedBy.HasValue)
+            {
+                query.OrWhere($"{TblAlias}.CreatedById", searchOptions.IncludeCreatedBy.Value);
+            }
         }
 
         protected override Query JoinRelated(Query query)
@@ -59,6 +92,46 @@ namespace MyPortal.Database.Repositories
             return bulletins;
         }
 
+        public async Task<BulletinMetadataPageResponse> GetBulletinMetadata(BulletinSearchOptions searchOptions, PageFilter pageFilter)
+        {
+            var query = new Query();
+
+            query.Select($"{TblAlias}.Id");
+            query.Select($"{TblAlias}.DirectoryId");
+            query.Select($"{TblAlias}.CreatedById");
+            query.Select($"D.DisplayName as CreatedByName");
+            query.Select($"{TblAlias}.CreatedDate");
+            query.Select($"{TblAlias}.ExpireDate");
+            query.Select($"{TblAlias}.Title");
+            query.Select($"{TblAlias}.Detail");
+            query.Select($"{TblAlias}.Private");
+            query.Select($"{TblAlias}.Approved");
+
+            query.FromRaw($@"Bulletins as {TblAlias}
+CROSS APPLY GetDisplayName({TblAlias}.CreatedById, 2, 1, 1) D");
+
+            query.OrderByDesc($"{TblAlias}.CreatedDate");
+            
+            ApplySearch(query, searchOptions);
+
+            if (pageFilter != null)
+            {
+                query.ApplyPaging(pageFilter);
+            }
+
+            var data = await ExecuteQuery<BulletinMetadata>(query);
+
+            var countQuery = GenerateEmptyQuery();
+            
+            ApplySearch(countQuery, searchOptions);
+
+            var count = await ExecuteQueryIntResult(countQuery.AsCount());
+
+            var response = new BulletinMetadataPageResponse(data, count ?? 0);
+
+            return response;
+        }
+        
         public async Task<IEnumerable<BulletinMetadata>> GetBulletinMetadata(BulletinSearchOptions searchOptions)
         {
             var query = new Query();
@@ -77,40 +150,20 @@ namespace MyPortal.Database.Repositories
             query.FromRaw($@"Bulletins as {TblAlias}
 CROSS APPLY GetDisplayName({TblAlias}.CreatedById, 2, 1, 1) D");
 
-            return await ExecuteQuery<BulletinMetadata>(query);
+            query.OrderByDesc($"{TblAlias}.CreatedDate");
+            
+            ApplySearch(query, searchOptions);
+
+            var metadata = await ExecuteQuery<BulletinMetadata>(query);
+
+            return metadata;
         }
 
         public async Task<IEnumerable<Bulletin>> GetBulletins(BulletinSearchOptions searchOptions)
         {
             var query = GenerateQuery();
 
-            if (!string.IsNullOrWhiteSpace(searchOptions.SearchText))
-            {
-                query.Where(q =>
-                    q.WhereContainsWord($"{TblAlias}.Title", searchOptions.SearchText)
-                        .OrWhereContainsWord($"{TblAlias}.Summary", searchOptions.SearchText));
-            }
-
-            if (!searchOptions.IncludeStaffOnly)
-            {
-                query.Where($"{TblAlias}.StaffOnly", false);
-            }
-
-            if (!searchOptions.IncludeExpired)
-            {
-                query.Where(q =>
-                    q.WhereNull($"{TblAlias}.ExpireDate").OrWhere($"{TblAlias}.ExpireDate", ">", DateTime.Now));
-            }
-
-            if (!searchOptions.IncludeUnapproved)
-            {
-                query.Where($"{TblAlias}.Approved", true);
-            }
-            
-            if (searchOptions.IncludeCreatedBy.HasValue)
-            {
-                query.OrWhere($"{TblAlias}.CreatedById", searchOptions.IncludeCreatedBy.Value);
-            }
+            ApplySearch(query, searchOptions);
 
             return await ExecuteQuery(query);
         }

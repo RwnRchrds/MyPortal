@@ -77,7 +77,9 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Where($"{TblAlias}.UserId", userId);
+            query.LeftJoin("Users as U", "U.PersonId", $"{TblAlias}.Id");
+
+            query.Where("U.Id", userId);
 
             return (await ExecuteQuery(query)).FirstOrDefault();
         }

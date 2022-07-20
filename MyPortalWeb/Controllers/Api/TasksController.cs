@@ -112,13 +112,13 @@ namespace MyPortalWeb.Controllers.Api
                     return Error(HttpStatusCode.BadRequest, "Tasks of this type cannot be created manually.");
                 }
 
-                var user = await GetLoggedInUser();
+                var userId = User.GetUserId();
 
                 var accessResponse = await GetPermissionsForTasksPerson(requestModel.AssignedToId, true);
 
                 if (accessResponse.CanAccess || accessResponse.IsOwner)
                 {
-                    requestModel.AssignedById = user.Id.Value;
+                    requestModel.AssignedById = userId;
 
                     await _taskService.Create(requestModel);
 
@@ -201,7 +201,7 @@ namespace MyPortalWeb.Controllers.Api
 
         private async Task<bool> CanUpdateTask(Guid taskId)
         {
-            var user = await GetLoggedInUser();
+            var userId = User.GetUserId();
             var task = await _taskService.GetById(taskId);
 
             var accessResponse = await GetPermissionsForTasksPerson(task.AssignedToId, true);
@@ -213,7 +213,7 @@ namespace MyPortalWeb.Controllers.Api
 
             if (accessResponse.IsOwner)
             {
-                return task.AssignedById == user.Id.Value || task.AllowEdit;
+                return task.AssignedById == userId || task.AllowEdit;
             }
 
             return false;

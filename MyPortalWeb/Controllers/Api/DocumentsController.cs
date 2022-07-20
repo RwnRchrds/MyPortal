@@ -190,9 +190,9 @@ namespace MyPortalWeb.Controllers.Api
             {
                 if (await CanAccessDirectory(model.DirectoryId, true))
                 {
-                    var user = await GetLoggedInUser();
+                    var userId = User.GetUserId();
                 
-                    await _documentService.CreateDocument(user.Id.Value, model);
+                    await _documentService.CreateDocument(userId, model);
 
                     return Ok();   
                 }

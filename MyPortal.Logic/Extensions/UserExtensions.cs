@@ -16,7 +16,7 @@ namespace MyPortal.Logic.Extensions
 {
     public static class UserExtensions
     {
-        internal static Guid GetUserId(this ClaimsPrincipal principal)
+        public static Guid GetUserId(this ClaimsPrincipal principal)
         {
             var nameId = principal.Claims.FirstOrDefault(c => c.Type.Contains(JwtRegisteredClaimNames.NameId));
 

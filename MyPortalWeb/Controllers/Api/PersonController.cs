@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Response.People;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -36,6 +38,42 @@ namespace MyPortalWeb.Controllers.Api
                 var people = await _personService.GetPeopleWithTypes(searchModel);
 
                 return Ok(people);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+        
+        [HttpGet]
+        [Route("user/{userId}")]
+        [ProducesResponseType(typeof(PersonModel), 200)]
+        public async Task<IActionResult> GetPersonByUser([FromRoute] Guid userId)
+        {
+            try
+            {
+                var person = await _personService.GetByUserId(userId, false);
+
+                return Ok(person);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        [HttpGet]
+        [Route("loggedInUser")]
+        [ProducesResponseType(typeof(PersonModel), 200)]
+        public async Task<IActionResult> GetPersonByCurrentUser()
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                
+                var person = await GetPersonByUser(userId);
+
+                return Ok(person);
             }
             catch (Exception e)
             {

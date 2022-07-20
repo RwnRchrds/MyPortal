@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.Filters;
+using MyPortal.Database.Models.Paging;
 using MyPortal.Database.Models.QueryResults.School;
 using MyPortal.Database.Models.Search;
 
@@ -15,5 +17,8 @@ namespace MyPortal.Database.Interfaces.Repositories
         Task<IEnumerable<Bulletin>> GetOwn(Guid authorId);
 
         Task<IEnumerable<BulletinMetadata>> GetBulletinMetadata(BulletinSearchOptions searchOptions);
+        
+        Task<BulletinMetadataPageResponse> GetBulletinMetadata(BulletinSearchOptions searchOptions,
+            PageFilter pageFilter);
     }
 }

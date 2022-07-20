@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Response.Users;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -24,9 +25,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var user = await GetLoggedInUser();
+                var userId = User.GetUserId();
 
-                var userInfo = await UserService.GetUserInfo(user.Id.Value);
+                var userInfo = await UserService.GetUserInfo(userId);
 
                 return Ok(userInfo);
             }

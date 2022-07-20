@@ -23,11 +23,44 @@ namespace MyPortal.Database.Repositories
            
         }
 
+        protected override Query JoinRelated(Query query)
+        {
+            JoinEntity(query, "People", "P", "PersonId");
+            JoinEntity(query, "StaffMembers", "LM", "LineManagerId");
+
+            return query;
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAllColumns(typeof(Person), "P");
+            query.SelectAllColumns(typeof(StaffMember), "LM");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<StaffMember>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            var staffMembers = await Transaction.Connection.QueryAsync<StaffMember, Person, StaffMember, StaffMember>(
+                sql.Sql,
+                (staff, person, lineManager) =>
+                {
+                    staff.Person = person;
+                    staff.LineManager = lineManager;
+
+                    return staff;
+                }, sql.NamedBindings, Transaction);
+
+            return staffMembers;
+        }
+
         public async Task<StaffMember> GetByPersonId(Guid personId)
         {
             var query = GenerateQuery();
 
-            query.Where("Person.Id", personId);
+            query.Where("P.Id", personId);
 
             return (await ExecuteQuery(query)).FirstOrDefault();
         }

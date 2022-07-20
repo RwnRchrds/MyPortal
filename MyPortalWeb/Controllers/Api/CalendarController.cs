@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
@@ -41,7 +42,7 @@ namespace MyPortalWeb.Controllers.Api
 
                     if (dateFrom == null || dateTo == null)
                     {
-                        dateRange = DateRange.GetCurrentWeek();
+                        dateRange = DateRange.CurrentWeek;
                     }
                     else
                     {
@@ -70,9 +71,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var user = await GetLoggedInUser();
+                var userId = User.GetUserId();
                 
-                await _calendarService.CreateEvent(user.Id.Value, model);
+                await _calendarService.CreateEvent(userId, model);
 
                 return Ok();
             }

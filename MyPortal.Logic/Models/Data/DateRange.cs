@@ -8,11 +8,14 @@ namespace MyPortal.Logic.Models.Data
 {
     public class DateRange
     {
-        public static DateRange GetCurrentWeek()
+        public static DateRange CurrentWeek
         {
-            var monday = DateTime.Today.GetDayOfWeek(DayOfWeek.Monday);
+            get
+            {
+                var monday = DateTime.Today.GetDayOfWeek(DayOfWeek.Monday);
 
-            return new DateRange(monday, monday.AddDays(6));
+                return new DateRange(monday, monday.AddDays(6));
+            }
         }
 
         public DateTime Start { get; set; }

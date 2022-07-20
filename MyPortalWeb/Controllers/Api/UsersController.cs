@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyPortal.Database.Enums;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
@@ -32,7 +33,7 @@ namespace MyPortalWeb.Controllers.Api
             return await UserHasPermission(requireEdit
                        ? PermissionValue.SystemEditUsers
                        : PermissionValue.SystemViewUsers) ||
-                   (await GetLoggedInUser()).Id == requestedUserId;
+                   User.GetUserId() == requestedUserId;
         }
 
         [HttpPost]

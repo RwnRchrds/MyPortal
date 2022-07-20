@@ -80,20 +80,24 @@ namespace MyPortal.Database.Repositories
             query.WhereDate($"{TblAlias}.StartTime", ">=", firstDate.Date);
             query.WhereDate($"{TblAlias}.EndTime", "<", lastDate.Date.AddDays(1));
 
-            if (includePublic)
+            query.Where(q =>
             {
-                query.Where(q => q.Where("A.PersonId", personId).OrWhereTrue($"{TblAlias}.Public"));
-            }
-            else
-            {
-                query.Where("A.PersonId", personId);
-            }
+                q.Where("A.PersonId", personId);
 
-            if (!includeDeclined)
-            {
-                query.Where(q => q.Where("A.ResponseId", "<>", AttendeeResponses.Declined).OrWhereTrue("A.Required"));
-            }
+                if (!includeDeclined)
+                {
+                    q.Where(
+                        a => a.Where("A.ResponseId", "<>", AttendeeResponses.Declined).OrWhereTrue("A.Required"));
+                }
 
+                if (includePublic)
+                {
+                    q.OrWhere($"{TblAlias}.IsPublic", true);
+                }
+
+                return q;
+            });
+            
             return await ExecuteQuery(query);
         }
 

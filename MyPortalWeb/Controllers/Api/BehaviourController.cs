@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
@@ -95,9 +96,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var user = await GetLoggedInUser();
+                var userId = User.GetUserId();
                 
-                await _behaviourService.CreateAchievement(user.Id.Value, model);
+                await _behaviourService.CreateAchievement(userId, model);
 
                 return Ok();
             }
@@ -206,9 +207,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var user = await GetLoggedInUser();
+                var userId = User.GetUserId();
                 
-                await _behaviourService.CreateIncident(user.Id.Value, model);
+                await _behaviourService.CreateIncident(userId, model);
 
                 return Ok();
             }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
+using MyPortal.Database.Models.Filters;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Extensions;
@@ -12,9 +13,11 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.School.Bulletins;
+using MyPortal.Logic.Models.Response.School;
 using MyPortal.Logic.Models.Summary;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
+using MyPortalWeb.Models.Requests;
 using MyPortalWeb.Models.Response;
 
 namespace MyPortalWeb.Controllers.Api
@@ -40,11 +43,8 @@ namespace MyPortalWeb.Controllers.Api
 
             if (searchOptions.IncludeCreatedBy.HasValue)
             {
-                var user = await GetLoggedInUser();
-                if (user.Id.HasValue)
-                {
-                    searchOptions.IncludeCreatedBy = user.Id.Value;
-                }
+                var userId = User.GetUserId();
+                searchOptions.IncludeCreatedBy = userId;
             }
         }
 
@@ -74,14 +74,14 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Route("local/bulletins")]
-        [ProducesResponseType(typeof(IEnumerable<BulletinSummaryModel>), 200)]
-        public async Task<IActionResult> GetSchoolBulletins([FromQuery] BulletinSearchOptions searchOptions)
+        [ProducesResponseType(typeof(BulletinPageResponse), 200)]
+        public async Task<IActionResult> GetSchoolBulletins([FromQuery] BulletinSearchOptions searchOptions, [FromQuery] PageFilter filter)
         {
             try
             {
                 await SetBulletinSearchOptions(searchOptions);
 
-                var bulletins = await _schoolService.GetBulletinSummaries(searchOptions);
+                var bulletins = await _schoolService.GetBulletinSummaries(searchOptions, filter);
 
                 return Ok(bulletins);
             }

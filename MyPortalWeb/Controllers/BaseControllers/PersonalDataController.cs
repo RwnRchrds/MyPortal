@@ -28,9 +28,9 @@ namespace MyPortalWeb.Controllers.BaseControllers
             if (User.IsType(UserTypes.Student))
             {
                 // Students can only access resources involving themselves
-                var user = await UserService.GetUserByPrincipal(User);
+                var userId = User.GetUserId();
 
-                var student = await StudentService.GetStudentByUserId(user.Id.Value);
+                var student = await StudentService.GetStudentByUserId(userId);
 
                 if (student.PersonId == requestedPersonId)
                 {

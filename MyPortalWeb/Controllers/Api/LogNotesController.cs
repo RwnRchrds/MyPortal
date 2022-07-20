@@ -129,9 +129,11 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var user = await GetLoggedInUser();
+                var userId = User.GetUserId();
+
+                requestModel.CreatedById = userId;
                 
-                await _logNoteService.CreateLogNote(user.Id.Value, requestModel);
+                await _logNoteService.CreateLogNote(requestModel);
 
                 return Ok();
             }

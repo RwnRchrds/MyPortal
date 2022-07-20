@@ -61,7 +61,7 @@ namespace MyPortal.Database.Helpers
                     .OrWhereLike(column, $"{searchText} %").OrWhere(column, searchText));
         }
 
-        public static Query Limit(this Query query, PageFilter filter)
+        public static Query ApplyPaging(this Query query, PageFilter filter)
         {
             query.Skip(filter.Skip);
             query.Take(filter.Take);

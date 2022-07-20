@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.Filters;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.School.Bulletins;
+using MyPortal.Logic.Models.Response.School;
 using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
 
@@ -54,6 +56,18 @@ namespace MyPortal.Logic.Services
                 var bulletins = await unitOfWork.Bulletins.GetBulletinMetadata(searchOptions);
 
                 return bulletins.Select(b => new BulletinSummaryModel(b));
+            }
+        }
+
+        public async Task<BulletinPageResponse> GetBulletinSummaries(BulletinSearchOptions searchOptions, PageFilter filter)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var bulletins = await unitOfWork.Bulletins.GetBulletinMetadata(searchOptions, filter);
+
+                var response = new BulletinPageResponse(bulletins);
+
+                return response;
             }
         }
 
