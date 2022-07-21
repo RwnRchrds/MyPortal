@@ -28,8 +28,9 @@ namespace MyPortal.Database.Repositories
         {
             query.LeftJoin("AttendanceCodes as AC", "AC.Id", $"{TblAlias}.CodeId");
             query.LeftJoin("AttendancePeriods as AP", "AP.Id", $"{TblAlias}.PeriodId");
-            query.LeftJoin("Students as S", "S.Id", $"{TblAlias}.StudentId");
             query.LeftJoin("AttendanceWeeks as AW", "AW.Id", $"{TblAlias}.WeekId");
+            query.LeftJoin("Students as S", "S.Id", $"{TblAlias}.StudentId");
+            query.LeftJoin("Users as U", "U.Id", $"{TblAlias}.CreatedById");
 
             return query;
         }
@@ -38,8 +39,9 @@ namespace MyPortal.Database.Repositories
         {
             query.SelectAllColumns(typeof(AttendanceCode), "AC");
             query.SelectAllColumns(typeof(AttendancePeriod), "AP");
-            query.SelectAllColumns(typeof(Student), "S");
             query.SelectAllColumns(typeof(AttendanceWeek), "AW");
+            query.SelectAllColumns(typeof(Student), "S");
+            query.SelectAllColumns(typeof(User), "U");
 
             return query;
         }
@@ -49,14 +51,15 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var marks = await Transaction.Connection
-                .QueryAsync<AttendanceMark, AttendanceCode, AttendancePeriod, AttendanceWeek, Student, AttendanceMark>(
+                .QueryAsync<AttendanceMark, AttendanceCode, AttendancePeriod, AttendanceWeek, Student, User, AttendanceMark>(
                     sql.Sql,
-                    (mark, code, period, week, student) =>
+                    (mark, code, period, week, student, user) =>
                     {
                         mark.Week = week;
                         mark.AttendancePeriod = period;
                         mark.AttendanceCode = code;
                         mark.Student = student;
+                        mark.CreatedBy = user;
 
                         return mark;
                     }, sql.NamedBindings, Transaction);

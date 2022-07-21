@@ -18,12 +18,15 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 4)]
         public Guid CodeId { get; set; }
-
+        
         [Column(Order = 5)]
+        public Guid CreatedById { get; set; }
+
+        [Column(Order = 6)]
         [StringLength(256)]
         public string Comments { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         public int MinutesLate { get; set; }
 
         public virtual AttendanceCode AttendanceCode { get; set; }
@@ -33,5 +36,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual Student Student { get; set; }
 
         public virtual AttendanceWeek Week { get; set; }
+        
+        public virtual User CreatedBy { get; set; }
     }
 }

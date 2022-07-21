@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,15 +18,13 @@ namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
     [Route("api/people")]
-    public class PersonController : BaseApiController
+    public class PersonController : PersonalDataController
     {
-        private IPersonService _personService;
-
-        public PersonController(IUserService userService, IRoleService roleService, IPersonService personService) :
-            base(userService, roleService)
+        public PersonController(IStudentService studentService, IPersonService personService, IUserService userService,
+            IRoleService roleService) : base(studentService, personService, userService, roleService)
         {
-            _personService = personService;
         }
+
 
         [HttpGet]
         [Authorize(Policy = Policies.UserType.Staff)]
@@ -35,7 +34,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var people = await _personService.GetPeopleWithTypes(searchModel);
+                var people = await PersonService.GetPeopleWithTypes(searchModel);
 
                 return Ok(people);
             }
@@ -52,28 +51,14 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var person = await _personService.GetByUserId(userId, false);
+                var person = await PersonService.GetByUserId(userId, false);
 
-                return Ok(person);
-            }
-            catch (Exception e)
-            {
-                return HandleException(e);
-            }
-        }
+                if (person.Id.HasValue && await CanAccessPerson(person.Id.Value))
+                {
+                    return Ok(person);
+                }
 
-        [HttpGet]
-        [Route("loggedInUser")]
-        [ProducesResponseType(typeof(PersonModel), 200)]
-        public async Task<IActionResult> GetPersonByCurrentUser()
-        {
-            try
-            {
-                var userId = User.GetUserId();
-                
-                var person = await GetPersonByUser(userId);
-
-                return Ok(person);
+                return Error(HttpStatusCode.Forbidden, PermissionMessage);
             }
             catch (Exception e)
             {

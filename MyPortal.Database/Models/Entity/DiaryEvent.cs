@@ -38,8 +38,11 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 7)]
         public DateTime EndTime { get; set; }
 
+        [Column(Order = 8)]
+        public bool AllDay { get; set; }
+
         [Column(Order = 9)]
-        public bool IsPublic { get; set; }
+        public bool Public { get; set; }
         
         
         public virtual DiaryEventType EventType { get; set; }

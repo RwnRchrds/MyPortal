@@ -7,7 +7,8 @@
     [Location]    NVARCHAR (256)   NULL,
     [StartTime]   DATETIME2 (7)    NOT NULL,
     [EndTime]     DATETIME2 (7)    NOT NULL,
-    [IsPublic]    BIT              NOT NULL,
+    [AllDay]    BIT              NOT NULL,
+    [Public] BIT NOT NULL, 
     CONSTRAINT [PK_DiaryEvents] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_DiaryEvents_DiaryEventTypes_EventTypeId] FOREIGN KEY ([EventTypeId]) REFERENCES [dbo].[DiaryEventTypes] ([Id]),
     CONSTRAINT [FK_DiaryEvents_Rooms_RoomId] FOREIGN KEY ([RoomId]) REFERENCES [dbo].[Rooms] ([Id])

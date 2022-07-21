@@ -21,7 +21,7 @@ namespace MyPortal.Database.Models.Search
             string personAlias, string studentHouseCteAlias, string studentRegGroupCteAlias,
             string studentYearGroupCteAlias)
         {
-            base.ApplySearch(query, personAlias);
+            ApplySearch(query, personAlias);
 
             switch (Status)
             {

@@ -37,7 +37,8 @@ namespace MyPortal.Logic.Models.Entity
             Location = model.Location;
             StartTime = model.StartTime;
             EndTime = model.EndTime;
-            IsPublic = model.IsPublic;
+            AllDay = model.AllDay;
+            Public = model.Public;
 
             if (model.EventType != null)
             {
@@ -137,9 +138,9 @@ namespace MyPortal.Logic.Models.Entity
             set => _endTime = value;
         }
 
-        public bool IsAllDay => (_startTime - _endTime).Ticks == (TimeSpan.TicksPerDay - 1);
+        public bool AllDay { get; set; }
 
-        public bool IsPublic { get; set; }
+        public bool Public { get; set; }
 
         public virtual DiaryEventTypeModel EventType { get; set; }
         public virtual RoomModel Room { get; set; }
@@ -164,7 +165,7 @@ namespace MyPortal.Logic.Models.Entity
                 Location = Location,
                 StartTime = StartTime,
                 EndTime = EndTime,
-                IsPublic = IsPublic
+                Public = Public
             };
         }
     }
