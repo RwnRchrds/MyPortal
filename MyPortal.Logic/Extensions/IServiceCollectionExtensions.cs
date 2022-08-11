@@ -124,7 +124,7 @@ namespace MyPortal.Logic.Extensions
             {
                 Configuration.Instance.GoogleConfig = new GoogleConfig
                 {
-                    CredentiaPath = googleCredPath,
+                    CredentialPath = googleCredPath,
                     DefaultAccountName = config["Google:DefaultAccountName"]
                 };
             }

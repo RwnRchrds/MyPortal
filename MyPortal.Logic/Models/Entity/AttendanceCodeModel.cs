@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Models.Entity
         {
             Code = model.Code;
             Description = model.Description;
-            MeaningId = model.MeaningId;
+            AttendanceCodeTypeId = model.AttendanceCodeTypeId;
             Active = model.Active;
             Restricted = model.Restricted;
 
@@ -37,7 +37,7 @@ namespace MyPortal.Logic.Models.Entity
         [StringLength(128)]
         public string Description { get; set; }
 
-        public Guid MeaningId { get; set; }
+        public Guid AttendanceCodeTypeId { get; set; }
 
         public bool Active { get; set; }
 

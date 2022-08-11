@@ -34,23 +34,23 @@ namespace MyPortal.Logic.Models.Reporting
                     throw new Exception($"Code not found for attendance code ID '{mark.CodeId}'.");
                 }
 
-                if (code.Id == AttendanceCodeTypes.Present)
+                if (code.AttendanceCodeTypeId == AttendanceCodeTypes.Present)
                 {
                     Present++;
                 }
-                else if (code.Id == AttendanceCodeTypes.ApprovedEdActivity)
+                else if (code.AttendanceCodeTypeId == AttendanceCodeTypes.ApprovedEdActivity)
                 {
                     ApprovedEdActivity++;
                 }
-                else if (code.Id == AttendanceCodeTypes.AuthorisedAbsence)
+                else if (code.AttendanceCodeTypeId == AttendanceCodeTypes.AuthorisedAbsence)
                 {
                     AuthorisedAbsence++;
                 }
-                else if (code.Id == AttendanceCodeTypes.UnauthorisedAbsence)
+                else if (code.AttendanceCodeTypeId == AttendanceCodeTypes.UnauthorisedAbsence)
                 {
                     UnauthorisedAbsence++;
                 }
-                else if (code.Id == AttendanceCodeTypes.AttendanceNotRequired)
+                else if (code.AttendanceCodeTypeId == AttendanceCodeTypes.AttendanceNotRequired)
                 {
                     NotRequired++;
                 }
@@ -81,17 +81,17 @@ namespace MyPortal.Logic.Models.Reporting
         /// </summary>
         /// <param name="asPercentage">Specifies whether the values should represent percentages of total marks (defaults to false).</param>
         /// <returns></returns>
-        public ChartData<CategoricChartDataPoint> GetChartData(bool asPercentage = false)
+        public ChartData<CategoricalChartDataPoint> GetChartData(bool asPercentage = false)
         {
-            var data = new List<CategoricChartDataPoint>();
+            var data = new List<CategoricalChartDataPoint>();
 
-            data.Add(new CategoricChartDataPoint("Present", asPercentage ? MathHelper.Percent(Present, TotalMarks, 1) : Present));
-            data.Add(new CategoricChartDataPoint("Authorised Absence", asPercentage ? MathHelper.Percent(AuthorisedAbsence, TotalMarks, 1) : AuthorisedAbsence));
-            data.Add(new CategoricChartDataPoint("Unauthorised Absence", UnauthorisedAbsence));
-            data.Add(new CategoricChartDataPoint("Approved Educational Activity", ApprovedEdActivity));
-            data.Add(new CategoricChartDataPoint("Attendance Not Required", NotRequired));
+            data.Add(new CategoricalChartDataPoint("Present", asPercentage ? MathHelper.Percent(Present, TotalMarks, 1) : Present));
+            data.Add(new CategoricalChartDataPoint("Authorised Absence", asPercentage ? MathHelper.Percent(AuthorisedAbsence, TotalMarks, 1) : AuthorisedAbsence));
+            data.Add(new CategoricalChartDataPoint("Unauthorised Absence", UnauthorisedAbsence));
+            data.Add(new CategoricalChartDataPoint("Approved Educational Activity", ApprovedEdActivity));
+            data.Add(new CategoricalChartDataPoint("Attendance Not Required", NotRequired));
 
-            return new ChartData<CategoricChartDataPoint>(data);
+            return new ChartData<CategoricalChartDataPoint>(data);
         }
     }
 }

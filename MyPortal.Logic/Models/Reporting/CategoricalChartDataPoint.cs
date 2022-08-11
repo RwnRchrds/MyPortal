@@ -2,12 +2,12 @@
 
 namespace MyPortal.Logic.Models.Reporting
 {
-    public class NumericChartDataPoint : IDataPoint
+    public class CategoricalChartDataPoint : IDataPoint
     {
-        public double X { get; set; }
+        public string X { get; set; }
         public double Y { get; set; }
 
-        public NumericChartDataPoint(double x, double y)
+        public CategoricalChartDataPoint(string x, double y)
         {
             X = x;
             Y = y;

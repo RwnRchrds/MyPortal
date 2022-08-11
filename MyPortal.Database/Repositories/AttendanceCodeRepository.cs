@@ -90,7 +90,7 @@ namespace MyPortal.Database.Repositories
             code.Code = entity.Code;
             code.Description = entity.Description;
             code.Active = entity.Active;
-            code.MeaningId = entity.MeaningId;
+            code.AttendanceCodeTypeId = entity.AttendanceCodeTypeId;
         }
     }
 }

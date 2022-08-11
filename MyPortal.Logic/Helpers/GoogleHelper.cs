@@ -16,7 +16,7 @@ namespace MyPortal.Logic.Helpers
 
         public BaseClientService.Initializer GetInitializer(string accountName = null, params string[] scopes)
         {
-            var credPath = _google.CredentiaPath;
+            var credPath = _google.CredentialPath;
 
             if (string.IsNullOrWhiteSpace(accountName))
             {

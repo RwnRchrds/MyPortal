@@ -144,8 +144,15 @@ namespace MyPortal.Logic.Services
                         Location = model.Location,
                         StartTime = model.StartTime,
                         EndTime = model.EndTime,
-                        IsPublic = model.IsPublic
+                        Public = model.IsPublic,
+                        AllDay = model.IsAllDay
                     };
+
+                    if (model.IsAllDay)
+                    {
+                        diaryEvent.StartTime = diaryEvent.StartTime.Date;
+                        diaryEvent.EndTime = diaryEvent.EndTime.Date;
+                    }
 
                     if (user.PersonId.HasValue)
                     {
@@ -194,7 +201,8 @@ namespace MyPortal.Logic.Services
                     eventInDb.Location = model.Location;
                     eventInDb.StartTime = model.StartTime;
                     eventInDb.EndTime = model.EndTime;
-                    eventInDb.IsPublic = model.IsPublic;
+                    eventInDb.Public = model.IsPublic;
+                    eventInDb.AllDay = model.IsAllDay;
 
                     await unitOfWork.DiaryEvents.Update(eventInDb);
                 }

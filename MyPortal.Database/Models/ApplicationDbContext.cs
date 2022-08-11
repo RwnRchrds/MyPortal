@@ -441,7 +441,7 @@ namespace MyPortal.Database.Models
 
                     e.HasMany(acm => acm.Codes)
                         .WithOne(ac => ac.CodeType)
-                        .HasForeignKey(ac => ac.MeaningId)
+                        .HasForeignKey(ac => ac.AttendanceCodeTypeId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });

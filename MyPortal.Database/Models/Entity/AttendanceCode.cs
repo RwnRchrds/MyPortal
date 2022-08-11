@@ -20,7 +20,7 @@ namespace MyPortal.Database.Models.Entity
         public string Description { get; set; }
 
         [Column(Order = 3)]
-        public Guid MeaningId { get; set; }
+        public Guid AttendanceCodeTypeId { get; set; }
 
         [Column(Order = 4)]
         public bool Active { get; set; }
