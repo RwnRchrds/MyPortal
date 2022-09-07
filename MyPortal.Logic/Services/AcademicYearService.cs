@@ -67,7 +67,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateAcademicYear(CreateAcademicYearRequestModel model)
+        public async Task CreateAcademicYear(AcademicYearRequestModel model)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -115,10 +115,10 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public CreateAcademicTermRequestModel GenerateAttendanceWeeks(CreateAcademicTermRequestModel model)
+        public AcademicTermRequestModel GenerateAttendanceWeeks(AcademicTermRequestModel model)
         {
             // TODO: This should be moved to the web app
-            var attendanceWeeks = new List<CreateAttendanceWeekRequestModel>();
+            var attendanceWeeks = new List<AttendanceWeekRequestModel>();
             var schoolHolidays = new List<DateTime>();
             var weekPatterns = model.WeekPatterns.OrderBy(p => p.Order).ToArray();
             int patternIndex = 0;
@@ -146,7 +146,7 @@ namespace MyPortal.Logic.Services
                     schoolHolidays.AddRange(daysAfterEnd);
                 }
 
-                attendanceWeeks.Add(new CreateAttendanceWeekRequestModel
+                attendanceWeeks.Add(new AttendanceWeekRequestModel
                 {
                     WeekBeginning = currentWeekBeginning,
                     WeekPatternId = weekPatterns[patternIndex].WeekPatternId
@@ -170,11 +170,11 @@ namespace MyPortal.Logic.Services
             return model;
         }
 
-        public async Task UpdateAcademicYear(UpdateAcademicYearRequestModel model)
+        public async Task UpdateAcademicYear(Guid academicYearId, AcademicYearRequestModel model)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var academicYearInDb = await unitOfWork.AcademicYears.GetById(model.Id);
+                var academicYearInDb = await unitOfWork.AcademicYears.GetById(academicYearId);
 
                 academicYearInDb.Name = model.Name;
                 academicYearInDb.Locked = model.Locked;

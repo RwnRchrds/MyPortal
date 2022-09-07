@@ -99,24 +99,35 @@ namespace MyPortal.Logic.Extensions
             return services;
         }
 
+        private static void SetFileProvider(string fileProvider)
+        {
+            switch (fileProvider.ToLower())
+            {
+                case "google":
+                    Configuration.Instance.FileProvider = FileProvider.GoogleDrive;
+                    break;
+                case "local":
+                    Configuration.Instance.FileProvider = FileProvider.Local;
+                    break;
+                default:
+                    throw new ArgumentException($"The file storage provider {fileProvider} is invalid.");
+            }
+        }
+
         private static void SetConfiguration(IConfiguration config)
         {
             var databaseProvider = config["Database:Provider"];
             var connectionString = config["Database:ConnectionString"];
+            var fileEncryptionKey = config["FileStorage:EncryptionKey"];
+            var fileProvider = config["FileStorage:Provider"];
 
             Configuration.CreateInstance(databaseProvider, connectionString);
 
             Configuration.Instance.InstallLocation = Environment.CurrentDirectory;
+            
+            SetFileProvider(fileProvider);
 
-            switch (config["FileProvider:ProviderName"])
-            {
-                case "Google":
-                    Configuration.Instance.FileProvider = FileProvider.GoogleDrive;
-                    break;
-                default:
-                    Configuration.Instance.FileProvider = FileProvider.Local;
-                    break;
-            }
+            Configuration.Instance.FileEncryptionKey = fileEncryptionKey;
 
             var googleCredPath = config["Google:CredentialPath"];
 

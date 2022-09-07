@@ -27,61 +27,50 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateContact(params CreateContactRequestModel[] models)
+        public async Task CreateContact(ContactRequestModel model)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var createDate = DateTime.Now;
-                
-                foreach (var model in models)
+                var contact = new Contact
                 {
-                    var contact = new Contact
-                    {
-                        JobTitle = model.JobTitle,
-                        NiNumber = model.NiNumber,
-                        PlaceOfWork = model.PlaceOfWork,
-                        ParentalBallot = model.ParentalBallot,
-                        Person = PersonHelper.CreatePerson(model)
-                    };
+                    JobTitle = model.JobTitle,
+                    NiNumber = model.NiNumber,
+                    PlaceOfWork = model.PlaceOfWork,
+                    ParentalBallot = model.ParentalBallot,
+                    Person = PersonHelper.CreatePerson(model),
+                };
                     
-                    unitOfWork.Contacts.Create(contact);
-                }
+                unitOfWork.Contacts.Create(contact);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task UpdateContact(params UpdateContactRequestRequestModel[] models)
+        public async Task UpdateContact(Guid contactId, ContactRequestModel model)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var model in models)
-                {
-                    var contact = await unitOfWork.Contacts.GetById(model.Id);
+                var contact = await unitOfWork.Contacts.GetById(contactId);
 
-                    contact.JobTitle = model.JobTitle;
-                    contact.NiNumber = model.NiNumber;
-                    contact.PlaceOfWork = model.PlaceOfWork;
-                    contact.ParentalBallot = model.ParentalBallot;
+                contact.JobTitle = model.JobTitle;
+                contact.NiNumber = model.NiNumber;
+                contact.PlaceOfWork = model.PlaceOfWork;
+                contact.ParentalBallot = model.ParentalBallot;
                     
-                    PersonHelper.UpdatePerson(contact.Person, model);
+                PersonHelper.UpdatePerson(contact.Person, model);
 
-                    await unitOfWork.People.Update(contact.Person);
-                    await unitOfWork.Contacts.Update(contact);
-                }
+                await unitOfWork.People.Update(contact.Person);
+                await unitOfWork.Contacts.Update(contact);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task DeleteContact(params Guid[] contactIds)
+        public async Task DeleteContact(Guid contactId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var contactId in contactIds)
-                {
-                    await unitOfWork.Contacts.Delete(contactId);
-                }
+                await unitOfWork.Contacts.Delete(contactId);
             }
         }
     }

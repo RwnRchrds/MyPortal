@@ -66,81 +66,72 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<IEnumerable<Guid>> Create(params CreateRoleRequestModel[] requests)
+        public async Task<IEnumerable<Guid>> CreateRole(RoleRequestModel request)
         {
             var newIds = new List<Guid>();
 
-            foreach (var request in requests)
+            var role = new Role
             {
-                var role = new Role
-                {
-                    Name = request.Name,
-                    Description = request.Description
-                };
+                Name = request.Name,
+                Description = request.Description
+            };
 
-                var result = await _roleManager.CreateAsync(role);
+            var result = await _roleManager.CreateAsync(role);
 
-                if (!result.Succeeded)
-                {
-                    var message = result.Errors.FirstOrDefault()?.Description;
-                    throw new Exception(message);
-                }
-
-                if (request.Permissions != null && request.Permissions.Any())
-                {
-                    role = await _roleManager.FindByNameAsync(request.Name);
-
-                    await SetPermissions(role.Id, request.Permissions);
-                }
-
-                newIds.Add(role.Id);
+            if (!result.Succeeded)
+            {
+                var message = result.Errors.FirstOrDefault()?.Description;
+                throw new Exception(message);
             }
+
+            if (request.Permissions != null && request.Permissions.Any())
+            {
+                role = await _roleManager.FindByNameAsync(request.Name);
+
+                await SetPermissions(role.Id, request.Permissions);
+            }
+
+            newIds.Add(role.Id);
 
             return newIds;
         }
 
-        public async Task Update(params UpdateRoleRequestModel[] requests)
+        public async Task UpdateRole(Guid roleId, RoleRequestModel request)
         {
-            foreach (var request in requests)
+            var roleInDb = await _roleManager.FindByIdAsync(roleId.ToString());
+
+            if (roleInDb.System)
             {
-                var roleInDb = await _roleManager.FindByIdAsync(request.Id.ToString());
+                throw new LogicException("Cannot modify system role.");
+            }
 
-                if (roleInDb.System)
-                {
-                    throw new LogicException("Cannot modify system role.");
-                }
+            roleInDb.Name = request.Name;
+            roleInDb.Description = request.Description;
 
-                roleInDb.Name = request.Name;
-                roleInDb.Description = request.Description;
+            await _roleManager.UpdateAsync(roleInDb);
 
-                await _roleManager.UpdateAsync(roleInDb);
-
-                if (request.PermissionValues != null)
-                {
-                    await SetPermissions(roleInDb.Id, request.PermissionValues);
-                }
+            if (request.Permissions != null)
+            {
+                await SetPermissions(roleInDb.Id, request.Permissions);
             }
         }
 
-        public async Task Delete(params Guid[] roleIds)
+        public async Task DeleteRole(Guid roleId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var roleId in roleIds)
+                await unitOfWork.UserRoles.DeleteAllByRole(roleId);
+
+                await unitOfWork.SaveChangesAsync();
+
+                var roleInDb = await _roleManager.FindByIdAsync(roleId.ToString());
+
+                if (roleInDb.System)
                 {
-                    await unitOfWork.UserRoles.DeleteAllByRole(roleId);
-
-                    await unitOfWork.SaveChangesAsync();
-
-                    var roleInDb = await _roleManager.FindByIdAsync(roleId.ToString());
-
-                    if (roleInDb.System)
-                    {
-                        throw new LogicException("Cannot delete a system role.");
-                    }
-
-                    await _roleManager.DeleteAsync(roleInDb);
+                    throw new LogicException("Cannot delete a system role.");
                 }
+
+                await _roleManager.DeleteAsync(roleInDb);
             }
         }
 

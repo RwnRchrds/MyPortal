@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Requests.Calendar;
 
 namespace MyPortal.Logic.Extensions
 {
@@ -22,6 +23,18 @@ namespace MyPortal.Logic.Extensions
             }
 
             return monday.AddDays(counter);
+        }
+
+        internal static DateTime? GetNextOccurrence(this DateTime dateTime, RecurringRequestModel recurringModel)
+        {
+            if (recurringModel.Frequency == EventFrequency.Daily && recurringModel.Days != null && recurringModel.LastOccurrence.HasValue)
+            {
+                var weeklyPattern = new WeeklyPatternModel(recurringModel.Days, recurringModel.LastOccurrence.Value);
+
+                return GetNextOccurrence(dateTime, weeklyPattern);
+            }
+
+            return GetNextOccurrence(dateTime, recurringModel.Frequency);
         }
 
         internal static DateTime? GetNextOccurrence(this DateTime dateTime, EventFrequency frequency)
@@ -64,9 +77,9 @@ namespace MyPortal.Logic.Extensions
             return null;
         }
 
-        internal static bool IsWeekday(this DateTime dateTime)
+        internal static bool IsWeekend(this DateTime dateTime)
         {
-            return dateTime.DayOfWeek != DayOfWeek.Saturday && dateTime.DayOfWeek != DayOfWeek.Sunday;
+            return dateTime.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
         }
 
         internal static DateTime GetEndOfDay(this DateTime dateTime)

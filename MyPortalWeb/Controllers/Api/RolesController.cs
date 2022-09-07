@@ -29,14 +29,14 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("")]
         [Permission(PermissionValue.SystemEditGroups)]
         [ProducesResponseType(typeof(NewEntityResponseModel), 200)]
-        public async Task<IActionResult> CreateRole([FromBody] CreateRoleRequestModel model)
+        public async Task<IActionResult> CreateRole([FromBody] RoleRequestModel model)
         {
             try
             {
-                var newId = (await _roleService.Create(model)).FirstOrDefault();
+                var newId = (await _roleService.CreateRole(model)).FirstOrDefault();
 
                 return Ok(new NewEntityResponseModel {Id = newId});
             }
@@ -47,14 +47,14 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("update")]
+        [Route("{roleId}")]
         [Permission(PermissionValue.SystemEditGroups)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleRequestModel model)
+        public async Task<IActionResult> UpdateRole([FromRoute] Guid roleId, [FromBody] RoleRequestModel model)
         {
             try
             {
-                await _roleService.Update(model);
+                await _roleService.UpdateRole(roleId, model);
 
                 return Ok();
             }
@@ -65,14 +65,14 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpDelete]
-        [Route("delete/{roleId}")]
+        [Route("{roleId}")]
         [Permission(PermissionValue.SystemEditGroups)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> DeleteRole([FromRoute] Guid roleId)
         {
             try
             {
-                await _roleService.Delete(roleId);
+                await _roleService.DeleteRole(roleId);
 
                 return Ok();
             }
@@ -101,7 +101,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("roleId")]
+        [Route("{roleId}")]
         [Permission(PermissionValue.SystemViewGroups)]
         [ProducesResponseType(typeof(RoleModel), 200)]
         public async Task<IActionResult> GetRoleById([FromRoute] Guid roleId)
@@ -119,7 +119,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("permissions/role/{roleId}")]
+        [Route("{roleId}/permissions")]
         [Permission(PermissionValue.SystemViewGroups)]
         [ProducesResponseType(typeof(TreeNode), 200)]
         public async Task<IActionResult> GetPermissionsTree([FromRoute] Guid roleId)

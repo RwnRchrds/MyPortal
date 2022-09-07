@@ -24,7 +24,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("person/{personId}")]
+        [Route("api/people/{personId}/addresses")]
         [Permission(PermissionRequirement.RequireAny, PermissionValue.PeopleViewContactDetails,
             PermissionValue.StudentViewStudentDetails, PermissionValue.PeopleViewAgentDetails)]
         [ProducesResponseType(typeof(IEnumerable<AddressModel>), 200)]

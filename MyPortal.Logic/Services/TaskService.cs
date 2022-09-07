@@ -17,26 +17,23 @@ namespace MyPortal.Logic.Services
 {
     public class TaskService : BaseService, ITaskService
     {
-        public async Task Create(params CreateTaskRequestModel[] tasks)
+        public async Task CreateTask(TaskRequestModel task)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var task in tasks)
+                var taskToAdd = new Database.Models.Entity.Task
                 {
-                    var taskToAdd = new Database.Models.Entity.Task
-                    {
-                        Title = task.Title,
-                        Description = task.Description,
-                        AssignedToId = task.AssignedToId,
-                        AssignedById = task.AssignedById,
-                        CreatedDate = DateTime.Now,
-                        DueDate = task.DueDate,
-                        TypeId = task.TypeId,
-                        Completed = false
-                    };
+                    Title = task.Title,
+                    Description = task.Description,
+                    AssignedToId = task.AssignedToId,
+                    AssignedById = task.AssignedById,
+                    CreatedDate = DateTime.Now,
+                    DueDate = task.DueDate,
+                    TypeId = task.TypeId,
+                    Completed = false
+                };
 
-                    unitOfWork.Tasks.Create(taskToAdd);
-                }
+                unitOfWork.Tasks.Create(taskToAdd);
 
                 await unitOfWork.SaveChangesAsync();
             }
@@ -94,46 +91,40 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task Update(params UpdateTaskRequestModel[] tasks)
+        public async Task UpdateTask(Guid taskId, TaskRequestModel task)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var task in tasks)
+                ValidationHelper.ValidateModel(task);
+
+                var taskInDb = await unitOfWork.Tasks.GetById(taskId);
+
+                if (taskInDb == null)
                 {
-                    ValidationHelper.ValidateModel(task);
-
-                    var taskInDb = await unitOfWork.Tasks.GetById(task.Id);
-
-                    if (taskInDb == null)
-                    {
-                        throw new NotFoundException("Task not found.");
-                    }
-
-                    if (taskInDb.System)
-                    {
-                        throw new LogicException("Tasks of this type cannot be updated manually.");
-                    }
-
-                    taskInDb.Title = task.Title;
-                    taskInDb.Description = task.Description;
-                    taskInDb.DueDate = task.DueDate;
-                    taskInDb.TypeId = task.TypeId;
-
-                    await unitOfWork.Tasks.Update(taskInDb);
+                    throw new NotFoundException("Task not found.");
                 }
+
+                if (taskInDb.System)
+                {
+                    throw new LogicException("Tasks of this type cannot be updated manually.");
+                }
+
+                taskInDb.Title = task.Title;
+                taskInDb.Description = task.Description;
+                taskInDb.DueDate = task.DueDate;
+                taskInDb.TypeId = task.TypeId;
+
+                await unitOfWork.Tasks.Update(taskInDb);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task Delete(params Guid[] taskIds)
+        public async Task DeleteTask(Guid taskId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var taskId in taskIds)
-                {
-                    await unitOfWork.Tasks.Delete(taskId);
-                }
+                await unitOfWork.Tasks.Delete(taskId);
 
                 await unitOfWork.SaveChangesAsync();
             }

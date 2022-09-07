@@ -12,7 +12,8 @@ namespace MyPortal.Logic.Models.Entity
 
         private void LoadFromModel(AchievementOutcome model)
         {
-            System = model.System;
+            Description = model.Description;
+            Active = model.Active;
         }
         
         public bool System { get; set; }

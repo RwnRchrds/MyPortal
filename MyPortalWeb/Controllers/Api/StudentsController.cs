@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +35,7 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.StudentViewStudentDetails)]
-        [Route("search")]
+        [Route("")]
         [ProducesResponseType(typeof(IEnumerable<StudentSummaryModel>), 200)]
         public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchOptions searchModel)
         {
@@ -67,7 +68,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("stats/{studentId}")]
+        [Route("{studentId}/stats")]
         [Permission(PermissionValue.StudentViewStudentDetails)]
         [ProducesResponseType(typeof(StudentStatsResponseModel), 200)]
         public async Task<IActionResult> GetStatsById([FromRoute] Guid studentId, [FromQuery] Guid? academicYearId)
@@ -80,7 +81,12 @@ namespace MyPortalWeb.Controllers.Api
                 {
                     if (academicYearId == null || academicYearId == Guid.Empty)
                     {
-                        academicYearId = (await _academicYearService.GetCurrentAcademicYear()).Id;
+                        academicYearId = (await _academicYearService.GetCurrentAcademicYear(true)).Id;
+                    }
+
+                    if (!academicYearId.HasValue)
+                    {
+                        return Error(HttpStatusCode.NotFound, "No academic year was found.");
                     }
 
                     var studentStats = await StudentService.GetStatsById(studentId, academicYearId.Value);

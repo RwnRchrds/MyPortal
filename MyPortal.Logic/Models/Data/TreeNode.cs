@@ -24,12 +24,7 @@ namespace MyPortal.Logic.Models.Data
             {
                 Id = id,
                 Text = name,
-                State = new TreeNodeState
-                {
-                    Opened = true,
-                    Disabled = false,
-                    Selected = false
-                }
+                State = TreeNodeState.Open
             };
         }
 

@@ -10,9 +10,9 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface IRoleService
     {
-        Task<IEnumerable<Guid>> Create(params CreateRoleRequestModel[] model);
-        Task Update(params UpdateRoleRequestModel[] model);
-        Task Delete(params Guid[] roleIds);
+        Task<IEnumerable<Guid>> CreateRole(RoleRequestModel role);
+        Task UpdateRole(Guid roleId, RoleRequestModel role);
+        Task DeleteRole(Guid roleId);
         Task<TreeNode> GetPermissionsTree(Guid roleId);
         Task<IEnumerable<RoleModel>> GetRoles(string roleName);
         Task<RoleModel> GetRoleById(Guid roleId);

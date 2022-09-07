@@ -6,7 +6,7 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models.Entity
 {
     [Table("SubjectStaffMemberRoles")]
-    public class SubjectStaffMemberRole : LookupItem, ISystemEntity
+    public class SubjectStaffMemberRole : LookupItem
     {
         public SubjectStaffMemberRole()
         {
@@ -14,7 +14,6 @@ namespace MyPortal.Database.Models.Entity
         }
 
         public bool SubjectLeader { get; set; }
-        public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SubjectStaffMember> StaffMembers { get; set; }

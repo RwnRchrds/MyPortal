@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore.Scaffolding;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
@@ -15,69 +16,84 @@ namespace MyPortal.Logic.Services;
 
 public class AssessmentService : BaseService, IAssessmentService
 {
-    public async Task CreateAspect(params CreateAspectRequestModel[] models)
+    public async Task CreateAspect(AspectRequestModel model)
     {
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
-            foreach (var model in models)
+            if (model.TypeId == AspectTypes.Grade && model.GradeSetId == null)
             {
-                if (model.TypeId == AspectTypes.Grade && model.GradeSetId == null)
-                {
-                    throw new InvalidDataException($"A grade set was not provided for {model.Name}.");
-                }
-
-                if (model.TypeId == AspectTypes.MarkDecimal || model.TypeId == AspectTypes.MarkInteger)
-                {
-                    if (model.MinMark == null)
-                    {
-                        throw new InvalidDataException($"A minimum mark was not provided for {model.Name}");
-                    }
-
-                    if (model.MaxMark == null)
-                    {
-                        throw new InvalidDataException($"A maximum mark was not provided for {model.Name}");
-                    }
-                }
-
-                var aspect = new Aspect
-                {
-                    TypeId = model.TypeId,
-                    GradeSetId = model.GradeSetId,
-                    MinMark = model.MinMark,
-                    MaxMark = model.MaxMark,
-                    Name = model.Name,
-                    ColumnHeading = model.ColumnHeading,
-                    Private = model.Private
-                };
-
-                unitOfWork.Aspects.Create(aspect);
+                throw new InvalidDataException($"A grade set was not provided for {model.Name}.");
             }
+
+            if (model.TypeId == AspectTypes.MarkDecimal || model.TypeId == AspectTypes.MarkInteger)
+            {
+                if (model.MinMark == null)
+                {
+                    throw new InvalidDataException($"A minimum mark was not provided for {model.Name}");
+                }
+
+                if (model.MaxMark == null)
+                {
+                    throw new InvalidDataException($"A maximum mark was not provided for {model.Name}");
+                }
+            }
+
+            var aspect = new Aspect
+            {
+                TypeId = model.TypeId,
+                GradeSetId = model.GradeSetId,
+                MinMark = model.MinMark,
+                MaxMark = model.MaxMark,
+                Name = model.Name,
+                ColumnHeading = model.ColumnHeading,
+                Private = model.Private
+            };
+
+            unitOfWork.Aspects.Create(aspect);
 
             await unitOfWork.SaveChangesAsync();
         }
     }
 
-    public async Task DeleteAspect(params Guid[] aspectIds)
+    public async Task UpdateAspect(Guid aspectId, AspectRequestModel model)
     {
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
-            foreach (var aspectId in aspectIds)
+            var aspect = await unitOfWork.Aspects.GetById(aspectId);
+
+            if (aspect == null)
             {
-                var aspect = await unitOfWork.Aspects.GetById(aspectId);
-
-                if (aspect == null)
-                {
-                    throw new NotFoundException("Aspect not found.");
-                }
-
-                await unitOfWork.Aspects.Delete(aspectId);
+                throw new EntityNotFoundException("Aspect not found.");
             }
+
+            aspect.TypeId = model.TypeId;
+            aspect.GradeSetId = model.GradeSetId;
+            aspect.MinMark = model.MinMark;
+            aspect.MaxMark = model.MaxMark;
+            aspect.Name = model.Name;
+            aspect.ColumnHeading = model.ColumnHeading;
+            aspect.Private = model.Private;
+        }
+    }
+
+    public async Task DeleteAspect(Guid aspectId)
+    {
+        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        {
+            var aspect = await unitOfWork.Aspects.GetById(aspectId);
+
+            if (aspect == null)
+            {
+                throw new NotFoundException("Aspect not found.");
+            }
+
+            await unitOfWork.Aspects.Delete(aspectId);
 
             await unitOfWork.SaveChangesAsync();
         }
     }
 
-    public async Task CreateOrUpdateResult(params CreateOrUpdateResultRequestModel[] models)
+    public async Task SaveResults(params ResultRequestModel[] models)
     {
         List<Aspect> cachedAspects = new List<Aspect>();
         List<ResultSet> cachedResultSets = new List<ResultSet>();
@@ -206,21 +222,18 @@ public class AssessmentService : BaseService, IAssessmentService
         }
     }
 
-    public async Task DeleteResult(params Guid[] resultIds)
+    public async Task DeleteResult(Guid resultId)
     {
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
-            foreach (var resultId in resultIds)
+            var result = await unitOfWork.Results.GetById(resultId);
+
+            if (result == null)
             {
-                var result = await unitOfWork.Results.GetById(resultId);
-
-                if (result == null)
-                {
-                    throw new NotFoundException("Result not found.");
-                }
-
-                await unitOfWork.Results.Delete(resultId);
+                throw new NotFoundException("Result not found.");
             }
+
+            await unitOfWork.Results.Delete(resultId);
 
             await unitOfWork.SaveChangesAsync();
         }

@@ -113,111 +113,110 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateEvent(Guid userId, params CreateEventRequestModel[] models)
+        public async Task CreateEvent(EventRequestModel model)
         {
             var eventTypes = (await GetEventTypes()).ToArray();
 
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var user = await unitOfWork.Users.GetById(userId);
-                
-                foreach (var model in models)
+                var user = await unitOfWork.Users.GetById(model.CreatedById);
+
+                if (user == null)
                 {
-                    var eventType = eventTypes.FirstOrDefault(t => t.Id == model.EventTypeId);
-
-                    if (eventType == null)
-                    {
-                        throw new NotFoundException("Event type not found.");
-                    }
-
-                    if (eventType.System)
-                    {
-                        throw new SystemEntityException("Events of this type cannot be created manually.");
-                    }
-
-                    var diaryEvent = new DiaryEvent
-                    {
-                        EventTypeId = model.EventTypeId,
-                        RoomId = model.RoomId,
-                        Subject = model.Subject,
-                        Description = model.Description,
-                        Location = model.Location,
-                        StartTime = model.StartTime,
-                        EndTime = model.EndTime,
-                        Public = model.IsPublic,
-                        AllDay = model.IsAllDay
-                    };
-
-                    if (model.IsAllDay)
-                    {
-                        diaryEvent.StartTime = diaryEvent.StartTime.Date;
-                        diaryEvent.EndTime = diaryEvent.EndTime.Date;
-                    }
-
-                    if (user.PersonId.HasValue)
-                    {
-                        diaryEvent.Attendees.Add(new DiaryEventAttendee
-                        {
-                            PersonId = user.PersonId.Value,
-                            Required = true,
-                            ResponseId = AttendeeResponses.Accepted,
-                            CanEdit = true
-                        });
-                    }
-
-                    unitOfWork.DiaryEvents.Create(diaryEvent);
+                    throw new EntityNotFoundException("User not found.");
                 }
+                
+                var eventType = eventTypes.FirstOrDefault(t => t.Id == model.EventTypeId);
+
+                if (eventType == null)
+                {
+                    throw new NotFoundException("Event type not found.");
+                }
+
+                if (eventType.System)
+                {
+                    throw new SystemEntityException("Events of this type cannot be created manually.");
+                }
+
+                var diaryEvent = new DiaryEvent
+                {
+                    EventTypeId = model.EventTypeId,
+                    RoomId = model.RoomId,
+                    Subject = model.Subject,
+                    Description = model.Description,
+                    Location = model.Location,
+                    StartTime = model.StartTime,
+                    EndTime = model.EndTime,
+                    Public = model.IsPublic,
+                    AllDay = model.IsAllDay
+                };
+
+                if (model.IsAllDay)
+                {
+                    diaryEvent.StartTime = diaryEvent.StartTime.Date;
+                    diaryEvent.EndTime = diaryEvent.EndTime.Date;
+                }
+
+                if (user.PersonId.HasValue)
+                {
+                    diaryEvent.Attendees.Add(new DiaryEventAttendee
+                    {
+                        PersonId = user.PersonId.Value,
+                        Required = true,
+                        ResponseId = AttendeeResponses.Accepted,
+                        CanEdit = true
+                    });
+                }
+
+                unitOfWork.DiaryEvents.Create(diaryEvent);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task UpdateEvent(params UpdateEventRequestModel[] models)
+        public async Task UpdateEvent(Guid eventId, EventRequestModel model)
         {
             var eventTypes = (await GetEventTypes()).ToArray();
 
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var model in models)
+                var eventInDb = await unitOfWork.DiaryEvents.GetById(eventId);
+
+                if (eventInDb.EventType.System)
                 {
-                    var eventInDb = await unitOfWork.DiaryEvents.GetById(model.Id);
-
-                    if (eventInDb.EventType.System)
-                    {
-                        throw new SystemEntityException("Events of this type cannot be updated manually.");
-                    }
-
-                    var eventType = eventTypes.FirstOrDefault(t => t.Id == model.EventTypeId);
-
-                    if (eventType == null)
-                    {
-                        throw new NotFoundException("Event type not found.");
-                    }
-
-                    eventInDb.EventTypeId = model.EventTypeId;
-                    eventInDb.RoomId = model.RoomId;
-                    eventInDb.Subject = model.Subject;
-                    eventInDb.Description = model.Description;
-                    eventInDb.Location = model.Location;
-                    eventInDb.StartTime = model.StartTime;
-                    eventInDb.EndTime = model.EndTime;
-                    eventInDb.Public = model.IsPublic;
-                    eventInDb.AllDay = model.IsAllDay;
-
-                    await unitOfWork.DiaryEvents.Update(eventInDb);
+                    throw new SystemEntityException("Events of this type cannot be updated manually.");
                 }
+
+                var eventType = eventTypes.FirstOrDefault(t => t.Id == model.EventTypeId);
+
+                if (eventType == null)
+                {
+                    throw new NotFoundException("Event type not found.");
+                }
+
+                eventInDb.EventTypeId = model.EventTypeId;
+                eventInDb.RoomId = model.RoomId;
+                eventInDb.Subject = model.Subject;
+                eventInDb.Description = model.Description;
+                eventInDb.Location = model.Location;
+                eventInDb.StartTime = model.StartTime;
+                eventInDb.EndTime = model.EndTime;
+                eventInDb.Public = model.IsPublic;
+                eventInDb.AllDay = model.IsAllDay;
+
+                await unitOfWork.DiaryEvents.Update(eventInDb);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
         
-        public async Task CreateOrUpdateEventAttendees(params UpdateEventAttendeesRequestModel[] models)
+        public async Task CreateOrUpdateEventAttendees(Guid eventId, params EventAttendeesRequestModel[] models)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 foreach (var model in models)
                 {
-                    var attendees = (await unitOfWork.DiaryEventAttendees.GetByEvent(model.EventId)).ToArray();
+                    var attendees = (await unitOfWork.DiaryEventAttendees.GetByEvent(eventId)).ToArray();
 
                     foreach (var attendee in model.Attendees)
                     {
@@ -236,7 +235,7 @@ namespace MyPortal.Logic.Services
                         {
                             var newAttendee = new DiaryEventAttendee
                             {
-                                EventId = model.EventId,
+                                EventId = eventId,
                                 PersonId = attendee.PersonId,
                                 Required = attendee.Required,
                                 CanEdit = attendee.CanEdit,

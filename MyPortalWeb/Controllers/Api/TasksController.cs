@@ -21,11 +21,10 @@ using MyPortalWeb.Models.Requests;
 
 namespace MyPortalWeb.Controllers.Api
 {
-    [Route("api/tasks")]
     public class TasksController : PersonalDataController
     {
-        private ITaskService _taskService;
-        private IStaffMemberService _staffMemberService;
+        private readonly ITaskService _taskService;
+        private readonly IStaffMemberService _staffMemberService;
 
         public TasksController(IStudentService studentService, IUserService userService, IRoleService roleService,
             ITaskService taskService, IPersonService personService, IStaffMemberService staffMemberService) : base(
@@ -36,7 +35,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("{taskId}")]
+        [Route("api/tasks/{taskId}")]
         [ProducesResponseType(typeof(TaskModel), 200)]
         public async Task<IActionResult> GetById([FromRoute] Guid taskId)
         {
@@ -60,7 +59,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("person/{personId}")]
+        [Route("api/people/{personId}/tasks")]
         [ProducesResponseType(typeof(IEnumerable<TaskModel>), 200)]
         public async Task<IActionResult> GetByPerson([FromRoute] Guid personId, [FromQuery] TaskSearchOptions searchOptions)
         {
@@ -84,7 +83,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("types")]
+        [Route("api/tasks/types")]
         [ProducesResponseType(typeof(IEnumerable<TaskTypeModel>), 200)]
         public async Task<IActionResult> GetTaskTypes([FromQuery] bool personal = false)
         {
@@ -101,9 +100,9 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("api/tasks")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Create([FromBody] CreateTaskRequestModel requestModel)
+        public async Task<IActionResult> Create([FromBody] TaskRequestModel requestModel)
         {
             try
             {
@@ -120,7 +119,7 @@ namespace MyPortalWeb.Controllers.Api
                 {
                     requestModel.AssignedById = userId;
 
-                    await _taskService.Create(requestModel);
+                    await _taskService.CreateTask(requestModel);
 
                     return Ok();
                 }
@@ -133,16 +132,16 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPost]
-        [Route("update")]
+        [HttpPut]
+        [Route("api/tasks/{taskId}")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Update([FromBody] UpdateTaskRequestModel requestModel)
+        public async Task<IActionResult> Update([FromRoute] Guid taskId, [FromBody] TaskRequestModel requestModel)
         {
             try
             {
-                if (await CanUpdateTask(requestModel.Id))
+                if (await CanUpdateTask(taskId))
                 {
-                    await _taskService.Update(requestModel);
+                    await _taskService.UpdateTask(taskId, requestModel);
 
                     return Ok();   
                 }
@@ -156,7 +155,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("toggle")]
+        [Route("api/tasks/{taskId}/complete")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> ToggleCompleted([FromBody] TaskToggleRequestModel model)
         {
@@ -178,7 +177,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpDelete]
-        [Route("delete/{taskId}")]
+        [Route("api/tasks/{taskId}")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Delete([FromRoute] Guid taskId)
         {
@@ -186,7 +185,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 if (await CanUpdateTask(taskId))
                 {
-                    await _taskService.Delete(taskId);
+                    await _taskService.DeleteTask(taskId);
 
                     return Ok();
                 }

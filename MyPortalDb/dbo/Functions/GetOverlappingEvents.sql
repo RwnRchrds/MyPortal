@@ -27,5 +27,5 @@ RETURN
         [DE].[AllDay],
         [DE].[Public]
     FROM DiaryEvents DE
-    WHERE ((DE.EndTime >= @StartTime AND DE.StartTime <= @EndTime) OR (@StartTime >= DE.StartTime AND @EndTime <= @EndTime AND DE.AllDay = 1)) AND (@EventTypeId IS NULL OR DE.EventTypeId = @EventTypeId)
+    WHERE ((DE.EndTime >= @StartTime AND DE.StartTime <= @EndTime) OR (@StartTime >= DE.StartTime AND @EndTime <= DE.EndTime AND DE.AllDay = 1)) AND (@EventTypeId IS NULL OR DE.EventTypeId = @EventTypeId)
 )

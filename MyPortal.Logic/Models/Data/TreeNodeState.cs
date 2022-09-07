@@ -12,5 +12,12 @@
             Disabled = false,
             Selected = false
         };
+
+        public static TreeNodeState Open = new TreeNodeState
+        {
+            Opened = true,
+            Disabled = false,
+            Selected = false
+        };
     }
 }

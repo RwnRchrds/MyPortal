@@ -26,11 +26,13 @@ namespace MyPortal.Logic.FileProviders
             Directory.CreateDirectory(_fileStoragePath);
         }
 
-        public async Task<Database.Models.Entity.File> SaveFile(UploadAttachmentRequestModel upload)
+        public async Task<Database.Models.Entity.File> SaveFile(FileUploadRequestModel upload)
         {
             var fileId = Guid.NewGuid().ToString("N");
 
-            var path = Path.Combine(_fileStoragePath, fileId);
+            var fileName = $"{fileId}.dat";
+
+            var path = Path.Combine(_fileStoragePath, fileName);
 
             byte[] encryptedData;
             
@@ -38,9 +40,10 @@ namespace MyPortal.Logic.FileProviders
 
             using (var ms = new MemoryStream())
             {
-                await upload.File.CopyToAsync(ms);
+                await upload.Attachment.CopyToAsync(ms);
                 var sourceData = ms.ToArray();
-                encryptedData = Encryption.Encrypt(sourceData, fileId);
+                var encryptionKey = Configuration.Instance.FileEncryptionKey;
+                encryptedData = Encryption.Encrypt(sourceData, encryptionKey);
             }
 
             using (var stream = new FileStream(path, FileMode.Create))
@@ -50,8 +53,8 @@ namespace MyPortal.Logic.FileProviders
 
             return new Database.Models.Entity.File
             {
-                FileName = upload.File.Name,
-                ContentType = upload.File.ContentType,
+                FileName = upload.Attachment.Name,
+                ContentType = upload.Attachment.ContentType,
                 FileId = fileId
             };
         }

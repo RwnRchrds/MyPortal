@@ -38,6 +38,7 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(50)]
         public string ColumnHeading { get; set; }
 
+        // Only visible to staff users
         [Column(Order = 9)]
         public bool Private { get; set; }
 

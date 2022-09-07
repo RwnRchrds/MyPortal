@@ -15,11 +15,11 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface IUserService
     {
-        Task<IEnumerable<Guid>> CreateUser(params CreateUserRequestModel[] createUserRequests);
+        Task<IEnumerable<Guid>> CreateUser(UserRequestModel user);
         Task LinkPerson(Guid userId, Guid personId);
         Task UnlinkPerson(Guid userId);
-        Task UpdateUser(params UpdateUserRequestModel[] updateUserRequests);
-        Task DeleteUser(params Guid[] userIds);
+        Task UpdateUser(Guid userId, UserRequestModel user);
+        Task DeleteUser(Guid userId);
         Task AddToRoles(Guid userId, params Guid[] roleIds);
         Task RemoveFromRoles(Guid userId, params Guid[] roleIds);
         Task SetPassword(Guid userId, string newPassword);

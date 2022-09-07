@@ -26,10 +26,10 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/documents")]
     public class DocumentsController : BaseApiController
     {
-        private IPersonService _personService;
-        private IStaffMemberService _staffMemberService;
-        private IDocumentService _documentService;
-        private IFileService _fileService;
+        private readonly IPersonService _personService;
+        private readonly IStaffMemberService _staffMemberService;
+        private readonly IDocumentService _documentService;
+        private readonly IFileService _fileService;
 
         public DocumentsController(IUserService userService, IRoleService roleService, IDocumentService documentService,
             IFileService fileService, IPersonService personService, IStaffMemberService staffMemberService)
@@ -182,9 +182,9 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> CreateDocument([FromBody] CreateDocumentRequestModel model)
+        public async Task<IActionResult> CreateDocument([FromBody] DocumentRequestModel model)
         {
             try
             {
@@ -192,7 +192,7 @@ namespace MyPortalWeb.Controllers.Api
                 {
                     var userId = User.GetUserId();
                 
-                    await _documentService.CreateDocument(userId, model);
+                    await _documentService.CreateDocument(model);
 
                     return Ok();   
                 }
@@ -206,17 +206,19 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("file/upload")]
+        [Route("{documentId}/file")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> UploadFile([FromBody] UploadAttachmentRequestModel requestModel)
+        public async Task<IActionResult> UploadFile([FromRoute] Guid documentId, [FromBody] FileUploadRequestModel requestModel)
         {
             try
             {
                 if (_fileService is LocalFileService localFileService)
                 {
-                    if (await CanAccessDocument(requestModel.DocumentId, true))
+                    if (await CanAccessDocument(documentId, true))
                     {
+                        requestModel.DocumentId = documentId;
+                        
                         await localFileService.UploadFileToDocument(requestModel);
 
                         return Ok();
@@ -235,10 +237,10 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("file/linkHosted")]
+        [Route("{documentId}/file")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> LinkHostedFile([FromBody] LinkHostedFileRequestModel requestModel)
+        public async Task<IActionResult> LinkHostedFile([FromBody] HostedFileRequestModel requestModel)
         {
             try
             {
@@ -264,7 +266,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpDelete]
-        [Route("file/{documentId}")]
+        [Route("{documentId}/file")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> RemoveAttachment([FromRoute] Guid documentId)
         {
@@ -285,16 +287,18 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPost]
-        [Route("update")]
+        [HttpPut]
+        [Route("{documentId}")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateDocument([FromBody] UpdateDocumentRequestModel model)
+        public async Task<IActionResult> UpdateDocument([FromRoute] Guid documentId, [FromBody] DocumentRequestModel model)
         {
             try
             {
-                if (await CanAccessDocument(model.Id, true))
+                if (await CanAccessDocument(documentId, true))
                 {
-                    await _documentService.UpdateDocument(model);
+                    var userId = User.GetUserId();
+                    
+                    await _documentService.UpdateDocument(userId, model);
 
                     return Ok();
                 }
@@ -330,7 +334,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("file/{documentId}")]
+        [Route("{documentId}/file")]
         [ProducesResponseType(typeof(Stream), 200)]
         public async Task<IActionResult> DownloadFile([FromRoute] Guid documentId)
         {
@@ -352,7 +356,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("webActions/{documentId}")]
+        [Route("{documentId}/webActions")]
         [ProducesResponseType(typeof(IEnumerable<WebAction>), 200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetWebActions([FromRoute] Guid documentId)
@@ -380,7 +384,7 @@ namespace MyPortalWeb.Controllers.Api
         }
         
         [HttpGet]
-        [Route("directories/children/{directoryId}")]
+        [Route("directories/{directoryId}/children")]
         [ProducesResponseType(typeof(DirectoryChildListWrapperResponseModel), 200)]
         public async Task<IActionResult> GetDirectoryChildren([FromRoute] Guid directoryId)
         {
@@ -418,9 +422,9 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("directories/create")]
+        [Route("directories")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> CreateDirectory([FromBody] CreateDirectoryRequestModel requestModel)
+        public async Task<IActionResult> CreateDirectory([FromBody] DirectoryRequestModel requestModel)
         {
             try
             {
@@ -439,16 +443,16 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPost]
-        [Route("directories/update")]
+        [HttpPut]
+        [Route("directories/{directoryId}")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Update([FromBody] UpdateDirectoryRequestModel requestModel)
+        public async Task<IActionResult> Update([FromRoute] Guid directoryId, [FromBody] DirectoryRequestModel requestModel)
         {
             try
             {
-                if (await CanAccessDirectory(requestModel.Id, true))
+                if (await CanAccessDirectory(directoryId, true))
                 {
-                    await _documentService.UpdateDirectory(requestModel);
+                    await _documentService.UpdateDirectory(directoryId, requestModel);
 
                     return Ok();
                 }

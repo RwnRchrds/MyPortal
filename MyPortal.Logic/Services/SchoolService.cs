@@ -71,94 +71,82 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateBulletin(params CreateBulletinRequestModel[] models)
+        public async Task CreateBulletin(BulletinRequestModel model)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var model in models)
+                var bulletin = new Bulletin
                 {
-                    var bulletin = new Bulletin
+                    Title = model.Title,
+                    Detail = model.Detail,
+                    CreatedDate = DateTime.Now,
+                    CreatedById = model.CreatedById,
+                    ExpireDate = model.ExpireDate,
+                    Private = model.Private,
+                    Directory = new Directory
                     {
-                        Title = model.Title,
-                        Detail = model.Detail,
-                        CreatedDate = DateTime.Now,
-                        CreatedById = model.CreatedById,
-                        ExpireDate = model.ExpireDate,
-                        Private = model.Private,
-                        Directory = new Directory
-                        {
-                            Name = "bulletin-root",
-                            Private = model.Private
-                        },
-                        Approved = false
-                    };
+                        Name = "bulletin-root",
+                        Private = model.Private
+                    },
+                    Approved = false
+                };
                     
-                    unitOfWork.Bulletins.Create(bulletin);
-                }
+                unitOfWork.Bulletins.Create(bulletin);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task UpdateBulletin(params UpdateBulletinRequestModel[] models)
+        public async Task UpdateBulletin(Guid bulletinId, BulletinRequestModel model)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var model in models)
+                var bulletin = await unitOfWork.Bulletins.GetById(bulletinId);
+
+                if (bulletin == null)
                 {
-                    var bulletin = await unitOfWork.Bulletins.GetById(model.Id);
-
-                    if (bulletin == null)
-                    {
-                        throw new NotFoundException("Bulletin not found.");
-                    }
-
-                    bulletin.Title = model.Title;
-                    bulletin.Detail = model.Detail;
-                    bulletin.ExpireDate = model.ExpireDate;
-                    bulletin.Private = model.Private;
-                    bulletin.Directory.Private = model.Private;
-
-                    await unitOfWork.Bulletins.Update(bulletin);
+                    throw new NotFoundException("Bulletin not found.");
                 }
+
+                bulletin.Title = model.Title;
+                bulletin.Detail = model.Detail;
+                bulletin.ExpireDate = model.ExpireDate;
+                bulletin.Private = model.Private;
+                bulletin.Directory.Private = model.Private;
+
+                await unitOfWork.Bulletins.Update(bulletin);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task DeleteBulletin(params Guid[] bulletinIds)
+        public async Task DeleteBulletin(Guid bulletinId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var bulletinId in bulletinIds)
+                var bulletin = await unitOfWork.Bulletins.GetById(bulletinId);
+
+                if (bulletin == null)
                 {
-                    var bulletin = await unitOfWork.Bulletins.GetById(bulletinId);
-
-                    if (bulletin == null)
-                    {
-                        throw new NotFoundException("Bulletin not found.");
-                    }
-
-                    await unitOfWork.Bulletins.Delete(bulletinId);
+                    throw new NotFoundException("Bulletin not found.");
                 }
+
+                await unitOfWork.Bulletins.Delete(bulletinId);
             }
         }
 
-        public async Task SetBulletinApproved(params ApproveBulletinRequestModel[] models)
+        public async Task SetBulletinApproved(ApproveBulletinRequestModel model)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var model in models)
+                var bulletin = await unitOfWork.Bulletins.GetById(model.BulletinId);
+
+                if (bulletin == null)
                 {
-                    var bulletin = await unitOfWork.Bulletins.GetById(model.BulletinId);
-
-                    if (bulletin == null)
-                    {
-                        throw new NotFoundException("Bulletin not found");
-                    }
-
-                    bulletin.Approved = model.Approved;
+                    throw new NotFoundException("Bulletin not found");
                 }
+
+                bulletin.Approved = model.Approved;
 
                 await unitOfWork.SaveChangesAsync();
             }

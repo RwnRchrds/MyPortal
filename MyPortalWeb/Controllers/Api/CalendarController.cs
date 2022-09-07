@@ -64,16 +64,18 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("events")]
         [Permission(PermissionValue.SchoolEditSchoolDiary)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> CreateEvent([FromBody] CreateEventRequestModel model)
+        public async Task<IActionResult> CreateEvent([FromBody] EventRequestModel model)
         {
             try
             {
                 var userId = User.GetUserId();
+
+                model.CreatedById = userId;
                 
-                await _calendarService.CreateEvent(userId, model);
+                await _calendarService.CreateEvent(model);
 
                 return Ok();
             }

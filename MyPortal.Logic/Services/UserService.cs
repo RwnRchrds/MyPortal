@@ -132,34 +132,31 @@ namespace MyPortal.Logic.Services
             return users.OrderBy(u => u.UserName).Select(u => new UserModel(u));
         }
 
-        public async Task<IEnumerable<Guid>> CreateUser(params CreateUserRequestModel[] createUserRequests)
+        public async Task<IEnumerable<Guid>> CreateUser(UserRequestModel request)
         {
             var newIds = new List<Guid>();
-            foreach (var request in createUserRequests)
+            if (await UsernameExists(request.Username))
             {
-                if (await UsernameExists(request.Username))
-                {
-                    throw new LogicException("The username is already in use.");
-                }
-
-                var user = new User
-                {
-                    UserName = request.Username.ToLower(),
-                    UserType = request.UserType,
-                    PersonId = request.PersonId,
-                    Enabled = true,
-                    CreatedDate = DateTime.Now
-                };
-
-                var result = await _userManager.CreateAsync(user, request.Password);
-
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.Aggregate("", (a, b) => $"{a}{Environment.NewLine}{b.Description}"));
-                }
-
-                newIds.Add(user.Id);
+                throw new LogicException("The username is already in use.");
             }
+
+            var user = new User
+            {
+                UserName = request.Username.ToLower(),
+                UserType = request.UserType,
+                PersonId = request.PersonId,
+                Enabled = true,
+                CreatedDate = DateTime.Now
+            };
+
+            var result = await _userManager.CreateAsync(user, request.Password);
+
+            if (!result.Succeeded)
+            {
+                throw new Exception(result.Errors.Aggregate("", (a, b) => $"{a}{Environment.NewLine}{b.Description}"));
+            }
+
+            newIds.Add(user.Id);
 
             return newIds.ToArray();
         }
@@ -192,53 +189,47 @@ namespace MyPortal.Logic.Services
             await _userManager.UpdateAsync(user);
         }
 
-        public async Task UpdateUser(params UpdateUserRequestModel[] updateUserRequests)
+        public async Task UpdateUser(Guid userId, UserRequestModel updateUserRequest)
         {
-            foreach (var updateUserRequest in updateUserRequests)
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null)
             {
-                var user = await _userManager.FindByIdAsync(updateUserRequest.Id.ToString());
-
-                if (user == null)
-                {
-                    throw new NotFoundException("User not found.");
-                }
-
-                user.PersonId = updateUserRequest.PersonId;
-
-                await _userManager.UpdateAsync(user);
-
-                var selectedRoles = new List<Role>();
-
-                var existingRoleNames = await _userManager.GetRolesAsync(user);
-
-                foreach (var roleId in updateUserRequest.RoleIds)
-                {
-                    selectedRoles.Add(await _roleManager.FindByIdAsync(roleId.ToString()));
-                }
-
-                var rolesToRemove = existingRoleNames.Where(r => selectedRoles.All(s => s.Name != r));
-
-                var rolesToAdd = selectedRoles.Where(s => existingRoleNames.All(r => r != s.Name)).Select(x => x.Name);
-
-                await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
-                await _userManager.AddToRolesAsync(user, rolesToAdd);
+                throw new NotFoundException("User not found.");
             }
+
+            user.PersonId = updateUserRequest.PersonId;
+
+            await _userManager.UpdateAsync(user);
+
+            var selectedRoles = new List<Role>();
+
+            var existingRoleNames = await _userManager.GetRolesAsync(user);
+
+            foreach (var roleId in updateUserRequest.RoleIds)
+            {
+                selectedRoles.Add(await _roleManager.FindByIdAsync(roleId.ToString()));
+            }
+
+            var rolesToRemove = existingRoleNames.Where(r => selectedRoles.All(s => s.Name != r));
+
+            var rolesToAdd = selectedRoles.Where(s => existingRoleNames.All(r => r != s.Name)).Select(x => x.Name);
+
+            await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+            await _userManager.AddToRolesAsync(user, rolesToAdd);
         }
 
-        public async Task DeleteUser(params Guid[] userIds)
+        public async Task DeleteUser(Guid userId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var userId in userIds)
-                {
-                    var userRoles = await unitOfWork.UserRoles.GetByUser(userId);
+                var userRoles = await unitOfWork.UserRoles.GetByUser(userId);
 
-                    await RemoveFromRoles(userId, userRoles.Select(ur => ur.RoleId).ToArray());
+                await RemoveFromRoles(userId, userRoles.Select(ur => ur.RoleId).ToArray());
 
-                    var user = await _userManager.FindByIdAsync(userId.ToString());
+                var user = await _userManager.FindByIdAsync(userId.ToString());
 
-                    await _userManager.DeleteAsync(user);
-                }
+                await _userManager.DeleteAsync(user);
             }
         }
 

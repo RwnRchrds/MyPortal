@@ -37,10 +37,10 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("")]
         [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(typeof(NewEntityResponseModel), 200)]
-        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestModel model)
+        public async Task<IActionResult> CreateUser([FromBody] UserRequestModel model)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("roles/user/{userId}")]
+        [Route("{userId}/roles")]
         [ProducesResponseType(typeof(IEnumerable<RoleModel>), 200)]
         public async Task<IActionResult> GetUserRoles([FromRoute] Guid userId)
         {
@@ -113,14 +113,14 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("update")]
+        [Route("{userId}")]
         [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequestModel model)
+        public async Task<IActionResult> UpdateUser([FromRoute] Guid userId, [FromBody] UserRequestModel model)
         {
             try
             {
-                await UserService.UpdateUser(model);
+                await UserService.UpdateUser(userId, model);
 
                 return Ok();
             }
@@ -131,7 +131,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpDelete]
-        [Route("delete/{userId}")]
+        [Route("{userId}")]
         [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
@@ -149,15 +149,15 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("setPassword")]
+        [Route("{userId}/password")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> SetPassword(SetPasswordRequestModel request)
+        public async Task<IActionResult> SetPassword([FromRoute] Guid userId, [FromBody] SetPasswordRequestModel request)
         {
             try
             {
-                if (await AuthoriseUser(request.UserId, true))
+                if (await AuthoriseUser(userId, true))
                 {
-                    await UserService.SetPassword(request.UserId, request.NewPassword);
+                    await UserService.SetPassword(userId, request.NewPassword);
 
                     return Ok();
                 }
@@ -171,14 +171,14 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("setEnabled")]
+        [Route("{userId}/enabled")]
         [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(typeof(bool), 200)]
-        public async Task<IActionResult> SetEnabled(SetUserEnabledRequestModel model)
+        public async Task<IActionResult> SetEnabled([FromRoute] Guid userId, [FromBody] SetUserEnabledRequestModel model)
         {
             try
             {
-                await UserService.SetUserEnabled(model.UserId, model.Enabled);
+                await UserService.SetUserEnabled(userId, model.Enabled);
 
                 return Ok(model.Enabled);
             }

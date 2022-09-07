@@ -10,33 +10,32 @@ namespace MyPortal.Logic.Models.Reporting
 {
     public class ChartData<TDataPoint> where TDataPoint : IDataPoint
     {
-        public string ChartTitle { get; set; }
+        public string Title { get; set; }
         public string XLabel { get; set; }
         public string YLabel { get; set; }
 
-        private List<TDataPoint> _dataPoints;
+        private List<ChartSeries<TDataPoint>> _series;
 
-        public TDataPoint[] DataPoints
+        public ChartSeries<TDataPoint>[] Series
         {
-            get { return _dataPoints.ToArray(); }
+            get { return _series.ToArray(); }
         }
 
-        public ChartData(string title, string xLabel, string yLabel, IEnumerable<TDataPoint> dataPoints) : this(
-            dataPoints)
+        public ChartData(string title, string xLabel, string yLabel)
         {
-            ChartTitle = title;
+            Title = title;
             XLabel = xLabel;
             YLabel = yLabel;
         }
 
-        public ChartData(IEnumerable<TDataPoint> dataPoints)
+        public ChartData(string title, string xLabel, string yLabel, IEnumerable<ChartSeries<TDataPoint>> series) : this(title, xLabel, yLabel)
         {
-            _dataPoints = dataPoints.ToList();
+            _series = series.ToList();
         }
 
-        public void AddPoint(TDataPoint newPoint)
+        public void AddSeries(ChartSeries<TDataPoint> series)
         {
-            _dataPoints.Add(newPoint);
+            _series.Add(series);
         }
     }
 }

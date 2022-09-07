@@ -35,7 +35,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("achievements/{achievementId}", Name = "ApiAchievementGetById")]
+        [Route("achievements/{achievementId}")]
         [Permission(PermissionValue.BehaviourViewAchievements)]
         [ProducesResponseType(typeof(AchievementModel), 200)]
         public async Task<IActionResult> GetAchievementById([FromRoute] Guid achievementId)
@@ -60,7 +60,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("achievements/student/{studentId}", Name = "ApiAchievementGetByStudent")]
+        [Route("students/{studentId}/achievements", Name = "ApiAchievementGetByStudent")]
         [Permission(PermissionValue.BehaviourViewAchievements)]
         [ProducesResponseType(typeof(IEnumerable<StudentAchievementSummaryModel>), 200)]
         public async Task<IActionResult> GetAchievementsByStudent([FromRoute] Guid studentId, [FromQuery] Guid? academicYearId)
@@ -71,9 +71,14 @@ namespace MyPortalWeb.Controllers.Api
                 
                 if (await CanAccessPerson(student.PersonId))
                 {
-                    var fromAcademicYearId = academicYearId ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id.Value;
+                    var fromAcademicYearId = academicYearId ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id;
 
-                    var achievements = await _behaviourService.GetAchievementsByStudent(studentId, fromAcademicYearId);
+                    if (fromAcademicYearId == null)
+                    {
+                        return Error(HttpStatusCode.BadRequest, "No academic year is currently selected.");
+                    }
+
+                    var achievements = await _behaviourService.GetAchievementsByStudent(studentId, fromAcademicYearId.Value);
 
                     return Ok(achievements);
                 }
@@ -90,15 +95,17 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPost]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.BehaviourEditAchievements)]
-        [Route("achievements/create", Name = "ApiAchievementCreate")]
+        [Route("achievements", Name = "ApiAchievementCreate")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> CreateAchievement([FromBody] CreateAchievementRequestModel model)
+        public async Task<IActionResult> CreateAchievement([FromBody] AchievementRequestModel model)
         {
             try
             {
                 var userId = User.GetUserId();
+
+                model.CreatedById = userId;
                 
-                await _behaviourService.CreateAchievement(userId, model);
+                await _behaviourService.CreateAchievement(model);
 
                 return Ok();
             }
@@ -108,16 +115,16 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.BehaviourEditAchievements)]
-        [Route("achievements/update", Name = "ApiAchievementUpdate")]
+        [Route("achievements/{achievementId}")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateAchievement([FromBody] UpdateAchievementRequestModel model)
+        public async Task<IActionResult> UpdateAchievement([FromQuery] Guid achievementId, [FromBody] AchievementRequestModel achievement)
         {
             try
             {
-                await _behaviourService.UpdateAchievement(model);
+                await _behaviourService.UpdateAchievement(achievementId, achievement);
 
                 return Ok();
             }
@@ -130,7 +137,7 @@ namespace MyPortalWeb.Controllers.Api
         [HttpDelete]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.BehaviourEditAchievements)]
-        [Route("achievements/delete/{achievementId}", Name = "ApiAchievementDelete")]
+        [Route("achievements/{achievementId}")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> DeleteAchievement([FromRoute] Guid achievementId)
         {
@@ -172,7 +179,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("incidents/student/{studentId}", Name = "ApiIncidentGetByStudent")]
+        [Route("students/{studentId}/incidents")]
         [Permission(PermissionValue.BehaviourViewIncidents)]
         [ProducesResponseType(typeof(IEnumerable<StudentIncidentSummaryModel>), 200)]
         public async Task<IActionResult> GetIncidentsByStudent([FromRoute] Guid studentId, [FromQuery] Guid? academicYearId)
@@ -183,9 +190,14 @@ namespace MyPortalWeb.Controllers.Api
                 
                 if (await CanAccessPerson(student.PersonId))
                 {
-                    var fromAcademicYearId = academicYearId ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id.Value;
+                    var fromAcademicYearId = academicYearId ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id;
 
-                    var incidents = (await _behaviourService.GetIncidentsByStudent(studentId, fromAcademicYearId)).ToList();
+                    if (fromAcademicYearId == null)
+                    {
+                        return Error(HttpStatusCode.BadRequest, "No academic year is currently selected.");
+                    }
+
+                    var incidents = (await _behaviourService.GetIncidentsByStudent(studentId, fromAcademicYearId.Value)).ToList();
 
                     return Ok(incidents);
                 }
@@ -201,15 +213,17 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPost]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.BehaviourEditIncidents)]
-        [Route("incidents/create", Name = "ApiIncidentCreate")]
+        [Route("incidents")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Create([FromBody] CreateIncidentRequestModel model)
+        public async Task<IActionResult> Create([FromBody] IncidentRequestModel model)
         {
             try
             {
                 var userId = User.GetUserId();
+
+                model.CreatedById = userId;
                 
-                await _behaviourService.CreateIncident(userId, model);
+                await _behaviourService.CreateIncident(model);
 
                 return Ok();
             }
@@ -222,13 +236,13 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPost]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.BehaviourEditIncidents)]
-        [Route("incidents/update", Name = "ApiIncidentUpdate")]
+        [Route("incidents/{incidentId}", Name = "ApiIncidentUpdate")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Update([FromBody] UpdateIncidentRequestModel requestModel)
+        public async Task<IActionResult> Update([FromRoute] Guid incidentId, [FromBody] IncidentRequestModel requestModel)
         {
             try
             {
-                await _behaviourService.UpdateIncident(requestModel);
+                await _behaviourService.UpdateIncident(incidentId, requestModel);
 
                 return Ok();
             }
@@ -241,7 +255,7 @@ namespace MyPortalWeb.Controllers.Api
         [HttpDelete]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.BehaviourEditIncidents)]
-        [Route("incidents/delete/{incidentId}", Name = "ApiIncidentDelete")]
+        [Route("incidents/{incidentId}", Name = "ApiIncidentDelete")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Delete([FromRoute] Guid incidentId) {
             try

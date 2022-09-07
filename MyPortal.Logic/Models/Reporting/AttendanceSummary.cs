@@ -79,19 +79,24 @@ namespace MyPortal.Logic.Models.Reporting
         /// <summary>
         /// Gets attendance data for presentation in a chart.
         /// </summary>
+        /// <param name="seriesTitle">A title for the range of attendance marks represented by this data.</param>
         /// <param name="asPercentage">Specifies whether the values should represent percentages of total marks (defaults to false).</param>
         /// <returns></returns>
-        public ChartData<CategoricalChartDataPoint> GetChartData(bool asPercentage = false)
+        public ChartData<CategoricalChartDataPoint> GetChartData(string seriesTitle, bool asPercentage = false)
         {
-            var data = new List<CategoricalChartDataPoint>();
+            var series = new ChartSeries<CategoricalChartDataPoint>(seriesTitle);
 
-            data.Add(new CategoricalChartDataPoint("Present", asPercentage ? MathHelper.Percent(Present, TotalMarks, 1) : Present));
-            data.Add(new CategoricalChartDataPoint("Authorised Absence", asPercentage ? MathHelper.Percent(AuthorisedAbsence, TotalMarks, 1) : AuthorisedAbsence));
-            data.Add(new CategoricalChartDataPoint("Unauthorised Absence", UnauthorisedAbsence));
-            data.Add(new CategoricalChartDataPoint("Approved Educational Activity", ApprovedEdActivity));
-            data.Add(new CategoricalChartDataPoint("Attendance Not Required", NotRequired));
+            series.AddPoint(new CategoricalChartDataPoint("Present", asPercentage ? MathHelper.Percent(Present, TotalMarks, 1) : Present));
+            series.AddPoint(new CategoricalChartDataPoint("Authorised Absence", asPercentage ? MathHelper.Percent(AuthorisedAbsence, TotalMarks, 1) : AuthorisedAbsence));
+            series.AddPoint(new CategoricalChartDataPoint("Unauthorised Absence", UnauthorisedAbsence));
+            series.AddPoint(new CategoricalChartDataPoint("Approved Educational Activity", ApprovedEdActivity));
+            series.AddPoint(new CategoricalChartDataPoint("Attendance Not Required", NotRequired));
 
-            return new ChartData<CategoricalChartDataPoint>(data);
+            var chart = new ChartData<CategoricalChartDataPoint>("Attendance Summary", "Type", "Marks");
+            
+            chart.AddSeries(series);
+
+            return chart;
         }
     }
 }

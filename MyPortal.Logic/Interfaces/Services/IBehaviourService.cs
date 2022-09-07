@@ -19,9 +19,9 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<StudentAchievementModel> GetAchievementById(Guid achievementId);
         Task<int> GetAchievementPointsByStudent(Guid studentId, Guid academicYearId);
         Task<int> GetAchievementCountByStudent(Guid studentId, Guid academicYearId);
-        Task CreateAchievement(Guid userId, params CreateAchievementRequestModel[] achievements);
-        Task UpdateAchievement(params UpdateAchievementRequestModel[] achievements);
-        Task DeleteAchievement(params Guid[] achievementIds);
+        Task CreateAchievement(AchievementRequestModel achievement);
+        Task UpdateAchievement(Guid achievementId, AchievementRequestModel achievement);
+        Task DeleteAchievement(Guid achievementId);
         Task<IEnumerable<AchievementTypeModel>> GetAchievementTypes();
         Task<IEnumerable<AchievementOutcomeModel>> GetAchievementOutcomes();    
         #endregion
@@ -31,15 +31,15 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<StudentIncidentModel> GetIncidentById(Guid incidentId);
         Task<int> GetBehaviourPointsByStudent(Guid studentId, Guid academicYearId);
         Task<int> GetBehaviourCountByStudent(Guid studentId, Guid academicYearId);
-        Task CreateIncident(Guid userId, params CreateIncidentRequestModel[] incidents);
-        Task UpdateIncident(params UpdateIncidentRequestModel[] incidents);
-        Task DeleteIncident(params Guid[] incidentIds);
-        Task AddStudentToIncident(params AddStudentToIncidentRequestModel[] models);
+        Task CreateIncident(IncidentRequestModel incident);
+        Task UpdateIncident(Guid incidentId, IncidentRequestModel incident);
+        Task DeleteIncident(Guid incidentId);
+        Task AddStudentToIncident(StudentIncidentRequestModel model);
         Task<IEnumerable<IncidentTypeModel>> GetIncidentTypes();
         Task<IEnumerable<BehaviourRoleTypeModel>> GetRoleTypes();
         Task<IEnumerable<BehaviourOutcomeModel>> GetIncidentOutcomes();
         Task<IEnumerable<BehaviourStatusModel>> GetBehaviourStatus();
-        Task RemoveStudentFromIncident(params Guid[] studentIncidentIds);
+        Task RemoveStudentFromIncident(Guid studentIncidentId);
         Task<IEnumerable<StudentIncidentSummaryModel>> GetInvolvedStudentsByIncident(Guid incidentId);
         #endregion
         
@@ -47,11 +47,11 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IEnumerable<DetentionModel>> Get(DetentionSearchOptions searchOptions);
         Task<DetentionModel> GetById(Guid detentionId);
         Task<DetentionModel> GetByIncident(Guid incidentId);
-        Task CreateDetention(params CreateDetentionRequestModel[] detentionModels);
-        Task UpdateDetention(params UpdateDetentionRequestModel[] detentionModels);
-        Task DeleteDetention(params Guid[] detentionIds);
-        Task AddToDetention(Guid detentionId, Guid incidentId);
-        Task RemoveFromDetention(Guid incidentDetentionId);
+        Task CreateDetention(DetentionRequestModel detentionModel);
+        Task UpdateDetention(Guid detentionId, DetentionRequestModel detentionModel);
+        Task DeleteDetention(Guid detentionId);
+        Task AddToDetention(Guid detentionId, Guid studentIncidentId);
+        Task RemoveFromDetention(Guid detentionId, Guid studentIncidentId);
         #endregion
     }
 }

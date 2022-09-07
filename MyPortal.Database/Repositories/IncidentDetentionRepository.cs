@@ -53,12 +53,12 @@ namespace MyPortal.Database.Repositories
             return incidentDetentions;
         }
 
-        public async Task<StudentIncidentDetention> Get(Guid detentionId, Guid studentId)
+        public async Task<StudentIncidentDetention> GetByStudentIncident(Guid detentionId, Guid studentIncidentId)
         {
             var query = GenerateQuery();
 
             query.Where("Detention.Id", detentionId);
-            query.Where("Student.Id", studentId);
+            query.Where("SI.Id", studentIncidentId);
 
             return await ExecuteQueryFirstOrDefault(query);
         }

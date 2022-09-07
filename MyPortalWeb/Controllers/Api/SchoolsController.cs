@@ -92,11 +92,11 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("local/bulletins/create")]
+        [Route("local/bulletins")]
         [Authorize(Policies.UserType.Staff)]
         [Permission(PermissionValue.SchoolEditSchoolBulletins)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> CreateBulletin([FromBody] CreateBulletinRequestModel model)
+        public async Task<IActionResult> CreateBulletin([FromBody] BulletinRequestModel model)
         {
             try
             {
@@ -110,15 +110,15 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("local/bulletins/update")]
+        [Route("local/bulletins/{bulletinId}")]
         [Authorize(Policies.UserType.Staff)]
         [Permission(PermissionValue.SchoolEditSchoolBulletins)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateBulletin([FromBody] UpdateBulletinRequestModel model)
+        public async Task<IActionResult> UpdateBulletin([FromRoute] Guid bulletinId, [FromBody] BulletinRequestModel model)
         {
             try
             {
-                await _schoolService.UpdateBulletin(model);
+                await _schoolService.UpdateBulletin(bulletinId, model);
                 return Ok();
             }
             catch (Exception e)
@@ -128,14 +128,15 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("local/bulletins/approve")]
+        [Route("local/bulletins/{bulletinId}/approve")]
         [Authorize(Policies.UserType.Staff)]
         [Permission(PermissionValue.SchoolApproveSchoolBulletins)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> ApproveBulletin([FromBody] ApproveBulletinRequestModel model)
+        public async Task<IActionResult> ApproveBulletin([FromRoute] Guid bulletinId, [FromBody] ApproveBulletinRequestModel model)
         {
             try
             {
+                model.BulletinId = bulletinId;
                 await _schoolService.SetBulletinApproved(model);
                 return Ok();
             }
@@ -146,7 +147,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpDelete]
-        [Route("local/bulletins/delete/{bulletinId}")]
+        [Route("local/bulletins/{bulletinId}")]
         [Authorize(Policies.UserType.Staff)]
         [Permission(PermissionValue.SchoolEditSchoolBulletins)]
         [ProducesResponseType(200)]

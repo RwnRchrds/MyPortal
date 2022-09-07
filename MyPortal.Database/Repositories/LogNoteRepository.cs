@@ -62,16 +62,16 @@ namespace MyPortal.Database.Repositories
             return logNotes;
         }
 
-        public Task<IEnumerable<LogNote>> GetByStudent(Guid studentId, Guid academicYearId, bool includeRestricted)
+        public Task<IEnumerable<LogNote>> GetByStudent(Guid studentId, Guid academicYearId, bool includePrivate)
         {
             var query = GenerateQuery();
 
             query.Where($"{TblAlias}.StudentId", studentId);
             query.Where($"{TblAlias}.AcademicYearId", academicYearId);
 
-            if (!includeRestricted)
+            if (!includePrivate)
             {
-                query.Where($"{TblAlias}.Restricted", false);
+                query.Where($"{TblAlias}.Private", false);
             }
 
             return ExecuteQuery(query);

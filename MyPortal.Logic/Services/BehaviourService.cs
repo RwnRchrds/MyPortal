@@ -73,79 +73,70 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateAchievement(Guid userId, params CreateAchievementRequestModel[] requests)
+        public async Task CreateAchievement(AchievementRequestModel achievement)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var now = DateTime.Now;
                 
-                foreach (var request in requests)
+                await AcademicHelper.IsAcademicYearLocked(achievement.AcademicYearId, true);
+
+                var model = new StudentAchievement
                 {
-                    await AcademicHelper.IsAcademicYearLocked(request.AcademicYearId, true);
-
-                    var model = new StudentAchievement
+                    StudentId = achievement.StudentId,
+                    OutcomeId = achievement.OutcomeId,
+                    Points = achievement.Points,
+                    Achievement = new Achievement
                     {
-                        StudentId = request.StudentId,
-                        OutcomeId = request.OutcomeId,
-                        Points = request.Points,
-                        Achievement = new Achievement
-                        {
-                            AcademicYearId = request.AcademicYearId,
-                            AchievementTypeId = request.AchievementTypeId,
-                            LocationId = request.LocationId,
-                            Comments = request.Comments,
-                            CreatedById = userId,
-                            CreatedDate = now
-                        }
-                    };
-
-                    unitOfWork.StudentAchievements.Create(model);
-                }
-
-                await unitOfWork.SaveChangesAsync();
-            }
-        }
-
-        public async Task UpdateAchievement(params UpdateAchievementRequestModel[] requests)
-        {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                foreach (var request in requests)
-                {
-                    var achievementInDb = await unitOfWork.StudentAchievements.GetById(request.Id);
-
-                    if (achievementInDb == null)
-                    {
-                        throw new NotFoundException("Achievement not found.");
+                        AcademicYearId = achievement.AcademicYearId,
+                        AchievementTypeId = achievement.AchievementTypeId,
+                        LocationId = achievement.LocationId,
+                        Comments = achievement.Comments,
+                        CreatedById = achievement.CreatedById,
+                        CreatedDate = now
                     }
+                };
 
-                    await AcademicHelper.IsAcademicYearLocked(achievementInDb.Achievement.AcademicYearId, true);
-
-                    achievementInDb.Achievement.AchievementTypeId = request.AchievementTypeId;
-                    achievementInDb.Achievement.LocationId = request.LocationId;
-                    achievementInDb.OutcomeId = request.OutcomeId;
-                    achievementInDb.Achievement.Comments = request.Comments;
-                    achievementInDb.Points = request.Points;
-
-                    await unitOfWork.StudentAchievements.Update(achievementInDb);
-                }
+                unitOfWork.StudentAchievements.Create(model);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task DeleteAchievement(params Guid[] achievementIds)
+        public async Task UpdateAchievement(Guid achievementId, AchievementRequestModel achievement)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var achievementId in achievementIds)
+                var achievementInDb = await unitOfWork.StudentAchievements.GetById(achievementId);
+
+                if (achievementInDb == null)
                 {
-                    var achievement = await GetAchievementById(achievementId);
-
-                    await AcademicHelper.IsAcademicYearLocked(achievement.Achievement.AcademicYearId, true);
-
-                    await unitOfWork.Achievements.Delete(achievementId);
+                    throw new NotFoundException("Achievement not found.");
                 }
+
+                await AcademicHelper.IsAcademicYearLocked(achievementInDb.Achievement.AcademicYearId, true);
+
+                achievementInDb.Achievement.AchievementTypeId = achievement.AchievementTypeId;
+                achievementInDb.Achievement.LocationId = achievement.LocationId;
+                achievementInDb.OutcomeId = achievement.OutcomeId;
+                achievementInDb.Achievement.Comments = achievement.Comments;
+                achievementInDb.Points = achievement.Points;
+
+                await unitOfWork.StudentAchievements.Update(achievementInDb);
+
+                await unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteAchievement(Guid achievementId)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var achievement = await GetAchievementById(achievementId);
+
+                await AcademicHelper.IsAcademicYearLocked(achievement.Achievement.AcademicYearId, true);
+
+                await unitOfWork.Achievements.Delete(achievementId);
 
                 await unitOfWork.SaveChangesAsync();
             }
@@ -220,66 +211,57 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateIncident(Guid userId, params CreateIncidentRequestModel[] incidents)
+        public async Task CreateIncident(IncidentRequestModel incident)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var incidentModel in incidents)
+                var studentIncident = new StudentIncident
                 {
-                    var studentIncident = new StudentIncident
+                    Points = incident.Points,
+                    OutcomeId = incident.OutcomeId,
+                    StatusId = incident.StatusId,
+                    StudentId = incident.StudentId,
+                    Incident = new Incident
                     {
-                        Points = incidentModel.Points,
-                        OutcomeId = incidentModel.OutcomeId,
-                        StatusId = incidentModel.StatusId,
-                        StudentId = incidentModel.StudentId,
-                        Incident = new Incident
-                        {
-                            CreatedDate = DateTime.Now,
-                            BehaviourTypeId = incidentModel.BehaviourTypeId,
-                            LocationId = incidentModel.LocationId,
-                            CreatedById = userId,
-                            Comments = incidentModel.Comments,
-                            AcademicYearId = incidentModel.AcademicYearId,
-                        }
-                    };
+                        CreatedDate = DateTime.Now,
+                        BehaviourTypeId = incident.BehaviourTypeId,
+                        LocationId = incident.LocationId,
+                        CreatedById = incident.CreatedById,
+                        Comments = incident.Comments,
+                        AcademicYearId = incident.AcademicYearId,
+                    }
+                };
 
-                    unitOfWork.StudentIncidents.Create(studentIncident);
-                }
+                unitOfWork.StudentIncidents.Create(studentIncident);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task UpdateIncident(params UpdateIncidentRequestModel[] incidents)
+        public async Task UpdateIncident(Guid incidentId, IncidentRequestModel incident)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var incidentModel in incidents)
-                {
-                    var studentIncidentInDb = await unitOfWork.StudentIncidents.GetById(incidentModel.Id);
+                var studentIncidentInDb = await unitOfWork.StudentIncidents.GetById(incidentId);
 
-                    studentIncidentInDb.Points = incidentModel.Points;
-                    studentIncidentInDb.Incident.BehaviourTypeId = incidentModel.BehaviourTypeId;
-                    studentIncidentInDb.Incident.LocationId = incidentModel.LocationId;
-                    studentIncidentInDb.OutcomeId = incidentModel.OutcomeId;
-                    studentIncidentInDb.StatusId = incidentModel.StatusId;
-                    studentIncidentInDb.Incident.Comments = incidentModel.Comments;
+                studentIncidentInDb.Points = incident.Points;
+                studentIncidentInDb.Incident.BehaviourTypeId = incident.BehaviourTypeId;
+                studentIncidentInDb.Incident.LocationId = incident.LocationId;
+                studentIncidentInDb.OutcomeId = incident.OutcomeId;
+                studentIncidentInDb.StatusId = incident.StatusId;
+                studentIncidentInDb.Incident.Comments = incident.Comments;
 
-                    await unitOfWork.StudentIncidents.Update(studentIncidentInDb);
-                }
+                await unitOfWork.StudentIncidents.Update(studentIncidentInDb);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task DeleteIncident(params Guid[] incidentIds)
+        public async Task DeleteIncident(Guid incidentId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var incidentId in incidentIds)
-                {
-                    await unitOfWork.Incidents.Delete(incidentId);
-                }
+                await unitOfWork.Incidents.Delete(incidentId);
 
                 await unitOfWork.SaveChangesAsync();
             }
@@ -355,87 +337,77 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateDetention(params CreateDetentionRequestModel[] detentionModels)
+        public async Task CreateDetention(DetentionRequestModel model)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var model in detentionModels)
+                var detention = new Detention
                 {
-                    var detention = new Detention
+                    DetentionTypeId = model.DetentionTypeId,
+                    SupervisorId = model.SupervisorId,
+                    Event = new DiaryEvent
+                    {
+                        StartTime = model.StartTime,
+                        EndTime = model.EndTime,
+                        RoomId = model.RoomId,
+                        EventTypeId = EventTypes.Detention,
+                        Subject = "Detention"
+                    }
+                };
+
+                unitOfWork.Detentions.Create(detention);
+
+                DateTime? nextOccurrence = model.StartTime.GetNextOccurrence(model.Frequency);
+                TimeSpan duration = model.EndTime - model.StartTime;
+
+                while (nextOccurrence != null && nextOccurrence.Value < model.LastOccurrence)
+                {
+                    var nextDetention = new Detention
                     {
                         DetentionTypeId = model.DetentionTypeId,
-                        SupervisorId = model.SupervisorId,
+                        SupervisorId = model.SameSupervisor ? model.SupervisorId : null,
                         Event = new DiaryEvent
                         {
-                            StartTime = model.StartTime,
-                            EndTime = model.EndTime,
+                            StartTime = nextOccurrence.Value,
+                            EndTime = nextOccurrence.Value.Add(duration),
                             RoomId = model.RoomId,
                             EventTypeId = EventTypes.Detention,
                             Subject = "Detention"
                         }
                     };
 
-                    unitOfWork.Detentions.Create(detention);
+                    unitOfWork.Detentions.Create(nextDetention);
+                    await unitOfWork.BatchSaveChangesAsync();
 
-                    
-                    DateTime? nextOccurrence = model.StartTime.GetNextOccurrence(model.Frequency);
-                    TimeSpan duration = model.EndTime - model.StartTime;
-                    
-                    while (nextOccurrence != null && nextOccurrence.Value < model.LastOccurrence)
-                    {
-                        var nextDetention = new Detention
-                        {
-                            DetentionTypeId = model.DetentionTypeId,
-                            SupervisorId = model.SameSupervisor ? model.SupervisorId : null,
-                            Event = new DiaryEvent
-                            {
-                                StartTime = nextOccurrence.Value,
-                                EndTime = nextOccurrence.Value.Add(duration),
-                                RoomId = model.RoomId,
-                                EventTypeId = EventTypes.Detention,
-                                Subject = "Detention"
-                            }
-                        };
-                        
-                        unitOfWork.Detentions.Create(nextDetention);
-                        await unitOfWork.BatchSaveChangesAsync();
-
-                        nextOccurrence = nextOccurrence.Value.GetNextOccurrence(model.Frequency);
-                    }
+                    nextOccurrence = nextOccurrence.Value.GetNextOccurrence(model.Frequency);
                 }
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task UpdateDetention(params UpdateDetentionRequestModel[] detentionModels)
+        public async Task UpdateDetention(Guid detentionId, DetentionRequestModel detention)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var model in detentionModels)
-                {
-                    var detentionInDb = await unitOfWork.Detentions.GetById(model.Id);
+                var detentionInDb = await unitOfWork.Detentions.GetById(detentionId);
 
-                    detentionInDb.DetentionTypeId = model.DetentionTypeId;
-                    detentionInDb.Event.StartTime = model.StartTime;
-                    detentionInDb.Event.EndTime = model.EndTime;
-                    detentionInDb.Event.RoomId = model.RoomId;
+                detentionInDb.DetentionTypeId = detention.DetentionTypeId;
+                detentionInDb.Event.StartTime = detention.StartTime;
+                detentionInDb.Event.EndTime = detention.EndTime;
+                detentionInDb.Event.RoomId = detention.RoomId;
 
-                    await unitOfWork.Detentions.Update(detentionInDb);
-                }
+                await unitOfWork.Detentions.Update(detentionInDb);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task DeleteDetention(params Guid[] detentionIds)
+        public async Task DeleteDetention(Guid detentionId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var detentionId in detentionIds)
-                {
-                    await unitOfWork.Detentions.Delete(detentionId);
-                }
+                await unitOfWork.Detentions.Delete(detentionId);
 
                 await unitOfWork.SaveChangesAsync();
             }
@@ -460,51 +432,45 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task AddStudentToIncident(params AddStudentToIncidentRequestModel[] models)
+        public async Task AddStudentToIncident(StudentIncidentRequestModel model)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var model in models)
+                var studentIncident = new StudentIncident
                 {
-                    var studentIncident = new StudentIncident
-                    {
-                        IncidentId = model.IncidentId,
-                        OutcomeId = model.OutcomeId,
-                        StatusId = model.StatusId,
-                        RoleTypeId = model.RoleTypeId,
-                        StudentId = model.StudentId,
-                        Points = model.Points
-                    };
+                    IncidentId = model.IncidentId,
+                    OutcomeId = model.OutcomeId,
+                    StatusId = model.StatusId,
+                    RoleTypeId = model.RoleTypeId,
+                    StudentId = model.StudentId,
+                    Points = model.Points
+                };
 
-                    unitOfWork.StudentIncidents.Create(studentIncident);
-                }
+                unitOfWork.StudentIncidents.Create(studentIncident);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task RemoveStudentFromIncident(params Guid[] studentIncidentIds)
+        public async Task RemoveStudentFromIncident(Guid studentIncidentId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var studentIncidentId in studentIncidentIds)
+                var studentIncident = await unitOfWork.StudentIncidents.GetById(studentIncidentId);
+
+                if (studentIncident == null)
                 {
-                    var studentIncident = await unitOfWork.StudentIncidents.GetById(studentIncidentId);
-
-                    if (studentIncident == null)
-                    {
-                        throw new NotFoundException("Student incident not found.");
-                    }
-
-                    var studentCount = await unitOfWork.StudentIncidents.GetCountByIncident(studentIncident.IncidentId);
-
-                    if (studentCount < 2)
-                    {
-                        throw new LogicException("Cannot remove the only student from incident.");
-                    }
-
-                    await unitOfWork.StudentIncidents.Delete(studentIncidentId);
+                    throw new NotFoundException("Student incident not found.");
                 }
+
+                var studentCount = await unitOfWork.StudentIncidents.GetCountByIncident(studentIncident.IncidentId);
+
+                if (studentCount < 2)
+                {
+                    throw new LogicException("Cannot remove the only student from this incident.");
+                }
+
+                await unitOfWork.StudentIncidents.Delete(studentIncidentId);
 
                 await unitOfWork.SaveChangesAsync();
             }
@@ -526,11 +492,12 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task RemoveFromDetention(Guid incidentDetentionId)
+        public async Task RemoveFromDetention(Guid detentionId, Guid studentIncidentId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var relatedIncident = await unitOfWork.IncidentDetentions.GetById(incidentDetentionId);
+                var relatedIncident =
+                    await unitOfWork.IncidentDetentions.GetByStudentIncident(detentionId, studentIncidentId);
 
                 if (relatedIncident == null)
                 {

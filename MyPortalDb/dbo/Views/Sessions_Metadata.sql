@@ -32,4 +32,4 @@ FROM        dbo.Sessions AS S
             CROSS APPLY dbo.GetOverlappingEvents(PAP.StartTime, PAP.EndTime, '84E9DDA4-1BCB-4A2F-8082-FCE51DD04F28') AS DE
             CROSS APPLY dbo.GetName_FullNameAbbreviated(SM.PersonId, 0, 1) AS FNA
             CROSS APPLY dbo.GetName_FullNameAbbreviated(CSM.PersonId, 0, 1) AS CNA
-WHERE       DE.Id IS NULL AND S.StartDate <= PAP.StartTime AND S.EndDate >= PAP.StartTime
+WHERE       DE.Id IS NULL AND S.StartDate <= PAP.EndTime AND S.EndDate >= PAP.StartTime

@@ -19,11 +19,10 @@ using MyPortalWeb.Controllers.BaseControllers;
 namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
-    [Route("api/student/logNotes")]
     public class LogNotesController : PersonalDataController
     {
-        private ILogNoteService _logNoteService;
-        private IAcademicYearService _academicYearService;
+        private readonly ILogNoteService _logNoteService;
+        private readonly IAcademicYearService _academicYearService;
 
         public LogNotesController(IStudentService studentService, IPersonService personService,
             IUserService userService, IRoleService roleService,
@@ -35,7 +34,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("{logNoteId}")]
+        [Route("api/logNotes/{logNoteId}")]
         [Permission(PermissionValue.StudentViewStudentLogNotes)]
         [ProducesResponseType(typeof(LogNoteModel), 200)]
         public async Task<IActionResult> GetById([FromQuery] Guid logNoteId)
@@ -70,7 +69,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("types")]
+        [Route("api/logNotes/types")]
         [ProducesResponseType(typeof(IEnumerable<LogNoteTypeModel>), 200)]
         public async Task<IActionResult> GetTypes()
         {
@@ -87,7 +86,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("student/{studentId}")]
+        [Route("api/students/{studentId}/logNotes")]
         [Permission(PermissionValue.StudentViewStudentLogNotes)]
         [ProducesResponseType(typeof(IEnumerable<LogNoteModel>), 200)]
         public async Task<IActionResult> GetByStudent([FromRoute] Guid studentId, [FromQuery] Guid? academicYearId)
@@ -123,9 +122,9 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPost]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.StudentEditStudentLogNotes)]
-        [Route("create")]
+        [Route("api/logNotes")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Create([FromBody] CreateLogNoteRequestModel requestModel)
+        public async Task<IActionResult> Create([FromBody] LogNoteRequestModel requestModel)
         {
             try
             {
@@ -143,16 +142,16 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.StudentEditStudentLogNotes)]
-        [Route("update")]
+        [Route("api/logNotes/{logNoteId}")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Update([FromBody] UpdateLogNoteRequestModel requestModel)
+        public async Task<IActionResult> Update([FromRoute] Guid logNoteId, [FromBody] LogNoteRequestModel requestModel)
         {
             try
             {
-                await _logNoteService.UpdateLogNote(requestModel);
+                await _logNoteService.UpdateLogNote(logNoteId, requestModel);
 
                 return Ok();
             }
@@ -165,9 +164,9 @@ namespace MyPortalWeb.Controllers.Api
         [HttpDelete]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.StudentEditStudentLogNotes)]
-        [Route("delete")]
+        [Route("api/logNotes/{logNoteId}")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Delete([FromQuery] Guid logNoteId)
+        public async Task<IActionResult> Delete([FromRoute] Guid logNoteId)
         {
             try
             {

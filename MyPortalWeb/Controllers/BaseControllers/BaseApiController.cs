@@ -18,8 +18,7 @@ using MyPortalWeb.Models.Response;
 
 namespace MyPortalWeb.Controllers.BaseControllers
 {
-    
-    [Route("api/[controller]")]
+
     [Authorize]
     [ApiController]
     public abstract class BaseApiController : ControllerBase

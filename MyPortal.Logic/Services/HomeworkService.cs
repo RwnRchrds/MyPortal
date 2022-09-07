@@ -16,7 +16,7 @@ namespace MyPortal.Logic.Services;
 
 public class HomeworkService : BaseService, IHomeworkService
 {
-    public async System.Threading.Tasks.Task CreateHomework(CreateHomeworkRequestModel model)
+    public async System.Threading.Tasks.Task CreateHomework(HomeworkRequestModel model)
     {
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
@@ -65,11 +65,11 @@ public class HomeworkService : BaseService, IHomeworkService
         }
     }
 
-    public async System.Threading.Tasks.Task UpdateHomework(UpdateHomeworkRequestModel model)
+    public async System.Threading.Tasks.Task UpdateHomework(Guid homeworkId, HomeworkRequestModel model)
     {
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
-            var homework = await unitOfWork.HomeworkItems.GetById(model.Id);
+            var homework = await unitOfWork.HomeworkItems.GetById(homeworkId);
 
             homework.Title = model.Title;
             homework.Description = model.Description;
@@ -123,7 +123,7 @@ public class HomeworkService : BaseService, IHomeworkService
         }
     }
 
-    public async System.Threading.Tasks.Task CreateHomeworkSubmission(CreateHomeworkSubmissionRequestModel model)
+    public async System.Threading.Tasks.Task CreateHomeworkSubmission(HomeworkSubmissionRequestModel model)
     {
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
@@ -164,44 +164,39 @@ public class HomeworkService : BaseService, IHomeworkService
         }
     }
 
-    public async System.Threading.Tasks.Task UpdateHomeworkSubmission(params UpdateHomeworkSubmissionRequestModel[] models)
+    // TODO: Review this service method
+    public async System.Threading.Tasks.Task UpdateHomeworkSubmission(Guid homeworkSubmissionId, HomeworkSubmissionRequestModel model)
     {
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
-            foreach (var model in models)
+            var homeworkSubmission = await unitOfWork.HomeworkSubmissions.GetById(homeworkSubmissionId);
+
+            if (homeworkSubmission == null)
             {
-                var homeworkSubmission = await unitOfWork.HomeworkSubmissions.GetById(model.Id);
-
-                if (homeworkSubmission == null)
-                {
-                    throw new NotFoundException("Homework submission not found.");
-                }
-
-                homeworkSubmission.PointsAchieved = model.PointsAchieved;
-                homeworkSubmission.Comments = model.Comments;
-                homeworkSubmission.Task.DueDate = model.DueDate;
-
-                if (model.Completed)
-                {
-                    homeworkSubmission.Task.Completed = true;
-                    homeworkSubmission.Task.CompletedDate = DateTime.Now;
-                }
-
-                await unitOfWork.HomeworkSubmissions.Update(homeworkSubmission);
+                throw new NotFoundException("Homework submission not found.");
             }
+
+            homeworkSubmission.PointsAchieved = model.PointsAchieved;
+            homeworkSubmission.Comments = model.Comments;
+            homeworkSubmission.Task.DueDate = model.DueDate;
+
+            if (model.Completed)
+            {
+                homeworkSubmission.Task.Completed = true;
+                homeworkSubmission.Task.CompletedDate = DateTime.Now;
+            }
+
+            await unitOfWork.HomeworkSubmissions.Update(homeworkSubmission);
 
             await unitOfWork.SaveChangesAsync();
         }
     }
 
-    public async System.Threading.Tasks.Task DeleteHomeworkSubmission(params Guid[] homeworkSubmissionIds)
+    public async System.Threading.Tasks.Task DeleteHomeworkSubmission(Guid homeworkSubmissionId)
     {
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
-            foreach (var homeworkSubmissionId in homeworkSubmissionIds)
-            {
-                await unitOfWork.HomeworkSubmissions.Delete(homeworkSubmissionId);
-            }
+            await unitOfWork.HomeworkSubmissions.Delete(homeworkSubmissionId);
 
             await unitOfWork.SaveChangesAsync();
         }

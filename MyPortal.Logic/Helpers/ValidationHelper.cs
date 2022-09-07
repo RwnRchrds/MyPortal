@@ -22,7 +22,7 @@ namespace MyPortal.Logic.Helpers
 
             var chars = upn.ToCharArray();
 
-            var checkDigit = GetUpnCheckDigit(chars[new Range(1, 12)]);
+            var checkDigit = GetUpnCheckDigit(chars[new Range(1, 13)]);
 
             return chars[0] == checkDigit;
         }
@@ -47,9 +47,9 @@ namespace MyPortal.Logic.Helpers
             
             var check = 0;
 
-            for (var i = 1; i < baseUpn.Length; i++)
+            for (var i = 1; i < baseUpn.Length + 1; i++)
             {
-                if (int.TryParse(baseUpn[i].ToString(), out var x))
+                if (int.TryParse(baseUpn[i-1].ToString(), out var x))
                 {
                     var n = x * (i + 1);
                     check += n;

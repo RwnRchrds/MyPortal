@@ -33,11 +33,11 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<IEnumerable<LogNoteModel>> GetLogNotesByStudent(Guid studentId, Guid academicYearId, bool includeRestricted)
+        public async Task<IEnumerable<LogNoteModel>> GetLogNotesByStudent(Guid studentId, Guid academicYearId, bool includePrivate)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var logNotes = await unitOfWork.LogNotes.GetByStudent(studentId, academicYearId, includeRestricted);
+                var logNotes = await unitOfWork.LogNotes.GetByStudent(studentId, academicYearId, includePrivate);
 
                 return logNotes.OrderByDescending(n => n.CreatedDate).Select(l => new LogNoteModel(l)).ToList();
             }
@@ -53,72 +53,61 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateLogNote(params CreateLogNoteRequestModel[] logNoteObjects)
+        public async Task CreateLogNote(LogNoteRequestModel logNoteModel)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var logNoteObject in logNoteObjects)
+                await AcademicHelper.IsAcademicYearLocked(logNoteModel.AcademicYearId, true);
+
+                var createDate = DateTime.Now;
+
+                var logNote = new LogNote
                 {
-                    await AcademicHelper.IsAcademicYearLocked(logNoteObject.AcademicYearId, true);
+                    TypeId = logNoteModel.TypeId,
+                    Message = logNoteModel.Message,
+                    StudentId = logNoteModel.StudentId,
+                    CreatedDate = createDate,
+                    CreatedById = logNoteModel.CreatedById,
+                    AcademicYearId = logNoteModel.AcademicYearId
+                };
 
-                    var createDate = DateTime.Now;
-
-                    var logNote = new LogNote
-                    {
-                        TypeId = logNoteObject.TypeId,
-                        Message = logNoteObject.Message,
-                        StudentId = logNoteObject.StudentId,
-                        CreatedDate = createDate,
-                        CreatedById = logNoteObject.CreatedById,
-                        AcademicYearId = logNoteObject.AcademicYearId
-                    };
-
-                    unitOfWork.LogNotes.Create(logNote);
-                }
+                unitOfWork.LogNotes.Create(logNote);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task UpdateLogNote(params UpdateLogNoteRequestModel[] logNoteObjects)
+        public async Task UpdateLogNote(Guid logNoteId, LogNoteRequestModel logNoteModel)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var logNoteObject in logNoteObjects)
-                {
-                    var logNote = await unitOfWork.LogNotes.GetById(logNoteObject.Id);
+                var logNote = await unitOfWork.LogNotes.GetById(logNoteId);
                     
-                    await AcademicHelper.IsAcademicYearLocked(logNote.AcademicYearId, true);
+                await AcademicHelper.IsAcademicYearLocked(logNote.AcademicYearId, true);
 
-                    var updateDate = DateTime.Now;
-
-                    if (logNote == null)
-                    {
-                        throw new NotFoundException("Log note not found.");
-                    }
-
-                    logNote.TypeId = logNoteObject.TypeId;
-                    logNote.Message = logNoteObject.Message;
-
-                    await unitOfWork.LogNotes.Update(logNote);
+                if (logNote == null)
+                {
+                    throw new NotFoundException("Log note not found.");
                 }
+
+                logNote.TypeId = logNoteModel.TypeId;
+                logNote.Message = logNoteModel.Message;
+
+                await unitOfWork.LogNotes.Update(logNote);
 
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task DeleteLogNote(params Guid[] logNoteIds)
+        public async Task DeleteLogNote(Guid logNoteId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var logNoteId in logNoteIds)
-                {
-                    var logNote = await GetLogNoteById(logNoteId);
+                var logNote = await GetLogNoteById(logNoteId);
 
-                    await AcademicHelper.IsAcademicYearLocked(logNote.AcademicYearId, true);
+                await AcademicHelper.IsAcademicYearLocked(logNote.AcademicYearId, true);
 
-                    await unitOfWork.LogNotes.Delete(logNoteId);
-                }
+                await unitOfWork.LogNotes.Delete(logNoteId);
 
                 await unitOfWork.SaveChangesAsync();
             }

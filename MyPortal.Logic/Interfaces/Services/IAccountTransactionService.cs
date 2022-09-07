@@ -6,6 +6,6 @@ namespace MyPortal.Logic.Interfaces.Services;
 
 public interface IAccountTransactionService
 {
-    Task CreateAccountTransaction(params CreateAccountTransactionRequestModel[] models);
-    Task DeleteAccountTransaction(params Guid[] transactionIds);
+    Task CreateAccountTransaction(AccountTransactionRequestModel accountTransaction);
+    Task DeleteAccountTransaction(Guid transactionId);
 }

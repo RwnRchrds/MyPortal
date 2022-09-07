@@ -23,34 +23,16 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("")]
         [Permission(PermissionValue.CurriculumAcademicStructure)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> CreateAcademicYear([FromBody] CreateAcademicYearRequestModel requestModel)
+        public async Task<IActionResult> CreateAcademicYear([FromBody] AcademicYearRequestModel requestModel)
         {
             try
             {
                 await _academicYearService.CreateAcademicYear(requestModel);
 
                 return Ok();
-            }
-            catch (Exception e)
-            {
-                return HandleException(e);
-            }
-        }
-
-        [HttpPost]
-        [Route("generate")]
-        [Permission(PermissionValue.CurriculumAcademicStructure)]
-        [ProducesResponseType(typeof(CreateAcademicTermRequestModel), 200)]
-        public async Task<IActionResult> GenerateAttendanceWeeks([FromBody] CreateAcademicTermRequestModel requestModel)  
-        {
-            try
-            {
-                var generatedModel = _academicYearService.GenerateAttendanceWeeks(requestModel);
-
-                return Ok(generatedModel);
             }
             catch (Exception e)
             {

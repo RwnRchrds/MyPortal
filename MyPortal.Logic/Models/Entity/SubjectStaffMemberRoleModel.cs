@@ -7,7 +7,9 @@ namespace MyPortal.Logic.Models.Entity
     {
         public SubjectStaffMemberRoleModel(SubjectStaffMemberRole model) : base(model)
         {
-            
+            SubjectLeader = model.SubjectLeader;
         }
+        
+        public bool SubjectLeader { get; set; }
     }
 }

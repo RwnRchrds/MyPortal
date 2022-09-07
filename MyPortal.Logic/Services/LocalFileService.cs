@@ -23,7 +23,7 @@ namespace MyPortal.Logic.Services
             _fileProvider = fileProvider;
         }
 
-        public async Task UploadFileToDocument(UploadAttachmentRequestModel upload)
+        public async Task UploadFileToDocument(FileUploadRequestModel upload)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

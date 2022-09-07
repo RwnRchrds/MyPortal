@@ -36,35 +36,23 @@ namespace MyPortal.Tests
         }
 
         [Test]
-        public void ValidateNhsNumber_WhenValid()
+        [TestCase("643 792 7186", true)]
+        [TestCase("643 792 7187", false)]
+        public void ValidateNhsNumber_ReturnsCorrectResult(string nhsNumber, bool expectedResult)
         {
-            var isValid = ValidationHelper.ValidateNhsNumber("643 792 7186");
+            var isValid = ValidationHelper.ValidateNhsNumber(nhsNumber);
             
-            Assert.IsTrue(isValid);
+            Assert.That(isValid, Is.EqualTo(expectedResult));
         }
 
         [Test]
-        public void ValidateNhsNumber_WhenInvalid()
+        [TestCase("H801200001001", true)]
+        [TestCase("G801200001001", false)]
+        public void ValidateUpn_ReturnsCorrectResult(string upn, bool expectedResult)
         {
-            var isValid = ValidationHelper.ValidateNhsNumber("643 792 7187");
-
-            Assert.IsFalse(isValid);
-        }
-
-        [Test]
-        public void ValidateUpn_WhenValid()
-        {
-            var isValid = ValidationHelper.ValidateUpn("H801200001001");
+            var isValid = ValidationHelper.ValidateUpn(upn);
             
-            Assert.IsTrue(isValid);
-        }
-
-        [Test]
-        public void ValidateUpn_WhenInvalid()
-        {
-            var isValid = ValidationHelper.ValidateUpn("G801200001001");
-
-            Assert.IsFalse(isValid);
+            Assert.That(isValid, Is.EqualTo(expectedResult));
         }
 
         [Test]

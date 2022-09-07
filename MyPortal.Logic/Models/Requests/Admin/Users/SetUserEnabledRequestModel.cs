@@ -5,8 +5,7 @@ using System.Text;
 namespace MyPortal.Logic.Models.Requests.Admin.Users
 {
     public class SetUserEnabledRequestModel
-    {
-        public Guid UserId { get; set; }
+    { 
         public bool Enabled { get; set; }
     }
 }

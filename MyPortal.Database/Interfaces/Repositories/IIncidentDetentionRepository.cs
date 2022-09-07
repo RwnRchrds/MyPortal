@@ -7,6 +7,6 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IIncidentDetentionRepository : IReadWriteRepository<StudentIncidentDetention>
     {
-        Task<StudentIncidentDetention> Get(Guid detentionId, Guid studentId);
+        Task<StudentIncidentDetention> GetByStudentIncident(Guid detentionId, Guid studentIncidentId);
     }
 }

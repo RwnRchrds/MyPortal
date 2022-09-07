@@ -25,7 +25,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("generate/{chargeBillingPeriodId}")]
+        [Route("drafts/{chargeBillingPeriodId}")]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.FinanceEditBills)]
         [ProducesResponseType(typeof(IEnumerable<BillModel>), 200)]

@@ -14,6 +14,7 @@ namespace MyPortal.Logic
 
         private string _installLocation;
         private string _connectionString;
+        private string _fileEncryptionKey;
         private FileProvider _fileProvider;
         private GoogleConfig _googleConfig;
         private DatabaseProvider _databaseProvider;
@@ -100,6 +101,15 @@ namespace MyPortal.Logic
             {
                 TestConnection(value);
                 _connectionString = value;
+            }
+        }
+
+        public string FileEncryptionKey
+        {
+            get { return _fileEncryptionKey; }
+            set
+            {
+                _fileEncryptionKey = value;
             }
         }
 

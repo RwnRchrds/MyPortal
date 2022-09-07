@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Models.Data
             {
                 Id = eventModel.Id.Value.ToString("N");
             }
-            AllDay = eventModel.IsAllDay;
+            AllDay = eventModel.AllDay;
             Start = eventModel.StartTime;
             End = eventModel.EndTime;
             Title = eventModel.Subject;

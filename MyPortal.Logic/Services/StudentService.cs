@@ -127,7 +127,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateStudent(params CreateStudentRequestModel[] students)
+        public async Task CreateStudent(StudentRequestModel request)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -135,41 +135,38 @@ namespace MyPortal.Logic.Services
 
                 var nextAdmissionNumber = admissionNumbers.Any() ? admissionNumbers.Max() + 1 : 1;
 
-                foreach (var request in students)
+                var createDate = DateTime.Now;
+                var groupIds = new List<Guid>() {request.YearGroupId, request.RegGroupId};
+
+                if (request.HouseId.HasValue)
                 {
-                    var createDate = DateTime.Now;
-                    var groupIds = new List<Guid>() {request.YearGroupId, request.RegGroupId};
-
-                    if (request.HouseId.HasValue)
-                    {
-                        groupIds.Add(request.HouseId.Value);
-                    }
-                    
-                    var student = new Student
-                    {
-                        AdmissionNumber = nextAdmissionNumber,
-                        DateStarting = request.DateStarting,
-                        SenStatusId = request.SenStatusId,
-                        SenTypeId = request.SenTypeId,
-                        EnrolmentStatusId = request.EnrolmentStatusId,
-                        BoarderStatusId = request.BoarderStatusId,
-                        PupilPremium = request.PupilPremium,
-                        Person = PersonHelper.CreatePerson(request)
-                    };
-
-                    foreach (var groupId in groupIds)
-                    {
-                        student.StudentGroupMemberships.Add(new StudentGroupMembership
-                        {
-                            StudentGroupId = groupId,
-                            StartDate = createDate
-                        });
-                    }
-                    
-                    unitOfWork.Students.Create(student);
-
-                    nextAdmissionNumber++;
+                    groupIds.Add(request.HouseId.Value);
                 }
+                    
+                var student = new Student
+                {
+                    AdmissionNumber = nextAdmissionNumber,
+                    DateStarting = request.DateStarting,
+                    DateLeaving = request.DateLeaving,
+                    Upn = request.Upn,
+                    SenStatusId = request.SenStatusId,
+                    SenTypeId = request.SenTypeId,
+                    EnrolmentStatusId = request.EnrolmentStatusId,
+                    BoarderStatusId = request.BoarderStatusId,
+                    PupilPremium = request.PupilPremium,
+                    Person = PersonHelper.CreatePerson(request)
+                };
+
+                foreach (var groupId in groupIds)
+                {
+                    student.StudentGroupMemberships.Add(new StudentGroupMembership
+                    {
+                        StudentGroupId = groupId,
+                        StartDate = createDate
+                    });
+                }
+                    
+                unitOfWork.Students.Create(student);
 
                 await unitOfWork.SaveChangesAsync();
             }
@@ -222,28 +219,25 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task UpdateStudent(params UpdateStudentRequestModel[] models)
+        public async Task UpdateStudent(Guid studentId, StudentRequestModel model)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var model in models)
-                {
-                    var student = await unitOfWork.Students.GetById(model.Id);
+                var student = await unitOfWork.Students.GetById(studentId);
 
-                    student.DateStarting = model.DateStarting;
-                    student.DateLeaving = model.DateLeaving;
-                    student.SenStatusId = model.SenStatusId;
-                    student.SenTypeId = model.SenTypeId;
-                    student.EnrolmentStatusId = model.EnrolmentStatusId;
-                    student.BoarderStatusId = model.BoarderStatusId;
-                    student.PupilPremium = model.PupilPremium;
-                    student.Upn = model.Upn;
+                student.DateStarting = model.DateStarting;
+                student.DateLeaving = model.DateLeaving;
+                student.SenStatusId = model.SenStatusId;
+                student.SenTypeId = model.SenTypeId;
+                student.EnrolmentStatusId = model.EnrolmentStatusId;
+                student.BoarderStatusId = model.BoarderStatusId;
+                student.PupilPremium = model.PupilPremium;
+                student.Upn = model.Upn;
                     
-                    PersonHelper.UpdatePerson(student.Person, model);
+                PersonHelper.UpdatePerson(student.Person, model);
 
-                    await unitOfWork.People.Update(student.Person);
-                    await unitOfWork.Students.Update(student);
-                }
+                await unitOfWork.People.Update(student.Person);
+                await unitOfWork.Students.Update(student);
 
                 await unitOfWork.SaveChangesAsync();
             }

@@ -7,7 +7,7 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models.Entity
 {
     [Table("AttendanceCodes")]
-    public partial class AttendanceCode : BaseTypes.Entity, ICensusEntity, IActivatable
+    public class AttendanceCode : BaseTypes.Entity, ICensusEntity, IActivatable
     {
         [Column(Order = 1)]
         [Required]
@@ -25,7 +25,7 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 4)]
         public bool Active { get; set; }
 
-        // TODO: Add permission for using restricted codes
+        // Only users with the UseRestrictedCodes permission can use these
         [Column(Order = 5)]
         public bool Restricted { get; set; }
         

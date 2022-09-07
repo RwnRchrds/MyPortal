@@ -7,7 +7,7 @@ namespace MyPortal.Logic.Helpers
 {
     internal static class PersonHelper
     {
-        public static Person CreatePerson(CreatePersonRequestModel model)
+        public static Person CreatePerson(PersonRequestModel model)
         {
             var createDate = DateTime.Now;
 
@@ -32,7 +32,7 @@ namespace MyPortal.Logic.Helpers
             };
         }
 
-        public static void UpdatePerson(Person person, UpdatePersonRequestModel requestModel)
+        public static void UpdatePerson(Person person, PersonRequestModel requestModel)
         {
             person.FirstName = requestModel.FirstName;
             person.PreferredFirstName = requestModel.PreferredFirstName;

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using MyPortal.Database;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 
 namespace MyPortal.Logic.Helpers
@@ -17,8 +18,20 @@ namespace MyPortal.Logic.Helpers
         {
             CheckConnectionString();
 
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseSqlServer(Configuration.Instance.ConnectionString).Options;
+            var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
+            DbContextOptions<ApplicationDbContext> options;
+
+            switch (Configuration.Instance.DatabaseProvider)
+            {
+                case DatabaseProvider.MsSqlServer:
+                    options = builder.UseSqlServer(Configuration.Instance.ConnectionString).Options;
+                    break;
+                case DatabaseProvider.MySql:
+                    options = builder.UseMySQL(Configuration.Instance.ConnectionString).Options;
+                    break;
+                default:
+                    throw new ConfigurationException("A database provider has not been set.");
+            }
 
             return new ApplicationDbContext(options);
         }

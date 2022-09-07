@@ -25,11 +25,6 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Subject role not found.");
             }
 
-            if (role.System)
-            {
-                throw ExceptionHelper.UpdateSystemEntityException;
-            }
-
             role.Description = entity.Description;
             role.Active = entity.Active;
         }

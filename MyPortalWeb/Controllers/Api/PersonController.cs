@@ -17,7 +17,6 @@ using MyPortalWeb.Controllers.BaseControllers;
 namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
-    [Route("api/people")]
     public class PersonController : PersonalDataController
     {
         public PersonController(IStudentService studentService, IPersonService personService, IUserService userService,
@@ -28,7 +27,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpGet]
         [Authorize(Policy = Policies.UserType.Staff)]
-        [Route("search")]
+        [Route("api/people")]
         [ProducesResponseType(typeof(IEnumerable<PersonSearchResultResponseModel>), 200)]
         public async Task<IActionResult> SearchPeople([FromQuery] PersonSearchOptions searchModel)
         {
@@ -45,7 +44,7 @@ namespace MyPortalWeb.Controllers.Api
         }
         
         [HttpGet]
-        [Route("user/{userId}")]
+        [Route("api/users/{userId}/person")]
         [ProducesResponseType(typeof(PersonModel), 200)]
         public async Task<IActionResult> GetPersonByUser([FromRoute] Guid userId)
         {

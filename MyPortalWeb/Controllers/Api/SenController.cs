@@ -12,7 +12,6 @@ using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
 {
-    [Route("api/send")]
     public class SenController : BaseApiController
     {
         private ISenService _senService;
@@ -24,7 +23,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("giftedTalented/student/{studentId}")]
+        [Route("api/students/{studentId}/send/giftedTalented")]
         [Permission(PermissionValue.StudentViewSenDetails)]
         [ProducesResponseType(typeof(IEnumerable<GiftedTalentedModel>), 200)]
         public async Task<IActionResult> GetGiftedTalentedByStudent([FromRoute] Guid studentId)
