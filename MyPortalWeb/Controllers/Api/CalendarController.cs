@@ -15,7 +15,6 @@ using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
 {
-    [Microsoft.AspNetCore.Components.Route("api/calendar")]
     [Authorize]
     public class CalendarController : PersonalDataController
     {
@@ -29,7 +28,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("person/{personId}")]
+        [Route("api/people/{personId}/calendar")]
         [ProducesResponseType(typeof(IEnumerable<CalendarEventModel>), 200)]
         public async Task<IActionResult> GetCalendarEventsByPerson([FromRoute] Guid personId,
             [FromQuery] DateTime? dateFrom, [FromQuery] DateTime? dateTo)
@@ -76,6 +75,42 @@ namespace MyPortalWeb.Controllers.Api
                 model.CreatedById = userId;
                 
                 await _calendarService.CreateEvent(model);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        [HttpPut]
+        [Route("events/{eventId}")]
+        [Permission(PermissionValue.SchoolEditSchoolDiary)]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> UpdateEvent([FromRoute] Guid eventId, [FromBody] EventRequestModel model)
+        {
+            try
+            {
+                await _calendarService.UpdateEvent(eventId, model);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        [HttpDelete]
+        [Route("events/{eventId}")]
+        [Permission(PermissionValue.SchoolEditSchoolDiary)]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> DeleteEvent([FromRoute] Guid eventId)
+        {
+            try
+            {
+                await _calendarService.DeleteEvent(eventId);
 
                 return Ok();
             }

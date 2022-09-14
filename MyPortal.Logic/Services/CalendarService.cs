@@ -209,7 +209,17 @@ namespace MyPortal.Logic.Services
                 await unitOfWork.SaveChangesAsync();
             }
         }
-        
+
+        public async Task DeleteEvent(Guid eventId)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                await unitOfWork.DiaryEvents.Delete(eventId);
+
+                await unitOfWork.SaveChangesAsync();
+            }
+        }
+
         public async Task CreateOrUpdateEventAttendees(Guid eventId, params EventAttendeesRequestModel[] models)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

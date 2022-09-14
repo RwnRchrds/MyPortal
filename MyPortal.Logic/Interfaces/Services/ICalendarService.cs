@@ -17,6 +17,8 @@ namespace MyPortal.Logic.Interfaces.Services
 
         Task UpdateEvent(Guid eventId, EventRequestModel model);
 
+        Task DeleteEvent(Guid eventId);
+
         Task CreateOrUpdateEventAttendees(Guid eventId, EventAttendeesRequestModel[] models);
     }
 }
