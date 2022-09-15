@@ -119,5 +119,41 @@ namespace MyPortalWeb.Controllers.Api
                 return HandleException(e);
             }
         }
+        
+        [HttpPost]
+        [Route("events/{eventId}/attendees")]
+        [Permission(PermissionValue.SchoolEditSchoolDiary)]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> CreateOrUpdateAttendees([FromRoute] Guid eventId, [FromBody] EventAttendeesRequestModel model)
+        {
+            try
+            {
+                await _calendarService.CreateOrUpdateEventAttendees(eventId, model);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        [HttpDelete]
+        [Route("events/{eventId}/attendees/{personId}")]
+        [Permission(PermissionValue.SchoolEditSchoolDiary)]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> DeleteAttendee([FromRoute] Guid eventId, [FromRoute] Guid personId)
+        {
+            try
+            {
+                await _calendarService.DeleteEventAttendee(eventId, personId);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
     }
 }

@@ -220,42 +220,54 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateOrUpdateEventAttendees(Guid eventId, params EventAttendeesRequestModel[] models)
+        public async Task CreateOrUpdateEventAttendees(Guid eventId, EventAttendeesRequestModel model)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                foreach (var model in models)
+                var attendees = (await unitOfWork.DiaryEventAttendees.GetByEvent(eventId)).ToArray();
+
+                foreach (var attendee in model.Attendees)
                 {
-                    var attendees = (await unitOfWork.DiaryEventAttendees.GetByEvent(eventId)).ToArray();
+                    var existingAttendee = attendees.FirstOrDefault(a => a.PersonId == attendee.PersonId);
 
-                    foreach (var attendee in model.Attendees)
+                    if (existingAttendee != null)
                     {
-                        var existingAttendee = attendees.FirstOrDefault(a => a.PersonId == attendee.PersonId);
+                        existingAttendee.Required = attendee.Required;
+                        existingAttendee.CanEdit = attendee.CanEdit;
+                        existingAttendee.Attended = attendee.Attended;
+                        existingAttendee.ResponseId = attendee.ResponseId;
 
-                        if (existingAttendee != null)
-                        {
-                            existingAttendee.Required = attendee.Required;
-                            existingAttendee.CanEdit = attendee.CanEdit;
-                            existingAttendee.Attended = attendee.Attended;
-                            existingAttendee.ResponseId = attendee.ResponseId;
-
-                            await unitOfWork.DiaryEventAttendees.Update(existingAttendee);
-                        }
-                        else
-                        {
-                            var newAttendee = new DiaryEventAttendee
-                            {
-                                EventId = eventId,
-                                PersonId = attendee.PersonId,
-                                Required = attendee.Required,
-                                CanEdit = attendee.CanEdit,
-                                ResponseId = attendee.ResponseId,
-                                Attended = attendee.Attended
-                            };
-                            
-                            unitOfWork.DiaryEventAttendees.Create(newAttendee);
-                        }
+                        await unitOfWork.DiaryEventAttendees.Update(existingAttendee);
                     }
+                    else
+                    {
+                        var newAttendee = new DiaryEventAttendee
+                        {
+                            EventId = eventId,
+                            PersonId = attendee.PersonId,
+                            Required = attendee.Required,
+                            CanEdit = attendee.CanEdit,
+                            ResponseId = attendee.ResponseId,
+                            Attended = attendee.Attended
+                        };
+                            
+                        unitOfWork.DiaryEventAttendees.Create(newAttendee);
+                    }
+                }
+
+                await unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteEventAttendee(Guid eventId, Guid personId)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var attendees = await unitOfWork.DiaryEventAttendees.GetByEvent(eventId);
+
+                foreach (var attendee in attendees.Where(a => a.PersonId == personId))
+                {
+                    await unitOfWork.DiaryEventAttendees.Delete(attendee.Id);
                 }
 
                 await unitOfWork.SaveChangesAsync();

@@ -152,13 +152,11 @@ namespace MyPortal.Logic.Services
                     WeekPatternId = weekPatterns[patternIndex].WeekPatternId
                 });
 
-                if (patternIndex == weekPatterns.Length - 1)
+                patternIndex++;
+
+                if (patternIndex == weekPatterns.Length)
                 {
                     patternIndex = 0;
-                }
-                else
-                {
-                    patternIndex++;
                 }
 
                 currentWeekBeginning = currentWeekBeginning.AddDays(7);
