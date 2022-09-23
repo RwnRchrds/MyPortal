@@ -15,6 +15,6 @@ namespace MyPortal.Logic.Interfaces.Services
         Task DeleteRole(Guid roleId);
         Task<TreeNode> GetPermissionsTree(Guid roleId);
         Task<IEnumerable<RoleModel>> GetRoles(string roleName);
-        Task<RoleModel> GetRoleById(Guid roleId);
+        Task<RoleModel> GetRoleById(Guid roleId, bool useCache);
     }
 }

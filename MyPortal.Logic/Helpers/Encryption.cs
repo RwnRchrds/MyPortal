@@ -30,7 +30,7 @@ namespace MyPortal.Logic.Helpers
             using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
             {
                 var keyBytes = password.GetBytes(Keysize / 8);
-                using (var symmetricKey = new RijndaelManaged())
+                using (var symmetricKey = Aes.Create())
                 {
                     symmetricKey.BlockSize = 128;
                     symmetricKey.Mode = CipherMode.CBC;
@@ -71,7 +71,7 @@ namespace MyPortal.Logic.Helpers
             using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
             {
                 var keyBytes = password.GetBytes(Keysize / 8);
-                using (var symmetricKey = new RijndaelManaged())
+                using (var symmetricKey = Aes.Create())
                 {
                     symmetricKey.BlockSize = 128;
                     symmetricKey.Mode = CipherMode.CBC;
@@ -97,7 +97,7 @@ namespace MyPortal.Logic.Helpers
         private static byte[] Generate128BitsOfRandomEntropy()
         {
             var randomBytes = new byte[16]; // 16 Bytes will give us 128 bits.
-            using (var rngCsp = new RNGCryptoServiceProvider())
+            using (var rngCsp = RandomNumberGenerator.Create())
             {
                 // Fill the array with cryptographically secure random bytes.
                 rngCsp.GetBytes(randomBytes);

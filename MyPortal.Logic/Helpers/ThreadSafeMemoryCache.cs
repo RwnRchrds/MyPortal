@@ -13,7 +13,7 @@ namespace MyPortal.Logic.Helpers
         private MemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
         private ConcurrentDictionary<object, SemaphoreSlim> _locks = new ConcurrentDictionary<object, SemaphoreSlim>();
 
-        public async Task<TItem> Get(object key)
+        public TItem Get(object key)
         {
             if (!_cache.TryGetValue(key, out TItem cacheEntry))
             {
@@ -21,6 +21,27 @@ namespace MyPortal.Logic.Helpers
             }
 
             return cacheEntry;
+        }
+
+        public async Task Purge(object key)
+        {
+            if (!_cache.TryGetValue(key, out _))// Look for cache key.
+            {
+                SemaphoreSlim mylock = _locks.GetOrAdd(key, k => new SemaphoreSlim(1, 1));
+
+                await mylock.WaitAsync();
+                try
+                {
+                    if (_cache.TryGetValue(key, out TItem cacheEntry))
+                    {
+                        _cache.Remove(key);
+                    }
+                }
+                finally
+                {
+                    mylock.Release();
+                }
+            }
         }
 
         public async Task<TItem> GetOrCreate(object key, Func<Task<TItem>> createItem, TimeSpan? cacheEntryLifespan = null)

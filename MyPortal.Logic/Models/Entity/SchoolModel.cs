@@ -17,7 +17,6 @@ namespace MyPortal.Logic.Models.Entity
 
         private void LoadFromModel(School model)
         {
-            Name = model.Name;
             LocalAuthorityId = model.LocalAuthorityId;
             EstablishmentNumber = model.EstablishmentNumber;
             Urn = model.Urn;
@@ -27,10 +26,6 @@ namespace MyPortal.Logic.Models.Entity
             GovernanceTypeId = model.GovernanceTypeId;
             IntakeTypeId = model.IntakeTypeId;
             HeadTeacherId = model.HeadTeacherId;
-            TelephoneNo = model.TelephoneNo;
-            FaxNo = model.FaxNo;
-            EmailAddress = model.EmailAddress;
-            Website = model.Website;
             Local = model.Local;
 
             if (model.SchoolPhase != null)
@@ -63,9 +58,7 @@ namespace MyPortal.Logic.Models.Entity
                 LocalAuthority = new LocalAuthorityModel(model.LocalAuthority);
             }
         }
-        
-        public string Name { get; set; }
-        
+
         public Guid? LocalAuthorityId { get; set; }
         
         public int EstablishmentNumber { get; set; }
@@ -87,23 +80,7 @@ namespace MyPortal.Logic.Models.Entity
         public Guid IntakeTypeId { get; set; }
         
         public Guid? HeadTeacherId { get; set; }
-        
-        [Phone]
-        [StringLength(128)]
-        public string TelephoneNo { get; set; }
-        
-        [Phone]
-        [StringLength(128)]
-        public string FaxNo { get; set; }
-        
-        [EmailAddress]
-        [StringLength(128)]
-        public string EmailAddress { get; set; }
-        
-        [Url]
-        [StringLength(128)]
-        public string Website { get; set; }
-        
+
         public bool Local { get; set; }
 
         public virtual SchoolPhaseModel SchoolPhase { get; set; }

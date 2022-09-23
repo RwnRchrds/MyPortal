@@ -24,6 +24,7 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
+            JoinEntity(query, "Agencies", "A", "AgencyId");
             JoinEntity(query, "SchoolPhases", "SP", "PhaseId");
             JoinEntity(query, "SchoolTypes", "ST", "TypeId");
             JoinEntity(query, "GovernanceTypes", "GT", "GovernanceTypeId");
@@ -36,6 +37,7 @@ namespace MyPortal.Database.Repositories
 
         protected override Query SelectAllRelated(Query query)
         {
+            query.SelectAllColumns(typeof(Agency), "A");
             query.SelectAllColumns(typeof(SchoolPhase), "SP");
             query.SelectAllColumns(typeof(SchoolType), "ST");
             query.SelectAllColumns(typeof(GovernanceType), "GT");
@@ -51,16 +53,17 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var schools = await Transaction.Connection
-                .QueryAsync<School, SchoolPhase, SchoolType, GovernanceType, IntakeType, Person, LocalAuthority,
-                    School>(sql.Sql,
-                    (school, phase, type, govType, intakeType, headTeacher, la) =>
+                .QueryAsync(sql.Sql,
+                    new [] { typeof(School), typeof(Agency), typeof(SchoolPhase), typeof(SchoolType), typeof(GovernanceType), typeof(IntakeType), typeof(Person), typeof(LocalAuthority)}, (objects) =>
                     {
-                        school.SchoolPhase = phase;
-                        school.Type = type;
-                        school.GovernanceType = govType;
-                        school.IntakeType = intakeType;
-                        school.HeadTeacher = headTeacher;
-                        school.LocalAuthority = la;
+                        var school = (School)objects[0];
+                        school.Agency = (Agency)objects[1];
+                        school.SchoolPhase = (SchoolPhase)objects[2];
+                        school.Type = (SchoolType)objects[3];
+                        school.GovernanceType = (GovernanceType)objects[4];
+                        school.IntakeType = (IntakeType)objects[5];
+                        school.HeadTeacher = (Person)objects[6];
+                        school.LocalAuthority = (LocalAuthority)objects[7];
 
                         return school;
                     }, sql.NamedBindings, Transaction);
@@ -70,7 +73,11 @@ namespace MyPortal.Database.Repositories
 
         public async Task<string> GetLocalSchoolName()
         {
-            var query = GenerateEmptyQuery().Select($"{TblAlias}.Name");
+            var query = GenerateEmptyQuery();
+
+            JoinRelated(query);
+
+            query.Select("A.Name");
 
             query.Where($"{TblAlias}.Local", true);
 
@@ -94,8 +101,7 @@ namespace MyPortal.Database.Repositories
             {
                 throw new EntityNotFoundException("School not found.");
             }
-
-            school.Name = entity.Name;
+            
             school.LocalAuthorityId = entity.LocalAuthorityId;
             school.EstablishmentNumber = entity.EstablishmentNumber;
             school.Urn = entity.Urn;
@@ -105,10 +111,6 @@ namespace MyPortal.Database.Repositories
             school.GovernanceTypeId = entity.GovernanceTypeId;
             school.IntakeTypeId = entity.IntakeTypeId;
             school.HeadTeacherId = entity.HeadTeacherId;
-            school.TelephoneNo = entity.TelephoneNo;
-            school.FaxNo = entity.FaxNo;
-            school.EmailAddress = entity.EmailAddress;
-            school.Website = entity.Website;
         }
     }
 }

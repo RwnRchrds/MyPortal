@@ -25,7 +25,7 @@ namespace MyPortal.Database
         private IAchievementRepository _achievements;
         private IAchievementTypeRepository _achievementTypes;
         private IActivityRepository _activities;
-        private IAddressPersonRepository _addressPersons;
+        private IAddressLinkRepository _addressLinks;
         private IAddressRepository _addresses;
         private IAddressTypeRepository _addressTypes;
         private IAgencyRepository _agencies;
@@ -236,8 +236,8 @@ namespace MyPortal.Database
         public IActivityRepository Activities =>
             _activities ??= new ActivityRepository(_context, _transaction);
 
-        public IAddressPersonRepository AddressPersons =>
-            _addressPersons ??= new AddressPersonRepository(_context, _transaction);
+        public IAddressLinkRepository AddressLinks =>
+            _addressLinks ??= new AddressLinkRepository(_context, _transaction);
 
         public IAddressRepository Addresses =>
             _addresses ??= new AddressRepository(_context, _transaction);
@@ -828,7 +828,7 @@ namespace MyPortal.Database
             _achievements = null;
             _achievementTypes = null;
             _activities = null;
-            _addressPersons = null;
+            _addressLinks = null;
             _addressTypes = null;
             _addresses = null;
             _agencies = null;

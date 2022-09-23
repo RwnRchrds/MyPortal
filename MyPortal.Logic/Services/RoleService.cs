@@ -114,6 +114,8 @@ namespace MyPortal.Logic.Services
             {
                 await SetPermissions(roleInDb.Id, request.Permissions);
             }
+
+            await CacheHelper.RoleCache.Purge(roleId);
         }
 
         public async Task DeleteRole(Guid roleId)
@@ -132,6 +134,8 @@ namespace MyPortal.Logic.Services
                 }
 
                 await _roleManager.DeleteAsync(roleInDb);
+
+                await CacheHelper.RoleCache.Purge(roleId);
             }
         }
 
@@ -149,9 +153,20 @@ namespace MyPortal.Logic.Services
             return roles.OrderBy(r => r.Description).Select(r => new RoleModel(r));
         }
 
-        public async Task<RoleModel> GetRoleById(Guid roleId)
+        public async Task<RoleModel> GetRoleById(Guid roleId, bool useCache)
         {
-            var role = await _roleManager.FindByIdAsync(roleId.ToString());
+            Role role;
+            
+            if (useCache)
+            {
+                // Eliminates latency between the web app and database during permission checks
+                role = await CacheHelper.RoleCache.GetOrCreate(roleId,
+                    async () => await _roleManager.FindByIdAsync(roleId.ToString()));
+            }
+            else
+            {
+                role = await _roleManager.FindByIdAsync(roleId.ToString());
+            }
 
             if (role == null)
             {

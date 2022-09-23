@@ -43,12 +43,11 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var agencies = await Transaction.Connection.QueryAsync<Agency, AgencyType, Address, Directory, Agency>(
+            var agencies = await Transaction.Connection.QueryAsync<Agency, AgencyType, Directory, Agency>(
                 sql.Sql,
-                (agency, type, address, dir) =>
+                (agency, type, dir) =>
                 {
                     agency.AgencyType = type;
-                    agency.Address = address;
                     agency.Directory = dir;
 
                     return agency;
@@ -67,7 +66,6 @@ namespace MyPortal.Database.Repositories
             }
 
             agency.TypeId = entity.TypeId;
-            agency.AddressId = entity.AddressId;
             agency.Name = entity.Name;
             agency.Website = entity.Website;
         }

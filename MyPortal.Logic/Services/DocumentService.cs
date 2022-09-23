@@ -19,8 +19,8 @@ namespace MyPortal.Logic.Services
 {
     public class DocumentService : BaseService, IDocumentService
     {
-        private readonly IUserService _userService;
-        private readonly IStaffMemberService _staffMemberService;
+        //private readonly IUserService _userService;
+        //private readonly IStaffMemberService _staffMemberService;
 
         public async Task CreateDocument(DocumentRequestModel document)
         {
@@ -129,7 +129,12 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var parentDirectory = await unitOfWork.Directories.GetById(directory.ParentId);
+                if (directory.ParentId == null)
+                {
+                    throw new LogicException("A parent directory was not provided.");
+                }
+                
+                var parentDirectory = await unitOfWork.Directories.GetById(directory.ParentId.Value);
 
                 if (parentDirectory == null)
                 {

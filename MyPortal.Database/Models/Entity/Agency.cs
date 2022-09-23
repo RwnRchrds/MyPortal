@@ -17,9 +17,6 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 1)]
         public Guid TypeId { get; set; }
 
-        [Column(Order = 2)]
-        public Guid? AddressId { get; set; }
-
         [Column(Order = 3)]
         public Guid DirectoryId { get; set; }
 
@@ -36,9 +33,10 @@ namespace MyPortal.Database.Models.Entity
         public bool Deleted { get; set; }
 
         public virtual AgencyType AgencyType { get; set; }
-        public virtual Address Address { get; set; }
         public virtual Directory Directory { get; set; }
         public virtual ICollection<Agent> Agents { get; set; }
+        public virtual ICollection<School> Schools { get; set; }
+        public virtual ICollection<AddressLink> AddressLinks { get; set; }
         public virtual ICollection<PhoneNumber> PhoneNumbers { get; set; }
         public virtual ICollection<EmailAddress> EmailAddresses { get; set; }
     }

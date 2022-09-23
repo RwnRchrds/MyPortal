@@ -108,7 +108,8 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var role = await _roleService.GetRoleById(roleId);
+                // Don't get cached version - get from database
+                var role = await _roleService.GetRoleById(roleId, false);
 
                 return Ok(role);
             }

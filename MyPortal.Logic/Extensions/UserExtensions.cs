@@ -56,7 +56,8 @@ namespace MyPortal.Logic.Extensions
             {
                 if (Guid.TryParse(roleClaim.Value, out Guid roleId))
                 {
-                    var role = await roleService.GetRoleById(roleId);
+                    // Use cached role here to improve performance
+                    var role = await roleService.GetRoleById(roleId, true);
 
                     var rolePermissions = new BitArray(role.Permissions);
 

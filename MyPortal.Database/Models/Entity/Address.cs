@@ -9,7 +9,7 @@ namespace MyPortal.Database.Models.Entity
     {
         public Address()
         {
-            People = new HashSet<AddressPerson>();
+            People = new HashSet<AddressLink>();
         }
 
         [Column(Order = 1)]
@@ -57,7 +57,7 @@ namespace MyPortal.Database.Models.Entity
         public bool Validated { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AddressPerson> People { get; set; }
+        public virtual ICollection<AddressLink> People { get; set; }
 
         public virtual ICollection<Agency> Agencies { get; set; }
     }

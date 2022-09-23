@@ -8,9 +8,9 @@ namespace MyPortal.Database.Models.Entity
     {
         public AddressType()
         {
-            AddressPersons = new HashSet<AddressPerson>();
+            AddressPersons = new HashSet<AddressLink>();
         }
         
-        public virtual ICollection<AddressPerson> AddressPersons { get; set; }
+        public virtual ICollection<AddressLink> AddressPersons { get; set; }
     }
 }

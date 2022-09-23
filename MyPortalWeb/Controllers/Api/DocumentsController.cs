@@ -428,7 +428,12 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (await CanAccessDirectory(requestModel.ParentId, true))
+                if (!requestModel.ParentId.HasValue)
+                {
+                    return Error(HttpStatusCode.BadRequest, "A parent directory was not provided.");
+                }
+                
+                if (await CanAccessDirectory(requestModel.ParentId.Value, true))
                 {
                     await _documentService.CreateDirectory(requestModel);
 

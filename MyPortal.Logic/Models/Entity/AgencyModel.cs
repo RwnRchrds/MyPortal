@@ -21,7 +21,6 @@ namespace MyPortal.Logic.Models.Entity
         private void LoadFromModel(Agency model)
         {
             TypeId = model.TypeId;
-            AddressId = model.AddressId;
             DirectoryId = model.DirectoryId;
             Website = model.Website;
             Deleted = model.Deleted;
@@ -31,11 +30,6 @@ namespace MyPortal.Logic.Models.Entity
                 AgencyType = new AgencyTypeModel(model.AgencyType);
             }
 
-            if (model.Address != null)
-            {
-                Address = new AddressModel(model.Address);
-            }
-
             if (model.Directory != null)
             {
                 Directory = new DirectoryModel(model.Directory);
@@ -43,8 +37,6 @@ namespace MyPortal.Logic.Models.Entity
         }
         
         public Guid TypeId { get; set; }
-
-        public Guid? AddressId { get; set; }
 
         public Guid DirectoryId { get; set; }
 
@@ -58,7 +50,6 @@ namespace MyPortal.Logic.Models.Entity
         public bool Deleted { get; set; }
 
         public virtual AgencyTypeModel AgencyType { get; set; }
-        public virtual AddressModel Address { get; set; }
         public virtual DirectoryModel Directory { get; set; }
         
         public async Task Load(IUnitOfWork unitOfWork)

@@ -8,9 +8,7 @@ namespace MyPortal.Database.Models.Entity
     public class School :BaseTypes.Entity
     {
         [Column(Order = 1)]
-        [Required]
-        [StringLength(256)]
-        public string Name { get; set; }
+        public Guid AgencyId { get; set; }
 
         [Column(Order = 2)]
         public Guid? LocalAuthorityId { get; set; }
@@ -43,29 +41,10 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 10)]
         public Guid? HeadTeacherId { get; set; }
 
-        [Column(Order = 11)]
-        [Phone]
-        [StringLength(128)]
-        public string TelephoneNo { get; set; }
-
-        [Column(Order = 13)]
-        [Phone]
-        [StringLength(128)]
-        public string FaxNo { get; set; }
-
-        [Column(Order = 14)]
-        [EmailAddress]
-        [StringLength(128)]
-        public string EmailAddress { get; set; }
-
-        [Column(Order = 15)]
-        [Url]
-        [StringLength(128)]
-        public string Website { get; set; }
-
         [Column(Order = 16)]
         public bool Local { get; set; }
 
+        public virtual Agency Agency { get; set; }
         public virtual SchoolPhase SchoolPhase { get; set; }
         public virtual SchoolType Type { get; set; }
         public virtual GovernanceType GovernanceType { get; set; }

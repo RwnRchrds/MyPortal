@@ -3,7 +3,7 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IAddressPersonRepository : IReadWriteRepository<AddressPerson>, IUpdateRepository<AddressPerson>
+    public interface IAddressLinkRepository : IReadWriteRepository<AddressLink>, IUpdateRepository<AddressLink>
     {
     }
 }
