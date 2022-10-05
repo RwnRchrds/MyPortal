@@ -39,8 +39,8 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Address not found.");
             }
 
-            address.HouseNumber = entity.HouseNumber;
-            address.HouseName = entity.HouseName;
+            address.BuildingNumber = entity.BuildingNumber;
+            address.BuildingName = entity.BuildingName;
             address.Apartment = entity.Apartment;
             address.Street = entity.Street;
             address.District = entity.District;

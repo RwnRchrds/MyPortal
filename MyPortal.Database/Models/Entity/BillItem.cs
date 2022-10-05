@@ -15,10 +15,10 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 3)]
         public int Quantity { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 4, TypeName = "decimal(10,2)")]
         public decimal NetAmount { get; set; }
         
-        [Column(Order = 5)] 
+        [Column(Order = 5, TypeName = "decimal(10,2)")] 
         public decimal VatAmount { get; set; }
 
         [Column(Order = 6)]

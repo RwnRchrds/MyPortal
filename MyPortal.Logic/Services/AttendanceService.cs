@@ -47,7 +47,30 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Register not found.");
                 }
 
+                var targetPeriod = await unitOfWork.AttendancePeriods.GetById(metadata.PeriodId);
+
+                if (targetPeriod == null)
+                {
+                    throw new NotFoundException("Attendance period not found.");
+                }
+
+                var periods = (await unitOfWork.AttendancePeriods.GetByWeekday(targetPeriod.Weekday))
+                    .OrderBy(p => p.Weekday).ThenBy(p => p.StartTime).ToArray();
+                
                 var register = new AttendanceRegisterResponseModel(metadata);
+
+                for (int i = 0; i < periods.Length; i++)
+                {
+                    var period = periods[i];
+                    
+                    register.Columns.Add(new AttendanceRegisterColumnModel
+                    {
+                        AttendancePeriodId = period.Id,
+                        AttendanceWeekId = metadata.AttendanceWeekId,
+                        ColumnName = period.Name,
+                        ColumnOrder = i
+                    });
+                }
 
                 var codes = await unitOfWork.AttendanceCodes.GetAll(true, false);
 
@@ -96,6 +119,8 @@ namespace MyPortal.Logic.Services
             {
                 foreach (var model in marks)
                 {
+                    Validate(model);
+                    
                     if (model.CodeId == Guid.Empty)
                     {
                         throw new AttendanceCodeException("Cannot insert blank attendance codes.");

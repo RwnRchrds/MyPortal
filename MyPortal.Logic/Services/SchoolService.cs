@@ -73,6 +73,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateBulletin(BulletinRequestModel model)
         {
+            Validate(model);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var bulletin = new Bulletin
@@ -99,6 +101,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateBulletin(Guid bulletinId, BulletinRequestModel model)
         {
+            Validate(model);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var bulletin = await unitOfWork.Bulletins.GetById(bulletinId);

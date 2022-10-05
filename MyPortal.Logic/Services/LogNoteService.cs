@@ -55,6 +55,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateLogNote(LogNoteRequestModel logNoteModel)
         {
+            Validate(logNoteModel);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 await AcademicHelper.IsAcademicYearLocked(logNoteModel.AcademicYearId, true);
@@ -79,6 +81,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateLogNote(Guid logNoteId, LogNoteRequestModel logNoteModel)
         {
+            Validate(logNoteModel);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var logNote = await unitOfWork.LogNotes.GetById(logNoteId);

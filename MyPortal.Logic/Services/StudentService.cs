@@ -129,6 +129,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateStudent(StudentRequestModel request)
         {
+            Validate(request);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var admissionNumbers = (await unitOfWork.Students.GetAdmissionNumbers()).ToArray();
@@ -221,6 +223,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateStudent(Guid studentId, StudentRequestModel model)
         {
+            Validate(model);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var student = await unitOfWork.Students.GetById(studentId);

@@ -16,6 +16,7 @@ namespace MyPortal.Logic.Models.Response.Attendance
         }
 
         public SessionMetadata Metadata { get; set; }
+        public ICollection<AttendanceRegisterColumnModel> Columns { get; set; }
         public ICollection<AttendanceCodeModel> Codes { get; set; }
         public ICollection<AttendanceRegisterStudentResponseModel> Students { get; set; }
     }

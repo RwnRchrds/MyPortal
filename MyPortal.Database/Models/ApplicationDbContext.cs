@@ -312,12 +312,6 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<Address>(e =>
                 {
                     SetIdDefaultValue(e);
-
-                    e.HasMany(x => x.People)
-                        .WithOne(x => x.Address)
-                        .HasForeignKey(x => x.AddressId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<AddressLink>(e =>
@@ -1799,7 +1793,6 @@ namespace MyPortal.Database.Models
                     e.HasMany(p => p.EmailAddresses)
                         .WithOne(ea => ea.Person)
                         .HasForeignKey(ea => ea.PersonId)
-                        .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(p => p.MedicalConditions)
@@ -2622,6 +2615,12 @@ namespace MyPortal.Database.Models
                     e.HasOne(x => x.Person)
                         .WithMany(x => x.Users)
                         .HasForeignKey(x => x.PersonId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.Results)
+                        .WithOne(x => x.CreatedBy)
+                        .HasForeignKey(x => x.CreatedById)
+                        .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.UserRoles)

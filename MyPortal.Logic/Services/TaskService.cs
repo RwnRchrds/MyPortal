@@ -19,6 +19,8 @@ namespace MyPortal.Logic.Services
     {
         public async Task CreateTask(TaskRequestModel task)
         {
+            Validate(task);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var taskToAdd = new Database.Models.Entity.Task
@@ -93,6 +95,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateTask(Guid taskId, TaskRequestModel task)
         {
+            Validate(task);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 ValidationHelper.ValidateModel(task);

@@ -9,16 +9,16 @@ namespace MyPortal.Database.Models.Entity
     {
         public Address()
         {
-            People = new HashSet<AddressLink>();
+            AddressLinks = new HashSet<AddressLink>();
         }
 
         [Column(Order = 1)]
         [StringLength(128)]
-        public string HouseNumber { get; set; }
+        public string BuildingNumber { get; set; }
 
         [Column(Order = 2)]
         [StringLength(128)]
-        public string HouseName { get; set; }
+        public string BuildingName { get; set; }
 
         [Column(Order = 3)]
         [StringLength(128)]
@@ -55,10 +55,7 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 10)]
         public bool Validated { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AddressLink> People { get; set; }
-
-        public virtual ICollection<Agency> Agencies { get; set; }
+        
+        public virtual ICollection<AddressLink> AddressLinks { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Scaffolding;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Exceptions;
@@ -9,6 +10,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Assessment;
 using Task = System.Threading.Tasks.Task;
 
@@ -16,28 +18,67 @@ namespace MyPortal.Logic.Services;
 
 public class AssessmentService : BaseService, IAssessmentService
 {
-    public async Task CreateAspect(AspectRequestModel model)
+    public async Task<IEnumerable<ResultModel>> GetPreviousResults(Guid studentId, Guid aspectId, DateTime dateTo)
     {
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
-            if (model.TypeId == AspectTypes.Grade && model.GradeSetId == null)
+            var results = await unitOfWork.Results.GetPreviousResults(studentId, aspectId, dateTo);
+
+            return results.Select(r => new ResultModel(r)).ToList();
+        }
+    }
+
+    public async Task<ResultModel> GetResult(Guid resultId)
+    {
+        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        {
+            var result = await unitOfWork.Results.GetById(resultId);
+
+            if (result == null)
             {
-                throw new InvalidDataException($"A grade set was not provided for {model.Name}.");
+                throw new NotFoundException("Result not found.");
             }
 
-            if (model.TypeId == AspectTypes.MarkDecimal || model.TypeId == AspectTypes.MarkInteger)
-            {
-                if (model.MinMark == null)
-                {
-                    throw new InvalidDataException($"A minimum mark was not provided for {model.Name}");
-                }
+            return new ResultModel(result);
+        }
+    }
 
-                if (model.MaxMark == null)
-                {
-                    throw new InvalidDataException($"A maximum mark was not provided for {model.Name}");
-                }
+    public async Task<ResultModel> GetResult(Guid studentId, Guid aspectId, Guid resultSetId)
+    {
+        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        {
+            var result = await unitOfWork.Results.GetResult(studentId, aspectId, resultSetId);
+
+            if (result == null)
+            {
+                throw new NotFoundException("Result not found.");
             }
 
+            return new ResultModel(result);
+        }
+    }
+
+    public async Task<IEnumerable<ResultModel>> GetPreviousResults(Guid resultId)
+    {
+        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        {
+            var result = await unitOfWork.Results.GetById(resultId);
+
+            if (result == null)
+            {
+                throw new NotFoundException("Result not found.");
+            }
+
+            return await GetPreviousResults(result.StudentId, result.AspectId, result.Date);
+        }
+    }
+
+    public async Task CreateAspect(AspectRequestModel model)
+    {
+        Validate(model);
+        
+        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        {
             var aspect = new Aspect
             {
                 TypeId = model.TypeId,
@@ -57,6 +98,8 @@ public class AssessmentService : BaseService, IAssessmentService
 
     public async Task UpdateAspect(Guid aspectId, AspectRequestModel model)
     {
+        Validate(model);
+        
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var aspect = await unitOfWork.Aspects.GetById(aspectId);
@@ -103,6 +146,8 @@ public class AssessmentService : BaseService, IAssessmentService
         {
             foreach (var model in models)
             {
+                Validate(model);
+                
                 Aspect aspect = cachedAspects.FirstOrDefault(x => x.Id == model.AspectId);
 
                 if (aspect == null)
@@ -137,7 +182,7 @@ public class AssessmentService : BaseService, IAssessmentService
                 }
 
                 Result result =
-                    await unitOfWork.Results.Get(model.StudentId, model.AspectId, model.ResultSetId);
+                    await unitOfWork.Results.GetResult(model.StudentId, model.AspectId, model.ResultSetId);
 
                 bool createNewResult = result == null;
 

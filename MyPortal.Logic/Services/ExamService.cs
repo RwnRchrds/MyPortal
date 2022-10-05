@@ -17,6 +17,8 @@ public class ExamService : BaseService, IExamService
         {
             foreach (var model in models)
             {
+                Validate(model);
+                
                 if (model.EndDate < DateTime.Now)
                 {
                     throw new InvalidDataException("End date cannot be in the past.");
@@ -41,6 +43,8 @@ public class ExamService : BaseService, IExamService
         {
             foreach (var model in models)
             {
+                Validate(model);
+                
                 if (model.EndDate < DateTime.Now)
                 {
                     throw new InvalidDataException("End date cannot be in the past.");

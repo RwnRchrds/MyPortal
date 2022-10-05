@@ -24,6 +24,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateDocument(DocumentRequestModel document)
         {
+            Validate(document);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var directory = await unitOfWork.Directories.GetById(document.DirectoryId);
@@ -60,6 +62,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateDocument(Guid documentId, DocumentRequestModel document)
         {
+            Validate(document);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var documentInDb = await unitOfWork.Documents.GetById(documentId);
@@ -127,6 +131,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateDirectory(DirectoryRequestModel directory)
         {
+            Validate(directory);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 if (directory.ParentId == null)
@@ -156,6 +162,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateDirectory(Guid directoryId, DirectoryRequestModel directory)
         {
+            Validate(directory);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var dirInDb = await unitOfWork.Directories.GetById(directoryId);

@@ -191,6 +191,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateUser(Guid userId, UserRequestModel updateUserRequest)
         {
+            Validate(updateUserRequest);
+            
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user == null)
@@ -375,6 +377,11 @@ namespace MyPortal.Logic.Services
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+
+                if (user == null)
+                {
+                    throw new NotFoundException("User not found.");
+                }
 
                 if (user.PersonId.HasValue)
                 {

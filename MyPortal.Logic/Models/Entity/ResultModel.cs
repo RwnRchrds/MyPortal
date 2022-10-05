@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public abstract class ResultModel : BaseModel, ILoadable
+    public class ResultModel : BaseModel, ILoadable
     {
         public ResultModel(Result model) : base(model)
         {
@@ -20,6 +20,7 @@ namespace MyPortal.Logic.Models.Entity
             ResultSetId = model.ResultSetId;
             StudentId = model.StudentId;
             AspectId = model.AspectId;
+            CreatedById = model.CreatedById;
             Date = model.Date;
             GradeId = model.GradeId;
             Mark = model.Mark;
@@ -46,6 +47,11 @@ namespace MyPortal.Logic.Models.Entity
             {
                 Grade = new GradeModel(model.Grade);
             }
+
+            if (model.CreatedBy != null)
+            {
+                CreatedBy = new UserModel(model.CreatedBy);
+            }
         }
         
         public Guid ResultSetId { get; set; }
@@ -53,6 +59,8 @@ namespace MyPortal.Logic.Models.Entity
         public Guid StudentId { get; set; }
 
         public Guid AspectId { get; set; }
+        
+        public Guid CreatedById { get; set; }
 
         public DateTime Date { get; set; }
 
@@ -73,6 +81,9 @@ namespace MyPortal.Logic.Models.Entity
         public virtual StudentModel Student { get; set; }
 
         public virtual GradeModel Grade { get; set; }
+        
+        public virtual UserModel CreatedBy { get; set; }
+        
         public async Task Load(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

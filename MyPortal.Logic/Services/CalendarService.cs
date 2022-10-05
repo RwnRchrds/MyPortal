@@ -115,6 +115,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateEvent(EventRequestModel model)
         {
+            Validate(model);
+            
             var eventTypes = (await GetEventTypes()).ToArray();
 
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
@@ -176,6 +178,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateEvent(Guid eventId, EventRequestModel model)
         {
+            Validate(model);
+            
             var eventTypes = (await GetEventTypes()).ToArray();
 
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
@@ -228,6 +232,8 @@ namespace MyPortal.Logic.Services
 
                 foreach (var attendee in model.Attendees)
                 {
+                    Validate(attendee);
+                    
                     var existingAttendee = attendees.FirstOrDefault(a => a.PersonId == attendee.PersonId);
 
                     if (existingAttendee != null)

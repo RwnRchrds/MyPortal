@@ -15,28 +15,32 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 3)]
         public Guid AspectId { get; set; }
+        
+        [Column(Order = 4)] 
+        public Guid CreatedById { get; set; }
 
-        [Column(Order = 4, TypeName = "date")]
+        [Column(Order = 5, TypeName = "date")]
         public DateTime Date { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         public Guid? GradeId { get; set; }
 
-        [Column(Order = 6, TypeName = "decimal(10,2)")]
+        [Column(Order = 7, TypeName = "decimal(10,2)")]
         public decimal? Mark { get; set; }
 
         // Used for comment result types
-        [Column(Order = 7)]
+        [Column(Order = 8)]
         [StringLength(1000)]
         public string Comment { get; set; }
 
-        [Column(Order = 8)] 
+        [Column(Order = 9)] 
         public string ColourCode { get; set; }
         
         // Used to add notes/comments to results
-        [Column(Order = 9)] 
+        [Column(Order = 10)] 
         public string Note { get; set; }
 
+        public virtual User CreatedBy { get; set; }
         public virtual ResultSet ResultSet { get; set; }
 
         public virtual Aspect Aspect { get; set; }

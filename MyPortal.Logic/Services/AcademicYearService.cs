@@ -69,6 +69,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateAcademicYear(AcademicYearRequestModel model)
         {
+            Validate(model);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var academicYear = new AcademicYear
@@ -170,6 +172,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateAcademicYear(Guid academicYearId, AcademicYearRequestModel model)
         {
+            Validate(model);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var academicYearInDb = await unitOfWork.AcademicYears.GetById(academicYearId);

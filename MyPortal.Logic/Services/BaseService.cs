@@ -9,6 +9,9 @@ namespace MyPortal.Logic.Services
 {
     public abstract class BaseService
     {
-        
+        public void Validate<T>(T model)
+        {
+            ValidationHelper.ValidateModel(model);
+        }
     }
 }

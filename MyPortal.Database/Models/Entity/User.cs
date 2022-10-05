@@ -40,6 +40,8 @@ namespace MyPortal.Database.Models.Entity
         public virtual Person Person { get; set; }
 
         public virtual ICollection<UserRole> UserRoles { get; set; }
+        
+        public virtual ICollection<Result> Results { get; set; }
 
         public virtual ICollection<LogNote> LogNotesCreated { get; set; }
 

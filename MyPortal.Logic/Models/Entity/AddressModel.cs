@@ -11,8 +11,8 @@ namespace MyPortal.Logic.Models.Entity
     {
         public AddressModel(Address model) : base(model)
         {
-            HouseNumber = model.HouseNumber;
-            HouseName = model.HouseName;
+            BuildingNumber = model.BuildingNumber;
+            BuildingName = model.BuildingName;
             Apartment = model.Apartment;
             Street = model.Street;
             District = model.District;
@@ -24,10 +24,10 @@ namespace MyPortal.Logic.Models.Entity
         }
         
         [StringLength(128)]
-        public string HouseNumber { get; set; }
+        public string BuildingNumber { get; set; }
 
         [StringLength(128)]
-        public string HouseName { get; set; }
+        public string BuildingName { get; set; }
 
         [StringLength(128)]
         public string Apartment { get; set; }

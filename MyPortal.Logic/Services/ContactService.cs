@@ -29,6 +29,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateContact(ContactRequestModel model)
         {
+            Validate(model);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var contact = new Contact
@@ -48,6 +50,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateContact(Guid contactId, ContactRequestModel model)
         {
+            Validate(model);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var contact = await unitOfWork.Contacts.GetById(contactId);

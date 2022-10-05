@@ -68,6 +68,8 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<Guid>> CreateRole(RoleRequestModel request)
         {
+            Validate(request);
+            
             var newIds = new List<Guid>();
 
             var role = new Role
@@ -98,6 +100,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateRole(Guid roleId, RoleRequestModel request)
         {
+            Validate(request);
+            
             var roleInDb = await _roleManager.FindByIdAsync(roleId.ToString());
 
             if (roleInDb.System)

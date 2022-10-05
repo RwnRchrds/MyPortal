@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -68,6 +69,15 @@ namespace MyPortal.Database.Repositories
             period.EndTime = entity.EndTime;
             period.Weekday = entity.Weekday;
             period.Name = entity.Name;
+        }
+
+        public async Task<IEnumerable<AttendancePeriod>> GetByWeekday(DayOfWeek weekday)
+        {
+            var query = GenerateQuery();
+            
+            query.Where($"{TblAlias}.Weekday", (int)weekday);
+
+            return await ExecuteQuery(query);
         }
     }
 }

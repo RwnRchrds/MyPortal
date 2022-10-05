@@ -1636,55 +1636,55 @@ USING (VALUES
            ('EBACEBAB-2D3B-452E-B2F4-9CFF11D1B083', 'Z', 'Pupil not on roll', '59036721-D349-46D3-B8A6-60FFA9263DB3', 0, 1),
            ('EBACEBAB-2E3B-452E-B2F4-9CFF11D1B083', '#', 'Planned whole or partial school closure', '59036721-D349-46D3-B8A6-60FFA9263DB3', 0, 1)
 )
-    AS Source (Id, Code, Description, MeaningId, Active, Restricted)
+    AS Source (Id, Code, Description, AttendanceCodeTypeId, Active, Restricted)
 ON Target.Id = Source.Id
 
 WHEN MATCHED THEN
-    UPDATE SET Code = Source.Code, Description = Source.Description, MeaningId = Source.MeaningId
+    UPDATE SET Code = Source.Code, Description = Source.Description, AttendanceCodeTypeId = Source.AttendanceCodeTypeId
 
 WHEN NOT MATCHED THEN
-    INSERT (Id, Code, Description, MeaningId, Active, Restricted, System)
-    VALUES (Id, Code, Description, MeaningId, Active, 0, 1);
+    INSERT (Id, Code, Description, AttendanceCodeTypeId, Active, Restricted, System)
+    VALUES (Id, Code, Description, AttendanceCodeTypeId, Active, 0, 1);
 
 --[AchievementOutcome]
 
 MERGE INTO [dbo].[AchievementOutcomes] AS Target
 USING (VALUES
-           ('1017B966-E589-4B87-A21F-B85081EE958B', 'Commended', 1, 0),
-           ('1017B967-E589-4B87-A21F-B85081EE958B', 'Certificate', 1, 0),
-           ('1017B968-E589-4B87-A21F-B85081EE958B', 'Merit Mark', 1, 0),
-           ('1017B969-E589-4B87-A21F-B85081EE958B', 'Merit', 1, 0),
-           ('1017B96A-E589-4B87-A21F-B85081EE958B', '8 Merit Letter', 1, 0),
-           ('1017B96B-E589-4B87-A21F-B85081EE958B', 'Not Applicable', 1, 1),
-           ('1017B96C-E589-4B87-A21F-B85081EE958B', 'Letter Sent to Parent or Guardian', 1, 0),
-           ('1017B96D-E589-4B87-A21F-B85081EE958B', 'Bronze Certificate', 1, 0),
-           ('1017B96E-E589-4B87-A21F-B85081EE958B', 'Positive Referral', 1, 0),
-           ('1017B96F-E589-4B87-A21F-B85081EE958B', 'Prize', 1, 0),
-           ('1017B970-E589-4B87-A21F-B85081EE958B', 'Gold Certificate', 1, 0),
-           ('1017B971-E589-4B87-A21F-B85081EE958B', 'Platinum Certificate', 1, 0),
-           ('1017B972-E589-4B87-A21F-B85081EE958B', 'Trophy', 1, 0),
-           ('1017B973-E589-4B87-A21F-B85081EE958B', 'Letter of Commendation', 1, 0),
-           ('1017B974-E589-4B87-A21F-B85081EE958B', 'Prefect Badge', 1, 0),
-           ('1017B975-E589-4B87-A21F-B85081EE958B', 'Emergency Aid Certificate', 1, 0),
-           ('1017B976-E589-4B87-A21F-B85081EE958B', 'Reading Certificate', 1, 0),
-           ('1017B977-E589-4B87-A21F-B85081EE958B', 'Sports Certificate', 1, 0),
-           ('1017B978-E589-4B87-A21F-B85081EE958B', 'College Colours', 1, 0),
-           ('1017B979-E589-4B87-A21F-B85081EE958B', 'Prize-winner', 1, 0),
-           ('1017B97A-E589-4B87-A21F-B85081EE958B', 'Community Certificate', 1, 0),
-           ('1017B97B-E589-4B87-A21F-B85081EE958B', 'Lifestyle Award Winner', 1, 0),
-           ('1017B97C-E589-4B87-A21F-B85081EE958B', 'Subject Referral', 1, 0),
-           ('1017B97D-E589-4B87-A21F-B85081EE958B', 'Other', 1, 1)
+           ('1017B966-E589-4B87-A21F-B85081EE958B', 'Commended', 1),
+           ('1017B967-E589-4B87-A21F-B85081EE958B', 'Certificate', 1),
+           ('1017B968-E589-4B87-A21F-B85081EE958B', 'Merit Mark', 1),
+           ('1017B969-E589-4B87-A21F-B85081EE958B', 'Merit', 1),
+           ('1017B96A-E589-4B87-A21F-B85081EE958B', '8 Merit Letter', 1),
+           ('1017B96B-E589-4B87-A21F-B85081EE958B', 'Not Applicable', 1),
+           ('1017B96C-E589-4B87-A21F-B85081EE958B', 'Letter Sent to Parent or Guardian', 1),
+           ('1017B96D-E589-4B87-A21F-B85081EE958B', 'Bronze Certificate', 1),
+           ('1017B96E-E589-4B87-A21F-B85081EE958B', 'Positive Referral', 1),
+           ('1017B96F-E589-4B87-A21F-B85081EE958B', 'Prize', 1),
+           ('1017B970-E589-4B87-A21F-B85081EE958B', 'Gold Certificate', 1),
+           ('1017B971-E589-4B87-A21F-B85081EE958B', 'Platinum Certificate', 1),
+           ('1017B972-E589-4B87-A21F-B85081EE958B', 'Trophy', 1),
+           ('1017B973-E589-4B87-A21F-B85081EE958B', 'Letter of Commendation', 1),
+           ('1017B974-E589-4B87-A21F-B85081EE958B', 'Prefect Badge', 1),
+           ('1017B975-E589-4B87-A21F-B85081EE958B', 'Emergency Aid Certificate', 1),
+           ('1017B976-E589-4B87-A21F-B85081EE958B', 'Reading Certificate', 1),
+           ('1017B977-E589-4B87-A21F-B85081EE958B', 'Sports Certificate', 1),
+           ('1017B978-E589-4B87-A21F-B85081EE958B', 'College Colours', 1),
+           ('1017B979-E589-4B87-A21F-B85081EE958B', 'Prize-winner', 1),
+           ('1017B97A-E589-4B87-A21F-B85081EE958B', 'Community Certificate', 1),
+           ('1017B97B-E589-4B87-A21F-B85081EE958B', 'Lifestyle Award Winner', 1),
+           ('1017B97C-E589-4B87-A21F-B85081EE958B', 'Subject Referral', 1),
+           ('1017B97D-E589-4B87-A21F-B85081EE958B', 'Other', 1)
 )
 
-    AS Source(Id, Description, Active, System)
+    AS Source(Id, Description, Active)
 ON Target.Id = Source.Id
 
 WHEN MATCHED THEN
-    UPDATE SET Description = Source.Description, Active = Source.Active, System = Source.System
+    UPDATE SET Description = Source.Description, Active = Source.Active
 
 WHEN NOT MATCHED THEN
-    INSERT (Id, Description, Active, System)
-    VALUES (Id, Description, Active, System);
+    INSERT (Id, Description, Active)
+    VALUES (Id, Description, Active);
 
 --[Behaviour_AchievementTypes]
 
@@ -1840,6 +1840,18 @@ USING (VALUES
            ('08890B46-AD75-4753-8DE8-BB5F60FFBB79', 'Fax'),
            ('08890B49-AD75-4753-8DE8-BB5F60FFBB79', 'Letter'),
            ('08890B50-AD75-4753-8DE8-BB5F60FFBB79', 'SMS Message')
+)
+    AS Source (Id, Description)
+ON Target.Id = Source.Id
+
+WHEN NOT MATCHED THEN
+    INSERT (Id, Description, Active)
+    VALUES (Id, Description, 1);
+
+MERGE INTO [dbo].[AddressTypes] AS Target
+USING (VALUES
+           ('B9B02CB0-8333-4EE7-995C-4D1FE88DCEA5', 'Home'),
+           ('B9B02CB0-8333-4EE7-995C-4D1FE88DCEA6', 'Work')
 )
     AS Source (Id, Description)
 ON Target.Id = Source.Id

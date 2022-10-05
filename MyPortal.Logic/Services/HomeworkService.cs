@@ -18,6 +18,8 @@ public class HomeworkService : BaseService, IHomeworkService
 {
     public async System.Threading.Tasks.Task CreateHomework(HomeworkRequestModel model)
     {
+        Validate(model);
+        
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var homeworkItem = new HomeworkItem
@@ -67,6 +69,8 @@ public class HomeworkService : BaseService, IHomeworkService
 
     public async System.Threading.Tasks.Task UpdateHomework(Guid homeworkId, HomeworkRequestModel model)
     {
+        Validate(model);
+        
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var homework = await unitOfWork.HomeworkItems.GetById(homeworkId);
@@ -125,6 +129,8 @@ public class HomeworkService : BaseService, IHomeworkService
 
     public async System.Threading.Tasks.Task CreateHomeworkSubmission(HomeworkSubmissionRequestModel model)
     {
+        Validate(model);
+        
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var homework = await unitOfWork.HomeworkItems.GetById(model.HomeworkId);
@@ -154,7 +160,6 @@ public class HomeworkService : BaseService, IHomeworkService
                     System = true,
                     TypeId = TaskTypes.Homework,
                     CreatedDate = now,
-
                 }
             };
 
@@ -167,6 +172,8 @@ public class HomeworkService : BaseService, IHomeworkService
     // TODO: Review this service method
     public async System.Threading.Tasks.Task UpdateHomeworkSubmission(Guid homeworkSubmissionId, HomeworkSubmissionRequestModel model)
     {
+        Validate(model);
+        
         using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var homeworkSubmission = await unitOfWork.HomeworkSubmissions.GetById(homeworkSubmissionId);

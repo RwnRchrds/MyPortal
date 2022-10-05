@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
@@ -7,6 +8,7 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IResultRepository : IReadWriteRepository<Result>, IUpdateRepository<Result>
     {
-        Task<Result> Get(Guid studentId, Guid aspectId, Guid resultSetId);
+        Task<Result> GetResult(Guid studentId, Guid aspectId, Guid resultSetId);
+        Task<IEnumerable<Result>> GetPreviousResults(Guid studentId, Guid aspectId, DateTime dateTo);
     }
 }

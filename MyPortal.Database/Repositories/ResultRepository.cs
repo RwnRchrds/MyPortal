@@ -28,6 +28,7 @@ namespace MyPortal.Database.Repositories
             JoinEntity(query, "Aspects", "A", "AspectId");
             JoinEntity(query, "Students", "S", "StudentId");
             JoinEntity(query, "Grades", "G", "GradeId");
+            JoinEntity(query, "Users", "U", "CreatedById");
 
             return query;
         }
@@ -38,6 +39,7 @@ namespace MyPortal.Database.Repositories
             query.SelectAllColumns(typeof(Aspect), "A");
             query.SelectAllColumns(typeof(Student), "S");
             query.SelectAllColumns(typeof(Grade), "G");
+            query.SelectAllColumns(typeof(User), "U");
 
             return query;
         }
@@ -46,14 +48,15 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var results = await Transaction.Connection.QueryAsync<Result, ResultSet, Aspect, Student, Grade, Result>(
+            var results = await Transaction.Connection.QueryAsync<Result, ResultSet, Aspect, Student, Grade, User, Result>(
                 sql.Sql,
-                (result, set, aspect, student, grade) =>
+                (result, set, aspect, student, grade, user) =>
                 {
                     result.ResultSet = set;
                     result.Aspect = aspect;
                     result.Student = student;
                     result.Grade = grade;
+                    result.CreatedBy = user;
 
                     return result;
                 }, sql.NamedBindings, Transaction);
@@ -70,13 +73,14 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("Result not found.");
             }
 
+            result.CreatedById = entity.CreatedById;
             result.GradeId = entity.GradeId;
             result.Mark = entity.Mark;
             result.Comment = entity.Comment;
             result.ColourCode = entity.ColourCode;
         }
 
-        public async Task<Result> Get(Guid studentId, Guid aspectId, Guid resultSetId)
+        public async Task<Result> GetResult(Guid studentId, Guid aspectId, Guid resultSetId)
         {
             var query = GenerateQuery();
 
@@ -87,6 +91,19 @@ namespace MyPortal.Database.Repositories
             var result = await ExecuteQueryFirstOrDefault(query);
 
             return result;
+        }
+
+        public async Task<IEnumerable<Result>> GetPreviousResults(Guid studentId, Guid aspectId, DateTime dateTo)
+        {
+            var query = GenerateQuery();
+            
+            query.Where($"{TblAlias}.StudentId", studentId);
+            query.Where($"{TblAlias}.AspectId", aspectId);
+            query.Where($"{TblAlias}.Date", "<", dateTo);
+
+            var results = await ExecuteQuery(query);
+
+            return results;
         }
     }
 }

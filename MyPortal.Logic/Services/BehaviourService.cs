@@ -75,6 +75,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateAchievement(AchievementRequestModel achievement)
         {
+            Validate(achievement);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var now = DateTime.Now;
@@ -105,6 +107,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateAchievement(Guid achievementId, AchievementRequestModel achievement)
         {
+            Validate(achievement);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var achievementInDb = await unitOfWork.StudentAchievements.GetById(achievementId);
@@ -213,6 +217,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateIncident(IncidentRequestModel incident)
         {
+            Validate(incident);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var studentIncident = new StudentIncident
@@ -240,6 +246,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateIncident(Guid incidentId, IncidentRequestModel incident)
         {
+            Validate(incident);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var studentIncidentInDb = await unitOfWork.StudentIncidents.GetById(incidentId);
@@ -339,6 +347,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateDetention(DetentionRequestModel model)
         {
+            Validate(model);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var detention = new Detention
@@ -388,6 +398,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateDetention(Guid detentionId, DetentionRequestModel detention)
         {
+            Validate(detention);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var detentionInDb = await unitOfWork.Detentions.GetById(detentionId);
@@ -434,6 +446,8 @@ namespace MyPortal.Logic.Services
 
         public async Task AddStudentToIncident(StudentIncidentRequestModel model)
         {
+            Validate(model);
+            
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var studentIncident = new StudentIncident
