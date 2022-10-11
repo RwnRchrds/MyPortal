@@ -1,5 +1,6 @@
 ﻿
 using System;
+using MyPortal.Logic.Attributes;
 
 namespace MyPortal.Logic.Models.Summary
 {    
@@ -11,7 +12,8 @@ namespace MyPortal.Logic.Models.Summary
 
         public Guid PeriodId { get; set; }
 
-        public Guid CodeId { get; set; }
+        [NotNull]
+        public Guid? CodeId { get; set; }
 
         public string Comments { get; set; }
 

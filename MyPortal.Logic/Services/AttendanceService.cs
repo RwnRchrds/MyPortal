@@ -7,12 +7,17 @@ using MyPortal.Database;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.QueryResults.Attendance;
+using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Reporting;
+using MyPortal.Logic.Models.Requests.Attendance;
 using MyPortal.Logic.Models.Response.Attendance;
+using MyPortal.Logic.Models.Response.Attendance.Register;
 using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
 
@@ -36,78 +41,63 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<AttendanceRegisterResponseModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId)
+        public async Task<AttendanceRegisterModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var metadata = await unitOfWork.Sessions.GetMetadata(sessionId, attendanceWeekId);
+                var session = await unitOfWork.Sessions.GetMetadata(sessionId, attendanceWeekId);
 
-                if (metadata == null || metadata.AttendanceWeekId == Guid.Empty)
+                return await GetRegisterByDateRange(session.StudentGroupId, session.StartTime, session.EndTime,
+                    session.PeriodId);
+            }
+        }
+
+        public async Task<IEnumerable<AttendanceRegisterSummaryModel>> GetRegisters(RegisterSearchRequestModel model)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var searchOptions = new RegisterSearchOptions
                 {
-                    throw new NotFoundException("Register not found.");
-                }
-
-                var targetPeriod = await unitOfWork.AttendancePeriods.GetById(metadata.PeriodId);
-
-                if (targetPeriod == null)
-                {
-                    throw new NotFoundException("Attendance period not found.");
-                }
-
-                var periods = (await unitOfWork.AttendancePeriods.GetByWeekday(targetPeriod.Weekday))
-                    .OrderBy(p => p.Weekday).ThenBy(p => p.StartTime).ToArray();
+                    DateFrom = model.Date.Date,
+                    DateTo = model.Date.GetEndOfDay(),
+                    PeriodId = model.PeriodId,
+                    TeacherId = model.TeacherId
+                };
                 
-                var register = new AttendanceRegisterResponseModel(metadata);
+                var sessions = await unitOfWork.Sessions.GetMetadata(searchOptions);
 
-                for (int i = 0; i < periods.Length; i++)
+                return sessions.Select(s => new AttendanceRegisterSummaryModel(s)).ToArray();
+            }
+        }
+
+        public async Task<AttendanceRegisterModel> GetRegisterByDateRange(Guid studentGroupId, DateTime dateFrom, DateTime dateTo, Guid? lockToPeriodId = null)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var studentGroup = await unitOfWork.StudentGroups.GetById(studentGroupId);
+
+                if (studentGroup == null)
                 {
-                    var period = periods[i];
-                    
-                    register.Columns.Add(new AttendanceRegisterColumnModel
-                    {
-                        AttendancePeriodId = period.Id,
-                        AttendanceWeekId = metadata.AttendanceWeekId,
-                        ColumnName = period.Name,
-                        ColumnOrder = i
-                    });
+                    throw new NotFoundException("Student group not found.");
                 }
+                
+                var register = new AttendanceRegisterModel();
 
-                var codes = await unitOfWork.AttendanceCodes.GetAll(true, false);
+                register.Title =
+                    $"Edit Marks - {studentGroup.Description}, {dateFrom:dd/MM/yyyy}-{dateTo:dd/MM/yyyy}";
 
-                register.Codes = codes.Select(c => new AttendanceCodeModel(c)).ToList();
+                var periods = (await unitOfWork.AttendancePeriods.GetByDateRange(dateFrom.Date, dateTo.GetEndOfDay())).ToArray();
+                
+                register.PopulateColumnGroups(periods, lockToPeriodId);
 
-                var possibleMarks = (await unitOfWork.AttendanceMarks.GetRegisterMarks(
-                    register.Metadata.CurriculumGroupId, register.Metadata.StartTime.Date,
-                    register.Metadata.StartTime.Date.AddDays(1))).GroupBy(m => m.StudentId);
+                var codes = (await unitOfWork.AttendanceCodes.GetAll()).Select(c => new AttendanceCodeModel(c))
+                    .ToArray();
 
-                foreach (var possibleMark in possibleMarks)
-                {
-                    var student = await unitOfWork.Students.GetById(possibleMark.Key);
+                register.Codes = codes;
 
-                    if (student == null)
-                    {
-                        throw new NotFoundException("Student not found.");
-                    }
-
-                    var studentModel = new StudentModel(student);
-
-                    var registerStudent = new AttendanceRegisterStudentResponseModel
-                    {
-                        StudentId = possibleMark.Key,
-                        StudentName = studentModel.Person.GetName(),
-                        Marks = possibleMark.Select(m => new AttendanceMarkSummaryModel
-                        {
-                            StudentId = m.StudentId,
-                            WeekId = m.WeekId,
-                            PeriodId = m.PeriodId,
-                            Comments = m.Comments,
-                            MinutesLate = m.MinutesLate,
-                            CodeId = m.CodeId ?? Guid.Empty
-                        }).ToList()
-                    };
-
-                    register.Students.Add(registerStudent);
-                }
+                var marks = await unitOfWork.AttendanceMarks.GetRegisterMarks(studentGroupId, periods);
+                
+                register.PopulateMarks(marks);
 
                 return register;
             }
@@ -130,7 +120,7 @@ namespace MyPortal.Logic.Services
 
                     if (markInDb != null && markInDb.Id.HasValue)
                     {
-                        markInDb.CodeId = model.CodeId;
+                        markInDb.CodeId = model.CodeId.Value;
                         markInDb.MinutesLate = model.MinutesLate ?? 0;
                         markInDb.Comments = model.Comments;
 
@@ -154,7 +144,7 @@ namespace MyPortal.Logic.Services
                             StudentId = model.StudentId,
                             WeekId = model.WeekId,
                             PeriodId = model.PeriodId,
-                            CodeId = model.CodeId,
+                            CodeId = model.CodeId.Value,
                             MinutesLate = model.MinutesLate ?? 0,
                             Comments = model.Comments
                         };
@@ -180,7 +170,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task UpdateAttendanceMarks(params AttendanceRegisterStudentResponseModel[] markCollections)
+        public async Task UpdateAttendanceMarks(params AttendanceRegisterStudentModel[] markCollections)
         {
             var attendanceMarks = new List<AttendanceMarkSummaryModel>();
 

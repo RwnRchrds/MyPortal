@@ -197,7 +197,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<DirectoryChildrenResponseModel> GetDirectoryChildren(Guid directoryId, bool includeRestricted)
+        public async Task<DirectoryChildrenModel> GetDirectoryChildren(Guid directoryId, bool includeRestricted)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -208,7 +208,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Directory not found.");
                 }
 
-                var children = new DirectoryChildrenResponseModel();
+                var children = new DirectoryChildrenModel();
 
                 var subDirs =
                     await unitOfWork.Directories.GetSubdirectories(directoryId, includeRestricted);

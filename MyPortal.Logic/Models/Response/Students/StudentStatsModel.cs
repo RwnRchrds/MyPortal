@@ -2,7 +2,7 @@
 
 namespace MyPortal.Logic.Models.Response.Students
 {
-    public class StudentStatsResponseModel
+    public class StudentStatsModel
     {
         public Guid StudentId { get; set; }
         public int AchievementPoints { get; set; }

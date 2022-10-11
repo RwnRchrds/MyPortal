@@ -28,7 +28,7 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("api/people")]
-        [ProducesResponseType(typeof(IEnumerable<PersonSearchResultResponseModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<PersonSearchResultModel>), 200)]
         public async Task<IActionResult> SearchPeople([FromQuery] PersonSearchOptions searchModel)
         {
             try

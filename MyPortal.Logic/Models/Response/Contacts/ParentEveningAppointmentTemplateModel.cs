@@ -3,9 +3,9 @@ using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Response.Contacts
 {
-    public class ParentEveningAppointmentTemplateResponseModel
+    public class ParentEveningAppointmentTemplateModel
     {
-        public ParentEveningAppointmentTemplateResponseModel(Guid parentEveningId, Guid staffMemberId, DateTime start, DateTime end)
+        public ParentEveningAppointmentTemplateModel(Guid parentEveningId, Guid staffMemberId, DateTime start, DateTime end)
         {
             ParentEveningId = parentEveningId;
             StaffMemberId = staffMemberId;

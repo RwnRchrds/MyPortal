@@ -11,6 +11,7 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.QueryResults.Attendance;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
 using Task = System.Threading.Tasks.Task;
@@ -71,13 +72,30 @@ namespace MyPortal.Database.Repositories
             period.Name = entity.Name;
         }
 
-        public async Task<IEnumerable<AttendancePeriod>> GetByWeekday(DayOfWeek weekday)
+        public async Task<IEnumerable<PossibleAttendancePeriod>> GetByDateRange(DateTime dateFrom, DateTime dateTo)
         {
-            var query = GenerateQuery();
-            
-            query.Where($"{TblAlias}.Weekday", (int)weekday);
+            var query = GenerateEmptyQuery(typeof(AttendancePeriod), "AP");
 
-            return await ExecuteQuery(query);
+            query.Select(
+                "CONVERT(DATETIME, CONVERT(CHAR(8), DATEADD(DAY, CASE WHEN P.Weekday = 0 THEN 6 ELSE P.Weekday - 1 END, W.Beginning), 112) + ' ' + CONVERT(CHAR(8), P.StartTime, 108)) AS ActualStartTime");
+
+            query.Select(
+                "CONVERT(DATETIME, CONVERT(CHAR(8), DATEADD(DAY, CASE WHEN P.Weekday = 0 THEN 6 ELSE P.Weekday - 1 END, W.Beginning), 112) + ' ' + CONVERT(CHAR(8), P.EndTime, 108)) AS ActualEndTime");
+
+            query.Select("AP.Id as PeriodId", "AW.Id as AttendanceWeekId", "P.WeekPatternId as WeekPatternId",
+                "P.Weekday as Weekday", "P.Name as Name", "P.StartTime as StartTime", "P.EndTime as EndTime",
+                "P.AmReg as AmReg", "P.PmReg as PmReg");
+
+            JoinEntity(query, "AttendanceWeekPatterns", "AWP", "AP.WeekPatternId");
+
+            query.LeftJoin("AttendanceWeeks AS AW", "AW.WeekPatternId", "AWP.Id");
+
+            query.Where("AW.IsNonTimeTable", false);
+
+            query.Where("ActualStartTime", ">=", dateFrom);
+            query.Where("ActualEndTime", "<=", dateTo);
+
+            return await ExecuteQuery<PossibleAttendancePeriod>(query);
         }
     }
 }

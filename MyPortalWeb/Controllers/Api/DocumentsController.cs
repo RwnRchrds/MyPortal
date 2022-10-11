@@ -385,7 +385,7 @@ namespace MyPortalWeb.Controllers.Api
         
         [HttpGet]
         [Route("directories/{directoryId}/children")]
-        [ProducesResponseType(typeof(DirectoryChildListWrapperResponseModel), 200)]
+        [ProducesResponseType(typeof(DirectoryChildWrapper), 200)]
         public async Task<IActionResult> GetDirectoryChildren([FromRoute] Guid directoryId)
         {
             try
@@ -404,7 +404,7 @@ namespace MyPortalWeb.Controllers.Api
                     childList.AddRange(children.Subdirectories.Select(x => x.GetListModel()));
                     childList.AddRange(children.Files.Select(x => x.GetListModel()));
 
-                    var response = new DirectoryChildListWrapperResponseModel
+                    var response = new DirectoryChildWrapper
                     {
                         Directory = directory,
                         Children = childList

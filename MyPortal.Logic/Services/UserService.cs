@@ -101,9 +101,9 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<UserInfoResponseModel> GetUserInfo(Guid userId)
+        public async Task<UserInfoModel> GetUserInfo(Guid userId)
         {
-            var response = new UserInfoResponseModel();
+            var response = new UserInfoModel();
 
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

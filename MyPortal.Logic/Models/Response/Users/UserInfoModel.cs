@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MyPortal.Logic.Models.Response.Users
 {
-    public class UserInfoResponseModel
+    public class UserInfoModel
     {
         public string DisplayName { get; set; }
         public string ProfileImage { get; set; }

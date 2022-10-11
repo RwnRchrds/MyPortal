@@ -7,6 +7,7 @@ using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Response.Attendance;
+using MyPortal.Logic.Models.Response.Attendance.Register;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -28,7 +29,7 @@ namespace MyPortalWeb.Controllers.Api
         [Route("register/{attendanceWeekId}/{sessionId}")]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.AttendanceViewAttendanceMarks)]
-        [ProducesResponseType(typeof(AttendanceRegisterResponseModel), 200)]
+        [ProducesResponseType(typeof(AttendanceRegisterModel), 200)]
         public async Task<IActionResult> GetRegister([FromRoute] Guid attendanceWeekId, [FromRoute] Guid sessionId)
         {
             try

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.QueryResults.Attendance;
+using MyPortal.Database.Models.Search;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
@@ -14,5 +15,7 @@ namespace MyPortal.Database.Interfaces.Repositories
         Task<IEnumerable<SessionMetadata>> GetMetadataByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo);
         Task<IEnumerable<SessionMetadata>> GetMetadataByStaffMember(Guid staffMemberId, DateTime dateFrom,
             DateTime dateTo);
+
+        Task<IEnumerable<SessionMetadata>> GetMetadata(RegisterSearchOptions searchOptions);
     }
 }

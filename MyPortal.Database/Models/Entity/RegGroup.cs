@@ -12,8 +12,11 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 1)] 
         public Guid StudentGroupId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 2)]
         public Guid YearGroupId { get; set; }
+        
+        [Column(Order = 3)] 
+        public Guid? RoomId { get; set; }
 
         public virtual StudentGroup StudentGroup { get; set; }
 

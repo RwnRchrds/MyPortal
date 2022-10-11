@@ -17,18 +17,22 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 5)]
         public Guid? PromoteToGroupId { get; set; }
-        
+
         [Column(Order = 6)]
-        public int? MaxMembers { get; set; }
+        public Guid? MainSupervisorId { get; set; }
         
         [Column(Order = 7)]
+        public int? MaxMembers { get; set; }
+        
+        [Column(Order = 8)]
         [StringLength(256)]
         public string Notes { get; set; }
         
-        [Column(Order = 8)]
+        [Column(Order = 9)]
         public bool System { get; set; }
 
         public virtual StudentGroup PromoteToGroup { get; set; }
+        public virtual StudentGroupSupervisor MainSupervisor { get; set; }
         public virtual ICollection<StudentGroupMembership> StudentMemberships { get; set; }
         public virtual ICollection<StudentGroupSupervisor> StudentGroupSupervisors { get; set; }
         public virtual ICollection<Activity> Activities { get; set; }

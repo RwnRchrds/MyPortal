@@ -47,33 +47,33 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<IEnumerable<PersonSearchResultResponseModel>> GetPeopleWithTypes(PersonSearchOptions searchModel)
+        public async Task<IEnumerable<PersonSearchResultModel>> GetPeopleWithTypes(PersonSearchOptions searchModel)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var results = await unitOfWork.People.GetAllWithTypes(searchModel);
 
-                return results.Select(r => new PersonSearchResultResponseModel(r)).ToList();
+                return results.Select(r => new PersonSearchResultModel(r)).ToList();
             }
         }
 
-        public async Task<PersonSearchResultResponseModel> GetPersonWithTypes(Guid personId)
+        public async Task<PersonSearchResultModel> GetPersonWithTypes(Guid personId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var result = await unitOfWork.People.GetPersonWithTypesById(personId);
 
-                return new PersonSearchResultResponseModel(result);
+                return new PersonSearchResultModel(result);
             }
         }
 
-        public async Task<PersonSearchResultResponseModel> GetPersonWithTypesByDirectory(Guid directoryId)
+        public async Task<PersonSearchResultModel> GetPersonWithTypesByDirectory(Guid directoryId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var result = await unitOfWork.People.GetPersonWithTypesByDirectoryId(directoryId);
 
-                return new PersonSearchResultResponseModel(result);
+                return new PersonSearchResultModel(result);
             }
         }
 

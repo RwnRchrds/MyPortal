@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using MyPortal.Logic.Models.Summary;
 
-namespace MyPortal.Logic.Models.Response.Attendance
+namespace MyPortal.Logic.Models.Response.Attendance.Register
 {
-    public class AttendanceRegisterStudentResponseModel
+    public class AttendanceRegisterStudentModel
     {
-        public AttendanceRegisterStudentResponseModel()
+        public AttendanceRegisterStudentModel()
         {
             Marks = new List<AttendanceMarkSummaryModel>();
         }

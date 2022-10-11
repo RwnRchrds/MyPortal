@@ -3,9 +3,9 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.Response.People
 {
-    public class PersonSearchResultResponseModel
+    public class PersonSearchResultModel
     {
-        public PersonSearchResultResponseModel(PersonSearchResult result)
+        public PersonSearchResultModel(PersonSearchResult result)
         {
             Person = new PersonModel(result.Person);
             PersonTypes = result.PersonTypes;

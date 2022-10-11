@@ -34,6 +34,6 @@ namespace MyPortal.Logic.Interfaces.Services
 
         Task<bool> UserHasPermission(Guid userId, PermissionRequirement requirement,
             params PermissionValue[] permissionValues);
-        Task<UserInfoResponseModel> GetUserInfo(Guid userId);
+        Task<UserInfoModel> GetUserInfo(Guid userId);
     }
 }

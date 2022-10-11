@@ -7,7 +7,7 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface IParentEveningService
     {
-        Task<IEnumerable<ParentEveningAppointmentTemplateResponseModel>> GetAppointmentTemplatesByStaffMember(
+        Task<IEnumerable<ParentEveningAppointmentTemplateModel>> GetAppointmentTemplatesByStaffMember(
             Guid parentEveningId, Guid staffMemberId);
     }
 }

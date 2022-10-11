@@ -16,7 +16,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IEnumerable<StudentModel>> GetStudents(StudentSearchOptions searchModel);
         Task<IEnumerable<StudentSummaryModel>> SearchStudents(StudentSearchOptions searchOptions);
 
-        Task<StudentStatsResponseModel> GetStatsById(Guid studentId, Guid academicYearId);
+        Task<StudentStatsModel> GetStatsById(Guid studentId, Guid academicYearId);
 
         Task<StudentModel> GetStudentById(Guid studentId);
 

@@ -13,8 +13,8 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<PersonModel> GetByUserId(Guid userId, bool throwIfNotFound = true);
         Task<PersonModel> GetById(Guid personId);
         Dictionary<string, string> GetGenderOptions();
-        Task<PersonSearchResultResponseModel> GetPersonWithTypes(Guid personId);
-        Task<PersonSearchResultResponseModel> GetPersonWithTypesByDirectory(Guid directoryId);
-        Task<IEnumerable<PersonSearchResultResponseModel>> GetPeopleWithTypes(PersonSearchOptions searchModel);
+        Task<PersonSearchResultModel> GetPersonWithTypes(Guid personId);
+        Task<PersonSearchResultModel> GetPersonWithTypesByDirectory(Guid directoryId);
+        Task<IEnumerable<PersonSearchResultModel>> GetPeopleWithTypes(PersonSearchOptions searchModel);
     }
 }

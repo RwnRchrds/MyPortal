@@ -39,11 +39,11 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<StudentStatsResponseModel> GetStatsById(Guid studentId, Guid academicYearId)
+        public async Task<StudentStatsModel> GetStatsById(Guid studentId, Guid academicYearId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var stats = new StudentStatsResponseModel();
+                var stats = new StudentStatsModel();
 
                 var achievements = await unitOfWork.StudentAchievements.GetPointsByStudent(studentId, academicYearId);
                 var incidents = await unitOfWork.StudentIncidents.GetPointsByStudent(studentId, academicYearId);

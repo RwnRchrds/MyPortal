@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.QueryResults.Attendance;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IAttendancePeriodRepository : IReadWriteRepository<AttendancePeriod>,
         IUpdateRepository<AttendancePeriod>
     {
-        Task<IEnumerable<AttendancePeriod>> GetByWeekday(DayOfWeek weekday);
+        Task<IEnumerable<PossibleAttendancePeriod>> GetByDateRange(DateTime dateFrom, DateTime dateTo);
     }
 }

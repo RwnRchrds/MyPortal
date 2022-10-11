@@ -20,7 +20,7 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Authorize]
         [Route("userInfo")]
-        [ProducesResponseType(typeof(UserInfoResponseModel), 200)]
+        [ProducesResponseType(typeof(UserInfoModel), 200)]
         public async Task<IActionResult> GetUserInfo()
         {
             try
