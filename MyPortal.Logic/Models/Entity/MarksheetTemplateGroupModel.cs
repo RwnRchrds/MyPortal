@@ -12,12 +12,12 @@ namespace MyPortal.Logic.Models.Entity
 {
     public class MarksheetTemplateGroupModel : BaseModel, ILoadable
     {
-        public MarksheetTemplateGroupModel(MarksheetTemplateGroup model) : base(model)
+        public MarksheetTemplateGroupModel(Marksheet model) : base(model)
         {
             LoadFromModel(model);
         }
 
-        private void LoadFromModel(MarksheetTemplateGroup model)
+        private void LoadFromModel(Marksheet model)
         {
             MarksheetTemplateId = model.MarksheetTemplateId;
             StudentGroupId = model.StudentGroupId;
@@ -45,7 +45,7 @@ namespace MyPortal.Logic.Models.Entity
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.MarksheetTemplateGroups.GetById(Id.Value);
+                var model = await unitOfWork.Marksheets.GetById(Id.Value);
             
                 LoadFromModel(model);   
             }

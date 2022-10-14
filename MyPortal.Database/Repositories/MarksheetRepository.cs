@@ -12,9 +12,9 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class MarksheetTemplateGroupRepository : BaseReadWriteRepository<MarksheetTemplateGroup>, IMarksheetTemplateGroupRepository
+    public class MarksheetRepository : BaseReadWriteRepository<Marksheet>, IMarksheetRepository
     {
-        public MarksheetTemplateGroupRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public MarksheetRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
         }
 
@@ -34,13 +34,13 @@ namespace MyPortal.Database.Repositories
             return query;
         }
 
-        protected override async Task<IEnumerable<MarksheetTemplateGroup>> ExecuteQuery(Query query)
+        protected override async Task<IEnumerable<Marksheet>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
             var templateGroups =
                 await Transaction.Connection
-                    .QueryAsync<MarksheetTemplateGroup, StudentGroup, MarksheetTemplate, MarksheetTemplateGroup>(
+                    .QueryAsync<Marksheet, StudentGroup, MarksheetTemplate, Marksheet>(
                         sql.Sql,
                         (templateGroup, studentGroup, template) =>
                         {

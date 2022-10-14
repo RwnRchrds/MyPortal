@@ -27,30 +27,6 @@ namespace MyPortal.Database.Repositories
             
         }
 
-        /*private Query GenerateMetadataQuery()
-        {
-            var query = GenerateEmptyQuery(typeof(Session), "S");
-
-            CommonTableExpressions.WithPossibleAttendancePeriods(query, "PossiblePeriodsCTE");
-            
-            JoinEntity(query, "AttendancePeriods", "AP", "S.PeriodId");
-            query.LeftJoin("PossiblePeriodsCTE as PAP", "PAP.PeriodId", "AP.Id");
-            query.LeftJoin("Classes as C", "C.Id", "S.ClassId");
-            query.LeftJoin("StaffMembers as SM", "SM.Id", "S.TeacherId");
-            query.LeftJoin("Rooms as R", "R.Id", "S.RoomId");
-            query.LeftJoin("CoverArrangements as CA",
-                ca => ca.On("CA.SessionId", "S.Id").On("CA.WeekId", "PAP.AttendanceWeekId"));
-            query.LeftJoin("Rooms as CR", "CR.Id", "CA.RoomId");
-            query.LeftJoin("StaffMembers as CSM", "CSM.Id", "CA.TeacherId");
-            query.LeftJoin("Courses as CO", "CO.Id", "C.CourseId");
-            query.ApplyOverlappingEvents("DE", "PAP.StartTime", "PAP.EndTime", EventTypes.SchoolHoliday);
-            query.ApplyName("FNA", "SM.PersonId", NameFormat.FullNameAbbreviated);
-            query.ApplyName("CNA", "CSM.PersonId", NameFormat.FullNameAbbreviated);
-
-            return query.WhereNull("DE.Id").Where("S.StartDate", "<=", "PAP.EndTime")
-                .Where("S.EndDate", ">=", "PAP.StartTime");
-        }*/
-
         private Query GenerateMetadataQuery(string alias = "SM")
         {
             var query = new Query();

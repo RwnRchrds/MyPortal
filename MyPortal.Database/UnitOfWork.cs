@@ -138,7 +138,7 @@ namespace MyPortal.Database
         private ILogNoteRepository _logNotes;
         private ILogNoteTypeRepository _logNoteTypes;
         private IMarksheetColumnRepository _marksheetColumns;
-        private IMarksheetTemplateGroupRepository _marksheetTemplateGroups;
+        private IMarksheetRepository _marksheets;
         private IMarksheetTemplateRepository _marksheetTemplates;
         private IMedicalConditionRepository _medicalConditions;
         private IMedicalEventRepository _medicalEvents;
@@ -536,8 +536,8 @@ namespace MyPortal.Database
         public IMarksheetColumnRepository MarksheetColumns =>
             _marksheetColumns ??= new MarksheetColumnRepository(_context, _transaction);
 
-        public IMarksheetTemplateGroupRepository MarksheetTemplateGroups => _marksheetTemplateGroups ??=
-            new MarksheetTemplateGroupRepository(_context, _transaction);
+        public IMarksheetRepository Marksheets => _marksheets ??=
+            new MarksheetRepository(_context, _transaction);
 
         public IMarksheetTemplateRepository MarksheetTemplates =>
             _marksheetTemplates ??= new MarksheetTemplateRepository(_context, _transaction);
@@ -939,7 +939,7 @@ namespace MyPortal.Database
             _logNotes = null;
             _logNoteTypes = null;
             _marksheetColumns = null;
-            _marksheetTemplateGroups = null;
+            _marksheets = null;
             _marksheetTemplates = null;
             _medicalConditions = null;
             _medicalConditions = null;

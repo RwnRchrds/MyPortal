@@ -48,21 +48,21 @@ namespace MyPortal.Database.Helpers
                 nameQuery.SelectRaw($@"CONCAT(IIF(P.Title IS NOT NULL, CONCAT(P.Title, ' '), ''),
         {(usePreferredName ? "COALESCE(P.PreferredFirstName, P.FirstName)" : "P.FirstName")},
         {(includeMiddleName ? "IIF(P.MiddleName IS NOT NULL, CONCAT(' ', P.MiddleName, ' '), ' ')" : "' '")},
-        {(usePreferredName ? "COALESCE(P.PreferredLastName, P.LastName)" : "P.LastName")}");
+        {(usePreferredName ? "COALESCE(P.PreferredLastName, P.LastName)" : "P.LastName) as [Name]")}");
             }
             else if (format == NameFormat.FullNameAbbreviated)
             {
                 nameQuery.SelectRaw($@"CONCAT(IIF(P.Title IS NOT NULL, CONCAT(P.Title, ' '), ''),
         SUBSTRING({(usePreferredName ? "COALESCE(P.PreferredFirstName, P.FirstName)" : "P.FirstName")}, 1, 1),
         {(includeMiddleName ? "IIF(P.MiddleName IS NOT NULL, CONCAT(' ', SUBSTRING(P.MiddleName, 1, 1), ' '), ' ')" : " ")},
-{(usePreferredName ? "COALESCE(P.PreferredLastName, P.LastName)" : "P.LastName")}");
+{(usePreferredName ? "COALESCE(P.PreferredLastName, P.LastName)" : "P.LastName) as [Name]")}");
             }
             else if (format == NameFormat.FullNameNoTitle)
             {
                 nameQuery.SelectRaw(
                     $@"CONCAT({(usePreferredName ? "COALESCE(P.PreferredFirstName, P.FirstName)" : "P.FirstName")},
         {(includeMiddleName ? "IIF(P.MiddleName IS NOT NULL, CONCAT(' ', P.MiddleName, ' '), ' ')" : "' '")},
-{(usePreferredName ? "COALESCE(P.PreferredLastName, P.LastName)" : "P.LastName")}");
+{(usePreferredName ? "COALESCE(P.PreferredLastName, P.LastName)" : "P.LastName) as [Name]")}");
             }
             else if (format == NameFormat.Initials)
             {
@@ -78,27 +78,33 @@ namespace MyPortal.Database.Helpers
         {(includeMiddleName ? "IIF(P.MiddleName IS NOT NULL, CONCAT(' ', P.MiddleName), '')" : "")}) as [Name]");
             }
 
-            nameQuery.Where("P.Id", personIdColumn);
+            nameQuery.WhereRaw($"P.Id = {personIdColumn}");
+
+            nameQuery.As(nameAlias);
             
-            return query.Join(nameQuery, j => j, "cross apply");
+            return query.Join(nameQuery, j => j, "outer apply");
         }
 
         public static Query ApplyOverlappingEvents(this Query query, string diaryEventAlias, string startTimeColumn, string endTimeColumn, Guid? eventTypeFilter)
         {
-            var eventQuery = new Query("DiaryEvents DE");
+            var eventQuery = new Query();
+
+            eventQuery.From("DiaryEvents as DE");
 
             eventQuery.SelectAllColumns(typeof(DiaryEvent), "DE");
 
-            eventQuery.Where(x =>
-                x.Where(y =>
-                        y.Where(z =>
-                                z.Where("DE.EndTime", ">=", startTimeColumn).Where("DE.StartTime", "<=", endTimeColumn))
-                            .OrWhere(z =>
-                                z.Where(startTimeColumn, ">=", "DE.StartTime")
-                                    .Where(endTimeColumn, "<=", "DE.EndTime")))
-                    .Where(y => y.Where(eventTypeFilter == null).OrWhere("DE.EventTypeId", eventTypeFilter)));
+            // Get all overlapping events
+            eventQuery.WhereRaw($"DE.EndTime >= {startTimeColumn}").WhereRaw($"DE.StartTime <= {endTimeColumn}");
 
-            return query.Join(eventQuery, j => j, "cross apply");
+            if (eventTypeFilter.HasValue)
+            {
+                // Filter to event type
+                eventQuery.Where("DE.EventTypeId", eventTypeFilter);
+            }
+
+            eventQuery.As("DE");
+
+            return query.Join(eventQuery, j => j, "outer apply");
         }
 
         public static Query WhereStudentGroup(this Query query, string studentGroupMembershipAlias,

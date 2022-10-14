@@ -141,7 +141,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<LogNoteType> LogNoteTypes { get; set; }
         public virtual DbSet<MarksheetColumn> MarksheetColumns { get; set; }
         public virtual DbSet<MarksheetTemplate> MarksheetTemplates { get; set; }
-        public virtual DbSet<MarksheetTemplateGroup> MarksheetTemplateGroups { get; set; }
+        public virtual DbSet<Marksheet> MarksheetTemplateGroups { get; set; }
         public virtual DbSet<MedicalCondition> Conditions { get; set; }
         public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
         public virtual DbSet<NextOfKinRelationshipType> NextOfKinRelationshipTypes { get; set; }
@@ -1660,19 +1660,19 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasMany(x => x.TemplateGroups)
+                    e.HasMany(x => x.Marksheets)
                         .WithOne(x => x.Template)
                         .HasForeignKey(x => x.MarksheetTemplateId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<MarksheetTemplateGroup>(e =>
+                modelBuilder.Entity<Marksheet>(e =>
                 {
                     SetIdDefaultValue(e);
 
                     e.HasOne(x => x.StudentGroup)
-                        .WithMany(x => x.MarksheetTemplateGroups)
+                        .WithMany(x => x.Marksheets)
                         .HasForeignKey(x => x.StudentGroupId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);

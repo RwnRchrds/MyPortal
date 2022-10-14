@@ -41,7 +41,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<House> Houses { get; set; }
         public virtual ICollection<CurriculumBand> CurriculumBands { get; set; }
         public virtual ICollection<CurriculumGroup> CurriculumGroups { get; set; }
-        public virtual ICollection<MarksheetTemplateGroup> MarksheetTemplateGroups { get; set; }
+        public virtual ICollection<Marksheet> Marksheets { get; set; }
         public virtual ICollection<StudentGroup> PromotionSourceGroups { get; set; }
     }
 }

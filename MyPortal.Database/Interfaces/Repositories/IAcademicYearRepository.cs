@@ -12,5 +12,6 @@ namespace MyPortal.Database.Interfaces.Repositories
         Task<AcademicYear> GetLatest();
         Task<IEnumerable<AcademicYear>> GetAllToDate();
         Task<bool> IsLocked(Guid academicYearId);
+        Task<bool> IsLockedByWeek(Guid attendanceWeekId);
     }
 }

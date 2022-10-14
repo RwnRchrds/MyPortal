@@ -15,7 +15,24 @@ namespace MyPortal.Logic.Helpers
                 {
                     if (throwException)
                     {
-                        Path.GetExtension("");
+                        throw new LogicException("This academic year is locked and cannot be modified.");
+                    }
+                    
+                    return true;
+                }
+
+                return false;
+            }
+        }
+        
+        internal static async Task<bool> IsAcademicYearLockedByWeek(Guid attendanceWeekId, bool throwException = false)
+        {
+            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                if (await unitOfWork.AcademicYears.IsLockedByWeek(attendanceWeekId))
+                {
+                    if (throwException)
+                    {
                         throw new LogicException("This academic year is locked and cannot be modified.");
                     }
                     

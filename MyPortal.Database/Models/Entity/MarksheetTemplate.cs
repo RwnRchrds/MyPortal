@@ -16,7 +16,7 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 3)]
         public bool Active { get; set; }
 
-        public virtual ICollection<MarksheetTemplateGroup> TemplateGroups { get; set; }
+        public virtual ICollection<Marksheet> Marksheets { get; set; }
         public virtual ICollection<MarksheetColumn> Columns { get; set; }
     }
 }

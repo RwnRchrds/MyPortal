@@ -129,7 +129,7 @@ namespace MyPortal.Database.Interfaces
         ILogNoteRepository LogNotes { get; }
         ILogNoteTypeRepository LogNoteTypes { get; }
         IMarksheetColumnRepository MarksheetColumns { get; }
-        IMarksheetTemplateGroupRepository MarksheetTemplateGroups { get; }
+        IMarksheetRepository Marksheets { get; }
         IMarksheetTemplateRepository MarksheetTemplates { get; }
         IMedicalConditionRepository MedicalConditions { get; }
         IMedicalEventRepository MedicalEvents { get; }

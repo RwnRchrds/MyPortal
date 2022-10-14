@@ -12,7 +12,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221004134006_InitialModel")]
+    [Migration("20221014084315_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -3978,6 +3978,35 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("LogNoteTypes");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Marksheet", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(0)
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Completed")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(3);
+
+                    b.Property<Guid>("MarksheetTemplateId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(1);
+
+                    b.Property<Guid>("StudentGroupId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(2);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MarksheetTemplateId");
+
+                    b.HasIndex("StudentGroupId");
+
+                    b.ToTable("Marksheets");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Entity.MarksheetColumn", b =>
                 {
                     b.Property<Guid>("Id")
@@ -4040,35 +4069,6 @@ namespace MyPortal.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MarksheetTemplates");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.MarksheetTemplateGroup", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(0)
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<bool>("Completed")
-                        .HasColumnType("bit")
-                        .HasColumnOrder(3);
-
-                    b.Property<Guid>("MarksheetTemplateId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(1);
-
-                    b.Property<Guid>("StudentGroupId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(2);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MarksheetTemplateId");
-
-                    b.HasIndex("StudentGroupId");
-
-                    b.ToTable("MarksheetTemplateGroups");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.MedicalCondition", b =>
@@ -4772,6 +4772,10 @@ namespace MyPortal.Database.Migrations
                         .HasColumnOrder(0)
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<Guid?>("RoomId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(3);
+
                     b.Property<Guid?>("StaffMemberId")
                         .HasColumnType("uniqueidentifier");
 
@@ -4781,7 +4785,7 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<Guid>("YearGroupId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(3);
+                        .HasColumnOrder(2);
 
                     b.HasKey("Id");
 
@@ -4976,28 +4980,32 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<string>("ColourCode")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnOrder(8);
+                        .HasColumnOrder(9);
 
                     b.Property<string>("Comment")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(8);
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(4);
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("date")
-                        .HasColumnOrder(4);
+                        .HasColumnOrder(5);
 
                     b.Property<Guid?>("GradeId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(6);
 
                     b.Property<decimal?>("Mark")
                         .HasColumnType("decimal(10,2)")
-                        .HasColumnOrder(6);
+                        .HasColumnOrder(7);
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnOrder(9);
+                        .HasColumnOrder(10);
 
                     b.Property<Guid>("ResultSetId")
                         .HasColumnType("uniqueidentifier")
@@ -5010,6 +5018,8 @@ namespace MyPortal.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AspectId");
+
+                    b.HasIndex("CreatedById");
 
                     b.HasIndex("GradeId");
 
@@ -6122,14 +6132,21 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasColumnOrder(1);
 
+                    b.Property<Guid?>("MainSupervisorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(6);
+
+                    b.Property<Guid?>("MainSupervisorId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int?>("MaxMembers")
                         .HasColumnType("int")
-                        .HasColumnOrder(6);
+                        .HasColumnOrder(7);
 
                     b.Property<string>("Notes")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(8);
 
                     b.Property<Guid?>("PromoteToGroupId")
                         .HasColumnType("uniqueidentifier")
@@ -6137,9 +6154,11 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("System")
                         .HasColumnType("bit")
-                        .HasColumnOrder(8);
+                        .HasColumnOrder(9);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MainSupervisorId1");
 
                     b.HasIndex("PromoteToGroupId");
 
@@ -8299,6 +8318,25 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.Marksheet", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.MarksheetTemplate", "Template")
+                        .WithMany("Marksheets")
+                        .HasForeignKey("MarksheetTemplateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.StudentGroup", "StudentGroup")
+                        .WithMany("Marksheets")
+                        .HasForeignKey("StudentGroupId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("StudentGroup");
+
+                    b.Navigation("Template");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Entity.MarksheetColumn", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Entity.Aspect", "Aspect")
@@ -8322,25 +8360,6 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("Aspect");
 
                     b.Navigation("ResultSet");
-
-                    b.Navigation("Template");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.MarksheetTemplateGroup", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Entity.MarksheetTemplate", "Template")
-                        .WithMany("TemplateGroups")
-                        .HasForeignKey("MarksheetTemplateId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Entity.StudentGroup", "StudentGroup")
-                        .WithMany("MarksheetTemplateGroups")
-                        .HasForeignKey("StudentGroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("StudentGroup");
 
                     b.Navigation("Template");
                 });
@@ -8736,6 +8755,12 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "CreatedBy")
+                        .WithMany("Results")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("MyPortal.Database.Models.Entity.Grade", "Grade")
                         .WithMany("Results")
                         .HasForeignKey("GradeId")
@@ -8754,6 +8779,8 @@ namespace MyPortal.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Aspect");
+
+                    b.Navigation("CreatedBy");
 
                     b.Navigation("Grade");
 
@@ -9193,10 +9220,16 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.StudentGroup", b =>
                 {
+                    b.HasOne("MyPortal.Database.Models.Entity.StudentGroupSupervisor", "MainSupervisor")
+                        .WithMany()
+                        .HasForeignKey("MainSupervisorId1");
+
                     b.HasOne("MyPortal.Database.Models.Entity.StudentGroup", "PromoteToGroup")
                         .WithMany("PromotionSourceGroups")
                         .HasForeignKey("PromoteToGroupId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("MainSupervisor");
 
                     b.Navigation("PromoteToGroup");
                 });
@@ -10036,7 +10069,7 @@ namespace MyPortal.Database.Migrations
                 {
                     b.Navigation("Columns");
 
-                    b.Navigation("TemplateGroups");
+                    b.Navigation("Marksheets");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.MedicalCondition", b =>
@@ -10321,7 +10354,7 @@ namespace MyPortal.Database.Migrations
 
                     b.Navigation("Houses");
 
-                    b.Navigation("MarksheetTemplateGroups");
+                    b.Navigation("Marksheets");
 
                     b.Navigation("PromotionSourceGroups");
 
@@ -10407,6 +10440,8 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("MedicalEvents");
 
                     b.Navigation("ReportCardSubmissions");
+
+                    b.Navigation("Results");
 
                     b.Navigation("UserClaims");
 

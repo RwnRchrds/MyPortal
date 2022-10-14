@@ -65,11 +65,25 @@ namespace MyPortal.Database.Repositories
 
         public async Task<bool> IsLocked(Guid academicYearId)
         {
-            var query = new Query(TblName);
+            var query = GenerateEmptyQuery();
 
             query.Select("Locked");
 
             query.Where($"{TblAlias}.Id", academicYearId);
+
+            return await ExecuteQueryFirstOrDefault<bool>(query);
+        }
+
+        public async Task<bool> IsLockedByWeek(Guid attendanceWeekId)
+        {
+            var query = GenerateEmptyQuery();
+
+            query.Select("Locked");
+
+            query.LeftJoin("AcademicTerms as AT", "AT.AcademicYearId", $"{TblAlias}.Id");
+            query.LeftJoin("AttendanceWeeks as AW", "AW.AcademicTermId", "AT.Id");
+
+            query.Where("AW.Id", attendanceWeekId);
 
             return await ExecuteQueryFirstOrDefault<bool>(query);
         }

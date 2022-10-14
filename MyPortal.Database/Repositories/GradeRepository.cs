@@ -77,5 +77,14 @@ namespace MyPortal.Database.Repositories
             grade.Description = entity.Description;
             grade.Value = entity.Value;
         }
+
+        public async Task<IEnumerable<Grade>> GetByGradeSet(Guid gradeSetId)
+        {
+            var query = GenerateQuery();
+
+            query.Where("GS.Id", gradeSetId);
+
+            return await ExecuteQuery(query);
+        }
     }
 }

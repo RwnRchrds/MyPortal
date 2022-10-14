@@ -110,7 +110,9 @@ namespace MyPortal.Logic.Services
                 foreach (var model in marks)
                 {
                     Validate(model);
-                    
+
+                    await AcademicHelper.IsAcademicYearLockedByWeek(model.WeekId, true);
+
                     if (model.CodeId == Guid.Empty)
                     {
                         throw new AttendanceCodeException("Cannot insert blank attendance codes.");
