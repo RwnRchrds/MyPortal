@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
@@ -70,6 +71,17 @@ namespace MyPortal.Database.Repositories
             column.ResultSetId = entity.ResultSetId;
             column.DisplayOrder = entity.DisplayOrder;
             column.ReadOnly = entity.ReadOnly;
+        }
+
+        public async Task<IEnumerable<MarksheetColumn>> GetByMarksheet(Guid marksheetId)
+        {
+            var query = GenerateQuery();
+
+            query.LeftJoin("Marksheets as M", "M.MarksheetTemplateId", "MT.Id");
+
+            query.Where("M.Id", marksheetId);
+
+            return await ExecuteQuery(query);
         }
     }
 }

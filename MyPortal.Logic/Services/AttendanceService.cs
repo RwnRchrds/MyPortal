@@ -45,10 +45,23 @@ namespace MyPortal.Logic.Services
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var session = await unitOfWork.Sessions.GetMetadata(sessionId, attendanceWeekId);
+                var metadata = await unitOfWork.Sessions.GetMetadata(sessionId, attendanceWeekId);
 
-                return await GetRegisterByDateRange(session.StudentGroupId, session.StartTime, session.EndTime,
-                    session.PeriodId);
+                if (metadata == null)
+                {
+                    throw new NotFoundException("Session not found.");
+                }
+
+                var title =
+                    $"Take Register - {metadata.PeriodName} {metadata.StartTime.Date: dd/MM/yyyy} ({metadata.ClassCode})";
+
+                if (metadata.TeacherId.HasValue)
+                {
+                    title += $" - {metadata.TeacherName}";
+                }
+
+                return await GetRegisterByDateRange(metadata.StudentGroupId, metadata.StartTime, metadata.EndTime,
+                    metadata.PeriodId, title);
             }
         }
 
@@ -70,7 +83,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<AttendanceRegisterModel> GetRegisterByDateRange(Guid studentGroupId, DateTime dateFrom, DateTime dateTo, Guid? lockToPeriodId = null)
+        public async Task<AttendanceRegisterModel> GetRegisterByDateRange(Guid studentGroupId, DateTime dateFrom, DateTime dateTo, Guid? lockToPeriodId = null, string title = null)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -83,8 +96,8 @@ namespace MyPortal.Logic.Services
                 
                 var register = new AttendanceRegisterModel();
 
-                register.Title =
-                    $"Edit Marks - {studentGroup.Description}, {dateFrom:dd/MM/yyyy}-{dateTo:dd/MM/yyyy}";
+                register.Title = string.IsNullOrWhiteSpace(title) ?
+                    $"Edit Marks - {studentGroup.Description}, {dateFrom:dd/MM/yyyy}-{dateTo:dd/MM/yyyy}" : title;
 
                 var periods = (await unitOfWork.AttendancePeriods.GetByDateRange(dateFrom.Date, dateTo.GetEndOfDay())).ToArray();
                 

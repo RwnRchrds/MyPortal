@@ -94,7 +94,8 @@ namespace MyPortal.Logic.Models.Response.Attendance.Register
                     });
                 }
 
-                foreach (var columnGroup in ColumnGroups)
+                // Metadata for this is in the columns, so this can likely be handled by the client app
+                /*foreach (var columnGroup in ColumnGroups)
                 {
                     var missingCells = columnGroup.Columns.Where(c =>
                             !dataRow.Marks.Any(
@@ -110,7 +111,7 @@ namespace MyPortal.Logic.Models.Response.Attendance.Register
                             PeriodId = missingCell.AttendancePeriodId
                         });
                     }
-                }
+                }*/
                 
                 data.Add(dataRow);
             }

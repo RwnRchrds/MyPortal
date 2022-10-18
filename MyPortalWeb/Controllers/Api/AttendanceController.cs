@@ -49,7 +49,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("register/{attendanceWeekId}/{sessionId}")]
+        [Route("weeks/{attendanceWeekId}/registers/{sessionId}")]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.AttendanceViewAttendanceMarks)]
         [ProducesResponseType(typeof(AttendanceRegisterModel), 200)]

@@ -17,7 +17,7 @@ namespace MyPortal.Database.Models.QueryResults.Attendance
         public string PeriodName { get; set; }
         public string ClassCode { get; set; }
         // public string CourseDescription { get; set; }
-        public Guid TeacherId { get; set; }
+        public Guid? TeacherId { get; set; }
         public string TeacherName { get; set; }
         public Guid? RoomId { get; set; }
         public string RoomName { get; set; }

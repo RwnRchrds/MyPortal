@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.QueryResults.Assessment;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
@@ -10,5 +11,6 @@ namespace MyPortal.Database.Interfaces.Repositories
     {
         Task<Result> GetResult(Guid studentId, Guid aspectId, Guid resultSetId);
         Task<IEnumerable<Result>> GetPreviousResults(Guid studentId, Guid aspectId, DateTime dateTo);
+        Task<IEnumerable<ResultMetadata>> GetResultMetadataByMarksheet(Guid marksheetId);
     }
 }

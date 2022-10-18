@@ -19,9 +19,12 @@ namespace MyPortal.Database.Models.Entity
         [Required]
         [StringLength(256)]
         public string Name { get; set; }
-        
+
         [Column(Order = 4)] 
         public DateTime? ReleaseDate { get; set; }
+        
+        [Column(Order = 5)] 
+        public bool Locked { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Result> Results { get; set; }

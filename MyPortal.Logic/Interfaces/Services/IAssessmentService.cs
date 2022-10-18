@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Assessment;
+using MyPortal.Logic.Models.Summary;
 
 namespace MyPortal.Logic.Interfaces.Services;
 
@@ -15,6 +16,6 @@ public interface IAssessmentService
     Task CreateAspect(AspectRequestModel aspect);
     Task UpdateAspect(Guid aspectId, AspectRequestModel aspect);
     Task DeleteAspect(Guid aspectId);
-    Task SaveResults(params ResultRequestModel[] results);
+    Task SaveResults(params ResultSummaryModel[] models);
     Task DeleteResult(Guid resultId);
 }

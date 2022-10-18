@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models.Entity
@@ -17,5 +18,6 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual StudentGroup StudentGroup { get; set; }
         public virtual StaffMember Supervisor { get; set; }
+        public virtual ICollection<StudentGroup> MainGroups { get; set; }
     }
 }

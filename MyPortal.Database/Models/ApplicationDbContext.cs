@@ -1101,7 +1101,7 @@ namespace MyPortal.Database.Models
                     e.HasOne(x => x.Course)
                         .WithMany(x => x.Awards)
                         .HasForeignKey(x => x.CourseId)
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<ExamAwardElement>(e =>
@@ -2460,6 +2460,11 @@ namespace MyPortal.Database.Models
                     e.HasOne(x => x.PromoteToGroup)
                         .WithMany(x => x.PromotionSourceGroups)
                         .HasForeignKey(x => x.PromoteToGroupId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(x => x.MainSupervisor)
+                        .WithMany(x => x.MainGroups)
+                        .HasForeignKey(x => x.MainSupervisorId)
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.StudentMemberships)

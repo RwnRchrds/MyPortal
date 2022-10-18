@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.QueryResults.Assessment;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Summary;
 
 namespace MyPortal.Logic.Models.Response.Assessment.Marksheet;
 
@@ -18,13 +20,13 @@ public class MarksheetViewModel
     }
     
     public string Title { get; set; }
+    public bool Completed { get; set; }
 
     public ICollection<MarksheetColumnViewModel> Columns { get; set; }
     public ICollection<MarksheetStudentViewModel> Students { get; set; }
 
     public async Task PopulateColumns(IUnitOfWork unitOfWork, IEnumerable<MarksheetColumnModel> columnCollection)
     {
-        // TODO: Continue work on this
         Dictionary<Guid, GradeModel[]> gradeSets = new Dictionary<Guid, GradeModel[]>();
 
         foreach (var columnModel in columnCollection)
@@ -47,14 +49,16 @@ public class MarksheetViewModel
                 ResultSetName = columnModel.ResultSet.Name,
                 AspectTypeId = columnModel.Aspect.TypeId,
                 Order = columnModel.DisplayOrder,
-                AspectId = columnModel.AspectId
+                AspectId = columnModel.AspectId,
+                IsReadOnly = columnModel.ResultSet.Locked || columnModel.ReadOnly || Completed
             };
 
             var aspectType = columnModel.Aspect.TypeId;
 
             if (aspectType == AspectTypes.Grade)
             {
-                if (!gradeSets.TryGetValue(columnModel.Aspect.GradeSetId.Value, out var columnGrades))
+                if (!columnModel.Aspect.GradeSetId.HasValue ||
+                    !gradeSets.TryGetValue(columnModel.Aspect.GradeSetId.Value, out var columnGrades))
                 {
                     throw new NotFoundException("Grade set not found.");
                 }
@@ -66,6 +70,51 @@ public class MarksheetViewModel
                 column.MinMark = columnModel.Aspect.MinMark;
                 column.MaxMark = columnModel.Aspect.MaxMark;
             }
+            
+            Columns.Add(column);
         }
     }
+
+    public void PopulateResults(IEnumerable<ResultMetadata> results)
+    {
+        var data = new List<MarksheetStudentViewModel>();
+
+        var students = results.GroupBy(r => r.StudentId).ToArray();
+
+        foreach (var student in students)
+        {
+            var studentData = student.ToArray();
+
+            var dataRow = new MarksheetStudentViewModel();
+
+            dataRow.StudentId = student.Key;
+
+            for (int i = 0; i < studentData.Length; i++)
+            {
+                var result = studentData[i];
+
+                if (i == 0)
+                {
+                    dataRow.StudentName = result.StudentName;
+                }
+                
+                dataRow.Results.Add(new ResultSummaryModel
+                {
+                    StudentId = result.StudentId,
+                    ResultSetId = result.ResultSetId,
+                    AspectId = result.AspectId,
+                    GradeId = result.GradeId,
+                    Mark = result.Mark,
+                    Comment = result.Comment,
+                    Note = result.Note,
+                    ColourCode = result.ColourCode
+                });
+            }
+            
+            data.Add(dataRow);
+        }
+
+        Students = data.OrderBy(d => d.StudentName).ToArray();
+    }
+    
 }

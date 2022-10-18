@@ -4,11 +4,14 @@ using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Constants;
+using MyPortal.Database.Enums;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.QueryResults.Assessment;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
 using Task = System.Threading.Tasks.Task;
@@ -20,6 +23,41 @@ namespace MyPortal.Database.Repositories
         public ResultRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
             
+        }
+        
+        private Query WithResults(Query query, string alias)
+        {
+            var cteQuery = new Query("Results as R").Distinct();
+
+            cteQuery.Select("R.Id as ResultId", "R.ResultSetId as ResultSetId", "R.StudentId as StudentId",
+                "R.AspectId as AspectId", "R.CreatedById as CreatedById", "R.Date as Date", "R.GradeId as GradeId",
+                "R.Mark as Mark", "R.Comment as Comment", "R.ColourCode as ColourCode", "R.Note as Note",
+                "SN.Name as StudentName");
+
+            cteQuery.SelectRaw("COALESCE(U.UserName, CBN.Name) as CreatedByName");
+
+            cteQuery.LeftJoin("Users as U", "U.Id", "R.CreatedById");
+            cteQuery.LeftJoin("Students as S", "S.Id", "R.StudentId");
+            cteQuery.ApplyName("SN", "S.PersonId");
+            cteQuery.ApplyName("CBN", "U.PersonId", NameFormat.FullNameAbbreviated);
+            
+            return query.With(alias, cteQuery);
+        }
+
+        private Query GenerateMetadataQuery(string alias = "RM")
+        {
+            var query = new Query();
+
+            WithResults(query, "ResultsMetadataCte");
+
+            query.Select($"{alias}.ResultId", $"{alias}.ResultSetId", $"{alias}.StudentId",
+                $"{alias}.AspectId", $"{alias}.CreatedById", $"{alias}.Date", $"{alias}.GradeId",
+                $"{alias}.Mark", $"{alias}.Comment", $"{alias}.ColourCode", $"{alias}.Note",
+                $"{alias}.StudentName", $"{alias}.CreatedByName");
+
+            query.From($"ResultsMetadataCte as {alias}");
+
+            return query;
         }
 
         protected override Query JoinRelated(Query query)
@@ -78,6 +116,20 @@ namespace MyPortal.Database.Repositories
             result.Mark = entity.Mark;
             result.Comment = entity.Comment;
             result.ColourCode = entity.ColourCode;
+        }
+
+        public async Task<IEnumerable<ResultMetadata>> GetResultMetadataByMarksheet(Guid marksheetId)
+        {
+            var query = GenerateMetadataQuery();
+
+            query.Join("MarksheetColumns as MC", "MC.AspectId", "RM.AspectId");
+            query.LeftJoin("MarksheetTemplates as MT", "MT.Id", "MC.TemplateId");
+            query.LeftJoin("Marksheets as M", "M.MarksheetTemplateId", "MT.Id");
+
+            query.WhereRaw("RM.ResultSetId = MC.ResultSetId");
+            query.Where("M.Id", marksheetId);
+
+            return await ExecuteQuery<ResultMetadata>(query);
         }
 
         public async Task<Result> GetResult(Guid studentId, Guid aspectId, Guid resultSetId)

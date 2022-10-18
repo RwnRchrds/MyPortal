@@ -12,6 +12,8 @@ using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Assessment;
+using MyPortal.Logic.Models.Response.Assessment.Marksheet;
+using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services;
@@ -70,6 +72,39 @@ public class AssessmentService : BaseService, IAssessmentService
             }
 
             return await GetPreviousResults(result.StudentId, result.AspectId, result.Date);
+        }
+    }
+
+    public async Task<MarksheetViewModel> GetMarksheet(Guid marksheetId)
+    {
+        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        {
+            var metadata = await unitOfWork.Marksheets.GetMarksheetMetadata(marksheetId);
+
+            if (metadata == null)
+            {
+                throw new NotFoundException("Marksheet not found.");
+            }
+
+            var marksheet = new MarksheetViewModel();
+
+            marksheet.Title = $"{metadata.TemplateName} - {metadata.StudentGroupCode}";
+
+            if (metadata.OwnerId.HasValue)
+            {
+                marksheet.Title += $" - {metadata.OwnerName}";
+            }
+            
+            marksheet.Completed = metadata.Completed;
+
+            var marksheetColumns = (await unitOfWork.MarksheetColumns.GetByMarksheet(marksheetId))
+                .Select(c => new MarksheetColumnModel(c)).ToList();
+            var resultData = (await unitOfWork.Results.GetResultMetadataByMarksheet(marksheetId)).ToList();
+
+            await marksheet.PopulateColumns(unitOfWork, marksheetColumns);
+            marksheet.PopulateResults(resultData);
+
+            return marksheet;
         }
     }
 
@@ -136,7 +171,7 @@ public class AssessmentService : BaseService, IAssessmentService
         }
     }
 
-    public async Task SaveResults(params ResultRequestModel[] models)
+    public async Task SaveResults(params ResultSummaryModel[] models)
     {
         List<Aspect> cachedAspects = new List<Aspect>();
         List<ResultSet> cachedResultSets = new List<ResultSet>();
@@ -195,14 +230,17 @@ public class AssessmentService : BaseService, IAssessmentService
                         ResultSetId = model.ResultSetId,
                         ColourCode = model.ColourCode,
                         Note = model.Note,
-                        Date = model.Date
+                        Date = DateTime.Now
                     };
                 }
                 else
                 {
                     result.ColourCode = model.ColourCode;
                     result.Note = model.Note;
-                    result.Date = model.Date;
+                    
+                    // To be discussed, a new result should not be created as this result is just being amended
+                    // but does the date need to be updated?
+                    result.Date = DateTime.Now;
                 }
 
                 if (aspect.TypeId == AspectTypes.Grade)
