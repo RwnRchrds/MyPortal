@@ -28,5 +28,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<Class> Classes { get; set; }
 
         public virtual ICollection<StudyTopic> StudyTopics { get; set; }
+        
+        public virtual ICollection<CommentBankArea> CommentBankAreas { get; set; }
     }
 }

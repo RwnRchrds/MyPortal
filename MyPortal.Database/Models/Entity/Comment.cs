@@ -8,12 +8,16 @@ namespace MyPortal.Database.Models.Entity
     public class Comment : BaseTypes.Entity
     {
         [Column(Order = 1)]
-        public Guid CommentBankId { get; set; }
-
+        public Guid CommentTypeId { get; set; }
+        
         [Column(Order = 2)]
+        public Guid CommentBankSectionId { get; set; }
+
+        [Column(Order = 3)]
         [Required]
         public string Value { get; set; }
 
-        public virtual CommentBank CommentBank { get; set; }
+        public virtual CommentType CommentType { get; set; }
+        public virtual CommentBankSection Section { get; set; }
     }
 }

@@ -1646,6 +1646,7 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Code, Description, AttendanceCodeTypeId, Active, Restricted, System)
     VALUES (Id, Code, Description, AttendanceCodeTypeId, Active, 0, 1);
 
+
 --[AchievementOutcome]
 
 MERGE INTO [dbo].[AchievementOutcomes] AS Target
@@ -1830,6 +1831,22 @@ WHEN MATCHED THEN
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, DefaultPoints, Active)
     VALUES (Id, Description, DefaultPoints, Active);
+
+
+-- [CommentTypes]
+MERGE INTO [dbo].[CommentTypes] AS Target
+USING (VALUES
+           ('57DEAF3C-1E3F-4D44-A516-15A79A1DC18C', 'Heading', 1, 1),
+           ('57DEAF3C-1E3F-4D44-A516-15A79A1DC18D', 'Join', 1, 1),
+           ('57DEAF3C-1E3F-4D44-A516-15A79A1DC18E', 'New Line', 1, 1)
+)
+    AS Source(Id, Description, DefaultPoints, Active)
+ON Target.Id = Source.Id
+
+WHEN NOT MATCHED THEN
+    INSERT (Id, Description, Active)
+    VALUES (Id, Description, Active);
+
 
 --[Communication_CommunicationTypes]
 

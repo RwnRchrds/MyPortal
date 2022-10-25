@@ -5,15 +5,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MyPortal.Database.Models.Entity
 {
     [Table("CommentBanks")]
-    public partial class CommentBank : BaseTypes.LookupItem
+    public class CommentBank : BaseTypes.LookupItem
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public CommentBank()
         {
-            Comments = new HashSet<Comment>();
+            Areas = new HashSet<CommentBankArea>();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<CommentBankArea> Areas { get; set; }
     }
 }

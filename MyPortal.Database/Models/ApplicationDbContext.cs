@@ -59,6 +59,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Class> Classes { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<CommentBank> CommentBanks { get; set; }
+        public virtual DbSet<CommentBankArea> CommentBankAreas { get; set; }
+        public virtual DbSet<CommentBankSection> CommentBankSections { get; set; }
         public virtual DbSet<CommunicationLog> CommunicationLogs { get; set; }
         public virtual DbSet<CommunicationType> CommunicationTypes { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
@@ -679,9 +681,31 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasMany(x => x.Comments)
+                    e.HasMany(x => x.Areas)
                         .WithOne(x => x.CommentBank)
                         .HasForeignKey(x => x.CommentBankId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<CommentBankArea>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(x => x.Sections)
+                        .WithOne(x => x.Area)
+                        .HasForeignKey(x => x.CommentBankAreaId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<CommentBankSection>(e =>
+                {
+                    SetIdDefaultValue(e);
+
+                    e.HasMany(x => x.Comments)
+                        .WithOne(x => x.Section)
+                        .HasForeignKey(x => x.CommentBankSectionId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -738,6 +762,12 @@ namespace MyPortal.Database.Models
                     e.HasMany(x => x.Awards)
                         .WithOne(x => x.Course)
                         .HasForeignKey(x => x.CourseId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                    
+                    e.HasMany(x => x.CommentBankAreas)
+                        .WithOne(x => x.Course)
+                        .HasForeignKey(x => x.CourseId)
+                        .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
