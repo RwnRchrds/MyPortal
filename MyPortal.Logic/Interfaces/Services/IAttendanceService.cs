@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Interfaces.Services
     public interface IAttendanceService
     {
         Task<AttendanceSummary> GetAttendanceSummaryByStudent(Guid studentId, Guid academicYearId);
-        Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId, bool returnNoMark = false);
+        Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId);
         Task<IEnumerable<AttendanceRegisterSummaryModel>> GetRegisters(RegisterSearchRequestModel model);
         Task<AttendanceRegisterModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId);
         Task<AttendanceRegisterModel> GetRegisterByDateRange(Guid studentGroupId, DateTime dateFrom, DateTime dateTo,

@@ -29,6 +29,23 @@ namespace MyPortalWeb.Controllers.Api
             _attendanceService = attendanceService;
         }
 
+        [HttpPost]
+        [Route("marks")]
+        [Permission(PermissionValue.AttendanceEditAttendanceMarks)]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> SaveAttendanceMarks([FromBody] AttendanceMarkSummaryModel[] marks)
+        {
+            try
+            {
+                await _attendanceService.UpdateAttendanceMarks(marks);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
         [HttpGet]
         [Route("registers")]
         [Authorize(Policy = Policies.UserType.Staff)]

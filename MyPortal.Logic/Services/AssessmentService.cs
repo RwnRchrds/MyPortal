@@ -88,7 +88,7 @@ public class AssessmentService : BaseService, IAssessmentService
 
             var marksheet = new MarksheetViewModel();
 
-            marksheet.Title = $"{metadata.TemplateName} - {metadata.StudentGroupCode}";
+            marksheet.Title = $"{metadata.TemplateName} ({metadata.StudentGroupCode})";
 
             if (metadata.OwnerId.HasValue)
             {

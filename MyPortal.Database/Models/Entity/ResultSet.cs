@@ -21,7 +21,7 @@ namespace MyPortal.Database.Models.Entity
         public string Name { get; set; }
 
         [Column(Order = 4)] 
-        public DateTime? ReleaseDate { get; set; }
+        public DateTime? PublishDate { get; set; }
         
         [Column(Order = 5)] 
         public bool Locked { get; set; }

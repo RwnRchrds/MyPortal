@@ -25,16 +25,15 @@ namespace MyPortal.Logic.Services
 {
     public class AttendanceService : BaseService, IAttendanceService
     {
-        public async Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId,
-            bool returnNoMark = false)
+        public async Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var attendanceMark = await unitOfWork.AttendanceMarks.GetMark(studentId, attendanceWeekId, periodId);
 
-                if (returnNoMark && attendanceMark == null)
+                if (attendanceMark == null)
                 {
-                    return AttendanceMarkModel.NoMark(studentId, attendanceWeekId, periodId);
+                    return null;
                 }
 
                 return new AttendanceMarkModel(attendanceMark);
@@ -53,7 +52,7 @@ namespace MyPortal.Logic.Services
                 }
 
                 var title =
-                    $"Take Register - {metadata.PeriodName} {metadata.StartTime.Date: dd/MM/yyyy} ({metadata.ClassCode})";
+                    $"{metadata.PeriodName} {metadata.StartTime.Date: dd/MM/yyyy} ({metadata.ClassCode})";
 
                 if (metadata.TeacherId.HasValue)
                 {
@@ -97,7 +96,7 @@ namespace MyPortal.Logic.Services
                 var register = new AttendanceRegisterModel();
 
                 register.Title = string.IsNullOrWhiteSpace(title) ?
-                    $"Edit Marks - {studentGroup.Description}, {dateFrom:dd/MM/yyyy}-{dateTo:dd/MM/yyyy}" : title;
+                    $"{studentGroup.Description}, {dateFrom:dd/MM/yyyy}-{dateTo:dd/MM/yyyy}" : title;
 
                 var periods = (await unitOfWork.AttendancePeriods.GetByDateRange(dateFrom.Date, dateTo.GetEndOfDay())).ToArray();
                 
@@ -126,7 +125,7 @@ namespace MyPortal.Logic.Services
 
                     await AcademicHelper.IsAcademicYearLockedByWeek(model.WeekId, true);
 
-                    if (model.CodeId == Guid.Empty)
+                    if (!model.CodeId.HasValue || model.CodeId == Guid.Empty)
                     {
                         throw new AttendanceCodeException("Cannot insert blank attendance codes.");
                     }
