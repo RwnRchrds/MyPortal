@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyPortal.Logic.Attributes;
 
-public class NotNullAttribute : ValidationAttribute
+internal class NotNullAttribute : ValidationAttribute
 {
     protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
