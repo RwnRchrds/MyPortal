@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data.Common;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
@@ -16,6 +18,7 @@ namespace MyPortal.Database
         private ApplicationDbContext _context;
         private int _batchSize;
         private int _batchLimit = 1000;
+        private readonly string _connectionString;
 
         private DbTransaction _transaction;
         private IAcademicTermRepository _academicTerms;
@@ -58,6 +61,8 @@ namespace MyPortal.Database
         private IChargeRepository _charges;
         private IClassRepository _classes;
         private ICommentBankRepository _commentBanks;
+        private ICommentBankAreaRepository _commentBankAreas;
+        private ICommentBankSectionRepository _commentBankSections;
         private ICommentRepository _comments;
         private ICommunicationLogRepository _communicationLogs;
         private ICommunicationTypeRepository _communicationTypes;
@@ -323,6 +328,12 @@ namespace MyPortal.Database
 
         public ICommentBankRepository CommentBanks =>
             _commentBanks ??= new CommentBankRepository(_context, _transaction);
+
+        public ICommentBankAreaRepository CommentBankAreas =>
+            _commentBankAreas ??= new CommentBankAreaRepository(_context, _transaction);
+
+        public ICommentBankSectionRepository CommentBankSections =>
+            _commentBankSections ??= new CommentBankSectionRepository(_context, _transaction);
 
         public ICommentRepository Comments => _comments ??= new CommentRepository(_context, _transaction);
 
@@ -746,11 +757,22 @@ namespace MyPortal.Database
 
         private async Task<DbTransaction> GetDbTransaction()
         {
-            var contextTransaction = await _context.Database.BeginTransactionAsync();
+            // TODO: Test both methods for performance and reliability
+            // Use this to utilise the context's own transaction
+            // var contextTransaction = await _context.Database.BeginTransactionAsync();
+            // var transaction = contextTransaction.GetDbTransaction();
+            // return transaction;
 
-            var transaction = contextTransaction.GetDbTransaction();
-
-            return transaction;
+            // Use this to create a transaction separate from the context
+            
+            if (!string.IsNullOrWhiteSpace(_connectionString))
+            {
+                var connection = new SqlConnection(_connectionString);
+                var transaction = await connection.BeginTransactionAsync();
+                return transaction;
+            }
+            
+            return null;
         }
 
         private async Task Initialise()
@@ -768,6 +790,7 @@ namespace MyPortal.Database
         private UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
+            _connectionString = context.Database.GetConnectionString();
         }
 
         public int BatchLimit
@@ -805,12 +828,12 @@ namespace MyPortal.Database
             try
             {
                 await _context.SaveChangesAsync();
-                await _context.Database.CurrentTransaction.CommitAsync();
+                await _transaction?.CommitAsync();
                 _batchSize = 0;
             }
             catch (Exception)
             {
-                await _context.Database.CurrentTransaction.RollbackAsync();
+                await _transaction?.RollbackAsync();
                 throw;
             }
             finally
@@ -861,6 +884,8 @@ namespace MyPortal.Database
             _charges = null;
             _classes = null;
             _commentBanks = null;
+            _commentBankAreas = null;
+            _commentBankSections = null;
             _comments = null;
             _communicationLogs = null;
             _communicationTypes = null;

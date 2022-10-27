@@ -105,7 +105,7 @@ namespace MyPortal.Logic.Models.Entity
 
                 if (attendeePerson != null)
                 {
-                    return attendeePerson.CanEdit;
+                    return attendeePerson.CanEditEvent;
                 }
             }
 

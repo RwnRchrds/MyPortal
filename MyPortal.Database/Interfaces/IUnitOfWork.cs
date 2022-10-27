@@ -49,6 +49,8 @@ namespace MyPortal.Database.Interfaces
         IChargeRepository Charges { get; }
         IClassRepository Classes { get; }
         ICommentBankRepository CommentBanks { get; }
+        ICommentBankAreaRepository CommentBankAreas { get; }
+        ICommentBankSectionRepository CommentBankSections { get; }
         ICommentRepository Comments { get; }
         ICommunicationLogRepository CommunicationLogs { get; }
         ICommunicationTypeRepository CommunicationTypes { get; }

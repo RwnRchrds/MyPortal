@@ -21,7 +21,7 @@ namespace MyPortal.Logic.Models.Entity
             ResponseId = model.ResponseId;
             Required = model.Required;
             Attended = model.Attended;
-            CanEdit = model.CanEdit;
+            CanEdit = model.CanEditEvent;
 
             if (model.Event != null)
             {
@@ -50,7 +50,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public bool CanEdit { get; set; }
         
-        public bool Attended { get; set; }
+        public bool? Attended { get; set; }
 
         public virtual DiaryEventModel Event { get; set; }
         public virtual PersonModel Person { get; set; }

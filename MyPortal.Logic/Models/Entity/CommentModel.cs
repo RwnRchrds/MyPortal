@@ -19,21 +19,21 @@ namespace MyPortal.Logic.Models.Entity
 
         private void LoadFromModel(Comment model)
         {
-            CommentBankId = model.CommentBankId;
+            CommentBankSectionId = model.CommentBankSectionId;
             Value = model.Value;
 
-            if (model.CommentBank != null)
+            if (model.Section != null)
             {
-                CommentBank = new CommentBankModel(model.CommentBank);
+                Section = new CommentBankSectionModel(model.Section);
             }
         }
         
-        public Guid CommentBankId { get; set; }
+        public Guid CommentBankSectionId { get; set; }
 
         [Required]
         public string Value { get; set; }
 
-        public CommentBankModel CommentBank { get; set; }
+        public CommentBankSectionModel Section { get; set; }
         public async Task Load(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

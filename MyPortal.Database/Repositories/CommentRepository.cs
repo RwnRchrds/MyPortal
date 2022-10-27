@@ -39,10 +39,10 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var comments = await Transaction.Connection.QueryAsync<Comment, CommentBank, Comment>(sql.Sql,
-                (comment, bank) =>
+            var comments = await Transaction.Connection.QueryAsync<Comment, CommentBankSection, Comment>(sql.Sql,
+                (comment, section) =>
                 {
-                    comment.CommentBank = bank;
+                    comment.Section = section;
 
                     return comment;
                 }, sql.NamedBindings, Transaction);
@@ -60,7 +60,7 @@ namespace MyPortal.Database.Repositories
             }
 
             comment.Value = entity.Value;
-            comment.CommentBankId = entity.CommentBankId;
+            comment.CommentBankSectionId = entity.CommentBankSectionId;
         }
     }
 }

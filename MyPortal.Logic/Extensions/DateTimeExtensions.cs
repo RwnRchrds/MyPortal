@@ -9,20 +9,13 @@ namespace MyPortal.Logic.Extensions
 {
     internal static class DateTimeExtensions
     {
-        internal static DateTime GetDayOfWeek(this DateTime dateTime, DayOfWeek dayOfWeek)
+        internal static DateTime GetDayOfWeek(this DateTime dateTime, DayOfWeek dayOfWeek, SundayPosition sundayPosition = SundayPosition.WeekEnd)
         {
-            int diff = (7 + (dateTime.DayOfWeek - DayOfWeek.Monday)) % 7;
+            var currentDayOfWeek = (int)dateTime.DayOfWeek;
 
-            var monday = dateTime.AddDays(-1 * diff).Date;
+            var target = sundayPosition == SundayPosition.WeekEnd && dayOfWeek == DayOfWeek.Sunday ? 7 : (int)dayOfWeek;
 
-            var counter = dayOfWeek - DayOfWeek.Monday;
-
-            if (counter == -1)
-            {
-                counter = 6;
-            }
-
-            return monday.AddDays(counter);
+            return dateTime.AddDays(target - currentDayOfWeek);
         }
 
         internal static DateTime? GetNextOccurrence(this DateTime dateTime, RecurringRequestModel recurringModel)

@@ -166,7 +166,7 @@ namespace MyPortal.Logic.Services
                         PersonId = user.PersonId.Value,
                         Required = true,
                         ResponseId = AttendeeResponses.Accepted,
-                        CanEdit = true
+                        CanEditEvent = true
                     });
                 }
 
@@ -239,7 +239,7 @@ namespace MyPortal.Logic.Services
                     if (existingAttendee != null)
                     {
                         existingAttendee.Required = attendee.Required;
-                        existingAttendee.CanEdit = attendee.CanEdit;
+                        existingAttendee.CanEditEvent = attendee.CanEdit;
                         existingAttendee.Attended = attendee.Attended;
                         existingAttendee.ResponseId = attendee.ResponseId;
 
@@ -252,7 +252,7 @@ namespace MyPortal.Logic.Services
                             EventId = eventId,
                             PersonId = attendee.PersonId,
                             Required = attendee.Required,
-                            CanEdit = attendee.CanEdit,
+                            CanEditEvent = attendee.CanEdit,
                             ResponseId = attendee.ResponseId,
                             Attended = attendee.Attended
                         };

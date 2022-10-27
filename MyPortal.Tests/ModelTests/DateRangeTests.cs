@@ -14,8 +14,12 @@ public class DateRangeTests
         // A:       |---------------|
         // B: |---------------|
 
-        var a = new DateRange(DateTime.Today.AddHours(9), DateTime.Today.AddHours(13));
-        var b = new DateRange(DateTime.Today.AddHours(10.5), DateTime.Today.AddHours(15));
+        
+        // 10:30 - 15:00
+        var a = new DateRange(DateTime.Today.AddHours(10.5), DateTime.Today.AddHours(15));
+        
+        // 09:00 - 13:00
+        var b = new DateRange(DateTime.Today.AddHours(9), DateTime.Today.AddHours(13));
 
         bool result = a.Overlaps(b);
         
@@ -28,8 +32,11 @@ public class DateRangeTests
         // A: |---------------|
         // B:         |---------------|
 
-        var a = new DateRange(DateTime.Today.AddHours(10.5), DateTime.Today.AddHours(15));
-        var b = new DateRange(DateTime.Today.AddHours(9), DateTime.Today.AddHours(13));
+        // 09:00 - 13:00
+        var a = new DateRange(DateTime.Today.AddHours(9), DateTime.Today.AddHours(13));
+        
+        // 10:30 - 15:00
+        var b = new DateRange(DateTime.Today.AddHours(10.5), DateTime.Today.AddHours(15));
 
         bool result = a.Overlaps(b);
         
@@ -42,7 +49,10 @@ public class DateRangeTests
         // A: |------------------------------|
         // B:           |-------|            
 
+        // 09:00 - 18:00
         var a = new DateRange(DateTime.Today.AddHours(9), DateTime.Today.AddHours(18));
+        
+        // 13:00 - 14:00
         var b = new DateRange(DateTime.Today.AddHours(13), DateTime.Today.AddHours(14));
 
         bool result = a.Overlaps(b);
@@ -56,7 +66,10 @@ public class DateRangeTests
         // A:           |-------|
         // B: |------------------------------|
 
+        // 13:00 - 14:00
         var a = new DateRange(DateTime.Today.AddHours(13), DateTime.Today.AddHours(14));
+        
+        // 09:00 - 18:00
         var b = new DateRange(DateTime.Today.AddHours(9), DateTime.Today.AddHours(18));
 
         bool result = a.Overlaps(b);
@@ -70,7 +83,10 @@ public class DateRangeTests
         // A: |---------------|
         // B: |---------------|
         
+        // 09:00 - 12:00
         var a = new DateRange(DateTime.Today.AddHours(9), DateTime.Today.AddHours(12));
+        
+        // 09:00 - 12:00
         var b = new DateRange(DateTime.Today.AddHours(9), DateTime.Today.AddHours(12));
 
         bool result = a.Overlaps(b);
@@ -79,18 +95,21 @@ public class DateRangeTests
     }
     
     [Test]
-    [Ignore("This creates extra complication and might not be needed")]
-    public void Overlaps_IgnoresAdjacent()
+    public void Overlaps_DetectsAdjacent()
     {
         // A: |---------------|
         // B:                 |---------------|
 
+        
+        // 09:00 - 10:00
         var a = new DateRange(DateTime.Today.AddHours(9), DateTime.Today.AddHours(10));
+        
+        // 10:00 - 11:00
         var b = new DateRange(DateTime.Today.AddHours(10), DateTime.Today.AddHours(11));
 
         bool result = a.Overlaps(b);
         
-        Assert.That(result, Is.False);
+        Assert.That(result, Is.True);
     }
     
     [Test]
@@ -99,7 +118,10 @@ public class DateRangeTests
         // A: |---------------|
         // B:                       |---------------|
 
+        // 09:00 - 10:00
         var a = new DateRange(DateTime.Today.AddHours(9), DateTime.Today.AddHours(10));
+        
+        // 12:00 - 13:00
         var b = new DateRange(DateTime.Today.AddHours(12), DateTime.Today.AddHours(13));
 
         bool result = a.Overlaps(b);

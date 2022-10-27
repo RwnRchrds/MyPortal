@@ -19,10 +19,10 @@ namespace MyPortal.Database.Models.Entity
         public bool Required { get; set; }
 
         [Column(Order = 5)]
-        public bool Attended { get; set; }
+        public bool? Attended { get; set; }
 
         [Column(Order = 6)]
-        public bool CanEdit { get; set; }
+        public bool CanEditEvent { get; set; }
 
         public virtual DiaryEvent Event { get; set; }
         public virtual Person Person { get; set; }

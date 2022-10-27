@@ -37,9 +37,10 @@ namespace MyPortal.Logic.Models.Data
             return Start <= dateRange.End && End >= dateRange.Start;
         }
 
-        public void Extend(int? days, int? hours = null, int? minutes = null)
+        public void Extend(int? years, int? months, int? days, int? hours = null, int? minutes = null)
         {
-            End = End.AddDays(days ?? 0).AddHours(hours ?? 0).AddMinutes(minutes ?? 0);
+            End = End.AddYears(years ?? 0).AddMonths(months ?? 0).AddDays(days ?? 0).AddHours(hours ?? 0)
+                .AddMinutes(minutes ?? 0);
         }
 
         public IEnumerable<DateTime> GetAllDates()
