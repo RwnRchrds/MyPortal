@@ -59,8 +59,7 @@ namespace MyPortal.Logic
                     databaseProviderValue = DatabaseProvider.MySql;
                     break;
                 default:
-                    throw new ArgumentException($"The database provider '{databaseProvider}' is invalid.",
-                        nameof(databaseProvider));
+                    throw new NotSupportedException($"The database provider '{databaseProvider}' is not supported.");
             }
 
             TestConnection(connectionString);

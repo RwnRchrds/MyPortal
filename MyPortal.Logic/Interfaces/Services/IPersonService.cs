@@ -9,9 +9,9 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface IPersonService
     {
-        Task<IEnumerable<PersonModel>> Get(PersonSearchOptions searchModel);
-        Task<PersonModel> GetByUserId(Guid userId, bool throwIfNotFound = true);
-        Task<PersonModel> GetById(Guid personId);
+        Task<IEnumerable<PersonModel>> GetPeople(PersonSearchOptions searchModel);
+        Task<PersonModel> GetPersonByUserId(Guid userId, bool throwIfNotFound = true);
+        Task<PersonModel> GetPersonById(Guid personId);
         Dictionary<string, string> GetGenderOptions();
         Task<PersonSearchResultModel> GetPersonWithTypes(Guid personId);
         Task<PersonSearchResultModel> GetPersonWithTypesByDirectory(Guid directoryId);

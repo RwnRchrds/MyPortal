@@ -50,7 +50,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var person = await PersonService.GetByUserId(userId, false);
+                var person = await PersonService.GetPersonByUserId(userId, false);
 
                 if (person.Id.HasValue && await CanAccessPerson(person.Id.Value))
                 {

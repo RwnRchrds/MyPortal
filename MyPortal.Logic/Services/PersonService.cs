@@ -15,7 +15,7 @@ namespace MyPortal.Logic.Services
 {
     public class PersonService : BaseService, IPersonService
     {
-        public async Task<PersonModel> GetById(Guid personId)
+        public async Task<PersonModel> GetPersonById(Guid personId)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -37,7 +37,7 @@ namespace MyPortal.Logic.Services
             return genders;
         }
 
-        public async Task<IEnumerable<PersonModel>> Get(PersonSearchOptions searchModel)
+        public async Task<IEnumerable<PersonModel>> GetPeople(PersonSearchOptions searchModel)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -77,7 +77,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<PersonModel> GetByUserId(Guid userId, bool throwIfNotFound = true)
+        public async Task<PersonModel> GetPersonByUserId(Guid userId, bool throwIfNotFound = true)
         {
             using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {

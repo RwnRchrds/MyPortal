@@ -12,6 +12,8 @@ namespace MyPortal.Logic.Models.Response.Attendance.Register
         }
 
         public Guid StudentId { get; set; }
+        public Guid? ReportCardId { get; set; }
+        public bool HasDetention { get; set; }
         public string StudentName { get; set; }
         public ICollection<AttendanceMarkSummaryModel> Marks { get; set; }
     }
