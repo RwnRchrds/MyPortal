@@ -23,7 +23,7 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "ParentEveningStaffMembers", "PESM", "ParentEveningStaffMemberId");
+            query.LeftJoin("ParentEveningStaffMembers as PESM", "PESM.Id", $"{TblAlias}.ParentEveningStaffMemberId");
 
             return query;
         }

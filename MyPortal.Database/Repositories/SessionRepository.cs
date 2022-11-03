@@ -91,8 +91,9 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("Students AS S", "S.Id", "SGM.StudentId");
 
             query.Where("S.Id", studentId);
-            query.WhereDate("SM.StartTime", ">=", dateFrom);
-            query.WhereDate("SM.EndTime", "<=", dateTo);
+            query.Where("SM.StartTime", ">=", dateFrom);
+            query.Where("SM.EndTime", "<=", dateTo);
+            query.WhereStudentGroupMembershipValid("SGM", dateFrom, dateTo);
 
             return await ExecuteQuery<SessionMetadata>(query);
         }

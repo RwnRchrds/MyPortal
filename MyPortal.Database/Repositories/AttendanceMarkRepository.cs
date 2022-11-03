@@ -81,6 +81,63 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
+        public async Task<IEnumerable<PossibleAttendanceMark>> GetPossibleMarksByStudentGroup(Guid studentGroupId,
+            IEnumerable<PossibleAttendancePeriod> attendancePeriods)
+        {
+            var orderedPeriods = attendancePeriods.OrderBy(p => p.ActualStartTime).ToArray();
+
+            var dateFrom = orderedPeriods.Select(x => x.ActualStartTime).FirstOrDefault();
+
+            var dateTo = orderedPeriods.Select(x => x.ActualStartTime).LastOrDefault();
+            
+            var query = new Query("Students as S");
+
+            query.Select("SGM.StudentId as StudentId", "AW.Id as AttendanceWeekId", "AP.Id as PeriodId");
+            query.SelectRaw("CASE WHEN AM.Id IS NOT NULL THEN 1 ELSE 0 END [Exists]");
+
+            query.CrossJoin("AttendancePeriods as AP");
+            query.LeftJoin("StudentGroupMemberships as SGM", "SGM.StudentId", "S.Id");
+            query.LeftJoin("StudentGroups as SG", "SG.Id", "SGM.StudentGroupId");
+            query.LeftJoin("CurriculumGroups as CG", "CG.StudentGroupId", "SG.Id");
+            query.LeftJoin("Classes as C", "C.CurriculumGroupId", "CG.Id");
+            query.LeftJoin("Sessions as SE", "SE.ClassId", "C.Id");
+            query.LeftJoin("AttendanceWeekPatterns as AWP", "AWP.Id", "AP.WeekPatternId");
+            query.LeftJoin("AttendanceWeeks as AW", "AW.WeekPatternId", "AWP.Id");
+            query.LeftJoin("AttendanceMarks as AM",
+                j => j.On("AM.StudentId", "S.Id").On("AM.WeekId", "AW.Id").On("AM.PeriodId", "AP.Id"));
+
+            query.GroupBy("SGM.StudentId", "AW.Id", "AP.Id");
+            query.GroupByRaw("CASE WHEN AM.Id IS NOT NULL THEN 1 ELSE 0 END");
+            
+            query.WhereStudentGroupMembershipValid("SGM", dateFrom, dateTo);
+            query.Where(q =>
+            {
+                for (int i = 0; i < orderedPeriods.Length; i++)
+                {
+                    var period = orderedPeriods[i];
+
+                    if (i == 0)
+                    {
+                        q.Where(sq =>
+                            sq.Where($"AM.PeriodId", period.PeriodId).Where($"AM.WeekId",
+                                period.AttendanceWeekId));
+                    }
+                    else
+                    {
+                        q.OrWhere(sq =>
+                            sq.Where($"AM.PeriodId", period.PeriodId).Where($"AM.WeekId",
+                                period.AttendanceWeekId));
+                    }
+                }
+
+                return q;
+            });
+
+            query.Where("SG.Id", studentGroupId);
+
+            return await ExecuteQuery<PossibleAttendanceMark>(query);
+        }
+
         public async Task<AttendanceMark> GetMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
             var query = GenerateQuery();
@@ -99,14 +156,17 @@ namespace MyPortal.Database.Repositories
         {
             if (attendancePeriods.Any())
             {
-                var runAsDate = attendancePeriods.OrderBy(p => p.ActualStartTime).Select(p => p.ActualStartTime)
-                    .FirstOrDefault();
-            
+                var orderedPeriods = attendancePeriods.OrderBy(p => p.ActualStartTime).ToArray();
+
+                var dateFrom = orderedPeriods.Select(x => x.ActualStartTime).FirstOrDefault();
+
+                var dateTo = orderedPeriods.Select(x => x.ActualStartTime).LastOrDefault();
+
                 var query = GenerateEmptyQuery(typeof(AttendanceMark), "AM");
 
                 JoinRelated(query);
 
-                JoinEntity(query, "People", "P", "S.PersonId");
+                query.LeftJoin("People as P", "P.Id", $"S.PersonId");
 
                 query.Select("AM.Id as AttendanceMarkId", "AM.StudentId as StudentId", "AM.WeekId as WeekId",
                     "AM.PeriodId as PeriodId", "AM.CodeId as CodeId", "AM.CreatedById as CreatedById",
@@ -114,7 +174,7 @@ namespace MyPortal.Database.Repositories
 
                 query.Select("CONCAT(P.LastName, ', ', P.FirstName) as StudentName");
 
-                query.JoinStudentGroups("S", "SGM");
+                query.JoinStudentGroupsByStudent("S", "SGM");
 
                 query.Where(q =>
                 {
@@ -139,7 +199,8 @@ namespace MyPortal.Database.Repositories
                     return q;
                 });
 
-                query.WhereStudentGroup("SGM", studentGroupId, runAsDate);
+                query.Where("SGM.StudentGroupId", studentGroupId);
+                query.WhereStudentGroupMembershipValid("SGM", dateFrom, dateTo);
 
                 return await ExecuteQuery<AttendanceMarkMetadata>(query);
             }

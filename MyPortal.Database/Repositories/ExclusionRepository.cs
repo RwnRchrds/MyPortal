@@ -24,10 +24,10 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "Students", "S", "StudentId");
-            JoinEntity(query, "ExclusionTypes", "ET", "ExclusionTypeId");
-            JoinEntity(query, "ExclusionReasons", "ER", "ExclusionReasonId");
-            JoinEntity(query, "ExclusionAppealResults", "EAR", "AppealResultId");
+            query.LeftJoin("Students as S", "S.Id", $"{TblAlias}.StudentId");
+            query.LeftJoin("ExclusionTypes as ET", "ET.Id", $"{TblAlias}.ExclusionTypeId");
+            query.LeftJoin("ExclusionReasons as ER", "ER.Id", $"{TblAlias}.ExclusionReasonId");
+            query.LeftJoin("ExclusionAppealResults as EAR", "EAR.Id", $"{TblAlias}.AppealResultId");
 
             return query;
         }

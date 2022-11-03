@@ -25,10 +25,10 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "Users", "U", "CreatedById");
-            JoinEntity(query, "Directory", "P", "DirectoryId");
-            JoinEntity(query, "DocumentType", "DT", "DocumentTypeId");
-            JoinEntity(query, "Files", "F", "FileId");
+            query.LeftJoin("Users as U", "U.Id", $"{TblAlias}.CreatedById");
+            query.LeftJoin("Directory as P", "P.Id", $"{TblAlias}.DirectoryId");
+            query.LeftJoin("DocumentType as DT", "DT.Id", $"{TblAlias}.DocumentTypeId");
+            query.LeftJoin("Files as F", "F.Id", $"{TblAlias}.FileId");
 
             return query;
         }

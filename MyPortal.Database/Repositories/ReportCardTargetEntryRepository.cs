@@ -22,8 +22,8 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "ReportCardEntries", "RCE", "EntryId");
-            JoinEntity(query, "ReportCardTargets", "RCT", "TargetId");
+            query.LeftJoin("ReportCardEntries as RCE", "RCE.Id", $"{TblAlias}.EntryId");
+            query.LeftJoin("ReportCardTargets as RCT", "RCT.Id", $"{TblAlias}.TargetId");
 
             return query;
         }

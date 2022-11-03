@@ -20,8 +20,8 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "People", "P", "PersonId");
-            JoinEntity(query, "DietaryRequirements", "DR", "DietaryRequirementId");
+            query.LeftJoin("People as P", "P.Id", $"{TblAlias}.PersonId");
+            query.LeftJoin("DietaryRequirements as DR", "DR.Id", $"{TblAlias}.DietaryRequirementId");
 
             return query;
         }

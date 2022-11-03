@@ -26,10 +26,10 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "HomeworkItems", "HI", "HomeworkId");
-            JoinEntity(query, "Students", "S", "StudentId");
-            JoinEntity(query, "Tasks", "T", "TaskId");
-            JoinEntity(query, "Documents", "D", "DocumentId");
+            query.LeftJoin("HomeworkItems", "HI.Id", $"{TblAlias}.HomeworkId");
+            query.LeftJoin("Students as S", "S.Id", $"{TblAlias}.StudentId");
+            query.LeftJoin("Tasks as T", "T.Id", $"{TblAlias}.TaskId");
+            query.LeftJoin("Documents as D", "D.Id", $"{TblAlias}.DocumentId");
 
             return query;
         }
@@ -91,7 +91,7 @@ namespace MyPortal.Database.Repositories
             
             var query = GenerateQuery();
 
-            query.JoinStudentGroups("S", "SGM");
+            query.JoinStudentGroupsByStudent("S", "SGM");
 
             query.WhereStudentGroup("SGM", studentGroupId, now);
 

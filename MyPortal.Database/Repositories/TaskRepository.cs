@@ -52,9 +52,9 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "People", "AT", "AssignedToId");
-            JoinEntity(query, "Users", "AB", "AssignedById");
-            JoinEntity(query, "TaskTypes", "TT", "TypeId");
+            query.LeftJoin("People as AT", "AT.Id", $"{TblAlias}.AssignedToId");
+            query.LeftJoin("Users as AB", "AB.Id", $"{TblAlias}.AssignedById");
+            query.LeftJoin("TaskTypes as TT", "TT.Id", $"{TblAlias}.TypeId");
 
             return query;
         }

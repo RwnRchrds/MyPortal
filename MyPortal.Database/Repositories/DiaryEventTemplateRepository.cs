@@ -25,7 +25,7 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "DiaryEventTypes", "T", "EventTypeId");
+            query.LeftJoin("DiaryEventTypes as T", "T.Id", $"{TblAlias}.EventTypeId");
 
             return query;
         }

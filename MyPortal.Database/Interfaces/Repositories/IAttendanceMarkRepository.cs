@@ -15,5 +15,8 @@ namespace MyPortal.Database.Interfaces.Repositories
 
         Task<IEnumerable<AttendanceMarkMetadata>> GetRegisterMarks(Guid studentGroupId,
             PossibleAttendancePeriod[] attendancePeriods);
+
+        Task<IEnumerable<PossibleAttendanceMark>> GetPossibleMarksByStudentGroup(Guid studentGroupId,
+            IEnumerable<PossibleAttendancePeriod> attendancePeriods);
     }
 }

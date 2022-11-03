@@ -22,9 +22,9 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "StaffMember", "SM", "StaffMemberId");
-            JoinEntity(query, "Person", "P", "PersonId");
-            JoinEntity(query, "NextOfKinRelationshipTypes", "NKRT", "RelationshipTypeId");
+            query.LeftJoin("StaffMember as SM", "SM.Id", $"{TblAlias}.StaffMemberId");
+            query.LeftJoin("Person as P", "P.Id", $"{TblAlias}.PersonId");
+            query.LeftJoin("NextOfKinRelationshipTypes as NKRT", "NKRT.Id", $"{TblAlias}.RelationshipTypeId");
 
             return query;
         }

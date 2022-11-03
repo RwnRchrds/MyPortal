@@ -23,9 +23,9 @@ public class StudentAchievementRepository : BaseReadWriteRepository<StudentAchie
 
     protected override Query JoinRelated(Query query)
     {
-        JoinEntity(query, "Students", "S", "StudentId");
-        JoinEntity(query, "Achievements", "A", "AchievementId");
-        JoinEntity(query, "AchievementOutcomes", "AO", "OutcomeId");
+        query.LeftJoin("Students as S", "S.Id", $"{TblAlias}.StudentId");
+        query.LeftJoin("Achievements as A", "A.Id", $"{TblAlias}.AchievementId");
+        query.LeftJoin("AchievementOutcomes as AO", "AO.Id", $"{TblAlias}.OutcomeId");
 
         return query;
     }

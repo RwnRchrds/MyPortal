@@ -23,10 +23,10 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "ReportCards", "RC", "ReportCardId");
-            JoinEntity(query, "Users", "U", "CreatedById");
-            JoinEntity(query, "AttendanceWeeks", "AW", "WeekId");
-            JoinEntity(query, "AttendancePeriods", "AP", "PeriodId");
+            query.LeftJoin("ReportCards as RC", "RC.Id", $"{TblAlias}.ReportCardId");
+            query.LeftJoin("Users as U", "U.Id", $"{TblAlias}.CreatedById");
+            query.LeftJoin("AttendanceWeeks as AW", "AW.Id", $"{TblAlias}.WeekId");
+            query.LeftJoin("AttendancePeriods as AP", "AP.Id", $"{TblAlias}.PeriodId");
 
             return query;
         }

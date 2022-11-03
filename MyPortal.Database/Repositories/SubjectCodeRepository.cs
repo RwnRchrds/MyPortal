@@ -18,7 +18,7 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "SubjectCodeSets", "SCS", "SubjectCodeSetId");
+            query.LeftJoin("SubjectCodeSets as SCS", "SCS.Id", $"{TblAlias}.SubjectCodeSetId");
 
             return query;
         }

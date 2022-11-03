@@ -23,9 +23,9 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "AgencyTypes", "AT", "TypeId");
-            JoinEntity(query, "Addresses", "AD", "AddressId");
-            JoinEntity(query, "Directory", "D", "DirectoryId");
+            query.LeftJoin("AgencyTypes as AT", "AT.Id", $"{TblAlias}.TypeId");
+            query.LeftJoin("Addresses as AD", "AD.Id", $"{TblAlias}.AddressId");
+            query.LeftJoin("Directory as D", "D.Id", $"{TblAlias}.DirectoryId");
 
             return query;
         }

@@ -2,6 +2,8 @@
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
@@ -20,8 +22,8 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "ExamComponentSittings", "ECS", "SittingId");
-            JoinEntity(query, "ExamCandidates", "EC", "CandidateId");
+            query.LeftJoin("ExamComponentSittings as ECS", "ECS.Id", $"{TblAlias}.SittingId");
+            query.LeftJoin("ExamCandidates as EC", "EC.Id", $"{TblAlias}.CandidateId");
 
             return query;
         }
@@ -54,6 +56,19 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(ExamSeatAllocation entity)
         {
+            var seatAllocation = await Context.ExamSeatAllocations.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (seatAllocation == null)
+            {
+                throw new EntityNotFoundException("Seat allocation not found.");
+            }
+
+            seatAllocation.SittingId = entity.SittingId;
+            seatAllocation.SeatRow = entity.SeatRow;
+            seatAllocation.SeatColumn = entity.SeatColumn;
+            seatAllocation.CandidateId = entity.CandidateId;
+            seatAllocation.Active = entity.Active;
+            seatAllocation.Attended = entity.Attended;
         }
     }
 }

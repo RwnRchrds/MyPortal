@@ -23,9 +23,9 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "MarksheetTemplates", "MT", "TemplateId");
-            JoinEntity(query, "Aspects", "A", "AspectId");
-            JoinEntity(query, "ResultSets", "RS", "ResultSetId");
+            query.LeftJoin("MarksheetTemplates as MT", "MT.Id", $"{TblAlias}.TemplateId");
+            query.LeftJoin("Aspects as A", "A.Id", $"{TblAlias}.AspectId");
+            query.LeftJoin("ResultSets as RS", "RS.Id", $"{TblAlias}.ResultSetId");
 
             return query;
         }

@@ -62,11 +62,11 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "ResultSets", "RS", "ResultSetId");
-            JoinEntity(query, "Aspects", "A", "AspectId");
-            JoinEntity(query, "Students", "S", "StudentId");
-            JoinEntity(query, "Grades", "G", "GradeId");
-            JoinEntity(query, "Users", "U", "CreatedById");
+            query.LeftJoin("ResultSets as RS", "RS.Id", $"{TblAlias}.ResultSetId");
+            query.LeftJoin("Aspects as A", "A.Id", $"{TblAlias}.AspectId");
+            query.LeftJoin("Students as S", "S.Id", $"{TblAlias}.StudentId");
+            query.LeftJoin("Grades as G", "G.Id", $"{TblAlias}.GradeId");
+            query.LeftJoin("Users as U", "U.Id", $"{TblAlias}.CreatedById");
 
             return query;
         }

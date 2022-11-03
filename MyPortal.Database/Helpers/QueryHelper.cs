@@ -29,7 +29,7 @@ namespace MyPortal.Database.Helpers
             return query;
         }
 
-        public static Query JoinStudentGroups(this Query query, string studentAlias, string studentGroupMembershipAlias)
+        public static Query JoinStudentGroupsByStudent(this Query query, string studentAlias, string studentGroupMembershipAlias)
         {
             query.LeftJoin($"StudentGroupMemberships as {studentGroupMembershipAlias}", $"{studentGroupMembershipAlias}.StudentId",
                 $"{studentAlias}.Id");
@@ -111,26 +111,37 @@ namespace MyPortal.Database.Helpers
             Guid studentGroupId, DateTime runAsDate)
         {
             query.Where($"{studentGroupMembershipAlias}.StudentGroupId", studentGroupId);
-            query.Where($"{studentGroupMembershipAlias}.StartDate", "<=", runAsDate);
-            query.Where(q =>
-                q.WhereNull($"{studentGroupMembershipAlias}.EndDate")
-                    .OrWhere($"{studentGroupMembershipAlias}.EndDate", ">=", runAsDate));
+
+            query.WhereStudentGroupMembershipValid(studentGroupMembershipAlias, runAsDate, runAsDate);
 
             return query;
         }
 
+        public static Query WhereStudentGroupMembershipValid(this Query query, string studentGroupMembershipAlias, DateTime dateFrom,
+            DateTime dateTo)
+        {
+            query.Where($"{studentGroupMembershipAlias}.StartDate", "<=", dateFrom);
+            query.Where(q =>
+                q.WhereNull($"{studentGroupMembershipAlias}.EndDate")
+                    .OrWhere($"{studentGroupMembershipAlias}.EndDate", ">=", dateTo));
+
+            return query;
+        }
+
+        private static Query ContainsWord(this Query query, string column, string searchText)
+        {
+            return query.WhereLike(column, $"% {searchText} %").OrWhereLike(column, $"% {searchText}")
+                .OrWhereLike(column, $"{searchText} %").OrWhere(column, searchText);
+        }
+
         public static Query WhereContainsWord(this Query query, string column, string searchText)
         {
-            return query.Where(q =>
-                q.WhereLike(column, $"% {searchText} %").OrWhereLike(column, $"% {searchText}")
-                    .OrWhereLike(column, $"{searchText} %").OrWhere(column, searchText));
+            return query.Where(q => q.ContainsWord(column, searchText));
         }
         
         public static Query OrWhereContainsWord(this Query query, string column, string searchText)
         {
-            return query.OrWhere(q =>
-                q.WhereLike(column, $"% {searchText} %").OrWhereLike(column, $"% {searchText}")
-                    .OrWhereLike(column, $"{searchText} %").OrWhere(column, searchText));
+            return query.OrWhere(q => q.ContainsWord(column, searchText));
         }
 
         public static Query ApplyPaging(this Query query, PageFilter filter)

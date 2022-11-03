@@ -23,11 +23,11 @@ public class StudentIncidentRepository : BaseReadWriteRepository<StudentIncident
 
     protected override Query JoinRelated(Query query)
     {
-        JoinEntity(query, "Students", "S", "StudentId");
-        JoinEntity(query, "Incidents", "I", "IncidentId");
-        JoinEntity(query, "BehaviourRoleTypes", "BRT", "RoleTypeId");
-        JoinEntity(query, "BehaviourOutcomes", "BO", "OutcomeId");
-        JoinEntity(query, "BehaviourStatus", "BS", "StatusId");
+        query.LeftJoin("Students as S", "S.Id", $"{TblAlias}.StudentId");
+        query.LeftJoin("Incidents as I", "I.Id", $"{TblAlias}.IncidentId");
+        query.LeftJoin("BehaviourRoleTypes as BRT", "BRT.Id", $"{TblAlias}.RoleTypeId");
+        query.LeftJoin("BehaviourOutcomes as BO", "BO.Id", $"{TblAlias}.OutcomeId");
+        query.LeftJoin("BehaviourStatus as BS", "BS.Id", $"{TblAlias}.StatusId");
 
         return query;
     }

@@ -26,7 +26,7 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "Directories", "D", "DirectoryId");
+            query.LeftJoin("Directories as D", "D.Id", $"{TblAlias}.DirectoryId");
 
             return query;
         }

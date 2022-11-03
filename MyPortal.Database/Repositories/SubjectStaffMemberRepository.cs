@@ -23,9 +23,9 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "Subjects", "SU", "SubjectId");
-            JoinEntity(query, "StaffMembers", "SM", "StaffMemberId");
-            JoinEntity(query, "SubjectStaffMemberRoles", "SSMR", "RoleId");
+            query.LeftJoin("Subjects as SU", "SU.Id", $"{TblAlias}.SubjectId");
+            query.LeftJoin("StaffMembers as SM", "SM.Id", $"{TblAlias}.StaffMemberId");
+            query.LeftJoin("SubjectStaffMemberRoles as SSMR", "SSMR.Id", $"{TblAlias}.RoleId");
 
             return query;
         }

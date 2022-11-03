@@ -86,7 +86,7 @@ namespace MyPortal.Database.Repositories
                 "P.Weekday as Weekday", "P.Name as Name", "P.StartTime as StartTime", "P.EndTime as EndTime",
                 "P.AmReg as AmReg", "P.PmReg as PmReg");
 
-            JoinEntity(query, "AttendanceWeekPatterns", "AWP", "AP.WeekPatternId");
+            query.LeftJoin("AttendanceWeekPatterns as AWP", "AWP.Id", $"AP.WeekPatternId");
 
             query.LeftJoin("AttendanceWeeks AS AW", "AW.WeekPatternId", "AWP.Id");
 

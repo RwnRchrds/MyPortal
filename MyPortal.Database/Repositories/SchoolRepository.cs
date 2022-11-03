@@ -24,13 +24,13 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "Agencies", "A", "AgencyId");
-            JoinEntity(query, "SchoolPhases", "SP", "PhaseId");
-            JoinEntity(query, "SchoolTypes", "ST", "TypeId");
-            JoinEntity(query, "GovernanceTypes", "GT", "GovernanceTypeId");
-            JoinEntity(query, "IntakeTypes", "IT", "IntakeTypeId");
-            JoinEntity(query, "People", "HT", "HeadTeacherId");
-            JoinEntity(query, "LocalAuthorities", "LA", "LocalAuthorityId");
+            query.LeftJoin("Agencies as A", "A.Id", $"{TblAlias}.AgencyId");
+            query.LeftJoin("SchoolPhases as SP", "SP.Id", $"{TblAlias}.PhaseId");
+            query.LeftJoin("SchoolTypes as ST", "ST.Id", $"{TblAlias}.TypeId");
+            query.LeftJoin("GovernanceTypes as GT", "GT.Id", $"{TblAlias}.GovernanceTypeId");
+            query.LeftJoin("IntakeTypes as IT", "IT.Id", $"{TblAlias}.IntakeTypeId");
+            query.LeftJoin("People as HT", "HT.Id", $"{TblAlias}.HeadTeacherId");
+            query.LeftJoin("LocalAuthorities as LA", "LA.Id", $"{TblAlias}.LocalAuthorityId");
             
             return query;
         }

@@ -22,7 +22,7 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "Users", "U", "UserId");
+            query.LeftJoin("Users as U", "U.Id", $"{TblAlias}.UserId");
 
             return query;
         }

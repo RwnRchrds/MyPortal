@@ -108,8 +108,12 @@ namespace MyPortal.Logic.Services
                 register.Codes = codes;
 
                 var marks = await unitOfWork.AttendanceMarks.GetRegisterMarks(studentGroupId, periods);
+
+                var possibleMarks =
+                    await unitOfWork.AttendanceMarks.GetPossibleMarksByStudentGroup(studentGroupId, periods);
                 
                 register.PopulateMarks(marks);
+                register.PopulateMissingMarks(possibleMarks);
 
                 return register;
             }

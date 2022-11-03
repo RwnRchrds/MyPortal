@@ -94,29 +94,41 @@ namespace MyPortal.Logic.Models.Response.Attendance.Register
                     });
                 }
 
-                // Metadata for this is in the columns, so this can likely be handled by the client app
-                /*foreach (var columnGroup in ColumnGroups)
-                {
-                    var missingCells = columnGroup.Columns.Where(c =>
-                            !dataRow.Marks.Any(
-                                m => m.WeekId == c.AttendanceWeekId && m.PeriodId == c.AttendancePeriodId))
-                        .ToArray();
-
-                    foreach (var missingCell in missingCells)
-                    {
-                        dataRow.Marks.Add(new AttendanceMarkSummaryModel
-                        {
-                            StudentId = student.Key,
-                            WeekId = missingCell.AttendanceWeekId,
-                            PeriodId = missingCell.AttendancePeriodId
-                        });
-                    }
-                }*/
-                
                 data.Add(dataRow);
             }
 
             Students = data.OrderBy(d => d.StudentName).ToArray();
+        }
+
+        // Inserts blank marks for marks that should be recorded.
+        // We need this because not all students will have a lesson on a given period (e.g. after school lessons)
+        // This is therefore used to distinguish students that *should* have marks from those who should not
+        public void PopulateMissingMarks(IEnumerable<PossibleAttendanceMark> requiredMarks)
+        {
+            var students = requiredMarks.GroupBy(m => m.StudentId).ToArray();
+
+            foreach (var student in students)
+            {
+                var studentData = student.ToArray();
+
+                var dataRow = Students.FirstOrDefault(x => x.StudentId == student.Key);
+
+                if (dataRow != null)
+                {
+                    var missingMarks = studentData.Where(d => !dataRow.Marks.Any(m =>
+                        m.WeekId == d.AttendanceWeekId && m.PeriodId == d.PeriodId)).ToArray();
+
+                    foreach (var missingMark in missingMarks)
+                    {
+                        dataRow.Marks.Add(new AttendanceMarkSummaryModel
+                        {
+                            StudentId = student.Key,
+                            WeekId = missingMark.AttendanceWeekId,
+                            PeriodId = missingMark.PeriodId
+                        });
+                    }
+                }
+            }
         }
     }
 }

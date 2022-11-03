@@ -22,8 +22,8 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "ExamComponents", "EC", "ComponentId");
-            JoinEntity(query, "ExamRooms", "ER", "RoomId");
+            query.LeftJoin("ExamComponents as EC", "EC.Id", $"{TblAlias}.ComponentId");
+            query.LeftJoin("ExamRooms as ER", "ER.Id", $"{TblAlias}.RoomId");
 
             return query;
         }

@@ -22,8 +22,8 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "GradeSets", "GS", "DefaultGradeSetId");
-            JoinEntity(query, "ExamQualifications", "EQ", "QualificationId");
+            query.LeftJoin("GradeSets as GS", "GS.Id", $"{TblAlias}.DefaultGradeSetId");
+            query.LeftJoin("ExamQualifications as EQ", "EQ.Id", $"{TblAlias}.QualificationId");
 
             return query;
         }

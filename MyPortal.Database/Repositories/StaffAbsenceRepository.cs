@@ -22,9 +22,9 @@ namespace MyPortal.Database.Repositories
 
         protected override Query JoinRelated(Query query)
         {
-            JoinEntity(query, "StaffMembers", "SM", "StaffMemberId");
-            JoinEntity(query, "StaffAbsenceTypes", "SAT", "AbsenceTypeId");
-            JoinEntity(query, "StaffIllnessTypes", "SIT", "IllnessTypeId");
+            query.LeftJoin("StaffMembers as SM", "SM.Id", $"{TblAlias}.StaffMemberId");
+            query.LeftJoin("StaffAbsenceTypes as SAT", "SAT.Id", $"{TblAlias}.AbsenceTypeId");
+            query.LeftJoin("StaffIllnessTypes as SIT", "SIT.Id", $"{TblAlias}.IllnessTypeId");
 
             return query;
         }
