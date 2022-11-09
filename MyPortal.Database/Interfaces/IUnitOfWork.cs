@@ -151,7 +151,6 @@ namespace MyPortal.Database.Interfaces
         IPhoneNumberTypeRepository PhoneNumberTypes { get; }
         IPhotoRepository Photos { get; }
         IProductRepository Products { get; }
-        IRefreshTokenRepository RefreshTokens { get; }
         IRegGroupRepository RegGroups { get; }
         IRelationshipTypeRepository RelationshipTypes { get; }
         IReportCardEntryRepository ReportCardEntries { get; }

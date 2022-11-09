@@ -163,7 +163,6 @@ namespace MyPortal.Database
         private IPhoneNumberTypeRepository _phoneNumberTypes;
         private IPhotoRepository _photos;
         private IProductRepository _products;
-        private IRefreshTokenRepository _refreshTokens;
         private IRegGroupRepository _regGroups;
         private IRelationshipTypeRepository _relationshipTypes;
         private IReportCardEntryRepository _reportCardEntries;
@@ -603,9 +602,6 @@ namespace MyPortal.Database
 
         public IProductRepository Products => _products ??= new ProductRepository(_context, _transaction);
 
-        public IRefreshTokenRepository RefreshTokens =>
-            _refreshTokens ??= new RefreshTokenRepository(_context, _transaction);
-
         public IRegGroupRepository RegGroups => _regGroups ??= new RegGroupRepository(_context, _transaction);
 
         public IRelationshipTypeRepository RelationshipTypes =>
@@ -997,7 +993,6 @@ namespace MyPortal.Database
             _phoneNumberTypes = null;
             _photos = null;
             _products = null;
-            _refreshTokens = null;
             _regGroups = null;
             _relationshipTypes = null;
             _reportCardEntries = null;

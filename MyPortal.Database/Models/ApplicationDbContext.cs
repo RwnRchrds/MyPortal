@@ -163,7 +163,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<StoreDiscount> ProductDiscounts { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductType> ProductTypes { get; set; }
-        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public virtual DbSet<RegGroup> RegGroups { get; set; }
         public virtual DbSet<ReportCard> ReportCards { get; set; }
         public virtual DbSet<ReportCardEntry> ReportCardEntries { get; set; }
@@ -1938,11 +1937,6 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.ProductTypeId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-                modelBuilder.Entity<RefreshToken>(e =>
-                {
-                    SetIdDefaultValue(e);
                 });
 
                 modelBuilder.Entity<RegGroup>(e =>
