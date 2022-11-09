@@ -23,7 +23,7 @@ namespace MyPortal.Logic.Services
 
         public async Task AttachFileToDocument(Guid documentId, string fileId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var document = await unitOfWork.Documents.GetById(documentId);
 
@@ -44,7 +44,7 @@ namespace MyPortal.Logic.Services
 
         public async Task RemoveFileFromDocument(Guid documentId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
@@ -61,7 +61,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<WebAction>> GetWebActionsByDocument(Guid documentId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
@@ -73,7 +73,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<FileDownload> GetDownloadByDocument(Guid documentId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var file = await unitOfWork.Files.GetByDocumentId(documentId);
 

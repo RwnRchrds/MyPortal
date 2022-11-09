@@ -231,7 +231,7 @@ namespace MyPortalWeb.Controllers.Api
 
             var person = await PersonService.GetPersonWithTypes(personId);
 
-            if (person.PersonTypes.IsStaff)
+            if (person.PersonTypes.StaffId.HasValue)
             {
                 var allStaffPermission =
                     edit ? PermissionValue.PeopleEditAllStaffTasks : PermissionValue.PeopleViewAllStaffTasks;
@@ -264,7 +264,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
             }
             
-            if (person.PersonTypes.IsContact)
+            if (person.PersonTypes.ContactId.HasValue)
             {
                 var contactPermission =
                     edit ? PermissionValue.PeopleEditContactTasks : PermissionValue.PeopleViewContactTasks;
@@ -273,7 +273,7 @@ namespace MyPortalWeb.Controllers.Api
                     await User.HasPermission(RoleService, PermissionRequirement.RequireAll, contactPermission);
             }
 
-            if (person.PersonTypes.IsStudent)
+            if (person.PersonTypes.StudentId.HasValue)
             {
                 var studentPermission =
                     edit ? PermissionValue.StudentEditStudentTasks : PermissionValue.StudentViewStudentTasks;

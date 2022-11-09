@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Services
         {
             var templates = new List<ParentEveningAppointmentTemplateModel>();
             
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var parentEvening = await unitOfWork.ParentEvenings.GetById(parentEveningId);
 

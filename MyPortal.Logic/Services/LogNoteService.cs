@@ -20,7 +20,7 @@ namespace MyPortal.Logic.Services
     {
         public async Task<LogNoteModel> GetLogNoteById(Guid logNoteId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var logNote = await unitOfWork.LogNotes.GetById(logNoteId);
 
@@ -35,7 +35,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<LogNoteModel>> GetLogNotesByStudent(Guid studentId, Guid academicYearId, bool includePrivate)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var logNotes = await unitOfWork.LogNotes.GetByStudent(studentId, academicYearId, includePrivate);
 
@@ -45,7 +45,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<LogNoteTypeModel>> GetLogNoteTypes()
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var logNoteTypes = await unitOfWork.LogNoteTypes.GetAll();
 
@@ -57,7 +57,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(logNoteModel);
             
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 await AcademicHelper.IsAcademicYearLocked(logNoteModel.AcademicYearId, true);
 
@@ -83,7 +83,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(logNoteModel);
             
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var logNote = await unitOfWork.LogNotes.GetById(logNoteId);
                     
@@ -105,7 +105,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteLogNote(Guid logNoteId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var logNote = await GetLogNoteById(logNoteId);
 

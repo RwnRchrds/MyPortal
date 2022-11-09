@@ -67,7 +67,7 @@ namespace MyPortalWeb.Controllers.Api
                     return User.IsType(UserTypes.Staff);
                 }
 
-                if (dirOwner.PersonTypes.IsStaff)
+                if (dirOwner.PersonTypes.StaffId.HasValue)
                 {
                     var allStaffPermission =
                         edit
@@ -120,7 +120,7 @@ namespace MyPortalWeb.Controllers.Api
                     return false;
                 }
 
-                if (dirOwner.PersonTypes.IsStudent)
+                if (dirOwner.PersonTypes.StudentId.HasValue)
                 {
                     var studentPermission =
                         edit

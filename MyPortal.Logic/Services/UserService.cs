@@ -69,7 +69,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<int>> GetPermissionValuesByUser(Guid userId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var rolePermissions = (await unitOfWork.UserRoles.GetByUser(userId)).ToList();
 
@@ -105,7 +105,7 @@ namespace MyPortal.Logic.Services
         {
             var response = new UserInfoModel();
 
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var user = await unitOfWork.Users.GetById(userId);
                 var userModel = new UserModel(user);
@@ -223,7 +223,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteUser(Guid userId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var userRoles = await unitOfWork.UserRoles.GetByUser(userId);
 
@@ -374,7 +374,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<UserModel> GetUserById(Guid userId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
 

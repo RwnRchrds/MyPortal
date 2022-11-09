@@ -12,7 +12,7 @@ public class PastoralService : BaseService, IPastoralService
 { 
     public async Task<IEnumerable<RegGroupModel>> GetRegGroups()
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var regGroups = await unitOfWork.RegGroups.GetAll();
 
@@ -24,7 +24,7 @@ public class PastoralService : BaseService, IPastoralService
     
     public async Task<IEnumerable<YearGroupModel>> GetYearGroups()
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var yearGroups = await unitOfWork.YearGroups.GetAll();
 
@@ -36,7 +36,7 @@ public class PastoralService : BaseService, IPastoralService
     
     public async Task<IEnumerable<HouseModel>> GetHouses()
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var houses = await unitOfWork.Houses.GetAll();
                 

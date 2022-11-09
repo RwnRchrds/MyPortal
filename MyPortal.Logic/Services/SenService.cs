@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Services
     {
         public async Task<IEnumerable<GiftedTalentedModel>> GetGiftedTalentedSubjects(Guid studentId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var giftedTalented = await unitOfWork.GiftedTalented.GetByStudent(studentId);
 

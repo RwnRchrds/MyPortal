@@ -23,11 +23,11 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class StudentService : BaseService, IStudentService
+    public class StudentService : BasePersonService, IStudentService
     {
         public async Task<StudentModel> GetStudentById(Guid studentId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var student = await unitOfWork.Students.GetById(studentId);
                 if (student == null)
@@ -41,7 +41,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<StudentStatsModel> GetStatsById(Guid studentId, Guid academicYearId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var stats = new StudentStatsModel();
 
@@ -67,7 +67,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<StudentModel> GetStudentByUserId(Guid userId, bool throwNotFound = true)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var student = await unitOfWork.Students.GetByUserId(userId);
 
@@ -82,7 +82,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<StudentModel> GetStudentByPersonId(Guid personId, bool throwIfNotFound = true)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var student = await unitOfWork.Students.GetByPersonId(personId);
 
@@ -109,7 +109,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<StudentModel>> GetStudents(StudentSearchOptions searchOptions)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var students = await unitOfWork.Students.GetAll(searchOptions);
 
@@ -117,9 +117,19 @@ namespace MyPortal.Logic.Services
             }
         }
 
+        public async Task<IEnumerable<StudentModel>> GetStudentsByContact(Guid contactId, bool reportableOnly)
+        {
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var students = await unitOfWork.Students.GetByContact(contactId, reportableOnly);
+
+                return students.Select(s => new StudentModel(s)).ToList();
+            }
+        }
+
         public async Task<IEnumerable<StudentSummaryModel>> SearchStudents(StudentSearchOptions searchOptions)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var students = await unitOfWork.Students.SearchAll(searchOptions);
 
@@ -131,7 +141,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(request);
             
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var admissionNumbers = (await unitOfWork.Students.GetAdmissionNumbers()).ToArray();
 
@@ -156,7 +166,7 @@ namespace MyPortal.Logic.Services
                     EnrolmentStatusId = request.EnrolmentStatusId,
                     BoarderStatusId = request.BoarderStatusId,
                     PupilPremium = request.PupilPremium,
-                    Person = PersonHelper.CreatePerson(request)
+                    Person = CreatePersonFromModel(request)
                 };
 
                 foreach (var groupId in groupIds)
@@ -176,7 +186,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<string> GenerateUpn()
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var school = await unitOfWork.Schools.GetLocal();
 
@@ -225,7 +235,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(model);
             
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var student = await unitOfWork.Students.GetById(studentId);
 
@@ -238,7 +248,7 @@ namespace MyPortal.Logic.Services
                 student.PupilPremium = model.PupilPremium;
                 student.Upn = model.Upn;
                     
-                PersonHelper.UpdatePerson(student.Person, model);
+                UpdatePersonFromModel(student.Person, model);
 
                 await unitOfWork.People.Update(student.Person);
                 await unitOfWork.Students.Update(student);

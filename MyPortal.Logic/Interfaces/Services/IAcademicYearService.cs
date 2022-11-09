@@ -11,7 +11,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<AcademicYearModel> GetCurrentAcademicYear(bool getLatestIfNull = false);
         Task<AcademicYearModel> GetAcademicYearById(Guid academicYearId);
         Task<IEnumerable<AcademicYearModel>> GetAcademicYears();
-        Task CreateAcademicYear(AcademicYearRequestModel model);
+        Task<AcademicYearModel> CreateAcademicYear(AcademicYearRequestModel model);
         Task UpdateAcademicYear(Guid academicYearId, AcademicYearRequestModel academicYear);
         Task DeleteAcademicYear(Guid academicYearId);
         Task<bool> IsAcademicYearLocked(Guid academicYearId);

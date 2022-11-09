@@ -211,7 +211,7 @@ namespace MyPortal.Database.Repositories
 
             if (reportableOnly)
             {
-                query.Where("SCR.PupilReport", true);
+                query.Where("SCR.ParentalResponsibility", true);
             }
 
             return await ExecuteQuery(query);

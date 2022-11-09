@@ -67,10 +67,10 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("StaffMembers AS SM", "SM.PersonId", $"{TblAlias}.Id");
             query.LeftJoin("Contacts AS C", "C.PersonId", $"{TblAlias}.Id");
 
-            query.SelectRaw("CASE WHEN [U].[Id] IS NULL THEN 0 ELSE 1 END AS IsUser");
-            query.SelectRaw("CASE WHEN [S].[Id] IS NULL THEN 0 ELSE 1 END AS IsStudent");
-            query.SelectRaw("CASE WHEN [SM].[Id] IS NULL THEN 0 ELSE 1 END AS IsStaff");
-            query.SelectRaw("CASE WHEN [C].[Id] IS NULL THEN 0 ELSE 1 END AS IsContact");
+            query.SelectRaw("U.Id as UserId");
+            query.SelectRaw("S.Id as StudentId");
+            query.SelectRaw("SM.Id as StaffId");
+            query.SelectRaw("C.Id as ContactId");
         }
 
         public async Task<Person> GetByUserId(Guid userId)
@@ -89,6 +89,17 @@ namespace MyPortal.Database.Repositories
             var query = GenerateQuery();
 
             query.Where($"{TblAlias}.Id", personId);
+
+            return (await ExecuteQueryWithTypes(query)).FirstOrDefault();
+        }
+
+        public async Task<PersonSearchResult> GetPersonWithTypesByUserId(Guid userId)
+        {
+            var query = GenerateQuery();
+            
+            IncludePersonTypes(query);
+
+            query.Where("U.Id", userId);
 
             return (await ExecuteQueryWithTypes(query)).FirstOrDefault();
         }

@@ -18,7 +18,7 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 3, TypeName = "decimal(10,2)")]
         public decimal NetAmount { get; set; }
         
-        [Column(Order = 4)] 
+        [Column(Order = 4, TypeName = "decimal(10, 2)")] 
         public decimal VatAmount { get; set; }
 
         [Column(Order = 5)]

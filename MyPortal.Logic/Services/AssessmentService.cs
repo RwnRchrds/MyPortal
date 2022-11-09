@@ -22,7 +22,7 @@ public class AssessmentService : BaseService, IAssessmentService
 {
     public async Task<IEnumerable<ResultModel>> GetPreviousResults(Guid studentId, Guid aspectId, DateTime dateTo)
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var results = await unitOfWork.Results.GetPreviousResults(studentId, aspectId, dateTo);
 
@@ -32,7 +32,7 @@ public class AssessmentService : BaseService, IAssessmentService
 
     public async Task<ResultModel> GetResult(Guid resultId)
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var result = await unitOfWork.Results.GetById(resultId);
 
@@ -47,7 +47,7 @@ public class AssessmentService : BaseService, IAssessmentService
 
     public async Task<ResultModel> GetResult(Guid studentId, Guid aspectId, Guid resultSetId)
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var result = await unitOfWork.Results.GetResult(studentId, aspectId, resultSetId);
 
@@ -62,7 +62,7 @@ public class AssessmentService : BaseService, IAssessmentService
 
     public async Task<IEnumerable<ResultModel>> GetPreviousResults(Guid resultId)
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var result = await unitOfWork.Results.GetById(resultId);
 
@@ -77,7 +77,7 @@ public class AssessmentService : BaseService, IAssessmentService
 
     public async Task<MarksheetViewModel> GetMarksheet(Guid marksheetId)
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var metadata = await unitOfWork.Marksheets.GetMarksheetMetadata(marksheetId);
 
@@ -108,11 +108,11 @@ public class AssessmentService : BaseService, IAssessmentService
         }
     }
 
-    public async Task CreateAspect(AspectRequestModel model)
+    public async Task<AspectModel> CreateAspect(AspectRequestModel model)
     {
         Validate(model);
         
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var aspect = new Aspect
             {
@@ -128,6 +128,8 @@ public class AssessmentService : BaseService, IAssessmentService
             unitOfWork.Aspects.Create(aspect);
 
             await unitOfWork.SaveChangesAsync();
+
+            return new AspectModel(aspect);
         }
     }
 
@@ -135,7 +137,7 @@ public class AssessmentService : BaseService, IAssessmentService
     {
         Validate(model);
         
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var aspect = await unitOfWork.Aspects.GetById(aspectId);
 
@@ -156,7 +158,7 @@ public class AssessmentService : BaseService, IAssessmentService
 
     public async Task DeleteAspect(Guid aspectId)
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var aspect = await unitOfWork.Aspects.GetById(aspectId);
 
@@ -177,7 +179,7 @@ public class AssessmentService : BaseService, IAssessmentService
         List<ResultSet> cachedResultSets = new List<ResultSet>();
         List<Grade> cachedGrades = new List<Grade>();
 
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             foreach (var model in models)
             {
@@ -307,7 +309,7 @@ public class AssessmentService : BaseService, IAssessmentService
 
     public async Task DeleteResult(Guid resultId)
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var result = await unitOfWork.Results.GetById(resultId);
 

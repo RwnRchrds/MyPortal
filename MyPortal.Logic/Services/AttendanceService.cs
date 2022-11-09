@@ -27,7 +27,7 @@ namespace MyPortal.Logic.Services
     {
         public async Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var attendanceMark = await unitOfWork.AttendanceMarks.GetMark(studentId, attendanceWeekId, periodId);
 
@@ -42,7 +42,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<AttendanceRegisterModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var metadata = await unitOfWork.Sessions.GetMetadata(sessionId, attendanceWeekId);
 
@@ -66,7 +66,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<AttendanceRegisterSummaryModel>> GetRegisters(RegisterSearchRequestModel model)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var searchOptions = new RegisterSearchOptions
                 {
@@ -84,7 +84,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<AttendanceRegisterModel> GetRegisterByDateRange(Guid studentGroupId, DateTime dateFrom, DateTime dateTo, Guid? lockToPeriodId = null, string title = null)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var studentGroup = await unitOfWork.StudentGroups.GetById(studentGroupId);
 
@@ -121,7 +121,7 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateAttendanceMarks(params AttendanceMarkSummaryModel[] marks)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 foreach (var model in marks)
                 {
@@ -177,7 +177,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteAttendanceMarks(params Guid[] attendanceMarkIds)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 foreach (var attendanceMarkId in attendanceMarkIds)
                 {
@@ -202,7 +202,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<AttendanceSummary> GetAttendanceSummaryByStudent(Guid studentId, Guid academicYearId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var codes = (await unitOfWork.AttendanceCodes.GetAll()).Select(c => new AttendanceCodeModel(c))
                     .ToList();
@@ -218,7 +218,7 @@ namespace MyPortal.Logic.Services
         
         public async Task<AttendancePeriodModel> GetPeriodById(Guid periodId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var period = await unitOfWork.AttendancePeriods.GetById(periodId);
 
@@ -233,7 +233,7 @@ namespace MyPortal.Logic.Services
         
         public async Task<AttendanceWeekModel> GetWeekById(Guid attendanceWeekId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var attendanceWeek = await unitOfWork.AttendanceWeeks.GetById(attendanceWeekId);
 
@@ -248,7 +248,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<AttendanceWeekModel> GetWeekByDate(DateTime date, bool throwIfNotFound = true)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var week = await unitOfWork.AttendanceWeeks.GetByDate(date);
 

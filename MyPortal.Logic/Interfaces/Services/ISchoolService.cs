@@ -18,7 +18,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IEnumerable<BulletinModel>> GetBulletins(BulletinSearchOptions searchOptions);
         Task<IEnumerable<BulletinSummaryModel>> GetBulletinSummaries(BulletinSearchOptions searchOptions);
         Task<BulletinPageResponse> GetBulletinSummaries(BulletinSearchOptions searchOptions, PageFilter filter);
-        Task CreateBulletin(BulletinRequestModel bulletin);
+        Task<BulletinModel> CreateBulletin(BulletinRequestModel bulletin);
         Task UpdateBulletin(Guid bulletinId, BulletinRequestModel bulletin);
         Task DeleteBulletin(Guid bulletinId);
         Task SetBulletinApproved(ApproveBulletinRequestModel model);

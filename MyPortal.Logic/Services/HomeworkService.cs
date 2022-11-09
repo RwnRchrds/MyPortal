@@ -20,7 +20,7 @@ public class HomeworkService : BaseService, IHomeworkService
     {
         Validate(model);
         
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var homeworkItem = new HomeworkItem
             {
@@ -71,7 +71,7 @@ public class HomeworkService : BaseService, IHomeworkService
     {
         Validate(model);
         
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var homework = await unitOfWork.HomeworkItems.GetById(homeworkId);
 
@@ -88,7 +88,7 @@ public class HomeworkService : BaseService, IHomeworkService
 
     public async System.Threading.Tasks.Task DeleteHomework(Guid homeworkId)
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             await unitOfWork.HomeworkItems.Delete(homeworkId);
 
@@ -98,7 +98,7 @@ public class HomeworkService : BaseService, IHomeworkService
 
     public async Task<IEnumerable<HomeworkSubmissionModel>> GetSubmissionsByStudent(Guid studentId)
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var submissions = await unitOfWork.HomeworkSubmissions.GetHomeworkSubmissionsByStudent(studentId);
 
@@ -108,7 +108,7 @@ public class HomeworkService : BaseService, IHomeworkService
 
     public async Task<IEnumerable<HomeworkSubmissionModel>> GetSubmissionsByStudentGroup(Guid studentGroupId)
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var submissions = await unitOfWork.HomeworkSubmissions.GetHomeworkSubmissionsByStudentGroup(studentGroupId);
 
@@ -118,7 +118,7 @@ public class HomeworkService : BaseService, IHomeworkService
 
     public async Task<IEnumerable<HomeworkItemModel>> GetHomework(HomeworkSearchOptions searchOptions)
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var homeworkItems =
                 (await unitOfWork.HomeworkItems.GetHomework(searchOptions)).Select(hi => new HomeworkItemModel(hi));
@@ -131,7 +131,7 @@ public class HomeworkService : BaseService, IHomeworkService
     {
         Validate(model);
         
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var homework = await unitOfWork.HomeworkItems.GetById(model.HomeworkId);
             var student = await unitOfWork.Students.GetById(model.StudentId);
@@ -174,7 +174,7 @@ public class HomeworkService : BaseService, IHomeworkService
     {
         Validate(model);
         
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             var homeworkSubmission = await unitOfWork.HomeworkSubmissions.GetById(homeworkSubmissionId);
 
@@ -201,7 +201,7 @@ public class HomeworkService : BaseService, IHomeworkService
 
     public async System.Threading.Tasks.Task DeleteHomeworkSubmission(Guid homeworkSubmissionId)
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             await unitOfWork.HomeworkSubmissions.Delete(homeworkSubmissionId);
 

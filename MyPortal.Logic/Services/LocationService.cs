@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Services
     {
         public async Task<IEnumerable<LocationModel>> GetLocations()
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var locations = await unitOfWork.Locations.GetAll();
 

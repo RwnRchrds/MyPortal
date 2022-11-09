@@ -42,7 +42,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var achievement = await _behaviourService.GetAchievementById(achievementId);
+                var achievement = await _behaviourService.GetStudentAchievementById(achievementId);
 
                 var student = await StudentService.GetStudentById(achievement.StudentId);
 

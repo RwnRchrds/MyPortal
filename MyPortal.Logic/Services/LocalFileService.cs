@@ -25,7 +25,7 @@ namespace MyPortal.Logic.Services
 
         public async Task UploadFileToDocument(FileUploadRequestModel upload)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var document = await unitOfWork.Documents.GetById(upload.DocumentId);
 
@@ -51,7 +51,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<FileDownload> GetDownloadByDocument(Guid documentId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
@@ -63,7 +63,7 @@ namespace MyPortal.Logic.Services
 
         public async Task RemoveFileFromDocument(Guid documentId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var file = await unitOfWork.Files.GetByDocumentId(documentId);
 

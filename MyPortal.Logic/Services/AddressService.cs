@@ -13,7 +13,7 @@ namespace MyPortal.Logic.Services
     {
         public async Task<IEnumerable<AddressModel>> GetAddressesByPerson(Guid personId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var addresses = await unitOfWork.Addresses.GetAddressesByPerson(personId);
 

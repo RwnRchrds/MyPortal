@@ -17,7 +17,7 @@ namespace MyPortal.Logic.Services
     {
         public async Task<PersonModel> GetPersonById(Guid personId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var person = await unitOfWork.People.GetById(personId);
 
@@ -39,7 +39,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<PersonModel>> GetPeople(PersonSearchOptions searchModel)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var people = await unitOfWork.People.GetAll(searchModel);
 
@@ -49,7 +49,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<PersonSearchResultModel>> GetPeopleWithTypes(PersonSearchOptions searchModel)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var results = await unitOfWork.People.GetAllWithTypes(searchModel);
 
@@ -59,7 +59,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<PersonSearchResultModel> GetPersonWithTypes(Guid personId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var result = await unitOfWork.People.GetPersonWithTypesById(personId);
 
@@ -67,9 +67,19 @@ namespace MyPortal.Logic.Services
             }
         }
 
+        public async Task<PersonSearchResultModel> GetPersonWithTypesByUser(Guid userId)
+        {
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var result = await unitOfWork.People.GetPersonWithTypesByUserId(userId);
+
+                return new PersonSearchResultModel(result);
+            }
+        }
+
         public async Task<PersonSearchResultModel> GetPersonWithTypesByDirectory(Guid directoryId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var result = await unitOfWork.People.GetPersonWithTypesByDirectoryId(directoryId);
 
@@ -79,7 +89,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<PersonModel> GetPersonByUserId(Guid userId, bool throwIfNotFound = true)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var person = await unitOfWork.People.GetByUserId(userId);
 

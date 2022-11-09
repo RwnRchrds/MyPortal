@@ -14,6 +14,7 @@ namespace MyPortal.Database.Interfaces.Repositories
         Task<Person> GetByUserId(Guid userId);
         Task<IEnumerable<Person>> GetAll(PersonSearchOptions searchParams);
         Task<PersonSearchResult> GetPersonWithTypesById(Guid personId);
+        Task<PersonSearchResult> GetPersonWithTypesByUserId(Guid userId);
         Task<IEnumerable<PersonSearchResult>> GetAllWithTypes(PersonSearchOptions searchParams);
         Task<PersonSearchResult> GetPersonWithTypesByDirectoryId(Guid directoryId);
     }

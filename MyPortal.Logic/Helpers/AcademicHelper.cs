@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Helpers
     {
         internal static async Task<bool> IsAcademicYearLocked(Guid academicYearId, bool throwException = false)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 if (await unitOfWork.AcademicYears.IsLocked(academicYearId))
                 {
@@ -27,7 +27,7 @@ namespace MyPortal.Logic.Helpers
         
         internal static async Task<bool> IsAcademicYearLockedByWeek(Guid attendanceWeekId, bool throwException = false)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 if (await unitOfWork.AcademicYears.IsLockedByWeek(attendanceWeekId))
                 {

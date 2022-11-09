@@ -35,16 +35,15 @@ namespace MyPortalWeb.Controllers.Api
                 searchOptions.IncludeUnapproved = false;
                 searchOptions.IncludeExpired = false;
             }
+            if (searchOptions.IncludeUnapproved)
+            {
+                var userId = User.GetUserId();
+                searchOptions.IncludeCreatedBy = userId;
+            }
             if (!await UserHasPermission(PermissionValue.SchoolApproveSchoolBulletins))
             {
                 searchOptions.IncludeUnapproved = false;
                 searchOptions.IncludeExpired = false;
-            }
-
-            if (searchOptions.IncludeCreatedBy.HasValue)
-            {
-                var userId = User.GetUserId();
-                searchOptions.IncludeCreatedBy = userId;
             }
         }
 
@@ -100,7 +99,12 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                await _schoolService.CreateBulletin(model);
+                var userId = User.GetUserId();
+
+                // Don't let users lie about who created the bulletin
+                model.CreatedById = userId;
+
+                var bulletin = await _schoolService.CreateBulletin(model);
                 return Ok();
             }
             catch (Exception e)

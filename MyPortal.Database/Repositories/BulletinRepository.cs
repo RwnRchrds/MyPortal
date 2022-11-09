@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Enums;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
@@ -99,7 +100,7 @@ namespace MyPortal.Database.Repositories
             query.Select($"{TblAlias}.Id");
             query.Select($"{TblAlias}.DirectoryId");
             query.Select($"{TblAlias}.CreatedById");
-            query.Select($"D.DisplayName as CreatedByName");
+            query.SelectRaw("COALESCE(D.Name, U.UserName) as CreatedByName");
             query.Select($"{TblAlias}.CreatedDate");
             query.Select($"{TblAlias}.ExpireDate");
             query.Select($"{TblAlias}.Title");
@@ -107,8 +108,9 @@ namespace MyPortal.Database.Repositories
             query.Select($"{TblAlias}.Private");
             query.Select($"{TblAlias}.Approved");
 
-            query.FromRaw($@"Bulletins as {TblAlias}
-CROSS APPLY GetDisplayName({TblAlias}.CreatedById, 2, 1, 1) D");
+            query.FromRaw($@"Bulletins as {TblAlias}");
+            query.LeftJoin("Users as U", "U.Id", $"{TblAlias}.CreatedById");
+            query.ApplyName("D", "U.PersonId", NameFormat.FullNameAbbreviated);
 
             query.OrderByDesc($"{TblAlias}.CreatedDate");
             

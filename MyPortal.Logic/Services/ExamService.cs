@@ -13,7 +13,7 @@ public class ExamService : BaseService, IExamService
 {
     public async Task CreateResultEmbargo(params ResultEmbargoRequestModel[] models)
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             foreach (var model in models)
             {
@@ -39,7 +39,7 @@ public class ExamService : BaseService, IExamService
 
     public async Task UpdateResultEmbargo(params ResultEmbargoRequestModel[] models)
     {
-        using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
             foreach (var model in models)
             {

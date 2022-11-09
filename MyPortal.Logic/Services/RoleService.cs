@@ -33,7 +33,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<TreeNode> GetPermissionsTree(Guid roleId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var role = await _roleManager.FindByIdAsync(roleId.ToString());
 
@@ -47,7 +47,7 @@ namespace MyPortal.Logic.Services
 
         private async Task SetPermissions(Guid roleId, params int[] permValues)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var role = await unitOfWork.Roles.GetById(roleId);
 
@@ -124,7 +124,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteRole(Guid roleId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 await unitOfWork.UserRoles.DeleteAllByRole(roleId);
 
@@ -165,7 +165,7 @@ namespace MyPortal.Logic.Services
             {
                 // Eliminates latency between the web app and database during permission checks
                 role = await CacheHelper.RoleCache.GetOrCreate(roleId,
-                    async () => await _roleManager.FindByIdAsync(roleId.ToString()));
+                    async () => await _roleManager.FindByIdAsync(roleId.ToString()), TimeSpan.FromHours(1));
             }
             else
             {

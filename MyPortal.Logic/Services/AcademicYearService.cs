@@ -22,7 +22,7 @@ namespace MyPortal.Logic.Services
     {
         public async Task<AcademicYearModel> GetCurrentAcademicYear(bool getLatestIfNull = false)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var acadYear = await unitOfWork.AcademicYears.GetCurrent();
 
@@ -49,7 +49,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<AcademicYearModel> GetAcademicYearById(Guid academicYearId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var acadYear = await unitOfWork.AcademicYears.GetById(academicYearId);
 
@@ -59,7 +59,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<AcademicYearModel>> GetAcademicYears()
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var acadYears = await unitOfWork.AcademicYears.GetAll();
 
@@ -67,11 +67,11 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task CreateAcademicYear(AcademicYearRequestModel model)
+        public async Task<AcademicYearModel> CreateAcademicYear(AcademicYearRequestModel model)
         {
             Validate(model);
             
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var academicYear = new AcademicYear
                 {
@@ -114,6 +114,8 @@ namespace MyPortal.Logic.Services
                 unitOfWork.AcademicYears.Create(academicYear);
 
                 await unitOfWork.SaveChangesAsync();
+
+                return new AcademicYearModel(academicYear);
             }
         }
 
@@ -174,7 +176,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(model);
             
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var academicYearInDb = await unitOfWork.AcademicYears.GetById(academicYearId);
 
@@ -189,7 +191,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteAcademicYear(Guid academicYearId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 await unitOfWork.AcademicYears.Delete(academicYearId);
 
@@ -199,7 +201,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<bool> IsAcademicYearLocked(Guid academicYearId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 return await unitOfWork.AcademicYears.IsLocked(academicYearId);
             }

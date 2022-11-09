@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Services
     {
         public async Task<bool> IsLineManager(Guid staffMemberId, Guid lineManagerId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var staffMember = await unitOfWork.StaffMembers.GetById(staffMemberId);
 
@@ -39,7 +39,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<StaffMemberModel> GetById(Guid staffMemberId)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var staffMember = await unitOfWork.StaffMembers.GetById(staffMemberId);
 
@@ -54,7 +54,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<StaffMemberModel> GetByPersonId(Guid personId, bool throwIfNotFound = true)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var staffMember = await unitOfWork.StaffMembers.GetByPersonId(personId);
 
@@ -69,7 +69,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<StaffMemberModel> GetByUserId(Guid userId, bool throwIfNotFound = true)
         {
-            using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
                 var staffMember = await unitOfWork.StaffMembers.GetByUserId(userId);
 

@@ -755,23 +755,25 @@ namespace MyPortal.Database
             return unitOfWork;
         }
 
-        private async Task<DbTransaction> GetDbTransaction()
+        private async Task<DbTransaction> GetDbTransaction(bool useContext)
         {
-            // TODO: Test both methods for performance and reliability
-            // Use this to utilise the context's own transaction
-            // var contextTransaction = await _context.Database.BeginTransactionAsync();
-            // var transaction = contextTransaction.GetDbTransaction();
-            // return transaction;
-
-            // Use this to create a transaction separate from the context
-            
-            if (!string.IsNullOrWhiteSpace(_connectionString))
+            if (useContext)
             {
-                var connection = new SqlConnection(_connectionString);
-                var transaction = await connection.BeginTransactionAsync();
+                // Use this to utilise the context's own transaction
+                var contextTransaction = await _context.Database.BeginTransactionAsync();
+                var transaction = contextTransaction.GetDbTransaction();
                 return transaction;
             }
             
+            // Use this to create a transaction separate from the context
+            if (!string.IsNullOrWhiteSpace(_connectionString))
+            {
+                var connection = new SqlConnection(_connectionString);
+                await connection.OpenAsync();
+                var transaction = await connection.BeginTransactionAsync();
+                return transaction;
+            }
+
             return null;
         }
 
@@ -784,7 +786,7 @@ namespace MyPortal.Database
                 ResetRepositories();
             }
 
-            _transaction = await GetDbTransaction();
+            _transaction = await GetDbTransaction(false);
         }
 
         private UnitOfWork(ApplicationDbContext context)
@@ -809,7 +811,9 @@ namespace MyPortal.Database
 
         public void Dispose()
         {
+            var connection = _transaction.Connection;
             _transaction?.Dispose();
+            connection?.Dispose();
             _context?.Dispose();
         }
 
@@ -828,12 +832,21 @@ namespace MyPortal.Database
             try
             {
                 await _context.SaveChangesAsync();
-                await _transaction?.CommitAsync();
+
+                if (_transaction != null)
+                {
+                    await _transaction.CommitAsync();
+                }
+                
                 _batchSize = 0;
             }
             catch (Exception)
             {
-                await _transaction?.RollbackAsync();
+                if (_transaction != null)
+                {
+                    await _transaction.RollbackAsync();
+                }
+                
                 throw;
             }
             finally
@@ -1040,6 +1053,27 @@ namespace MyPortal.Database
             _users = null;
             _vatRates = null;
             _yearGroups = null;
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            var connection = _transaction.Connection;
+
+            if (_transaction != null)
+            {
+                await _transaction.DisposeAsync();
+            }
+
+            if (connection != null)
+            {
+                await connection.CloseAsync();
+                await connection.DisposeAsync();
+            }
+
+            if (_context != null)
+            {
+                await _context.DisposeAsync();
+            }
         }
     }
 }

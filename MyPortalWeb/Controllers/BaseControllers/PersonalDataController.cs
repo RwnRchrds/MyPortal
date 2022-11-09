@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
@@ -39,18 +40,18 @@ namespace MyPortalWeb.Controllers.BaseControllers
             }
             else if (User.IsType(UserTypes.Staff))
             {
-                if (person.PersonTypes.IsStudent)
+                if (person.PersonTypes.StudentId.HasValue)
                 {
                     // Staff members can access resources for all students if they have ViewStudentDetails permission
                     return await UserHasPermission(PermissionValue.StudentViewStudentDetails);
                 }
-                if (person.PersonTypes.IsStaff)
+                if (person.PersonTypes.StaffId.HasValue)
                 {
                     // Staff members can access other basic staff information if they have the ViewBasicDetails permission
                     // Non basic details (e.g employment details) should require further permission checks
                     return await UserHasPermission(PermissionValue.PeopleViewStaffBasicDetails);
                 }
-                if (person.PersonTypes.IsContact)
+                if (person.PersonTypes.ContactId.HasValue)
                 {
                     // Staff members can access all contacts if they have ViewContactDetails permission
                     return await UserHasPermission(PermissionValue.PeopleViewContactDetails);
@@ -58,8 +59,24 @@ namespace MyPortalWeb.Controllers.BaseControllers
             }
             else if (User.IsType(UserTypes.Parent))
             {
-                // TODO - Add this functionality in when it becomes available
                 // Parents can only access resources involving students that they have parental responsibility for
+                var userId = User.GetUserId();
+                var userPerson = await PersonService.GetPersonWithTypesByUser(userId);
+                if (userPerson.PersonTypes.ContactId.HasValue)
+                {
+                    var students =
+                        await StudentService.GetStudentsByContact(userPerson.PersonTypes.ContactId.Value, true);
+
+                    return students.Any(s =>
+                    {
+                        if (s.Person.Id.HasValue && person.Person.Id.HasValue)
+                        {
+                            return s.Person.Id.Value == person.Person.Id.Value;
+                        }
+
+                        return false;
+                    });
+                }
             }
 
             return false;
