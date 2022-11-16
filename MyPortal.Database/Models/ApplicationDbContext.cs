@@ -24,7 +24,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<AchievementType> AchievementTypes { get; set; }
         public virtual DbSet<Activity> Activities { get; set; }
         public virtual DbSet<Address> Addresses { get; set; }
-        public virtual DbSet<AddressLink> AddressLinks { get; set; }
+        public virtual DbSet<AddressAgency> AddressAgencies { get; set; }
+        public virtual DbSet<AddressPerson> AddressPeople { get; set; }
         public virtual DbSet<AddressType> AddressTypes { get; set; }
         public virtual DbSet<Agency> Agencies { get; set; }
         public virtual DbSet<AgencyType> AgencyTypes { get; set; }
@@ -315,7 +316,12 @@ namespace MyPortal.Database.Models
                     SetIdDefaultValue(e);
                 });
 
-                modelBuilder.Entity<AddressLink>(e =>
+                modelBuilder.Entity<AddressAgency>(e =>
+                {
+                    SetIdDefaultValue(e);
+                });
+
+                modelBuilder.Entity<AddressPerson>(e =>
                 {
                     SetIdDefaultValue(e);
                 });
@@ -335,7 +341,7 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasMany(x => x.AddressLinks)
+                    e.HasMany(x => x.AddressAgencies)
                         .WithOne(x => x.Agency)
                         .HasForeignKey(x => x.AgencyId)
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1814,7 +1820,7 @@ namespace MyPortal.Database.Models
                 {
                     SetIdDefaultValue(e);
 
-                    e.HasMany(p => p.AddressLinks)
+                    e.HasMany(p => p.AddressPeople)
                         .WithOne(a => a.Person)
                         .HasForeignKey(a => a.PersonId)
                         .OnDelete(DeleteBehavior.Restrict);

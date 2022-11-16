@@ -11,7 +11,8 @@ namespace MyPortal.Logic.Interfaces.Services
     {
         Task<IEnumerable<DiaryEventTypeModel>> GetEventTypes(bool includeReserved = false);
 
-        Task<IEnumerable<CalendarEventModel>> GetCalendarEventsByPerson(Guid personId, DateRange dateRange);
+        Task<IEnumerable<CalendarEventModel>> GetCalendarEventsByPerson(Guid personId, DateTime dateFrom,
+            DateTime dateTo, bool includeDeclined, bool includePrivate, bool hidePrivateDetails);
 
         Task CreateEvent(EventRequestModel model);
 

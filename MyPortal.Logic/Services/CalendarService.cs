@@ -31,7 +31,8 @@ namespace MyPortal.Logic.Services
             }
         }
         
-        public async Task<IEnumerable<CalendarEventModel>> GetCalendarEventsByPerson(Guid personId, DateRange dateRange)
+        public async Task<IEnumerable<CalendarEventModel>> GetCalendarEventsByPerson(Guid personId, DateTime dateFrom,
+            DateTime dateTo, bool includeDeclined, bool includePrivate, bool hidePrivateDetails)
         {
             var calendarEvents = new List<CalendarEventModel>();
             
@@ -50,12 +51,17 @@ namespace MyPortal.Logic.Services
                 
                 // Get all generic events for person
                 var events =
-                    (await unitOfWork.DiaryEvents.GetByPerson(dateRange.Start, dateRange.End, personId, false,
-                        true))
+                    (await unitOfWork.DiaryEvents.GetByPerson(dateFrom, dateTo, personId, includeDeclined,
+                        includePrivate))
                     .Select(e => new DiaryEventModel(e)).ToList();
 
                 foreach (var diaryEvent in events)
                 {
+                    if (hidePrivateDetails && !diaryEvent.Public)
+                    {
+                        diaryEvent.HideDetails();
+                    }
+                    
                     calendarEvents.Add(new CalendarEventModel(diaryEvent));
                 }
 
@@ -80,34 +86,18 @@ namespace MyPortal.Logic.Services
 
                     if (person.PersonTypes.StudentId.HasValue)
                     {
-                        var student = await unitOfWork.Students.GetByPersonId(personId);
-
-                        if (student == null)
-                        {
-                            throw new NotFoundException("Student not found.");
-                        }
-
                         sessions =
-                            await unitOfWork.Sessions.GetMetadataByStudent(student.Id, dateRange.Start, dateRange.End);
+                            await unitOfWork.Sessions.GetMetadataByStudent(person.PersonTypes.StudentId.Value, dateFrom, dateTo);
                     }
                     else if (person.PersonTypes.StaffId.HasValue)
                     {
-                        var staffMember = await unitOfWork.StaffMembers.GetByPersonId(personId);
-
-                        if (staffMember == null)
-                        {
-                            throw new NotFoundException("Staff member not found.");
-                        }
-
-                        sessions = await unitOfWork.Sessions.GetMetadataByStaffMember(staffMember.Id, dateRange.Start,
-                            dateRange.End);
+                      sessions = await unitOfWork.Sessions.GetMetadataByStaffMember(person.PersonTypes.StaffId.Value, dateFrom,
+                            dateTo);
                     }
                     
                     calendarEvents.AddRange(sessions.Select(s =>
                         new CalendarEventModel(s, s.IsCover ? coverEventType.ColourCode : lessonEventType.ColourCode)));
                 }
-                
-                
 
                 return calendarEvents;
             }

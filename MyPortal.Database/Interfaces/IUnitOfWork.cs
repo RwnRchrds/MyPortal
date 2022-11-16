@@ -16,7 +16,8 @@ namespace MyPortal.Database.Interfaces
         IAchievementRepository Achievements { get; }
         IAchievementTypeRepository AchievementTypes { get; }
         IActivityRepository Activities { get; }
-        IAddressLinkRepository AddressLinks { get; }
+        IAddressAgencyRepository AddressAgencies {get;}
+        IAddressPersonRepository AddressPeople { get; }
         IAddressRepository Addresses { get; }
         IAddressTypeRepository AddressTypes { get; }
         IAgencyRepository Agencies { get; }

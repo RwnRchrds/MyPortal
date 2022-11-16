@@ -11,12 +11,12 @@ namespace MyPortal.Logic.Models.Entity
 {
     public class AddressLinkModel : BaseModel, ILoadable
     {
-        public AddressLinkModel(AddressLink model) : base(model)
+        public AddressLinkModel(AddressPerson model) : base(model)
         {
             LoadFromModel(model);
         }
 
-        private void LoadFromModel(AddressLink model)
+        private void LoadFromModel(AddressPerson model)
         {
             AddressId = model.AddressId;
             PersonId = model.PersonId;
@@ -52,7 +52,7 @@ namespace MyPortal.Logic.Models.Entity
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.AddressLinks.GetById(Id.Value);
+                var model = await unitOfWork.AddressPeople.GetById(Id.Value);
             
                 LoadFromModel(model);   
             }

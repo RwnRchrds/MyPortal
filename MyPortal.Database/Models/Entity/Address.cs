@@ -9,7 +9,8 @@ namespace MyPortal.Database.Models.Entity
     {
         public Address()
         {
-            AddressLinks = new HashSet<AddressLink>();
+            AddressPeople = new HashSet<AddressPerson>();
+            AddressAgencies = new HashSet<AddressAgency>();
         }
 
         [Column(Order = 1)]
@@ -56,6 +57,7 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 10)]
         public bool Validated { get; set; }
         
-        public virtual ICollection<AddressLink> AddressLinks { get; set; }
+        public virtual ICollection<AddressAgency> AddressAgencies { get; set; }
+        public virtual ICollection<AddressPerson> AddressPeople { get; set; }
     }
 }

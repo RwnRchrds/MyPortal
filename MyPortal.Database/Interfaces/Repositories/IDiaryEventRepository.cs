@@ -11,6 +11,8 @@ namespace MyPortal.Database.Interfaces.Repositories
         Task<IEnumerable<DiaryEvent>> GetByDateRange(DateTime firstDate, DateTime lastDate, bool includePrivateEvents = false);
 
         Task<IEnumerable<DiaryEvent>> GetByPerson(DateTime firstDate, DateTime lastDate, Guid personId,
-            bool includeDeclined = false, bool includePublic = false);
+            bool includeDeclined = false, bool includePrivate = false);
+
+        Task<IEnumerable<DiaryEvent>> GetByRoom(DateTime firstDate, DateTime lastDate, Guid roomId);
     }
 }

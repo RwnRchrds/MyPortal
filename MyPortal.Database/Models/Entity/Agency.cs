@@ -36,7 +36,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual Directory Directory { get; set; }
         public virtual ICollection<Agent> Agents { get; set; }
         public virtual ICollection<School> Schools { get; set; }
-        public virtual ICollection<AddressLink> AddressLinks { get; set; }
+        public virtual ICollection<AddressAgency> AddressAgencies { get; set; }
         public virtual ICollection<PhoneNumber> PhoneNumbers { get; set; }
         public virtual ICollection<EmailAddress> EmailAddresses { get; set; }
     }

@@ -17,7 +17,7 @@ namespace MyPortal.Database.Models.Entity
             DietaryRequirements = new HashSet<PersonDietaryRequirement>();
             HeadteacherOf = new HashSet<School>();
             EmailAddresses = new HashSet<EmailAddress>();
-            AddressLinks = new HashSet<AddressLink>();
+            AddressPeople = new HashSet<AddressPerson>();
             DiaryEventInvitations = new HashSet<DiaryEventAttendee>();
             AssignedTo = new HashSet<Task>();
         }
@@ -91,7 +91,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<PersonDietaryRequirement> DietaryRequirements { get; set; }
         public virtual ICollection<School> HeadteacherOf { get; set; }
         public virtual ICollection<EmailAddress> EmailAddresses { get; set; }
-        public virtual ICollection<AddressLink> AddressLinks { get; set; }
+        public virtual ICollection<AddressPerson> AddressPeople { get; set; }
         public virtual ICollection<DiaryEventAttendee> DiaryEventInvitations { get; set; }
         public virtual ICollection<Task> AssignedTo { get; set; }
         public virtual ICollection<NextOfKin> RelatedStaff { get; set; }

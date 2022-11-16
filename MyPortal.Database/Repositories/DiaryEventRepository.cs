@@ -71,33 +71,51 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
-        public async Task<IEnumerable<DiaryEvent>> GetByPerson(DateTime firstDate, DateTime lastDate, Guid personId, bool includeDeclined = false, bool includePublic = false)
+        public async Task<IEnumerable<DiaryEvent>> GetByPerson(DateTime firstDate, DateTime lastDate, Guid personId, bool includeDeclined = false, bool includePrivate = false)
         {
             var query = GenerateQuery();
 
             query.LeftJoin("DiaryEventAttendees as A", "A.EventId", $"{TblAlias}.Id");
             
             query.WhereDate($"{TblAlias}.StartTime", ">=", firstDate.Date);
-            query.WhereDate($"{TblAlias}.EndTime", "<", lastDate.Date.AddDays(1));
+            
+            // Events might start today but go on for 2 weeks (unlikely but still a use case)
+            // we want to include these events but exclude events that start after the end date
+            query.WhereDate($"{TblAlias}.StartTime", "<=", lastDate.Date.AddTicks(TimeSpan.TicksPerDay - 1));
 
             query.Where(q =>
             {
                 q.Where("A.PersonId", personId);
+                
+                if (!includePrivate)
+                {
+                    q.Where($"{TblAlias}.IsPublic", true);
+                }
 
                 if (!includeDeclined)
                 {
                     q.Where(
-                        a => a.Where("A.ResponseId", "<>", AttendeeResponses.Declined).OrWhereTrue("A.Required"));
-                }
-
-                if (includePublic)
-                {
-                    q.OrWhere($"{TblAlias}.IsPublic", true);
+                        a => a.Where("A.ResponseId", "<>", AttendeeResponses.Declined));
                 }
 
                 return q;
             });
             
+            return await ExecuteQuery(query);
+        }
+
+        public async Task<IEnumerable<DiaryEvent>> GetByRoom(DateTime firstDate, DateTime lastDate, Guid roomId)
+        {
+            var query = GenerateQuery();
+            
+            query.WhereDate($"{TblAlias}.StartTime", ">=", firstDate.Date);
+            
+            // Events might start today but go on for 2 weeks (unlikely but still a use case)
+            // we want to include these events but exclude events that start after the end date
+            query.WhereDate($"{TblAlias}.StartTime", "<=", lastDate.Date.AddTicks(TimeSpan.TicksPerDay - 1));
+
+            query.Where($"{TblAlias}.RoomId", roomId);
+
             return await ExecuteQuery(query);
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Enums;
@@ -21,6 +22,13 @@ namespace MyPortal.Logic.Models.Entity
         private DiaryEventModel()
         {
             
+        }
+
+        public void HideDetails()
+        {
+            Subject = "Private";
+            Description = null;
+            Location = null;
         }
         
         public DiaryEventModel(DiaryEvent model) : base(model)

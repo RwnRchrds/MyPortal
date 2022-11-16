@@ -37,8 +37,7 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 6)]
         public bool ShowOnStore { get; set; }
-
-        [Range(0, Int32.MaxValue)]
+        
         [Column(Order = 7)]
         public int OrderLimit { get; set; }
 

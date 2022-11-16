@@ -174,8 +174,78 @@ namespace MyPortal.Logic.Models.Permissions
                     }
                 }
             },
-            new SystemArea("cur", "Curriculum"),
-            new SystemArea("fin", "Finance"),
+            new SystemArea("cur", "Curriculum")
+            {
+                ChildAreas = new List<SystemArea>
+                {
+                    new ("cur-str", "Academic Structure")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View/Edit", "View/Edit Academic Structure", PermissionValue.CurriculumAcademicStructure)
+                        }
+                    },
+                    new ("cur-yer", "Academic Years")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("Edit", "Edit Academic Years", PermissionValue.CurriculumEditAcademicYears)
+                        }
+                    },
+                    new ("cur-cov", "Cover")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("Run", "Run Arrange Cover", PermissionValue.CurriculumArrangeCover)
+                        }
+                    },
+                    new ("cur-hmw", "Homework")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View", "View Homework", PermissionValue.CurriculumViewHomework),
+                            new ("Edit", "Edit Homework", PermissionValue.CurriculumEditHomework)
+                        }
+                    },
+                    new ("cur-pln", "Lesson Plans")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View", "View Lesson Plans", PermissionValue.CurriculumViewLessonPlans),
+                            new ("Edit", "Edit Lesson Plans", PermissionValue.CurriculumEditLessonPlans)
+                        }
+                    },
+                    new ("cur-tpc", "Study Topics")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View", "View Study Topics", PermissionValue.CurriculumViewStudyTopics),
+                            new ("Edit", "Edit Study Topics", PermissionValue.CurriculumEditStudyTopics)
+                        }
+                    }
+                },
+            },
+            new SystemArea("fin", "Finance")
+            {
+                ChildAreas = new List<SystemArea>
+                {
+                    new ("fin-acc", "Accounts")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View", "View Accounts", PermissionValue.FinanceViewAccounts),
+                            new ("Edit", "Edit Accounts", PermissionValue.FinanceEditAccounts)
+                        }
+                    },
+                    new ("fin-prd", "Products")
+                    {
+                        Permissions = new List<Permission>
+                        {
+                            new ("View", "View Products", PermissionValue.FinanceViewProducts)
+                        }
+                    }
+                }
+            },
             new SystemArea("peo", "People"),
             new SystemArea("pro", "Profiles"),
             new SystemArea("sch", "School"),

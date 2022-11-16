@@ -18,9 +18,9 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class AddressLinkRepository : BaseReadWriteRepository<AddressLink>, IAddressLinkRepository
+    public class AddressPersonRepository : BaseReadWriteRepository<AddressPerson>, IAddressPersonRepository
     {
-        public AddressLinkRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public AddressPersonRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
         {
            
         }
@@ -29,7 +29,6 @@ namespace MyPortal.Database.Repositories
         {
             query.LeftJoin("Addresses as A", "A.Id", $"{TblAlias}.AddressId");
             query.LeftJoin("People as P", "P.Id", $"{TblAlias}.PersonId");
-            query.LeftJoin("Agencies as AG", "AG.Id", $"{TblAlias}.AgencyId");
 
             return query;
         }
@@ -38,16 +37,15 @@ namespace MyPortal.Database.Repositories
         {
             query.SelectAllColumns(typeof(Address), "A");
             query.SelectAllColumns(typeof(Person), "P");
-            query.SelectAllColumns(typeof(Agency), "AG");
 
             return query;
         }
 
-        protected override async Task<IEnumerable<AddressLink>> ExecuteQuery(Query query)
+        protected override async Task<IEnumerable<AddressPerson>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            var addressPeople = await Transaction.Connection.QueryAsync<AddressLink, Address, Person, AddressLink>(
+            var addressPeople = await Transaction.Connection.QueryAsync<AddressPerson, Address, Person, AddressPerson>(
                 sql.Sql,
                 (addressPerson, address, person) =>
                 {
@@ -60,9 +58,9 @@ namespace MyPortal.Database.Repositories
             return addressPeople;
         }
 
-        public async Task Update(AddressLink entity)
+        public async Task Update(AddressPerson entity)
         {
-            var addressPerson = await Context.AddressLinks.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var addressPerson = await Context.AddressPeople.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (addressPerson == null)
             {
@@ -71,7 +69,6 @@ namespace MyPortal.Database.Repositories
 
             addressPerson.AddressId = entity.AddressId;
             addressPerson.PersonId = entity.PersonId;
-            addressPerson.AgencyId = entity.AgencyId;
             addressPerson.AddressTypeId = entity.AddressTypeId;
             addressPerson.Main = entity.Main;
         }
