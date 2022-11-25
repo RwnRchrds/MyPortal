@@ -29,6 +29,7 @@ namespace MyPortal.Logic.Models.Entity
             AccessFailedCount = model.AccessFailedCount;
             CreatedDate = model.CreatedDate;
             PersonId = model.PersonId;
+            UserType = model.UserType;
             Enabled = model.Enabled;
 
             if (model.Person != null)

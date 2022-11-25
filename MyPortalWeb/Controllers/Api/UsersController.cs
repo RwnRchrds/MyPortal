@@ -11,7 +11,7 @@ using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Admin.Users;
+using MyPortal.Logic.Models.Requests.Settings.Users;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 using MyPortalWeb.Models;
@@ -112,7 +112,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("{userId}")]
         [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(200)]
@@ -148,21 +148,17 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("{userId}/password")]
+        [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> SetPassword([FromRoute] Guid userId, [FromBody] SetPasswordRequestModel request)
         {
             try
             {
-                if (await AuthoriseUser(userId, true))
-                {
-                    await UserService.SetPassword(userId, request.NewPassword);
+                await UserService.SetPassword(userId, request.NewPassword);
 
-                    return Ok();
-                }
-
-                return PermissionError();
+                return Ok();
             }
             catch (Exception e)
             {
@@ -170,7 +166,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("{userId}/enabled")]
         [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(typeof(bool), 200)]

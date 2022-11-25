@@ -9,7 +9,7 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Admin.Roles;
+using MyPortal.Logic.Models.Requests.Settings.Roles;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 using MyPortalWeb.Models;
@@ -46,7 +46,7 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("{roleId}")]
         [Permission(PermissionValue.SystemEditGroups)]
         [ProducesResponseType(200)]

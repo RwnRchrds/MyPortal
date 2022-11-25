@@ -22,8 +22,8 @@ using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Admin.Users;
 using MyPortal.Logic.Models.Requests.Auth;
+using MyPortal.Logic.Models.Requests.Settings.Users;
 using MyPortal.Logic.Models.Response.Users;
 using Task = System.Threading.Tasks.Task;
 
@@ -263,6 +263,41 @@ namespace MyPortal.Logic.Services
             if (!setPasswordResult.Succeeded)
             {
                 errors.AddRange(setPasswordResult.Errors);
+            }
+
+            if (errors.Any())
+            {
+                var message = errors.Aggregate("", (a, b) => $"{a}{Environment.NewLine}{b.Description}");
+                throw new Exception(message);
+            }
+        }
+
+        public async Task ChangePassword(Guid userId, string oldPassword, string newPassword)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+
+            List<IdentityError> errors = new List<IdentityError>();
+
+            foreach (var passwordValidator in _userManager.PasswordValidators)
+            {
+                var passwordValidationResult = await passwordValidator.ValidateAsync(_userManager, user, newPassword);
+                if (!passwordValidationResult.Succeeded)
+                {
+                    errors.AddRange(passwordValidationResult.Errors);
+                }
+            }
+
+            if (errors.Any())
+            {
+                var message = errors.Aggregate("", (a, b) => $"{a}{Environment.NewLine}{b.Description}");
+                throw new Exception(message);
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+
+            if (!result.Succeeded)
+            {
+                errors.AddRange(result.Errors);
             }
 
             if (errors.Any())

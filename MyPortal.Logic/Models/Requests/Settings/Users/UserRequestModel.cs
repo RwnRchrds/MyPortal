@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyPortal.Logic.Models.Requests.Admin.Users
+namespace MyPortal.Logic.Models.Requests.Settings.Users
 {
     public class UserRequestModel
     {

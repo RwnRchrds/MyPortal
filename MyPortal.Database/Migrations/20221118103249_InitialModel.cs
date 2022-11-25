@@ -1622,6 +1622,39 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AddressAgencies",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AgencyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AddressTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Main = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AddressAgencies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AddressAgencies_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AddressAgencies_AddressTypes_AddressTypeId",
+                        column: x => x.AddressTypeId,
+                        principalTable: "AddressTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AddressAgencies_Agencies_AgencyId",
+                        column: x => x.AgencyId,
+                        principalTable: "Agencies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ExamBaseComponents",
                 columns: table => new
                 {
@@ -1682,39 +1715,32 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AddressLinks",
+                name: "AddressPeople",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    AgencyId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     AddressTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Main = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AddressLinks", x => x.Id);
+                    table.PrimaryKey("PK_AddressPeople", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AddressLinks_Addresses_AddressId",
+                        name: "FK_AddressPeople_Addresses_AddressId",
                         column: x => x.AddressId,
                         principalTable: "Addresses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AddressLinks_AddressTypes_AddressTypeId",
+                        name: "FK_AddressPeople_AddressTypes_AddressTypeId",
                         column: x => x.AddressTypeId,
                         principalTable: "AddressTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AddressLinks_Agencies_AgencyId",
-                        column: x => x.AgencyId,
-                        principalTable: "Agencies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AddressLinks_People_PersonId",
+                        name: "FK_AddressPeople_People_PersonId",
                         column: x => x.PersonId,
                         principalTable: "People",
                         principalColumn: "Id",
@@ -3226,26 +3252,6 @@ namespace MyPortal.Database.Migrations
                     table.PrimaryKey("PK_UserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
                         name: "FK_UserLogins_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserRefreshTokens",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserRefreshTokens", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserRefreshTokens_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -4834,23 +4840,33 @@ namespace MyPortal.Database.Migrations
                 column: "StudentGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AddressLinks_AddressId",
-                table: "AddressLinks",
+                name: "IX_AddressAgencies_AddressId",
+                table: "AddressAgencies",
                 column: "AddressId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AddressLinks_AddressTypeId",
-                table: "AddressLinks",
+                name: "IX_AddressAgencies_AddressTypeId",
+                table: "AddressAgencies",
                 column: "AddressTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AddressLinks_AgencyId",
-                table: "AddressLinks",
+                name: "IX_AddressAgencies_AgencyId",
+                table: "AddressAgencies",
                 column: "AgencyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AddressLinks_PersonId",
-                table: "AddressLinks",
+                name: "IX_AddressPeople_AddressId",
+                table: "AddressPeople",
+                column: "AddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AddressPeople_AddressTypeId",
+                table: "AddressPeople",
+                column: "AddressTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AddressPeople_PersonId",
+                table: "AddressPeople",
                 column: "PersonId");
 
             migrationBuilder.CreateIndex(
@@ -6216,11 +6232,6 @@ namespace MyPortal.Database.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRefreshTokens_UserId",
-                table: "UserRefreshTokens",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_RoleId",
                 table: "UserRoles",
                 column: "RoleId");
@@ -6364,7 +6375,10 @@ namespace MyPortal.Database.Migrations
                 name: "Activities");
 
             migrationBuilder.DropTable(
-                name: "AddressLinks");
+                name: "AddressAgencies");
+
+            migrationBuilder.DropTable(
+                name: "AddressPeople");
 
             migrationBuilder.DropTable(
                 name: "AttendanceMarks");
@@ -6560,9 +6574,6 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserLogins");
-
-            migrationBuilder.DropTable(
-                name: "UserRefreshTokens");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");

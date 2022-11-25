@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Requests.Settings.Users;
 using MyPortal.Logic.Models.Response.Users;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -30,6 +31,26 @@ namespace MyPortalWeb.Controllers.Api
                 var userInfo = await UserService.GetUserInfo(userId);
 
                 return Ok(userInfo);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        [HttpPut]
+        [Authorize]
+        [Route("password")]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestModel model)
+        {
+            try
+            {
+                var userId = User.GetUserId();
+
+                await UserService.ChangePassword(userId, model.CurrentPassword, model.NewPassword);
+
+                return Ok();
             }
             catch (Exception e)
             {

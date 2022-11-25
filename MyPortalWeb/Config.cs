@@ -24,7 +24,8 @@ namespace MyPortalWeb
                     ClientName = "MyPortal Web App",
                     AllowAccessTokensViaBrowser = true,
                     AllowOfflineAccess = true,
-                    RefreshTokenUsage = TokenUsage.OneTimeOnly
+                    RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                    AccessTokenLifetime = 30
                 }
             };
     }

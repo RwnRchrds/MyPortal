@@ -20,7 +20,6 @@ namespace MyPortal.Logic.Models.Entity
         {
             AddressId = model.AddressId;
             PersonId = model.PersonId;
-            AgencyId = model.AgencyId;
 
             if (model.Address != null)
             {
@@ -30,11 +29,6 @@ namespace MyPortal.Logic.Models.Entity
             if (model.Person != null)
             {
                 Person = new PersonModel(model.Person);
-            }
-
-            if (model.Agency != null)
-            {
-                Agency = new AgencyModel(model.Agency);
             }
         }
         

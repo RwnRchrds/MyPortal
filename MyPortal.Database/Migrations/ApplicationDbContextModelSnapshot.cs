@@ -292,7 +292,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.AddressLink", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AddressAgency", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -306,15 +306,46 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<Guid>("AddressTypeId")
                         .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(3);
+
+                    b.Property<Guid>("AgencyId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(2);
+
+                    b.Property<bool>("Main")
+                        .HasColumnType("bit")
                         .HasColumnOrder(4);
 
-                    b.Property<Guid?>("AgencyId")
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("AddressTypeId");
+
+                    b.HasIndex("AgencyId");
+
+                    b.ToTable("AddressAgencies");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AddressPerson", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(0)
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(1);
+
+                    b.Property<Guid>("AddressTypeId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(3);
 
                     b.Property<bool>("Main")
                         .HasColumnType("bit")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(4);
 
                     b.Property<Guid?>("PersonId")
                         .HasColumnType("uniqueidentifier")
@@ -326,11 +357,9 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("AddressTypeId");
 
-                    b.HasIndex("AgencyId");
-
                     b.HasIndex("PersonId");
 
-                    b.ToTable("AddressLinks");
+                    b.ToTable("AddressPeople");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.AddressType", b =>
@@ -4819,33 +4848,6 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ProductTypes");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.RefreshToken", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(0)
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnOrder(3);
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(1);
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnOrder(2);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserRefreshTokens");
-                });
-
             modelBuilder.Entity("MyPortal.Database.Models.Entity.RegGroup", b =>
                 {
                     b.Property<Guid>("Id")
@@ -7065,10 +7067,37 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("StudentGroup");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.AddressLink", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AddressAgency", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Entity.Address", "Address")
-                        .WithMany("AddressLinks")
+                        .WithMany("AddressAgencies")
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.AddressType", "AddressType")
+                        .WithMany()
+                        .HasForeignKey("AddressTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Entity.Agency", "Agency")
+                        .WithMany("AddressAgencies")
+                        .HasForeignKey("AgencyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("AddressType");
+
+                    b.Navigation("Agency");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.AddressPerson", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Entity.Address", "Address")
+                        .WithMany("AddressPeople")
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -7079,21 +7108,14 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Entity.Agency", "Agency")
-                        .WithMany("AddressLinks")
-                        .HasForeignKey("AgencyId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("MyPortal.Database.Models.Entity.Person", "Person")
-                        .WithMany("AddressLinks")
+                        .WithMany("AddressPeople")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Address");
 
                     b.Navigation("AddressType");
-
-                    b.Navigation("Agency");
 
                     b.Navigation("Person");
                 });
@@ -8744,17 +8766,6 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("VatRate");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.RefreshToken", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Entity.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("MyPortal.Database.Models.Entity.RegGroup", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Entity.StaffMember", null)
@@ -9693,7 +9704,9 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Address", b =>
                 {
-                    b.Navigation("AddressLinks");
+                    b.Navigation("AddressAgencies");
+
+                    b.Navigation("AddressPeople");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.AddressType", b =>
@@ -9703,7 +9716,7 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Agency", b =>
                 {
-                    b.Navigation("AddressLinks");
+                    b.Navigation("AddressAgencies");
 
                     b.Navigation("Agents");
 
@@ -10240,7 +10253,7 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.Person", b =>
                 {
-                    b.Navigation("AddressLinks");
+                    b.Navigation("AddressPeople");
 
                     b.Navigation("Agents");
 

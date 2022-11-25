@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Admin.Roles;
+using MyPortal.Logic.Models.Requests.Settings.Roles;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Interfaces.Services

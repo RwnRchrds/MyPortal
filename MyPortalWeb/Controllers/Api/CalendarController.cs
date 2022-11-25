@@ -49,7 +49,8 @@ namespace MyPortalWeb.Controllers.Api
                     }
 
                     var events =
-                        await _calendarService.GetCalendarEventsByPerson(personId, dateRange);
+                        await _calendarService.GetCalendarEventsByPerson(personId, dateRange.Start, dateRange.End,
+                            false, true, false);
 
                     return Ok(events);
                 }

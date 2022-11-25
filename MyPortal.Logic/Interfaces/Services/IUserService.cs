@@ -6,8 +6,8 @@ using MyPortal.Database.Enums;
 using MyPortal.Logic.Authentication;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Admin.Users;
 using MyPortal.Logic.Models.Requests.Auth;
+using MyPortal.Logic.Models.Requests.Settings.Users;
 using MyPortal.Logic.Models.Response.Users;
 using Task = System.Threading.Tasks.Task;
 
@@ -23,6 +23,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task AddToRoles(Guid userId, params Guid[] roleIds);
         Task RemoveFromRoles(Guid userId, params Guid[] roleIds);
         Task SetPassword(Guid userId, string newPassword);
+        Task ChangePassword(Guid userId, string oldPassword, string newPassword);
         Task<LoginResult> Login(LoginRequestModel login);
         Task<bool> UsernameExists(string username);
         Task SetUserEnabled(Guid userId, bool enabled);

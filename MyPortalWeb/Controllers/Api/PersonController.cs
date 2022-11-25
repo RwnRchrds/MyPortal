@@ -52,6 +52,11 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var person = await PersonService.GetPersonByUserId(userId, false);
 
+                if (person == null)
+                {
+                    return Ok();
+                }
+
                 if (person.Id.HasValue && await CanAccessPerson(person.Id.Value))
                 {
                     return Ok(person);

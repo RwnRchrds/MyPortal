@@ -1,7 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyPortal.Logic.Models.Requests.Admin.Users
+namespace MyPortal.Logic.Models.Requests.Settings.Users
 {
     public class SetPasswordRequestModel
     {

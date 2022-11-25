@@ -1,7 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyPortal.Logic.Models.Requests.Admin.Roles
+namespace MyPortal.Logic.Models.Requests.Settings.Roles
 {
     public class RoleRequestModel
     {
