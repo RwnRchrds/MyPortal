@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class RoomClosureModel : BaseModel, ILoadable
+    public class RoomClosureModel : BaseModelWithLoad
     {
         public RoomClosureModel(RoomClosure model) : base(model)
         {
@@ -48,7 +48,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual RoomModel Room { get; set; }
         public virtual RoomClosureReasonModel Reason { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

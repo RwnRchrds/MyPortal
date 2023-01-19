@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Models.QueryResults.Attendance
 {
-    public class AttendanceMarkMetadata
+    public class AttendanceMarkDetailModel
     {
         public Guid AttendanceMarkId { get; set; }
         public Guid StudentId { get; set; }

@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class ExamQualificationLevelModel : LookupItemModel, ILoadable
+    public class ExamQualificationLevelModel : LookupItemModelWithLoad
     {
         public Guid QualificationId { get; set; }
         
@@ -42,7 +42,7 @@ namespace MyPortal.Logic.Models.Entity
             }
         }
 
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

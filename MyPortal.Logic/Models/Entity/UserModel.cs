@@ -10,7 +10,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class UserModel : BaseModel, ILoadable
+    public class UserModel : BaseModelWithLoad
     {
         public UserModel(User model) : base(model)
         {
@@ -85,7 +85,7 @@ namespace MyPortal.Logic.Models.Entity
             return Person.Photo != null ? Convert.ToBase64String(Person.Photo.Data) : null;
         }
 
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

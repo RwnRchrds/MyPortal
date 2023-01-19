@@ -11,19 +11,19 @@ using MyPortal.Logic.Models.Summary;
 
 namespace MyPortal.Logic.Models.Response.Assessment.Marksheet;
 
-public class MarksheetViewModel
+public class MarksheetDataModel
 {
-    public MarksheetViewModel()
+    public MarksheetDataModel()
     {
-        Columns = new List<MarksheetColumnViewModel>();
-        Students = new List<MarksheetStudentViewModel>();
+        Columns = new List<MarksheetColumnDataModel>();
+        Students = new List<MarksheetStudentDataModel>();
     }
     
     public string Title { get; set; }
     public bool Completed { get; set; }
 
-    public ICollection<MarksheetColumnViewModel> Columns { get; set; }
-    public ICollection<MarksheetStudentViewModel> Students { get; set; }
+    public ICollection<MarksheetColumnDataModel> Columns { get; set; }
+    public ICollection<MarksheetStudentDataModel> Students { get; set; }
 
     public async Task PopulateColumns(IUnitOfWork unitOfWork, IEnumerable<MarksheetColumnModel> columnCollection)
     {
@@ -42,7 +42,7 @@ public class MarksheetViewModel
                 }
             }
 
-            var column = new MarksheetColumnViewModel
+            var column = new MarksheetColumnDataModel
             {
                 Header = columnModel.Aspect.ColumnHeading,
                 ResultSetId = columnModel.ResultSetId,
@@ -75,9 +75,9 @@ public class MarksheetViewModel
         }
     }
 
-    public void PopulateResults(IEnumerable<ResultMetadata> results)
+    public void PopulateResults(IEnumerable<ResultDetailModel> results)
     {
-        var data = new List<MarksheetStudentViewModel>();
+        var data = new List<MarksheetStudentDataModel>();
 
         var students = results.GroupBy(r => r.StudentId).ToArray();
 
@@ -85,7 +85,7 @@ public class MarksheetViewModel
         {
             var studentData = student.ToArray();
 
-            var dataRow = new MarksheetStudentViewModel();
+            var dataRow = new MarksheetStudentDataModel();
 
             dataRow.StudentId = student.Key;
 

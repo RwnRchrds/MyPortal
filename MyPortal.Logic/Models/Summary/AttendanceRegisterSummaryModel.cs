@@ -5,17 +5,17 @@ namespace MyPortal.Logic.Models.Summary;
 
 public class AttendanceRegisterSummaryModel
 {
-    internal AttendanceRegisterSummaryModel(SessionMetadata metadata)
+    internal AttendanceRegisterSummaryModel(SessionDetailModel detailModel)
     {
-        StudentGroupId = metadata.StudentGroupId;
-        AttendanceWeekId = metadata.AttendanceWeekId;
-        PeriodId = metadata.PeriodId;
-        PeriodName = metadata.PeriodName;
-        ClassCode = metadata.ClassCode;
-        TeacherName = metadata.TeacherName;
-        RoomName = metadata.RoomName;
-        StartTime = metadata.StartTime;
-        EndTime = metadata.EndTime;
+        StudentGroupId = detailModel.StudentGroupId;
+        AttendanceWeekId = detailModel.AttendanceWeekId;
+        PeriodId = detailModel.PeriodId;
+        PeriodName = detailModel.PeriodName;
+        ClassCode = detailModel.ClassCode;
+        TeacherName = detailModel.TeacherName;
+        RoomName = detailModel.RoomName;
+        StartTime = detailModel.StartTime;
+        EndTime = detailModel.EndTime;
     } 
     
     public Guid StudentGroupId { get; set; }

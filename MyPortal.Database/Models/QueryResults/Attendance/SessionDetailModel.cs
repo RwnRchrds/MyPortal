@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Models.QueryResults.Attendance
 {
-    public class SessionMetadata
+    public class SessionDetailModel
     {
         // public DateTime FirstDate { get; set; }
         // public DateTime LastDate { get; set; }

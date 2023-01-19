@@ -7,7 +7,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class BillModel : BaseModel, ILoadable
+    public class BillModel : BaseModelWithLoad
     {
         public BillModel(Bill model) : base(model)
         {
@@ -36,14 +36,16 @@ namespace MyPortal.Logic.Models.Entity
         public bool? Dispatched  { get; set; }
 
         public StudentModel Student { get; set; }
-        
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.Bills.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var bill = await unitOfWork.Bills.GetById(Id.Value);
+
+                if (bill != null)
+                {
+                    LoadFromModel(bill);
+                }
             }
         }
     }

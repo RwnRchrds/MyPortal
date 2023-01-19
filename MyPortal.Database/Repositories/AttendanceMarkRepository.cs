@@ -151,7 +151,7 @@ namespace MyPortal.Database.Repositories
             return (await ExecuteQuery(query)).SingleOrDefault();
         }
 
-        public async Task<IEnumerable<AttendanceMarkMetadata>> GetRegisterMarks(Guid studentGroupId,
+        public async Task<IEnumerable<AttendanceMarkDetailModel>> GetRegisterMarks(Guid studentGroupId,
             PossibleAttendancePeriod[] attendancePeriods)
         {
             if (attendancePeriods.Any())
@@ -202,10 +202,10 @@ namespace MyPortal.Database.Repositories
                 query.Where("SGM.StudentGroupId", studentGroupId);
                 query.WhereStudentGroupMembershipValid("SGM", dateFrom, dateTo);
 
-                return await ExecuteQuery<AttendanceMarkMetadata>(query);
+                return await ExecuteQuery<AttendanceMarkDetailModel>(query);
             }
 
-            return Array.Empty<AttendanceMarkMetadata>();
+            return Array.Empty<AttendanceMarkDetailModel>();
         }
 
         public async Task Update(AttendanceMark mark)

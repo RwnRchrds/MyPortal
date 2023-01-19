@@ -4,7 +4,7 @@ using MyPortal.Logic.Models.Summary;
 
 namespace MyPortal.Logic.Models.Response.Assessment.Marksheet;
 
-public class MarksheetStudentViewModel
+public class MarksheetStudentDataModel
 {
     public Guid StudentId { get; set; }
     public string StudentName { get; set; }

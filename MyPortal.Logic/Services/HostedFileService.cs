@@ -15,9 +15,11 @@ namespace MyPortal.Logic.Services
     public class HostedFileService : BaseService, IFileService
     {
         private readonly IHostedFileProvider _fileProvider;
+        private readonly string _accessToken;
 
-        public HostedFileService(IHostedFileProvider fileProvider) 
+        public HostedFileService(string accessToken, IHostedFileProvider fileProvider)
         {
+            _accessToken = accessToken;
             _fileProvider = fileProvider;
         }
 
@@ -32,7 +34,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Document not found.");
                 }
 
-                var file = await _fileProvider.GetFileById(fileId);
+                var file = await _fileProvider.CreateFileFromId(_accessToken, fileId);
 
                 document.Attachment = file;
                 
@@ -65,21 +67,9 @@ namespace MyPortal.Logic.Services
             {
                 var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
-                var webActions = await _fileProvider.GetWebActions(file.FileId);
+                var webActions = await _fileProvider.GetWebActions(_accessToken, file.FileId);
 
                 return webActions;
-            }
-        }
-
-        public async Task<FileDownload> GetDownloadByDocument(Guid documentId)
-        {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var file = await unitOfWork.Files.GetByDocumentId(documentId);
-
-                var stream = await _fileProvider.DownloadFileToStream(file.FileId);
-
-                return new FileDownload(stream, file.ContentType, file.FileName);
             }
         }
     }

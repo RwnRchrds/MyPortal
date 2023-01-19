@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class StudentContactRelationshipModel : BaseModel, ILoadable
+    public class StudentContactRelationshipModel : BaseModelWithLoad
     {
         public StudentContactRelationshipModel(StudentContactRelationship model) : base(model)
         {
@@ -58,7 +58,7 @@ namespace MyPortal.Logic.Models.Entity
         public virtual RelationshipTypeModel RelationshipType { get; set; }
         public virtual StudentModel Student { get; set; }
         public virtual ContactModel Contact { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

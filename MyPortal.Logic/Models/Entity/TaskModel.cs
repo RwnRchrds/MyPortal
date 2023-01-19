@@ -7,7 +7,7 @@ using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class TaskModel : BaseModel, ILoadable
+    public class TaskModel : BaseModelWithLoad
     {
         public TaskModel(Task model) : base(model)
         {
@@ -74,7 +74,7 @@ namespace MyPortal.Logic.Models.Entity
         public virtual TaskTypeModel Type { get; set; }
 
         public bool Overdue => !Completed && DueDate <= DateTime.Now;
-        public async System.Threading.Tasks.Task Load(IUnitOfWork unitOfWork)
+        protected override async System.Threading.Tasks.Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

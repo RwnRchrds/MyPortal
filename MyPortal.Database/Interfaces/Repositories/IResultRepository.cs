@@ -11,6 +11,6 @@ namespace MyPortal.Database.Interfaces.Repositories
     {
         Task<Result> GetResult(Guid studentId, Guid aspectId, Guid resultSetId);
         Task<IEnumerable<Result>> GetPreviousResults(Guid studentId, Guid aspectId, DateTime dateTo);
-        Task<IEnumerable<ResultMetadata>> GetResultMetadataByMarksheet(Guid marksheetId);
+        Task<IEnumerable<ResultDetailModel>> GetResultDetailsByMarksheet(Guid marksheetId);
     }
 }

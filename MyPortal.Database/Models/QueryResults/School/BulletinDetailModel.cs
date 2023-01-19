@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyPortal.Database.Models.QueryResults.School;
 
-public class BulletinMetadata
+public class BulletinDetailModel
 {
     public Guid Id { get; set; }
     

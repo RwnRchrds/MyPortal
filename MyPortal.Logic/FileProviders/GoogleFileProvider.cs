@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Google.Apis.Drive.v3;
+using Google.Apis.Drive.v3.Data;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Web;
@@ -11,65 +12,53 @@ namespace MyPortal.Logic.FileProviders
 {
     public class GoogleFileProvider : IHostedFileProvider
     {
-        private readonly DriveService _driveService;
-
-        public GoogleFileProvider()
+        private DriveService CreateDriveService(string accessToken)
         {
-            var googleHelper = new GoogleHelper(Configuration.Instance.GoogleConfig);
-            _driveService = new DriveService(googleHelper.GetInitializer(scopes: DriveService.Scope.Drive));
+            var initializer = GoogleHelper.GetInitializer(accessToken, DriveService.Scope.Drive);
+            return new DriveService(initializer);
         }
 
-        public void Dispose()
+        public async Task<IEnumerable<WebAction>> GetWebActions(string accessToken, string fileId)
         {
-            _driveService.Dispose();
-        }
-
-        public async Task<IEnumerable<WebAction>> GetWebActions(string fileId)
-        {
-            var actions = new List<WebAction>();
-            
-            var request = _driveService.Files.Get(fileId);
-
-            var data = await request.ExecuteAsync();
-
-            request.Fields = "id, name, mimeType, webViewLink";
-
-            var webViewAction = new WebAction("View on Web", data.WebViewLink);
-
-            actions.Add(webViewAction);
-
-            return actions;
-        }
-
-        public async Task<File> GetFileById(string fileId)
-        {
-            var request = _driveService.Files.Get(fileId);
-
-            request.Fields = "id, name, mimeType";
-
-            var data = await request.ExecuteAsync();
-
-            var file = new File
+            using (var driveService = CreateDriveService(accessToken))
             {
-                FileId = data.Id,
-                FileName = data.Name,
-                ContentType = data.MimeType
-            };
+                var actions = new List<WebAction>();
+            
+                var request = driveService.Files.Get(fileId);
 
-            return file;
+                var data = await request.ExecuteAsync();
+
+                request.Fields = "id, name, mimeType, webViewLink";
+
+                var webViewAction = new WebAction("View on Web", data.WebViewLink);
+                var downloadAction = new WebAction("Download", data.WebContentLink);
+
+                actions.Add(webViewAction);
+                actions.Add(downloadAction);
+
+                return actions;
+            }
         }
 
-        public async Task<Stream> DownloadFileToStream(string fileId)
+        public async Task<File> CreateFileFromId(string accessToken, string fileId)
         {
-            var stream = new MemoryStream();
+            using (var driveService = CreateDriveService(accessToken))
+            {
+                var request = driveService.Files.Get(fileId);
 
-            var request = _driveService.Files.Get(fileId);
+                request.Fields = "id, name, mimeType";
 
-            await request.DownloadAsync(stream);
+                var data = await request.ExecuteAsync();
 
-            stream.Position = 0;
+                var file = new File
+                {
+                    FileId = data.Id,
+                    FileName = data.Name,
+                    ContentType = data.MimeType
+                };
 
-            return stream;
+                return file;
+            }
         }
     }
 }

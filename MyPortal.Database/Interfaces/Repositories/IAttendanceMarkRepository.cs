@@ -13,7 +13,7 @@ namespace MyPortal.Database.Interfaces.Repositories
         Task<IEnumerable<AttendanceMark>> GetByStudent(Guid studentId, Guid academicYearId);
         Task<AttendanceMark> GetMark(Guid studentId, Guid attendanceWeekId, Guid periodId);
 
-        Task<IEnumerable<AttendanceMarkMetadata>> GetRegisterMarks(Guid studentGroupId,
+        Task<IEnumerable<AttendanceMarkDetailModel>> GetRegisterMarks(Guid studentGroupId,
             PossibleAttendancePeriod[] attendancePeriods);
 
         Task<IEnumerable<PossibleAttendanceMark>> GetPossibleMarksByStudentGroup(Guid studentGroupId,

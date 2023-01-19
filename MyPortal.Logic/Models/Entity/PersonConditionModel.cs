@@ -10,7 +10,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class PersonConditionModel : BaseModel, ILoadable
+    public class PersonConditionModel : BaseModelWithLoad
     {
         public PersonConditionModel(PersonCondition model) : base(model)
         {
@@ -46,7 +46,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual PersonModel Person { get; set; }
         public virtual MedicalConditionModel MedicalCondition { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

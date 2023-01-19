@@ -60,7 +60,7 @@ namespace MyPortal.Logic.Models.Response.Attendance.Register
             }
         }
 
-        public void PopulateMarks(IEnumerable<AttendanceMarkMetadata> markCollection)
+        public void PopulateMarks(IEnumerable<AttendanceMarkDetailModel> markCollection)
         {
             var data = new List<AttendanceRegisterStudentModel>();
 

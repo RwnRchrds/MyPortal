@@ -10,7 +10,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class GiftedTalentedModel : BaseModel, ILoadable
+    public class GiftedTalentedModel : BaseModelWithLoad
     {
         public Guid StudentId { get; set; }
         public Guid SubjectId { get; set; }
@@ -43,7 +43,7 @@ namespace MyPortal.Logic.Models.Entity
             }
         }
 
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

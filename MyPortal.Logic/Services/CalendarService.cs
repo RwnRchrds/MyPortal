@@ -68,7 +68,7 @@ namespace MyPortal.Logic.Services
                 // If person is student or staff, get lesson events
                 if (person.PersonTypes.StudentId.HasValue || person.PersonTypes.StaffId.HasValue)
                 {
-                    IEnumerable<SessionMetadata> sessions = new List<SessionMetadata>();
+                    IEnumerable<SessionDetailModel> sessions = new List<SessionDetailModel>();
 
                     var coverEventType = eventTypes.FirstOrDefault(t => t.Id == EventTypes.Cover);
 
@@ -87,11 +87,11 @@ namespace MyPortal.Logic.Services
                     if (person.PersonTypes.StudentId.HasValue)
                     {
                         sessions =
-                            await unitOfWork.Sessions.GetMetadataByStudent(person.PersonTypes.StudentId.Value, dateFrom, dateTo);
+                            await unitOfWork.Sessions.GetSessionDetailsByStudent(person.PersonTypes.StudentId.Value, dateFrom, dateTo);
                     }
                     else if (person.PersonTypes.StaffId.HasValue)
                     {
-                      sessions = await unitOfWork.Sessions.GetMetadataByStaffMember(person.PersonTypes.StaffId.Value, dateFrom,
+                      sessions = await unitOfWork.Sessions.GetSessionDetailsByStaffMember(person.PersonTypes.StaffId.Value, dateFrom,
                             dateTo);
                     }
                     

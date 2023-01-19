@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class ContactModel : BaseModel, ILoadable
+    public class ContactModel : BaseModelWithLoad
     {
         public ContactModel(Contact model) : base(model)
         {
@@ -43,14 +43,17 @@ namespace MyPortal.Logic.Models.Entity
         public string NiNumber { get; set; }
 
         public virtual PersonModel Person { get; set; }
-        
-        public async Task Load(IUnitOfWork unitOfWork)
+
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.Contacts.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var contact = await unitOfWork.Contacts.GetById(Id.Value);
+
+                if (contact != null)
+                {
+                    LoadFromModel(contact);
+                }
             }
         }
     }

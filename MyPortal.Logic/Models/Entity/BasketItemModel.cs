@@ -7,7 +7,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class BasketItemModel : BaseModel, ILoadable
+    public class BasketItemModel : BaseModelWithLoad
     {
         public BasketItemModel(BasketItem model) : base(model)
         {
@@ -18,6 +18,7 @@ namespace MyPortal.Logic.Models.Entity
         {
             StudentId = model.StudentId;
             ProductId = model.ProductId;
+            Quantity = model.Quantity;
 
             if (model.Student != null)
             {
@@ -34,17 +35,21 @@ namespace MyPortal.Logic.Models.Entity
 
         public Guid ProductId { get; set; }
 
+        public int Quantity { get; set; }
+
         public virtual StudentModel Student { get; set; }
 
         public virtual ProductModel Product { get; set; }
-        
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.BasketItems.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var item = await unitOfWork.BasketItems.GetById(Id.Value);
+
+                if (item != null)
+                {
+                    LoadFromModel(item);
+                }
             }
         }
     }

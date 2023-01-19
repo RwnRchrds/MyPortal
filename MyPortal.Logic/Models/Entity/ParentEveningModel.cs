@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class ParentEveningModel : BaseModel, ILoadable
+    public class ParentEveningModel : BaseModelWithLoad
     {
         public ParentEveningModel(ParentEvening model) : base(model)
         {
@@ -38,7 +38,7 @@ namespace MyPortal.Logic.Models.Entity
         public DateTime BookingClosed { get; set; } 
 
         public virtual DiaryEventModel Event { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

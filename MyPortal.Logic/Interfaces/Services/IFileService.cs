@@ -8,7 +8,6 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface IFileService
     {
-        Task<FileDownload> GetDownloadByDocument(Guid documentId);
         Task RemoveFileFromDocument(Guid documentId);
     }
 }

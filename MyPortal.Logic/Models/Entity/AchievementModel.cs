@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AchievementModel : BaseModel, ILoadable
+    public class AchievementModel : BaseModelWithLoad
     {
         internal AchievementModel(Achievement model) : base(model)
         {
@@ -69,14 +69,17 @@ namespace MyPortal.Logic.Models.Entity
         public AcademicYearModel AcademicYear { get; set; }
 
         public UserModel CreatedBy { get; set; }
-
-        public async Task Load(IUnitOfWork unitOfWork)
+        
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.Achievements.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var achievement = await unitOfWork.Achievements.GetById(Id.Value);
+
+                if (achievement != null)
+                {
+                    LoadFromModel(achievement);
+                }
             }
         }
     }

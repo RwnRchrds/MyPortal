@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class BillItemModel : BaseModel, ILoadable
+    public class BillItemModel : BaseModelWithLoad
     {
         public BillItemModel(BillItem model) : base(model)
         {
@@ -46,19 +46,25 @@ namespace MyPortal.Logic.Models.Entity
         
         public decimal VatAmount { get; set; }
 
+        public decimal GrossAmount => NetAmount + VatAmount;
+
         public bool CustomerReceived { get; set; }
 
         public bool Refunded { get; set; }
 
         public virtual BillModel Bill { get; set; }
         public virtual ProductModel Product { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.BillItems.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var billItem = await unitOfWork.BillItems.GetById(Id.Value);
+
+                if (billItem != null)
+                {
+                    LoadFromModel(billItem);
+                }
             }
         }
     }

@@ -22,6 +22,9 @@ namespace MyPortal.Database.Models.Entity
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
+        
+        [Column(Order = 5)] 
+        public int Order { get; set; }
 
         public virtual Course Course { get; set; }
 

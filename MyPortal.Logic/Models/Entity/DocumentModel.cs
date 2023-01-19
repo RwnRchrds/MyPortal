@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class DocumentModel : BaseModel, ILoadable
+    public class DocumentModel : BaseModelWithLoad
     {
         public DocumentModel(Document model) : base(model)
         {
@@ -80,7 +80,7 @@ namespace MyPortal.Logic.Models.Entity
             return new DirectoryChildSummaryModel(this);
         }
 
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

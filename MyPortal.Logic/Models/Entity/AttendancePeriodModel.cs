@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AttendancePeriodModel : BaseModel, ILoadable
+    public class AttendancePeriodModel : BaseModelWithLoad
     {
         public AttendancePeriodModel(AttendancePeriod model) : base(model)
         {
@@ -48,14 +48,16 @@ namespace MyPortal.Logic.Models.Entity
         public bool PmReg { get; set; }
 
         public AttendanceWeekPatternModel WeekPattern { get; set; }
-        
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.AttendancePeriods.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var period = await unitOfWork.AttendancePeriods.GetById(Id.Value);
+
+                if (period != null)
+                {
+                    LoadFromModel(period);
+                }
             }
         }
     }

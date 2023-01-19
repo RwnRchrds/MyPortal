@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using Microsoft.Data.SqlClient;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Models.Configuration;
 
 [assembly:InternalsVisibleTo("MyPortal.Tests")]
 namespace MyPortal.Logic
@@ -16,7 +15,6 @@ namespace MyPortal.Logic
         private string _connectionString;
         private string _fileEncryptionKey;
         private FileProvider _fileProvider;
-        private GoogleConfig _googleConfig;
         private DatabaseProvider _databaseProvider;
 
         internal static bool CheckConfiguration(bool testConnection = false)
@@ -41,7 +39,7 @@ namespace MyPortal.Logic
             return true;
         }
 
-        internal static void CreateInstance(string databaseProvider, string connectionString)
+        internal static void CreateInstance(string databaseProvider, string fileProvider, string connectionString)
         {
             if (Instance != null)
             {
@@ -49,17 +47,30 @@ namespace MyPortal.Logic
             }
 
             DatabaseProvider databaseProviderValue;
+            FileProvider fileProviderValue;
 
             switch (databaseProvider.ToLower())
             {
                 case "mssql":
                     databaseProviderValue = DatabaseProvider.MsSqlServer;
                     break;
-                case "mysql":
+                /*case "mysql":
                     databaseProviderValue = DatabaseProvider.MySql;
-                    break;
+                    break;*/
                 default:
                     throw new NotSupportedException($"The database provider '{databaseProvider}' is not supported.");
+            }
+
+            switch (fileProvider.ToLower())
+            {
+                case "local":
+                    fileProviderValue = FileProvider.Local;
+                    break;
+                case "google":
+                    fileProviderValue = FileProvider.Google;
+                    break;
+                default:
+                    throw new NotSupportedException($"The file provider '{fileProvider}' is not supported");
             }
 
             TestConnection(connectionString);
@@ -67,6 +78,7 @@ namespace MyPortal.Logic
             Instance = new Configuration();
 
             Instance.DatabaseProvider = databaseProviderValue;
+            Instance.FileProvider = fileProviderValue;
             Instance.ConnectionString = connectionString;
         }
 
@@ -106,22 +118,16 @@ namespace MyPortal.Logic
         public string FileEncryptionKey
         {
             get { return _fileEncryptionKey; }
-            set
+            internal set
             {
                 _fileEncryptionKey = value;
             }
         }
 
-        internal FileProvider FileProvider
+        public FileProvider FileProvider
         {
             get { return _fileProvider; }
-            set { _fileProvider = value; }
-        }
-
-        internal GoogleConfig GoogleConfig
-        {
-            get { return _googleConfig; }
-            set { _googleConfig = value; }
+            internal set { _fileProvider = value; }
         }
     }
 }

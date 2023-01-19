@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -9,7 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Enums;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
+using MyPortal.Logic.FileProviders;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Entity;
@@ -19,6 +22,7 @@ using MyPortal.Logic.Models.Summary;
 using MyPortal.Logic.Models.Web;
 using MyPortal.Logic.Services;
 using MyPortalWeb.Controllers.BaseControllers;
+using Configuration = MyPortal.Logic.Configuration;
 
 namespace MyPortalWeb.Controllers.Api
 {
@@ -29,16 +33,38 @@ namespace MyPortalWeb.Controllers.Api
         private readonly IPersonService _personService;
         private readonly IStaffMemberService _staffMemberService;
         private readonly IDocumentService _documentService;
-        private readonly IFileService _fileService;
 
         public DocumentsController(IUserService userService, IRoleService roleService, IDocumentService documentService,
-            IFileService fileService, IPersonService personService, IStaffMemberService staffMemberService)
+            IPersonService personService, IStaffMemberService staffMemberService)
             : base(userService, roleService)
         {
             _documentService = documentService;
-            _fileService = fileService;
             _personService = personService;
             _staffMemberService = staffMemberService;
+        }
+
+        private IFileService CreateFileService()
+        {
+            if (Configuration.Instance.FileProvider == FileProvider.Local)
+            {
+                var fileProvider = new LocalFileProvider();
+                return new LocalFileService(fileProvider);
+            }
+            
+            if (Configuration.Instance.FileProvider == FileProvider.Google)
+            {
+                var accessToken = Request.Headers["x-file-access-token"];
+                
+                if (string.IsNullOrWhiteSpace(accessToken))
+                {
+                    throw new UnauthorisedException("No file access token was provided.");
+                }
+                
+                var fileProvider = new GoogleFileProvider();
+                return new HostedFileService(accessToken, fileProvider);
+            }
+
+            return null;
         }
 
         private async Task<bool> CanAccessDirectory(Guid directoryId, bool edit)
@@ -213,7 +239,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (_fileService is LocalFileService localFileService)
+                var fileService = CreateFileService();
+                
+                if (fileService is LocalFileService localFileService)
                 {
                     if (await CanAccessDocument(documentId, true))
                     {
@@ -244,7 +272,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (_fileService is HostedFileService hostedFileService)
+                var fileService = CreateFileService();
+                
+                if (fileService is HostedFileService hostedFileService)
                 {
                     if (await CanAccessDocument(requestModel.DocumentId, true))
                     {
@@ -272,9 +302,11 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
+                var fileService = CreateFileService();
+                
                 if (await CanAccessDocument(documentId, true))
                 {
-                    await _fileService.RemoveFileFromDocument(documentId);
+                    await fileService.RemoveFileFromDocument(documentId);
 
                     return Ok();
                 }
@@ -334,36 +366,16 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("{documentId}/file")]
-        [ProducesResponseType(typeof(Stream), 200)]
-        public async Task<IActionResult> DownloadFile([FromRoute] Guid documentId)
-        {
-            try
-            {
-                if (await CanAccessDocument(documentId, false))
-                {
-                    var download = await _fileService.GetDownloadByDocument(documentId);
-
-                    return File(download.FileStream, download.ContentType, download.FileName);
-                }
-
-                return PermissionError();
-            }
-            catch (Exception e)
-            {
-                return HandleException(e);
-            }
-        }
-
-        [HttpGet]
         [Route("{documentId}/webActions")]
         [ProducesResponseType(typeof(IEnumerable<WebAction>), 200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetWebActions([FromRoute] Guid documentId)
+        public async Task<IActionResult> GetWebActions([FromQuery] Guid documentId)
         {
             try
             {
-                if (_fileService is HostedFileService hostedFileService)
+                var fileService = CreateFileService();
+                
+                if (fileService is HostedFileService hostedFileService)
                 {
                     if (await CanAccessDocument(documentId, false))
                     {

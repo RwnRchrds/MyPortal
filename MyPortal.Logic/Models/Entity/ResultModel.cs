@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class ResultModel : BaseModel, ILoadable
+    public class ResultModel : BaseModelWithLoad
     {
         public ResultModel(Result model) : base(model)
         {
@@ -84,7 +84,7 @@ namespace MyPortal.Logic.Models.Entity
         
         public virtual UserModel CreatedBy { get; set; }
         
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

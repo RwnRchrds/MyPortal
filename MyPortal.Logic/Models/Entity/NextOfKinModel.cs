@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class NextOfKinModel : BaseModel, ILoadable
+    public class NextOfKinModel : BaseModelWithLoad
     {
         public NextOfKinModel(NextOfKin model) : base(model)
         {
@@ -45,7 +45,7 @@ namespace MyPortal.Logic.Models.Entity
         public virtual PersonModel NextOfKinPerson { get; set; }
         public virtual NextOfKinRelationshipTypeModel RelationshipType { get; set; }
         
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

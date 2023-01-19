@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class StaffMemberModel : BaseModel, ILoadable
+    public class StaffMemberModel : BaseModelWithLoad
     {
         public StaffMemberModel(StaffMember model) : base(model)
         {
@@ -70,7 +70,7 @@ namespace MyPortal.Logic.Models.Entity
         public virtual PersonModel Person { get; set; }
 
         public virtual StaffMemberModel LineManager { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

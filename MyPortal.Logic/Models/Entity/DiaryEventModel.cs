@@ -14,7 +14,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class DiaryEventModel : BaseModel, ILoadable, ICloneable
+    public class DiaryEventModel : BaseModelWithLoad, ICloneable
     {
         private DateTime _startTime;
         private DateTime _endTime;
@@ -152,7 +152,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual DiaryEventTypeModel EventType { get; set; }
         public virtual RoomModel Room { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

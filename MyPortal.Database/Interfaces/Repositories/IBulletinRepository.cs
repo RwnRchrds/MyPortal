@@ -16,9 +16,9 @@ namespace MyPortal.Database.Interfaces.Repositories
 
         Task<IEnumerable<Bulletin>> GetOwn(Guid authorId);
 
-        Task<IEnumerable<BulletinMetadata>> GetBulletinMetadata(BulletinSearchOptions searchOptions);
+        Task<IEnumerable<BulletinDetailModel>> GetBulletinDetails(BulletinSearchOptions searchOptions);
         
-        Task<BulletinMetadataPageResponse> GetBulletinMetadata(BulletinSearchOptions searchOptions,
+        Task<BulletinMetadataPageResponse> GetBulletinDetails(BulletinSearchOptions searchOptions,
             PageFilter pageFilter);
     }
 }

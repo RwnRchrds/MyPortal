@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class CurriculumBandModel : BaseModel, ILoadable
+    public class CurriculumBandModel : BaseModelWithLoad
     {
         public CurriculumBandModel(CurriculumBand model) : base(model)
         {
@@ -54,8 +54,8 @@ namespace MyPortal.Logic.Models.Entity
         public CurriculumYearGroupModel CurriculumYearGroup { get; set; }
         
         public StudentGroupModel StudentGroup { get; set; }
-        
-        public async Task Load(IUnitOfWork unitOfWork)
+
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

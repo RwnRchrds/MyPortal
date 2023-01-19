@@ -7,7 +7,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class TrainingCertificateModel : BaseModel, ILoadable
+    public class TrainingCertificateModel : BaseModelWithLoad
     {
         public TrainingCertificateModel(TrainingCertificate model) : base(model)
         {
@@ -47,7 +47,7 @@ namespace MyPortal.Logic.Models.Entity
         public virtual TrainingCourseModel TrainingCourse { get; set; }
 
         public virtual TrainingCertificateStatusModel Status { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

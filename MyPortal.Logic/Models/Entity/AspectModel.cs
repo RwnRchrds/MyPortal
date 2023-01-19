@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AspectModel : LookupItemModel, ILoadable
+    public class AspectModel : LookupItemModelWithLoad
     {
         public AspectModel(Aspect model) : base(model)
         {
@@ -57,14 +57,16 @@ namespace MyPortal.Logic.Models.Entity
         public virtual AspectTypeModel Type { get; set; }
 
         public virtual GradeSetModel GradeSet { get; set; }
-        
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.Aspects.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var aspect = await unitOfWork.Aspects.GetById(Id.Value);
+
+                if (aspect != null)
+                {
+                    LoadFromModel(aspect);
+                }
             }
         }
     }

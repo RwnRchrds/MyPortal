@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class RoomModel : BaseModel, ILoadable
+    public class RoomModel : BaseModelWithLoad
     {
         public RoomModel(Room model) : base(model)
         {
@@ -46,7 +46,7 @@ namespace MyPortal.Logic.Models.Entity
         public bool ExcludeFromCover { get; set; }
 
         public virtual BuildingFloorModel BuildingFloor { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

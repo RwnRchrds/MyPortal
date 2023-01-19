@@ -44,7 +44,7 @@ namespace MyPortal.Database.Repositories
             return query.With(alias, cteQuery);
         }
 
-        private Query GenerateMetadataQuery(string alias = "RM")
+        private Query GenerateDetailsQuery(string alias = "RM")
         {
             var query = new Query();
 
@@ -118,9 +118,9 @@ namespace MyPortal.Database.Repositories
             result.ColourCode = entity.ColourCode;
         }
 
-        public async Task<IEnumerable<ResultMetadata>> GetResultMetadataByMarksheet(Guid marksheetId)
+        public async Task<IEnumerable<ResultDetailModel>> GetResultDetailsByMarksheet(Guid marksheetId)
         {
-            var query = GenerateMetadataQuery();
+            var query = GenerateDetailsQuery();
 
             query.Join("MarksheetColumns as MC", "MC.AspectId", "RM.AspectId");
             query.LeftJoin("MarksheetTemplates as MT", "MT.Id", "MC.TemplateId");
@@ -129,7 +129,7 @@ namespace MyPortal.Database.Repositories
             query.WhereRaw("RM.ResultSetId = MC.ResultSetId");
             query.Where("M.Id", marksheetId);
 
-            return await ExecuteQuery<ResultMetadata>(query);
+            return await ExecuteQuery<ResultDetailModel>(query);
         }
 
         public async Task<Result> GetResult(Guid studentId, Guid aspectId, Guid resultSetId)

@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class CurriculumBandBlockAssignmentModel : BaseModel, ILoadable
+    public class CurriculumBandBlockAssignmentModel : BaseModelWithLoad
     {
         public CurriculumBandBlockAssignmentModel(CurriculumBandBlockAssignment model) : base(model)
         {
@@ -37,14 +37,17 @@ namespace MyPortal.Logic.Models.Entity
         
         public CurriculumBlockModel Block { get; set; }
         public CurriculumBandModel Band { get; set; }
-        
-        public async Task Load(IUnitOfWork unitOfWork)
+
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.CurriculumBandBlockAssignments.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var assignment = await unitOfWork.CurriculumBandBlockAssignments.GetById(Id.Value);
+
+                if (assignment != null)
+                {
+                    LoadFromModel(assignment);
+                }
             }
         }
     }

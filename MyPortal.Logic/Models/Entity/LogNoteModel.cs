@@ -10,7 +10,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class LogNoteModel : BaseModel, ILoadable
+    public class LogNoteModel : BaseModelWithLoad
     {
         public LogNoteModel(LogNote model) : base(model)
         {
@@ -81,7 +81,7 @@ namespace MyPortal.Logic.Models.Entity
             return new LogNoteSummaryModel(this);
         }
 
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

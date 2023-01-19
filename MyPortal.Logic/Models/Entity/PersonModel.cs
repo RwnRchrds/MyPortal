@@ -11,7 +11,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class PersonModel : BaseModel, ILoadable
+    public class PersonModel : BaseModelWithLoad
     {
         public PersonModel(Person model) : base(model)
         {
@@ -148,7 +148,7 @@ namespace MyPortal.Logic.Models.Entity
             return name.Replace("  ", " ").Trim();
         }
 
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

@@ -7,7 +7,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class CommunicationLogModel : BaseModel, ILoadable
+    public class CommunicationLogModel : BaseModelWithLoad
     {
         public CommunicationLogModel(CommunicationLog model) : base(model)
         {
@@ -45,14 +45,17 @@ namespace MyPortal.Logic.Models.Entity
 
         public CommunicationTypeModel Type { get; set; }
         public ContactModel Contact { get; set; }
-        
-        public async Task Load(IUnitOfWork unitOfWork)
+
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.CommunicationLogs.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var commLog = await unitOfWork.CommunicationLogs.GetById(Id.Value);
+
+                if (commLog != null)
+                {
+                    LoadFromModel(commLog);
+                }
             }
         }
     }

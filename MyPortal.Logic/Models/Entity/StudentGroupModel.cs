@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class StudentGroupModel : LookupItemModel, ILoadable
+    public class StudentGroupModel : LookupItemModelWithLoad
     {
         public StudentGroupModel(StudentGroup model) : base(model)
         {
@@ -20,6 +20,7 @@ namespace MyPortal.Logic.Models.Entity
             Code = model.Code;
             Description = model.Description;
             PromoteToGroupId = model.PromoteToGroupId;
+            MainSupervisorId = model.MainSupervisorId;
             MaxMembers = model.MaxMembers;
             Notes = model.Notes;
             System = model.System;
@@ -28,11 +29,18 @@ namespace MyPortal.Logic.Models.Entity
             {
                 PromoteToGroup = new StudentGroupModel(model.PromoteToGroup);
             }
+
+            if (model.MainSupervisor != null)
+            {
+                MainSupervisor = new StudentGroupSupervisorModel(model.MainSupervisor);
+            }
         }
         
         public string Code { get; set; }
 
         public Guid? PromoteToGroupId { get; set; }
+
+        public Guid? MainSupervisorId { get; set; }
         
         public int? MaxMembers { get; set; }
         
@@ -41,7 +49,8 @@ namespace MyPortal.Logic.Models.Entity
         public bool System { get; set; }
         
         public StudentGroupModel PromoteToGroup { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        public StudentGroupSupervisorModel MainSupervisor { get; set; }
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

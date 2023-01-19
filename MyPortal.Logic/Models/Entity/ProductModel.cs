@@ -10,7 +10,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class ProductModel : BaseModel, ILoadable
+    public class ProductModel : BaseModelWithLoad
     {
         public ProductModel(Product model) : base(model)
         {
@@ -63,7 +63,7 @@ namespace MyPortal.Logic.Models.Entity
         public virtual ProductTypeModel Type { get; set; }
 
         public virtual VatRateModel VatRate { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

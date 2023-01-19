@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity;
 
-public class StudentAchievementModel : BaseModel, ILoadable
+public class StudentAchievementModel : BaseModelWithLoad
 {
     public StudentAchievementModel(StudentAchievement model) : base(model)
     {
@@ -50,7 +50,7 @@ public class StudentAchievementModel : BaseModel, ILoadable
     public virtual AchievementModel Achievement { get; set; }
     public virtual AchievementOutcomeModel Outcome { get; set; }
     
-    public async Task Load(IUnitOfWork unitOfWork)
+    protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
     {
         if (Id.HasValue)
         {

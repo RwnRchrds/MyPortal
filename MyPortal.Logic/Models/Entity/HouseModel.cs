@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class HouseModel : BaseModel, ILoadable
+    public class HouseModel : BaseModelWithLoad
     {
         public HouseModel(House model) : base(model)
         {
@@ -34,7 +34,7 @@ namespace MyPortal.Logic.Models.Entity
         public string ColourCode { get; set; }
         
         public virtual StudentGroupModel StudentGroup { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

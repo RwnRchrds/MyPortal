@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class MarksheetColumnModel : BaseModel, ILoadable
+    public class MarksheetColumnModel : BaseModelWithLoad
     {
         public MarksheetColumnModel(MarksheetColumn model) : base(model)
         {
@@ -50,7 +50,7 @@ namespace MyPortal.Logic.Models.Entity
         public virtual AspectModel Aspect { get; set; }
         public virtual ResultSetModel ResultSet { get; set; }
         
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

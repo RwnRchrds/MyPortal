@@ -55,7 +55,7 @@ namespace MyPortal.Logic.Services
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var bulletins = await unitOfWork.Bulletins.GetBulletinMetadata(searchOptions);
+                var bulletins = await unitOfWork.Bulletins.GetBulletinDetails(searchOptions);
 
                 return bulletins.Select(b => new BulletinSummaryModel(b));
             }
@@ -65,7 +65,7 @@ namespace MyPortal.Logic.Services
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var bulletins = await unitOfWork.Bulletins.GetBulletinMetadata(searchOptions, filter);
+                var bulletins = await unitOfWork.Bulletins.GetBulletinDetails(searchOptions, filter);
 
                 var response = new BulletinPageResponse(bulletins);
 
