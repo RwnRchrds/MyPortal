@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class ObservationModel : BaseModel, ILoadable
+    public class ObservationModel : BaseModelWithLoad
     {
         public ObservationModel(Observation model) : base(model)
         {
@@ -48,7 +48,7 @@ namespace MyPortal.Logic.Models.Entity
         public virtual StaffMemberModel Observer { get; set; }
         public virtual ObservationOutcomeModel Outcome { get; set; }
         
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

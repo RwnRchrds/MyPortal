@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class DetentionModel : BaseModel, ILoadable
+    public class DetentionModel : BaseModelWithLoad
     {
         public DetentionModel(Detention model) : base(model)
         {
@@ -46,7 +46,8 @@ namespace MyPortal.Logic.Models.Entity
         public DetentionTypeModel Type { get; set; }
         public DiaryEventModel Event { get; set; }
         public StaffMemberModel Supervisor { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

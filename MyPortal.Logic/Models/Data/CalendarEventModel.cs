@@ -22,21 +22,21 @@ namespace MyPortal.Logic.Models.Data
             Color = eventModel.EventType.ColourCode;
         }
 
-        public CalendarEventModel(SessionMetadata sessionMetadata, string colour)
+        public CalendarEventModel(SessionDetailModel sessionDetailModel, string colour)
         {
             AllDay = false;
-            Start = sessionMetadata.StartTime;
-            End = sessionMetadata.EndTime;
-            Title = $"{sessionMetadata.ClassCode}";
+            Start = sessionDetailModel.StartTime;
+            End = sessionDetailModel.EndTime;
+            Title = $"{sessionDetailModel.ClassCode}";
             Display = CalendarDisplayModes.Auto;
             Color = colour;
             TextColor = "#FFFFFF";
-            if (sessionMetadata.RoomId.HasValue && !string.IsNullOrWhiteSpace(sessionMetadata.RoomName))
+            if (sessionDetailModel.RoomId.HasValue && !string.IsNullOrWhiteSpace(sessionDetailModel.RoomName))
             {
                 ExtendedProps = new
                 {
-                    Room = sessionMetadata.RoomName,
-                    Teacher = sessionMetadata.TeacherName
+                    Room = sessionDetailModel.RoomName,
+                    Teacher = sessionDetailModel.TeacherName
                 };
             }
         }

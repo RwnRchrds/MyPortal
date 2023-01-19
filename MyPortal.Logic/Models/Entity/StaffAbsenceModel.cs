@@ -7,7 +7,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class StaffAbsenceModel : BaseModel, ILoadable
+    public class StaffAbsenceModel : BaseModelWithLoad
     {
         public StaffAbsenceModel(StaffAbsence model) : base(model)
         {
@@ -57,7 +57,7 @@ namespace MyPortal.Logic.Models.Entity
         public virtual StaffMemberModel StaffMember { get; set; }
         public virtual StaffAbsenceTypeModel AbsenceType { get; set; }
         public virtual StaffIllnessTypeModel IllnessType { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

@@ -8,10 +8,9 @@ using File = MyPortal.Database.Models.Entity.File;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface IHostedFileProvider : IDisposable
+    public interface IHostedFileProvider
     {
-        Task<IEnumerable<WebAction>> GetWebActions(string fileId); 
-        Task<File> GetFileById(string fileId);
-        Task<Stream> DownloadFileToStream(string fileId);
+        Task<IEnumerable<WebAction>> GetWebActions(string accessToken, string fileId); 
+        Task<File> CreateFileFromId(string accessToken, string fileId);
     }
 }

@@ -38,7 +38,7 @@ namespace MyPortal.Database.Repositories
             return query.With(alias, cteQuery);
         }
 
-        private Query GenerateMetadataQuery(string alias = "MM")
+        private Query GenerateDetailsQuery(string alias = "MM")
         {
             var query = new Query();
 
@@ -53,13 +53,13 @@ namespace MyPortal.Database.Repositories
             return query;
         }
 
-        public async Task<MarksheetMetadata> GetMarksheetMetadata(Guid marksheetId)
+        public async Task<MarksheetDetailModel> GetMarksheetDetails(Guid marksheetId)
         {
-            var query = GenerateMetadataQuery();
+            var query = GenerateDetailsQuery();
 
             query.Where("MM.MarksheetId", marksheetId);
 
-            return await ExecuteQueryFirstOrDefault<MarksheetMetadata>(query);
+            return await ExecuteQueryFirstOrDefault<MarksheetDetailModel>(query);
         }
 
         protected override Query JoinRelated(Query query)

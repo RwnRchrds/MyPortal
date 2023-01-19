@@ -10,12 +10,12 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface ISessionRepository : IReadWriteRepository<Session>, IUpdateRepository<Session>
     {
-        Task<IEnumerable<SessionMetadata>> GetMetadata(Guid sessionId, DateTime dateFrom, DateTime dateTo);
-        Task<SessionMetadata> GetMetadata(Guid sessionId, Guid attendanceWeekId);
-        Task<IEnumerable<SessionMetadata>> GetMetadataByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo);
-        Task<IEnumerable<SessionMetadata>> GetMetadataByStaffMember(Guid staffMemberId, DateTime dateFrom,
+        Task<IEnumerable<SessionDetailModel>> GetSessionDetails(Guid sessionId, DateTime dateFrom, DateTime dateTo);
+        Task<SessionDetailModel> GetSessionDetails(Guid sessionId, Guid attendanceWeekId);
+        Task<IEnumerable<SessionDetailModel>> GetSessionDetailsByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo);
+        Task<IEnumerable<SessionDetailModel>> GetSessionDetailsByStaffMember(Guid staffMemberId, DateTime dateFrom,
             DateTime dateTo);
 
-        Task<IEnumerable<SessionMetadata>> GetMetadata(RegisterSearchOptions searchOptions);
+        Task<IEnumerable<SessionDetailModel>> GetSessionDetails(RegisterSearchOptions searchOptions);
     }
 }

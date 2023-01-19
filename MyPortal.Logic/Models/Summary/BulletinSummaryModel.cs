@@ -19,16 +19,16 @@ public class BulletinSummaryModel
     public DateTime CreatedDate { get; set; }
     public DateTime? ExpireDate { get; set; }
 
-    public BulletinSummaryModel(BulletinMetadata metadata)
+    public BulletinSummaryModel(BulletinDetailModel detailModel)
     {
-        Id = metadata.Id;
-        DirectoryId = metadata.DirectoryId;
-        Title = metadata.Title;
-        Detail = metadata.Detail;
-        Private = metadata.Private;
-        Approved = metadata.Approved;
-        CreatedByName = metadata.CreatedByName;
-        CreatedDate = metadata.CreatedDate;
-        ExpireDate = metadata.ExpireDate;
+        Id = detailModel.Id;
+        DirectoryId = detailModel.DirectoryId;
+        Title = detailModel.Title;
+        Detail = detailModel.Detail;
+        Private = detailModel.Private;
+        Approved = detailModel.Approved;
+        CreatedByName = detailModel.CreatedByName;
+        CreatedDate = detailModel.CreatedDate;
+        ExpireDate = detailModel.ExpireDate;
     }
 }

@@ -25,7 +25,7 @@ namespace MyPortalWeb
                     AllowAccessTokensViaBrowser = true,
                     AllowOfflineAccess = true,
                     RefreshTokenUsage = TokenUsage.OneTimeOnly,
-                    AccessTokenLifetime = 30
+                    AccessTokenLifetime = 3600
                 }
             };
     }

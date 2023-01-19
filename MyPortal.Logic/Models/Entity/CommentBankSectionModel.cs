@@ -8,9 +8,9 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity;
 
-public class CommentBankSectionModel : BaseModel
+public class CommentBankSectionModel : BaseModelWithLoad
 {
-    public CommentBankSectionModel(CommentBankSection model)
+    public CommentBankSectionModel(CommentBankSection model) : base(model)
     {
         LoadFromModel(model);
     }
@@ -26,16 +26,19 @@ public class CommentBankSectionModel : BaseModel
         }
     }
 
-    public async Task Load(IUnitOfWork unitOfWork)
+    protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
     {
         if (Id.HasValue)
         {
             var section = await unitOfWork.CommentBankSections.GetById(Id.Value);
-            
-            LoadFromModel(section);
+
+            if (section != null)
+            {
+                LoadFromModel(section);
+            }
         }
     }
-    
+
     public Guid CommentBankAreaId { get; set; }
 
     [Required]

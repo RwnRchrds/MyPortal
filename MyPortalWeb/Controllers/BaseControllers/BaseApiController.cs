@@ -63,7 +63,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
                 case SecurityTokenException:
                     statusCode = HttpStatusCode.Unauthorized;
                     break;
-                case UnauthorisedException:
+                case PermissionException:
                     statusCode = HttpStatusCode.Forbidden;
                     break;
                 case InvalidDataException:

@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class StudentModel : BaseModel, ILoadable
+    public class StudentModel : BaseModelWithLoad
     {
         public StudentModel(Student model) : base(model)
         {
@@ -103,7 +103,7 @@ namespace MyPortal.Logic.Models.Entity
         public virtual EnrolmentStatusModel EnrolmentStatus { get; set; }
 
         public virtual BoarderStatusModel BoarderStatus { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

@@ -44,7 +44,7 @@ namespace MyPortal.Logic.Services
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var metadata = await unitOfWork.Sessions.GetMetadata(sessionId, attendanceWeekId);
+                var metadata = await unitOfWork.Sessions.GetSessionDetails(sessionId, attendanceWeekId);
 
                 if (metadata == null)
                 {
@@ -76,7 +76,7 @@ namespace MyPortal.Logic.Services
                     TeacherId = model.TeacherId
                 };
                 
-                var sessions = await unitOfWork.Sessions.GetMetadata(searchOptions);
+                var sessions = await unitOfWork.Sessions.GetSessionDetails(searchOptions);
 
                 return sessions.Select(s => new AttendanceRegisterSummaryModel(s)).ToArray();
             }

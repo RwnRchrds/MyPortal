@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class SenProvisionModel : BaseModel, ILoadable
+    public class SenProvisionModel : BaseModelWithLoad
     {
         public SenProvisionModel(SenProvision model) : base(model)
         {
@@ -48,7 +48,7 @@ namespace MyPortal.Logic.Models.Entity
         public virtual StudentModel Student { get; set; }
 
         public virtual SenProvisionTypeModel Type { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

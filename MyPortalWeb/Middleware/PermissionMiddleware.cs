@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using MyPortal.Database.Enums;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortalWeb.Attributes;
+using MyPortalWeb.Models.Response;
 
 namespace MyPortalWeb.Middleware
 {
@@ -22,7 +18,7 @@ namespace MyPortalWeb.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IRoleService roleService)
+        public async Task InvokeAsync(HttpContext context, IRoleService roleService)
         {
             Endpoint endpoint = context.Features.Get<IEndpointFeature>()?.Endpoint;
             PermissionAttribute attribute = endpoint?.Metadata.GetMetadata<PermissionAttribute>();
@@ -33,13 +29,15 @@ namespace MyPortalWeb.Middleware
                     await context.User.HasPermission(roleService, attribute.Requirement, attribute.Permissions))
                 {
                     await _next(context);
-                }
-                else
-                {
-                    context.Response.StatusCode = 403;
-                    await context.Response.WriteAsync("You do not have permission to access this resource.");
                     return;
                 }
+                
+                context.Response.StatusCode = 403;
+                var error = new ErrorResponseModel("You do not have permission to access this resource.");
+                await context.Response.WriteJsonAsync(error);
+                context.Response.ContentLength = context.Response.Body.Length;
+                await context.Response.CompleteAsync();
+                return;
             }
 
             if (!context.Response.HasStarted)

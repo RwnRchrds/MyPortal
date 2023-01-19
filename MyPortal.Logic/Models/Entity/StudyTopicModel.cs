@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class StudyTopicModel : LookupItemModel, ILoadable
+    public class StudyTopicModel : LookupItemModelWithLoad
     {
         public StudyTopicModel(StudyTopic model) : base(model)
         {
@@ -33,7 +33,7 @@ namespace MyPortal.Logic.Models.Entity
         public string Name { get; set; }
 
         public virtual CourseModel Course { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

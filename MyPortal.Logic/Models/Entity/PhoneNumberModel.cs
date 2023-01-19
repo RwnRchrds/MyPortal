@@ -11,7 +11,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class PhoneNumberModel : BaseModel, ILoadable
+    public class PhoneNumberModel : BaseModelWithLoad
     {
         public PhoneNumberModel(PhoneNumber model) : base(model)
         {
@@ -51,7 +51,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual PhoneNumberTypeModel Type { get; set; }
         public virtual PersonModel Person { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

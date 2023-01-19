@@ -10,9 +10,9 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class MarksheetTemplateGroupModel : BaseModel, ILoadable
+    public class MarksheetModel : BaseModelWithLoad
     {
-        public MarksheetTemplateGroupModel(Marksheet model) : base(model)
+        public MarksheetModel(Marksheet model) : base(model)
         {
             LoadFromModel(model);
         }
@@ -34,6 +34,8 @@ namespace MyPortal.Logic.Models.Entity
             }
         }
 
+        public string Name => $"{Template.Name} ({StudentGroup.Code})";
+
         public bool Completed { get; set; } 
 
         public Guid MarksheetTemplateId { get; set; }
@@ -41,7 +43,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual MarksheetTemplateModel Template { get; set; }
         public virtual StudentGroupModel StudentGroup { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

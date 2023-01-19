@@ -7,7 +7,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class CoverArrangementModel : BaseModel, ILoadable
+    public class CoverArrangementModel : BaseModelWithLoad
     {
         public CoverArrangementModel(CoverArrangement model) : base(model)
         {
@@ -61,13 +61,18 @@ namespace MyPortal.Logic.Models.Entity
         public bool StaffChanged => TeacherId.HasValue;
 
         public bool RoomChanged => RoomId.HasValue;
-        public async Task Load(IUnitOfWork unitOfWork)
+
+
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.CoverArrangements.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var coverArrangement = await unitOfWork.CoverArrangements.GetById(Id.Value);
+
+                if (coverArrangement != null)
+                {
+                    LoadFromModel(coverArrangement);
+                }
             }
         }
     }

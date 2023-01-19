@@ -27,7 +27,7 @@ namespace MyPortal.Database.Repositories
             
         }
 
-        private Query GenerateMetadataQuery(string alias = "SM")
+        private Query GenerateDetailsQuery(string alias = "SM")
         {
             var query = new Query();
             CommonTableExpressions.WithPossibleAttendancePeriods(query, "PossiblePeriodsCte");
@@ -42,30 +42,30 @@ namespace MyPortal.Database.Repositories
             return query;
         }
 
-        public async Task<IEnumerable<SessionMetadata>> GetMetadata(Guid sessionId, DateTime dateFrom, DateTime dateTo)
+        public async Task<IEnumerable<SessionDetailModel>> GetSessionDetails(Guid sessionId, DateTime dateFrom, DateTime dateTo)
         {
-            var query = GenerateMetadataQuery();
+            var query = GenerateDetailsQuery();
 
             query.Where("SM.SessionId", sessionId);
             query.WhereDate("SM.StartTime", ">=", dateFrom);
             query.WhereDate("SM.EndTime", "<=", dateTo);
 
-            return await ExecuteQuery<SessionMetadata>(query);
+            return await ExecuteQuery<SessionDetailModel>(query);
         }
 
-        public async Task<SessionMetadata> GetMetadata(Guid sessionId, Guid attendanceWeekId)
+        public async Task<SessionDetailModel> GetSessionDetails(Guid sessionId, Guid attendanceWeekId)
         {
-            var query = GenerateMetadataQuery();
+            var query = GenerateDetailsQuery();
 
             query.Where("SM.SessionId", sessionId);
             query.Where("SM.AttendanceWeekId", attendanceWeekId);
 
-            return await ExecuteQueryFirstOrDefault<SessionMetadata>(query);
+            return await ExecuteQueryFirstOrDefault<SessionDetailModel>(query);
         }
 
-        public async Task<IEnumerable<SessionMetadata>> GetMetadata(RegisterSearchOptions searchOptions)
+        public async Task<IEnumerable<SessionDetailModel>> GetSessionDetails(RegisterSearchOptions searchOptions)
         {
-            var query = GenerateMetadataQuery();
+            var query = GenerateDetailsQuery();
             
             query.WhereDate("SM.StartTime", ">=", searchOptions.DateFrom);
             query.WhereDate("SM.EndTime", "<=", searchOptions.DateTo);
@@ -80,12 +80,12 @@ namespace MyPortal.Database.Repositories
                 query.Where("SM.TeacherId", searchOptions.TeacherId);
             }
 
-            return await ExecuteQuery<SessionMetadata>(query);
+            return await ExecuteQuery<SessionDetailModel>(query);
         }
 
-        public async Task<IEnumerable<SessionMetadata>> GetMetadataByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo)
+        public async Task<IEnumerable<SessionDetailModel>> GetSessionDetailsByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo)
         {
-            var query = GenerateMetadataQuery();
+            var query = GenerateDetailsQuery();
             
             query.LeftJoin("StudentGroupMemberships AS SGM", "SGM.StudentGroupId", "SM.StudentGroupId");
             query.LeftJoin("Students AS S", "S.Id", "SGM.StudentId");
@@ -95,12 +95,12 @@ namespace MyPortal.Database.Repositories
             query.Where("SM.EndTime", "<=", dateTo);
             query.WhereStudentGroupMembershipValid("SGM", dateFrom, dateTo);
 
-            return await ExecuteQuery<SessionMetadata>(query);
+            return await ExecuteQuery<SessionDetailModel>(query);
         }
 
-        public async Task<IEnumerable<SessionMetadata>> GetMetadataByStaffMember(Guid staffMemberId, DateTime dateFrom, DateTime dateTo)
+        public async Task<IEnumerable<SessionDetailModel>> GetSessionDetailsByStaffMember(Guid staffMemberId, DateTime dateFrom, DateTime dateTo)
         {
-            var query = GenerateMetadataQuery();
+            var query = GenerateDetailsQuery();
 
             query.LeftJoin("StaffMembers AS S", "S.Id", "SM.TeacherId");
             
@@ -108,7 +108,7 @@ namespace MyPortal.Database.Repositories
             query.WhereDate("SM.StartTime", ">=", dateFrom);
             query.WhereDate("SM.EndTime", "<=", dateTo);
             
-            return await ExecuteQuery<SessionMetadata>(query);
+            return await ExecuteQuery<SessionDetailModel>(query);
         }
 
         public async Task Update(Session entity)

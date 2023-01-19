@@ -10,7 +10,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class ReportCardModel : BaseModel, ILoadable
+    public class ReportCardModel : BaseModelWithLoad
     {
         public ReportCardModel(ReportCard model) : base(model)
         {
@@ -52,7 +52,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual StudentModel Student { get; set; }
         public virtual IncidentTypeModel BehaviourType { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

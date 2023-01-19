@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class BulletinModel : BaseModel, ILoadable
+    public class BulletinModel : BaseModelWithLoad
     {
         public BulletinModel(Bulletin model) : base(model)
         {
@@ -61,14 +61,17 @@ namespace MyPortal.Logic.Models.Entity
         public DirectoryModel Directory { get; set; }
 
         public bool Expired => ExpireDate <= DateTime.Now;
-        
-        public async Task Load(IUnitOfWork unitOfWork)
+
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.Bulletins.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var bulletin = await unitOfWork.Bulletins.GetById(Id.Value);
+
+                if (bulletin != null)
+                {
+                    LoadFromModel(bulletin);
+                }
             }
         }
     }

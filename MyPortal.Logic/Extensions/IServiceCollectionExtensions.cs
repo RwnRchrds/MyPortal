@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,10 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.FileProviders;
-using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Configuration;
 using MyPortal.Logic.Services;
 
 namespace MyPortal.Logic.Extensions
@@ -41,9 +35,9 @@ namespace MyPortal.Logic.Extensions
                     case DatabaseProvider.MsSqlServer:
                         options.UseSqlServer(Configuration.Instance.ConnectionString);
                         break;
-                    case DatabaseProvider.MySql:
+                    /*case DatabaseProvider.MySql:
                         options.UseMySQL(Configuration.Instance.ConnectionString);
-                        break;
+                        break;*/
                     default:
                         throw new ConfigurationException("A database provider has not been set.");
                 }
@@ -55,7 +49,6 @@ namespace MyPortal.Logic.Extensions
         private static IServiceCollection AddBusinessServices(this IServiceCollection services)
         {
             services.AddTransient(s => s.GetService<HttpContext>()?.User);
-
             services.AddScoped<IAcademicYearService, AcademicYearService>();
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IAddressService, AddressService>();
@@ -81,64 +74,55 @@ namespace MyPortal.Logic.Extensions
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<IUserService, UserService>();
 
-            if (Configuration.Instance.FileProvider == FileProvider.Local)
-            {
-                services.AddScoped<ILocalFileProvider, LocalFileProvider>();
-                services.AddScoped<IFileService, LocalFileService>();
-            }
-            else
-            {
-                if (Configuration.Instance.FileProvider == FileProvider.GoogleDrive)
-                {
-                    services.AddScoped<IHostedFileProvider, GoogleFileProvider>();
-                }
-
-                services.AddScoped<IFileService, HostedFileService>();
-            }
-
             return services;
         }
 
-        private static void SetFileProvider(string fileProvider)
+        private static string GetSecret(IConfiguration config, string configKey, string secretName)
         {
-            switch (fileProvider.ToLower())
+            var secretSource = config[configKey];
+
+            if (secretSource.ToLower() == "azure")
             {
-                case "google":
-                    Configuration.Instance.FileProvider = FileProvider.GoogleDrive;
-                    break;
-                case "local":
-                    Configuration.Instance.FileProvider = FileProvider.Local;
-                    break;
-                default:
-                    throw new ArgumentException($"The file storage provider {fileProvider} is invalid.");
+                var keyVaultName = Environment.GetEnvironmentVariable("MYPORTAL_KEYVAULT");
+                var keyVaultSecret = Environment.GetEnvironmentVariable($"MYPORTAL_{secretName.ToUpper()}");
+
+                var secret = AzureKeyVaultHelper.GetSecret(keyVaultName, keyVaultSecret);
+
+                return secret;
+            }   
+            
+            if (secretSource.ToLower() == "environment")
+            {
+                var secret = Environment.GetEnvironmentVariable($"MYPORTAL_{secretName.ToUpper()}");
+                
+                return secret;
             }
+            
+            return secretSource;
+        }
+
+        private static string GetConnectionString(IConfiguration config)
+        {
+            return GetSecret(config, "DataSource:ConnectionString", "cs");
+        }
+
+        private static string GetFileEncryptionKey(IConfiguration config)
+        {
+            return GetSecret(config, "DataSource:FileEncryptionKey", "fek");
         }
 
         private static void SetConfiguration(IConfiguration config)
         {
-            var databaseProvider = config["Database:Provider"];
-            var connectionString = config["Database:ConnectionString"];
-            var fileEncryptionKey = config["FileStorage:EncryptionKey"];
-            var fileProvider = config["FileStorage:Provider"];
-
-            Configuration.CreateInstance(databaseProvider, connectionString);
-
-            Configuration.Instance.InstallLocation = Environment.CurrentDirectory;
+            var connectionString = GetConnectionString(config);
+            var fileEncryptionKey = GetFileEncryptionKey(config);
             
-            SetFileProvider(fileProvider);
+            var databaseProvider = config["DataSource:DbProvider"];
+            var fileProvider = config["DataSource:FileProvider"];
 
+            Configuration.CreateInstance(databaseProvider, fileProvider, connectionString);
+            
+            Configuration.Instance.InstallLocation = Environment.CurrentDirectory;
             Configuration.Instance.FileEncryptionKey = fileEncryptionKey;
-
-            var googleCredPath = config["Google:CredentialPath"];
-
-            if (!string.IsNullOrWhiteSpace(googleCredPath))
-            {
-                Configuration.Instance.GoogleConfig = new GoogleConfig
-                {
-                    CredentialPath = googleCredPath,
-                    DefaultAccountName = config["Google:DefaultAccountName"]
-                };
-            }
         }
     }
 }

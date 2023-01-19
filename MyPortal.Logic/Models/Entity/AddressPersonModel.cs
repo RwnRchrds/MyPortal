@@ -9,9 +9,9 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AddressLinkModel : BaseModel, ILoadable
+    public class AddressPersonModel : BaseModelWithLoad
     {
-        public AddressLinkModel(AddressPerson model) : base(model)
+        public AddressPersonModel(AddressPerson model) : base(model)
         {
             LoadFromModel(model);
         }
@@ -35,20 +35,19 @@ namespace MyPortal.Logic.Models.Entity
         public Guid AddressId { get; set; }
 
         public Guid? PersonId { get; set; }
-        
-        public Guid? AgencyId { get; set; }
 
         public virtual AddressModel Address { get; set; }
         public virtual PersonModel Person { get; set; }
-        public virtual AgencyModel Agency { get; set; }
-        
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.AddressPeople.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var addressPerson = await unitOfWork.AddressPeople.GetById(Id.Value);
+
+                if (addressPerson != null)
+                {
+                    LoadFromModel(addressPerson);
+                }
             }
         }
     }

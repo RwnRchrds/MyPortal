@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class SchoolModel : BaseModel, ILoadable
+    public class SchoolModel : BaseModelWithLoad
     {
         public SchoolModel(School model) : base(model)
         {
@@ -17,6 +17,7 @@ namespace MyPortal.Logic.Models.Entity
 
         private void LoadFromModel(School model)
         {
+            AgencyId = model.AgencyId;
             LocalAuthorityId = model.LocalAuthorityId;
             EstablishmentNumber = model.EstablishmentNumber;
             Urn = model.Urn;
@@ -28,6 +29,11 @@ namespace MyPortal.Logic.Models.Entity
             HeadTeacherId = model.HeadTeacherId;
             Local = model.Local;
 
+            if (model.Agency != null)
+            {
+                Agency = new AgencyModel(model.Agency);
+            }
+            
             if (model.SchoolPhase != null)
             {
                 SchoolPhase = new SchoolPhaseModel(model.SchoolPhase);
@@ -59,6 +65,8 @@ namespace MyPortal.Logic.Models.Entity
             }
         }
 
+        public Guid AgencyId { get; set; }
+        
         public Guid? LocalAuthorityId { get; set; }
         
         public int EstablishmentNumber { get; set; }
@@ -83,13 +91,14 @@ namespace MyPortal.Logic.Models.Entity
 
         public bool Local { get; set; }
 
+        public virtual AgencyModel Agency { get; set; }
         public virtual SchoolPhaseModel SchoolPhase { get; set; }
         public virtual SchoolTypeModel Type { get; set; }
         public virtual GovernanceTypeModel GovernanceType { get; set; }
         public virtual IntakeTypeModel IntakeType { get; set; }
         public virtual PersonModel HeadTeacher { get; set; }
         public virtual LocalAuthorityModel LocalAuthority { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

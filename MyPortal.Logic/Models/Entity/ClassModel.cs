@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class ClassModel : BaseModel, ILoadable
+    public class ClassModel : BaseModelWithLoad
     {
         public ClassModel(Class model) : base(model)
         {
@@ -19,6 +19,7 @@ namespace MyPortal.Logic.Models.Entity
         {
             CourseId = model.CourseId;
             CurriculumGroupId = model.CurriculumGroupId;
+            DirectoryId = model.DirectoryId;
             Code = model.Code;
 
             if (model.Course != null)
@@ -30,26 +31,36 @@ namespace MyPortal.Logic.Models.Entity
             {
                 Group = new CurriculumGroupModel(model.Group);
             }
+
+            if (model.Directory != null)
+            {
+                Directory = new DirectoryModel(model.Directory);
+            }
         }
         
         public Guid CourseId { get; set; }
 
         public Guid CurriculumGroupId { get; set; }
 
+        public Guid DirectoryId { get; set; }
+
         [Required]
         [StringLength(10)]
         public string Code { get; set; }
 
+        public DirectoryModel Directory { get; set; }
         public CourseModel Course { get; set; }
         public CurriculumGroupModel Group { get; set; }
-        
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.Classes.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var currClass = await unitOfWork.Classes.GetById(Id.Value);
+
+                if (currClass != null)
+                {
+                    LoadFromModel(currClass);
+                }
             }
         }
     }

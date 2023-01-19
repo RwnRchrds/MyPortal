@@ -75,18 +75,18 @@ public class AssessmentService : BaseService, IAssessmentService
         }
     }
 
-    public async Task<MarksheetViewModel> GetMarksheet(Guid marksheetId)
+    public async Task<MarksheetDataModel> GetMarksheet(Guid marksheetId)
     {
         await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
-            var metadata = await unitOfWork.Marksheets.GetMarksheetMetadata(marksheetId);
+            var metadata = await unitOfWork.Marksheets.GetMarksheetDetails(marksheetId);
 
             if (metadata == null)
             {
                 throw new NotFoundException("Marksheet not found.");
             }
 
-            var marksheet = new MarksheetViewModel();
+            var marksheet = new MarksheetDataModel();
 
             marksheet.Title = $"{metadata.TemplateName} ({metadata.StudentGroupCode})";
 
@@ -99,7 +99,7 @@ public class AssessmentService : BaseService, IAssessmentService
 
             var marksheetColumns = (await unitOfWork.MarksheetColumns.GetByMarksheet(marksheetId))
                 .Select(c => new MarksheetColumnModel(c)).ToList();
-            var resultData = (await unitOfWork.Results.GetResultMetadataByMarksheet(marksheetId)).ToList();
+            var resultData = (await unitOfWork.Results.GetResultDetailsByMarksheet(marksheetId)).ToList();
 
             await marksheet.PopulateColumns(unitOfWork, marksheetColumns);
             marksheet.PopulateResults(resultData);

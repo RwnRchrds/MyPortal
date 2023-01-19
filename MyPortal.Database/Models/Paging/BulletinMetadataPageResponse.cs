@@ -6,12 +6,12 @@ namespace MyPortal.Database.Models.Paging;
 
 public class BulletinMetadataPageResponse : IPageResponse
 {
-    public BulletinMetadataPageResponse(IEnumerable<BulletinMetadata> data, int totalRecords)
+    public BulletinMetadataPageResponse(IEnumerable<BulletinDetailModel> data, int totalRecords)
     {
         Data = data;
         TotalRecords = totalRecords;
     }
     
-    public IEnumerable<BulletinMetadata> Data { get; }
+    public IEnumerable<BulletinDetailModel> Data { get; }
     public int TotalRecords { get; }
 }

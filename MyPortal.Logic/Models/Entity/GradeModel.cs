@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class GradeModel : BaseModel, ILoadable
+    public class GradeModel : BaseModelWithLoad
     {
         public GradeModel(Grade model) : base(model)
         {
@@ -40,7 +40,7 @@ namespace MyPortal.Logic.Models.Entity
         public decimal Value { get; set; }
 
         public virtual GradeSetModel GradeSet { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

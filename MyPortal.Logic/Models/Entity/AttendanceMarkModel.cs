@@ -10,16 +10,11 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AttendanceMarkModel : BaseModel, ILoadable
+    public class AttendanceMarkModel : BaseModelWithLoad
     {
         public AttendanceMarkModel(AttendanceMark model) : base(model)
         {
             LoadFromModel(model);
-        }
-
-        internal AttendanceMarkModel()
-        {
-            
         }
 
         private void LoadFromModel(AttendanceMark model)
@@ -52,19 +47,6 @@ namespace MyPortal.Logic.Models.Entity
             }
         }
 
-        internal static AttendanceMarkModel NoMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
-        {
-            return new AttendanceMarkModel
-            {
-                Id = Guid.Empty,
-                StudentId = studentId,
-                WeekId = attendanceWeekId,
-                PeriodId = periodId,
-                MinutesLate = 0,
-                CodeId = Guid.Empty
-            };
-        }
-
         public Guid StudentId { get; set; }
 
         public Guid WeekId { get; set; }
@@ -85,27 +67,16 @@ namespace MyPortal.Logic.Models.Entity
         public StudentModel Student { get; set; }
 
         public AttendanceWeekModel Week { get; set; }
-
-        public AttendanceMarkSummaryModel ToListModel()
-        {
-            return new AttendanceMarkSummaryModel
-            {
-                StudentId = StudentId,
-                WeekId = WeekId,
-                PeriodId = PeriodId,
-                CodeId = CodeId,
-                MinutesLate = MinutesLate,
-                Comments = Comments
-            };
-        }
-
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.AttendanceMarks.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var attendanceMark = await unitOfWork.AttendanceMarks.GetById(Id.Value);
+
+                if (attendanceMark != null)
+                {
+                    LoadFromModel(attendanceMark);
+                }
             }
         }
     }

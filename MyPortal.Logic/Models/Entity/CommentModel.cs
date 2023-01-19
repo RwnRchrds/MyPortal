@@ -10,7 +10,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class CommentModel : BaseModel, ILoadable
+    public class CommentModel : BaseModelWithLoad
     {
         public CommentModel(Comment model) : base(model)
         {
@@ -34,13 +34,16 @@ namespace MyPortal.Logic.Models.Entity
         public string Value { get; set; }
 
         public CommentBankSectionModel Section { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.Comments.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var comment = await unitOfWork.Comments.GetById(Id.Value);
+
+                if (comment != null)
+                {
+                    LoadFromModel(comment);
+                }
             }
         }
     }

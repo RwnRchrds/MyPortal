@@ -93,7 +93,7 @@ namespace MyPortal.Database.Repositories
             return bulletins;
         }
 
-        public async Task<BulletinMetadataPageResponse> GetBulletinMetadata(BulletinSearchOptions searchOptions, PageFilter pageFilter)
+        public async Task<BulletinMetadataPageResponse> GetBulletinDetails(BulletinSearchOptions searchOptions, PageFilter pageFilter)
         {
             var query = new Query();
 
@@ -121,7 +121,7 @@ namespace MyPortal.Database.Repositories
                 query.ApplyPaging(pageFilter);
             }
 
-            var data = await ExecuteQuery<BulletinMetadata>(query);
+            var data = await ExecuteQuery<BulletinDetailModel>(query);
 
             var countQuery = GenerateEmptyQuery();
             
@@ -134,7 +134,7 @@ namespace MyPortal.Database.Repositories
             return response;
         }
         
-        public async Task<IEnumerable<BulletinMetadata>> GetBulletinMetadata(BulletinSearchOptions searchOptions)
+        public async Task<IEnumerable<BulletinDetailModel>> GetBulletinDetails(BulletinSearchOptions searchOptions)
         {
             var query = new Query();
 
@@ -156,7 +156,7 @@ CROSS APPLY GetDisplayName({TblAlias}.CreatedById, 2, 1, 1) D");
             
             ApplySearch(query, searchOptions);
 
-            var metadata = await ExecuteQuery<BulletinMetadata>(query);
+            var metadata = await ExecuteQuery<BulletinDetailModel>(query);
 
             return metadata;
         }

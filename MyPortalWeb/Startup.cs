@@ -50,7 +50,7 @@ namespace MyPortalWeb
 #endif
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
 #if DEBUG
             app.UseSwagger();

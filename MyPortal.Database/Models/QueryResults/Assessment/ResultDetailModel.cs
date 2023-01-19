@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Models.QueryResults.Assessment;
 
-public class ResultMetadata
+public class ResultDetailModel
 {
     public Guid ResultSetId { get; set; }
     public Guid StudentId { get; set; }

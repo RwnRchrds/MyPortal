@@ -4,7 +4,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.Response.Assessment.Marksheet;
 
-public class MarksheetColumnViewModel
+public class MarksheetColumnDataModel
 {
     public Guid AspectTypeId { get; set; }
     public Guid AspectId { get; set; }

@@ -11,7 +11,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AgencyModel : BaseModel, ILoadable
+    public class AgencyModel : BaseModelWithLoad
     {
         public AgencyModel(Agency model) : base(model)
         {
@@ -51,14 +51,16 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual AgencyTypeModel AgencyType { get; set; }
         public virtual DirectoryModel Directory { get; set; }
-        
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.Agencies.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var agency = await unitOfWork.Agencies.GetById(Id.Value);
+
+                if (agency != null)
+                {
+                    LoadFromModel(agency);
+                }
             }
         }
     }

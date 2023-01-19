@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AttendanceCodeModel : BaseModel, ILoadable
+    public class AttendanceCodeModel : BaseModelWithLoad
     {
         public AttendanceCodeModel(AttendanceCode model) : base(model)
         {
@@ -45,13 +45,16 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual AttendanceCodeTypeModel CodeType { get; set; }
         
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.AttendanceCodes.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                if (model != null)
+                {
+                    LoadFromModel(model);
+                }
             }
         }
     }

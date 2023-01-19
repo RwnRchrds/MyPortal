@@ -7,7 +7,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class HomeworkItemModel : BaseModel, ILoadable
+    public class HomeworkItemModel : BaseModelWithLoad
     {
         public HomeworkItemModel(HomeworkItem model) : base(model)
         {
@@ -36,7 +36,7 @@ namespace MyPortal.Logic.Models.Entity
         public bool SubmitOnline { get; set; }
 
         public virtual DirectoryModel Directory { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

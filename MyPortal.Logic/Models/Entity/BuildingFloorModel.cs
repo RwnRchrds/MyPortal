@@ -7,7 +7,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class BuildingFloorModel : LookupItemModel, ILoadable
+    public class BuildingFloorModel : LookupItemModelWithLoad
     {
         public BuildingFloorModel(BuildingFloor model) : base(model)
         {
@@ -29,13 +29,16 @@ namespace MyPortal.Logic.Models.Entity
 
         public BuildingModel Building { get; set; }
         
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.BuildingFloors.GetById(Id.Value);
-                
-                LoadFromModel(model);
+                var floor = await unitOfWork.BuildingFloors.GetById(Id.Value);
+
+                if (floor != null)
+                {
+                    LoadFromModel(floor);
+                }
             }
         }
     }

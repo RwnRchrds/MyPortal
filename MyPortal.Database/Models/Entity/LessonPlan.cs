@@ -25,8 +25,11 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 4)]
         public DateTime CreatedDate { get; set; }
+        
+        [Column(Order = 5)] 
+        public int Order { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         [Required] [StringLength(256)] public string Title { get; set; }
 
         [Column(Order = 7)]

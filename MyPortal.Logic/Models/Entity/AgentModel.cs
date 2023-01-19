@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AgentModel : BaseModel, ILoadable
+    public class AgentModel : BaseModelWithLoad
     {
         public AgentModel(Agent model) : base(model)
         {
@@ -53,13 +53,17 @@ namespace MyPortal.Logic.Models.Entity
         public virtual AgencyModel Agency { get; set; }
         public virtual PersonModel Person { get; set; }
         public virtual AgentTypeModel AgentType { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
-                var model = await unitOfWork.Agents.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+                var agent = await unitOfWork.Agents.GetById(Id.Value);
+
+                if (agent != null)
+                {
+                    LoadFromModel(agent);
+                }
             }
         }
     }

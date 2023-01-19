@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Models.QueryResults.Assessment;
 
-public class MarksheetMetadata
+public class MarksheetDetailModel
 {
     public Guid MarksheetId { get; set; }
     public Guid MarksheetTemplateId { get; set; }

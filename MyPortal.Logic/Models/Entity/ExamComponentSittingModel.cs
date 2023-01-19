@@ -7,7 +7,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class ExamComponentSittingModel : BaseModel, ILoadable
+    public class ExamComponentSittingModel : BaseModelWithLoad
     {
         public ExamComponentSittingModel(ExamComponentSitting model) : base(model)
         {
@@ -45,7 +45,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual ExamComponentModel Component { get; set; }
         public virtual ExamRoomModel Room { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

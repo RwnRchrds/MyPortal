@@ -7,6 +7,6 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IMarksheetRepository : IReadWriteRepository<Marksheet>
     {
-        Task<MarksheetMetadata> GetMarksheetMetadata(Guid marksheetId);
+        Task<MarksheetDetailModel> GetMarksheetDetails(Guid marksheetId);
     }
 }

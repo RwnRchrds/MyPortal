@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class YearGroupModel : BaseModel, ILoadable
+    public class YearGroupModel : BaseModelWithLoad
     {
         public YearGroupModel(YearGroup model) : base(model)
         {
@@ -38,7 +38,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual StudentGroupModel StudentGroup { get; set; }
         public virtual CurriculumYearGroupModel CurriculumYearGroup { get; set; }
-        public async Task Load(IUnitOfWork unitOfWork)
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {

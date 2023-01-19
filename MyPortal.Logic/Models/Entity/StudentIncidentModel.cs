@@ -11,7 +11,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Entity;
 
-public class StudentIncidentModel : BaseModel, ILoadable
+public class StudentIncidentModel : BaseModelWithLoad
 {
     public StudentIncidentModel(StudentIncident model) : base(model)
     {
@@ -73,7 +73,7 @@ public class StudentIncidentModel : BaseModel, ILoadable
     
     public BehaviourInvolvedStudentSummaryModel[] InvolvedStudents { get; set; }
 
-    public async Task Load(IUnitOfWork unitOfWork)
+    protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
     {
         if (Id.HasValue)
         {
