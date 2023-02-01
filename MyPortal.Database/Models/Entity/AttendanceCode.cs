@@ -7,7 +7,7 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models.Entity
 {
     [Table("AttendanceCodes")]
-    public class AttendanceCode : BaseTypes.Entity, ICensusEntity, IActivatable
+    public class AttendanceCode : BaseTypes.Entity, ISystemEntity, ICensusEntity, IActivatable
     {
         [Column(Order = 1)]
         [Required]
