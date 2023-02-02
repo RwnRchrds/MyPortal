@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Students;
+
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 

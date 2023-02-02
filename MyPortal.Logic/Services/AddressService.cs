@@ -5,7 +5,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Contacts;
+
 
 namespace MyPortal.Logic.Services
 {

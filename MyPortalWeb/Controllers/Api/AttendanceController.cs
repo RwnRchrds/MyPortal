@@ -8,9 +8,8 @@ using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Data.Attendance.Register;
 using MyPortal.Logic.Models.Requests.Attendance;
-using MyPortal.Logic.Models.Response.Attendance;
-using MyPortal.Logic.Models.Response.Attendance.Register;
 using MyPortal.Logic.Models.Summary;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -69,7 +68,7 @@ namespace MyPortalWeb.Controllers.Api
         [Route("weeks/{attendanceWeekId}/registers/{sessionId}")]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Permission(PermissionValue.AttendanceViewAttendanceMarks)]
-        [ProducesResponseType(typeof(AttendanceRegisterModel), 200)]
+        [ProducesResponseType(typeof(AttendanceRegisterDataModel), 200)]
         public async Task<IActionResult> GetRegister([FromRoute] Guid attendanceWeekId, [FromRoute] Guid sessionId)
         {
             try

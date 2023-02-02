@@ -13,7 +13,11 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Behaviour.Achievements;
+using MyPortal.Logic.Models.Data.Behaviour.Detentions;
+using MyPortal.Logic.Models.Data.Behaviour.Incidents;
+using MyPortal.Logic.Models.Data.Students;
+
 using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
 using MyPortal.Logic.Models.Requests.Behaviour.Detentions;
 using MyPortal.Logic.Models.Requests.Behaviour.Incidents;

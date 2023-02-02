@@ -10,9 +10,9 @@ using MyPortal.Database.Models.Filters;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Documents;
+
 using MyPortal.Logic.Models.Requests.Documents;
-using MyPortal.Logic.Models.Response.Documents;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services

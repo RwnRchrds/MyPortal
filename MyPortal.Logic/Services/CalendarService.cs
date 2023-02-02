@@ -12,9 +12,10 @@ using MyPortal.Database.Models.QueryResults.Attendance;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Data;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Calendar;
+
 using MyPortal.Logic.Models.Requests.Calendar;
+using MyPortal.Logic.Models.Structures;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services

@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Behaviour.Achievements;
+using MyPortal.Logic.Models.Data.Behaviour.Detentions;
+using MyPortal.Logic.Models.Data.Behaviour.Incidents;
+using MyPortal.Logic.Models.Data.Students;
+
 using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
 using MyPortal.Logic.Models.Requests.Behaviour.Detentions;
 using MyPortal.Logic.Models.Requests.Behaviour.Incidents;

@@ -14,10 +14,11 @@ using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Data;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Settings;
+
 using MyPortal.Logic.Models.Permissions;
 using MyPortal.Logic.Models.Requests.Settings.Roles;
+using MyPortal.Logic.Models.Structures;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services

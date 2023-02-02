@@ -1,5 +1,5 @@
 ﻿using System;
-using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Structures;
 using NUnit.Framework;
 using Org.BouncyCastle.Asn1.X509;
 

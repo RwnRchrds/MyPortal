@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Finance;
+
 
 namespace MyPortal.Logic.Services
 {

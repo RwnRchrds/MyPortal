@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Data;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Settings;
+
 using MyPortal.Logic.Models.Requests.Settings.Roles;
+using MyPortal.Logic.Models.Structures;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 using MyPortalWeb.Models;

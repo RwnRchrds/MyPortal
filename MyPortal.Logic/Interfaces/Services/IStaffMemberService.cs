@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.StaffMembers;
+
 
 namespace MyPortal.Logic.Interfaces.Services
 {

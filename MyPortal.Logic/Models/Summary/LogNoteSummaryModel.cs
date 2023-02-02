@@ -1,6 +1,7 @@
 ﻿using System;
 using MyPortal.Logic.Enums;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Students;
+
 
 namespace MyPortal.Logic.Models.Summary
 {

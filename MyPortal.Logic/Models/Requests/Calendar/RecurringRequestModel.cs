@@ -1,6 +1,5 @@
 ﻿using System;
 using MyPortal.Logic.Enums;
-using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Requests.Calendar;
 

@@ -1,5 +1,6 @@
 ﻿using System;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Curriculum;
+
 
 namespace MyPortal.Logic.Models.Requests.Curriculum
 {

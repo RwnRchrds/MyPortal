@@ -21,10 +21,10 @@ using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Settings;
+
 using MyPortal.Logic.Models.Requests.Auth;
 using MyPortal.Logic.Models.Requests.Settings.Users;
-using MyPortal.Logic.Models.Response.Users;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services

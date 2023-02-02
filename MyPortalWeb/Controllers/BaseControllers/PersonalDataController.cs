@@ -7,8 +7,7 @@ using MyPortal.Database.Enums;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Response.People;
+
 
 namespace MyPortalWeb.Controllers.BaseControllers
 {

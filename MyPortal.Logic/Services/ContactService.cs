@@ -9,7 +9,8 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Students;
+
 using MyPortal.Logic.Models.Requests.Contact;
 using Task = System.Threading.Tasks.Task;
 

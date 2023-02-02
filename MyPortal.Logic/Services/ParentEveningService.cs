@@ -7,8 +7,8 @@ using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Data;
-using MyPortal.Logic.Models.Response.Contacts;
+using MyPortal.Logic.Models.Data.StaffMembers;
+using MyPortal.Logic.Models.Structures;
 
 namespace MyPortal.Logic.Services
 {

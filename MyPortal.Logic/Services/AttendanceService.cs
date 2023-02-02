@@ -13,11 +13,11 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Attendance;
+using MyPortal.Logic.Models.Data.Attendance.Register;
+
 using MyPortal.Logic.Models.Reporting;
 using MyPortal.Logic.Models.Requests.Attendance;
-using MyPortal.Logic.Models.Response.Attendance;
-using MyPortal.Logic.Models.Response.Attendance.Register;
 using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
 
@@ -40,7 +40,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<AttendanceRegisterModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId)
+        public async Task<AttendanceRegisterDataModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId)
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -82,7 +82,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task<AttendanceRegisterModel> GetRegisterByDateRange(Guid studentGroupId, DateTime dateFrom, DateTime dateTo, Guid? lockToPeriodId = null, string title = null)
+        public async Task<AttendanceRegisterDataModel> GetRegisterByDateRange(Guid studentGroupId, DateTime dateFrom, DateTime dateTo, Guid? lockToPeriodId = null, string title = null)
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
@@ -93,7 +93,7 @@ namespace MyPortal.Logic.Services
                     throw new NotFoundException("Student group not found.");
                 }
                 
-                var register = new AttendanceRegisterModel();
+                var register = new AttendanceRegisterDataModel();
 
                 register.Title = string.IsNullOrWhiteSpace(title) ?
                     $"{studentGroup.Description}, {dateFrom:dd/MM/yyyy}-{dateTo:dd/MM/yyyy}" : title;
@@ -188,7 +188,7 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task UpdateAttendanceMarks(params AttendanceRegisterStudentModel[] markCollections)
+        public async Task UpdateAttendanceMarks(params AttendanceRegisterStudentDataModel[] markCollections)
         {
             var attendanceMarks = new List<AttendanceMarkSummaryModel>();
 

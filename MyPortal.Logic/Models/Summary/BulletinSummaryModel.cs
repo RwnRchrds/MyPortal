@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MyPortal.Database.Models.QueryResults.School;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Helpers;
-using MyPortal.Logic.Models.Entity;
+
 
 namespace MyPortal.Logic.Models.Summary;
 

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
-using MyPortal.Logic.Models.Entity;
+
 
 namespace MyPortal.Logic.Services
 {

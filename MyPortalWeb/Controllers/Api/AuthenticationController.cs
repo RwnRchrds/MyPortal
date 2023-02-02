@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Data.Settings;
 using MyPortal.Logic.Models.Requests.Settings.Users;
-using MyPortal.Logic.Models.Response.Users;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api

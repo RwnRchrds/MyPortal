@@ -10,9 +10,10 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Assessment;
+using MyPortal.Logic.Models.Data.Assessment.MarksheetEntry;
+
 using MyPortal.Logic.Models.Requests.Assessment;
-using MyPortal.Logic.Models.Response.Assessment.Marksheet;
 using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
 
@@ -75,7 +76,7 @@ public class AssessmentService : BaseService, IAssessmentService
         }
     }
 
-    public async Task<MarksheetDataModel> GetMarksheet(Guid marksheetId)
+    public async Task<MarksheetEntryDataModel> GetMarksheet(Guid marksheetId)
     {
         await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
         {
@@ -86,7 +87,7 @@ public class AssessmentService : BaseService, IAssessmentService
                 throw new NotFoundException("Marksheet not found.");
             }
 
-            var marksheet = new MarksheetDataModel();
+            var marksheet = new MarksheetEntryDataModel();
 
             marksheet.Title = $"{metadata.TemplateName} ({metadata.StudentGroupCode})";
 

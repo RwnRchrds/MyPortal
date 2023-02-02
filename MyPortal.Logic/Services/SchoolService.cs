@@ -12,9 +12,9 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.School;
+
 using MyPortal.Logic.Models.Requests.School.Bulletins;
-using MyPortal.Logic.Models.Response.School;
 using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
 

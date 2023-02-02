@@ -31,8 +31,16 @@
 
   <ItemGroup>
     <Folder Include="Configuration" />
+    <Folder Include="Models\Requests\Assessment" />
+    <Folder Include="Models\Requests\Attendance" />
+    <Folder Include="Models\Requests\Auth" />
+    <Folder Include="Models\Requests\Behaviour\Achievements" />
+    <Folder Include="Models\Requests\Behaviour\Detentions" />
+    <Folder Include="Models\Requests\Behaviour\Incidents" />
+    <Folder Include="Models\Requests\Calendar" />
+    <Folder Include="Models\Requests\Contact" />
+    <Folder Include="Models\Requests\Curriculum\Homework" />
     <Folder Include="Models\Requests\School\" />
-    <Folder Include="Models\Response\Behaviour\" />
   </ItemGroup>
 
 </Project>

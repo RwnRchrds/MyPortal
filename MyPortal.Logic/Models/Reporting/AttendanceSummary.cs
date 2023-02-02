@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using MyPortal.Database.Constants;
 using MyPortal.Logic.Helpers;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Attendance;
+
 
 namespace MyPortal.Logic.Models.Reporting
 {

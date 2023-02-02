@@ -6,7 +6,8 @@ using MyPortal.Database.Models;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.StaffMembers;
+
 
 namespace MyPortal.Logic.Services
 {

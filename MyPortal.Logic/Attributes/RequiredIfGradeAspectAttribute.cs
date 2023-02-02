@@ -5,7 +5,8 @@ using System.Text;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Constants;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Assessment;
+
 
 namespace MyPortal.Logic.Attributes
 {

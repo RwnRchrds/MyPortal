@@ -10,9 +10,9 @@ using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Students;
+
 using MyPortal.Logic.Models.Requests.Student;
-using MyPortal.Logic.Models.Response.Students;
 using MyPortal.Logic.Models.Summary;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;

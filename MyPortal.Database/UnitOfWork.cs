@@ -545,7 +545,7 @@ namespace MyPortal.Database
 
         public ILogNoteRepository LogNotes => _logNotes ??= new LogNoteRepository(_context, _transaction);
 
-        public ILogNoteTypeRepository LogNoteTypes => _logNoteTypes ??= new LogNoteTypeRepository(_transaction);
+        public ILogNoteTypeRepository LogNoteTypes => _logNoteTypes ??= new LogNoteTypeRepository(_context, _transaction);
 
         public IMarksheetColumnRepository MarksheetColumns =>
             _marksheetColumns ??= new MarksheetColumnRepository(_context, _transaction);

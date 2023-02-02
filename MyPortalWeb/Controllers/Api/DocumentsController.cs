@@ -15,9 +15,9 @@ using MyPortal.Logic.Extensions;
 using MyPortal.Logic.FileProviders;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Documents;
+
 using MyPortal.Logic.Models.Requests.Documents;
-using MyPortal.Logic.Models.Response.Documents;
 using MyPortal.Logic.Models.Summary;
 using MyPortal.Logic.Models.Web;
 using MyPortal.Logic.Services;

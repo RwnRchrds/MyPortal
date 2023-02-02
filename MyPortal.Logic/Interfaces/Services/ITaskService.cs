@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models.Search;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.People;
+
 using MyPortal.Logic.Models.Requests.Person.Tasks;
 
 namespace MyPortal.Logic.Interfaces.Services

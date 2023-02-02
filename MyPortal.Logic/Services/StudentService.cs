@@ -14,10 +14,11 @@ using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Attendance;
+using MyPortal.Logic.Models.Data.Students;
+
 using MyPortal.Logic.Models.Reporting;
 using MyPortal.Logic.Models.Requests.Student;
-using MyPortal.Logic.Models.Response.Students;
 using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
 

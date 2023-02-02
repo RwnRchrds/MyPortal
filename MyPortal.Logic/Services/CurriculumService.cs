@@ -6,7 +6,7 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+
 using MyPortal.Logic.Models.Requests.Curriculum;
 using Task = System.Threading.Tasks.Task;
 

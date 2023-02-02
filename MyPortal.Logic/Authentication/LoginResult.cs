@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 using MyPortal.Database.Models;
-using MyPortal.Logic.Models.Entity;
+
 
 namespace MyPortal.Logic.Authentication
 {

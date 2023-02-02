@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Curriculum;
+
 using MyPortal.Logic.Models.Requests.Curriculum;
 
 namespace MyPortal.Logic.Interfaces.Services

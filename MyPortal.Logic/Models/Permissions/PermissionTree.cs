@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Enums;
-using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Requests.Curriculum;
+using MyPortal.Logic.Models.Structures;
 
 namespace MyPortal.Logic.Models.Permissions
 {

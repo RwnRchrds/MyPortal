@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyPortal.Logic.Models.Response.Contacts;
+using MyPortal.Logic.Models.Data.StaffMembers;
 
 namespace MyPortal.Logic.Interfaces.Services
 {

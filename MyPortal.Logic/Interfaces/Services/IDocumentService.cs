@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models.Filters;
+using MyPortal.Logic.Models.Data.Documents;
 using MyPortal.Logic.Models.DocumentProvision;
-using MyPortal.Logic.Models.Entity;
+
 using MyPortal.Logic.Models.Requests.Documents;
-using MyPortal.Logic.Models.Response.Documents;
 
 namespace MyPortal.Logic.Interfaces.Services
 {

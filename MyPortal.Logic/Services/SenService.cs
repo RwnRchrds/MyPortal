@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Students;
+
 
 namespace MyPortal.Logic.Services
 {

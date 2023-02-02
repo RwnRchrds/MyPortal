@@ -8,7 +8,8 @@ using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.People;
+
 using MyPortal.Logic.Models.Requests.Person.Tasks;
 using Task = System.Threading.Tasks.Task;
 using TaskStatus = MyPortal.Database.Models.Search.TaskStatus;

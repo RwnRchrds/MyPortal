@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Database.Models.QueryResults.School;
 using MyPortal.Database.Models.Search;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.School;
+
 using MyPortal.Logic.Models.Requests.School;
 using MyPortal.Logic.Models.Requests.School.Bulletins;
-using MyPortal.Logic.Models.Response.School;
 using MyPortal.Logic.Models.Summary;
 
 namespace MyPortal.Logic.Interfaces.Services

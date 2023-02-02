@@ -2,7 +2,7 @@
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Data.Calendar;
 using NUnit.Framework;
 
 namespace MyPortal.Tests.ModelTests;

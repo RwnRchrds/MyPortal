@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using MyPortal.Logic.Enums;
-using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Requests.Calendar;
+using MyPortal.Logic.Models.Structures;
 
 namespace MyPortal.Logic.Extensions
 {
