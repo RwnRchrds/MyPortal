@@ -88,6 +88,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<User> Users { get; set; }
         public virtual ICollection<PhoneNumber> PhoneNumbers { get; set; }
         public virtual ICollection<PersonCondition> MedicalConditions { get; set; }
+        public virtual ICollection<MedicalEvent> MedicalEvents { get; set; }
         public virtual ICollection<PersonDietaryRequirement> DietaryRequirements { get; set; }
         public virtual ICollection<School> HeadteacherOf { get; set; }
         public virtual ICollection<EmailAddress> EmailAddresses { get; set; }

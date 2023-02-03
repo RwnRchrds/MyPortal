@@ -18,7 +18,6 @@ namespace MyPortal.Database.Models.Entity
             StudentIncidents = new HashSet<StudentIncident>();
             FinanceBasketItems = new HashSet<BasketItem>();
             Bills = new HashSet<Bill>();
-            MedicalEvents = new HashSet<MedicalEvent>();
             SenEvents = new HashSet<SenEvent>();
             SenProvisions = new HashSet<SenProvision>();
             ProfileLogs = new HashSet<LogNote>();
@@ -91,9 +90,6 @@ namespace MyPortal.Database.Models.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bill> Bills { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MedicalEvent> MedicalEvents { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SenEvent> SenEvents { get; set; }

@@ -24,7 +24,7 @@ namespace MyPortal.Database.Repositories
         protected override Query JoinRelated(Query query)
         {
             query.LeftJoin("Users as U", "U.Id", $"{TblAlias}.CreatedById");
-            query.LeftJoin("Students as S", "S.Id", $"{TblAlias}.StudentId");
+            query.LeftJoin("People as P", "P.Id", $"{TblAlias}.PersonId");
 
             return query;
         }
@@ -32,7 +32,7 @@ namespace MyPortal.Database.Repositories
         protected override Query SelectAllRelated(Query query)
         {
             query.SelectAllColumns(typeof(User), "U");
-            query.SelectAllColumns(typeof(Student), "S");
+            query.SelectAllColumns(typeof(Person), "P");
 
             return query;
         }
@@ -41,12 +41,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var medicalEvents = await Transaction.Connection.QueryAsync<MedicalEvent, User, Student, MedicalEvent>(
+            var medicalEvents = await Transaction.Connection.QueryAsync<MedicalEvent, User, Person, MedicalEvent>(
                 sql.Sql,
                 (medicalEvent, user, student) =>
                 {
                     medicalEvent.CreatedBy = user;
-                    medicalEvent.Student = student;
+                    medicalEvent.Person = student;
 
                     return medicalEvent;
                 }, sql.NamedBindings, Transaction);

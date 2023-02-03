@@ -9,7 +9,7 @@ namespace MyPortal.Database.Models.Entity
     public class MedicalEvent : BaseTypes.Entity, ICreatable
     {
         [Column(Order = 1)]
-        public Guid StudentId { get; set; }
+        public Guid PersonId { get; set; }
 
         [Column(Order = 2)]
         public Guid CreatedById { get; set; }
@@ -26,6 +26,6 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual User CreatedBy { get; set; } 
 
-        public virtual Student Student { get; set; }
+        public virtual Person Person { get; set; }
     }
 }

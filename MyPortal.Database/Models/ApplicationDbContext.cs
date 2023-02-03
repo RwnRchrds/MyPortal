@@ -1835,6 +1835,12 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(pc => pc.PersonId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
+                    
+                    e.HasMany(x => x.MedicalEvents)
+                        .WithOne(x => x.Person)
+                        .HasForeignKey(x => x.PersonId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(p => p.PhoneNumbers)
                         .WithOne(pn => pn.Person)
@@ -2367,12 +2373,6 @@ namespace MyPortal.Database.Models
                     e.HasOne(x => x.Person)
                         .WithMany(x => x.Students)
                         .HasForeignKey(x => x.PersonId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasMany(x => x.MedicalEvents)
-                        .WithOne(x => x.Student)
-                        .HasForeignKey(x => x.StudentId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Models.Data.People;
 using MyPortal.Logic.Models.Data.Settings;
 using MyPortal.Logic.Models.Data.Students;
 using MyPortal.Logic.Models.Structures;
@@ -18,7 +19,7 @@ namespace MyPortal.Logic.Models.Data.Medical
 
         private void LoadFromModel(MedicalEvent model)
         {
-            StudentId = model.StudentId;
+            StudentId = model.PersonId;
             CreatedById = model.CreatedById;
             Date = model.Date;
             Note = model.Note;
@@ -28,9 +29,9 @@ namespace MyPortal.Logic.Models.Data.Medical
                 CreatedBy = new UserModel(model.CreatedBy);
             }
 
-            if (model.Student != null)
+            if (model.Person != null)
             {
-                Student = new StudentModel(model.Student);
+                Person = new PersonModel(model.Person);
             }
         }
         
@@ -45,7 +46,7 @@ namespace MyPortal.Logic.Models.Data.Medical
 
         public virtual UserModel CreatedBy { get; set; }
 
-        public virtual StudentModel Student { get; set; }
+        public virtual PersonModel Person { get; set; }
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
