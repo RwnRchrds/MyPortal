@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MyPortal.Logic.Helpers
 {
-    internal class Encryption
+    /*internal class Encryption
     {
         private const int Keysize = 128;
         private const int DerivationIterations = 10000;
@@ -104,6 +104,6 @@ namespace MyPortal.Logic.Helpers
             }
             return randomBytes;
         }
-    }
+    }*/
 }
 

@@ -10,6 +10,7 @@ namespace MyPortal.Logic.Interfaces
     {
         Task<File> SaveFile(FileUploadRequestModel upload);
         void DeleteFile(string fileId);
-        Task<Stream> DownloadFileToStream(string fileId);
+        Task<byte[]> LoadFileData(string fileId);
+        Task<Stream> LoadFileAsStream(string fileId);
     }
 }

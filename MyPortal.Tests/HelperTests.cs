@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using NUnit.Framework;
@@ -10,29 +12,33 @@ namespace MyPortal.Tests
     public class HelperTests
     {
         [Test]
-        public void Encryption_String()
+        public async Task Encryption_String()
         {
             var plaintext = @"*Test\pl41nt3xt*";
-            var secret = @"$C&F)J@NcRfUjXnZr4u7x!A%D*G-KaPdSgVkYp3s5v8y/B?E(H+MbQeThWmZq4t7";
 
-            var encryptedText = Encryption.Encrypt(plaintext, secret);
+            var key = CryptoHelper.GenerateEncryptionKey();
 
-            var decryptedText = Encryption.Decrypt(encryptedText, secret);
+            var encryptionResult = await CryptoHelper.EncryptAsync(plaintext, key);
 
-            Assert.That(decryptedText.Equals(plaintext, StringComparison.InvariantCulture));
+            var decryptedData =
+                await CryptoHelper.DecryptAsync(encryptionResult.DataString, key, encryptionResult.IvString);
+
+            Assert.That(decryptedData.Equals(plaintext, StringComparison.InvariantCulture));
         }
 
         [Test]
-        public void Encryption_Bytes()
+        public async Task Encryption_Bytes()
         {
             var plainData = new byte[] {32, 64, 51, 28, 133, 122};
-            var secret = @"H+MbQeThWmZq4t7w9z$C&F)J@NcRfUjXn2r5u8x/A%D*G-KaPdSgVkYp3s6v9y$B";
 
-            var encryptedData = Encryption.Encrypt(plainData, secret);
+            var key = CryptoHelper.GenerateEncryptionKey();
 
-            var decryptedData = Encryption.Decrypt(encryptedData, secret);
+            var encryptionResult = await CryptoHelper.EncryptAsync(plainData, key);
 
-            Assert.That(plainData.SequenceEqual(decryptedData));
+            var decryptionResult =
+                await CryptoHelper.DecryptAsync(encryptionResult.Data, key, encryptionResult.IvString);
+
+            Assert.That(plainData.SequenceEqual(decryptionResult));
         }
 
         [Test]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
@@ -30,25 +31,29 @@ namespace MyPortal.Logic.FileProviders
         {
             var fileId = Guid.NewGuid().ToString("N");
 
-            var fileName = $"{fileId}.dat";
+            var fileName = $"{fileId}";
 
             var path = Path.Combine(_fileStoragePath, fileName);
 
-            byte[] encryptedData;
+            byte[] sourceData;
             
             // Encrypt file contents before saving
 
             using (var ms = new MemoryStream())
             {
                 await upload.Attachment.CopyToAsync(ms);
-                var sourceData = ms.ToArray();
-                var encryptionKey = Configuration.Instance.FileEncryptionKey;
-                encryptedData = Encryption.Encrypt(sourceData, encryptionKey);
+                sourceData = ms.ToArray();
             }
+            
+            var key = Configuration.Instance.FileEncryptionKey;
+            var encryptionResult = await CryptoHelper.EncryptAsync(sourceData, key);
+
+            // Store the file and the IV together
+            var file = encryptionResult.Iv.Concat(encryptionResult.Data).ToArray();
 
             using (var stream = new FileStream(path, FileMode.Create))
             {
-                await stream.WriteAsync(encryptedData);
+                await stream.WriteAsync(file);
             }
 
             return new Database.Models.Entity.File
@@ -66,24 +71,33 @@ namespace MyPortal.Logic.FileProviders
             File.Delete(filePath);
         }
 
-        public async Task<Stream> DownloadFileToStream(string fileId)
+        public async Task<byte[]> LoadFileData(string fileId)
         {
             var path = Path.Combine(_fileStoragePath, fileId);
 
             if (File.Exists(path))
             {
+                var key = Configuration.Instance.FileEncryptionKey;
+                
                 var encryptedData = await File.ReadAllBytesAsync(path);
 
-                var decryptedData = Encryption.Decrypt(encryptedData, fileId);
+                var iv = encryptedData.Take(16).ToArray();
 
-                var ms = new MemoryStream();
+                var fileData = encryptedData.Skip(16).Take(encryptedData.Length - 16).ToArray();
 
-                await ms.WriteAsync(decryptedData);
+                var decryptedData = await CryptoHelper.DecryptAsync(fileData, key, iv);
 
-                return ms;
+                return decryptedData;
             }
 
             throw new NotFoundException("File not found.");
+        }
+
+        public async Task<Stream> LoadFileAsStream(string fileId)
+        {
+            var data = await LoadFileData(fileId);
+
+            return new MemoryStream(data);
         }
     }
 }

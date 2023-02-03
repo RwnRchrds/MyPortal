@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Data.SqlClient;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Helpers;
 
 [assembly:InternalsVisibleTo("MyPortal.Tests")]
 namespace MyPortal.Logic
@@ -37,6 +38,19 @@ namespace MyPortal.Logic
             }
 
             return true;
+        }
+
+        internal static void CreateTestInstance(string installLocation)
+        {
+            if (Instance != null)
+            {
+                throw new ConfigurationException("A configuration has already been added.");
+            }
+
+            Instance = new Configuration();
+
+            Instance.InstallLocation = installLocation;
+            Instance.FileEncryptionKey = CryptoHelper.GenerateEncryptionKey();
         }
 
         internal static void CreateInstance(string databaseProvider, string fileProvider, string connectionString)

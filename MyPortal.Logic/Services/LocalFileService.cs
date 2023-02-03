@@ -55,7 +55,7 @@ namespace MyPortal.Logic.Services
             {
                 var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
-                var stream = await _fileProvider.DownloadFileToStream(file.FileId);
+                var stream = await _fileProvider.LoadFileAsStream(file.FileId);
 
                 return new FileDownload(stream, file.ContentType, file.FileName);
             }
