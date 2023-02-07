@@ -13,7 +13,13 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IEnumerable<DiaryEventTypeModel>> GetEventTypes(bool includeReserved = false);
 
         Task<IEnumerable<CalendarEventModel>> GetCalendarEventsByPerson(Guid personId, DateTime dateFrom,
-            DateTime dateTo, bool includeDeclined, bool includePrivate, bool hidePrivateDetails);
+            DateTime dateTo);
+
+        Task<DiaryEventModel> GetEvent(Guid eventId);
+
+        Task<IEnumerable<DiaryEventAttendeeModel>> GetAttendeesByEvent(Guid eventId);
+        
+        Task<DiaryEventAttendeeModel> GetEventAttendee(Guid eventId, Guid personId);
 
         Task CreateEvent(EventRequestModel model);
 

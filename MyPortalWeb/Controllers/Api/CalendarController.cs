@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -12,6 +13,7 @@ using MyPortal.Logic.Models.Requests.Calendar;
 using MyPortal.Logic.Models.Structures;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
+using MyPortalWeb.Models;
 
 namespace MyPortalWeb.Controllers.Api
 {
@@ -25,6 +27,49 @@ namespace MyPortalWeb.Controllers.Api
             : base(studentService, personService, userService, roleService)
         {
             _calendarService = calendarService;
+        }
+
+        private async Task<EventAccessResponse> GetEventAccess(Guid eventId)
+        {
+            var response = new EventAccessResponse();
+            
+            var userId = User.GetUserId();
+            var diaryEvent = await _calendarService.GetEvent(eventId);
+            
+            if (diaryEvent.CreatedById == userId)
+            {
+                response.CanView = true;
+                response.CanEdit = true;
+            }
+
+            if (diaryEvent.Public)
+            {
+                if (await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
+                        PermissionValue.SchoolViewSchoolDiary))
+                {
+                    response.CanView = true;
+                }
+
+                if (await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
+                        PermissionValue.SchoolEditSchoolDiary))
+                {
+                    response.CanEdit = true;
+                }
+            }
+
+            var user = await GetLoggedInUser();
+            if (user.PersonId.HasValue)
+            {
+                var attendee = await _calendarService.GetEventAttendee(eventId, user.PersonId.Value);
+
+                if (attendee != null)
+                {
+                    response.CanView = true;
+                    response.CanEdit = attendee.CanEdit;
+                }
+            }
+            
+            return response;
         }
 
         [HttpGet]
@@ -49,8 +94,7 @@ namespace MyPortalWeb.Controllers.Api
                     }
 
                     var events =
-                        await _calendarService.GetCalendarEventsByPerson(personId, dateRange.Start, dateRange.End,
-                            false, true, false);
+                        await _calendarService.GetCalendarEventsByPerson(personId, dateRange.Start, dateRange.End);
 
                     return Ok(events);
                 }
@@ -65,7 +109,6 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPost]
         [Route("events")]
-        [Permission(PermissionValue.SchoolEditSchoolDiary)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> CreateEvent([FromBody] EventRequestModel model)
         {
@@ -74,6 +117,12 @@ namespace MyPortalWeb.Controllers.Api
                 var userId = User.GetUserId();
 
                 model.CreatedById = userId;
+
+                if (model.IsPublic && !await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
+                        PermissionValue.SchoolEditSchoolDiary))
+                {
+                    return Error(403, "You do not have permission to edit the school diary.");
+                }
                 
                 await _calendarService.CreateEvent(model);
 
@@ -87,15 +136,21 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPut]
         [Route("events/{eventId}")]
-        [Permission(PermissionValue.SchoolEditSchoolDiary)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> UpdateEvent([FromRoute] Guid eventId, [FromBody] EventRequestModel model)
         {
             try
             {
-                await _calendarService.UpdateEvent(eventId, model);
+                var access = await GetEventAccess(eventId);
 
-                return Ok();
+                if (access.CanEdit)
+                {
+                    await _calendarService.UpdateEvent(eventId, model);
+
+                    return Ok();
+                }
+                
+                return Error(403, "You do not have permission to edit this event.");
             }
             catch (Exception e)
             {
@@ -105,15 +160,21 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpDelete]
         [Route("events/{eventId}")]
-        [Permission(PermissionValue.SchoolEditSchoolDiary)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> DeleteEvent([FromRoute] Guid eventId)
         {
             try
             {
-                await _calendarService.DeleteEvent(eventId);
+                var access = await GetEventAccess(eventId);
 
-                return Ok();
+                if (access.CanEdit)
+                {
+                    await _calendarService.DeleteEvent(eventId);
+
+                    return Ok();
+                }
+
+                return Error(403, "You do not have permission to delete this event.");
             }
             catch (Exception e)
             {
@@ -121,17 +182,23 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
         
-        [HttpPost]
+        [HttpPut]
         [Route("events/{eventId}/attendees")]
-        [Permission(PermissionValue.SchoolEditSchoolDiary)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> CreateOrUpdateAttendees([FromRoute] Guid eventId, [FromBody] EventAttendeesRequestModel model)
         {
             try
             {
-                await _calendarService.CreateOrUpdateEventAttendees(eventId, model);
+                var access = await GetEventAccess(eventId);
 
-                return Ok();
+                if (access.CanEdit)
+                {
+                    await _calendarService.CreateOrUpdateEventAttendees(eventId, model);
+
+                    return Ok();
+                }
+                
+                return Error(403, "You do not have permission to edit this event.");
             }
             catch (Exception e)
             {
@@ -141,15 +208,21 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpDelete]
         [Route("events/{eventId}/attendees/{personId}")]
-        [Permission(PermissionValue.SchoolEditSchoolDiary)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> DeleteAttendee([FromRoute] Guid eventId, [FromRoute] Guid personId)
         {
             try
             {
-                await _calendarService.DeleteEventAttendee(eventId, personId);
+                var access = await GetEventAccess(eventId);
 
-                return Ok();
+                if (access.CanEdit)
+                {
+                    await _calendarService.DeleteEventAttendee(eventId, personId);
+
+                    return Ok();
+                }
+
+                return Error(403, "You do not have permission to edit this event.");
             }
             catch (Exception e)
             {

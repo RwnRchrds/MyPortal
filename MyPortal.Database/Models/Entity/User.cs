@@ -66,5 +66,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<UserLogin> UserLogins { get; set; }
 
         public virtual ICollection<UserToken> UserTokens { get; set; }
+        
+        public virtual ICollection<DiaryEvent> DiaryEvents { get; set; }
     }
 }

@@ -54,8 +54,8 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<DetentionModel> CreateDetention(DetentionRequestModel detentionModel);
         Task UpdateDetention(Guid detentionId, DetentionRequestModel detentionModel);
         Task DeleteDetention(Guid detentionId);
-        Task AddToDetention(Guid detentionId, Guid studentIncidentId);
-        Task RemoveFromDetention(Guid detentionId, Guid studentIncidentId);
+        Task AddDetentions(Guid studentIncidentId, Guid[] detentionIds);
+        Task RemoveDetentions(Guid studentIncidentId, Guid[] detentionIds);
         #endregion
     }
 }

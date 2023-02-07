@@ -72,6 +72,16 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
+        public async Task<DiaryEventAttendee> GetAttendee(Guid eventId, Guid personId)
+        {
+            var query = GenerateQuery();
+
+            query.Where($"{TblAlias}.EventId", eventId);
+            query.Where($"{TblAlias}.PersonId");
+
+            return await ExecuteQueryFirstOrDefault(query);
+        }
+
         public async Task Update(DiaryEventAttendee entity)
         {
             var attendee = await Context.DiaryEventAttendees.FirstOrDefaultAsync(x => x.Id == entity.Id);

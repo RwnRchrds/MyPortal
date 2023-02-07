@@ -122,6 +122,8 @@ public class StudentIncidentRepository : BaseReadWriteRepository<StudentIncident
             throw new EntityNotFoundException("Student incident not found.");
         }
 
+        studentIncident.StudentId = entity.StudentId;
+        studentIncident.IncidentId = entity.IncidentId;
         studentIncident.RoleTypeId = entity.RoleTypeId;
         studentIncident.OutcomeId = entity.OutcomeId;
         studentIncident.StatusId = entity.StatusId;

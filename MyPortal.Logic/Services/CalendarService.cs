@@ -33,7 +33,7 @@ namespace MyPortal.Logic.Services
         }
         
         public async Task<IEnumerable<CalendarEventModel>> GetCalendarEventsByPerson(Guid personId, DateTime dateFrom,
-            DateTime dateTo, bool includeDeclined, bool includePrivate, bool hidePrivateDetails)
+            DateTime dateTo)
         {
             var calendarEvents = new List<CalendarEventModel>();
             
@@ -49,20 +49,17 @@ namespace MyPortal.Logic.Services
                 {
                     throw new NotFoundException("Person not found.");
                 }
-                
-                // Get all generic events for person
-                var events =
-                    (await unitOfWork.DiaryEvents.GetByPerson(dateFrom, dateTo, personId, includeDeclined,
-                        includePrivate))
+
+                var publicEvents = (await unitOfWork.DiaryEvents.GetPublicEvents(dateFrom, dateTo))
                     .Select(e => new DiaryEventModel(e)).ToList();
 
-                foreach (var diaryEvent in events)
+                // Get all generic events for person
+                var events =
+                    (await unitOfWork.DiaryEvents.GetByPerson(dateFrom, dateTo, personId))
+                    .Select(e => new DiaryEventModel(e)).ToList();
+
+                foreach (var diaryEvent in events.Union(publicEvents))
                 {
-                    if (hidePrivateDetails && !diaryEvent.Public)
-                    {
-                        diaryEvent.HideDetails();
-                    }
-                    
                     calendarEvents.Add(new CalendarEventModel(diaryEvent));
                 }
 
@@ -101,6 +98,38 @@ namespace MyPortal.Logic.Services
                 }
 
                 return calendarEvents;
+            }
+        }
+        
+        public async Task<DiaryEventModel> GetEvent(Guid eventId)
+        {
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var diaryEvent = new DiaryEventModel(await unitOfWork.DiaryEvents.GetById(eventId));
+
+                return diaryEvent;
+            }
+        }
+
+        public async Task<IEnumerable<DiaryEventAttendeeModel>> GetAttendeesByEvent(Guid eventId)
+        {
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var attendees =
+                    (await unitOfWork.DiaryEventAttendees.GetByEvent(eventId)).Select(a =>
+                        new DiaryEventAttendeeModel(a));
+
+                return attendees;
+            }
+        }
+
+        public async Task<DiaryEventAttendeeModel> GetEventAttendee(Guid eventId, Guid personId)
+        {
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                var attendee = await unitOfWork.DiaryEventAttendees.GetAttendee(eventId, personId);
+
+                return new DiaryEventAttendeeModel(attendee);
             }
         }
 

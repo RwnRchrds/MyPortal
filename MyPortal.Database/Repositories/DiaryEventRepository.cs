@@ -28,6 +28,32 @@ namespace MyPortal.Database.Repositories
         {
             query.LeftJoin("DiaryEventTypes as DET", "DET.Id", $"{TblAlias}.EventTypeId");
             query.LeftJoin("Rooms as R", "R.Id", $"{TblAlias}.RoomId");
+            query.LeftJoin("Users as U", "U.Id", $"{TblAlias}.CreatedById");
+
+            return query;
+        }
+
+        private Query JoinEventTypeEntities(Query query)
+        {
+            query.LeftJoin("Detentions as D", "D.EventId", $"{TblAlias}.Id");
+            query.LeftJoin("ParentEvenings as PE", "PE.EventId", $"{TblAlias}.Id");
+
+            return query;
+        }
+
+        private Query JoinEventTypePeople(Query query)
+        {
+            // Detentions
+            query.LeftJoin("StudentIncidentDetentions as SID", "D.Id", "SID.DetentionId");
+            query.LeftJoin("StudentIncidents as SI", "SID.StudentIncidentId", "SI.Id");
+            query.LeftJoin("Students as DetentionStudents", "SI.StudentId", "DetentionStudents.Id");
+            query.LeftJoin("StaffMembers as DetentionStaff", "D.SupervisorId", "DetentionStaff.Id");
+            
+            // Parent Evenings
+            query.LeftJoin("ParentEveningStaffMembers as PESM", "PE.Id", "PESM.ParentEveningId");
+            query.LeftJoin("ParentEveningAppointments as PEA", "PESM.Id", "PEA.ParentEveningStaffId");
+            query.LeftJoin("Students as ParentEveningStudents", "PEA.StudentId", "ParentEveningStudents.Id");
+            query.LeftJoin("StaffMembers as ParentEveningStaff", "PESM.StaffMemberId", "ParentEveningStaff.Id");
 
             return query;
         }
@@ -36,6 +62,7 @@ namespace MyPortal.Database.Repositories
         {
             query.SelectAllColumns(typeof(DiaryEventType), "DET");
             query.SelectAllColumns(typeof(Room), "R");
+            query.SelectAllColumns(typeof(User), "U");
 
             return query;
         }
@@ -44,11 +71,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var events = await Transaction.Connection.QueryAsync<DiaryEvent, DiaryEventType, Room, DiaryEvent>(sql.Sql,
-                (diaryEvent, type, room) =>
+            var events = await Transaction.Connection.QueryAsync<DiaryEvent, DiaryEventType, Room, User, DiaryEvent>(sql.Sql,
+                (diaryEvent, type, room, user) =>
                 {
                     diaryEvent.EventType = type;
                     diaryEvent.Room = room;
+                    diaryEvent.CreatedBy = user;
 
                     return diaryEvent;
                 }, sql.NamedBindings, Transaction);
@@ -71,36 +99,41 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
-        public async Task<IEnumerable<DiaryEvent>> GetByPerson(DateTime firstDate, DateTime lastDate, Guid personId, bool includeDeclined = false, bool includePrivate = false)
+        public async Task<IEnumerable<DiaryEvent>> GetByPerson(DateTime firstDate, DateTime lastDate, Guid personId)
         {
             var query = GenerateQuery();
 
             query.LeftJoin("DiaryEventAttendees as A", "A.EventId", $"{TblAlias}.Id");
+
+            JoinEventTypeEntities(query);
+            JoinEventTypePeople(query);
             
-            query.WhereDate($"{TblAlias}.StartTime", ">=", firstDate.Date);
+            query.Where($"{TblAlias}.StartTime", ">=", firstDate.Date);
             
             // Events might start today but go on for 2 weeks (unlikely but still a use case)
             // we want to include these events but exclude events that start after the end date
-            query.WhereDate($"{TblAlias}.StartTime", "<=", lastDate.Date.AddTicks(TimeSpan.TicksPerDay - 1));
+            query.Where($"{TblAlias}.StartTime", "<=", lastDate.Date.AddTicks(TimeSpan.TicksPerDay - 1));
 
             query.Where(q =>
             {
                 q.Where("A.PersonId", personId);
-                
-                if (!includePrivate)
-                {
-                    q.Where($"{TblAlias}.IsPublic", true);
-                }
-
-                if (!includeDeclined)
-                {
-                    q.Where(
-                        a => a.Where("A.ResponseId", "<>", AttendeeResponses.Declined));
-                }
+                q.OrWhere("DetentionStudents.PersonId", personId);
+                q.OrWhere("DetentionStaff.PersonId", personId);
+                q.OrWhere("ParentEveningStudents.PersonId", personId);
+                q.OrWhere("ParentEveningStaff.PersonId", personId);
 
                 return q;
             });
             
+            return await ExecuteQuery(query);
+        }
+
+        public async Task<IEnumerable<DiaryEvent>> GetPublicEvents(DateTime firstDate, DateTime lastDate)
+        {
+            var query = GenerateQuery();
+
+            query.Where($"{TblAlias}.Public", true);
+
             return await ExecuteQuery(query);
         }
 

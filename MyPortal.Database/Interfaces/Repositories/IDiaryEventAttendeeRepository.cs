@@ -10,5 +10,6 @@ namespace MyPortal.Database.Interfaces.Repositories
     public interface IDiaryEventAttendeeRepository : IReadWriteRepository<DiaryEventAttendee>, IUpdateRepository<DiaryEventAttendee>
     {
         Task<IEnumerable<DiaryEventAttendee>> GetByEvent(Guid eventId);
+        Task<DiaryEventAttendee> GetAttendee(Guid eventId, Guid personId);
     }
 }

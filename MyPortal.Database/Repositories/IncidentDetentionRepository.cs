@@ -53,14 +53,23 @@ namespace MyPortal.Database.Repositories
             return incidentDetentions;
         }
 
-        public async Task<StudentIncidentDetention> GetByStudentIncident(Guid detentionId, Guid studentIncidentId)
+        public async Task<StudentIncidentDetention> GetSpecific(Guid detentionId, Guid studentIncidentId)
         {
             var query = GenerateQuery();
 
-            query.Where("Detention.Id", detentionId);
+            query.Where("D.Id", detentionId);
             query.Where("SI.Id", studentIncidentId);
 
             return await ExecuteQueryFirstOrDefault(query);
+        }
+
+        public async Task<IEnumerable<StudentIncidentDetention>> GetByStudentIncident(Guid studentIncidentId)
+        {
+            var query = GenerateQuery();
+
+            query.Where("SI.Id", studentIncidentId);
+
+            return await ExecuteQuery(query);
         }
     }
 }

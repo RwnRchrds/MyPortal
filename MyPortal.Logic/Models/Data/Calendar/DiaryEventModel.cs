@@ -8,6 +8,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Models.Data.School;
+using MyPortal.Logic.Models.Data.Settings;
 using MyPortal.Logic.Models.Structures;
 using Task = System.Threading.Tasks.Task;
 
@@ -23,13 +24,6 @@ namespace MyPortal.Logic.Models.Data.Calendar
             
         }
 
-        public void HideDetails()
-        {
-            Subject = "Private";
-            Description = null;
-            Location = null;
-        }
-        
         public DiaryEventModel(DiaryEvent model) : base(model)
         {
             LoadFromModel(model);
@@ -38,6 +32,8 @@ namespace MyPortal.Logic.Models.Data.Calendar
         private void LoadFromModel(DiaryEvent model)
         {
             EventTypeId = model.EventTypeId;
+            CreatedById = model.CreatedById;
+            CreatedDate = model.CreatedDate;
             RoomId = model.RoomId;
             Subject = model.Subject;
             Description = model.Description;
@@ -50,6 +46,11 @@ namespace MyPortal.Logic.Models.Data.Calendar
             if (model.EventType != null)
             {
                 EventType = new DiaryEventTypeModel(model.EventType);
+            }
+
+            if (model.CreatedBy != null)
+            {
+                CreatedBy = new UserModel(model.CreatedBy);
             }
 
             if (model.Room != null)
@@ -102,24 +103,11 @@ namespace MyPortal.Logic.Models.Data.Calendar
             return series;
         }
 
-        internal async Task<bool> CanEdit(IUnitOfWork unitOfWork, Guid personId)
-        {
-            if (Id.HasValue)
-            {
-                var attendees = await unitOfWork.DiaryEventAttendees.GetByEvent(Id.Value);
-
-                var attendeePerson = attendees.FirstOrDefault(a => a.PersonId == personId);
-
-                if (attendeePerson != null)
-                {
-                    return attendeePerson.CanEditEvent;
-                }
-            }
-
-            return false;
-        }
-        
         public Guid EventTypeId { get; set; }
+
+        public Guid? CreatedById { get; set; }
+
+        public DateTime CreatedDate { get; set; }
         
         public Guid? RoomId { get; set; }
         
@@ -150,6 +138,7 @@ namespace MyPortal.Logic.Models.Data.Calendar
         public bool Public { get; set; }
 
         public virtual DiaryEventTypeModel EventType { get; set; }
+        public virtual UserModel CreatedBy { get; set; }
         public virtual RoomModel Room { get; set; }
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {

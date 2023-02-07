@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
@@ -244,6 +245,14 @@ namespace MyPortal.Logic.Services
                     }
                 };
 
+                foreach (var detentionId in incident.DetentionIds)
+                {
+                    studentIncident.LinkedDetentions.Add(new StudentIncidentDetention
+                    {
+                        DetentionId = detentionId
+                    });
+                }
+
                 unitOfWork.StudentIncidents.Create(studentIncident);
 
                 await unitOfWork.SaveChangesAsync();
@@ -260,6 +269,11 @@ namespace MyPortal.Logic.Services
             {
                 var studentIncidentInDb = await unitOfWork.StudentIncidents.GetById(incidentId);
 
+                if (studentIncidentInDb == null)
+                {
+                    throw new NotFoundException("Student incident not found.");
+                }
+
                 studentIncidentInDb.Points = incident.Points;
                 studentIncidentInDb.Incident.BehaviourTypeId = incident.BehaviourTypeId;
                 studentIncidentInDb.Incident.LocationId = incident.LocationId;
@@ -268,6 +282,17 @@ namespace MyPortal.Logic.Services
                 studentIncidentInDb.Incident.Comments = incident.Comments;
 
                 await unitOfWork.StudentIncidents.Update(studentIncidentInDb);
+
+                var linkedDetentions = await unitOfWork.IncidentDetentions.GetByStudentIncident(studentIncidentInDb.Id);
+
+                var detentionsToAdd = incident.DetentionIds.Where(d => linkedDetentions.All(ld => ld.DetentionId != d))
+                    .ToArray();
+
+                var detentionsToRemove =
+                    linkedDetentions.Where(ld => incident.DetentionIds.All(d => ld.DetentionId != d))
+                        .Select(ld => ld.DetentionId).ToArray();
+
+                await RemoveDetentionsWithUnitOfWork(unitOfWork, studentIncidentInDb.Id, detentionsToRemove);
 
                 await unitOfWork.SaveChangesAsync();
             }
@@ -500,9 +525,10 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task AddToDetention(Guid detentionId, Guid studentIncidentId)
+        private async Task AddDetentionsWithUnitOfWork(IUnitOfWork unitOfWork, Guid studentIncidentId,
+            Guid[] detentionIds)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            foreach (var detentionId in detentionIds)
             {
                 var incidentDetention = new StudentIncidentDetention
                 {
@@ -511,17 +537,25 @@ namespace MyPortal.Logic.Services
                 };
 
                 unitOfWork.IncidentDetentions.Create(incidentDetention);
-
-                await unitOfWork.SaveChangesAsync();
             }
+
+            await unitOfWork.SaveChangesAsync();
         }
 
-        public async Task RemoveFromDetention(Guid detentionId, Guid studentIncidentId)
+        public async Task AddDetentions(Guid studentIncidentId, Guid[] detentionIds)
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
+                await AddDetentionsWithUnitOfWork(unitOfWork, studentIncidentId, detentionIds);
+            }
+        }
+
+        private async Task RemoveDetentionsWithUnitOfWork(IUnitOfWork unitOfWork, Guid studentIncidentId, Guid[] detentionIds)
+        {
+            foreach (var detentionId in detentionIds)
+            {
                 var relatedIncident =
-                    await unitOfWork.IncidentDetentions.GetByStudentIncident(detentionId, studentIncidentId);
+                    await unitOfWork.IncidentDetentions.GetSpecific(detentionId, studentIncidentId);
 
                 if (relatedIncident == null)
                 {
@@ -529,8 +563,16 @@ namespace MyPortal.Logic.Services
                 }
 
                 await unitOfWork.IncidentDetentions.Delete(relatedIncident.Id);
+            }
 
-                await unitOfWork.SaveChangesAsync();
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task RemoveDetentions(Guid studentIncidentId, Guid[] detentionIds)
+        {
+            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            {
+                await RemoveDetentionsWithUnitOfWork(unitOfWork, studentIncidentId, detentionIds);
             }
         }
     }

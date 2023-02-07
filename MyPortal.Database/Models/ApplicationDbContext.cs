@@ -2646,6 +2646,11 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<User>(e =>
                 {
                     e.ToTable("Users");
+                    
+                    e.HasMany(x => x.DiaryEvents)
+                        .WithOne(x => x.CreatedBy)
+                        .HasForeignKey(x => x.CreatedById)
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasOne(x => x.Person)
                         .WithMany(x => x.Users)

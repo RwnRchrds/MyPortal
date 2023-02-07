@@ -12,6 +12,10 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 2)]
         public Guid DetentionId { get; set; }
 
+        public bool Attended { get; set; }
+
+        public string Notes { get; set; }
+
         public virtual StudentIncident StudentIncident { get; set; }
         public virtual Detention Detention { get; set; }
     }

@@ -19,6 +19,8 @@ namespace MyPortal.Logic.Models.Requests.Behaviour.Incidents
 
         public Guid? OutcomeId { get; set; }
 
+        public Guid[] DetentionIds { get; set; }
+
         [Required(ErrorMessage = "Status is required.")]
         public Guid StatusId { get; set; }
 
