@@ -8,6 +8,7 @@ using MyPortal.Database;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Students;
 
@@ -18,6 +19,10 @@ namespace MyPortal.Logic.Services
 {
     public class ContactService : BasePersonService, IContactService
     {
+        public ContactService(ICurrentUser user) : base(user)
+        {
+        }
+
         public async Task<IEnumerable<StudentModel>> GetReportableStudents(Guid contactId)
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

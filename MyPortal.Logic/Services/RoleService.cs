@@ -23,11 +23,11 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class RoleService : BaseService, IRoleService
+    public class RoleService : BaseUserService, IRoleService
     {
         private RoleManager<Role> _roleManager;
 
-        public RoleService(RoleManager<Role> roleManager)
+        public RoleService(ICurrentUser user, RoleManager<Role> roleManager) : base(user)
         {
             _roleManager = roleManager;
         }

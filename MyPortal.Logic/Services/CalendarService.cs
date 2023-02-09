@@ -11,6 +11,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.QueryResults.Attendance;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Calendar;
 
@@ -20,8 +21,12 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class CalendarService : BaseService, ICalendarService
+    public class CalendarService : BaseUserService, ICalendarService
     {
+        public CalendarService(ICurrentUser user) : base(user)
+        {
+        }
+
         public async Task<IEnumerable<DiaryEventTypeModel>> GetEventTypes(bool includeReserved = false)
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

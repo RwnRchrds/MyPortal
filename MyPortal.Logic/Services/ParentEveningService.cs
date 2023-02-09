@@ -6,14 +6,19 @@ using System.Threading.Tasks;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.StaffMembers;
 using MyPortal.Logic.Models.Structures;
 
 namespace MyPortal.Logic.Services
 {
-    public class ParentEveningService : BaseService, IParentEveningService
+    public class ParentEveningService : BaseUserService, IParentEveningService
     {
+        public ParentEveningService(ICurrentUser user) : base(user)
+        {
+        }
+
         public async Task<IEnumerable<ParentEveningAppointmentTemplateModel>> GetAppointmentTemplatesByStaffMember(
             Guid parentEveningId, Guid staffMemberId)
         {

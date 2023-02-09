@@ -48,6 +48,11 @@ namespace MyPortal.Database.Repositories.Base
         {
             var entity = await Context.Set<TEntity>().FindAsync(id);
 
+            if (entity == null)
+            {
+                throw new EntityNotFoundException($"Entity with ID {id} was not found.");
+            }
+            
             switch (entity)
             {
                 case IReadOnlyEntity:

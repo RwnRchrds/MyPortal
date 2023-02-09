@@ -9,6 +9,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Documents;
 
@@ -17,8 +18,12 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class DocumentService : BaseService, IDocumentService
+    public class DocumentService : BaseUserService, IDocumentService
     {
+        public DocumentService(ICurrentUser user) : base(user)
+        {
+        }
+
         //private readonly IUserService _userService;
         //private readonly IStaffMemberService _staffMemberService;
 

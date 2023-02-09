@@ -29,14 +29,15 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class UserService : BaseService, IUserService
+    public class UserService : BaseUserService, IUserService
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IUserClaimsPrincipalFactory<User> _claimsPrincipalFactory;
 
-        public UserService(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager, IUserClaimsPrincipalFactory<User> claimsPrincipalFactory)
+        public UserService(ICurrentUser user, UserManager<User> userManager, RoleManager<Role> roleManager,
+            SignInManager<User> signInManager, IUserClaimsPrincipalFactory<User> claimsPrincipalFactory) : base(user)
         {
             _userManager = userManager;
             _roleManager = roleManager;

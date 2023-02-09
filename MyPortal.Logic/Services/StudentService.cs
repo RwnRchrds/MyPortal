@@ -13,6 +13,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Attendance;
 using MyPortal.Logic.Models.Data.Students;
@@ -26,6 +27,10 @@ namespace MyPortal.Logic.Services
 {
     public class StudentService : BasePersonService, IStudentService
     {
+        public StudentService(ICurrentUser user) : base(user)
+        {
+        }
+
         public async Task<StudentModel> GetStudentById(Guid studentId)
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

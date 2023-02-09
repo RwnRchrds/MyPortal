@@ -5,14 +5,19 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.StaffMembers;
 
 
 namespace MyPortal.Logic.Services
 {
-    public class StaffMemberService : BaseService, IStaffMemberService
+    public class StaffMemberService : BaseUserService, IStaffMemberService
     {
+        public StaffMemberService(ICurrentUser user) : base(user)
+        {
+        }
+
         public async Task<bool> IsLineManager(Guid staffMemberId, Guid lineManagerId)
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

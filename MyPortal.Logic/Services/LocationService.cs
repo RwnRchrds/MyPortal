@@ -5,14 +5,19 @@ using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.School;
 
 
 namespace MyPortal.Logic.Services
 {
-    public class LocationService : BaseService, ILocationService
+    public class LocationService : BaseUserService, ILocationService
     {
+        public LocationService(ICurrentUser user) : base(user)
+        {
+        }
+
         public async Task<IEnumerable<LocationModel>> GetLocations()
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

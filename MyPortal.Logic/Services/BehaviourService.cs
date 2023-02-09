@@ -13,6 +13,7 @@ using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Behaviour.Achievements;
 using MyPortal.Logic.Models.Data.Behaviour.Detentions;
@@ -27,8 +28,12 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class BehaviourService : BaseService, IBehaviourService
+    public class BehaviourService : BaseUserService, IBehaviourService
     {
+        public BehaviourService(ICurrentUser user) : base(user)
+        {
+        }
+
         public async Task<IEnumerable<StudentAchievementSummaryModel>> GetAchievementsByStudent(Guid studentId, Guid academicYearId)
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

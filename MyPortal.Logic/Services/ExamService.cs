@@ -3,14 +3,19 @@ using System.Security.Claims;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Requests.Assessment;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services;
 
-public class ExamService : BaseService, IExamService
+public class ExamService : BaseUserService, IExamService
 {
+    public ExamService(ICurrentUser user) : base(user)
+    {
+    }
+
     public async Task CreateResultEmbargo(params ResultEmbargoRequestModel[] models)
     {
         await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

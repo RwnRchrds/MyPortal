@@ -9,6 +9,7 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Students;
 
@@ -17,8 +18,12 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class LogNoteService : BaseService, ILogNoteService
+    public class LogNoteService : BaseUserService, ILogNoteService
     {
+        public LogNoteService(ICurrentUser user) : base(user)
+        {
+        }
+
         public async Task<LogNoteModel> GetLogNoteById(Guid logNoteId)
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

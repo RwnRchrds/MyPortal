@@ -11,6 +11,7 @@ using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.School;
 
@@ -20,8 +21,12 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class SchoolService : BaseService, ISchoolService
+    public class SchoolService : BaseUserService, ISchoolService
     {
+        public SchoolService(ICurrentUser user) : base(user)
+        {
+        }
+
         private async Task<string> GetLocalSchoolNameFromDb()
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

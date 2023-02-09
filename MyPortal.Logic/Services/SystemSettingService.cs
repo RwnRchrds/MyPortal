@@ -3,13 +3,18 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class SystemSettingService : BaseService, ISystemSettingService
+    public class SystemSettingService : BaseUserService, ISystemSettingService
     {
+        public SystemSettingService(ICurrentUser user) : base(user)
+        {
+        }
+
         public async Task SetValue(string name, string value)
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

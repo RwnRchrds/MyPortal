@@ -9,6 +9,7 @@ using MyPortal.Database.Exceptions;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Assessment;
 using MyPortal.Logic.Models.Data.Assessment.MarksheetEntry;
@@ -19,8 +20,12 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services;
 
-public class AssessmentService : BaseService, IAssessmentService
+public class AssessmentService : BaseUserService, IAssessmentService
 {
+    public AssessmentService(ICurrentUser user) : base(user)
+    {
+    }
+
     public async Task<IEnumerable<ResultModel>> GetPreviousResults(Guid studentId, Guid aspectId, DateTime dateTo)
     {
         await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

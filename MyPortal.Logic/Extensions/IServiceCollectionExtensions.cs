@@ -7,6 +7,8 @@ using MyPortal.Database.Models;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Identity;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Services;
 
@@ -49,6 +51,8 @@ namespace MyPortal.Logic.Extensions
         private static IServiceCollection AddBusinessServices(this IServiceCollection services)
         {
             services.AddTransient(s => s.GetService<HttpContext>()?.User);
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUser, CurrentUser>();
             services.AddScoped<IAcademicYearService, AcademicYearService>();
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IAddressService, AddressService>();

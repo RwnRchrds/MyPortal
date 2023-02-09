@@ -7,6 +7,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Curriculum;
 
@@ -15,8 +16,12 @@ using Task = MyPortal.Database.Models.Entity.Task;
 
 namespace MyPortal.Logic.Services;
 
-public class HomeworkService : BaseService, IHomeworkService
+public class HomeworkService : BaseUserService, IHomeworkService
 {
+    public HomeworkService(ICurrentUser user) : base(user)
+    {
+    }
+
     public async System.Threading.Tasks.Task CreateHomework(HomeworkRequestModel model)
     {
         Validate(model);

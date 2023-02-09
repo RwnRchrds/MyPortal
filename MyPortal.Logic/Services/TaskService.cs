@@ -7,6 +7,7 @@ using MyPortal.Database.Constants;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.People;
 
@@ -16,8 +17,12 @@ using TaskStatus = MyPortal.Database.Models.Search.TaskStatus;
 
 namespace MyPortal.Logic.Services
 {
-    public class TaskService : BaseService, ITaskService
+    public class TaskService : BaseUserService, ITaskService
     {
+        public TaskService(ICurrentUser user) : base(user)
+        {
+        }
+
         public async Task CreateTask(TaskRequestModel task)
         {
             Validate(task);

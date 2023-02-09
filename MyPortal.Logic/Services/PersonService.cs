@@ -7,14 +7,19 @@ using MyPortal.Database.Models.QueryResults.Person;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.People;
 
 
 namespace MyPortal.Logic.Services
 {
-    public class PersonService : BaseService, IPersonService
+    public class PersonService : BaseUserService, IPersonService
     {
+        public PersonService(ICurrentUser user) : base(user)
+        {
+        }
+
         public async Task<PersonModel> GetPersonById(Guid personId)
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

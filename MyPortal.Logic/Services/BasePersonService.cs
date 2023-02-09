@@ -1,11 +1,16 @@
 ﻿using System;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Requests.Person;
 
 namespace MyPortal.Logic.Services;
 
-public class BasePersonService : BaseService
+public class BasePersonService : BaseUserService
 {
+    public BasePersonService(ICurrentUser user) : base(user)
+    {
+    }
+
     protected Person CreatePersonFromModel(PersonRequestModel model)
     {
         var createDate = DateTime.Now;

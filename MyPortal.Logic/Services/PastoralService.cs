@@ -3,14 +3,19 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Curriculum;
 
 
 namespace MyPortal.Logic.Services;
 
-public class PastoralService : BaseService, IPastoralService
-{ 
+public class PastoralService : BaseUserService, IPastoralService
+{
+    public PastoralService(ICurrentUser user) : base(user)
+    {
+    }
+
     public async Task<IEnumerable<RegGroupModel>> GetRegGroups()
     {
         await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())

@@ -11,6 +11,7 @@ using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Curriculum;
 
@@ -19,8 +20,12 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class AcademicYearService : BaseService, IAcademicYearService
+    public class AcademicYearService : BaseUserService, IAcademicYearService
     {
+        public AcademicYearService(ICurrentUser user) : base(user)
+        {
+        }
+
         public async Task<AcademicYearModel> GetCurrentAcademicYear(bool getLatestIfNull = false)
         {
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
