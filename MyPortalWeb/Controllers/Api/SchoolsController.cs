@@ -99,12 +99,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var userId = User.GetUserId();
-
-                // Don't let users lie about who created the bulletin
-                model.CreatedById = userId;
-
-                var bulletin = await _schoolService.CreateBulletin(model);
+                await _schoolService.CreateBulletin(model);
                 return Ok();
             }
             catch (Exception e)

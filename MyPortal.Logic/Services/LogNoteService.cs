@@ -75,7 +75,7 @@ namespace MyPortal.Logic.Services
                     Message = logNoteModel.Message,
                     StudentId = logNoteModel.StudentId,
                     CreatedDate = createDate,
-                    CreatedById = logNoteModel.CreatedById,
+                    CreatedById = User.GetUserId(),
                     AcademicYearId = logNoteModel.AcademicYearId
                 };
 

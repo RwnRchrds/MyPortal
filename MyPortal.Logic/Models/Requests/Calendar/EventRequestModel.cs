@@ -5,8 +5,6 @@ namespace MyPortal.Logic.Models.Requests.Calendar
 {
     public class EventRequestModel
     {
-        public Guid CreatedById { get; set; }
-        
         public Guid EventTypeId { get; set; }
         
         public Guid? RoomId { get; set; }

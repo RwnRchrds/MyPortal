@@ -18,8 +18,6 @@ namespace MyPortal.Logic.Models.Requests.Assessment
 
         [NotDefault]
         public Guid AspectId { get; set; }
-        
-        public Guid CreatedById { get; set; }
 
         public DateTime Date { get; set; }
 

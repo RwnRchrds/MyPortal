@@ -146,7 +146,7 @@ namespace MyPortal.Logic.Services
 
             await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
             {
-                var user = await unitOfWork.Users.GetById(model.CreatedById);
+                var user = await unitOfWork.Users.GetById(User.GetUserId());
 
                 if (user == null)
                 {
@@ -175,7 +175,8 @@ namespace MyPortal.Logic.Services
                     StartTime = model.StartTime,
                     EndTime = model.EndTime,
                     Public = model.IsPublic,
-                    AllDay = model.IsAllDay
+                    AllDay = model.IsAllDay,
+                    CreatedById = User.GetUserId()
                 };
 
                 if (model.IsAllDay)

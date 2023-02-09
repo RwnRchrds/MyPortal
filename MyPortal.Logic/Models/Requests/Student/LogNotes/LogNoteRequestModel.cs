@@ -14,9 +14,6 @@ namespace MyPortal.Logic.Models.Requests.Student.LogNotes
 
         [NotDefault]
         public Guid AcademicYearId { get; set; }
-        
-        [NotDefault] 
-        public Guid CreatedById { get; set; }
 
         [Required]
         public string Message { get; set; }

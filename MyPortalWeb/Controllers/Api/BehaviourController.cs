@@ -102,10 +102,6 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var userId = User.GetUserId();
-
-                model.CreatedById = userId;
-                
                 await _behaviourService.CreateAchievement(model);
 
                 return Ok();
@@ -220,10 +216,6 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var userId = User.GetUserId();
-
-                model.CreatedById = userId;
-                
                 await _behaviourService.CreateIncident(model);
 
                 return Ok();

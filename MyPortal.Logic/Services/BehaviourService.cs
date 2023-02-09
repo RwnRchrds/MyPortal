@@ -104,7 +104,7 @@ namespace MyPortal.Logic.Services
                         AchievementTypeId = achievement.AchievementTypeId,
                         LocationId = achievement.LocationId,
                         Comments = achievement.Comments,
-                        CreatedById = achievement.CreatedById,
+                        CreatedById = User.GetUserId(),
                         CreatedDate = now
                     }
                 };
@@ -244,7 +244,7 @@ namespace MyPortal.Logic.Services
                         CreatedDate = DateTime.Now,
                         BehaviourTypeId = incident.BehaviourTypeId,
                         LocationId = incident.LocationId,
-                        CreatedById = incident.CreatedById,
+                        CreatedById = User.GetUserId(),
                         Comments = incident.Comments,
                         AcademicYearId = incident.AcademicYearId,
                     }
@@ -298,6 +298,8 @@ namespace MyPortal.Logic.Services
                         .Select(ld => ld.DetentionId).ToArray();
 
                 await RemoveDetentionsWithUnitOfWork(unitOfWork, studentIncidentInDb.Id, detentionsToRemove);
+
+                await AddDetentionsWithUnitOfWork(unitOfWork, studentIncidentInDb.Id, detentionsToAdd);
 
                 await unitOfWork.SaveChangesAsync();
             }

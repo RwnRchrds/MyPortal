@@ -12,9 +12,6 @@ namespace MyPortal.Logic.Models.Requests.Documents
         [NotDefault]
         public Guid DirectoryId { get; set; }
 
-        [NotDefault]
-        public Guid CreatedById { get; set; }
-
         [Required]
         public string Title { get; set; }
 

@@ -49,7 +49,7 @@ namespace MyPortal.Logic.Services
                         Description = document.Description,
                         CreatedDate = DateTime.Today,
                         DirectoryId = document.DirectoryId,
-                        CreatedById = document.CreatedById,
+                        CreatedById = User.GetUserId(),
                         Deleted = false,
                         Private = document.Private
                     };

@@ -89,7 +89,7 @@ namespace MyPortal.Logic.Services
                     Title = model.Title,
                     Detail = model.Detail,
                     CreatedDate = DateTime.Now,
-                    CreatedById = model.CreatedById,
+                    CreatedById = User.GetUserId(),
                     ExpireDate = model.ExpireDate,
                     Private = model.Private,
                     Directory = new Directory

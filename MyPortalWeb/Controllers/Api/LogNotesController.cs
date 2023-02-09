@@ -128,10 +128,6 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var userId = User.GetUserId();
-
-                requestModel.CreatedById = userId;
-                
                 await _logNoteService.CreateLogNote(requestModel);
 
                 return Ok();

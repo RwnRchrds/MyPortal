@@ -114,10 +114,6 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var userId = User.GetUserId();
-
-                model.CreatedById = userId;
-
                 if (model.IsPublic && !await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
                         PermissionValue.SchoolEditSchoolDiary))
                 {
