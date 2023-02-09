@@ -6,13 +6,13 @@ namespace MyPortal.Logic.Models.Requests.Documents
 {
     public class DocumentRequestModel
     {
-        [NotEmpty]
+        [NotDefault]
         public Guid TypeId { get; set; }
 
-        [NotEmpty]
+        [NotDefault]
         public Guid DirectoryId { get; set; }
 
-        [NotEmpty]
+        [NotDefault]
         public Guid CreatedById { get; set; }
 
         [Required]

@@ -17,6 +17,6 @@ public class BulletinRequestModel
     
     public DateTime? ExpireDate { get; set; }
     
-    [NotEmpty]
+    [NotDefault]
     public Guid CreatedById { get; set; }
 }

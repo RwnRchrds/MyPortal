@@ -5,16 +5,11 @@ using System.Text;
 
 namespace MyPortal.Logic.Attributes
 {
-    internal class NotEmptyAttribute : ValidationAttribute
+    internal class NotDefaultAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if (value is Guid guid)
-            {
-                return guid == Guid.Empty ? new ValidationResult("Value cannot be empty.") : ValidationResult.Success;
-            }
-
-            return ValidationResult.Success;
+            return value == default ? new ValidationResult("Value cannot be default.") : ValidationResult.Success;
         }
     }
 }

@@ -11,10 +11,10 @@ namespace MyPortal.Logic.Models.Requests.Student
     {
         public Guid? HouseId { get; set; }
         
-        [NotEmpty]
+        [NotDefault]
         public Guid YearGroupId { get; set; }
         
-        [NotEmpty]
+        [NotDefault]
         public Guid RegGroupId { get; set; }
 
         public DateTime? DateStarting { get; set; }

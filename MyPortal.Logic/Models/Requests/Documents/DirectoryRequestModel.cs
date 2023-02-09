@@ -6,7 +6,7 @@ namespace MyPortal.Logic.Models.Requests.Documents
 {
     public class DirectoryRequestModel
     {
-        [NotEmpty]
+        [NotDefault]
         public Guid? ParentId { get; set; }
 
         [Required]

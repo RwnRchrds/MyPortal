@@ -50,12 +50,12 @@ namespace MyPortal.Logic.Models.Data.Students
             }
         }
 
-        [NotEmpty]
+        [NotDefault]
         public Guid TypeId { get; set; }
 
         public Guid CreatedById { get; set; }
 
-        [NotEmpty]
+        [NotDefault]
         public Guid StudentId { get; set; }
 
         public Guid AcademicYearId { get; set; }

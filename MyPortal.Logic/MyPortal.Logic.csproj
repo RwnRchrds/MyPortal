@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Configuration" />
-    <Folder Include="Models\Requests\Assessment" />
     <Folder Include="Models\Requests\Attendance" />
     <Folder Include="Models\Requests\Auth" />
     <Folder Include="Models\Requests\Behaviour\Achievements" />

@@ -6,16 +6,16 @@ namespace MyPortal.Logic.Models.Requests.Student.LogNotes
 {
     public class LogNoteRequestModel
     {
-        [NotEmpty]
+        [NotDefault]
         public Guid StudentId { get; set; }
         
-        [NotEmpty]
+        [NotDefault]
         public Guid TypeId { get; set; }
 
-        [NotEmpty]
+        [NotDefault]
         public Guid AcademicYearId { get; set; }
         
-        [NotEmpty] 
+        [NotDefault] 
         public Guid CreatedById { get; set; }
 
         [Required]

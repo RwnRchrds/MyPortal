@@ -243,6 +243,7 @@ public class AssessmentService : BaseService, IAssessmentService
                     
                     // To be discussed, a new result should not be created as this result is just being amended
                     // but does the date need to be updated?
+                    // ^ Do we need audit history to see who changed the result (and reason why)?
                     result.Date = DateTime.Now;
                 }
 

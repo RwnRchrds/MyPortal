@@ -6,7 +6,7 @@ namespace MyPortal.Logic.Models.Requests.Finance;
 
 public class AccountTransactionRequestModel
 {
-    [NotEmpty]
+    [NotDefault]
     public Guid StudentId { get; set; }
     
     [Currency]

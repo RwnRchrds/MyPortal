@@ -6,7 +6,7 @@ namespace MyPortal.Logic.Models.Requests.Assessment;
 
 public class AspectRequestModel
 {
-    [NotEmpty]
+    [NotDefault]
     public Guid TypeId { get; set; }
     
     [RequiredIfGradeAspect]

@@ -10,13 +10,13 @@ namespace MyPortal.Logic.Models.Requests.Assessment
 {
     public class ResultRequestModel
     {
-        [NotEmpty]
+        [NotDefault]
         public Guid ResultSetId { get; set; }
 
-        [NotEmpty]
+        [NotDefault]
         public Guid StudentId { get; set; }
 
-        [NotEmpty]
+        [NotDefault]
         public Guid AspectId { get; set; }
         
         public Guid CreatedById { get; set; }

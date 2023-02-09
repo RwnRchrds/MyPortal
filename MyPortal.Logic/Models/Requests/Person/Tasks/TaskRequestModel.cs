@@ -6,13 +6,13 @@ namespace MyPortal.Logic.Models.Requests.Person.Tasks
 {
     public class TaskRequestModel
     {
-        [NotEmpty]
+        [NotDefault]
         public Guid AssignedToId { get; set; }
         
-        [NotEmpty] 
+        [NotDefault] 
         public Guid AssignedById { get; set; }
 
-        [NotEmpty] 
+        [NotDefault] 
         public Guid TypeId { get; set; }
 
         [Required]
