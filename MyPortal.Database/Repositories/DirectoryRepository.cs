@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
@@ -63,6 +64,35 @@ namespace MyPortal.Database.Repositories
             }
 
             return await ExecuteQuery(query);
+        }
+
+        public async Task DeleteWithChildren(Guid directoryId)
+        {
+            if (directoryId == Constants.Directories.School)
+            {
+                throw new Exception("Cannot delete school directory.");
+            }
+
+            var subdirectories = await Context.Directories.Where(d => d.ParentId == directoryId).ToArrayAsync();
+
+            foreach (var subdirectory in subdirectories)
+            {
+                await DeleteWithChildren(subdirectory.Id);
+            }
+
+            var documents = await Context.Documents.Where(d => d.DirectoryId == directoryId).ToArrayAsync();
+
+            foreach (var document in documents)
+            {
+                if (document.FileId.HasValue)
+                {
+                    Context.Files.Remove(document.Attachment);
+                }
+
+                Context.Documents.Remove(document);
+            }
+
+            await Delete(directoryId);
         }
 
         public async Task Update(Directory entity)
