@@ -26,103 +26,128 @@ namespace MyPortal.Logic.Services
         {
         }
 
+        public async Task<bool> IsAcademicYearLocked(Guid academicYearId, bool throwException = false)
+        {
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            if (await unitOfWork.AcademicYears.IsLocked(academicYearId))
+            {
+                if (throwException)
+                {
+                    throw new YearLockedException("This academic year is locked and cannot be modified.");
+                }
+                    
+                return true;
+            }
+
+            return false;
+        }
+        
+        public async Task<bool> IsAcademicYearLockedByWeek(Guid attendanceWeekId, bool throwException = false)
+        {
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            if (await unitOfWork.AcademicYears.IsLockedByWeek(attendanceWeekId))
+            {
+                if (throwException)
+                {
+                    throw new YearLockedException("This academic year is locked and cannot be modified.");
+                }
+                    
+                return true;
+            }
+
+            return false;
+        }
+
         public async Task<AcademicYearModel> GetCurrentAcademicYear(bool getLatestIfNull = false)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            var acadYear = await unitOfWork.AcademicYears.GetCurrent();
+
+            if (acadYear == null)
             {
-                var acadYear = await unitOfWork.AcademicYears.GetCurrent();
-
-                if (acadYear == null)
+                if (getLatestIfNull)
                 {
-                    if (getLatestIfNull)
-                    {
-                        acadYear = await unitOfWork.AcademicYears.GetLatest();
+                    acadYear = await unitOfWork.AcademicYears.GetLatest();
 
-                        if (acadYear == null)
-                        {
-                            throw new NotFoundException("No academic years are defined.");
-                        }
-                    }
-                    else
+                    if (acadYear == null)
                     {
-                        throw new NotFoundException("There is no academic year defined for the current date.");
+                        throw new NotFoundException("No academic years are defined.");
                     }
                 }
-
-                return new AcademicYearModel(acadYear);
+                else
+                {
+                    throw new NotFoundException("There is no academic year defined for the current date.");
+                }
             }
+
+            return new AcademicYearModel(acadYear);
         }
 
         public async Task<AcademicYearModel> GetAcademicYearById(Guid academicYearId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var acadYear = await unitOfWork.AcademicYears.GetById(academicYearId);
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            var acadYear = await unitOfWork.AcademicYears.GetById(academicYearId);
 
-                return new AcademicYearModel(acadYear);
-            }
+            return new AcademicYearModel(acadYear);
         }
 
         public async Task<IEnumerable<AcademicYearModel>> GetAcademicYears()
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var acadYears = await unitOfWork.AcademicYears.GetAll();
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            var acadYears = await unitOfWork.AcademicYears.GetAll();
 
-                return acadYears.Select(y => new AcademicYearModel(y));
-            }
+            return acadYears.Select(y => new AcademicYearModel(y));
         }
 
         public async Task<AcademicYearModel> CreateAcademicYear(AcademicYearRequestModel model)
         {
             Validate(model);
             
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            var academicYear = new AcademicYear
             {
-                var academicYear = new AcademicYear
+                Name = model.Name
+            };
+            
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+
+            foreach (var termModel in model.AcademicTerms)
+            {
+                var term = new AcademicTerm
                 {
-                    Name = model.Name
+                    Name = termModel.Name,
+                    StartDate = termModel.StartDate,
+                    EndDate = termModel.EndDate
                 };
 
-                foreach (var termModel in model.AcademicTerms)
+                foreach (var attendanceWeek in termModel.AttendanceWeeks)
                 {
-                    var term = new AcademicTerm
+                    term.AttendanceWeeks.Add(new AttendanceWeek
                     {
-                        Name = termModel.Name,
-                        StartDate = termModel.StartDate,
-                        EndDate = termModel.EndDate
-                    };
-
-                    foreach (var attendanceWeek in termModel.AttendanceWeeks)
+                        Beginning = attendanceWeek.WeekBeginning,
+                        WeekPatternId = attendanceWeek.WeekPatternId,
+                        IsNonTimetable = attendanceWeek.NonTimetable
+                    });
+                }
+                
+                foreach (var schoolHoliday in termModel.Holidays)
+                {
+                    unitOfWork.DiaryEvents.Create(new DiaryEvent
                     {
-                        term.AttendanceWeeks.Add(new AttendanceWeek
-                        {
-                            Beginning = attendanceWeek.WeekBeginning,
-                            WeekPatternId = attendanceWeek.WeekPatternId,
-                            IsNonTimetable = attendanceWeek.NonTimetable
-                        });
-                    }
-
-                    foreach (var schoolHoliday in termModel.Holidays)
-                    {
-                        unitOfWork.DiaryEvents.Create(new DiaryEvent
-                        {
-                            Description = "School Holiday",
-                            EventTypeId = EventTypes.SchoolHoliday,
-                            StartTime = schoolHoliday.Date,
-                            EndTime = schoolHoliday.GetEndOfDay()
-                        });
-                    }
-
-                    academicYear.AcademicTerms.Add(term);
+                        Description = "School Holiday",
+                        EventTypeId = EventTypes.SchoolHoliday,
+                        StartTime = schoolHoliday.Date,
+                        EndTime = schoolHoliday.GetEndOfDay()
+                    });
                 }
 
-                unitOfWork.AcademicYears.Create(academicYear);
-
-                await unitOfWork.SaveChangesAsync();
-
-                return new AcademicYearModel(academicYear);
+                academicYear.AcademicTerms.Add(term);
             }
+
+            unitOfWork.AcademicYears.Create(academicYear);
+
+            await unitOfWork.SaveChangesAsync();
+
+            return new AcademicYearModel(academicYear);
         }
 
         public AcademicTermRequestModel GenerateAttendanceWeeks(AcademicTermRequestModel model)
@@ -182,35 +207,24 @@ namespace MyPortal.Logic.Services
         {
             Validate(model);
             
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var academicYearInDb = await unitOfWork.AcademicYears.GetById(academicYearId);
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            var academicYearInDb = await unitOfWork.AcademicYears.GetById(academicYearId);
 
-                academicYearInDb.Name = model.Name;
-                academicYearInDb.Locked = model.Locked;
+            academicYearInDb.Name = model.Name;
+            academicYearInDb.Locked = model.Locked;
 
-                await unitOfWork.AcademicYears.Update(academicYearInDb);
+            await unitOfWork.AcademicYears.Update(academicYearInDb);
 
-                await unitOfWork.SaveChangesAsync();
-            }
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteAcademicYear(Guid academicYearId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                await unitOfWork.AcademicYears.Delete(academicYearId);
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            await unitOfWork.AcademicYears.Delete(academicYearId);
 
-                await unitOfWork.SaveChangesAsync();
-            }
-        }
-
-        public async Task<bool> IsAcademicYearLocked(Guid academicYearId)
-        {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                return await unitOfWork.AcademicYears.IsLocked(academicYearId);
-            }
+            await unitOfWork.SaveChangesAsync();
         }
     }
 }

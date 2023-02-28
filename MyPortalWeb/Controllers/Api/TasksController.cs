@@ -26,9 +26,9 @@ namespace MyPortalWeb.Controllers.Api
         private readonly ITaskService _taskService;
         private readonly IStaffMemberService _staffMemberService;
 
-        public TasksController(IStudentService studentService, IUserService userService, IRoleService roleService,
-            ITaskService taskService, IPersonService personService, IStaffMemberService staffMemberService) : base(
-            studentService, personService, userService, roleService)
+        public TasksController(IUserService userService, IPersonService personService, IStudentService studentService,
+            ITaskService taskService, IStaffMemberService staffMemberService) 
+            : base(userService, personService, studentService)
         {
             _taskService = taskService;
             _staffMemberService = staffMemberService;
@@ -201,6 +201,7 @@ namespace MyPortalWeb.Controllers.Api
         private async Task<bool> CanUpdateTask(Guid taskId)
         {
             var userId = User.GetUserId();
+            
             var task = await _taskService.GetById(taskId);
 
             var accessResponse = await GetPermissionsForTasksPerson(task.AssignedToId, true);
@@ -224,7 +225,7 @@ namespace MyPortalWeb.Controllers.Api
             
             var user = await GetLoggedInUser();
             
-            if (user.PersonId.Value == personId)
+            if (user.PersonId != null && user.PersonId.Value == personId)
             {
                 response.IsOwner = true;
             }
@@ -237,22 +238,22 @@ namespace MyPortalWeb.Controllers.Api
                     edit ? PermissionValue.PeopleEditAllStaffTasks : PermissionValue.PeopleViewAllStaffTasks;
                 var managedStaffPermission =
                     edit ? PermissionValue.PeopleEditManagedStaffTasks : PermissionValue.PeopleViewManagedStaffTasks;
-                
-                if (await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
+
+                if (await User.HasPermission(UserService, PermissionRequirement.RequireAll,
                         allStaffPermission))
                 {
                     response.CanAccess = true;
                 }
 
-                if (await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
+                if (await User.HasPermission(UserService, PermissionRequirement.RequireAll,
                         managedStaffPermission))
                 {
-                    if (user.PersonId.HasValue)
+                    if (user.PersonId.HasValue && person.Person.Id.HasValue)
                     {
                         var staffMember = await _staffMemberService.GetByPersonId(person.Person.Id.Value);
                         var userPerson = await _staffMemberService.GetByPersonId(user.PersonId.Value);
 
-                        if (staffMember != null && userPerson != null)
+                        if (staffMember is { Id: { } } && userPerson is {Id: { }})
                         {
                             if (await _staffMemberService.IsLineManager(staffMember.Id.Value, userPerson.Id.Value))
                             {
@@ -270,7 +271,7 @@ namespace MyPortalWeb.Controllers.Api
                     edit ? PermissionValue.PeopleEditContactTasks : PermissionValue.PeopleViewContactTasks;
 
                 response.CanAccess =
-                    await User.HasPermission(RoleService, PermissionRequirement.RequireAll, contactPermission);
+                    await User.HasPermission(UserService, PermissionRequirement.RequireAll, contactPermission);
             }
 
             if (person.PersonTypes.StudentId.HasValue)
@@ -279,7 +280,7 @@ namespace MyPortalWeb.Controllers.Api
                     edit ? PermissionValue.StudentEditStudentTasks : PermissionValue.StudentViewStudentTasks;
 
                 response.CanAccess =
-                    await User.HasPermission(RoleService, PermissionRequirement.RequireAll, studentPermission);
+                    await User.HasPermission(UserService, PermissionRequirement.RequireAll, studentPermission);
             }
 
             return response;

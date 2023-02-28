@@ -25,59 +25,56 @@ namespace MyPortal.Logic.Services
 
         public async Task UploadFileToDocument(FileUploadRequestModel upload)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var document = await unitOfWork.Documents.GetById(upload.DocumentId);
+
+            if (document == null)
             {
-                var document = await unitOfWork.Documents.GetById(upload.DocumentId);
-
-                if (document == null)
-                {
-                    throw new NotFoundException("Document not found.");
-                }
-
-                if (document.FileId.HasValue)
-                {
-                    throw new LogicException("A file is already attached to this document.");
-                }
-
-                var file = await _fileProvider.SaveFile(upload);
-
-                document.Attachment = file;
-                
-                await unitOfWork.Documents.Update(document);
-                
-                await unitOfWork.SaveChangesAsync();
+                throw new NotFoundException("Document not found.");
             }
+
+            if (document.FileId.HasValue)
+            {
+                throw new LogicException("A file is already attached to this document.");
+            }
+
+            var file = await _fileProvider.SaveFile(upload);
+
+            document.Attachment = file;
+                
+            await unitOfWork.Documents.Update(document);
+                
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task<FileDownload> GetDownloadByDocument(Guid documentId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var file = await unitOfWork.Files.GetByDocumentId(documentId);
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
-                var stream = await _fileProvider.LoadFileAsStream(file.FileId);
+            var stream = await _fileProvider.LoadFileAsStream(file.FileId);
 
-                return new FileDownload(stream, file.ContentType, file.FileName);
-            }
+            return new FileDownload(stream, file.ContentType, file.FileName);
         }
 
         public async Task RemoveFileFromDocument(Guid documentId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var file = await unitOfWork.Files.GetByDocumentId(documentId);
+
+            if (file == null)
             {
-                var file = await unitOfWork.Files.GetByDocumentId(documentId);
-
-                if (file == null)
-                {
-                    throw new LogicException("No file is attached to this document.");
-                }
-
-                _fileProvider.DeleteFile(file.FileId);
-
-                await unitOfWork.Files.Delete(file.Id);
-
-                await unitOfWork.SaveChangesAsync();
+                throw new LogicException("No file is attached to this document.");
             }
+
+            _fileProvider.DeleteFile(file.FileId);
+
+            await unitOfWork.Files.Delete(file.Id);
+
+            await unitOfWork.SaveChangesAsync();
         }
     }
 }

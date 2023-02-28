@@ -33,8 +33,7 @@ namespace MyPortal.Logic.Models.Summary
         
         public static async Task<StudentAchievementSummaryModel> GetSummary(IUnitOfWork unitOfWork, StudentAchievementModel model)
         {
-            await model.Student.Load(unitOfWork);
-            await model.Achievement.Load(unitOfWork);
+            await model.Load(unitOfWork);
 
             return new StudentAchievementSummaryModel(model);
         }

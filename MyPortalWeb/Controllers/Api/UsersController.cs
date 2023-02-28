@@ -25,7 +25,7 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/users")]
     public class UsersController : BaseApiController
     {
-        public UsersController(IUserService userService, IRoleService roleService) : base(userService, roleService)
+        public UsersController(IUserService userService) : base(userService)
         {
         }
 

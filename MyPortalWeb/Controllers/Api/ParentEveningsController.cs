@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -10,12 +11,13 @@ namespace MyPortalWeb.Controllers.Api
     public class ParentEveningsController : BaseApiController
     {
         private readonly IParentEveningService _parentEveningService;
-        
-        public ParentEveningsController(IUserService userService, IRoleService roleService, IParentEveningService parentEveningService) : base(userService, roleService)
+
+        public ParentEveningsController(IUserService userService, IParentEveningService parentEveningService) 
+            : base(userService)
         {
             _parentEveningService = parentEveningService;
         }
-        
+
         [HttpGet]
         [Route("templates/{parentEveningId}/{staffMemberId}")]
         public async Task<IActionResult> GetParentEveningTemplatesByStaffMember([FromRoute] Guid parentEveningId,

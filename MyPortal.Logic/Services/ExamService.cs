@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Claims;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
@@ -18,56 +19,54 @@ public class ExamService : BaseUserService, IExamService
 
     public async Task CreateResultEmbargo(params ResultEmbargoRequestModel[] models)
     {
-        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        
+        foreach (var model in models)
         {
-            foreach (var model in models)
+            Validate(model);
+                
+            if (model.EndDate < DateTime.Now)
             {
-                Validate(model);
-                
-                if (model.EndDate < DateTime.Now)
-                {
-                    throw new InvalidDataException("End date cannot be in the past.");
-                }
-
-                var embargo = new ExamResultEmbargo
-                {
-                    ResultSetId = model.ResultSetId,
-                    EndTime = model.EndDate
-                };
-                
-                unitOfWork.ExamResultEmbargoes.Create(embargo);
+                throw new InvalidDataException("End date cannot be in the past.");
             }
 
-            await unitOfWork.SaveChangesAsync();
+            var embargo = new ExamResultEmbargo
+            {
+                ResultSetId = model.ResultSetId,
+                EndTime = model.EndDate
+            };
+                
+            unitOfWork.ExamResultEmbargoes.Create(embargo);
         }
+
+        await unitOfWork.SaveChangesAsync();
     }
 
     public async Task UpdateResultEmbargo(params ResultEmbargoRequestModel[] models)
     {
-        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        
+        foreach (var model in models)
         {
-            foreach (var model in models)
+            Validate(model);
+
+            if (model.EndDate < DateTime.Now)
             {
-                Validate(model);
-                
-                if (model.EndDate < DateTime.Now)
-                {
-                    throw new InvalidDataException("End date cannot be in the past.");
-                }
-
-                var embargoInDb = await unitOfWork.ExamResultEmbargoes.GetByResultSetId(model.ResultSetId);
-
-                if (embargoInDb == null)
-                {
-                    throw new NotFoundException("Exam result embargo not found.");
-                }
-
-                embargoInDb.EndTime = model.EndDate;
-
-                await unitOfWork.ExamResultEmbargoes.Update(embargoInDb);
+                throw new InvalidDataException("End date cannot be in the past.");
             }
 
-            await unitOfWork.SaveChangesAsync();
+            var embargoInDb = await unitOfWork.ExamResultEmbargoes.GetByResultSetId(model.ResultSetId);
+
+            if (embargoInDb == null)
+            {
+                throw new NotFoundException("Exam result embargo not found.");
+            }
+
+            embargoInDb.EndTime = model.EndDate;
+
+            await unitOfWork.ExamResultEmbargoes.Update(embargoInDb);
         }
+
+        await unitOfWork.SaveChangesAsync();
     }
 }

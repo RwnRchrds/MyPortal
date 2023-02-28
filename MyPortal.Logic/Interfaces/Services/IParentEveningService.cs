@@ -5,9 +5,9 @@ using MyPortal.Logic.Models.Data.StaffMembers;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IParentEveningService
+    public interface IParentEveningService : IService
     {
-        Task<IEnumerable<ParentEveningAppointmentTemplateModel>> GetAppointmentTemplatesByStaffMember(
+        Task<IEnumerable<ParentEveningAppointmentPlaceholderModel>> GetAppointmentTemplatesByStaffMember(
             Guid parentEveningId, Guid staffMemberId);
     }
 }

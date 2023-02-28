@@ -24,13 +24,12 @@ namespace MyPortalWeb.Controllers.Api
         private readonly ILogNoteService _logNoteService;
         private readonly IAcademicYearService _academicYearService;
 
-        public LogNotesController(IStudentService studentService, IPersonService personService,
-            IUserService userService, IRoleService roleService,
-            ILogNoteService logNoteService, IAcademicYearService academicYearService) : base(studentService,
-            personService, userService, roleService)
+        public LogNotesController(IUserService userService, IPersonService personService,
+            IStudentService studentService, ILogNoteService logNoteService, IAcademicYearService academicYearService) 
+            : base(userService, personService, studentService)
         {
-            _logNoteService = logNoteService;
             _academicYearService = academicYearService;
+            _logNoteService = logNoteService;
         }
 
         [HttpGet]
@@ -103,7 +102,7 @@ namespace MyPortalWeb.Controllers.Api
                     }
 
                     var viewRestricted = User.IsType(UserTypes.Staff);
-
+                    
                     var logNotes = await _logNoteService.GetLogNotesByStudent(studentId, academicYearId.Value, viewRestricted);
 
                     var result = logNotes;

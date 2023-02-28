@@ -11,7 +11,7 @@ using MyPortal.Logic.Models.Summary;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IAttendanceService
+    public interface IAttendanceService : IService
     {
         Task<AttendanceSummary> GetAttendanceSummaryByStudent(Guid studentId, Guid academicYearId);
         Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId);

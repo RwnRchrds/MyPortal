@@ -5,7 +5,7 @@ using MyPortal.Logic.Models.Data.School;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface ILocationService
+    public interface ILocationService : IService
     {
         Task<IEnumerable<LocationModel>> GetLocations();
     }

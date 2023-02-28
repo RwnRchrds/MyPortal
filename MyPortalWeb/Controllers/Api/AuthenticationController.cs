@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Extensions;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Settings;
 using MyPortal.Logic.Models.Requests.Settings.Users;
@@ -13,8 +14,7 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/auth")]
     public class AuthenticationController : BaseApiController
     {
-        public AuthenticationController(IUserService userService, IRoleService roleService) : base(userService,
-            roleService)
+        public AuthenticationController(IUserService userService) : base(userService)
         {
         }
 
@@ -47,7 +47,7 @@ namespace MyPortalWeb.Controllers.Api
             try
             {
                 var userId = User.GetUserId();
-
+                
                 await UserService.ChangePassword(userId, model.CurrentPassword, model.NewPassword);
 
                 return Ok();

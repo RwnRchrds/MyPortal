@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using MyPortal.Database.Interfaces;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
@@ -19,14 +20,14 @@ namespace MyPortal.Logic.Services
         {
         }
 
-        public async Task<IEnumerable<ParentEveningAppointmentTemplateModel>> GetAppointmentTemplatesByStaffMember(
+        public async Task<IEnumerable<ParentEveningAppointmentPlaceholderModel>> GetAppointmentTemplatesByStaffMember(
             Guid parentEveningId, Guid staffMemberId)
         {
-            var templates = new List<ParentEveningAppointmentTemplateModel>();
+            var templates = new List<ParentEveningAppointmentPlaceholderModel>();
             
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var parentEvening = await unitOfWork.ParentEvenings.GetById(parentEveningId);
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+
+            var parentEvening = await unitOfWork.ParentEvenings.GetById(parentEveningId);
 
                 if (parentEvening == null)
                 {
@@ -57,7 +58,7 @@ namespace MyPortal.Logic.Services
 
                 foreach (var startTime in allStartTimes)
                 {
-                    var template = new ParentEveningAppointmentTemplateModel(pesm.ParentEveningId, pesm.StaffMemberId, startTime,
+                    var template = new ParentEveningAppointmentPlaceholderModel(pesm.ParentEveningId, pesm.StaffMemberId, startTime,
                         startTime.AddMinutes(pesm.AppointmentLength));
 
                     var templateRange = template.GetDateRange();
@@ -76,7 +77,6 @@ namespace MyPortal.Logic.Services
 
                     templates.Add(template);
                 }
-            }
 
             return templates;
         }

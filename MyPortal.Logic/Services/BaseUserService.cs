@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
@@ -11,8 +12,8 @@ namespace MyPortal.Logic.Services
     public abstract class BaseUserService : BaseService
     {
         protected ICurrentUser User;
-        
-        public BaseUserService(ICurrentUser user)
+
+        public BaseUserService(ICurrentUser user) : base()
         {
             User = user;
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
@@ -26,153 +27,146 @@ public class HomeworkService : BaseUserService, IHomeworkService
     {
         Validate(model);
         
-        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+
+        var homeworkItem = new HomeworkItem
         {
-            var homeworkItem = new HomeworkItem
+            Title = model.Title,
+            Description = model.Description,
+            SubmitOnline = model.SubmitOnline,
+            MaxPoints = model.MaxPoints,
+            Directory = new Directory
             {
-                Title = model.Title,
-                Description = model.Description,
-                SubmitOnline = model.SubmitOnline,
-                MaxPoints = model.MaxPoints,
-                Directory = new Directory
+                Name = "homework-root"
+            }
+        };
+            
+        var now = DateTime.Now;
+
+        foreach (var studentId in model.StudentIds)
+        {
+            var student = await unitOfWork.Students.GetById(studentId);
+
+            if (student == null)
+            {
+                throw new NotFoundException("Student not found.");
+            }
+
+            var submission = new HomeworkSubmission
+            {
+                StudentId = studentId,
+                Task = new Task
                 {
-                    Name = "homework-root"
+                    DueDate = model.DueDate,
+                    TypeId = TaskTypes.Homework,
+                    AssignedToId = student.PersonId,
+                    AssignedById = model.AssignedById,
+                    System = true,
+                    CreatedDate = now
                 }
             };
-            
-            var now = DateTime.Now;
-
-            foreach (var studentId in model.StudentIds)
-            {
-                var student = await unitOfWork.Students.GetById(studentId);
-
-                if (student == null)
-                {
-                    throw new NotFoundException("Student not found.");
-                }
-
-                var submission = new HomeworkSubmission
-                {
-                    StudentId = studentId,
-                    Task = new Task
-                    {
-                        DueDate = model.DueDate,
-                        TypeId = TaskTypes.Homework,
-                        AssignedToId = student.PersonId,
-                        AssignedById = model.AssignedById,
-                        System = true,
-                        CreatedDate = now
-                    }
-                };
                 
-                homeworkItem.Submissions.Add(submission);
-            }
-            
-            unitOfWork.HomeworkItems.Create(homeworkItem);
-            await unitOfWork.SaveChangesAsync();
+            homeworkItem.Submissions.Add(submission);
         }
+            
+        unitOfWork.HomeworkItems.Create(homeworkItem);
+        await unitOfWork.SaveChangesAsync();
     }
 
     public async System.Threading.Tasks.Task UpdateHomework(Guid homeworkId, HomeworkRequestModel model)
     {
         Validate(model);
         
-        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-        {
-            var homework = await unitOfWork.HomeworkItems.GetById(homeworkId);
+        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        
+        var homework = await unitOfWork.HomeworkItems.GetById(homeworkId);
 
-            homework.Title = model.Title;
-            homework.Description = model.Description;
-            homework.SubmitOnline = model.SubmitOnline;
-            homework.MaxPoints = model.MaxPoints;
+        homework.Title = model.Title;
+        homework.Description = model.Description;
+        homework.SubmitOnline = model.SubmitOnline;
+        homework.MaxPoints = model.MaxPoints;
 
-            await unitOfWork.HomeworkItems.Update(homework);
+        await unitOfWork.HomeworkItems.Update(homework);
 
-            await unitOfWork.SaveChangesAsync();
-        }
+        await unitOfWork.SaveChangesAsync();
     }
 
     public async System.Threading.Tasks.Task DeleteHomework(Guid homeworkId)
     {
-        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-        {
-            await unitOfWork.HomeworkItems.Delete(homeworkId);
+        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        
+        await unitOfWork.HomeworkItems.Delete(homeworkId);
 
-            await unitOfWork.SaveChangesAsync();
-        }
+        await unitOfWork.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<HomeworkSubmissionModel>> GetSubmissionsByStudent(Guid studentId)
     {
-        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-        {
-            var submissions = await unitOfWork.HomeworkSubmissions.GetHomeworkSubmissionsByStudent(studentId);
+        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        
+        var submissions = await unitOfWork.HomeworkSubmissions.GetHomeworkSubmissionsByStudent(studentId);
 
-            return submissions.Select(s => new HomeworkSubmissionModel(s));
-        }
+        return submissions.Select(s => new HomeworkSubmissionModel(s));
     }
 
     public async Task<IEnumerable<HomeworkSubmissionModel>> GetSubmissionsByStudentGroup(Guid studentGroupId)
     {
-        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-        {
-            var submissions = await unitOfWork.HomeworkSubmissions.GetHomeworkSubmissionsByStudentGroup(studentGroupId);
+        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        
+        var submissions = await unitOfWork.HomeworkSubmissions.GetHomeworkSubmissionsByStudentGroup(studentGroupId);
 
-            return submissions.Select(s => new HomeworkSubmissionModel(s));
-        }
+        return submissions.Select(s => new HomeworkSubmissionModel(s));
     }
 
     public async Task<IEnumerable<HomeworkItemModel>> GetHomework(HomeworkSearchOptions searchOptions)
     {
-        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-        {
-            var homeworkItems =
-                (await unitOfWork.HomeworkItems.GetHomework(searchOptions)).Select(hi => new HomeworkItemModel(hi));
+        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        
+        var homeworkItems =
+            (await unitOfWork.HomeworkItems.GetHomework(searchOptions)).Select(hi => new HomeworkItemModel(hi));
 
-            return homeworkItems;
-        }
+        return homeworkItems;
     }
 
     public async System.Threading.Tasks.Task CreateHomeworkSubmission(HomeworkSubmissionRequestModel model)
     {
         Validate(model);
         
-        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        
+        var homework = await unitOfWork.HomeworkItems.GetById(model.HomeworkId);
+        var student = await unitOfWork.Students.GetById(model.StudentId);
+
+        if (homework == null)
         {
-            var homework = await unitOfWork.HomeworkItems.GetById(model.HomeworkId);
-            var student = await unitOfWork.Students.GetById(model.StudentId);
-
-            if (homework == null)
-            {
-                throw new NotFoundException("Homework item not found.");
-            }
-
-            if (student == null)
-            {
-                throw new NotFoundException("Student not found.");
-            }
-            
-            var now = DateTime.Now;
-
-            var homeworkSubmission = new HomeworkSubmission
-            {
-                HomeworkId = model.HomeworkId,
-                StudentId = model.StudentId,
-                Task = new Task
-                {
-                    DueDate = model.DueDate,
-                    AssignedToId = student.PersonId,
-                    AssignedById = model.AssignedById,
-                    System = true,
-                    TypeId = TaskTypes.Homework,
-                    CreatedDate = now,
-                }
-            };
-
-            unitOfWork.HomeworkSubmissions.Create(homeworkSubmission);
-
-            await unitOfWork.SaveChangesAsync();
+            throw new NotFoundException("Homework item not found.");
         }
+
+        if (student == null)
+        {
+            throw new NotFoundException("Student not found.");
+        }
+            
+        var now = DateTime.Now;
+
+        var homeworkSubmission = new HomeworkSubmission
+        {
+            HomeworkId = model.HomeworkId,
+            StudentId = model.StudentId,
+            Task = new Task
+            {
+                DueDate = model.DueDate,
+                AssignedToId = student.PersonId,
+                AssignedById = model.AssignedById,
+                System = true,
+                TypeId = TaskTypes.Homework,
+                CreatedDate = now,
+            }
+        };
+
+        unitOfWork.HomeworkSubmissions.Create(homeworkSubmission);
+
+        await unitOfWork.SaveChangesAsync();
     }
 
     // TODO: Review this service method
@@ -180,38 +174,36 @@ public class HomeworkService : BaseUserService, IHomeworkService
     {
         Validate(model);
         
-        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        
+        var homeworkSubmission = await unitOfWork.HomeworkSubmissions.GetById(homeworkSubmissionId);
+
+        if (homeworkSubmission == null)
         {
-            var homeworkSubmission = await unitOfWork.HomeworkSubmissions.GetById(homeworkSubmissionId);
-
-            if (homeworkSubmission == null)
-            {
-                throw new NotFoundException("Homework submission not found.");
-            }
-
-            homeworkSubmission.PointsAchieved = model.PointsAchieved;
-            homeworkSubmission.Comments = model.Comments;
-            homeworkSubmission.Task.DueDate = model.DueDate;
-
-            if (model.Completed)
-            {
-                homeworkSubmission.Task.Completed = true;
-                homeworkSubmission.Task.CompletedDate = DateTime.Now;
-            }
-
-            await unitOfWork.HomeworkSubmissions.Update(homeworkSubmission);
-
-            await unitOfWork.SaveChangesAsync();
+            throw new NotFoundException("Homework submission not found.");
         }
+
+        homeworkSubmission.PointsAchieved = model.PointsAchieved;
+        homeworkSubmission.Comments = model.Comments;
+        homeworkSubmission.Task.DueDate = model.DueDate;
+
+        if (model.Completed)
+        {
+            homeworkSubmission.Task.Completed = true;
+            homeworkSubmission.Task.CompletedDate = DateTime.Now;
+        }
+
+        await unitOfWork.HomeworkSubmissions.Update(homeworkSubmission);
+
+        await unitOfWork.SaveChangesAsync();
     }
 
     public async System.Threading.Tasks.Task DeleteHomeworkSubmission(Guid homeworkSubmissionId)
     {
-        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-        {
-            await unitOfWork.HomeworkSubmissions.Delete(homeworkSubmissionId);
+        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        
+        await unitOfWork.HomeworkSubmissions.Delete(homeworkSubmissionId);
 
-            await unitOfWork.SaveChangesAsync();
-        }
+        await unitOfWork.SaveChangesAsync();
     }
 }

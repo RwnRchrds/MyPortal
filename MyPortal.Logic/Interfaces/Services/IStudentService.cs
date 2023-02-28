@@ -11,7 +11,7 @@ using MyPortal.Logic.Models.Summary;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IStudentService
+    public interface IStudentService : IService
     {
         Task<IEnumerable<StudentModel>> GetStudents(StudentSearchOptions searchModel);
         Task<IEnumerable<StudentModel>> GetStudentsByContact(Guid contactId, bool reportableOnly);

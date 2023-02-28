@@ -30,30 +30,28 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/documents")]
     public class DocumentsController : BaseApiController
     {
+        private readonly IDocumentService _documentService;
         private readonly IPersonService _personService;
         private readonly IStaffMemberService _staffMemberService;
-        private readonly IDocumentService _documentService;
 
-        public DocumentsController(IUserService userService, IRoleService roleService, IDocumentService documentService,
-            IPersonService personService, IStaffMemberService staffMemberService)
-            : base(userService, roleService)
+        public DocumentsController(IUserService userService, IDocumentService documentService,
+            IPersonService personService, IStaffMemberService staffMemberService) : base(userService)
         {
             _documentService = documentService;
             _personService = personService;
             _staffMemberService = staffMemberService;
-        }
+        }   
 
         private IFileService CreateFileService()
         {
             if (Configuration.Instance.FileProvider == FileProvider.Local)
             {
-                var fileProvider = new LocalFileProvider();
-                return new LocalFileService(fileProvider);
+                return new LocalFileService(new LocalFileProvider());
             }
             
             if (Configuration.Instance.FileProvider == FileProvider.Google)
             {
-                var accessToken = Request.Headers["x-file-access-token"];
+                var accessToken = Request.Headers["file-access-token"];
                 
                 if (string.IsNullOrWhiteSpace(accessToken))
                 {
@@ -61,7 +59,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
                 
                 var fileProvider = new GoogleFileProvider();
-                return new HostedFileService(accessToken, fileProvider);
+                return new HostedFileService(fileProvider, accessToken);
             }
 
             return null;
@@ -70,13 +68,13 @@ namespace MyPortalWeb.Controllers.Api
         private async Task<bool> CanAccessDirectory(Guid directoryId, bool edit)
         {
             var user = await GetLoggedInUser();
-
+            
             if (await _documentService.IsSchoolDirectory(directoryId))
             {
                 var publicPermission =
                     edit ? PermissionValue.SchoolEditSchoolDocuments : PermissionValue.SchoolViewSchoolDocuments;
 
-                if (await User.HasPermission(RoleService, PermissionRequirement.RequireAll, publicPermission))
+                if (await User.HasPermission(UserService, PermissionRequirement.RequireAll, publicPermission))
                 {
                     return true;
                 }
@@ -94,7 +92,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 if (dirOwner.PersonTypes.StaffId.HasValue)
-                {
+                { 
                     var allStaffPermission =
                         edit
                             ? PermissionValue.PeopleEditAllStaffDocuments
@@ -110,13 +108,13 @@ namespace MyPortalWeb.Controllers.Api
                             ? PermissionValue.PeopleEditManagedStaffDocuments
                             : PermissionValue.PeopleViewManagedStaffDocuments;
                     
-                    if (await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
+                    if (await User.HasPermission(UserService, PermissionRequirement.RequireAll,
                             allStaffPermission))
                     {
                         return true;
                     }
 
-                    if (await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
+                    if (await User.HasPermission(UserService, PermissionRequirement.RequireAll,
                             ownStaffPermission))
                     {
                         if (dirOwner.Person.Id == user.PersonId)
@@ -125,7 +123,7 @@ namespace MyPortalWeb.Controllers.Api
                         }
                     }
 
-                    if (await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
+                    if (await User.HasPermission(UserService, PermissionRequirement.RequireAll,
                             managedStaffPermission))
                     {
                         if (user.PersonId.HasValue)
@@ -133,7 +131,7 @@ namespace MyPortalWeb.Controllers.Api
                             var staffMember = await _staffMemberService.GetByPersonId(dirOwner.Person.Id.Value);
                             var lineManager = await _staffMemberService.GetByPersonId(user.PersonId.Value);
 
-                            if (staffMember != null && lineManager != null)
+                            if (staffMember is { Id: { } } && lineManager is { Id: { } })
                             {
                                 if (await _staffMemberService.IsLineManager(staffMember.Id.Value, lineManager.Id.Value))
                                 {
@@ -153,7 +151,7 @@ namespace MyPortalWeb.Controllers.Api
                             ? PermissionValue.StudentEditStudentDocuments
                             : PermissionValue.StudentViewStudentDocuments;
                     
-                    if (await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
+                    if (await User.HasPermission(UserService, PermissionRequirement.RequireAll,
                             studentPermission))
                     {
                         return true;
@@ -216,8 +214,6 @@ namespace MyPortalWeb.Controllers.Api
             {
                 if (await CanAccessDirectory(model.DirectoryId, true))
                 {
-                    var userId = User.GetUserId();
-                
                     await _documentService.CreateDocument(model);
 
                     return Ok();   
@@ -329,7 +325,7 @@ namespace MyPortalWeb.Controllers.Api
                 if (await CanAccessDocument(documentId, true))
                 {
                     var userId = User.GetUserId();
-                    
+
                     await _documentService.UpdateDocument(userId, model);
 
                     return Ok();
@@ -405,7 +401,7 @@ namespace MyPortalWeb.Controllers.Api
                 if (await CanAccessDirectory(directoryId, false))
                 {
                     var user = await GetLoggedInUser();
-                
+
                     var directory = await _documentService.GetDirectoryById(directoryId);
 
                     var children =

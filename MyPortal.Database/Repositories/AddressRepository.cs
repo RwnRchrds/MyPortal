@@ -7,7 +7,9 @@ using MyPortal.Database.Exceptions;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
+using SqlKata;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
@@ -26,6 +28,38 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("AddressPeople AS AP", "AP.AddressId", $"{TblAlias}.Id");
 
             query.Where("AP.PersonId", personId);
+
+            return await ExecuteQuery(query);
+        }
+
+        private void ApplySearch(Query query, AddressSearchOptions searchOptions)
+        {
+            if (!string.IsNullOrWhiteSpace(searchOptions.Postcode))
+            {
+                query.Where($"{TblAlias}.Postcode", searchOptions.Postcode);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchOptions.BuildingNumber))
+            {
+                query.Where($"{TblAlias}.BuildingNumber", searchOptions.BuildingNumber);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchOptions.Street))
+            {
+                query.Where($"{TblAlias}.Street", searchOptions.Street);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchOptions.Town))
+            {
+                query.Where($"{TblAlias}.Town", searchOptions.Town);
+            }
+        }
+
+        public async Task<IEnumerable<Address>> GetAll(AddressSearchOptions searchOptions)
+        {
+            var query = GenerateQuery();
+            
+            ApplySearch(query, searchOptions);
 
             return await ExecuteQuery(query);
         }

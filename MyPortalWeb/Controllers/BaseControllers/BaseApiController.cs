@@ -11,7 +11,6 @@ using MyPortal.Database.Enums;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Settings;
 
@@ -24,13 +23,11 @@ namespace MyPortalWeb.Controllers.BaseControllers
     [ApiController]
     public abstract class BaseApiController : ControllerBase
     {
-        protected IUserService UserService;
-        protected IRoleService RoleService;
+        protected readonly IUserService UserService;
 
-        public BaseApiController(IUserService userService, IRoleService roleService)
+        protected BaseApiController(IUserService userService)
         {
             UserService = userService;
-            RoleService = roleService;
         }
 
         protected async Task<UserModel> GetLoggedInUser()
@@ -42,12 +39,12 @@ namespace MyPortalWeb.Controllers.BaseControllers
         
         protected async Task<bool> UserHasPermission(PermissionRequirement requirement, params PermissionValue[] permissionValues)
         {
-            return await User.HasPermission(RoleService, requirement, permissionValues);
+            return await User.HasPermission(UserService, requirement, permissionValues);
         }
 
         protected async Task<bool> UserHasPermission(params PermissionValue[] permissionValues)
         {
-            return await User.HasPermission(RoleService, PermissionRequirement.RequireAny, permissionValues);
+            return await User.HasPermission(UserService, PermissionRequirement.RequireAny, permissionValues);
         }
 
         protected IActionResult HandleException(Exception ex)

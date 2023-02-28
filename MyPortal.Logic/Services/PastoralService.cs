@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using MyPortal.Database.Interfaces;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -18,37 +19,34 @@ public class PastoralService : BaseUserService, IPastoralService
 
     public async Task<IEnumerable<RegGroupModel>> GetRegGroups()
     {
-        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-        {
-            var regGroups = await unitOfWork.RegGroups.GetAll();
+        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        
+        var regGroups = await unitOfWork.RegGroups.GetAll();
 
-            var result = regGroups.Select(r => new RegGroupModel(r)).ToList();
+        var result = regGroups.Select(r => new RegGroupModel(r)).ToList();
 
-            return result.OrderBy(r => r.StudentGroup.Description);
-        }
+        return result.OrderBy(r => r.StudentGroup.Description);
     }
     
     public async Task<IEnumerable<YearGroupModel>> GetYearGroups()
     {
-        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-        {
-            var yearGroups = await unitOfWork.YearGroups.GetAll();
+        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        
+        var yearGroups = await unitOfWork.YearGroups.GetAll();
 
-            var models = yearGroups.Select(y => new YearGroupModel(y)).ToList();
+        var models = yearGroups.Select(y => new YearGroupModel(y)).ToList();
 
-            return models.OrderBy(m => m.StudentGroup.Description);
-        }
+        return models.OrderBy(m => m.StudentGroup.Description);
     }
     
     public async Task<IEnumerable<HouseModel>> GetHouses()
     {
-        await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-        {
-            var houses = await unitOfWork.Houses.GetAll();
+        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        
+        var houses = await unitOfWork.Houses.GetAll();
                 
-            var houseModels = houses.Select(h => new HouseModel(h)).ToList();
+        var houseModels = houses.Select(h => new HouseModel(h)).ToList();
 
-            return houseModels.OrderBy(h => h.StudentGroup.Description).ToList();
-        }
+        return houseModels.OrderBy(h => h.StudentGroup.Description).ToList();
     }
 }

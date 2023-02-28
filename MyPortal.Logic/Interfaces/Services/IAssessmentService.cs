@@ -9,7 +9,7 @@ using MyPortal.Logic.Models.Summary;
 
 namespace MyPortal.Logic.Interfaces.Services;
 
-public interface IAssessmentService
+public interface IAssessmentService : IService
 {
     Task<ResultModel> GetResult(Guid resultId);
     Task<ResultModel> GetResult(Guid studentId, Guid aspectId, Guid resultSetId);

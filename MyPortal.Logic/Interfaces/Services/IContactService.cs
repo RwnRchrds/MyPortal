@@ -8,7 +8,7 @@ using MyPortal.Logic.Models.Requests.Contact;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IContactService
+    public interface IContactService : IService
     {
         Task<IEnumerable<StudentModel>> GetReportableStudents(Guid contactId);
         Task CreateContact(ContactRequestModel contact);

@@ -22,9 +22,9 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/roles")]
     public class RolesController : BaseApiController
     {
-        private IRoleService _roleService;
+        private readonly IRoleService _roleService;
 
-        public RolesController(IUserService userService, IRoleService roleService) : base(userService, roleService)
+        public RolesController(IUserService userService, IRoleService roleService) : base(userService)
         {
             _roleService = roleService;
         }

@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration.EnvironmentVariables;
 using MyPortal.Database;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Helpers;
@@ -17,7 +18,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class ContactService : BasePersonService, IContactService
+    public class ContactService : BaseUserService, IContactService
     {
         public ContactService(ICurrentUser user) : base(user)
         {
@@ -25,63 +26,59 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<StudentModel>> GetReportableStudents(Guid contactId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var students = await unitOfWork.Students.GetByContact(contactId, true);
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var students = await unitOfWork.Students.GetByContact(contactId, true);
 
-                return students.Select(s => new StudentModel(s));
-            }
+            return students.Select(s => new StudentModel(s));
         }
 
         public async Task CreateContact(ContactRequestModel model)
         {
             Validate(model);
             
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var contact = new Contact
             {
-                var contact = new Contact
-                {
-                    JobTitle = model.JobTitle,
-                    NiNumber = model.NiNumber,
-                    PlaceOfWork = model.PlaceOfWork,
-                    ParentalBallot = model.ParentalBallot,
-                    Person = CreatePersonFromModel(model),
-                };
+                JobTitle = model.JobTitle,
+                NiNumber = model.NiNumber,
+                PlaceOfWork = model.PlaceOfWork,
+                ParentalBallot = model.ParentalBallot,
+                Person = PersonHelper.CreatePersonFromModel(model)
+            };
                     
-                unitOfWork.Contacts.Create(contact);
+            unitOfWork.Contacts.Create(contact);
 
-                await unitOfWork.SaveChangesAsync();
-            }
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task UpdateContact(Guid contactId, ContactRequestModel model)
         {
             Validate(model);
             
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var contact = await unitOfWork.Contacts.GetById(contactId);
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var contact = await unitOfWork.Contacts.GetById(contactId);
 
-                contact.JobTitle = model.JobTitle;
-                contact.NiNumber = model.NiNumber;
-                contact.PlaceOfWork = model.PlaceOfWork;
-                contact.ParentalBallot = model.ParentalBallot;
+            contact.JobTitle = model.JobTitle;
+            contact.NiNumber = model.NiNumber;
+            contact.PlaceOfWork = model.PlaceOfWork;
+            contact.ParentalBallot = model.ParentalBallot;
                     
-                UpdatePersonFromModel(contact.Person, model);
+            PersonHelper.UpdatePersonFromModel(contact.Person, model);
 
-                await unitOfWork.People.Update(contact.Person);
-                await unitOfWork.Contacts.Update(contact);
+            await unitOfWork.People.Update(contact.Person);
+            await unitOfWork.Contacts.Update(contact);
 
-                await unitOfWork.SaveChangesAsync();
-            }
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteContact(Guid contactId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                await unitOfWork.Contacts.Delete(contactId);
-            }
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            await unitOfWork.Contacts.Delete(contactId);
         }
     }
 }

@@ -335,6 +335,12 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.AddressTypeId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.AddressAgencies)
+                        .WithOne(x => x.AddressType)
+                        .HasForeignKey(x => x.AddressTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<Agency>(e =>

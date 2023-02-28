@@ -1,6 +1,7 @@
 ﻿using System;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Models.Data.Behaviour.Achievements;
 using MyPortal.Logic.Models.Structures;
@@ -46,7 +47,10 @@ public class StudentAchievementModel : BaseModelWithLoad
     
     public int Points { get; set; }
 
+    [EagerLoad]
     public virtual StudentModel Student { get; set; }
+    
+    [EagerLoad]
     public virtual AchievementModel Achievement { get; set; }
     public virtual AchievementOutcomeModel Outcome { get; set; }
     

@@ -52,7 +52,7 @@ namespace MyPortal.Logic.Extensions
         {
             services.AddTransient(s => s.GetService<HttpContext>()?.User);
             services.AddHttpContextAccessor();
-            services.AddScoped<ICurrentUser, CurrentUser>();
+            services.AddScoped<ICurrentUser, HttpCurrentUser>();
             services.AddScoped<IAcademicYearService, AcademicYearService>();
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IAddressService, AddressService>();

@@ -37,7 +37,6 @@
     <Folder Include="Models\Requests\Behaviour\Detentions" />
     <Folder Include="Models\Requests\Behaviour\Incidents" />
     <Folder Include="Models\Requests\Calendar" />
-    <Folder Include="Models\Requests\Contact" />
     <Folder Include="Models\Requests\Curriculum\Homework" />
     <Folder Include="Models\Requests\School\" />
   </ItemGroup>

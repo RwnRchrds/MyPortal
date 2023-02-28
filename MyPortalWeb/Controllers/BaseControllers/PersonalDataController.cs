@@ -13,9 +13,16 @@ namespace MyPortalWeb.Controllers.BaseControllers
 {
     public abstract class PersonalDataController : BaseApiController
     {
-        protected IStudentService StudentService;
-        protected IPersonService PersonService;
-        
+        protected readonly IPersonService PersonService;
+        protected readonly IStudentService StudentService;
+
+        protected PersonalDataController(IUserService userService, IPersonService personService,
+            IStudentService studentService) : base(userService)
+        {
+            PersonService = personService;
+            StudentService = studentService;
+        }
+
         protected async Task<bool> CanAccessPerson(Guid requestedPersonId)
         {
             var person = await PersonService.GetPersonWithTypes(requestedPersonId);
@@ -79,13 +86,6 @@ namespace MyPortalWeb.Controllers.BaseControllers
             }
 
             return false;
-        }
-
-        protected PersonalDataController(IStudentService studentService, IPersonService personService,
-            IUserService userService, IRoleService roleService) : base(userService, roleService)
-        {
-            StudentService = studentService;
-            PersonService = personService;
         }
     }
 }

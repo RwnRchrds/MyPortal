@@ -18,7 +18,7 @@ namespace MyPortalWeb.Middleware
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, IRoleService roleService)
+        public async Task InvokeAsync(HttpContext context, IUserService userService)
         {
             Endpoint endpoint = context.Features.Get<IEndpointFeature>()?.Endpoint;
             PermissionAttribute attribute = endpoint?.Metadata.GetMetadata<PermissionAttribute>();
@@ -26,7 +26,7 @@ namespace MyPortalWeb.Middleware
             if (attribute != null)
             {
                 if (context.User.IsAuthenticated() &&
-                    await context.User.HasPermission(roleService, attribute.Requirement, attribute.Permissions))
+                    await context.User.HasPermission(userService, attribute.Requirement, attribute.Permissions))
                 {
                     await _next(context);
                     return;

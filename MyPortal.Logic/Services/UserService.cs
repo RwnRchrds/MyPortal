@@ -70,51 +70,49 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<int>> GetPermissionValuesByUser(Guid userId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var rolePermissions = (await unitOfWork.UserRoles.GetByUser(userId)).ToList();
+
+            BitArray userPermissions = null;
+
+            foreach (var role in rolePermissions)
             {
-                var rolePermissions = (await unitOfWork.UserRoles.GetByUser(userId)).ToList();
+                var permissions = new BitArray(role.Role.Permissions);
 
-                BitArray userPermissions = null;
+                userPermissions = userPermissions == null ? permissions : userPermissions.And(permissions);
+            }
 
-                foreach (var role in rolePermissions)
+            var permIndexes = Enumerable.Range(0, Enum.GetNames(typeof(PermissionValue)).Length);
+
+            List<int> permissionValues = new List<int>();
+
+            if (userPermissions != null)
+            {
+                foreach (var permIndex in permIndexes)
                 {
-                    var permissions = new BitArray(role.Role.Permissions);
-
-                    userPermissions = userPermissions == null ? permissions : userPermissions.And(permissions);
-                }
-
-                var permIndexes = Enumerable.Range(0, Enum.GetNames(typeof(PermissionValue)).Length);
-
-                List<int> permissionValues = new List<int>();
-
-                if (userPermissions != null)
-                {
-                    foreach (var permIndex in permIndexes)
+                    if (userPermissions[permIndex])
                     {
-                        if (userPermissions[permIndex])
-                        {
-                            permissionValues.Add(permIndex);
-                        }
+                        permissionValues.Add(permIndex);
                     }
                 }
-
-                return permissionValues;
             }
+
+            return permissionValues;
         }
 
         public async Task<UserInfoModel> GetUserInfo(Guid userId)
         {
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
             var response = new UserInfoModel();
 
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var user = await unitOfWork.Users.GetById(userId);
-                var userModel = new UserModel(user);
+            var user = await unitOfWork.Users.GetById(userId);
+            var userModel = new UserModel(user);
 
-                response.DisplayName = userModel.GetDisplayName(NameFormat.FullNameNoTitle, true, false);
-                response.ProfileImage = await userModel.GetProfileImageAsBase64(unitOfWork);
-                response.Permissions = (await GetPermissionValuesByUser(userId)).ToArray();
-            }
+            response.DisplayName = userModel.GetDisplayName(NameFormat.FullNameNoTitle, true, false);
+            response.ProfileImage = await userModel.GetProfileImageAsBase64(unitOfWork);
+            response.Permissions = (await GetPermissionValuesByUser(userId)).ToArray();
 
             return response;
         }
@@ -224,16 +222,15 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteUser(Guid userId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var userRoles = await unitOfWork.UserRoles.GetByUser(userId);
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var userRoles = await unitOfWork.UserRoles.GetByUser(userId);
 
-                await RemoveFromRoles(userId, userRoles.Select(ur => ur.RoleId).ToArray());
+            await RemoveFromRoles(userId, userRoles.Select(ur => ur.RoleId).ToArray());
 
-                var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.FindByIdAsync(userId.ToString());
 
-                await _userManager.DeleteAsync(user);
-            }
+            await _userManager.DeleteAsync(user);
         }
 
         public async Task SetPassword(Guid userId, string newPassword)
@@ -410,22 +407,21 @@ namespace MyPortal.Logic.Services
 
         public async Task<UserModel> GetUserById(Guid userId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+
+            if (user == null)
             {
-                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
-
-                if (user == null)
-                {
-                    throw new NotFoundException("User not found.");
-                }
-
-                if (user.PersonId.HasValue)
-                {
-                    user.Person = await unitOfWork.People.GetById(user.PersonId.Value);
-                }
-
-                return new UserModel(user);
+                throw new NotFoundException("User not found.");
             }
+
+            if (user.PersonId.HasValue)
+            {
+                await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+                
+                user.Person = await unitOfWork.People.GetById(user.PersonId.Value);
+            }
+
+            return new UserModel(user);
         }
 
         public async Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal)

@@ -20,11 +20,11 @@ namespace MyPortalWeb.Controllers.Api
     [Authorize]
     public class CalendarController : PersonalDataController
     {
-        private ICalendarService _calendarService;
+        private readonly ICalendarService _calendarService;
 
-        public CalendarController(IStudentService studentService, IPersonService personService,
-            IUserService userService, IRoleService roleService, ICalendarService calendarService)
-            : base(studentService, personService, userService, roleService)
+        public CalendarController(IUserService userService, IPersonService personService,
+            IStudentService studentService, ICalendarService calendarService) 
+            : base(userService, personService, studentService)
         {
             _calendarService = calendarService;
         }
@@ -44,13 +44,13 @@ namespace MyPortalWeb.Controllers.Api
 
             if (diaryEvent.Public)
             {
-                if (await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
+                if (await User.HasPermission(UserService, PermissionRequirement.RequireAll,
                         PermissionValue.SchoolViewSchoolDiary))
                 {
                     response.CanView = true;
                 }
 
-                if (await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
+                if (await User.HasPermission(UserService, PermissionRequirement.RequireAll,
                         PermissionValue.SchoolEditSchoolDiary))
                 {
                     response.CanEdit = true;
@@ -92,7 +92,7 @@ namespace MyPortalWeb.Controllers.Api
                     {
                         dateRange = new DateRange(dateFrom.Value, dateTo.Value);
                     }
-
+                    
                     var events =
                         await _calendarService.GetCalendarEventsByPerson(personId, dateRange.Start, dateRange.End);
 
@@ -114,7 +114,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (model.IsPublic && !await User.HasPermission(RoleService, PermissionRequirement.RequireAll,
+                if (model.IsPublic && !await User.HasPermission(UserService, PermissionRequirement.RequireAll,
                         PermissionValue.SchoolEditSchoolDiary))
                 {
                     return Error(403, "You do not have permission to edit the school diary.");

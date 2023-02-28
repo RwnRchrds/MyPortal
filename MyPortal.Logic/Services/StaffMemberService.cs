@@ -20,72 +20,68 @@ namespace MyPortal.Logic.Services
 
         public async Task<bool> IsLineManager(Guid staffMemberId, Guid lineManagerId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var staffMember = await unitOfWork.StaffMembers.GetById(staffMemberId);
+
+            if (staffMember == null)
             {
-                var staffMember = await unitOfWork.StaffMembers.GetById(staffMemberId);
-
-                if (staffMember == null)
-                {
-                    throw new NotFoundException("Staff member not found.");
-                }
-
-                if (staffMember.LineManagerId == null)
-                {
-                    return false;
-                }
-
-                if (staffMember.LineManagerId == lineManagerId)
-                {
-                    return true;
-                }
-
-                return await IsLineManager(staffMember.LineManagerId.Value, lineManagerId);
+                throw new NotFoundException("Staff member not found.");
             }
+
+            if (staffMember.LineManagerId == null)
+            {
+                return false;
+            }
+
+            if (staffMember.LineManagerId == lineManagerId)
+            {
+                return true;
+            }
+
+            return await IsLineManager(staffMember.LineManagerId.Value, lineManagerId);
         }
 
         public async Task<StaffMemberModel> GetById(Guid staffMemberId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var staffMember = await unitOfWork.StaffMembers.GetById(staffMemberId);
+
+            if (staffMember == null)
             {
-                var staffMember = await unitOfWork.StaffMembers.GetById(staffMemberId);
-
-                if (staffMember == null)
-                {
-                    throw new NotFoundException("Staff member not found.");
-                }
-
-                return new StaffMemberModel(staffMember);
+                throw new NotFoundException("Staff member not found.");
             }
+
+            return new StaffMemberModel(staffMember);
         }
 
         public async Task<StaffMemberModel> GetByPersonId(Guid personId, bool throwIfNotFound = true)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var staffMember = await unitOfWork.StaffMembers.GetByPersonId(personId);
+
+            if (staffMember == null && throwIfNotFound)
             {
-                var staffMember = await unitOfWork.StaffMembers.GetByPersonId(personId);
-
-                if (staffMember == null && throwIfNotFound)
-                {
-                    throw new NotFoundException("Staff member not found.");
-                }
-
-                return new StaffMemberModel(staffMember);
+                throw new NotFoundException("Staff member not found.");
             }
+
+            return new StaffMemberModel(staffMember);
         }
 
         public async Task<StaffMemberModel> GetByUserId(Guid userId, bool throwIfNotFound = true)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var staffMember = await unitOfWork.StaffMembers.GetByUserId(userId);
+
+            if (staffMember == null && throwIfNotFound)
             {
-                var staffMember = await unitOfWork.StaffMembers.GetByUserId(userId);
-
-                if (staffMember == null && throwIfNotFound)
-                {
-                    throw new NotFoundException("Staff member not found.");
-                }
-
-                return new StaffMemberModel(staffMember);
+                throw new NotFoundException("Staff member not found.");
             }
+
+            return new StaffMemberModel(staffMember);
         }
     }
 }

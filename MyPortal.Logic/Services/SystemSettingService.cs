@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using MyPortal.Database.Interfaces;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
@@ -17,27 +18,25 @@ namespace MyPortal.Logic.Services
 
         public async Task SetValue(string name, string value)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                await unitOfWork.SystemSettings.Update(name, value);
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            await unitOfWork.SystemSettings.Update(name, value);
 
-                await unitOfWork.SaveChangesAsync();
-            }
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task<int> GetDatabaseVersion()
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var databaseVersion = await unitOfWork.SystemSettings.Get("DatabaseVersion");
+
+            if (databaseVersion == null)
             {
-                var databaseVersion = await unitOfWork.SystemSettings.Get("DatabaseVersion");
-
-                if (databaseVersion == null)
-                {
-                    throw new NotFoundException("Database version not found.");
-                }
-
-                return Convert.ToInt32(databaseVersion.Setting);
+                throw new NotFoundException("Database version not found.");
             }
+
+            return Convert.ToInt32(databaseVersion.Setting);
         }
     }
 }

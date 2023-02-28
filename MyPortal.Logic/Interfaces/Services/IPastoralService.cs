@@ -5,7 +5,7 @@ using MyPortal.Logic.Models.Data.Curriculum;
 
 namespace MyPortal.Logic.Interfaces.Services;
 
-public interface IPastoralService
+public interface IPastoralService : IService
 {
     Task<IEnumerable<RegGroupModel>> GetRegGroups();
     Task<IEnumerable<YearGroupModel>> GetYearGroups();

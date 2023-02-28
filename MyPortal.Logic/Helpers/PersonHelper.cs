@@ -1,17 +1,12 @@
 ﻿using System;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Requests.Person;
 
-namespace MyPortal.Logic.Services;
+namespace MyPortal.Logic.Helpers;
 
-public class BasePersonService : BaseUserService
+public class PersonHelper
 {
-    public BasePersonService(ICurrentUser user) : base(user)
-    {
-    }
-
-    protected Person CreatePersonFromModel(PersonRequestModel model)
+    public static Person CreatePersonFromModel(PersonRequestModel model)
     {
         var createDate = DateTime.Now;
 
@@ -36,7 +31,7 @@ public class BasePersonService : BaseUserService
         };
     }
 
-    protected void UpdatePersonFromModel(Person person, PersonRequestModel requestModel)
+    public static void UpdatePersonFromModel(Person person, PersonRequestModel requestModel)
     {
         person.FirstName = requestModel.FirstName;
         person.PreferredFirstName = requestModel.PreferredFirstName;

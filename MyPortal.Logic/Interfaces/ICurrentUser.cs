@@ -9,5 +9,4 @@ namespace MyPortal.Logic.Interfaces;
 public interface ICurrentUser
 {
     Guid GetUserId();
-    ClaimsPrincipal GetPrincipal();
 }

@@ -7,7 +7,7 @@ using MyPortal.Logic.Models.Data.Students;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface ISenService
+    public interface ISenService : IService
     {
         Task<IEnumerable<GiftedTalentedModel>> GetGiftedTalentedSubjects(Guid studentId);
     }

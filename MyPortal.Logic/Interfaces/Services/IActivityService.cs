@@ -1,6 +1,6 @@
 ﻿namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IActivityService
+    public interface IActivityService : IService
     {
         
     }

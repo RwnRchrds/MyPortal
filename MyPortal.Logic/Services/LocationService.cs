@@ -20,12 +20,11 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<LocationModel>> GetLocations()
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var locations = await unitOfWork.Locations.GetAll();
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var locations = await unitOfWork.Locations.GetAll();
 
-                return locations.Select(l => new LocationModel(l));
-            }
+            return locations.Select(l => new LocationModel(l));
         }
     }
 }

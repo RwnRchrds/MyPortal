@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Constants;
-using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Behaviour.Achievements;
@@ -24,15 +23,16 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/behaviour")]
     public class BehaviourController : PersonalDataController
     {
-        private IBehaviourService _behaviourService;
-        private IAcademicYearService _academicYearService;
+        private readonly IBehaviourService _behaviourService;
+        private readonly IAcademicYearService _academicYearService;
 
-        public BehaviourController(IStudentService studentService, IPersonService personService, IUserService userService,
-            IRoleService roleService, IBehaviourService behaviourService, IAcademicYearService academicYearService)
-            : base(studentService, personService, userService, roleService)
+        public BehaviourController(IUserService userService, IPersonService personService,
+            IStudentService studentService, IBehaviourService behaviourService,
+                IAcademicYearService academicYearService)
+            : base(userService, personService, studentService)
         {
-            _behaviourService = behaviourService;
             _academicYearService = academicYearService;
+            _behaviourService = behaviourService;
         }
 
         [HttpGet]
@@ -64,7 +64,8 @@ namespace MyPortalWeb.Controllers.Api
         [Route("students/{studentId}/achievements", Name = "ApiAchievementGetByStudent")]
         [Permission(PermissionValue.BehaviourViewAchievements)]
         [ProducesResponseType(typeof(IEnumerable<StudentAchievementSummaryModel>), 200)]
-        public async Task<IActionResult> GetAchievementsByStudent([FromRoute] Guid studentId, [FromQuery] Guid? academicYearId)
+        public async Task<IActionResult> GetAchievementsByStudent([FromRoute] Guid studentId,
+            [FromQuery] Guid? academicYearId)
         {
             try
             {
@@ -72,14 +73,16 @@ namespace MyPortalWeb.Controllers.Api
                 
                 if (await CanAccessPerson(student.PersonId))
                 {
-                    var fromAcademicYearId = academicYearId ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id;
+                    var fromAcademicYearId = academicYearId 
+                                             ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id;
 
                     if (fromAcademicYearId == null)
                     {
                         return Error(HttpStatusCode.BadRequest, "No academic year is currently selected.");
                     }
-
-                    var achievements = await _behaviourService.GetAchievementsByStudent(studentId, fromAcademicYearId.Value);
+                    
+                    var achievements = 
+                        await _behaviourService.GetAchievementsByStudent(studentId, fromAcademicYearId.Value);
 
                     return Ok(achievements);
                 }
@@ -187,14 +190,16 @@ namespace MyPortalWeb.Controllers.Api
                 
                 if (await CanAccessPerson(student.PersonId))
                 {
-                    var fromAcademicYearId = academicYearId ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id;
+                    var fromAcademicYearId = academicYearId 
+                                             ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id;
 
                     if (fromAcademicYearId == null)
                     {
                         return Error(HttpStatusCode.BadRequest, "No academic year is currently selected.");
                     }
-
-                    var incidents = (await _behaviourService.GetIncidentsByStudent(studentId, fromAcademicYearId.Value)).ToList();
+                    
+                    var incidents = 
+                        (await _behaviourService.GetIncidentsByStudent(studentId, fromAcademicYearId.Value)).ToList();
 
                     return Ok(incidents);
                 }

@@ -29,12 +29,11 @@ namespace MyPortal.Logic.Services
 
         private async Task<string> GetLocalSchoolNameFromDb()
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var localSchoolName = await unitOfWork.Schools.GetLocalSchoolName();
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var localSchoolName = await unitOfWork.Schools.GetLocalSchoolName();
 
-                return localSchoolName;
-            }
+            return localSchoolName;
         }
 
         public async Task<string> GetLocalSchoolName()
@@ -48,121 +47,114 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<BulletinModel>> GetBulletins(BulletinSearchOptions searchOptions)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var bulletins = await unitOfWork.Bulletins.GetBulletins(searchOptions);
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var bulletins = await unitOfWork.Bulletins.GetBulletins(searchOptions);
 
-                return bulletins.Select(b => new BulletinModel(b));
-            }
+            return bulletins.Select(b => new BulletinModel(b));
         }
 
         public async Task<IEnumerable<BulletinSummaryModel>> GetBulletinSummaries(BulletinSearchOptions searchOptions)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var bulletins = await unitOfWork.Bulletins.GetBulletinDetails(searchOptions);
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var bulletins = await unitOfWork.Bulletins.GetBulletinDetails(searchOptions);
 
-                return bulletins.Select(b => new BulletinSummaryModel(b));
-            }
+            return bulletins.Select(b => new BulletinSummaryModel(b));
         }
 
         public async Task<BulletinPageResponse> GetBulletinSummaries(BulletinSearchOptions searchOptions, PageFilter filter)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var bulletins = await unitOfWork.Bulletins.GetBulletinDetails(searchOptions, filter);
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var bulletins = await unitOfWork.Bulletins.GetBulletinDetails(searchOptions, filter);
 
-                var response = new BulletinPageResponse(bulletins);
+            var response = new BulletinPageResponse(bulletins);
 
-                return response;
-            }
+            return response;
         }
 
         public async Task<BulletinModel> CreateBulletin(BulletinRequestModel model)
         {
             Validate(model);
             
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var bulletin = new Bulletin
             {
-                var bulletin = new Bulletin
+                Title = model.Title,
+                Detail = model.Detail,
+                CreatedDate = DateTime.Now,
+                CreatedById = User.GetUserId(),
+                ExpireDate = model.ExpireDate,
+                Private = model.Private,
+                Directory = new Directory
                 {
-                    Title = model.Title,
-                    Detail = model.Detail,
-                    CreatedDate = DateTime.Now,
-                    CreatedById = User.GetUserId(),
-                    ExpireDate = model.ExpireDate,
-                    Private = model.Private,
-                    Directory = new Directory
-                    {
-                        Name = "bulletin-root",
-                        Private = model.Private
-                    },
-                    Approved = false
-                };
+                    Name = "bulletin-root",
+                    Private = model.Private
+                },
+                Approved = false
+            };
                     
-                unitOfWork.Bulletins.Create(bulletin);
+            unitOfWork.Bulletins.Create(bulletin);
 
-                await unitOfWork.SaveChangesAsync();
+            await unitOfWork.SaveChangesAsync();
 
-                return new BulletinModel(bulletin);
-            }
+            return new BulletinModel(bulletin);
         }
 
         public async Task UpdateBulletin(Guid bulletinId, BulletinRequestModel model)
         {
             Validate(model);
             
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var bulletin = await unitOfWork.Bulletins.GetById(bulletinId);
+
+            if (bulletin == null)
             {
-                var bulletin = await unitOfWork.Bulletins.GetById(bulletinId);
-
-                if (bulletin == null)
-                {
-                    throw new NotFoundException("Bulletin not found.");
-                }
-
-                bulletin.Title = model.Title;
-                bulletin.Detail = model.Detail;
-                bulletin.ExpireDate = model.ExpireDate;
-                bulletin.Private = model.Private;
-                bulletin.Directory.Private = model.Private;
-
-                await unitOfWork.Bulletins.Update(bulletin);
-
-                await unitOfWork.SaveChangesAsync();
+                throw new NotFoundException("Bulletin not found.");
             }
+
+            bulletin.Title = model.Title;
+            bulletin.Detail = model.Detail;
+            bulletin.ExpireDate = model.ExpireDate;
+            bulletin.Private = model.Private;
+            bulletin.Directory.Private = model.Private;
+
+            await unitOfWork.Bulletins.Update(bulletin);
+
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteBulletin(Guid bulletinId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var bulletin = await unitOfWork.Bulletins.GetById(bulletinId);
+
+            if (bulletin == null)
             {
-                var bulletin = await unitOfWork.Bulletins.GetById(bulletinId);
-
-                if (bulletin == null)
-                {
-                    throw new NotFoundException("Bulletin not found.");
-                }
-
-                await unitOfWork.Bulletins.Delete(bulletinId);
+                throw new NotFoundException("Bulletin not found.");
             }
+
+            await unitOfWork.Bulletins.Delete(bulletinId);
         }
 
         public async Task SetBulletinApproved(ApproveBulletinRequestModel model)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var bulletin = await unitOfWork.Bulletins.GetById(model.BulletinId);
+
+            if (bulletin == null)
             {
-                var bulletin = await unitOfWork.Bulletins.GetById(model.BulletinId);
-
-                if (bulletin == null)
-                {
-                    throw new NotFoundException("Bulletin not found");
-                }
-
-                bulletin.Approved = model.Approved;
-
-                await unitOfWork.SaveChangesAsync();
+                throw new NotFoundException("Bulletin not found");
             }
+
+            bulletin.Approved = model.Approved;
+
+            await unitOfWork.SaveChangesAsync();
         }
     }
 }

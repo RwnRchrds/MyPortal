@@ -16,10 +16,9 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/bills")]
     public class BillsController : BaseApiController
     {
-        private IBillService _billService;
+        private readonly IBillService _billService;
 
-        public BillsController(IUserService userService, IRoleService roleService, IBillService billService) : base(
-            userService, roleService)
+        public BillsController(IUserService userService, IBillService billService) : base(userService)
         {
             _billService = billService;
         }

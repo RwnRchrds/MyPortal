@@ -8,7 +8,7 @@ using MyPortal.Logic.Models.Requests.Person.Tasks;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface ITaskService
+    public interface ITaskService : IService
     {
         Task CreateTask(TaskRequestModel task);
 

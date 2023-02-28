@@ -8,7 +8,7 @@ using MyPortal.Logic.Models.Requests.Curriculum.Homework;
 
 namespace MyPortal.Logic.Interfaces.Services;
 
-public interface IHomeworkService
+public interface IHomeworkService : IService
 {
     Task<IEnumerable<HomeworkItemModel>> GetHomework(HomeworkSearchOptions searchOptions);
     Task CreateHomework(HomeworkRequestModel homework);

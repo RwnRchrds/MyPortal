@@ -14,29 +14,20 @@ namespace MyPortalWeb.Services
     public class ProfileService : IProfileService
     {
         private readonly UserManager<User> _userManager;
-        private readonly IUserService _userService;
 
-        public ProfileService(UserManager<User> userManager, IUserService userService)
+        public ProfileService(UserManager<User> userManager)
         {
             _userManager = userManager;
-            _userService = userService;
         }
 
         public async System.Threading.Tasks.Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             var user = await _userManager.GetUserAsync(context.Subject);
 
-            var roles = await _userService.GetUserRoles(user.Id);
-
             var claims = new List<Claim>
             {
                 new (ApplicationClaimTypes.UserType, user.UserType.ToString())
             };
-
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role.Id.Value.ToString("N")));
-            }
 
             context.IssuedClaims.AddRange(claims);
         }

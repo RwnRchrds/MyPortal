@@ -42,7 +42,7 @@ namespace MyPortal.Logic.Extensions
             return hasType && claimValue == userType;
         }
 
-        public static async Task<bool> HasPermission(this ClaimsPrincipal principal, IRoleService roleService,
+        public static async Task<bool> HasPermission(this ClaimsPrincipal principal, IUserService userService, 
             PermissionRequirement requirement, params PermissionValue[] permissionValues)
         {
             if (!permissionValues.Any())
@@ -50,30 +50,27 @@ namespace MyPortal.Logic.Extensions
                 return true;
             }
 
-            var roleClaims = principal.FindAll(c => c.Type == ClaimTypes.Role);
+            var roles = await userService.GetUserRoles(principal.GetUserId());
 
-            foreach (var roleClaim in roleClaims)
+            foreach (var role in roles)
             {
-                if (Guid.TryParse(roleClaim.Value, out Guid roleId))
+                // Use cached role here to improve performance
+                //var role = await roleService.GetRoleById(roleId, true);
+
+                var rolePermissions = new BitArray(role.Permissions);
+
+                foreach (var permissionValue in permissionValues)
                 {
-                    // Use cached role here to improve performance
-                    var role = await roleService.GetRoleById(roleId, true);
-
-                    var rolePermissions = new BitArray(role.Permissions);
-
-                    foreach (var permissionValue in permissionValues)
+                    if (rolePermissions[(int)permissionValue])
                     {
-                        if (rolePermissions[(int)permissionValue])
+                        if (requirement == PermissionRequirement.RequireAny)
                         {
-                            if (requirement == PermissionRequirement.RequireAny)
-                            {
-                                return true;   
-                            }
+                            return true;   
                         }
-                        else if (requirement == PermissionRequirement.RequireAll)
-                        {
-                            return false;
-                        }
+                    }
+                    else if (requirement == PermissionRequirement.RequireAll)
+                    {
+                        return false;
                     }
                 }
             }

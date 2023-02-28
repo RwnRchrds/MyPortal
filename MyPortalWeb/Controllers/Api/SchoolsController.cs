@@ -25,7 +25,12 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/schools")]
     public class SchoolsController : BaseApiController
     {
-        private ISchoolService _schoolService;
+        private readonly ISchoolService _schoolService;
+
+        public SchoolsController(IUserService userService, ISchoolService schoolService) : base(userService)
+        {
+            _schoolService = schoolService;
+        }
 
         private async Task SetBulletinSearchOptions(BulletinSearchOptions searchOptions)
         {
@@ -45,12 +50,6 @@ namespace MyPortalWeb.Controllers.Api
                 searchOptions.IncludeUnapproved = false;
                 searchOptions.IncludeExpired = false;
             }
-        }
-
-        public SchoolsController(IUserService userService, IRoleService roleService, ISchoolService schoolService) :
-            base(userService, roleService)
-        {
-            _schoolService = schoolService;
         }
 
         [HttpGet]

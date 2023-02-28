@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Assessment;
 using MyPortal.Logic.Models.Requests.Assessment;
@@ -12,12 +13,13 @@ using MyPortalWeb.Controllers.BaseControllers;
 namespace MyPortalWeb.Controllers.Api;
 
 [Microsoft.AspNetCore.Components.Route("api/assessment")]
-public class AssessmentController : PersonalDataController
+public sealed class AssessmentController : PersonalDataController
 {
     private readonly IAssessmentService _assessmentService;
 
-    public AssessmentController(IStudentService studentService, IPersonService personService, IUserService userService,
-        IRoleService roleService, IAssessmentService assessmentService) : base(studentService, personService, userService, roleService)
+    public AssessmentController(IUserService userService, IPersonService personService, IStudentService studentService,
+        IAssessmentService assessmentService) 
+        : base(userService, personService, studentService)
     {
         _assessmentService = assessmentService;
     }

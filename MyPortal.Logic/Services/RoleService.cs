@@ -34,37 +34,33 @@ namespace MyPortal.Logic.Services
 
         public async Task<TreeNode> GetPermissionsTree(Guid roleId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var role = await _roleManager.FindByIdAsync(roleId.ToString());
+            var role = await _roleManager.FindByIdAsync(roleId.ToString());
 
-                var root = PermissionTree.Create(role.Permissions);
+            var root = PermissionTree.Create(role.Permissions);
 
-                root.SetEnabled(!role.System);
+            root.SetEnabled(!role.System);
 
-                return root;
-            }
+            return root;
         }
 
         private async Task SetPermissions(Guid roleId, params int[] permValues)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            var role = await unitOfWork.Roles.GetById(roleId);
+
+            var permArray = PermissionHelper.CreatePermissionArray();
+
+            foreach (var permValue in permValues)
             {
-                var role = await unitOfWork.Roles.GetById(roleId);
-
-                var permArray = PermissionHelper.CreatePermissionArray();
-
-                foreach (var permValue in permValues)
-                {
-                    permArray.Set(permValue, true);
-                }
-
-                role.Permissions = permArray.ToBytes();
-
-                await unitOfWork.Roles.Update(role);
-
-                await unitOfWork.SaveChangesAsync();
+                permArray.Set(permValue, true);
             }
+
+            role.Permissions = permArray.ToBytes();
+
+            await unitOfWork.Roles.Update(role);
+
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Guid>> CreateRole(RoleRequestModel request)
@@ -125,23 +121,22 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteRole(Guid roleId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            await unitOfWork.UserRoles.DeleteAllByRole(roleId);
+
+            await unitOfWork.SaveChangesAsync();
+
+            var roleInDb = await _roleManager.FindByIdAsync(roleId.ToString());
+
+            if (roleInDb.System)
             {
-                await unitOfWork.UserRoles.DeleteAllByRole(roleId);
-
-                await unitOfWork.SaveChangesAsync();
-
-                var roleInDb = await _roleManager.FindByIdAsync(roleId.ToString());
-
-                if (roleInDb.System)
-                {
-                    throw new LogicException("Cannot delete a system role.");
-                }
-
-                await _roleManager.DeleteAsync(roleInDb);
-
-                await CacheHelper.RoleCache.Purge(roleId);
+                throw new LogicException("Cannot delete a system role.");
             }
+
+            await _roleManager.DeleteAsync(roleInDb);
+
+            await CacheHelper.RoleCache.Purge(roleId);
         }
 
         public async Task<IEnumerable<RoleModel>> GetRoles(string roleName)

@@ -17,9 +17,9 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/pastoral")]
     public class PastoralController : BaseApiController
     {
-        private IPastoralService _pastoralService;
+        private readonly IPastoralService _pastoralService;
 
-        public PastoralController(IUserService userService, IRoleService roleService, IPastoralService pastoralService) : base(userService, roleService)
+        public PastoralController(IUserService userService, IPastoralService pastoralService) : base(userService)
         {
             _pastoralService = pastoralService;
         }

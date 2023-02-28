@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
@@ -19,9 +20,9 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<BillModel>> GenerateChargeBills(Guid chargeBillingPeriodId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                ChargeBillingPeriod chargeBillingPeriod = await unitOfWork.ChargeBillingPeriods.GetById(chargeBillingPeriodId);
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            
+            ChargeBillingPeriod chargeBillingPeriod = await unitOfWork.ChargeBillingPeriods.GetById(chargeBillingPeriodId);
 
                 var billableStudents =
                     (await unitOfWork.StudentCharges.GetOutstandingByBillingPeriod(chargeBillingPeriodId)).GroupBy(sc =>
@@ -71,10 +72,11 @@ namespace MyPortal.Logic.Services
 
                 // TODO: Do we want to immediately write these to the database?
                 // Might be better to let the user review the bills first before saving
+                
+                // ^It creates the bills with dispatched = false, so users can review bills before dispatching them
                 await unitOfWork.SaveChangesAsync();
 
                 return generatedBills.Select(b => new BillModel(b));
-            }
         }
     }
 }

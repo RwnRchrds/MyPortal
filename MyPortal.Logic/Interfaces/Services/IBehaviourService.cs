@@ -16,7 +16,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IBehaviourService
+    public interface IBehaviourService : IService
     {
         #region Achievements
         Task<IEnumerable<StudentAchievementSummaryModel>> GetAchievementsByStudent(Guid studentId, Guid academicYearId);

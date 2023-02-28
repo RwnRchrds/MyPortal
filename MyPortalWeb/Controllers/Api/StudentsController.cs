@@ -23,11 +23,11 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/students")]
     public class StudentsController : PersonalDataController
     {
-        private IAcademicYearService _academicYearService;
+        private readonly IAcademicYearService _academicYearService;
 
-        public StudentsController(IAcademicYearService academicYearService, IStudentService studentService,
-            IPersonService personService, IUserService userService, IRoleService roleService) :
-            base(studentService, personService, userService, roleService)
+        public StudentsController(IUserService userService, IPersonService personService,
+            IStudentService studentService, IAcademicYearService academicYearService) 
+            : base(userService, personService, studentService)
         {
             _academicYearService = academicYearService;
         }

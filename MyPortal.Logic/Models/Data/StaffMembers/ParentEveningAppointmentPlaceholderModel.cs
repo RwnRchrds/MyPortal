@@ -3,9 +3,9 @@ using MyPortal.Logic.Models.Structures;
 
 namespace MyPortal.Logic.Models.Data.StaffMembers
 {
-    public class ParentEveningAppointmentTemplateModel
+    public class ParentEveningAppointmentPlaceholderModel
     {
-        public ParentEveningAppointmentTemplateModel(Guid parentEveningId, Guid staffMemberId, DateTime start, DateTime end)
+        public ParentEveningAppointmentPlaceholderModel(Guid parentEveningId, Guid staffMemberId, DateTime start, DateTime end)
         {
             ParentEveningId = parentEveningId;
             StaffMemberId = staffMemberId;

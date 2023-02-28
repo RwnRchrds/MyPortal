@@ -12,7 +12,7 @@ using MyPortal.Logic.Models.Summary;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface ISchoolService
+    public interface ISchoolService : IService
     {
         Task<string> GetLocalSchoolName();
         Task<IEnumerable<BulletinModel>> GetBulletins(BulletinSearchOptions searchOptions);

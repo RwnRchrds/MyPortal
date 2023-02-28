@@ -6,7 +6,7 @@ using MyPortal.Logic.Models.DocumentProvision;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IFileService
+    public interface IFileService : IService
     {
         Task RemoveFileFromDocument(Guid documentId);
     }

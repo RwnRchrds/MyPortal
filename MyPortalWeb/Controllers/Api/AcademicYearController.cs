@@ -13,11 +13,11 @@ namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
     [Route("api/academicYears")]
-    public class AcademicYearController : BaseApiController
+    public sealed class AcademicYearController : BaseApiController
     {
-        private IAcademicYearService _academicYearService;
+        private readonly IAcademicYearService _academicYearService;
 
-        public AcademicYearController(IUserService userService, IRoleService roleService, IAcademicYearService academicYearService) : base(userService, roleService)
+        public AcademicYearController(IUserService userService, IAcademicYearService academicYearService) : base(userService)
         {
             _academicYearService = academicYearService;
         }

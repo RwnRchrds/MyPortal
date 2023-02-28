@@ -8,7 +8,7 @@ using MyPortal.Logic.Models.Structures;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface ICalendarService
+    public interface ICalendarService : IService
     {
         Task<IEnumerable<DiaryEventTypeModel>> GetEventTypes(bool includeReserved = false);
 

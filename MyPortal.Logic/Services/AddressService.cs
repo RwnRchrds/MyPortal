@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -19,12 +21,19 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<AddressModel>> GetAddressesByPerson(Guid personId)
         {
-            await using (var unitOfWork = await DataConnectionFactory.CreateUnitOfWork())
-            {
-                var addresses = await unitOfWork.Addresses.GetAddressesByPerson(personId);
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            var addresses = await unitOfWork.Addresses.GetAddressesByPerson(personId);
 
-                return addresses.Select(a => new AddressModel(a)).ToList();
-            }
+            return addresses.Select(a => new AddressModel(a)).ToList();
+        }
+
+        public async Task<IEnumerable<AddressModel>> GetMatchingAddresses(AddressSearchOptions searchOptions)
+        {
+            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+
+            var matchingAddresses = await unitOfWork.Addresses.GetAll(searchOptions);
+
+            return matchingAddresses.Select(a => new AddressModel(a)).ToArray();
         }
     }
 }

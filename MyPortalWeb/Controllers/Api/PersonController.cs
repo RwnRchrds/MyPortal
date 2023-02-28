@@ -18,11 +18,10 @@ namespace MyPortalWeb.Controllers.Api
     [Authorize]
     public class PersonController : PersonalDataController
     {
-        public PersonController(IStudentService studentService, IPersonService personService, IUserService userService,
-            IRoleService roleService) : base(studentService, personService, userService, roleService)
+        public PersonController(IUserService userService, IPersonService personService, IStudentService studentService) 
+            : base(userService, personService, studentService)
         {
         }
-
 
         [HttpGet]
         [Authorize(Policy = Policies.UserType.Staff)]

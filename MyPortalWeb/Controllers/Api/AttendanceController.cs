@@ -20,10 +20,9 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/attendance")]
     public class AttendanceController : BaseApiController
     {
-        private IAttendanceService _attendanceService;
+        private readonly IAttendanceService _attendanceService;
 
-        public AttendanceController(IUserService userService, IRoleService roleService,
-            IAttendanceService attendanceService) : base(userService, roleService)
+        public AttendanceController(IUserService userService, IAttendanceService attendanceService) : base(userService)
         {
             _attendanceService = attendanceService;
         }

@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IRoleService
+    public interface IRoleService : IService
     {
         Task<IEnumerable<Guid>> CreateRole(RoleRequestModel role);
         Task UpdateRole(Guid roleId, RoleRequestModel role);

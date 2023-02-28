@@ -6,7 +6,7 @@ using MyPortal.Logic.Models.Data.Students;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IStudentGroupService
+    public interface IStudentGroupService : IService
     {
         Task<IEnumerable<StudentModel>> GetStudents(Guid groupId);
     }

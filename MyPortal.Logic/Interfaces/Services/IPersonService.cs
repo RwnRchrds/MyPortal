@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Data.People;
+using MyPortal.Logic.Models.Requests.Person;
 
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IPersonService
+    public interface IPersonService : IService
     {
         Task<IEnumerable<PersonModel>> GetPeople(PersonSearchOptions searchModel);
         Task<PersonModel> GetPersonByUserId(Guid userId, bool throwIfNotFound = true);

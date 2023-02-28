@@ -24,56 +24,6 @@ public class MarksheetEntryDataModel
     public ICollection<MarksheetColumnDataModel> Columns { get; set; }
     public ICollection<MarksheetStudentDataModel> Students { get; set; }
 
-    public async Task PopulateColumns(IUnitOfWork unitOfWork, IEnumerable<MarksheetColumnModel> columnCollection)
-    {
-        Dictionary<Guid, GradeModel[]> gradeSets = new Dictionary<Guid, GradeModel[]>();
-
-        foreach (var columnModel in columnCollection)
-        {
-            if (columnModel.Aspect.GradeSetId.HasValue && !gradeSets.ContainsKey(columnModel.Aspect.GradeSetId.Value))
-            {
-                var grades = (await unitOfWork.Grades.GetByGradeSet(columnModel.Aspect.GradeSetId.Value))
-                    .Select(g => new GradeModel(g)).ToArray();
-                
-                if (grades.Any())
-                {
-                    gradeSets.Add(columnModel.Aspect.GradeSetId.Value, grades);
-                }
-            }
-
-            var column = new MarksheetColumnDataModel
-            {
-                Header = columnModel.Aspect.ColumnHeading,
-                ResultSetId = columnModel.ResultSetId,
-                ResultSetName = columnModel.ResultSet.Name,
-                AspectTypeId = columnModel.Aspect.TypeId,
-                Order = columnModel.DisplayOrder,
-                AspectId = columnModel.AspectId,
-                IsReadOnly = columnModel.ResultSet.Locked || columnModel.ReadOnly || Completed
-            };
-
-            var aspectType = columnModel.Aspect.TypeId;
-
-            if (aspectType == AspectTypes.Grade)
-            {
-                if (!columnModel.Aspect.GradeSetId.HasValue ||
-                    !gradeSets.TryGetValue(columnModel.Aspect.GradeSetId.Value, out var columnGrades))
-                {
-                    throw new NotFoundException("Grade set not found.");
-                }
-
-                column.Grades = columnGrades;
-            }
-            else if (aspectType == AspectTypes.MarkDecimal || aspectType == AspectTypes.MarkInteger)
-            {
-                column.MinMark = columnModel.Aspect.MinMark;
-                column.MaxMark = columnModel.Aspect.MaxMark;
-            }
-            
-            Columns.Add(column);
-        }
-    }
-
     public void PopulateResults(IEnumerable<ResultDetailModel> results)
     {
         var data = new List<MarksheetStudentDataModel>();

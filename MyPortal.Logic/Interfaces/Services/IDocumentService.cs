@@ -9,7 +9,7 @@ using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
-    public interface IDocumentService
+    public interface IDocumentService : IService
     {
         Task CreateDocument(DocumentRequestModel document);
         Task UpdateDocument(Guid documentId, DocumentRequestModel document);
