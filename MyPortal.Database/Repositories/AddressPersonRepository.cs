@@ -72,5 +72,23 @@ namespace MyPortal.Database.Repositories
             addressPerson.AddressTypeId = entity.AddressTypeId;
             addressPerson.Main = entity.Main;
         }
+
+        public async Task<IEnumerable<AddressPerson>> GetByPerson(Guid personId)
+        {
+            var query = GenerateQuery();
+
+            query.Where("P.Id", personId);
+
+            return await ExecuteQuery(query);
+        }
+
+        public async Task<IEnumerable<AddressPerson>> GetByAddress(Guid addressId)
+        {
+            var query = GenerateQuery();
+
+            query.Where("A.Id", addressId);
+
+            return await ExecuteQuery(query);
+        }
     }
 }

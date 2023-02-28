@@ -33,7 +33,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             var attendanceMark = await unitOfWork.AttendanceMarks.GetMark(studentId, attendanceWeekId, periodId);
 
             if (attendanceMark == null)
@@ -46,7 +46,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<AttendanceRegisterDataModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var metadata = await unitOfWork.Sessions.GetSessionDetails(sessionId, attendanceWeekId);
 
@@ -69,7 +69,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<AttendanceRegisterSummaryModel>> GetRegisters(RegisterSearchRequestModel model)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var searchOptions = new RegisterSearchOptions
             {
@@ -87,7 +87,7 @@ namespace MyPortal.Logic.Services
         public async Task<AttendanceRegisterDataModel> GetRegisterByDateRange(Guid studentGroupId, DateTime dateFrom,
             DateTime dateTo, Guid? lockToPeriodId = null, string title = null)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var studentGroup = await unitOfWork.StudentGroups.GetById(studentGroupId);
 
@@ -126,7 +126,7 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateAttendanceMarks(params AttendanceMarkSummaryModel[] marks)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             foreach (var model in marks)
             {
@@ -182,7 +182,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteAttendanceMarks(params Guid[] attendanceMarkIds)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             foreach (var attendanceMarkId in attendanceMarkIds)
             {
@@ -206,7 +206,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<AttendanceSummary> GetAttendanceSummaryByStudent(Guid studentId, Guid academicYearId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var codes = (await unitOfWork.AttendanceCodes.GetAll())
                 .Select(c => new AttendanceCodeModel(c))
@@ -223,7 +223,7 @@ namespace MyPortal.Logic.Services
         
         public async Task<AttendancePeriodModel> GetPeriodById(Guid periodId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var period = await unitOfWork.AttendancePeriods.GetById(periodId);
 
@@ -237,7 +237,7 @@ namespace MyPortal.Logic.Services
         
         public async Task<AttendanceWeekModel> GetWeekById(Guid attendanceWeekId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var attendanceWeek = await unitOfWork.AttendanceWeeks.GetById(attendanceWeekId);
 
@@ -251,7 +251,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<AttendanceWeekModel> GetWeekByDate(DateTime date, bool throwIfNotFound = true)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var week = await unitOfWork.AttendanceWeeks.GetByDate(date);
 

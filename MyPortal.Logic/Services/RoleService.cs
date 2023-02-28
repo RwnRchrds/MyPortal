@@ -45,7 +45,7 @@ namespace MyPortal.Logic.Services
 
         private async Task SetPermissions(Guid roleId, params int[] permValues)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var role = await unitOfWork.Roles.GetById(roleId);
 
@@ -121,7 +121,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteRole(Guid roleId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             await unitOfWork.UserRoles.DeleteAllByRole(roleId);
 

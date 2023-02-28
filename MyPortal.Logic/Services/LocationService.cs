@@ -20,7 +20,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<LocationModel>> GetLocations()
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var locations = await unitOfWork.Locations.GetAll();
 

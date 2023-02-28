@@ -18,7 +18,7 @@ namespace MyPortal.Logic.Services
 
         public async Task SetValue(string name, string value)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             await unitOfWork.SystemSettings.Update(name, value);
 
@@ -27,7 +27,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<int> GetDatabaseVersion()
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var databaseVersion = await unitOfWork.SystemSettings.Get("DatabaseVersion");
 

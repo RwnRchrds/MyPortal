@@ -28,7 +28,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(task);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var taskToAdd = new Database.Models.Entity.Task
             {
@@ -49,7 +49,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<TaskTypeModel>> GetTypes(bool personalOnly, bool activeOnly = true)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var taskTypes = await unitOfWork.TaskTypes.GetAll(personalOnly, activeOnly, false);
 
@@ -58,7 +58,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<bool> IsTaskOwner(Guid taskId, Guid userId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var task = await unitOfWork.Tasks.GetById(taskId);
 
@@ -84,7 +84,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<TaskModel> GetById(Guid taskId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var task = await unitOfWork.Tasks.GetById(taskId);
 
@@ -98,7 +98,7 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateTask(Guid taskId, TaskRequestModel task)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             Validate(task);
             
@@ -128,7 +128,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteTask(Guid taskId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             await unitOfWork.Tasks.Delete(taskId);
 
@@ -137,7 +137,7 @@ namespace MyPortal.Logic.Services
 
         public async Task SetCompleted(Guid taskId, bool completed)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var taskInDb = await unitOfWork.Tasks.GetById(taskId);
 
@@ -161,7 +161,7 @@ namespace MyPortal.Logic.Services
                 searchOptions = new TaskSearchOptions { Status = TaskStatus.Active };
             }
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
 
             var tasks = await unitOfWork.Tasks.GetByAssignedTo(personId, searchOptions);
 

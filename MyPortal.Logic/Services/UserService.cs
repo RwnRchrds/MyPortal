@@ -70,7 +70,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<int>> GetPermissionValuesByUser(Guid userId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var rolePermissions = (await unitOfWork.UserRoles.GetByUser(userId)).ToList();
 
@@ -103,7 +103,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<UserInfoModel> GetUserInfo(Guid userId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var response = new UserInfoModel();
 
@@ -222,7 +222,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteUser(Guid userId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var userRoles = await unitOfWork.UserRoles.GetByUser(userId);
 
@@ -416,7 +416,7 @@ namespace MyPortal.Logic.Services
 
             if (user.PersonId.HasValue)
             {
-                await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+                await using var unitOfWork = await User.GetConnection();
                 
                 user.Person = await unitOfWork.People.GetById(user.PersonId.Value);
             }

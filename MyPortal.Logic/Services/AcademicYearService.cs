@@ -28,7 +28,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<bool> IsAcademicYearLocked(Guid academicYearId, bool throwException = false)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             if (await unitOfWork.AcademicYears.IsLocked(academicYearId))
             {
                 if (throwException)
@@ -44,7 +44,7 @@ namespace MyPortal.Logic.Services
         
         public async Task<bool> IsAcademicYearLockedByWeek(Guid attendanceWeekId, bool throwException = false)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             if (await unitOfWork.AcademicYears.IsLockedByWeek(attendanceWeekId))
             {
                 if (throwException)
@@ -60,7 +60,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<AcademicYearModel> GetCurrentAcademicYear(bool getLatestIfNull = false)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             var acadYear = await unitOfWork.AcademicYears.GetCurrent();
 
             if (acadYear == null)
@@ -85,7 +85,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<AcademicYearModel> GetAcademicYearById(Guid academicYearId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             var acadYear = await unitOfWork.AcademicYears.GetById(academicYearId);
 
             return new AcademicYearModel(acadYear);
@@ -93,7 +93,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<AcademicYearModel>> GetAcademicYears()
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             var acadYears = await unitOfWork.AcademicYears.GetAll();
 
             return acadYears.Select(y => new AcademicYearModel(y));
@@ -108,7 +108,7 @@ namespace MyPortal.Logic.Services
                 Name = model.Name
             };
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
 
             foreach (var termModel in model.AcademicTerms)
             {
@@ -207,7 +207,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(model);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             var academicYearInDb = await unitOfWork.AcademicYears.GetById(academicYearId);
 
             academicYearInDb.Name = model.Name;
@@ -220,7 +220,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteAcademicYear(Guid academicYearId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             await unitOfWork.AcademicYears.Delete(academicYearId);
 

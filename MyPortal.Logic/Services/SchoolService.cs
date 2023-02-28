@@ -29,7 +29,7 @@ namespace MyPortal.Logic.Services
 
         private async Task<string> GetLocalSchoolNameFromDb()
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var localSchoolName = await unitOfWork.Schools.GetLocalSchoolName();
 
@@ -47,7 +47,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<BulletinModel>> GetBulletins(BulletinSearchOptions searchOptions)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var bulletins = await unitOfWork.Bulletins.GetBulletins(searchOptions);
 
@@ -56,7 +56,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<BulletinSummaryModel>> GetBulletinSummaries(BulletinSearchOptions searchOptions)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var bulletins = await unitOfWork.Bulletins.GetBulletinDetails(searchOptions);
 
@@ -65,7 +65,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<BulletinPageResponse> GetBulletinSummaries(BulletinSearchOptions searchOptions, PageFilter filter)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var bulletins = await unitOfWork.Bulletins.GetBulletinDetails(searchOptions, filter);
 
@@ -78,7 +78,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(model);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var bulletin = new Bulletin
             {
@@ -107,7 +107,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(model);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var bulletin = await unitOfWork.Bulletins.GetById(bulletinId);
 
@@ -129,7 +129,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteBulletin(Guid bulletinId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var bulletin = await unitOfWork.Bulletins.GetById(bulletinId);
 
@@ -143,7 +143,7 @@ namespace MyPortal.Logic.Services
 
         public async Task SetBulletinApproved(ApproveBulletinRequestModel model)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var bulletin = await unitOfWork.Bulletins.GetById(model.BulletinId);
 

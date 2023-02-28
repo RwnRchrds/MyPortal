@@ -25,7 +25,7 @@ namespace MyPortal.Logic.Services
         {
             var templates = new List<ParentEveningAppointmentPlaceholderModel>();
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
 
             var parentEvening = await unitOfWork.ParentEvenings.GetById(parentEveningId);
 

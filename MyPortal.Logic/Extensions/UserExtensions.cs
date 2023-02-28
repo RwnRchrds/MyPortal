@@ -45,37 +45,8 @@ namespace MyPortal.Logic.Extensions
         public static async Task<bool> HasPermission(this ClaimsPrincipal principal, IUserService userService, 
             PermissionRequirement requirement, params PermissionValue[] permissionValues)
         {
-            if (!permissionValues.Any())
-            {
-                return true;
-            }
-
-            var roles = await userService.GetUserRoles(principal.GetUserId());
-
-            foreach (var role in roles)
-            {
-                // Use cached role here to improve performance
-                //var role = await roleService.GetRoleById(roleId, true);
-
-                var rolePermissions = new BitArray(role.Permissions);
-
-                foreach (var permissionValue in permissionValues)
-                {
-                    if (rolePermissions[(int)permissionValue])
-                    {
-                        if (requirement == PermissionRequirement.RequireAny)
-                        {
-                            return true;   
-                        }
-                    }
-                    else if (requirement == PermissionRequirement.RequireAll)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return requirement == PermissionRequirement.RequireAll;
+            return await PermissionHelper.UserHasPermission(principal.GetUserId(), userService, requirement,
+                permissionValues);
         }
     }
 }

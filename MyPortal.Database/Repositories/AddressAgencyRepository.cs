@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
@@ -14,7 +15,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories;
 
-public class AddressAgencyRepository : BaseReadWriteRepository<AddressAgency>, IAddressAgencyRepository
+internal class AddressAgencyRepository : BaseReadWriteRepository<AddressAgency>, IAddressAgencyRepository
 {
     public AddressAgencyRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
     {
@@ -65,5 +66,23 @@ public class AddressAgencyRepository : BaseReadWriteRepository<AddressAgency>, I
         addressPerson.AddressId = entity.AddressId;
         addressPerson.AddressTypeId = entity.AddressTypeId;
         addressPerson.Main = entity.Main;
+    }
+
+    public async Task<IEnumerable<AddressAgency>> GetByAgency(Guid agencyId)
+    {
+        var query = GenerateQuery();
+
+        query.Where("AG.Id", agencyId);
+
+        return await ExecuteQuery(query);
+    }
+
+    public async Task<IEnumerable<AddressAgency>> GetByAddress(Guid addressId)
+    {
+        var query = GenerateQuery();
+
+        query.Where("A.Id", addressId);
+
+        return await ExecuteQuery(query);
     }
 }

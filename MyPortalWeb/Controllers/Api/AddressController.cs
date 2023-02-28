@@ -7,6 +7,7 @@ using MyPortal.Database.Enums;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Data.Addresses;
 using MyPortal.Logic.Models.Data.Contacts;
 using MyPortal.Logic.Models.Requests.Addresses;
 using MyPortalWeb.Attributes;
@@ -14,34 +15,46 @@ using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
 {
-    public class AddressController : BaseApiController
+    public class AddressController : PersonalDataController
     {
         private readonly IAddressService _addressService;
 
-        public AddressController(IUserService userService, IAddressService addressService) : base(userService)
+        public AddressController(IUserService userService, IPersonService personService, 
+            IStudentService studentService, IAddressService addressService) 
+            : base(userService, personService, studentService)
         {
             _addressService = addressService;
         }
 
-        [HttpPost]
-        [Route("api/people/{personId}/addresses")]
-        public async Task<IActionResult> CreatePersonAddress([FromQuery] bool forceCreate,
-            [FromBody] EntityAddressRequestModel personAddress)
+        [HttpGet]
+        [Route("api/addresses")]
+        [Permission(PermissionRequirement.RequireAny, PermissionValue.PeopleEditContactDetails,
+            PermissionValue.StudentEditStudentDetails, PermissionValue.PeopleEditAgentDetails,
+            PermissionValue.PeopleEditStaffBasicDetails, PermissionValue.AgencyEditAgencies)]
+        public async Task<IActionResult> GetExistingAddresses([FromQuery] AddressSearchRequestModel searchModel)
         {
             try
             {
-                if (!forceCreate)
-                {
-                    var searchOptions = personAddress.GetSearchOptions();
-                    var existingAddresses = await _addressService.GetMatchingAddresses(searchOptions);
+                var addresses = await _addressService.GetMatchingAddresses(searchModel);
 
-                    if (existingAddresses.Any())
-                    {
-                        return Ok(existingAddresses);
-                    }
-                }
-                
-                //TODO: Create address
+                return Ok(addresses);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        [HttpPut]
+        [Route("api/addresses/{addressId}")]
+        [Permission(PermissionRequirement.RequireAny, PermissionValue.PeopleEditContactDetails,
+            PermissionValue.StudentEditStudentDetails, PermissionValue.PeopleEditAgentDetails,
+            PermissionValue.PeopleEditStaffBasicDetails, PermissionValue.AgencyEditAgencies)]
+        public async Task<IActionResult> UpdateAddress([FromRoute] Guid addressId, AddressRequestModel model)
+        {
+            try
+            {
+                await _addressService.UpdateAddress(addressId, model);
 
                 return Ok();
             }
@@ -51,19 +64,68 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
+        [HttpPost]
+        [Route("api/people/{personId}/addresses")]
+        [Permission(PermissionRequirement.RequireAny, PermissionValue.PeopleEditContactDetails,
+            PermissionValue.StudentEditStudentDetails, PermissionValue.PeopleEditAgentDetails,
+            PermissionValue.PeopleEditStaffBasicDetails)]
+        public async Task<IActionResult> CreatePersonAddress([FromRoute] Guid personId, [FromBody] EntityAddressRequestModel personAddress)
+        {
+            try
+            {
+                if (await CanAccessPerson(personId))
+                {
+                    await _addressService.CreateAddressForPerson(personId, personAddress);
+
+                    return Ok();
+                }
+
+                return PermissionError();
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        [HttpPut]
+        [Route("api/people/{personId}/addresses/{addressLinkId}")]
+        [Permission(PermissionRequirement.RequireAny, PermissionValue.PeopleEditContactDetails,
+            PermissionValue.StudentEditStudentDetails, PermissionValue.PeopleEditAgentDetails,
+            PermissionValue.PeopleEditStaffBasicDetails)]
+        public async Task<IActionResult> UpdatePersonAddressLink([FromRoute] Guid addressPersonId,
+            [FromBody] LinkAddressRequestModel addressLink)
+        {
+            try
+            {
+                await _addressService.UpdateAddressLinkForPerson(addressPersonId, addressLink);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
 
         [HttpGet]
         [Route("api/people/{personId}/addresses")]
         [Permission(PermissionRequirement.RequireAny, PermissionValue.PeopleViewContactDetails,
-            PermissionValue.StudentViewStudentDetails, PermissionValue.PeopleViewAgentDetails)]
-        [ProducesResponseType(typeof(IEnumerable<AddressModel>), 200)]
+            PermissionValue.StudentViewStudentDetails, PermissionValue.PeopleViewAgentDetails,
+            PermissionValue.PeopleViewStaffBasicDetails)]
+        [ProducesResponseType(typeof(IEnumerable<AddressLinkDataModel>), 200)]
         public async Task<IActionResult> GetAddressesByPerson([FromRoute] Guid personId)
         {
             try
             {
-                var addresses = await _addressService.GetAddressesByPerson(personId);
+                if (await CanAccessPerson(personId))
+                {
+                    var addresses = await _addressService.GetAddressLinksByPerson(personId);
 
-                return Ok(addresses);
+                    return Ok(addresses);
+                }
+
+                return PermissionError();
             }
             catch (Exception e)
             {

@@ -36,7 +36,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<StudentAchievementSummaryModel>> GetAchievementsByStudent(Guid studentId, Guid academicYearId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var achievements =
                 (await unitOfWork.StudentAchievements.GetByStudent(studentId, academicYearId)).Select(a =>
@@ -54,7 +54,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<StudentAchievementModel> GetStudentAchievementById(Guid achievementId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var achievement = await unitOfWork.StudentAchievements.GetById(achievementId);
 
@@ -63,7 +63,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<int> GetAchievementPointsByStudent(Guid studentId, Guid academicYearId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var points = await unitOfWork.StudentAchievements.GetPointsByStudent(studentId, academicYearId);
 
@@ -72,7 +72,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<int> GetAchievementCountByStudent(Guid studentId, Guid academicYearId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var count = await unitOfWork.StudentAchievements.GetCountByStudent(studentId, academicYearId);
 
@@ -83,7 +83,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(achievement);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var now = DateTime.Now;
 
@@ -117,7 +117,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(achievement);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var achievementInDb = await unitOfWork.StudentAchievements.GetById(achievementId);
 
@@ -147,7 +147,7 @@ namespace MyPortal.Logic.Services
             var academicYearService = new AcademicYearService(User);
             await academicYearService.IsAcademicYearLocked(achievement.Achievement.AcademicYearId, true);
 
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             await unitOfWork.Achievements.Delete(achievementId);
 
@@ -156,7 +156,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<AchievementTypeModel>> GetAchievementTypes()
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             var types = await unitOfWork.AchievementTypes.GetAll();
 
             return types.Select(t => new AchievementTypeModel(t)).ToList();
@@ -164,7 +164,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<AchievementOutcomeModel>> GetAchievementOutcomes()
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             var outcomes = await unitOfWork.AchievementOutcomes.GetAll();
 
             return outcomes.Select(o => new AchievementOutcomeModel(o)).ToList();
@@ -172,7 +172,7 @@ namespace MyPortal.Logic.Services
         
         public async Task<IEnumerable<StudentIncidentSummaryModel>> GetIncidentsByStudent(Guid studentId, Guid academicYearId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             var incidents = await unitOfWork.StudentIncidents.GetByStudent(studentId, academicYearId);
 
             var models = incidents.Select(i => new StudentIncidentModel(i));
@@ -189,7 +189,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<StudentIncidentModel> GetIncidentById(Guid incidentId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             var incident = await unitOfWork.StudentIncidents.GetById(incidentId);
 
             return new StudentIncidentModel(incident);
@@ -197,7 +197,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<int> GetBehaviourPointsByStudent(Guid studentId, Guid academicYearId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             var points = await unitOfWork.StudentIncidents.GetPointsByStudent(studentId, academicYearId);
 
             return points;
@@ -205,7 +205,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<int> GetBehaviourCountByStudent(Guid studentId, Guid academicYearId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             var count = await unitOfWork.StudentIncidents.GetCountByStudent(studentId, academicYearId);
 
             return count;
@@ -240,7 +240,7 @@ namespace MyPortal.Logic.Services
                 });
             }
 
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             unitOfWork.StudentIncidents.Create(studentIncident);
 
@@ -253,7 +253,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(incident);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var studentIncidentInDb = await unitOfWork.StudentIncidents.GetById(incidentId);
 
@@ -289,7 +289,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteIncident(Guid incidentId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             await unitOfWork.Incidents.Delete(incidentId);
 
@@ -298,7 +298,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<IncidentTypeModel>> GetIncidentTypes()
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var types = await unitOfWork.IncidentTypes.GetAll();
 
@@ -307,7 +307,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<BehaviourRoleTypeModel>> GetRoleTypes()
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var roleTypes = await unitOfWork.BehaviourRoleTypes.GetAll();
 
@@ -316,7 +316,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<BehaviourOutcomeModel>> GetIncidentOutcomes()
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var outcomes = await unitOfWork.BehaviourOutcomes.GetAll();
 
@@ -325,7 +325,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<BehaviourStatusModel>> GetBehaviourStatus()
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var status = await unitOfWork.BehaviourStatus.GetAll();
 
@@ -334,7 +334,7 @@ namespace MyPortal.Logic.Services
         
         public async Task<IEnumerable<DetentionModel>> Get(DetentionSearchOptions searchOptions)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var detentions = await unitOfWork.Detentions.GetAll(searchOptions);
 
@@ -343,7 +343,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<DetentionModel> GetById(Guid detentionId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var detention = await unitOfWork.Detentions.GetById(detentionId);
 
@@ -352,7 +352,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<DetentionModel> GetByIncident(Guid incidentId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var detention = await unitOfWork.Detentions.GetByIncident(incidentId);
 
@@ -377,7 +377,7 @@ namespace MyPortal.Logic.Services
                 }
             };
 
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             unitOfWork.Detentions.Create(detention);
 
@@ -415,7 +415,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(detention);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var detentionInDb = await unitOfWork.Detentions.GetById(detentionId);
 
@@ -431,7 +431,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteDetention(Guid detentionId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             await unitOfWork.Detentions.Delete(detentionId);
 
@@ -440,7 +440,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<StudentIncidentSummaryModel>> GetInvolvedStudentsByIncident(Guid incidentId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var involvedStudents =
                 (await unitOfWork.StudentIncidents.GetByIncident(incidentId)).Select(s =>
@@ -470,7 +470,7 @@ namespace MyPortal.Logic.Services
                 Points = model.Points
             };
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
 
             unitOfWork.StudentIncidents.Create(studentIncident);
 
@@ -479,7 +479,7 @@ namespace MyPortal.Logic.Services
 
         public async Task RemoveStudentFromIncident(Guid studentIncidentId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var studentIncident = await unitOfWork.StudentIncidents.GetById(studentIncidentId);
 
@@ -502,7 +502,7 @@ namespace MyPortal.Logic.Services
 
         public async Task AddDetentions(Guid studentIncidentId, Guid[] detentionIds)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             foreach (var detentionId in detentionIds)
             {
@@ -520,7 +520,7 @@ namespace MyPortal.Logic.Services
 
         public async Task RemoveDetentions(Guid studentIncidentId, Guid[] detentionIds)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             foreach (var detentionId in detentionIds)
             {

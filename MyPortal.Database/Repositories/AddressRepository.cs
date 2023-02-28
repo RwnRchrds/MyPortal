@@ -34,24 +34,49 @@ namespace MyPortal.Database.Repositories
 
         private void ApplySearch(Query query, AddressSearchOptions searchOptions)
         {
-            if (!string.IsNullOrWhiteSpace(searchOptions.Postcode))
+            if (!string.IsNullOrWhiteSpace(searchOptions.Apartment))
             {
-                query.Where($"{TblAlias}.Postcode", searchOptions.Postcode);
+                query.WhereStarts($"{TblAlias}.Apartment", searchOptions.Apartment);
             }
 
+            if (!string.IsNullOrWhiteSpace(searchOptions.BuildingName))
+            {
+                query.WhereStarts($"{TblAlias}.BuildingName", searchOptions.BuildingName);
+            }
+            
             if (!string.IsNullOrWhiteSpace(searchOptions.BuildingNumber))
             {
-                query.Where($"{TblAlias}.BuildingNumber", searchOptions.BuildingNumber);
+                query.WhereStarts($"{TblAlias}.BuildingNumber", searchOptions.BuildingNumber);
             }
-
+            
             if (!string.IsNullOrWhiteSpace(searchOptions.Street))
             {
-                query.Where($"{TblAlias}.Street", searchOptions.Street);
+                query.WhereStarts($"{TblAlias}.Street", searchOptions.Street);
             }
 
+            if (!string.IsNullOrWhiteSpace(searchOptions.District))
+            {
+                query.WhereStarts($"{TblAlias}.District", searchOptions.District);
+            }
+            
             if (!string.IsNullOrWhiteSpace(searchOptions.Town))
             {
-                query.Where($"{TblAlias}.Town", searchOptions.Town);
+                query.WhereStarts($"{TblAlias}.Town", searchOptions.Town);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchOptions.County))
+            {
+                query.WhereStarts($"{TblAlias}.County", searchOptions.County);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchOptions.Country))
+            {
+                query.WhereStarts($"{TblAlias}.Country", searchOptions.Country);
+            }
+            
+            if (!string.IsNullOrWhiteSpace(searchOptions.Postcode))
+            {
+                query.WhereStarts($"{TblAlias}.Postcode", searchOptions.Postcode);
             }
         }
 

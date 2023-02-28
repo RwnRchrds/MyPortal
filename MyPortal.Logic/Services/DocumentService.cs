@@ -29,7 +29,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(document);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var directory = await unitOfWork.Directories.GetById(document.DirectoryId);
 
@@ -66,7 +66,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(document);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var documentInDb = await unitOfWork.Documents.GetById(documentId);
 
@@ -82,7 +82,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<DocumentTypeModel>> GetTypes(DocumentTypeFilter filter)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var documentTypes = await unitOfWork.DocumentTypes.Get(filter);
 
@@ -91,7 +91,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteDocument(Guid documentId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             await unitOfWork.Documents.Delete(documentId);
 
@@ -100,7 +100,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<DocumentModel> GetDocumentById(Guid documentId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var document = await unitOfWork.Documents.GetById(documentId);
 
@@ -114,7 +114,7 @@ namespace MyPortal.Logic.Services
         
         public async Task<DirectoryModel> GetDirectoryById(Guid directoryId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var directory = await unitOfWork.Directories.GetById(directoryId);
 
@@ -135,7 +135,7 @@ namespace MyPortal.Logic.Services
                 throw new LogicException("A parent directory was not provided.");
             }
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
                 
             var parentDirectory = await unitOfWork.Directories.GetById(directory.ParentId.Value);
 
@@ -160,7 +160,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(directory);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var dirInDb = await unitOfWork.Directories.GetById(directoryId);
 
@@ -184,7 +184,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteDirectory(Guid directoryId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             await unitOfWork.Directories.Delete(directoryId);
 
@@ -193,7 +193,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<DirectoryChildrenModel> GetDirectoryChildren(Guid directoryId, bool includeRestricted)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var directory = await unitOfWork.Directories.GetById(directoryId);
 
@@ -217,7 +217,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<bool> IsPrivateDirectory(Guid directoryId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var dir = await unitOfWork.Directories.GetById(directoryId);
 
@@ -241,7 +241,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<bool> IsSchoolDirectory(Guid directoryId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
         
             var dir = await unitOfWork.Directories.GetById(directoryId);
 

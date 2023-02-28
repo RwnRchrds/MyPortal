@@ -28,7 +28,7 @@ public class AssessmentService : BaseUserService, IAssessmentService
 
     public async Task<IEnumerable<ResultModel>> GetPreviousResults(Guid studentId, Guid aspectId, DateTime dateTo)
     {
-        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        await using var unitOfWork = await User.GetConnection();
         
         var results = await unitOfWork.Results.GetPreviousResults(studentId, aspectId, dateTo);
 
@@ -37,7 +37,7 @@ public class AssessmentService : BaseUserService, IAssessmentService
 
     public async Task<ResultModel> GetResult(Guid resultId)
     {
-        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        await using var unitOfWork = await User.GetConnection();
         var result = await unitOfWork.Results.GetById(resultId);
 
         if (result == null)
@@ -50,7 +50,7 @@ public class AssessmentService : BaseUserService, IAssessmentService
 
     public async Task<ResultModel> GetResult(Guid studentId, Guid aspectId, Guid resultSetId)
     {
-        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        await using var unitOfWork = await User.GetConnection();
         var result = await unitOfWork.Results.GetResult(studentId, aspectId, resultSetId);
 
         if (result == null)
@@ -63,7 +63,7 @@ public class AssessmentService : BaseUserService, IAssessmentService
 
     public async Task<IEnumerable<ResultModel>> GetPreviousResults(Guid resultId)
     {
-        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        await using var unitOfWork = await User.GetConnection();
         var result = await unitOfWork.Results.GetById(resultId);
 
         if (result == null)
@@ -76,7 +76,7 @@ public class AssessmentService : BaseUserService, IAssessmentService
 
     public async Task<MarksheetEntryDataModel> GetMarksheet(Guid marksheetId)
     {
-        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        await using var unitOfWork = await User.GetConnection();
         var metadata = await unitOfWork.Marksheets.GetMarksheetDetails(marksheetId);
 
         if (metadata == null)
@@ -107,7 +107,7 @@ public class AssessmentService : BaseUserService, IAssessmentService
 
     private async Task PopulateMarksheetColumns(MarksheetEntryDataModel marksheet, IEnumerable<MarksheetColumnModel> columnCollection)
     {
-        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        await using var unitOfWork = await User.GetConnection();
         
         Dictionary<Guid, GradeModel[]> gradeSets = new Dictionary<Guid, GradeModel[]>();
 
@@ -172,7 +172,7 @@ public class AssessmentService : BaseUserService, IAssessmentService
             Private = model.Private
         };
 
-        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        await using var unitOfWork = await User.GetConnection();
         
         unitOfWork.Aspects.Create(aspect);
 
@@ -185,7 +185,7 @@ public class AssessmentService : BaseUserService, IAssessmentService
     {
         Validate(model);
         
-        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        await using var unitOfWork = await User.GetConnection();
         
         var aspect = await unitOfWork.Aspects.GetById(aspectId);
 
@@ -205,7 +205,7 @@ public class AssessmentService : BaseUserService, IAssessmentService
 
     public async Task DeleteAspect(Guid aspectId)
     {
-        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        await using var unitOfWork = await User.GetConnection();
         
         var aspect = await unitOfWork.Aspects.GetById(aspectId);
 
@@ -225,7 +225,7 @@ public class AssessmentService : BaseUserService, IAssessmentService
         List<ResultSet> cachedResultSets = new List<ResultSet>();
         List<Grade> cachedGrades = new List<Grade>();
         
-        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        await using var unitOfWork = await User.GetConnection();
 
         foreach (var model in models)
         {
@@ -355,7 +355,7 @@ public class AssessmentService : BaseUserService, IAssessmentService
 
     public async Task DeleteResult(Guid resultId)
     {
-        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        await using var unitOfWork = await User.GetConnection();
         
         var result = await unitOfWork.Results.GetById(resultId);
 

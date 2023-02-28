@@ -26,7 +26,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<StudentModel>> GetReportableStudents(Guid contactId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var students = await unitOfWork.Students.GetByContact(contactId, true);
 
@@ -37,7 +37,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(model);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var contact = new Contact
             {
@@ -57,7 +57,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(model);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var contact = await unitOfWork.Contacts.GetById(contactId);
 
@@ -76,7 +76,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteContact(Guid contactId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             await unitOfWork.Contacts.Delete(contactId);
         }

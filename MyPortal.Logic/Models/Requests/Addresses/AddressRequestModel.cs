@@ -35,15 +35,4 @@ public class AddressRequestModel
     [Required]
     [StringLength(128)]
     public string Country { get; set; }
-
-    public AddressSearchOptions GetSearchOptions()
-    {
-        return new AddressSearchOptions
-        {
-            BuildingNumber = BuildingNumber,
-            Postcode = Postcode,
-            Street = Street,
-            Town = Town
-        };
-    }
 }

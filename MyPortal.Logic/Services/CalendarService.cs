@@ -30,7 +30,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<DiaryEventTypeModel>> GetEventTypes(bool includeReserved = false)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var eventTypes = await unitOfWork.DiaryEventTypes.GetAll(includeReserved);
 
@@ -42,7 +42,7 @@ namespace MyPortal.Logic.Services
         {
             var calendarEvents = new List<CalendarEventModel>();
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
 
             // Get event type data so events can be coloured correctly
                 var eventTypes = (await unitOfWork.DiaryEventTypes.GetAll(true)).ToList();
@@ -103,7 +103,7 @@ namespace MyPortal.Logic.Services
         
         public async Task<DiaryEventModel> GetEvent(Guid eventId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var diaryEvent = new DiaryEventModel(await unitOfWork.DiaryEvents.GetById(eventId));
 
@@ -112,7 +112,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<DiaryEventAttendeeModel>> GetAttendeesByEvent(Guid eventId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var attendees =
                 (await unitOfWork.DiaryEventAttendees.GetByEvent(eventId)).Select(a =>
@@ -123,7 +123,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<DiaryEventAttendeeModel> GetEventAttendee(Guid eventId, Guid personId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var attendee = await unitOfWork.DiaryEventAttendees.GetAttendee(eventId, personId);
 
@@ -134,7 +134,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(model);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
 
             var eventTypes = (await GetEventTypes()).ToArray();
 
@@ -197,7 +197,7 @@ namespace MyPortal.Logic.Services
         {
             Validate(model);
             
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var eventTypes = (await GetEventTypes()).ToArray();
 
@@ -232,7 +232,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteEvent(Guid eventId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             await unitOfWork.DiaryEvents.Delete(eventId);
 
@@ -241,7 +241,7 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateOrUpdateEventAttendees(Guid eventId, EventAttendeesRequestModel model)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var attendees = (await unitOfWork.DiaryEventAttendees.GetByEvent(eventId)).ToArray();
 
@@ -281,7 +281,7 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteEventAttendee(Guid eventId, Guid personId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var attendees = await unitOfWork.DiaryEventAttendees.GetByEvent(eventId);
 

@@ -20,7 +20,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<BillModel>> GenerateChargeBills(Guid chargeBillingPeriodId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             ChargeBillingPeriod chargeBillingPeriod = await unitOfWork.ChargeBillingPeriods.GetById(chargeBillingPeriodId);
 
