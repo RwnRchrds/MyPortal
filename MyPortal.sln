@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29123.88
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPortal.Database", "MyPortal.Database\MyPortal.Database.csproj", "{166E1359-8F93-462C-A72D-61750A7E30F9}"
 EndProject
@@ -36,10 +36,8 @@ Global
 		{E5F08C1D-A0C6-456B-B01E-1C8E5644B96E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5F08C1D-A0C6-456B-B01E-1C8E5644B96E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1341B5F9-D401-498C-AA58-FEAB1446B228}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1341B5F9-D401-498C-AA58-FEAB1446B228}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1341B5F9-D401-498C-AA58-FEAB1446B228}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{1341B5F9-D401-498C-AA58-FEAB1446B228}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1341B5F9-D401-498C-AA58-FEAB1446B228}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1341B5F9-D401-498C-AA58-FEAB1446B228}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
