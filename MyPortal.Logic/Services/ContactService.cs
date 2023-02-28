@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration.EnvironmentVariables;
 using MyPortal.Database;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
