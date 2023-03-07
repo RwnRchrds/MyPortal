@@ -12,13 +12,18 @@
     CONSTRAINT [FK_AttendanceMarks_AttendancePeriods_PeriodId] FOREIGN KEY ([PeriodId]) REFERENCES [dbo].[AttendancePeriods] ([Id]),
     CONSTRAINT [FK_AttendanceMarks_AttendanceWeeks_WeekId] FOREIGN KEY ([WeekId]) REFERENCES [dbo].[AttendanceWeeks] ([Id]),
     CONSTRAINT [FK_AttendanceMarks_Students_StudentId] FOREIGN KEY ([StudentId]) REFERENCES [dbo].[Students] ([Id]),
-    CONSTRAINT [FK_AttendanceMarks_Users_CreatedById] FOREIGN KEY ([CreatedById]) REFERENCES [dbo].[Users] ([Id])
+    CONSTRAINT [FK_AttendanceMarks_Users_CreatedById] FOREIGN KEY ([CreatedById]) REFERENCES [dbo].[Users] ([Id]) ON DELETE CASCADE
 );
 
 
 GO
 CREATE NONCLUSTERED INDEX [IX_AttendanceMarks_CodeId]
     ON [dbo].[AttendanceMarks]([CodeId] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_AttendanceMarks_CreatedById]
+    ON [dbo].[AttendanceMarks]([CreatedById] ASC);
 
 
 GO
@@ -34,8 +39,4 @@ CREATE NONCLUSTERED INDEX [IX_AttendanceMarks_StudentId]
 GO
 CREATE NONCLUSTERED INDEX [IX_AttendanceMarks_WeekId]
     ON [dbo].[AttendanceMarks]([WeekId] ASC);
-
-GO
-CREATE NONCLUSTERED INDEX [IX_AttendanceMarks_CreatedById]
-    ON [dbo].[AttendanceMarks]([CreatedById] ASC);
 

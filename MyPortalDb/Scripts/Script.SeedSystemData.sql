@@ -8,9 +8,10 @@ Author: R. Richards
 
 --- MODIFY BASEDATA ---
 
-EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all"
+BEGIN TRANSACTION;
 
---[SystemSettings]
+EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all";
+
 MERGE INTO [dbo].[SystemSettings] AS Target
 USING (VALUES
            ('iBillPaymntPeriodLength', '6'),
@@ -22,9 +23,7 @@ ON Target.Name = Source.Name
 
 WHEN NOT MATCHED THEN
     INSERT (Name, Setting)
-    VALUES (Name, Setting);
-
---[AspNetRoles]
+    VALUES (Name, Setting);    
 
 MERGE INTO [dbo].[Roles] AS Target
 USING (VALUES
@@ -76,7 +75,7 @@ WHEN MATCHED THEN
     UPDATE SET Name = Source.Name
 WHEN NOT MATCHED THEN
     INSERT (Id, Name, NormalizedName, Description, Permissions, System)
-    VALUES (Id, Name, NormalizedName, Description, Permissions, 1);
+    VALUES (Id, Name, NormalizedName, Description, Permissions, 1);    
 
 MERGE INTO [dbo].[Users] AS Target
 USING (VALUES
@@ -87,7 +86,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, UserName, NormalizedUserName, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, CreatedDate, UserType, Enabled)
-    VALUES (Id, UserName, NormalizedUserName, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, CreatedDate, UserType, Enabled);
+    VALUES (Id, UserName, NormalizedUserName, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, CreatedDate, UserType, Enabled);  
 
 MERGE INTO [dbo].[UserRoles] AS Target
 USING (VALUES
@@ -99,8 +98,6 @@ ON Target.UserId = Source.UserId AND Target.RoleId = Source.RoleId
 WHEN NOT MATCHED THEN
     INSERT (UserId, RoleId)
     VALUES (UserId, RoleId);
-
---[Assessment_AspectTypes]
 
 MERGE INTO [dbo].[AspectTypes] AS Target
 USING (VALUES
@@ -118,8 +115,6 @@ WHEN NOT MATCHED THEN
 
 WHEN MATCHED THEN
     UPDATE SET Description = Source.Description;
-
---[Assessment_GradeSets]
 
 MERGE INTO [dbo].[GradeSets] AS Target
 USING (VALUES
@@ -237,8 +232,6 @@ WHEN MATCHED THEN
 WHEN NOT MATCHED THEN
     INSERT (Id, Name, Description, Active, System)
     VALUES (Id, Name, Description, Active, System);
-
---[Assessment_Grades]
 
 MERGE INTO [dbo].[Grades] AS Target
 USING (VALUES
@@ -1150,7 +1143,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, GradeSetId, Code, Value, Description)
-    VALUES (Id, GradeSetId, Code, Value, Description);
+    VALUES (Id, GradeSetId, Code, Value, Description);  
 
 MERGE INTO [dbo].[ExamQualifications] AS Target
 USING (VALUES
@@ -1606,8 +1599,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description)
     VALUES (Id, Description);
 
---[Attendance_Codes]
-
 MERGE INTO [dbo].[AttendanceCodes] AS Target
 USING (VALUES
            ('EBACEBAB-153B-452E-B2F4-9CFF11D1B083', '/', 'Present (AM)', '59036717-D349-46D3-B8A6-60FFA9263DB3', 1, 1),
@@ -1645,9 +1636,6 @@ WHEN MATCHED THEN
 WHEN NOT MATCHED THEN
     INSERT (Id, Code, Description, AttendanceCodeTypeId, Active, Restricted, System)
     VALUES (Id, Code, Description, AttendanceCodeTypeId, Active, 0, 1);
-
-
---[AchievementOutcome]
 
 MERGE INTO [dbo].[AchievementOutcomes] AS Target
 USING (VALUES
@@ -1687,8 +1675,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
     VALUES (Id, Description, Active);
 
---[Behaviour_AchievementTypes]
-
 MERGE INTO [dbo].[AchievementTypes] AS Target
 USING (VALUES
            ('F4BD5F85-CDD7-4937-A346-EAAF1A173CD5', 'Academic', 1),
@@ -1713,7 +1699,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, DefaultPoints, Active)
     VALUES (Id, Description, DefaultPoints, 1);
 
---[BehaviourOutcome]
 MERGE INTO [dbo].[BehaviourOutcomes] AS Target
 USING (VALUES
            ('59C4E8DB-CFEF-462B-855A-9092897E7135', 'Counselling', 1, 0),
@@ -1769,7 +1754,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active, System)
     VALUES (Id, Description, Active, System);
 
---[BehaviourStatus]
 MERGE INTO [dbo].[BehaviourStatus] AS Target
 USING (VALUES
            ('997FBFDD-DD28-4F2C-9336-2858A5FBD434', 'Unresolved', 1, 0),
@@ -1790,8 +1774,6 @@ WHEN MATCHED THEN
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active, Resolved)
     VALUES (Id, Description, Active, Resolved);
-
---[Behaviour_IncidentTypes]
 
 MERGE INTO [dbo].[IncidentTypes] AS Target
 USING (VALUES
@@ -1832,8 +1814,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, DefaultPoints, Active)
     VALUES (Id, Description, DefaultPoints, Active);
 
-
--- [CommentTypes]
 MERGE INTO [dbo].[CommentTypes] AS Target
 USING (VALUES
            ('57DEAF3C-1E3F-4D44-A516-15A79A1DC18C', 'Heading', 1, 1),
@@ -1846,9 +1826,6 @@ ON Target.Id = Source.Id
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
     VALUES (Id, Description, Active);
-
-
---[Communication_CommunicationTypes]
 
 MERGE INTO [dbo].[CommunicationTypes] AS Target
 USING (VALUES
@@ -1890,8 +1867,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
     VALUES (Id, Description, 1);
 
---[Communication_PhoneNumberTypes]
-
 MERGE INTO [dbo].[PhoneNumberTypes] AS Target
 USING (VALUES
            ('4BE15DCD-8F53-4AB9-933E-4E586B6FBF6E', 'Mobile'),
@@ -1926,8 +1901,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, Student, Staff, Contact, General, Sen, Active, System)
     VALUES (Id, Description, Student, Staff, Contact, General, Sen, 1, 1);
 
---[Finance_ProductTypes]
-
 MERGE INTO [dbo].[ProductTypes] AS Target
 USING (VALUES
            ('9508DB1A-1FC2-44E2-9BB7-E0924A003376', 'Meals', 1),
@@ -1945,8 +1918,6 @@ WHEN MATCHED THEN
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, IsMeal, Active)
     VALUES (Id, Description, IsMeal, 1);
-
---[Medical_Conditions]
 
 MERGE INTO [dbo].[MedicalConditions] AS Target
 USING (VALUES
@@ -1967,8 +1938,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
     VALUES (Id, Description, Active);
 
---[Medical_DietaryRequirements]
-
 MERGE INTO [dbo].[DietaryRequirements] AS Target
 USING (VALUES
            ('C5614AA0-E50C-4BCF-B59F-A55A43B271C8', 'Artificial Colouring Allergy'),
@@ -1987,8 +1956,6 @@ ON Target.Id = Source.Id
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
     VALUES (Id, Description, 1);
-
---[People_RelationshipTypes]
 
 MERGE INTO [dbo].[RelationshipTypes] AS Target
 USING (VALUES
@@ -2046,8 +2013,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, ColourCode, Active)
     VALUES (Id, Description, ColourCode, 1);
 
---[Profile_CommentBanks]
-
 MERGE INTO [dbo].[CommentBanks] AS Target
 USING (VALUES
            ('24163807-8A48-4266-965F-32C5C98C6BFC', 'Attendance', 1),
@@ -2079,8 +2044,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
     VALUES (Id, Description, Active);
 
---[Profile_LogTypes]
-
 MERGE INTO [dbo].[LogNoteTypes] AS Target
 USING (VALUES
            ('C6C718BE-8255-4D26-96C1-3B92815F358E', 'Academic Support', '#4287f5', 'fa-comments'),
@@ -2098,8 +2061,6 @@ ON Target.Id = Source.Id
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, ColourCode, IconClass, Active)
     VALUES (Id, Description, ColourCode, IconClass, 1);
-
---[School_GovernanceTypes]
 
 MERGE INTO [dbo].[GovernanceTypes] AS Target
 USING (VALUES
@@ -2119,8 +2080,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, Code, Active)
     VALUES (Id, Description, Code, 1);
 
---[School_IntakeTypes]
-
 MERGE INTO [dbo].[IntakeTypes] AS Target
 USING (VALUES
            ('611BD40E-346E-4099-8450-DC8B57B81681', 'Comprehensive', 'COMP'),
@@ -2137,8 +2096,6 @@ ON Target.Id = Source.Id
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Code, Active)
     VALUES (Id, Description, Code, 1);
-
---[School_Locations]
 
 MERGE INTO [dbo].[Locations] AS Target
 USING (VALUES
@@ -2165,8 +2122,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, System)
     VALUES (Id, Description, 1);
 
---[School_Phases]
-
 MERGE INTO [dbo].[SchoolPhases] AS Target
 USING (VALUES
            ('5C75D59C-CE4B-4568-A95D-7E27F284B168', 'Primary', 'PS'),
@@ -2184,8 +2139,6 @@ ON Target.Id = Source.Id
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Code, Active)
     VALUES (Id, Description, Code, 1);
-
---[School_Types]
 
 MERGE INTO [dbo].[SchoolTypes] AS Target
 USING (VALUES
@@ -2215,8 +2168,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, Code, Active)
     VALUES (Id, Description, Code, 1);
 
---[Sen_EventTypes]
-
 MERGE INTO [dbo].[SenEventTypes] AS Target
 USING (VALUES
            ('4A504CAF-290C-4BF9-8E7E-56054BE94CBC', 'Audiometrist'),
@@ -2240,8 +2191,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
     VALUES (Id, Description, 1);
 
---[Sen_ProvisionTypes]
-
 MERGE INTO [dbo].[SenProvisionTypes] AS Target
 USING (VALUES
            ('D568AE97-8137-4B56-9316-E6CA4C8327EF', 'Extra Time for Exams'),
@@ -2263,8 +2212,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
     VALUES (Id, Description, 1);
 
---[Sen_ReviewTypes]
-
 MERGE INTO [dbo].[SenReviewTypes] AS Target
 USING (VALUES
            ('D635E1BA-B3AB-4FD0-9B84-94A77CC69271', 'Annual'),
@@ -2281,8 +2228,6 @@ ON Target.Id = Source.Id
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
     VALUES (Id, Description, 1);
-
---[Sen_Status]
 
 MERGE INTO [dbo].[SenStatus] AS Target
 USING (VALUES
@@ -3328,4 +3273,13 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
     VALUES (Id, Description, Active);
 
-EXEC sp_MSforeachtable @command1="print '?'", @command2="ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all"
+EXEC sp_MSforeachtable @command1="print '?'", @command2="ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all";
+
+IF(@@ERROR > 0)  
+BEGIN  
+    ROLLBACK TRANSACTION  
+END  
+ELSE  
+BEGIN  
+   COMMIT TRANSACTION  
+END  

@@ -4,6 +4,7 @@
     [CreatedById]  UNIQUEIDENTIFIER NOT NULL,
     [DirectoryId]  UNIQUEIDENTIFIER NOT NULL,
     [CreatedDate]  DATETIME2 (7)    NOT NULL,
+    [Order]        INT              NOT NULL,
     [Title]        NVARCHAR (256)   NOT NULL,
     [PlanContent]  NVARCHAR (MAX)   NOT NULL,
     CONSTRAINT [PK_LessonPlans] PRIMARY KEY CLUSTERED ([Id] ASC),

@@ -4,6 +4,7 @@
     [Active]      BIT              NOT NULL,
     [CourseId]    UNIQUEIDENTIFIER NOT NULL,
     [Name]        NVARCHAR (128)   NOT NULL,
+    [Order]       INT              NOT NULL,
     CONSTRAINT [PK_StudyTopics] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_StudyTopics_Courses_CourseId] FOREIGN KEY ([CourseId]) REFERENCES [dbo].[Courses] ([Id])
 );

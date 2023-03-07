@@ -13,11 +13,11 @@
 
 
 GO
-CREATE NONCLUSTERED INDEX [IX_DeviceCodes_Expiration]
-    ON [dbo].[DeviceCodes]([Expiration] ASC);
+CREATE UNIQUE NONCLUSTERED INDEX [IX_DeviceCodes_DeviceCode]
+    ON [dbo].[DeviceCodes]([DeviceCode] ASC);
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_DeviceCodes_DeviceCode]
-    ON [dbo].[DeviceCodes]([DeviceCode] ASC);
+CREATE NONCLUSTERED INDEX [IX_DeviceCodes_Expiration]
+    ON [dbo].[DeviceCodes]([Expiration] ASC);
 

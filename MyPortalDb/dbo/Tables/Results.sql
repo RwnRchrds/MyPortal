@@ -3,6 +3,7 @@
     [ResultSetId] UNIQUEIDENTIFIER NOT NULL,
     [StudentId]   UNIQUEIDENTIFIER NOT NULL,
     [AspectId]    UNIQUEIDENTIFIER NOT NULL,
+    [CreatedById] UNIQUEIDENTIFIER NOT NULL,
     [Date]        DATE             NOT NULL,
     [GradeId]     UNIQUEIDENTIFIER NULL,
     [Mark]        DECIMAL (10, 2)  NULL,
@@ -13,13 +14,19 @@
     CONSTRAINT [FK_Results_Aspects_AspectId] FOREIGN KEY ([AspectId]) REFERENCES [dbo].[Aspects] ([Id]),
     CONSTRAINT [FK_Results_Grades_GradeId] FOREIGN KEY ([GradeId]) REFERENCES [dbo].[Grades] ([Id]),
     CONSTRAINT [FK_Results_ResultSets_ResultSetId] FOREIGN KEY ([ResultSetId]) REFERENCES [dbo].[ResultSets] ([Id]),
-    CONSTRAINT [FK_Results_Students_StudentId] FOREIGN KEY ([StudentId]) REFERENCES [dbo].[Students] ([Id])
+    CONSTRAINT [FK_Results_Students_StudentId] FOREIGN KEY ([StudentId]) REFERENCES [dbo].[Students] ([Id]),
+    CONSTRAINT [FK_Results_Users_CreatedById] FOREIGN KEY ([CreatedById]) REFERENCES [dbo].[Users] ([Id])
 );
 
 
 GO
 CREATE NONCLUSTERED INDEX [IX_Results_AspectId]
     ON [dbo].[Results]([AspectId] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_Results_CreatedById]
+    ON [dbo].[Results]([CreatedById] ASC);
 
 
 GO

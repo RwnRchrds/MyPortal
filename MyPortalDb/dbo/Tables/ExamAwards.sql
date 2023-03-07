@@ -7,7 +7,7 @@
     [AwardCode]       NVARCHAR (MAX)   NULL,
     [ExpiryDate]      DATETIME2 (7)    NULL,
     CONSTRAINT [PK_ExamAwards] PRIMARY KEY CLUSTERED ([Id] ASC),
-    CONSTRAINT [FK_ExamAwards_Courses_CourseId] FOREIGN KEY ([CourseId]) REFERENCES [dbo].[Courses] ([Id]) ON DELETE SET NULL,
+    CONSTRAINT [FK_ExamAwards_Courses_CourseId] FOREIGN KEY ([CourseId]) REFERENCES [dbo].[Courses] ([Id]),
     CONSTRAINT [FK_ExamAwards_ExamAssessments_AssessmentId] FOREIGN KEY ([AssessmentId]) REFERENCES [dbo].[ExamAssessments] ([Id]),
     CONSTRAINT [FK_ExamAwards_ExamQualifications_QualificationId] FOREIGN KEY ([QualificationId]) REFERENCES [dbo].[ExamQualifications] ([Id])
 );

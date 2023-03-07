@@ -14,13 +14,8 @@
 
 
 GO
-CREATE NONCLUSTERED INDEX [IX_PersistedGrants_SubjectId_SessionId_Type]
-    ON [dbo].[PersistedGrants]([SubjectId] ASC, [SessionId] ASC, [Type] ASC);
-
-
-GO
-CREATE NONCLUSTERED INDEX [IX_PersistedGrants_SubjectId_ClientId_Type]
-    ON [dbo].[PersistedGrants]([SubjectId] ASC, [ClientId] ASC, [Type] ASC);
+CREATE NONCLUSTERED INDEX [IX_PersistedGrants_ConsumedTime]
+    ON [dbo].[PersistedGrants]([ConsumedTime] ASC);
 
 
 GO
@@ -29,6 +24,11 @@ CREATE NONCLUSTERED INDEX [IX_PersistedGrants_Expiration]
 
 
 GO
-CREATE NONCLUSTERED INDEX [IX_PersistedGrants_ConsumedTime]
-    ON [dbo].[PersistedGrants]([ConsumedTime] ASC);
+CREATE NONCLUSTERED INDEX [IX_PersistedGrants_SubjectId_ClientId_Type]
+    ON [dbo].[PersistedGrants]([SubjectId] ASC, [ClientId] ASC, [Type] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_PersistedGrants_SubjectId_SessionId_Type]
+    ON [dbo].[PersistedGrants]([SubjectId] ASC, [SessionId] ASC, [Type] ASC);
 

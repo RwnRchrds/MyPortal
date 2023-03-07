@@ -2,6 +2,7 @@
     [Id]             UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
     [StudentGroupId] UNIQUEIDENTIFIER NOT NULL,
     [YearGroupId]    UNIQUEIDENTIFIER NOT NULL,
+    [RoomId]         UNIQUEIDENTIFIER NULL,
     [StaffMemberId]  UNIQUEIDENTIFIER NULL,
     CONSTRAINT [PK_RegGroups] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_RegGroups_StaffMembers_StaffMemberId] FOREIGN KEY ([StaffMemberId]) REFERENCES [dbo].[StaffMembers] ([Id]),

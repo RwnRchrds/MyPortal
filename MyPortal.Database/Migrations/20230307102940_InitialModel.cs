@@ -1645,7 +1645,7 @@ namespace MyPortal.Database.Migrations
                         column: x => x.AddressTypeId,
                         principalTable: "AddressTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AddressAgencies_Agencies_AgencyId",
                         column: x => x.AgencyId,
@@ -2245,38 +2245,6 @@ namespace MyPortal.Database.Migrations
                         name: "FK_StoreDiscounts_ProductTypes_ProductTypeId",
                         column: x => x.ProductTypeId,
                         principalTable: "ProductTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DiaryEvents",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    EventTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Subject = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Location = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AllDay = table.Column<bool>(type: "bit", nullable: false),
-                    Public = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DiaryEvents", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DiaryEvents_DiaryEventTypes_EventTypeId",
-                        column: x => x.EventTypeId,
-                        principalTable: "DiaryEventTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_DiaryEvents_Rooms_RoomId",
-                        column: x => x.RoomId,
-                        principalTable: "Rooms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -2970,6 +2938,47 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DiaryEvents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    EventTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Subject = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Location = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AllDay = table.Column<bool>(type: "bit", nullable: false),
+                    Public = table.Column<bool>(type: "bit", nullable: false),
+                    System = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DiaryEvents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DiaryEvents_DiaryEventTypes_EventTypeId",
+                        column: x => x.EventTypeId,
+                        principalTable: "DiaryEventTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DiaryEvents_Rooms_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Rooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DiaryEvents_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Documents",
                 columns: table => new
                 {
@@ -3103,7 +3112,7 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Date = table.Column<DateTime>(type: "date", nullable: false),
@@ -3113,9 +3122,9 @@ namespace MyPortal.Database.Migrations
                 {
                     table.PrimaryKey("PK_MedicalEvents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MedicalEvents_Students_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Students",
+                        name: "FK_MedicalEvents_People_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "People",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -3510,93 +3519,6 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Detentions",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    DetentionTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SupervisorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Detentions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Detentions_DetentionTypes_DetentionTypeId",
-                        column: x => x.DetentionTypeId,
-                        principalTable: "DetentionTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Detentions_DiaryEvents_EventId",
-                        column: x => x.EventId,
-                        principalTable: "DiaryEvents",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Detentions_StaffMembers_SupervisorId",
-                        column: x => x.SupervisorId,
-                        principalTable: "StaffMembers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DiaryEventAttendees",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ResponseId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Required = table.Column<bool>(type: "bit", nullable: false),
-                    Attended = table.Column<bool>(type: "bit", nullable: true),
-                    CanEditEvent = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DiaryEventAttendees", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DiaryEventAttendees_DiaryEventAttendeeResponses_ResponseId",
-                        column: x => x.ResponseId,
-                        principalTable: "DiaryEventAttendeeResponses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_DiaryEventAttendees_DiaryEvents_EventId",
-                        column: x => x.EventId,
-                        principalTable: "DiaryEvents",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_DiaryEventAttendees_People_PersonId",
-                        column: x => x.PersonId,
-                        principalTable: "People",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ParentEvenings",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
-                    BookingOpened = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BookingClosed = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ParentEvenings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ParentEvenings_DiaryEvents_EventId",
-                        column: x => x.EventId,
-                        principalTable: "DiaryEvents",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ExamRoomSeatBlocks",
                 columns: table => new
                 {
@@ -3877,6 +3799,93 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Detentions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    DetentionTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SupervisorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Detentions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Detentions_DetentionTypes_DetentionTypeId",
+                        column: x => x.DetentionTypeId,
+                        principalTable: "DetentionTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Detentions_DiaryEvents_EventId",
+                        column: x => x.EventId,
+                        principalTable: "DiaryEvents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Detentions_StaffMembers_SupervisorId",
+                        column: x => x.SupervisorId,
+                        principalTable: "StaffMembers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DiaryEventAttendees",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ResponseId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Required = table.Column<bool>(type: "bit", nullable: false),
+                    Attended = table.Column<bool>(type: "bit", nullable: true),
+                    CanEditEvent = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DiaryEventAttendees", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DiaryEventAttendees_DiaryEventAttendeeResponses_ResponseId",
+                        column: x => x.ResponseId,
+                        principalTable: "DiaryEventAttendeeResponses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DiaryEventAttendees_DiaryEvents_EventId",
+                        column: x => x.EventId,
+                        principalTable: "DiaryEvents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DiaryEventAttendees_People_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "People",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ParentEvenings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
+                    BookingOpened = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BookingClosed = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParentEvenings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ParentEvenings_DiaryEvents_EventId",
+                        column: x => x.EventId,
+                        principalTable: "DiaryEvents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "StudentIncidents",
                 columns: table => new
                 {
@@ -4086,7 +4095,8 @@ namespace MyPortal.Database.Migrations
                     Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false),
                     CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -4095,6 +4105,32 @@ namespace MyPortal.Database.Migrations
                         name: "FK_StudyTopics_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReportCardTargetEntries",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    EntryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TargetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TargetCompleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReportCardTargetEntries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReportCardTargetEntries_ReportCardEntries_EntryId",
+                        column: x => x.EntryId,
+                        principalTable: "ReportCardEntries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ReportCardTargetEntries_ReportCardTargets_TargetId",
+                        column: x => x.TargetId,
+                        principalTable: "ReportCardTargets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -4129,38 +4165,14 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ReportCardTargetEntries",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    EntryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TargetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TargetCompleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ReportCardTargetEntries", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ReportCardTargetEntries_ReportCardEntries_EntryId",
-                        column: x => x.EntryId,
-                        principalTable: "ReportCardEntries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ReportCardTargetEntries_ReportCardTargets_TargetId",
-                        column: x => x.TargetId,
-                        principalTable: "ReportCardTargets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "StudentIncidentDetentions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     StudentIncidentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DetentionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    DetentionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Attended = table.Column<bool>(type: "bit", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -4314,6 +4326,7 @@ namespace MyPortal.Database.Migrations
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DirectoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     PlanContent = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -5185,6 +5198,11 @@ namespace MyPortal.Database.Migrations
                 column: "ResponseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DiaryEvents_CreatedById",
+                table: "DiaryEvents",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DiaryEvents_EventTypeId",
                 table: "DiaryEvents",
                 column: "EventTypeId");
@@ -5620,9 +5638,9 @@ namespace MyPortal.Database.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MedicalEvents_StudentId",
+                name: "IX_MedicalEvents_PersonId",
                 table: "MedicalEvents",
-                column: "StudentId");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NextOfKin_NextOfKinPersonId",
@@ -6897,9 +6915,6 @@ namespace MyPortal.Database.Migrations
                 name: "IncidentTypes");
 
             migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
                 name: "CurriculumBlocks");
 
             migrationBuilder.DropTable(
@@ -6928,6 +6943,9 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "Rooms");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "AcademicYears");

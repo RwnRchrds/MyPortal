@@ -1882,16 +1882,24 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("AllDay")
                         .HasColumnType("bit")
-                        .HasColumnOrder(8);
+                        .HasColumnOrder(10);
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(2);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(3);
 
                     b.Property<string>("Description")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)")
-                        .HasColumnOrder(4);
+                        .HasColumnOrder(6);
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(9);
 
                     b.Property<Guid>("EventTypeId")
                         .HasColumnType("uniqueidentifier")
@@ -1900,27 +1908,33 @@ namespace MyPortal.Database.Migrations
                     b.Property<string>("Location")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(7);
 
                     b.Property<bool>("Public")
                         .HasColumnType("bit")
-                        .HasColumnOrder(9);
+                        .HasColumnOrder(11);
 
                     b.Property<Guid?>("RoomId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(2);
+                        .HasColumnOrder(4);
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2")
-                        .HasColumnOrder(6);
+                        .HasColumnOrder(8);
 
                     b.Property<string>("Subject")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)")
-                        .HasColumnOrder(3);
+                        .HasColumnOrder(5);
+
+                    b.Property<bool>("System")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(12);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
 
                     b.HasIndex("EventTypeId");
 
@@ -3876,6 +3890,10 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(3);
 
+                    b.Property<int>("Order")
+                        .HasColumnType("int")
+                        .HasColumnOrder(5);
+
                     b.Property<string>("PlanContent")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -3889,7 +3907,7 @@ namespace MyPortal.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(6);
 
                     b.HasKey("Id");
 
@@ -4230,7 +4248,7 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnOrder(5);
 
-                    b.Property<Guid>("StudentId")
+                    b.Property<Guid>("PersonId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(1);
 
@@ -4238,7 +4256,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("MedicalEvents");
                 });
@@ -6368,9 +6386,15 @@ namespace MyPortal.Database.Migrations
                         .HasColumnOrder(0)
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Attended")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("DetentionId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(2);
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("StudentIncidentId")
                         .HasColumnType("uniqueidentifier")
@@ -6412,6 +6436,10 @@ namespace MyPortal.Database.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)")
                         .HasColumnOrder(4);
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int")
+                        .HasColumnOrder(5);
 
                     b.HasKey("Id");
 
@@ -7076,9 +7104,9 @@ namespace MyPortal.Database.Migrations
                         .IsRequired();
 
                     b.HasOne("MyPortal.Database.Models.Entity.AddressType", "AddressType")
-                        .WithMany()
+                        .WithMany("AddressAgencies")
                         .HasForeignKey("AddressTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("MyPortal.Database.Models.Entity.Agency", "Agency")
@@ -7683,6 +7711,11 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.DiaryEvent", b =>
                 {
+                    b.HasOne("MyPortal.Database.Models.Entity.User", "CreatedBy")
+                        .WithMany("DiaryEvents")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MyPortal.Database.Models.Entity.DiaryEventType", "EventType")
                         .WithMany("DiaryEvents")
                         .HasForeignKey("EventTypeId")
@@ -7693,6 +7726,8 @@ namespace MyPortal.Database.Migrations
                         .WithMany("DiaryEvents")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CreatedBy");
 
                     b.Navigation("EventType");
 
@@ -8515,15 +8550,15 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Entity.Student", "Student")
+                    b.HasOne("MyPortal.Database.Models.Entity.Person", "Person")
                         .WithMany("MedicalEvents")
-                        .HasForeignKey("StudentId")
+                        .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
 
-                    b.Navigation("Student");
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.NextOfKin", b =>
@@ -9711,6 +9746,8 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.AddressType", b =>
                 {
+                    b.Navigation("AddressAgencies");
+
                     b.Navigation("AddressPersons");
                 });
 
@@ -10271,6 +10308,8 @@ namespace MyPortal.Database.Migrations
 
                     b.Navigation("MedicalConditions");
 
+                    b.Navigation("MedicalEvents");
+
                     b.Navigation("PhoneNumbers");
 
                     b.Navigation("RelatedStaff");
@@ -10468,8 +10507,6 @@ namespace MyPortal.Database.Migrations
 
                     b.Navigation("HomeworkSubmissions");
 
-                    b.Navigation("MedicalEvents");
-
                     b.Navigation("ParentEveningAppointments");
 
                     b.Navigation("ProfileLogs");
@@ -10585,6 +10622,8 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("AssignedBy");
 
                     b.Navigation("Bulletins");
+
+                    b.Navigation("DiaryEvents");
 
                     b.Navigation("Documents");
 

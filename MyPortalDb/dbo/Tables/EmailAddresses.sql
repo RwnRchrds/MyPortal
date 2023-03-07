@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[EmailAddresses] (
     [Id]       UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
     [TypeId]   UNIQUEIDENTIFIER NOT NULL,
-    [PersonId] UNIQUEIDENTIFIER NOT NULL,
+    [PersonId] UNIQUEIDENTIFIER NULL,
     [AgencyId] UNIQUEIDENTIFIER NULL,
     [Address]  NVARCHAR (128)   NOT NULL,
     [Main]     BIT              NOT NULL,
