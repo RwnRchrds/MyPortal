@@ -6,9 +6,11 @@ namespace MyPortal.Database.Constants;
 
 public class CommonTableExpressions
 {
-    internal static Query WithPossibleAttendancePeriods(Query query, string alias)
+    internal static Query WithAttendancePeriodInstances(Query query, string alias)
     {
-        return query.With(alias, GetPossibleAttendancePeriodsCte());
+        //return query.With(alias, GetAttendancePeriodInstancesCte());
+
+        return query.With(alias, Views.GetAttendancePeriodInstances("API"));
     }
 
     internal static Query WithSessionsMetadata(Query query, string papCteAlias, string alias, bool includeRegPeriods)
@@ -23,7 +25,7 @@ public class CommonTableExpressions
         return query.With(alias, cteQuery);
     }
 
-    private static Query GetPossibleAttendancePeriodsCte()
+    private static Query GetAttendancePeriodInstancesCte()
     {
         var query = new Query("AttendancePeriods as AP");
             
@@ -41,7 +43,10 @@ public class CommonTableExpressions
 
         query.LeftJoin("AttendanceWeeks AS AW", "AW.WeekPatternId", "AWP.Id");
 
+        // Only return AM and PM reg periods on non-timetable weeks
         query.Where("AW.IsNonTimeTable", false);
+        query.OrWhere("AP.AmReg", true);
+        query.OrWhere("AP.PmReg", true);
 
         return query;
     }
@@ -64,7 +69,7 @@ public class CommonTableExpressions
         cteQuery.LeftJoin("StudentGroupSupervisors as SGS", "SGS.Id", "SG.MainSupervisorId");
         cteQuery.LeftJoin("StaffMembers as SM", "SM.Id", "SGS.SupervisorId");
         cteQuery.LeftJoin("Rooms as R", "R.Id", "RG.RoomId");
-        cteQuery.ApplyOverlappingEvents("DE", "PAP.ActualStartTime", "PAP.ActualEndTime", EventTypes.SchoolHoliday);
+        //cteQuery.ApplyOverlappingEvents("DE", "PAP.ActualStartTime", "PAP.ActualEndTime", EventTypes.SchoolHoliday);
         cteQuery.ApplyName("FNA", "SM.PersonId", NameFormat.FullNameAbbreviated);
         cteQuery.Where(x => x.Where($"AP.AmReg", true).OrWhere("AP.PmReg", true));
 
@@ -96,7 +101,7 @@ public class CommonTableExpressions
         cteQuery.LeftJoin("Rooms as CR", "CR.Id", "CA.RoomId");
         cteQuery.LeftJoin("StaffMembers as CSM", "CSM.Id", "CA.TeacherId");
         cteQuery.LeftJoin("Courses as CO", "CO.Id", "C.CourseId");
-        cteQuery.ApplyOverlappingEvents("DE", "PAP.ActualStartTime", "PAP.ActualEndTime", EventTypes.SchoolHoliday);
+        //cteQuery.ApplyOverlappingEvents("DE", "PAP.ActualStartTime", "PAP.ActualEndTime", EventTypes.SchoolHoliday);
         cteQuery.ApplyName("FNA", "SM.PersonId", NameFormat.FullNameAbbreviated);
         cteQuery.ApplyName("CNA", "CSM.PersonId", NameFormat.FullNameAbbreviated);
 

@@ -29,20 +29,23 @@ namespace MyPortal.Database.Helpers
             return query;
         }
 
-        public static Query JoinStudentGroupsByStudent(this Query query, string studentAlias, string studentGroupMembershipAlias)
+        public static Query JoinStudentGroupsByStudent(this Query query, string studentAlias,
+            string studentGroupMembershipAlias)
         {
-            query.LeftJoin($"StudentGroupMemberships as {studentGroupMembershipAlias}", $"{studentGroupMembershipAlias}.StudentId",
+            query.LeftJoin($"StudentGroupMemberships as {studentGroupMembershipAlias}",
+                $"{studentGroupMembershipAlias}.StudentId",
                 $"{studentAlias}.Id");
 
             return query;
         }
 
-        public static Query ApplyName(this Query query, string nameAlias, string personIdColumn, NameFormat format = NameFormat.Default, bool usePreferredName = false, bool includeMiddleName = true)
+        private static Query ApplyNameWithoutFunction(this Query query, string nameAlias, string personIdColumn,
+            NameFormat format = NameFormat.Default, bool usePreferredName = false, bool includeMiddleName = true)
         {
             var nameQuery = new Query("People as P");
 
             nameQuery.Select("P.Id as PersonId");
-            
+
             if (format == NameFormat.FullName)
             {
                 nameQuery.SelectRaw($@"CONCAT(IIF(P.Title IS NOT NULL, CONCAT(P.Title, ' '), ''),
@@ -73,7 +76,8 @@ namespace MyPortal.Database.Helpers
             }
             else
             {
-                nameQuery.SelectRaw($@"CONCAT({(usePreferredName ? "COALESCE(P.PreferredLastName, P.LastName)" : "P.LastName")},
+                nameQuery.SelectRaw(
+                    $@"CONCAT({(usePreferredName ? "COALESCE(P.PreferredLastName, P.LastName)" : "P.LastName")},
         ', ', {(usePreferredName ? "COALESCE(P.PreferredFirstName, P.FirstName)" : "P.FirstName")},
         {(includeMiddleName ? "IIF(P.MiddleName IS NOT NULL, CONCAT(' ', P.MiddleName), '')" : "")}) as [Name]");
             }
@@ -81,11 +85,12 @@ namespace MyPortal.Database.Helpers
             nameQuery.WhereRaw($"P.Id = {personIdColumn}");
 
             nameQuery.As(nameAlias);
-            
+
             return query.Join(nameQuery, j => j, "outer apply");
         }
 
-        public static Query ApplyOverlappingEvents(this Query query, string diaryEventAlias, string startTimeColumn, string endTimeColumn, Guid? eventTypeFilter)
+        public static Query ApplyOverlappingEvents(this Query query, string diaryEventAlias, string startTimeColumn,
+            string endTimeColumn, Guid? eventTypeFilter)
         {
             var eventQuery = new Query();
 
@@ -102,9 +107,16 @@ namespace MyPortal.Database.Helpers
                 eventQuery.Where("DE.EventTypeId", eventTypeFilter);
             }
 
-            eventQuery.As("DE");
+            eventQuery.As(diaryEventAlias);
 
             return query.Join(eventQuery, j => j, "outer apply");
+        }
+
+        public static Query ApplyName(this Query query, string nameAlias, string personIdColumn,
+            NameFormat format = NameFormat.Default, bool usePreferredName = false, bool includeMiddleName = true)
+        {
+            return ApplyNameWithoutFunction(query, nameAlias, personIdColumn, format, usePreferredName,
+                includeMiddleName);
         }
 
         public static Query WhereStudentGroup(this Query query, string studentGroupMembershipAlias,
@@ -117,7 +129,8 @@ namespace MyPortal.Database.Helpers
             return query;
         }
 
-        public static Query WhereStudentGroupMembershipValid(this Query query, string studentGroupMembershipAlias, DateTime dateFrom,
+        public static Query WhereStudentGroupMembershipValid(this Query query, string studentGroupMembershipAlias,
+            DateTime dateFrom,
             DateTime dateTo)
         {
             query.Where($"{studentGroupMembershipAlias}.StartDate", "<=", dateFrom);
@@ -138,7 +151,7 @@ namespace MyPortal.Database.Helpers
         {
             return query.Where(q => q.ContainsWord(column, searchText));
         }
-        
+
         public static Query OrWhereContainsWord(this Query query, string column, string searchText)
         {
             return query.OrWhere(q => q.ContainsWord(column, searchText));
