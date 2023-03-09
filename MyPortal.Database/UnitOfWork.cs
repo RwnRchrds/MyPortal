@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
@@ -853,6 +854,16 @@ namespace MyPortal.Database
             {
                 await Initialise();
             }
+        }
+
+        public async Task<bool> GetLock(string name, int timeout = 0)
+        {
+            if (_transaction != null)
+            {
+                return await DatabaseHelper.TryGetApplicationLock(_transaction, name, timeout);
+            }
+
+            return false;
         }
 
         private void ResetRepositories()

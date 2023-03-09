@@ -73,6 +73,8 @@
   <ItemGroup>
     <Build Include="dbo\Functions\GetName.sql" />
     <Build Include="dbo\Views\AttendancePeriodInstances.sql" />
+    <Content Include="dbo\Functions\GetOverlappingEvents.sql" />
+    <Content Include="dbo\Views\SessionMetadata.sql" />
     <Content Include="Scripts\Script.IdentityServer.sql" />
   </ItemGroup>
   <ItemGroup>

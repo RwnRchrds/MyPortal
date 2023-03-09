@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models.Entity;
 using Task = System.Threading.Tasks.Task;
@@ -211,5 +212,6 @@ namespace MyPortal.Database.Interfaces
         int BatchLimit { get; set; }
         Task BatchSaveChangesAsync();
         Task SaveChangesAsync();
+        Task<bool> GetLock(string name, int timeout = 0);
     }
 }

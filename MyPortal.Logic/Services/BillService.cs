@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -21,6 +22,13 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<BillModel>> GenerateChargeBills(Guid chargeBillingPeriodId)
         {
             await using var unitOfWork = await User.GetConnection();
+
+            var billLock = await unitOfWork.GetLock("MyPortal_GenerateBills");
+
+            if (!billLock)
+            {
+                throw new LogicException("Another user is currently generating bills. Please try again later.");
+            }
             
             ChargeBillingPeriod chargeBillingPeriod = await unitOfWork.ChargeBillingPeriods.GetById(chargeBillingPeriodId);
 

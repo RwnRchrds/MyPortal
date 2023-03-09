@@ -189,7 +189,7 @@ namespace MyPortal.Logic.Services
 
                 patternIndex++;
 
-                if (patternIndex == weekPatterns.Length)
+                if (patternIndex >= weekPatterns.Length)
                 {
                     patternIndex = 0;
                 }

@@ -27,24 +27,9 @@ namespace MyPortal.Database.Repositories
             
         }
 
-        private Query GenerateMetadataQuery(string alias = "SM")
-        {
-            var query = new Query();
-            CommonTableExpressions.WithAttendancePeriodInstances(query, "PeriodsCte");
-            CommonTableExpressions.WithSessionsMetadata(query, "PeriodsCte", "SessionsCte", true);
-
-            query.Select($"{alias}.SessionId", $"{alias}.AttendanceWeekId", $"{alias}.PeriodId", $"{alias}.StudentGroupId", $"{alias}.StartTime",
-                $"{alias}.EndTime", $"{alias}.PeriodName", $"{alias}.ClassCode", $"{alias}.TeacherId", $"{alias}.TeacherName", $"{alias}.RoomId",
-                $"{alias}.RoomName", $"{alias}.IsCover");
-            
-            query.From($"SessionsCte as {alias}");
-
-            return query;
-        }
-
         public async Task<IEnumerable<SessionDetailModel>> GetSessionDetails(Guid sessionId, DateTime dateFrom, DateTime dateTo)
         {
-            var query = GenerateMetadataQuery();
+            var query = Views.GetSessionMetadata("SM");
 
             query.Where("SM.SessionId", sessionId);
             query.WhereDate("SM.StartTime", ">=", dateFrom);
@@ -55,7 +40,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<SessionDetailModel> GetSessionDetails(Guid sessionId, Guid attendanceWeekId)
         {
-            var query = GenerateMetadataQuery();
+            var query = Views.GetSessionMetadata("SM");
 
             query.Where("SM.SessionId", sessionId);
             query.Where("SM.AttendanceWeekId", attendanceWeekId);
@@ -65,7 +50,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<SessionDetailModel>> GetSessionDetails(RegisterSearchOptions searchOptions)
         {
-            var query = GenerateMetadataQuery();
+            var query = Views.GetSessionMetadata("SM");
             
             query.WhereDate("SM.StartTime", ">=", searchOptions.DateFrom);
             query.WhereDate("SM.EndTime", "<=", searchOptions.DateTo);
@@ -85,7 +70,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<SessionDetailModel>> GetSessionDetailsByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo)
         {
-            var query = GenerateMetadataQuery();
+            var query = Views.GetSessionMetadata("SM");
             
             query.LeftJoin("StudentGroupMemberships AS SGM", "SGM.StudentGroupId", "SM.StudentGroupId");
             query.LeftJoin("Students AS S", "S.Id", "SGM.StudentId");
@@ -100,7 +85,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<SessionDetailModel>> GetSessionDetailsByStaffMember(Guid staffMemberId, DateTime dateFrom, DateTime dateTo)
         {
-            var query = GenerateMetadataQuery();
+            var query = Views.GetSessionMetadata("SM");
 
             query.LeftJoin("StaffMembers AS S", "S.Id", "SM.TeacherId");
             

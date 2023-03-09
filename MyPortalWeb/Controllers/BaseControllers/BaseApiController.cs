@@ -64,6 +64,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
                 case PermissionException:
                     statusCode = HttpStatusCode.Forbidden;
                     break;
+                case LogicException:
                 case InvalidDataException:
                     statusCode = HttpStatusCode.BadRequest;
                     break;
