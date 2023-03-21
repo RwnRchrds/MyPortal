@@ -17,7 +17,6 @@ namespace MyPortal.Logic.Models.Data.Examinations
         {
             ComponentId = model.ComponentId;
             ExamRoomId = model.ExamRoomId;
-            ExamDate = model.ExamDate;
             ActualStartTime = model.ActualStartTime;
             ExtraTimePercent = model.ExtraTimePercent;
 
