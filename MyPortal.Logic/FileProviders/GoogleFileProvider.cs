@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Google.Apis.Drive.v3;
@@ -52,6 +53,7 @@ namespace MyPortal.Logic.FileProviders
 
                 var file = new File
                 {
+                    Id = Guid.NewGuid(),
                     FileId = data.Id,
                     FileName = data.Name,
                     ContentType = data.MimeType

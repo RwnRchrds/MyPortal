@@ -12,11 +12,11 @@ namespace MyPortal.Database.BaseTypes
         }
         
         [Required]
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public bool Active { get; set; }
     }
 }

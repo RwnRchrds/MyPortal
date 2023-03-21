@@ -6,19 +6,19 @@ namespace MyPortal.Database.Models.Entity
     [Table("MarksheetColumns")]
     public class MarksheetColumn : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid TemplateId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid AspectId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid ResultSetId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public int DisplayOrder { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         public bool ReadOnly { get; set; }
 
         public virtual MarksheetTemplate Template { get; set; }

@@ -14,7 +14,7 @@ namespace MyPortal.Database.Models.Entity
             Incidents = new HashSet<Incident>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public int DefaultPoints { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

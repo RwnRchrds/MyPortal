@@ -6,10 +6,10 @@ namespace MyPortal.Database.Models.Entity
     [Table("CurriculumBandBlockAssignments")]
     public class CurriculumBandBlockAssignment : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid BlockId { get; set; }
         
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid BandId { get; set; }
 
         public virtual CurriculumBlock Block { get; set; }

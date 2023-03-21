@@ -15,7 +15,7 @@ namespace MyPortal.Database.Models.Entity
             Students = new HashSet<Student>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public string Code { get; set; }
 
         public virtual ICollection<Student> Students { get; set; }

@@ -15,15 +15,15 @@ namespace MyPortal.Database.Models.Entity
             LessonPlans = new HashSet<LessonPlan>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid CourseId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
         
-        [Column(Order = 5)] 
+        [Column(Order = 6)] 
         public int Order { get; set; }
 
         public virtual Course Course { get; set; }

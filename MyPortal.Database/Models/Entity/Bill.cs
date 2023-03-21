@@ -17,19 +17,19 @@ namespace MyPortal.Database.Models.Entity
             AccountTransactions = new HashSet<BillAccountTransaction>();
         }
         
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid StudentId { get; set; }
         
-        [Column(Order = 2)] 
+        [Column(Order = 3)] 
         public Guid? ChargeBillingPeriodId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public DateTime CreatedDate { get; set; }
 
-        [Column(Order = 4)] 
+        [Column(Order = 5)] 
         public DateTime DueDate { get; set; }
 
-        [Column(Order = 5)] 
+        [Column(Order = 6)] 
         public bool? Dispatched { get; set; }
 
         public virtual Student Student { get; set; }

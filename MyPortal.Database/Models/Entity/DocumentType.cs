@@ -13,22 +13,22 @@ namespace MyPortal.Database.Models.Entity
             Documents = new HashSet<Document>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public bool Staff { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public bool Student { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         public bool Contact { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         public bool General { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 8)]
         public bool Sen { get; set; }
         
-        [Column(Order = 8)] 
+        [Column(Order = 9)] 
         public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

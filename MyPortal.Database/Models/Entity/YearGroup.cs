@@ -15,10 +15,10 @@ namespace MyPortal.Database.Models.Entity
             RegGroups = new HashSet<RegGroup>();
         }
         
-        [Column(Order = 1)] 
+        [Column(Order = 2)] 
         public Guid StudentGroupId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 3)]
         public Guid CurriculumYearGroupId { get; set; }
 
         public virtual StudentGroup StudentGroup { get; set; }

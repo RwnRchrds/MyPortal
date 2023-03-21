@@ -69,6 +69,7 @@ namespace MyPortal.Logic.Services
 
             var logNote = new LogNote
             {
+                Id = Guid.NewGuid(),
                 TypeId = logNoteModel.TypeId,
                 Message = logNoteModel.Message,
                 StudentId = logNoteModel.StudentId,

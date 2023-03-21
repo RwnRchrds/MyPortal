@@ -7,41 +7,41 @@ namespace MyPortal.Database.Models.Entity
     [Table("Schools")]
     public class School :BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid AgencyId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid? LocalAuthorityId { get; set; }
 
-        [Column(Order = 3)]
-        public int EstablishmentNumber { get; set; }
-
         [Column(Order = 4)]
-        [Required]
-        [StringLength(128)]
-        public string Urn { get; set; }
+        public int EstablishmentNumber { get; set; }
 
         [Column(Order = 5)]
         [Required]
         [StringLength(128)]
-        public string Uprn { get; set; }
+        public string Urn { get; set; }
 
         [Column(Order = 6)]
+        [Required]
+        [StringLength(128)]
+        public string Uprn { get; set; }
+
+        [Column(Order = 7)]
         public Guid PhaseId { get; set; }
         
-        [Column(Order = 7)]
+        [Column(Order = 8)]
         public Guid TypeId { get; set; }
 
-        [Column(Order = 8)]
+        [Column(Order = 9)]
         public Guid GovernanceTypeId { get; set; }
 
-        [Column(Order = 9)]
+        [Column(Order = 10)]
         public Guid IntakeTypeId { get; set; }
 
-        [Column(Order = 10)]
+        [Column(Order = 11)]
         public Guid? HeadTeacherId { get; set; }
 
-        [Column(Order = 16)]
+        [Column(Order = 12)]
         public bool Local { get; set; }
 
         public virtual Agency Agency { get; set; }

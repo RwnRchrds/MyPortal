@@ -15,11 +15,11 @@ namespace MyPortal.Database.Models.Entity
             DiaryEvents = new HashSet<DiaryEvent>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [StringLength(128)]
         public string ColourCode { get; set; }
 
-        [Column(Order = 4)] 
+        [Column(Order = 5)] 
         public bool System { get; set; }
 
         public virtual  ICollection<DiaryEventTemplate> DiaryEventTemplates { get; set; }

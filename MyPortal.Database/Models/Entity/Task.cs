@@ -9,39 +9,39 @@ namespace MyPortal.Database.Models.Entity
     [Table("Tasks")]
     public class Task : BaseTypes.Entity, ISystemEntity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid TypeId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid AssignedToId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid? AssignedById { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public DateTime CreatedDate { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         public DateTime? DueDate { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         public DateTime? CompletedDate { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 8)]
         [StringLength(128)]
         public string Title { get; set; }
 
-        [Column(Order = 8)]
+        [Column(Order = 9)]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [Column(Order = 9)]
+        [Column(Order = 10)]
         public bool Completed { get; set; }
         
-        [Column(Order = 10)]
+        [Column(Order = 11)]
         public bool AllowEdit { get; set; }
 
-        [Column(Order = 11)]
+        [Column(Order = 12)]
         public bool System { get; set; }
         
         public virtual Person AssignedTo { get; set; }

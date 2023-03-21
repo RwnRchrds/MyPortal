@@ -163,6 +163,7 @@ public class AssessmentService : BaseUserService, IAssessmentService
 
         var aspect = new Aspect
         {
+            Id = Guid.NewGuid(),
             TypeId = model.TypeId,
             GradeSetId = model.GradeSetId,
             MinMark = model.MinMark,
@@ -273,6 +274,7 @@ public class AssessmentService : BaseUserService, IAssessmentService
             {
                 result = new Result
                 {
+                    Id = Guid.NewGuid(),
                     StudentId = model.StudentId,
                     AspectId = model.AspectId,
                     ResultSetId = model.ResultSetId,

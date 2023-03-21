@@ -5,16 +5,16 @@ namespace MyPortal.Database.Models.Entity
 {
     public class ExamAssessmentAspect : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid AssessmentId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid AspectId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid SeriesId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public int AspectOrder { get; set; }
 
         public virtual Aspect Aspect { get; set; }

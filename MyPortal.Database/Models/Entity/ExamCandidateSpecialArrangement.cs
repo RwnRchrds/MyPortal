@@ -6,10 +6,10 @@ namespace MyPortal.Database.Models.Entity
     [Table("ExamCandidateSpecialArrangements")]
     public class ExamCandidateSpecialArrangement : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid CandidateId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid SpecialArrangementId { get; set; }
 
         public virtual ExamCandidate Candidate { get; set; }

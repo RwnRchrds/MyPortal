@@ -13,7 +13,7 @@ namespace MyPortal.Database.Models.Entity
             Certificates = new HashSet<TrainingCertificate>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [StringLength(128)]
         public string ColourCode { get; set; }
 

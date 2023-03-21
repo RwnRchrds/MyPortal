@@ -12,13 +12,13 @@ namespace MyPortal.Database.Models.Entity
             BillAccountTransactions = new HashSet<BillAccountTransaction>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid StudentId { get; set; }
 
-        [Column(Order = 2, TypeName = "decimal(10,2)")]
+        [Column(Order = 3, TypeName = "decimal(10,2)")]
         public decimal Amount { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public DateTime Date { get; set; } 
 
         public virtual Student Student { get; set; }

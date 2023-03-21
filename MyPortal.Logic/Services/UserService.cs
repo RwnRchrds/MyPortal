@@ -141,6 +141,7 @@ namespace MyPortal.Logic.Services
 
             var user = new User
             {
+                Id = Guid.NewGuid(),
                 UserName = request.Username.ToLower(),
                 UserType = request.UserType,
                 PersonId = request.PersonId,

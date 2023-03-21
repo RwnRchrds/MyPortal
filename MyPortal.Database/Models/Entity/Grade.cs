@@ -13,19 +13,19 @@ namespace MyPortal.Database.Models.Entity
             Results = new HashSet<Result>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid GradeSetId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         [Required]
         [StringLength(25)]
         public string Code { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [StringLength(50)]
         public string Description { get; set; }
 
-        [Column(Order = 4, TypeName = "decimal(10,2)")]
+        [Column(Order = 5, TypeName = "decimal(10,2)")]
         public decimal Value { get; set; }
 
         public virtual GradeSet GradeSet { get; set; }

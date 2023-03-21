@@ -14,7 +14,7 @@ namespace MyPortal.Database.Models.Entity
             People = new HashSet<Person>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [Required]
         [StringLength(10)]
         public string Code { get; set; }

@@ -63,7 +63,6 @@ namespace MyPortal.Database.Repositories
             }
 
             sitting.ExamRoomId = entity.ExamRoomId;
-            sitting.ExamDate = entity.ExamDate;
             sitting.ActualStartTime = entity.ActualStartTime;
             sitting.ExtraTimePercent = entity.ExtraTimePercent;
         }

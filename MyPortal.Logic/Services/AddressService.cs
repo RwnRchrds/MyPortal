@@ -25,6 +25,7 @@ namespace MyPortal.Logic.Services
         {
             return new Address
             {
+                Id = Guid.NewGuid(),
                 Apartment = model.Apartment,
                 BuildingName = model.BuildingName,
                 BuildingNumber = model.BuildingNumber,
@@ -72,6 +73,7 @@ namespace MyPortal.Logic.Services
 
             person.AddressPeople.Add(new AddressPerson
             {
+                Id = Guid.NewGuid(),
                 Address = CreateAddress(model),
                 AddressTypeId = model.AddressTypeId,
                 Main = model.Main
@@ -104,6 +106,7 @@ namespace MyPortal.Logic.Services
             
             agency.AddressAgencies.Add(new AddressAgency
             {
+                Id = Guid.NewGuid(),
                 Address = CreateAddress(model),
                 AddressTypeId = model.AddressTypeId,
                 Main = model.Main
@@ -196,6 +199,7 @@ namespace MyPortal.Logic.Services
 
             var addressPerson = new AddressPerson
             {
+                Id = Guid.NewGuid(),
                 AddressId = address.Id,
                 PersonId = person.Id,
                 AddressTypeId = model.AddressTypeId,
@@ -227,6 +231,7 @@ namespace MyPortal.Logic.Services
 
             var addressAgency = new AddressAgency
             {
+                Id = Guid.NewGuid(),
                 AddressId = address.Id,
                 AgencyId = agency.Id,
                 AddressTypeId = model.AddressTypeId,

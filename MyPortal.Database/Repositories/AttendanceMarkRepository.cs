@@ -82,7 +82,7 @@ namespace MyPortal.Database.Repositories
         }
 
         public async Task<IEnumerable<PossibleAttendanceMark>> GetPossibleMarksByStudentGroup(Guid studentGroupId,
-            IEnumerable<PossibleAttendancePeriod> attendancePeriods)
+            IEnumerable<AttendancePeriodInstance> attendancePeriods)
         {
             var orderedPeriods = attendancePeriods.OrderBy(p => p.ActualStartTime).ToArray();
 
@@ -152,7 +152,7 @@ namespace MyPortal.Database.Repositories
         }
 
         public async Task<IEnumerable<AttendanceMarkDetailModel>> GetRegisterMarks(Guid studentGroupId,
-            PossibleAttendancePeriod[] attendancePeriods)
+            AttendancePeriodInstance[] attendancePeriods)
         {
             if (attendancePeriods.Any())
             {

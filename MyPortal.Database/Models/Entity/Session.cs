@@ -6,22 +6,22 @@ namespace MyPortal.Database.Models.Entity
     [Table("Sessions")]
     public class Session : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid ClassId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid PeriodId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid TeacherId { get; set; }
 
-        [Column(Order = 4)] 
+        [Column(Order = 5)] 
         public Guid? RoomId { get; set; }
         
-        [Column(Order = 5)] 
+        [Column(Order = 6, TypeName = "date")] 
         public DateTime StartDate { get; set; }
         
-        [Column(Order = 6)] 
+        [Column(Order = 7, TypeName = "date")] 
         public DateTime EndDate { get; set; }
 
         public virtual StaffMember Teacher { get; set; }

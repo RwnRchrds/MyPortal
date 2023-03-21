@@ -7,16 +7,16 @@ namespace MyPortal.Database.Models.Entity
     [Table("PersonConditions")]
     public class PersonCondition : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid PersonId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid ConditionId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public bool MedicationTaken { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         [StringLength(256)]
         public string Medication { get; set; }
 

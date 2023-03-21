@@ -9,13 +9,13 @@ namespace MyPortal.Database.Models.Entity
     [Table("RegGroups")]
     public partial class RegGroup : BaseTypes.Entity, IStudentGroupEntity
     {
-        [Column(Order = 1)] 
+        [Column(Order = 2)] 
         public Guid StudentGroupId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid YearGroupId { get; set; }
         
-        [Column(Order = 3)] 
+        [Column(Order = 4)] 
         public Guid? RoomId { get; set; }
 
         public virtual StudentGroup StudentGroup { get; set; }

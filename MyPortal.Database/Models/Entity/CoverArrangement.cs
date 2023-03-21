@@ -6,19 +6,19 @@ namespace MyPortal.Database.Models.Entity
     [Table("CoverArrangements")]
     public class CoverArrangement : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid WeekId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid SessionId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid? TeacherId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public Guid? RoomId { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         public string Comments { get; set; }
 
         public virtual AttendanceWeek Week { get; set; }

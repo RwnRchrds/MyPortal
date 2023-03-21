@@ -6,22 +6,22 @@ namespace MyPortal.Database.Models.Entity
     [Table("DiaryEventAttendees")]
     public class DiaryEventAttendee : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid EventId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid PersonId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid? ResponseId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public bool Required { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         public bool? Attended { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         public bool CanEditEvent { get; set; }
 
         public virtual DiaryEvent Event { get; set; }

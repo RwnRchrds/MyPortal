@@ -71,6 +71,7 @@ namespace MyPortal.Logic.Services
 
             var role = new Role
             {
+                Id = Guid.NewGuid(),
                 Name = request.Name,
                 Description = request.Description
             };

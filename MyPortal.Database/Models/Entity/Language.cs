@@ -10,7 +10,7 @@ namespace MyPortal.Database.Models.Entity
     [Table("Languages")]
     public class Language : LookupItem, ICensusEntity
     {
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public string Code { get; set; }
     }
 }

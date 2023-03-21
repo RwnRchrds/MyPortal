@@ -224,7 +224,7 @@ namespace MyPortal.Database.Models
             {
                 modelBuilder.Entity<AcademicTerm>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.AcademicYear)
                         .WithMany(x => x.AcademicTerms)
@@ -241,7 +241,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AcademicYear>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Achievements)
                         .WithOne(x => x.AcademicYear)
@@ -264,7 +264,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AccountTransaction>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Student)
                         .WithMany(x => x.AccountTransactions)
@@ -275,12 +275,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Achievement>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<AchievementOutcome>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(ao => ao.StudentAchievements)
                         .WithOne(a => a.Outcome)
@@ -291,7 +291,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AchievementType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Achievements)
                         .WithOne(x => x.Type)
@@ -302,7 +302,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Activity>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.StudentGroup)
                         .WithMany(x => x.Activities)
@@ -313,22 +313,22 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Address>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<AddressAgency>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<AddressPerson>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<AddressType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.AddressPersons)
                         .WithOne(x => x.AddressType)
@@ -345,7 +345,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Agency>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.AddressAgencies)
                         .WithOne(x => x.Agency)
@@ -378,12 +378,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AgencyType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<Agent>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Person)
                         .WithMany(x => x.Agents)
@@ -400,7 +400,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AgentType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Agents)
                         .WithOne(x => x.AgentType)
@@ -411,7 +411,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Aspect>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(a => a.Results)
                         .WithOne(r => r.Aspect)
@@ -422,7 +422,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AspectType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(at => at.Aspects)
                         .WithOne(a => a.Type)
@@ -433,7 +433,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AttendanceCode>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.AttendanceMarks)
                         .WithOne(x => x.AttendanceCode)
@@ -444,7 +444,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AttendanceCodeType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(acm => acm.Codes)
                         .WithOne(ac => ac.CodeType)
@@ -455,12 +455,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AttendanceMark>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<AttendancePeriod>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(ap => ap.AttendanceMarks)
                         .WithOne(am => am.AttendancePeriod)
@@ -477,7 +477,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AttendanceWeek>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(aw => aw.AttendanceMarks)
                         .WithOne(am => am.Week)
@@ -488,7 +488,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<AttendanceWeekPattern>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(awp => awp.Periods)
                         .WithOne(ap => ap.WeekPattern)
@@ -505,12 +505,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<BasketItem>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<BehaviourOutcome>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.StudentIncidents)
                         .WithOne(x => x.Outcome)
@@ -521,7 +521,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<BehaviourStatus>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.StudentIncidents)
                         .WithOne(x => x.Status)
@@ -532,7 +532,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<BehaviourTarget>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.ReportCardLinks)
                         .WithOne(x => x.Target)
@@ -543,7 +543,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Bill>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.BillItems)
                         .WithOne(x => x.Bill)
@@ -554,7 +554,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<BillAccountTransaction>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Bill)
                         .WithMany(x => x.AccountTransactions)
@@ -571,7 +571,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<BillStudentCharge>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Bill)
                         .WithMany(x => x.BillStudentCharges)
@@ -588,7 +588,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<BillDiscount>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Discount)
                         .WithMany(x => x.BillDiscounts)
@@ -603,11 +603,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<BillItem>(e => { SetIdDefaultValue(e); });
+                modelBuilder.Entity<BillItem>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<BoarderStatus>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Students)
                         .WithOne(x => x.BoarderStatus)
@@ -617,7 +617,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Building>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Floors)
                         .WithOne(x => x.Building)
@@ -627,7 +627,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<BuildingFloor>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Rooms)
                         .WithOne(x => x.BuildingFloor)
@@ -635,16 +635,16 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Bulletin>(e => { SetIdDefaultValue(e); });
+                modelBuilder.Entity<Bulletin>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<Charge>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<ChargeBillingPeriod>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.StudentCharges)
                         .WithOne(x => x.ChargeBillingPeriod)
@@ -660,7 +660,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ChargeDiscount>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Charge)
                         .WithMany(x => x.ChargeDiscounts)
@@ -677,7 +677,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Class>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Sessions)
                         .WithOne(x => x.Class)
@@ -686,11 +686,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Comment>(e => { SetIdDefaultValue(e); });
+                modelBuilder.Entity<Comment>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<CommentBank>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Areas)
                         .WithOne(x => x.CommentBank)
@@ -701,7 +701,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<CommentBankArea>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Sections)
                         .WithOne(x => x.Area)
@@ -712,7 +712,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<CommentBankSection>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Comments)
                         .WithOne(x => x.Section)
@@ -721,14 +721,25 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+                modelBuilder.Entity<CommentType>(e =>
+                {
+                    ConfigureEntity(e);
+
+                    e.HasMany(x => x.Comments)
+                        .WithOne(x => x.CommentType)
+                        .HasForeignKey(x => x.CommentTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
                 modelBuilder.Entity<CommunicationLog>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<CommunicationType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.CommunicationLogs)
                         .WithOne(x => x.Type)
@@ -739,7 +750,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Contact>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.LinkedStudents)
                         .WithOne(x => x.Contact)
@@ -756,7 +767,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Course>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Classes)
                         .WithOne(x => x.Course)
@@ -784,12 +795,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<CoverArrangement>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<CurriculumBand>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.StudentGroup)
                         .WithMany(x => x.CurriculumBands)
@@ -807,12 +818,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<CurriculumBandBlockAssignment>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<CurriculumBlock>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.BandAssignments)
                         .WithOne(x => x.Block)
@@ -829,7 +840,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<CurriculumGroup>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.StudentGroup)
                         .WithMany(x => x.CurriculumGroups)
@@ -846,7 +857,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<CurriculumYearGroup>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.YearGroups)
                         .WithOne(x => x.CurriculumYearGroup)
@@ -863,7 +874,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Detention>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Incidents)
                         .WithOne(x => x.Detention)
@@ -874,7 +885,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<DetentionType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Detentions)
                         .WithOne(x => x.Type)
@@ -885,7 +896,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<DiaryEvent>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Detentions)
                         .WithOne(x => x.Event)
@@ -908,12 +919,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<DiaryEventAttendee>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<DiaryEventAttendeeResponse>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.DiaryEventAttendees)
                         .WithOne(x => x.Response)
@@ -923,12 +934,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<DiaryEventTemplate>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<DiaryEventType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.DiaryEventTemplates)
                         .WithOne(x => x.DiaryEventType)
@@ -945,7 +956,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<DietaryRequirement>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.PersonDietaryRequirements)
                         .WithOne(x => x.DietaryRequirement)
@@ -956,7 +967,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Directory>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(d => d.Bulletins)
                         .WithOne(b => b.Directory)
@@ -994,16 +1005,16 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Discount>(e => { SetIdDefaultValue(e); });
+                modelBuilder.Entity<Discount>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<Document>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<DocumentType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Documents)
                         .WithOne(x => x.Type)
@@ -1014,12 +1025,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<EmailAddress>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<EmailAddressType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.EmailAddresses)
                         .WithOne(x => x.Type)
@@ -1030,7 +1041,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<EnrolmentStatus>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Students)
                         .WithOne(x => x.EnrolmentStatus)
@@ -1040,7 +1051,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Ethnicity>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.People)
                         .WithOne(x => x.Ethnicity)
@@ -1050,7 +1061,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamAssessment>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Aspects)
                         .WithOne(x => x.Assessment)
@@ -1085,7 +1096,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamAssessmentAspect>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Aspect)
                         .WithMany(x => x.AssessmentAspects)
@@ -1096,7 +1107,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamAssessmentMode>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Components)
                         .WithOne(x => x.AssessmentMode)
@@ -1113,7 +1124,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamAward>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.ExamAwardElements)
                         .WithOne(x => x.Award)
@@ -1147,7 +1158,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamAwardElement>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Element)
                         .WithMany(x => x.ExamAwardElements)
@@ -1158,7 +1169,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamAwardSeries>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Series)
                         .WithMany(x => x.ExamAwardSeries)
@@ -1169,7 +1180,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamBaseComponent>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.ExamComponents)
                         .WithOne(x => x.BaseComponent)
@@ -1180,7 +1191,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamBaseElement>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Elements)
                         .WithOne(x => x.BaseElement)
@@ -1203,7 +1214,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamBoard>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.ExamSeries)
                         .WithOne(x => x.ExamBoard)
@@ -1214,7 +1225,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamCandidate>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.LinkedSeries)
                         .WithOne(x => x.Candidate)
@@ -1249,7 +1260,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamCandidateSeries>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Series)
                         .WithMany(x => x.ExamCandidateSeries)
@@ -1260,7 +1271,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamCandidateSpecialArrangement>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.SpecialArrangement)
                         .WithMany(x => x.Candidates)
@@ -1271,7 +1282,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamComponent>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Sittings)
                         .WithOne(x => x.Component)
@@ -1294,7 +1305,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamComponentSitting>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Room)
                         .WithMany(x => x.ExamComponentSittings)
@@ -1311,7 +1322,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamDate>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Session)
                         .WithMany(x => x.ExamDates)
@@ -1327,7 +1338,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamElement>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Series)
                         .WithMany(x => x.ExamElements)
@@ -1344,17 +1355,17 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamElementComponent>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<ExamEnrolment>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<ExamQualification>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Levels)
                         .WithOne(x => x.Qualification)
@@ -1365,7 +1376,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamQualificationLevel>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.DefaultGradeSet)
                         .WithMany(x => x.ExamQualificationLevels)
@@ -1375,7 +1386,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamResultEmbargo>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.ResultSet)
                         .WithMany(x => x.ExamResultEmbargoes)
@@ -1386,7 +1397,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamRoom>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Room)
                         .WithMany(x => x.ExamRooms)
@@ -1403,7 +1414,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamSeason>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.ResultSet)
                         .WithMany(x => x.ExamSeasons)
@@ -1420,27 +1431,27 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExamSeatAllocation>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<ExamSeries>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<ExamSession>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<ExamSpecialArrangement>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<Exclusion>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Student)
                         .WithMany(x => x.Exclusions)
@@ -1468,22 +1479,22 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ExclusionAppealResult>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<ExclusionReason>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<ExclusionType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<File>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Documents)
                         .WithOne(x => x.Attachment)
@@ -1493,12 +1504,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<GiftedTalented>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<GovernanceType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Schools)
                         .WithOne(x => x.GovernanceType)
@@ -1509,7 +1520,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Grade>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Results)
                         .WithOne(x => x.Grade)
@@ -1519,7 +1530,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<GradeSet>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(gs => gs.Aspects)
                         .WithOne(a => a.GradeSet)
@@ -1535,7 +1546,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<HomeworkItem>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Submissions)
                         .WithOne(x => x.HomeworkItem)
@@ -1546,7 +1557,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<HomeworkSubmission>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Task)
                         .WithMany(x => x.HomeworkSubmissions)
@@ -1568,7 +1579,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<House>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.StudentGroup)
                         .WithMany(x => x.Houses)
@@ -1579,7 +1590,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Incident>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.InvolvedStudents)
                         .WithOne(x => x.Incident)
@@ -1590,12 +1601,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StudentIncidentDetention>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<IncidentType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Incidents)
                         .WithOne(x => x.Type)
@@ -1606,7 +1617,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<IntakeType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Schools)
                         .WithOne(x => x.IntakeType)
@@ -1617,17 +1628,17 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Language>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<LessonPlan>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<LessonPlanHomeworkItem>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.HomeworkItem)
                         .WithMany(x => x.LessonPlanHomeworkItems)
@@ -1644,12 +1655,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<LessonPlanTemplate>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<LocalAuthority>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Schools)
                         .WithOne(x => x.LocalAuthority)
@@ -1660,7 +1671,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Location>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.BehaviourAchievements)
                         .WithOne(x => x.Location)
@@ -1673,11 +1684,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<LogNote>(e => { SetIdDefaultValue(e); });
+                modelBuilder.Entity<LogNote>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<LogNoteType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.LogNotes)
                         .WithOne(x => x.LogNoteType)
@@ -1688,12 +1699,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<MarksheetColumn>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<MarksheetTemplate>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Columns)
                         .WithOne(x => x.Template)
@@ -1710,7 +1721,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Marksheet>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.StudentGroup)
                         .WithMany(x => x.Marksheets)
@@ -1721,7 +1732,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<MedicalCondition>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.PersonConditions)
                         .WithOne(x => x.MedicalCondition)
@@ -1732,12 +1743,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<MedicalEvent>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<NextOfKin>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.StaffMember)
                         .WithMany(x => x.NextOfKin)
@@ -1754,7 +1765,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<NextOfKinRelationshipType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.NextOfKin)
                         .WithOne(x => x.RelationshipType)
@@ -1765,12 +1776,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Observation>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<ObservationOutcome>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Observations)
                         .WithOne(x => x.Outcome)
@@ -1781,7 +1792,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ParentEvening>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.StaffMembers)
                         .WithOne(x => x.ParentEvening)
@@ -1792,22 +1803,22 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ParentEveningAppointment>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<ParentEveningBreak>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<ParentEveningGroup>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<ParentEveningStaffMember>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Appointments)
                         .WithOne(x => x.ParentEveningStaffMember)
@@ -1824,7 +1835,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Person>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(p => p.AddressPeople)
                         .WithOne(a => a.Person)
@@ -1872,22 +1883,22 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<PersonCondition>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<PersonDietaryRequirement>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<PhoneNumber>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<PhoneNumberType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.PhoneNumbers)
                         .WithOne(x => x.Type)
@@ -1898,7 +1909,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Photo>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.People)
                         .WithOne(x => x.Photo)
@@ -1908,7 +1919,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Product>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.BasketItems)
                         .WithOne(x => x.Product)
@@ -1931,7 +1942,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StoreDiscount>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Product)
                         .WithMany(x => x.ProductDiscounts)
@@ -1942,7 +1953,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ProductType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Products)
                         .WithOne(x => x.Type)
@@ -1959,7 +1970,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<RegGroup>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.StudentGroup)
                         .WithMany(x => x.RegGroups)
@@ -1970,7 +1981,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<RelationshipType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.StudentContacts)
                         .WithOne(x => x.RelationshipType)
@@ -1987,7 +1998,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ReportCard>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Targets)
                         .WithOne(x => x.ReportCard)
@@ -2016,7 +2027,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ReportCardEntry>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.TargetSubmissions)
                         .WithOne(x => x.Entry)
@@ -2033,7 +2044,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ReportCardTarget>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Submissions)
                         .WithOne(x => x.Target)
@@ -2044,14 +2055,14 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<ReportCardTargetEntry>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
-                modelBuilder.Entity<Result>(e => { SetIdDefaultValue(e); });
+                modelBuilder.Entity<Result>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<ResultSet>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(rs => rs.Results)
                         .WithOne(r => r.ResultSet)
@@ -2083,7 +2094,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Room>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.CoverArrangements)
                         .WithOne(x => x.Room)
@@ -2109,12 +2120,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<RoomClosure>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<RoomClosureReason>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Closures)
                         .WithOne(x => x.Reason)
@@ -2125,7 +2136,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<School>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Agency)
                         .WithMany(x => x.Schools)
@@ -2136,7 +2147,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<SchoolPhase>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Schools)
                         .WithOne(x => x.SchoolPhase)
@@ -2147,7 +2158,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<SchoolType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Schools)
                         .WithOne(x => x.Type)
@@ -2156,11 +2167,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<SenEvent>(e => { SetIdDefaultValue(e); });
+                modelBuilder.Entity<SenEvent>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<SenEventType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Events)
                         .WithOne(x => x.Type)
@@ -2171,12 +2182,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<SenProvision>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<SenProvisionType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.SenProvisions)
                         .WithOne(x => x.Type)
@@ -2185,11 +2196,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<SenReview>(e => { SetIdDefaultValue(e); });
+                modelBuilder.Entity<SenReview>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<SenReviewType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Reviews)
                         .WithOne(x => x.ReviewType)
@@ -2200,7 +2211,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<SenStatus>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                     
                     e.HasMany(x => x.Students)
                         .WithOne(x => x.SenStatus)
@@ -2214,7 +2225,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<SenType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Students)
                         .WithOne(x => x.SenType)
@@ -2222,16 +2233,16 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Session>(e => { SetIdDefaultValue(e); });
+                modelBuilder.Entity<Session>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<StaffAbsence>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<StaffAbsenceType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Absences)
                         .WithOne(x => x.AbsenceType)
@@ -2242,7 +2253,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StaffIllnessType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Absences)
                         .WithOne(x => x.IllnessType)
@@ -2252,7 +2263,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StaffMember>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(sm => sm.Sessions)
                         .WithOne(s => s.Teacher)
@@ -2321,12 +2332,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StoreDiscount>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<Student>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(s => s.Results)
                         .WithOne(r => r.Student)
@@ -2418,7 +2429,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StudentAchievement>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Achievement)
                         .WithMany(x => x.InvolvedStudents)
@@ -2429,7 +2440,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StudentAgentRelationship>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Student)
                         .WithMany(x => x.AgentRelationships)
@@ -2440,7 +2451,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StudentCharge>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Charge)
                         .WithMany(x => x.StudentCharges)
@@ -2457,7 +2468,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StudentContactRelationship>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Contact)
                         .WithMany(x => x.LinkedStudents)
@@ -2474,7 +2485,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StudentChargeDiscount>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.Student)
                         .WithMany(x => x.ChargeDiscounts)
@@ -2491,7 +2502,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StudentGroup>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasOne(x => x.PromoteToGroup)
                         .WithMany(x => x.PromotionSourceGroups)
@@ -2518,17 +2529,17 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StudentGroupMembership>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<StudentGroupSupervisor>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<StudentIncident>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.LinkedDetentions)
                         .WithOne(x => x.StudentIncident)
@@ -2539,7 +2550,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<StudyTopic>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.LessonPlans)
                         .WithOne(x => x.StudyTopic)
@@ -2556,7 +2567,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Subject>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Courses)
                         .WithOne(x => x.Subject)
@@ -2579,12 +2590,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<SubjectCode>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<SubjectCodeSet>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.SubjectCodes)
                         .WithOne(x => x.SubjectCodeSet)
@@ -2595,12 +2606,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<SubjectStaffMember>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<SubjectStaffMemberRole>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.StaffMembers)
                         .WithOne(x => x.Role)
@@ -2609,11 +2620,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Task>(e => { SetIdDefaultValue(e); });
+                modelBuilder.Entity<Task>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<TaskType>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Tasks)
                         .WithOne(x => x.Type)
@@ -2624,12 +2635,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<TrainingCertificate>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<TrainingCertificateStatus>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Certificates)
                         .WithOne(x => x.Status)
@@ -2640,7 +2651,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<TrainingCourse>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.Certificates)
                         .WithOne(x => x.TrainingCourse)
@@ -2761,14 +2772,12 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<VatRate>(e =>
                 {
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<YearGroup>(e =>
                 {
-                    SetIdDefaultValue(e);
-
-                    SetIdDefaultValue(e);
+                    ConfigureEntity(e);
 
                     e.HasMany(x => x.RegGroups)
                         .WithOne(x => x.YearGroup)
@@ -2785,9 +2794,11 @@ namespace MyPortal.Database.Models
             }
         }
 
-        private void SetIdDefaultValue(EntityTypeBuilder builder)
+        private void ConfigureEntity(EntityTypeBuilder builder)
         {
-            builder.Property("Id").HasDefaultValueSql("NEWSEQUENTIALID()");
+            builder.HasKey("Id").IsClustered(false);
+            builder.Property("ClusterId").UseIdentityColumn(1, 1);
+            builder.HasIndex("ClusterId").IsClustered().IsUnique().HasDatabaseName("CIX_ClusterId");
         }
     }
 }

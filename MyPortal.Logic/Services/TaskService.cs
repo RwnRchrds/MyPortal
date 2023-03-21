@@ -32,6 +32,7 @@ namespace MyPortal.Logic.Services
             
             var taskToAdd = new Database.Models.Entity.Task
             {
+                Id = Guid.NewGuid(),
                 Title = task.Title,
                 Description = task.Description,
                 AssignedToId = task.AssignedToId,

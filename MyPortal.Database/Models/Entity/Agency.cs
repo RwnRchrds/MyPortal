@@ -14,7 +14,7 @@ namespace MyPortal.Database.Models.Entity
             Agents = new HashSet<Agent>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid TypeId { get; set; }
 
         [Column(Order = 3)]

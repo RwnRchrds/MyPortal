@@ -6,7 +6,7 @@ namespace MyPortal.Database.Models.Entity
     [Table("ExamResultEmbargoes")]
     public class ExamResultEmbargo : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid ResultSetId { get; set; }
 
         [Column(Order = 3)]

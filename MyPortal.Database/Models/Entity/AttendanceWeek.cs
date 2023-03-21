@@ -13,16 +13,16 @@ namespace MyPortal.Database.Models.Entity
             AttendanceMarks = new HashSet<AttendanceMark>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid WeekPatternId { get; set; }
 
-        [Column(Order = 2)] 
+        [Column(Order = 3)] 
         public Guid AcademicTermId { get; set; }
 
-        [Column(Order = 3, TypeName = "date")]
+        [Column(Order = 4, TypeName = "date")]
         public DateTime Beginning { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public bool IsNonTimetable { get; set; }
 
         public virtual AcademicTerm AcademicTerm { get; set; }

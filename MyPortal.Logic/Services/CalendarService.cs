@@ -159,6 +159,7 @@ namespace MyPortal.Logic.Services
 
             var diaryEvent = new DiaryEvent
             {
+                Id = Guid.NewGuid(),
                 EventTypeId = model.EventTypeId,
                 RoomId = model.RoomId,
                 Subject = model.Subject,
@@ -181,6 +182,7 @@ namespace MyPortal.Logic.Services
             {
                 diaryEvent.Attendees.Add(new DiaryEventAttendee
                 {
+                    Id = Guid.NewGuid(),
                     PersonId = user.PersonId.Value,
                     Required = true,
                     ResponseId = AttendeeResponses.Accepted,
@@ -264,6 +266,7 @@ namespace MyPortal.Logic.Services
                 {
                     var newAttendee = new DiaryEventAttendee
                     {
+                        Id = Guid.NewGuid(),
                         EventId = eventId,
                         PersonId = attendee.PersonId,
                         Required = attendee.Required,

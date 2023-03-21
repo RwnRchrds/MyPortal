@@ -82,6 +82,7 @@ namespace MyPortal.Logic.Services
             
             var bulletin = new Bulletin
             {
+                Id = Guid.NewGuid(),
                 Title = model.Title,
                 Detail = model.Detail,
                 CreatedDate = DateTime.Now,

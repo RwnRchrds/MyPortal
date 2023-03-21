@@ -12,6 +12,7 @@ public class PersonHelper
 
         return new Person
         {
+            Id = Guid.NewGuid(),
             FirstName = model.FirstName,
             PreferredFirstName = model.PreferredFirstName,
             LastName = model.PreferredLastName,

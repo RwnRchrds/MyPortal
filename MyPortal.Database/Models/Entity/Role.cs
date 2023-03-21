@@ -15,7 +15,7 @@ namespace MyPortal.Database.Models.Entity
             UserRoles = new HashSet<UserRole>();
             RoleClaims = new HashSet<RoleClaim>();
         }
-
+        
         public string Description { get; set; }
         public byte[] Permissions { get; set; }
         public bool System { get; set; }

@@ -7,16 +7,16 @@ namespace MyPortal.Database.Models.Entity;
 [Table("StudentAchievements")]
 public class StudentAchievement : BaseTypes.Entity
 {
-    [Column(Order = 1)]
+    [Column(Order = 2)]
     public Guid StudentId { get; set; }
     
-    [Column(Order = 2)]
+    [Column(Order = 3)]
     public Guid AchievementId { get; set; }
     
-    [Column(Order = 3)]
+    [Column(Order = 4)]
     public Guid? OutcomeId { get; set; }
     
-    [Column(Order = 4)]
+    [Column(Order = 5)]
     [Range(0, int.MaxValue, ErrorMessage = "Achievement cannot have negative points.")]
     public int Points { get; set; }
 

@@ -15,15 +15,15 @@ namespace MyPortal.Database.Models.Entity
             Results = new HashSet<Result>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [Required]
         [StringLength(256)]
         public string Name { get; set; }
 
-        [Column(Order = 4)] 
+        [Column(Order = 5, TypeName = "date")] 
         public DateTime? PublishDate { get; set; }
         
-        [Column(Order = 5)] 
+        [Column(Order = 6)] 
         public bool Locked { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

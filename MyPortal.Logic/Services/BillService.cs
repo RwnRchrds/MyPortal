@@ -42,6 +42,7 @@ namespace MyPortal.Logic.Services
                 {
                     var bill = new Bill
                     {
+                        Id = Guid.NewGuid(),
                         CreatedDate = DateTime.Now,
                         StudentId = billableStudent.Key,
                         DueDate = chargeBillingPeriod.EndDate
@@ -54,6 +55,7 @@ namespace MyPortal.Logic.Services
                     {
                         bill.BillStudentCharges.Add(new BillStudentCharge
                         {
+                            Id = Guid.NewGuid(),
                             StudentChargeId = studentCharge.Id,
                             NetAmount = studentCharge.Charge.Amount,
                             VatAmount = studentCharge.Charge.Amount * studentCharge.Charge.VatRate.Value
@@ -68,6 +70,7 @@ namespace MyPortal.Logic.Services
                         {
                             bill.BillChargeDiscounts.Add(new BillDiscount
                             {
+                                Id = Guid.NewGuid(),
                                 DiscountId = chargeDiscount.DiscountId,
                                 GrossAmount = chargeDiscount.Discount.Percentage ? studentCharge.Charge.Amount * (100 / chargeDiscount.Discount.Amount) : chargeDiscount.Discount.Amount
                             });

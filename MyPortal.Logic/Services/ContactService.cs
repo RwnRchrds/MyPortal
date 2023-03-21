@@ -40,6 +40,7 @@ namespace MyPortal.Logic.Services
             
             var contact = new Contact
             {
+                Id = Guid.NewGuid(),
                 JobTitle = model.JobTitle,
                 NiNumber = model.NiNumber,
                 PlaceOfWork = model.PlaceOfWork,

@@ -17,20 +17,20 @@ namespace MyPortal.Database.Models.Entity
             StaffMembers = new HashSet<SubjectStaffMember>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid SubjectCodeId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         [Required]
         [StringLength(256)]
         public string Name { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [Required]
         [StringLength(5)]
         public string Code { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public bool Deleted { get; set; }
 
         public virtual SubjectCode SubjectCode { get; set; }

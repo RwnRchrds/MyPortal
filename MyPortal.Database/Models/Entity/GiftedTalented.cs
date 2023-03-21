@@ -7,13 +7,13 @@ namespace MyPortal.Database.Models.Entity
     [Table("GiftedTalentedStudents")]
     public class GiftedTalented : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid StudentId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid SubjectId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [Required]
         public string Notes { get; set; }
 

@@ -155,6 +155,7 @@ namespace MyPortal.Logic.Services
                     
             var student = new Student
             {
+                Id = Guid.NewGuid(),
                 AdmissionNumber = nextAdmissionNumber,
                 DateStarting = request.DateStarting,
                 DateLeaving = request.DateLeaving,

@@ -8,26 +8,26 @@ namespace MyPortal.Database.Models.Entity
     [Table("AttendanceMarks")]
     public class AttendanceMark : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid StudentId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid WeekId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid PeriodId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public Guid CodeId { get; set; }
         
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         public Guid CreatedById { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         [StringLength(256)]
         public string Comments { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 8)]
         public int MinutesLate { get; set; }
 
         public virtual AttendanceCode AttendanceCode { get; set; }

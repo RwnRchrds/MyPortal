@@ -22,60 +22,60 @@ namespace MyPortal.Database.Models.Entity
             AssignedTo = new HashSet<Task>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid DirectoryId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         [StringLength(128)]
         public string Title { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [StringLength(256)]
         public string PreferredFirstName { get; set; }
         
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         [StringLength(256)]
         public string PreferredLastName { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         [Required]
         [StringLength(256)]
         public string FirstName { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         [StringLength(256)] 
         public string MiddleName { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 8)]
         [Required]
         [StringLength(256)]
         public string LastName { get; set; }
 
-        [Column(Order = 8)]
+        [Column(Order = 9)]
         public Guid? PhotoId { get; set; }
 
-        [Column(Order = 9)]
+        [Column(Order = 10)]
         [StringLength(10)]
         public string NhsNumber { get; set; }
 
-        [Column(Order = 10)]
+        [Column(Order = 11)]
         public DateTime CreatedDate { get; set; }
 
-        [Column(Order = 11)]
+        [Column(Order = 12)]
         [Required]
         [StringLength(1)]
         public string Gender { get; set; }
 
-        [Column(Order = 12, TypeName = "date")]
+        [Column(Order = 13, TypeName = "date")]
         public DateTime? Dob { get; set; }
 
-        [Column(Order = 13, TypeName = "date")] 
+        [Column(Order = 14, TypeName = "date")] 
         public DateTime? Deceased { get; set; }
 
-        [Column(Order = 14)]
+        [Column(Order = 15)]
         public Guid? EthnicityId { get; set; }
 
-        [Column(Order = 15)]
+        [Column(Order = 16)]
         public bool Deleted { get; set; }
         
         public virtual Photo Photo { get; set; }

@@ -14,13 +14,13 @@ namespace MyPortal.Database.Models.Entity
         AssignedBlocks = new HashSet<CurriculumBandBlockAssignment>();
     }
 
-    [Column(Order = 1)] 
+    [Column(Order = 2)] 
     public Guid AcademicYearId { get; set; }
 
-    [Column(Order = 2)] 
+    [Column(Order = 3)] 
     public Guid CurriculumYearGroupId { get; set; }
     
-    [Column(Order = 3)] 
+    [Column(Order = 4)] 
     public Guid StudentGroupId { get; set; }
 
     public virtual AcademicYear AcademicYear { get; set; }

@@ -15,7 +15,7 @@ namespace MyPortal.Database.Models.Entity
             Schools = new HashSet<School>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [Required]
         [StringLength(10)]
         public string Code { get; set; }

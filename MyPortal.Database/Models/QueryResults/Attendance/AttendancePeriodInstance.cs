@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Models.QueryResults.Attendance;
 
-public class PossibleAttendancePeriod
+public class AttendancePeriodInstance
 {
     public DateTime ActualStartTime { get; set; }
     public DateTime ActualEndTime { get; set; }

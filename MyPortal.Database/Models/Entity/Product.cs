@@ -16,32 +16,32 @@ namespace MyPortal.Database.Models.Entity
             BillItems = new HashSet<BillItem>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid ProductTypeId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid VatRateId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         [Required]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [Column(Order = 5, TypeName = "decimal(10,2)")]
+        [Column(Order = 6, TypeName = "decimal(10,2)")]
         public decimal Price { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         public bool ShowOnStore { get; set; }
         
-        [Column(Order = 7)]
+        [Column(Order = 8)]
         public int OrderLimit { get; set; }
 
-        [Column(Order = 8)]
+        [Column(Order = 9)]
         public bool Deleted { get; set; }
 
         public virtual ProductType Type { get; set; }

@@ -15,21 +15,21 @@ namespace MyPortal.Database.Models.Entity
             StudentCharges = new HashSet<StudentCharge>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid VatRateId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         [StringLength(64)]
         public string Code { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [Column(Order = 6, TypeName = "decimal(10,2)")]
+        [Column(Order = 7, TypeName = "decimal(10,2)")]
         public decimal Amount { get; set; }
 
-        [Column(Order = 7)] 
+        [Column(Order = 8)] 
         public bool Variable { get; set; }
 
         public virtual VatRate VatRate { get; set; }

@@ -23,18 +23,14 @@ namespace MyPortal.Database.Models.Entity
             AssignedBy = new HashSet<Task>();
             ReportCardSubmissions = new HashSet<ReportCardEntry>();
         }
-
-        [Column(Order = 3)]
+        
         public DateTime CreatedDate { get; set; }
-
-        [Column(Order = 4)]
+        
         public Guid? PersonId { get; set; }
-
-        [Column(Order = 5)]
+        
         [StringLength(1)]
         public int UserType { get; set; }
-
-        [Column(Order = 6)]
+        
         public bool Enabled { get; set; }
 
         public virtual Person Person { get; set; }

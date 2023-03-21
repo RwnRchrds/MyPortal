@@ -14,47 +14,47 @@ namespace MyPortal.Database.Models.Entity
             Attendees = new HashSet<DiaryEventAttendee>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid EventTypeId { get; set; }
         
-        [Column(Order = 2)] 
+        [Column(Order = 3)] 
         public Guid? CreatedById { get; set; }
         
-        [Column(Order = 3)] 
+        [Column(Order = 4)] 
         public DateTime CreatedDate { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public Guid? RoomId { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         [Required]
         [StringLength(256)]
         public string Subject { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 8)]
         [StringLength(256)]
         public string Location { get; set; }
 
-        [Column(Order = 8)]
+        [Column(Order = 9)]
         public DateTime StartTime { get; set; }
 
-        [Column(Order = 9)]
+        [Column(Order = 10)]
         public DateTime EndTime { get; set; }
 
-        [Column(Order = 10)]
+        [Column(Order = 11)]
         public bool AllDay { get; set; }
 
         /// <summary>
         /// Public events are visible to all users on the school diary
         /// </summary>
-        [Column(Order = 11)]
+        [Column(Order = 12)]
         public bool Public { get; set; }
 
-        [Column(Order = 12)]
+        [Column(Order = 13)]
         public bool System { get; set; }
         
         

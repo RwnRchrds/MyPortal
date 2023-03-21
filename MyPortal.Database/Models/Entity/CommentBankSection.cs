@@ -8,12 +8,12 @@ namespace MyPortal.Database.Models.Entity;
 [Table("CommentBankSections")]
 public class CommentBankSection : BaseTypes.Entity
 {
-    [Column(Order = 1)]
+    [Column(Order = 2)]
     public Guid CommentBankAreaId { get; set; }
 
     [Required]
     [StringLength(256)]
-    [Column(Order = 2)]
+    [Column(Order = 3)]
     public string Name { get; set; }
     
     public virtual CommentBankArea Area { get; set; }

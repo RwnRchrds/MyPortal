@@ -14,6 +14,7 @@ namespace MyPortal.Database.Models.Entity
             Products = new HashSet<Product>();
         }
 
+        [Column(Order = 4)]
         public bool IsMeal { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -15,32 +15,32 @@ namespace MyPortal.Database.Models.Entity
             
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid TypeId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid DirectoryId { get; set; }
         
-        [Column(Order = 3)] 
+        [Column(Order = 4)] 
         public Guid? FileId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         [Required]
         [StringLength(128)]
         public string Title { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         public Guid CreatedById { get; set; }
 
-        [Column(Order = 7, TypeName = "date")]
+        [Column(Order = 8)]
         public DateTime CreatedDate { get; set; }
 
         // Only visible to staff users who have access to the directory
-        [Column(Order = 8)]
+        [Column(Order = 9)]
         public bool Private { get; set; }
 
         [Column(Order = 10)]

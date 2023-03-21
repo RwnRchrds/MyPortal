@@ -14,22 +14,22 @@ namespace MyPortal.Database.Models.Entity
             Submissions = new HashSet<HomeworkSubmission>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid DirectoryId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         [Required]
         [StringLength(128)]
         public string Title { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public bool SubmitOnline { get; set; }
         
-        [Column(Order = 5)] 
+        [Column(Order = 6)] 
         public int MaxPoints { get; set; }
 
         public virtual Directory Directory { get; set; }

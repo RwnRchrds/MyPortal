@@ -15,10 +15,10 @@ namespace MyPortal.Database.Models.Entity
             StudyTopics = new HashSet<StudyTopic>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid SubjectId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public string Name { get; set; }
 
         public virtual Subject Subject { get; set; }

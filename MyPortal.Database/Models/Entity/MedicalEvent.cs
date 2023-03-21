@@ -8,19 +8,19 @@ namespace MyPortal.Database.Models.Entity
     [Table("MedicalEvents")]
     public class MedicalEvent : BaseTypes.Entity, ICreatable
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid PersonId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid CreatedById { get; set; }
         
-        [Column(Order = 3)] 
+        [Column(Order = 4)] 
         public DateTime CreatedDate { get; set; }
 
-        [Column(Order = 4, TypeName = "date")]
+        [Column(Order = 5, TypeName = "date")]
         public DateTime Date { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         [Required]
         public string Note { get; set; }
 

@@ -31,6 +31,7 @@ public class HomeworkService : BaseUserService, IHomeworkService
 
         var homeworkItem = new HomeworkItem
         {
+            Id = Guid.NewGuid(),
             Title = model.Title,
             Description = model.Description,
             SubmitOnline = model.SubmitOnline,
@@ -151,10 +152,12 @@ public class HomeworkService : BaseUserService, IHomeworkService
 
         var homeworkSubmission = new HomeworkSubmission
         {
+            Id = Guid.NewGuid(),
             HomeworkId = model.HomeworkId,
             StudentId = model.StudentId,
             Task = new Task
             {
+                Id = Guid.NewGuid(),
                 DueDate = model.DueDate,
                 AssignedToId = student.PersonId,
                 AssignedById = model.AssignedById,

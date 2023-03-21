@@ -7,13 +7,13 @@ namespace MyPortal.Database.Models.Entity
     [Table("StudentGroupSupervisors")]
     public class StudentGroupSupervisor : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid StudentGroupId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid SupervisorId { get; set; }
         
-        [Column(Order = 3)] 
+        [Column(Order = 4)] 
         public string Title { get; set; }
 
         public virtual StudentGroup StudentGroup { get; set; }

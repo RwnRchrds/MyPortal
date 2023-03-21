@@ -7,16 +7,16 @@ namespace MyPortal.Database.Models.Entity
     [Table("SenEvents")]
     public class SenEvent : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid StudentId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid EventTypeId { get; set; }
 
-        [Column(Order = 3, TypeName = "date")]
+        [Column(Order = 4, TypeName = "date")]
         public DateTime Date { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         [Required]
         public string Note { get; set; }
 

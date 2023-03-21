@@ -26,41 +26,41 @@ namespace MyPortal.Database.Models.Entity
             HomeworkSubmissions = new HashSet<HomeworkSubmission>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid PersonId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public int AdmissionNumber { get; set; }
 
-        [Column(Order = 3, TypeName = "date")]
+        [Column(Order = 4, TypeName = "date")]
         public DateTime? DateStarting { get; set; }
 
-        [Column(Order = 4, TypeName = "date")]
+        [Column(Order = 5, TypeName = "date")]
         public DateTime? DateLeaving { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         public bool FreeSchoolMeals { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         public Guid? SenStatusId { get; set; }
 
-        [Column(Order = 7)] 
+        [Column(Order = 8)] 
         public Guid? SenTypeId { get; set; }
 
-        [Column(Order = 8)]
+        [Column(Order = 9)]
         public Guid? EnrolmentStatusId { get; set; }
 
-        [Column(Order = 9)] 
+        [Column(Order = 10)] 
         public Guid? BoarderStatusId { get; set; }
 
-        [Column(Order = 10)]
+        [Column(Order = 11)]
         public bool PupilPremium { get; set; }
 
-        [Column(Order = 11)]
+        [Column(Order = 12)]
         [StringLength(13)]
         public string Upn { get; set; }
 
-        [Column(Order = 12)]
+        [Column(Order = 13)]
         public bool Deleted { get; set; }
 
         public virtual Person Person { get; set; }

@@ -8,13 +8,13 @@ namespace MyPortal.Database.Models.Entity;
 [Table("ChargeBillingPeriods")]
 public class ChargeBillingPeriod : BaseTypes.Entity
 {
-    [Column(Order = 1)]
+    [Column(Order = 2)]
     public string Name { get; set; }
     
-    [Column(Order = 2)]
+    [Column(Order = 3, TypeName = "date")]
     public DateTime StartDate { get; set; }
     
-    [Column(Order = 3)]
+    [Column(Order = 4, TypeName = "date")]
     public DateTime EndDate { get; set; }
 
     public virtual ICollection<Bill> Bills { get; set; }

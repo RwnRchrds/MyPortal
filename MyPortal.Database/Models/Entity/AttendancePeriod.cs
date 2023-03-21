@@ -15,27 +15,27 @@ namespace MyPortal.Database.Models.Entity
             Sessions = new HashSet<Session>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid WeekPatternId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public DayOfWeek Weekday { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
         
-        [Column(Order = 4, TypeName = "time(2)")]
+        [Column(Order = 5, TypeName = "time(2)")]
         public TimeSpan StartTime { get; set; }
         
-        [Column(Order = 5, TypeName = "time(2)")]
+        [Column(Order = 6, TypeName = "time(2)")]
         public TimeSpan EndTime { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         public bool AmReg { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 8)]
         public bool PmReg { get; set; }
 
         public virtual AttendanceWeekPattern WeekPattern { get; set; }

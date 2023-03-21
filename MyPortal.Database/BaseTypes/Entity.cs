@@ -9,9 +9,10 @@ namespace MyPortal.Database.BaseTypes
 {
     public abstract class Entity : IEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 0)]
         public Guid Id { get; set; }
+        
+        [Column(Order = 1)] 
+        public int ClusterId { get; set; }
     }
 }

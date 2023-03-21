@@ -13,7 +13,7 @@ namespace MyPortal.Database.Models.Entity
             StudentIncidents = new HashSet<StudentIncident>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public bool System { get; set; }
 
         public virtual ICollection<StudentIncident> StudentIncidents { get; set; }

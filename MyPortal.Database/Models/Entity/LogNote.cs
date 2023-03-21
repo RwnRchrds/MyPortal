@@ -8,30 +8,30 @@ namespace MyPortal.Database.Models.Entity
     [Table("LogNotes")]
     public class LogNote : BaseTypes.Entity, ISoftDeleteEntity, ICreatable
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid TypeId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid CreatedById { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid StudentId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public Guid AcademicYearId { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         [Required]
         public string Message { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         public DateTime CreatedDate { get; set; }
         
         // Only visible to staff users
-        [Column(Order = 7)] 
+        [Column(Order = 8)] 
         public bool Private { get; set; }
 
-        [Column(Order = 8)]
+        [Column(Order = 9)]
         public bool Deleted { get; set; }
 
         public virtual User CreatedBy { get; set; }

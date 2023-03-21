@@ -7,22 +7,22 @@ namespace MyPortal.Database.Models.Entity;
 [Table("StudentIncidents")]
 public class StudentIncident : BaseTypes.Entity
 {
-    [Column(Order = 1)]
+    [Column(Order = 2)]
     public Guid StudentId { get; set; }
     
-    [Column(Order = 2)]
+    [Column(Order = 3)]
     public Guid IncidentId { get; set; }
     
-    [Column(Order = 3)]
+    [Column(Order = 4)]
     public Guid RoleTypeId { get; set; }
     
-    [Column(Order = 4)]
+    [Column(Order = 5)]
     public Guid? OutcomeId { get; set; }
 
-    [Column(Order = 5)]
+    [Column(Order = 6)]
     public Guid StatusId { get; set; }
     
-    [Column(Order = 6)]
+    [Column(Order = 7)]
     public int Points { get; set; }
     
     public virtual Student Student { get; set; }

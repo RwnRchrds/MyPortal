@@ -8,10 +8,10 @@ namespace MyPortal.Database.Models.Entity
     [Table("Incidents")]
     public class Incident : BaseTypes.Entity, ICreatable, ISoftDeleteEntity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid AcademicYearId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid BehaviourTypeId { get; set; }
 
         [Column(Order = 4)]
@@ -20,13 +20,13 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 5)]
         public Guid CreatedById { get; set; }
 
-        [Column(Order = 8, TypeName = "date")]
+        [Column(Order = 6, TypeName = "date")]
         public DateTime CreatedDate { get; set; }
 
-        [Column(Order = 9)]
+        [Column(Order = 7)]
         public string Comments { get; set; }
 
-        [Column(Order = 11)]
+        [Column(Order = 8)]
         public bool Deleted { get; set; }
 
         public virtual IncidentType Type { get; set; }

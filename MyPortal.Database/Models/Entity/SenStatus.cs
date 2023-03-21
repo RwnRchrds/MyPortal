@@ -16,7 +16,7 @@ namespace MyPortal.Database.Models.Entity
             Students = new HashSet<Student>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [Required]
         [StringLength(1)]
         public string Code { get; set; }

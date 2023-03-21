@@ -13,7 +13,7 @@ namespace MyPortal.Database.Models.Entity
             Absences = new HashSet<StaffAbsence>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public bool System { get; set; }
 
         public virtual ICollection<StaffAbsence> Absences { get; set; }

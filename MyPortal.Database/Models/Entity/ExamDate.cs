@@ -13,7 +13,7 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 3)]
         public int Duration { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 4, TypeName = "date")]
         public DateTime SittingDate { get; set; }
 
         public virtual ExamSession Session { get; set; }

@@ -10,7 +10,7 @@ namespace MyPortal.Database.Models.Entity
     {
         // TODO: Populate Data
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public TimeSpan StartTime { get; set; }
 
         public virtual ICollection<ExamDate> ExamDates { get; set; }

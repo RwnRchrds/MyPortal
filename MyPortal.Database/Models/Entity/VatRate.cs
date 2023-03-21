@@ -12,7 +12,7 @@ namespace MyPortal.Database.Models.Entity
             Products = new HashSet<Product>();
         }
         
-        [Column(Order = 3, TypeName = "decimal(10,2)")]
+        [Column(Order = 4, TypeName = "decimal(10,2)")]
         public decimal Value { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }

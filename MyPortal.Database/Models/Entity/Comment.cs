@@ -7,13 +7,13 @@ namespace MyPortal.Database.Models.Entity
     [Table("Comments")]
     public class Comment : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid CommentTypeId { get; set; }
         
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid CommentBankSectionId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [Required]
         public string Value { get; set; }
 

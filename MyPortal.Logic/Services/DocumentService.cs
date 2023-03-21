@@ -42,6 +42,7 @@ namespace MyPortal.Logic.Services
             {
                 var docToAdd = new Document
                 {
+                    Id = Guid.NewGuid(),
                     TypeId = document.TypeId,
                     Title = document.Title,
                     Description = document.Description,
@@ -146,6 +147,7 @@ namespace MyPortal.Logic.Services
 
             var dirToAdd = new Directory
             {
+                Id = Guid.NewGuid(),
                 ParentId = directory.ParentId,
                 Name = directory.Name,
                 Private = directory.Private

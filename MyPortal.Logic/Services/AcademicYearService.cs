@@ -105,6 +105,7 @@ namespace MyPortal.Logic.Services
             
             var academicYear = new AcademicYear
             {
+                Id = Guid.NewGuid(),
                 Name = model.Name
             };
             
@@ -114,6 +115,7 @@ namespace MyPortal.Logic.Services
             {
                 var term = new AcademicTerm
                 {
+                    Id = Guid.NewGuid(),
                     Name = termModel.Name,
                     StartDate = termModel.StartDate,
                     EndDate = termModel.EndDate
@@ -123,6 +125,7 @@ namespace MyPortal.Logic.Services
                 {
                     term.AttendanceWeeks.Add(new AttendanceWeek
                     {
+                        Id = Guid.NewGuid(),
                         Beginning = attendanceWeek.WeekBeginning,
                         WeekPatternId = attendanceWeek.WeekPatternId,
                         IsNonTimetable = attendanceWeek.NonTimetable
@@ -133,10 +136,12 @@ namespace MyPortal.Logic.Services
                 {
                     unitOfWork.DiaryEvents.Create(new DiaryEvent
                     {
+                        Id = Guid.NewGuid(),
                         Description = "School Holiday",
                         EventTypeId = EventTypes.SchoolHoliday,
                         StartTime = schoolHoliday.Date,
-                        EndTime = schoolHoliday.GetEndOfDay()
+                        EndTime = schoolHoliday.Date,
+                        AllDay = true
                     });
                 }
 

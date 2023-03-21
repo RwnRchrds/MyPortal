@@ -7,22 +7,22 @@ namespace MyPortal.Database.Models.Entity
     [Table("EmailAddresses")]
     public class EmailAddress : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid TypeId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid? PersonId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid? AgencyId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         [Required]
         [EmailAddress]
         [StringLength(128)]
         public string Address { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         public bool Main { get; set; }
 
         [Column(Order = 7)]

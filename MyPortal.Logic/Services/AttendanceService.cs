@@ -74,7 +74,7 @@ namespace MyPortal.Logic.Services
             var searchOptions = new RegisterSearchOptions
             {
                 DateFrom = model.Date.Date,
-                DateTo = model.Date.GetEndOfDay(),
+                DateTo = model.Date.Date,
                 PeriodId = model.PeriodId,
                 TeacherId = model.TeacherId
             };
@@ -102,7 +102,7 @@ namespace MyPortal.Logic.Services
                 $"{studentGroup.Description}, {dateFrom:dd/MM/yyyy}-{dateTo:dd/MM/yyyy}" : title;
 
             var periods = (await unitOfWork.AttendancePeriods
-                .GetByDateRange(dateFrom.Date, dateTo.GetEndOfDay())).ToArray();
+                .GetByDateRange(dateFrom.Date, dateTo.Date)).ToArray();
                 
             register.PopulateColumnGroups(periods, lockToPeriodId);
 
@@ -165,6 +165,7 @@ namespace MyPortal.Logic.Services
                 {
                     var mark = new AttendanceMark
                     {
+                        Id = Guid.NewGuid(),
                         StudentId = model.StudentId,
                         WeekId = model.WeekId,
                         PeriodId = model.PeriodId,

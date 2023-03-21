@@ -6,6 +6,6 @@ namespace MyPortal.Database.Models.Entity;
 [Table("BehaviourRoleTypes")]
 public class BehaviourRoleType : LookupItem
 {
-    [Column(Order = 3)]
+    [Column(Order = 4)]
     public int DefaultPoints { get; set; }
 }

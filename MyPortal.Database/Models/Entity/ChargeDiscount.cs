@@ -10,10 +10,10 @@ namespace MyPortal.Database.Models.Entity
     [Table("ChargeDiscounts")]
     public class ChargeDiscount : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid ChargeId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid DiscountId { get; set; }
 
         public virtual Charge Charge { get; set; }

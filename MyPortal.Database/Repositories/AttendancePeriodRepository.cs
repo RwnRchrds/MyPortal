@@ -72,7 +72,7 @@ namespace MyPortal.Database.Repositories
             period.Name = entity.Name;
         }
 
-        public async Task<IEnumerable<PossibleAttendancePeriod>> GetByDateRange(DateTime dateFrom, DateTime dateTo)
+        public async Task<IEnumerable<AttendancePeriodInstance>> GetByDateRange(DateTime dateFrom, DateTime dateTo)
         {
             var query = GenerateEmptyQuery(typeof(AttendancePeriod), "AP");
 
@@ -92,10 +92,10 @@ namespace MyPortal.Database.Repositories
 
             query.Where("AW.IsNonTimeTable", false);
 
-            query.Where("ActualStartTime", ">=", dateFrom);
-            query.Where("ActualEndTime", "<=", dateTo);
+            query.Where("ActualStartTime", ">=", dateFrom.Date);
+            query.Where("ActualEndTime", "<", dateTo.Date.AddDays(1));
 
-            return await ExecuteQuery<PossibleAttendancePeriod>(query);
+            return await ExecuteQuery<AttendancePeriodInstance>(query);
         }
     }
 }

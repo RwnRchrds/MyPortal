@@ -13,10 +13,10 @@ namespace MyPortal.Database.Models.Entity
             Classes = new HashSet<Class>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid BlockId { get; set; }
         
-        [Column(Order = 2)] 
+        [Column(Order = 3)] 
         public Guid StudentGroupId { get; set; }
 
         public virtual CurriculumBlock Block { get; set; }

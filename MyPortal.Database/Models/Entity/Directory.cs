@@ -14,16 +14,16 @@ namespace MyPortal.Database.Models.Entity
             Documents = new HashSet<Document>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid? ParentId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
         // Only visible to staff users and the owner
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public bool Private { get; set; }
 
         public virtual Directory Parent { get; set; }

@@ -17,12 +17,12 @@ namespace MyPortal.Database.Models.Entity
             AcademicTerms = new HashSet<AcademicTerm>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [Column(Order = 4)] 
+        [Column(Order = 3)] 
         public bool Locked { get; set; }
 
 

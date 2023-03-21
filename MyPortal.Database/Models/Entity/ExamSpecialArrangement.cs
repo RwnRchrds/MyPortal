@@ -6,10 +6,10 @@ namespace MyPortal.Database.Models.Entity
 {
     public class ExamSpecialArrangement : BaseTypes.Entity, ISystemEntity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public string Description { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public bool System { get; set; }
 
         public virtual ICollection<ExamCandidateSpecialArrangement> Candidates { get; set; }

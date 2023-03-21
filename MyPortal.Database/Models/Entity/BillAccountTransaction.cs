@@ -7,7 +7,10 @@ namespace MyPortal.Database.Models.Entity
     [Table("BillAccountTransactions")]
     public class BillAccountTransaction : BaseTypes.Entity
     {
+        [Column(Order = 2)]
         public Guid BillId { get; set; }
+        
+        [Column(Order = 3)]
         public Guid AccountTransactionId { get; set; }
 
         public virtual Bill Bill { get; set; }

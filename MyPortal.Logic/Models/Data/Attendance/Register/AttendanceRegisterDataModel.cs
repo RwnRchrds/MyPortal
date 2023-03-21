@@ -21,7 +21,7 @@ namespace MyPortal.Logic.Models.Data.Attendance.Register
         public ICollection<AttendanceRegisterColumnGroupDataModel> ColumnGroups { get; set; }
         public ICollection<AttendanceRegisterStudentDataModel> Students { get; set; }
 
-        public void PopulateColumnGroups(IEnumerable<PossibleAttendancePeriod> periodCollection, Guid? lockToPeriodId)
+        public void PopulateColumnGroups(IEnumerable<AttendancePeriodInstance> periodCollection, Guid? lockToPeriodId)
         {
             var dates =
                 (periodCollection).GroupBy(p =>

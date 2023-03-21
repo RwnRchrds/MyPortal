@@ -32,6 +32,7 @@ public class ExamService : BaseUserService, IExamService
 
             var embargo = new ExamResultEmbargo
             {
+                Id = Guid.NewGuid(),
                 ResultSetId = model.ResultSetId,
                 EndTime = model.EndDate
             };

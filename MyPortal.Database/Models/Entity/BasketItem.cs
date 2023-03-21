@@ -6,13 +6,13 @@ namespace MyPortal.Database.Models.Entity
     [Table("BasketItems")]
     public partial class BasketItem : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid StudentId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid ProductId { get; set; }
         
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public int Quantity { get; set; }
 
         public virtual Student Student { get; set; }

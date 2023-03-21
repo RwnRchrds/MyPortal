@@ -10,7 +10,7 @@ namespace MyPortal.Database.Models.Entity
     [Table("StudentGroups")]
     public class StudentGroup : LookupItem, ISystemEntity
     {
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [Required]
         [StringLength(50)]
         public string Code { get; set; }

@@ -13,7 +13,7 @@ namespace MyPortal.Database.Models.Entity
             Codes = new HashSet<AttendanceCode>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         [Required]
         [StringLength(256)]
         public string Description { get; set; }

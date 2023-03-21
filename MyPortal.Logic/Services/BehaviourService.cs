@@ -92,11 +92,13 @@ namespace MyPortal.Logic.Services
 
             var model = new StudentAchievement
             {
+                Id = Guid.NewGuid(),
                 StudentId = achievement.StudentId,
                 OutcomeId = achievement.OutcomeId,
                 Points = achievement.Points,
                 Achievement = new Achievement
                 {
+                    Id = Guid.NewGuid(),
                     AcademicYearId = achievement.AcademicYearId,
                     AchievementTypeId = achievement.AchievementTypeId,
                     LocationId = achievement.LocationId,
@@ -217,12 +219,14 @@ namespace MyPortal.Logic.Services
 
             var studentIncident = new StudentIncident
             {
+                Id = Guid.NewGuid(),
                 Points = incident.Points,
                 OutcomeId = incident.OutcomeId,
                 StatusId = incident.StatusId,
                 StudentId = incident.StudentId,
                 Incident = new Incident
                 {
+                    Id = Guid.NewGuid(),
                     CreatedDate = DateTime.Now,
                     BehaviourTypeId = incident.BehaviourTypeId,
                     LocationId = incident.LocationId,
@@ -365,10 +369,12 @@ namespace MyPortal.Logic.Services
 
             var detention = new Detention
             {
+                Id = Guid.NewGuid(),
                 DetentionTypeId = model.DetentionTypeId,
                 SupervisorId = model.SupervisorId,
                 Event = new DiaryEvent
                 {
+                    Id = Guid.NewGuid(),
                     StartTime = model.StartTime,
                     EndTime = model.EndTime,
                     RoomId = model.RoomId,
@@ -392,6 +398,7 @@ namespace MyPortal.Logic.Services
                     SupervisorId = model.SameSupervisor ? model.SupervisorId : null,
                     Event = new DiaryEvent
                     {
+                        Id = Guid.NewGuid(),
                         StartTime = nextOccurrence.Value,
                         EndTime = nextOccurrence.Value.Add(duration),
                         RoomId = model.RoomId,
@@ -462,6 +469,7 @@ namespace MyPortal.Logic.Services
             
             var studentIncident = new StudentIncident
             {
+                Id = Guid.NewGuid(),
                 IncidentId = model.IncidentId,
                 OutcomeId = model.OutcomeId,
                 StatusId = model.StatusId,
@@ -508,6 +516,7 @@ namespace MyPortal.Logic.Services
             {
                 var incidentDetention = new StudentIncidentDetention
                 {
+                    Id = Guid.NewGuid(),
                     DetentionId = detentionId,
                     StudentIncidentId = studentIncidentId
                 };

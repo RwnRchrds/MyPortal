@@ -12,17 +12,17 @@ namespace MyPortal.Database.Models.Entity
     {
         // TODO: Populate Data
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid QualificationId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public Guid? DefaultGradeSetId { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         [StringLength(25)]
         public string JcLevelCode { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         public bool System { get; set; }
 
         public virtual GradeSet DefaultGradeSet { get; set; }

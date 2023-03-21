@@ -12,13 +12,13 @@ namespace MyPortal.Database.Models.Entity
             SeatBlocks = new HashSet<ExamRoomSeatBlock>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid RoomId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public int Columns { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public int Rows { get; set; }
 
         public virtual Room Room { get; set; }

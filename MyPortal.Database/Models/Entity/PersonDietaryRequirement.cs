@@ -6,10 +6,10 @@ namespace MyPortal.Database.Models.Entity
     [Table("PersonDietaryRequirements")]
     public class PersonDietaryRequirement : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid PersonId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid DietaryRequirementId { get; set; }
 
         public virtual DietaryRequirement DietaryRequirement { get; set; }

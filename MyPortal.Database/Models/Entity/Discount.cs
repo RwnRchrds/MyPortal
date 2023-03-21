@@ -10,18 +10,18 @@ namespace MyPortal.Database.Models.Entity
     [Table("Discounts")]
     public class Discount : LookupItem
     {
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [Column(Order = 4, TypeName = "decimal(10,2)")]
+        [Column(Order = 5, TypeName = "decimal(10,2)")]
         public decimal Amount { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         public bool Percentage { get; set; }
         
         // Specify whether this discount can be combined with other discounts
-        [Column(Order = 6)] 
+        [Column(Order = 7)] 
         public bool BlockOtherDiscounts { get; set; }
 
         public virtual ICollection<BillDiscount> BillDiscounts { get; set; }

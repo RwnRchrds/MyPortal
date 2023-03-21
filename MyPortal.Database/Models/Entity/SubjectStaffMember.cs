@@ -6,13 +6,13 @@ namespace MyPortal.Database.Models.Entity
     [Table("SubjectStaffMembers")]
     public class SubjectStaffMember : BaseTypes.Entity
     {
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public Guid SubjectId { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public Guid StaffMemberId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid RoleId { get; set; }
 
         public virtual Subject Subject { get; set; }

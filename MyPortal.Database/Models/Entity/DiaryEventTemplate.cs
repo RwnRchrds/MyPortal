@@ -7,16 +7,16 @@ namespace MyPortal.Database.Models.Entity
     [Table("DiaryEventTemplates")]
     public class DiaryEventTemplate : LookupItem
     {
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid EventTypeId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public int Minutes { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         public int Hours { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         public int Days { get; set; }
 
         public virtual DiaryEventType DiaryEventType { get; set; }

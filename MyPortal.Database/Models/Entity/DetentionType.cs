@@ -13,10 +13,10 @@ namespace MyPortal.Database.Models.Entity
             Detentions = new HashSet<Detention>();
         }
 
-        [Column(Order = 3, TypeName = "time(2)")]
+        [Column(Order = 4, TypeName = "time(2)")]
         public TimeSpan StartTime { get; set; }
 
-        [Column(Order = 4, TypeName = "time(2)")]
+        [Column(Order = 5, TypeName = "time(2)")]
         public TimeSpan EndTime { get; set; }
 
         public virtual ICollection<Detention> Detentions { get; set; }

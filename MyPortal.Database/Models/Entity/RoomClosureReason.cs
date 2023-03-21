@@ -13,7 +13,7 @@ namespace MyPortal.Database.Models.Entity
             Closures = new HashSet<RoomClosure>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

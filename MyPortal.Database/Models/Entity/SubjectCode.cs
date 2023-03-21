@@ -13,10 +13,10 @@ namespace MyPortal.Database.Models.Entity
             Elements = new HashSet<ExamBaseElement>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public string Code { get; set; }
 
-        [Column(Order = 4)] 
+        [Column(Order = 5)] 
         public Guid SubjectCodeSetId { get; set; }
 
         public virtual SubjectCodeSet SubjectCodeSet { get; set; }

@@ -16,33 +16,33 @@ namespace MyPortal.Database.Models.Entity
             Results = new HashSet<Result>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         public Guid TypeId { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         public Guid? GradeSetId { get; set; }
 
-        [Column(Order = 5, TypeName = "decimal(10,2)")]
+        [Column(Order = 6, TypeName = "decimal(10,2)")]
         public decimal? MinMark { get; set; }
 
-        [Column(Order = 6, TypeName = "decimal(10,2)")]
+        [Column(Order = 7, TypeName = "decimal(10,2)")]
         public decimal? MaxMark { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 8)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [Column(Order = 8)]
+        [Column(Order = 9)]
         [Required]
         [StringLength(50)]
         public string ColumnHeading { get; set; }
 
         // Only visible to staff users
-        [Column(Order = 9)]
+        [Column(Order = 10)]
         public bool Private { get; set; }
 
-        [Column(Order = 10)]
+        [Column(Order = 11)]
         public bool System { get; set; }
 
         public virtual AspectType Type { get; set; }

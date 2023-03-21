@@ -13,12 +13,12 @@ namespace MyPortal.Database.Models.Entity
             Certificates = new HashSet<TrainingCertificate>();
         }
 
-        [Column(Order = 3)]
+        [Column(Order = 4)]
         [Required]
         [StringLength(128)]
         public string Code { get; set; }
 
-        [Column(Order = 4)]
+        [Column(Order = 5)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }

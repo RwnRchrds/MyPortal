@@ -16,12 +16,12 @@ namespace MyPortal.Database.Models.Entity
             Rooms = new HashSet<Room>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         [Required]
         [StringLength(128)]
         public string Description { get; set; }
 
-        [Column(Order = 2)]
+        [Column(Order = 3)]
         public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
