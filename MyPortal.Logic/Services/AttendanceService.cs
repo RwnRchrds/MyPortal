@@ -27,7 +27,7 @@ namespace MyPortal.Logic.Services
 {
     public class AttendanceService : BaseUserService, IAttendanceService
     {
-        public AttendanceService(ICurrentUser user) : base(user)
+        public AttendanceService(ISessionUser user) : base(user)
         {
         }
 

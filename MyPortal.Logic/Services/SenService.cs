@@ -15,7 +15,7 @@ namespace MyPortal.Logic.Services
 {
     public class SenService : BaseUserService, ISenService
     {
-        public SenService(ICurrentUser user) : base(user)
+        public SenService(ISessionUser user) : base(user)
         {
         }
 

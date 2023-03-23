@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Services
 {
     public class ContactService : BaseUserService, IContactService
     {
-        public ContactService(ICurrentUser user) : base(user)
+        public ContactService(ISessionUser user) : base(user)
         {
         }
 

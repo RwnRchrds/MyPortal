@@ -27,7 +27,7 @@ namespace MyPortal.Logic.Services
     {
         private RoleManager<Role> _roleManager;
 
-        public RoleService(ICurrentUser user, RoleManager<Role> roleManager) : base(user)
+        public RoleService(ISessionUser user, RoleManager<Role> roleManager) : base(user)
         {
             _roleManager = roleManager;
         }

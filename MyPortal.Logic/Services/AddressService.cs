@@ -17,7 +17,7 @@ namespace MyPortal.Logic.Services
 {
     public class AddressService : BaseUserService, IAddressService
     {
-        public AddressService(ICurrentUser user) : base(user)
+        public AddressService(ISessionUser user) : base(user)
         {
         }
 

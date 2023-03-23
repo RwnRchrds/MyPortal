@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Services
 {
     public class StaffMemberService : BaseUserService, IStaffMemberService
     {
-        public StaffMemberService(ICurrentUser user) : base(user)
+        public StaffMemberService(ISessionUser user) : base(user)
         {
         }
 

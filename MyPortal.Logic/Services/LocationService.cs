@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Services
 {
     public class LocationService : BaseUserService, ILocationService
     {
-        public LocationService(ICurrentUser user) : base(user)
+        public LocationService(ISessionUser user) : base(user)
         {
         }
 

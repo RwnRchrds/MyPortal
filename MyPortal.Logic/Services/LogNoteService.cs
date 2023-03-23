@@ -20,7 +20,7 @@ namespace MyPortal.Logic.Services
 {
     public class LogNoteService : BaseUserService, ILogNoteService
     {
-        public LogNoteService(ICurrentUser user) : base(user)
+        public LogNoteService(ISessionUser user) : base(user)
         {
         }
 

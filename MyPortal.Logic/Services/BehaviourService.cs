@@ -30,7 +30,7 @@ namespace MyPortal.Logic.Services
 {
     public class BehaviourService : BaseUserService, IBehaviourService
     {
-        public BehaviourService(ICurrentUser user) : base(user)
+        public BehaviourService(ISessionUser user) : base(user)
         {
         }
 

@@ -175,7 +175,7 @@ namespace MyPortal.Logic.Models.Data.People
 
             NhsNumber = null;
             CreatedDate = DateTime.UnixEpoch;
-            Gender = Constants.Gender.Unknown;
+            Gender = Constants.Sexes.Unknown;
             Dob = null;
             Deceased = Deceased.HasValue ? DateTime.UnixEpoch : null;
             EthnicityId = null;

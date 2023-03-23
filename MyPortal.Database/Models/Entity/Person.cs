@@ -19,7 +19,7 @@ namespace MyPortal.Database.Models.Entity
             EmailAddresses = new HashSet<EmailAddress>();
             AddressPeople = new HashSet<AddressPerson>();
             DiaryEventInvitations = new HashSet<DiaryEventAttendee>();
-            AssignedTo = new HashSet<Task>();
+            AssignedTasks = new HashSet<Task>();
         }
 
         [Column(Order = 2)]
@@ -94,7 +94,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<EmailAddress> EmailAddresses { get; set; }
         public virtual ICollection<AddressPerson> AddressPeople { get; set; }
         public virtual ICollection<DiaryEventAttendee> DiaryEventInvitations { get; set; }
-        public virtual ICollection<Task> AssignedTo { get; set; }
+        public virtual ICollection<Task> AssignedTasks { get; set; }
         public virtual ICollection<NextOfKin> RelatedStaff { get; set; }
     }
 }

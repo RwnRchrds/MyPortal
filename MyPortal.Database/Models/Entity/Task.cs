@@ -7,16 +7,16 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models.Entity
 {
     [Table("Tasks")]
-    public class Task : BaseTypes.Entity, ISystemEntity
+    public class Task : BaseTypes.Entity, ISystemEntity, ICreatable
     {
         [Column(Order = 2)]
         public Guid TypeId { get; set; }
 
         [Column(Order = 3)]
-        public Guid AssignedToId { get; set; }
+        public Guid? AssignedToId { get; set; }
 
         [Column(Order = 4)]
-        public Guid? AssignedById { get; set; }
+        public Guid CreatedById { get; set; }
 
         [Column(Order = 5)]
         public DateTime CreatedDate { get; set; }
@@ -45,9 +45,10 @@ namespace MyPortal.Database.Models.Entity
         public bool System { get; set; }
         
         public virtual Person AssignedTo { get; set; }
-        public virtual User AssignedBy { get; set; }
+        public virtual User CreatedBy { get; set; }
         public virtual TaskType Type { get; set; }
         
         public virtual ICollection<HomeworkSubmission> HomeworkSubmissions { get; set; }
+        public virtual ICollection<TaskReminder> Reminders { get; set; }
     }
 }

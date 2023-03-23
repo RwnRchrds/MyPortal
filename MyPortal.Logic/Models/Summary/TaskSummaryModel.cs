@@ -23,7 +23,7 @@ namespace MyPortal.Logic.Models.Summary
                 Id = model.Id.Value;   
             }
             DueDate = model.DueDate;
-            AssignedByName = model.AssignedBy.GetDisplayName(NameFormat.FullNameAbbreviated);
+            AssignedByName = model.CreatedBy.GetDisplayName(NameFormat.FullNameAbbreviated);
             TaskTypeName = model.Type?.Description;
             TaskTypeColourCode = model.Type?.ColourCode;
             Title = model.Title;

@@ -26,7 +26,7 @@ namespace MyPortal.Logic.Services
 {
     public class StudentService : BaseUserService, IStudentService
     {
-        public StudentService(ICurrentUser user) : base(user)
+        public StudentService(ISessionUser user) : base(user)
         {
         }
 

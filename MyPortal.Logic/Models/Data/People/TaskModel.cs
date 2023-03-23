@@ -18,7 +18,7 @@ namespace MyPortal.Logic.Models.Data.People
         {
             TypeId = model.TypeId;
             AssignedToId = model.AssignedToId;
-            AssignedById = model.AssignedById;
+            CreatedById = model.CreatedById;
             CreatedDate = model.CreatedDate;
             DueDate = model.DueDate;
             CompletedDate = model.CompletedDate;
@@ -33,9 +33,9 @@ namespace MyPortal.Logic.Models.Data.People
                 AssignedTo = new PersonModel(model.AssignedTo);
             }
 
-            if (model.AssignedBy != null)
+            if (model.CreatedBy != null)
             {
-                AssignedBy = new UserModel(model.AssignedBy);
+                CreatedBy = new UserModel(model.CreatedBy);
             }
 
             if (model.Type != null)
@@ -46,9 +46,9 @@ namespace MyPortal.Logic.Models.Data.People
 
         public Guid TypeId { get; set; }
 
-        public Guid AssignedToId { get; set; }
+        public Guid? AssignedToId { get; set; }
 
-        public Guid? AssignedById { get; set; }
+        public Guid CreatedById { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
@@ -70,7 +70,7 @@ namespace MyPortal.Logic.Models.Data.People
         public bool System { get; set; }
         
         public virtual PersonModel AssignedTo { get; set; }
-        public virtual UserModel AssignedBy { get; set; }
+        public virtual UserModel CreatedBy { get; set; }
         public virtual TaskTypeModel Type { get; set; }
 
         public bool Overdue => !Completed && DueDate <= DateTime.Now;

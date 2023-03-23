@@ -8,7 +8,7 @@ namespace MyPortal.Logic.Services
 {
     public class ActivityService : BaseUserService, IActivityService
     {
-        public ActivityService(ICurrentUser user) : base(user)
+        public ActivityService(ISessionUser user) : base(user)
         {
         }
     }

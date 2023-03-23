@@ -13,7 +13,7 @@ namespace MyPortal.Logic.Services;
 
 public class ExamService : BaseUserService, IExamService
 {
-    public ExamService(ICurrentUser user) : base(user)
+    public ExamService(ISessionUser user) : base(user)
     {
     }
 

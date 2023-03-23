@@ -22,7 +22,7 @@ namespace MyPortal.Logic.Services
 {
     public class AcademicYearService : BaseUserService, IAcademicYearService
     {
-        public AcademicYearService(ICurrentUser user) : base(user)
+        public AcademicYearService(ISessionUser user) : base(user)
         {
         }
 

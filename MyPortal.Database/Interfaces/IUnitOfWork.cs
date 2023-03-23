@@ -200,6 +200,7 @@ namespace MyPortal.Database.Interfaces
         ISubjectStaffMemberRoleRepository SubjectStaffMemberRoles { get; }
         ISystemSettingRepository SystemSettings { get; }
         ITaskRepository Tasks { get; }
+        ITaskReminderRepository TaskReminders { get; }
         ITaskTypeRepository TaskTypes { get; }
         ITrainingCertificateRepository TrainingCertificates { get; }
         ITrainingCertificateStatusRepository TrainingCertificateStatus { get; }

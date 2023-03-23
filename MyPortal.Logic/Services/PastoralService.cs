@@ -13,7 +13,7 @@ namespace MyPortal.Logic.Services;
 
 public class PastoralService : BaseUserService, IPastoralService
 {
-    public PastoralService(ICurrentUser user) : base(user)
+    public PastoralService(ISessionUser user) : base(user)
     {
     }
 

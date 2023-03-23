@@ -15,7 +15,7 @@ namespace MyPortal.Logic.Services
 {
     public class BillService : BaseUserService, IBillService
     {
-        public BillService(ICurrentUser user) : base(user)
+        public BillService(ISessionUser user) : base(user)
         {
         }
 

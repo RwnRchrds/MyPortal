@@ -21,7 +21,7 @@ namespace MyPortal.Logic.Services
 {
     public class DocumentService : BaseUserService, IDocumentService
     {
-        public DocumentService(ICurrentUser user) : base(user)
+        public DocumentService(ISessionUser user) : base(user)
         {
         }
 

@@ -41,7 +41,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var task = await _taskService.GetById(taskId);
+                var task = await _taskService.GetTaskById(taskId);
 
                 var accessResponse = await GetPermissionsForTasksPerson(task.AssignedToId, false);
 
@@ -202,7 +202,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             var userId = User.GetUserId();
             
-            var task = await _taskService.GetById(taskId);
+            var task = await _taskService.GetTaskById(taskId);
 
             var accessResponse = await GetPermissionsForTasksPerson(task.AssignedToId, true);
 
@@ -213,7 +213,7 @@ namespace MyPortalWeb.Controllers.Api
 
             if (accessResponse.IsOwner)
             {
-                return task.AssignedById == userId || task.AllowEdit;
+                return task.CreatedById == userId || task.AllowEdit;
             }
 
             return false;

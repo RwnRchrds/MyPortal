@@ -34,12 +34,12 @@ namespace MyPortal.Database.Repositories
             query.Select($"{TblAlias}.TypeId");
             query.Select($"{TblAlias}.Id");
             query.Select($"{TblAlias}.AssignedToId");
-            query.Select($"{TblAlias}.AssignedById");
+            query.Select($"{TblAlias}.CreatedById");
             query.Select($"{TblAlias}.CreatedDate");
             query.Select($"{TblAlias}.DueDate");
             query.Select($"{TblAlias}.CompletedDate");
-            query.SelectRaw($"COALESCE({TblAlias}.Title, HI.Title) as [Title]");
-            query.SelectRaw($"COALESCE({TblAlias}.Description, HI.Description) as [Description]");
+            query.SelectRaw($"COALESCE(HI.Title, {TblAlias}.Title) as [Title]");
+            query.SelectRaw($"COALESCE(HI.Description, {TblAlias}.Description) as [Description]");
             query.Select($"{TblAlias}.Completed");
             query.Select($"{TblAlias}.AllowEdit");
             query.Select($"{TblAlias}.System");
@@ -53,7 +53,7 @@ namespace MyPortal.Database.Repositories
         protected override Query JoinRelated(Query query)
         {
             query.LeftJoin("People as AT", "AT.Id", $"{TblAlias}.AssignedToId");
-            query.LeftJoin("Users as AB", "AB.Id", $"{TblAlias}.AssignedById");
+            query.LeftJoin("Users as AB", "AB.Id", $"{TblAlias}.CreatedById");
             query.LeftJoin("TaskTypes as TT", "TT.Id", $"{TblAlias}.TypeId");
 
             return query;
@@ -76,7 +76,7 @@ namespace MyPortal.Database.Repositories
                 (task, person, user, type) =>
                 {
                     task.AssignedTo = person;
-                    task.AssignedBy = user;
+                    task.CreatedBy = user;
                     task.Type = type;
 
                     return task;

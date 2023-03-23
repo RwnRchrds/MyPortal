@@ -20,7 +20,7 @@ namespace MyPortal.Database.Models.Entity
             Achievements = new HashSet<Achievement>();
             LessonPlans = new HashSet<LessonPlan>();
             Bulletins = new HashSet<Bulletin>();
-            AssignedBy = new HashSet<Task>();
+            CreatedTasks = new HashSet<Task>();
             ReportCardSubmissions = new HashSet<ReportCardEntry>();
         }
         
@@ -53,7 +53,7 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual ICollection<Bulletin> Bulletins { get; set; }
 
-        public virtual ICollection<Task> AssignedBy { get; set; }
+        public virtual ICollection<Task> CreatedTasks { get; set; }
 
         public virtual ICollection<ReportCardEntry> ReportCardSubmissions { get; set; }
 

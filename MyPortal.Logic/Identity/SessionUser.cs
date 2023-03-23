@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Interfaces;
 using MyPortal.Logic.Enums;
@@ -9,11 +10,13 @@ using MyPortal.Logic.Interfaces.Services;
 
 namespace MyPortal.Logic.Identity;
 
-public class CustomCurrentUser : ICurrentUser
+public class SessionUser : ISessionUser
 {
     private readonly Guid _userId;
 
-    public CustomCurrentUser(Guid userId)
+    public static ISessionUser System => new SessionUser(Users.System);
+
+    public SessionUser(Guid userId)
     {
         _userId = userId;
     }

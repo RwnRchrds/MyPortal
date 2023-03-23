@@ -10,6 +10,7 @@ namespace MyPortal.Database.Models
     public class ApplicationDbContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole,
         UserLogin, RoleClaim, UserToken>
     {
+        
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
@@ -209,6 +210,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<SubjectStaffMemberRole> SubjectStaffMemberRoles { get; set; }
         public virtual DbSet<SystemSetting> SystemSettings { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
+        public virtual DbSet<TaskReminder> TaskReminders { get; set; }
         public virtual DbSet<TaskType> TaskTypes { get; set; }
         public virtual DbSet<TrainingCertificate> TrainingCertificates { get; set; }
         public virtual DbSet<TrainingCertificateStatus> TrainingCertificateStatus { get; set; }
@@ -1874,10 +1876,9 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasMany(x => x.AssignedTo)
+                    e.HasMany(x => x.AssignedTasks)
                         .WithOne(x => x.AssignedTo)
                         .HasForeignKey(x => x.AssignedToId)
-                        .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -2620,7 +2621,21 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Task>(e => { ConfigureEntity(e); });
+                modelBuilder.Entity<Task>(e =>
+                {
+                    ConfigureEntity(e);
+
+                    e.HasMany(x => x.Reminders)
+                        .WithOne(x => x.Task)
+                        .HasForeignKey(x => x.TaskId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<TaskReminder>(e =>
+                {
+                    ConfigureEntity(e);
+                });
 
                 modelBuilder.Entity<TaskType>(e =>
                 {
@@ -2728,9 +2743,9 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasMany(x => x.AssignedBy)
-                        .WithOne(x => x.AssignedBy)
-                        .HasForeignKey(x => x.AssignedById)
+                    e.HasMany(x => x.CreatedTasks)
+                        .WithOne(x => x.CreatedBy)
+                        .HasForeignKey(x => x.CreatedById)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 

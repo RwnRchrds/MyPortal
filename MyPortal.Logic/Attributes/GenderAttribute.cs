@@ -11,7 +11,7 @@ namespace MyPortal.Logic.Attributes
         {
             if (value is string stringValue)
             {
-                var validValues = new string[] { Gender.Male, Gender.Female, Gender.Other, Gender.Unknown };
+                var validValues = new string[] { Sexes.Male, Sexes.Female, Sexes.Other, Sexes.Unknown };
 
                 if (validValues.Contains(stringValue))
                 {

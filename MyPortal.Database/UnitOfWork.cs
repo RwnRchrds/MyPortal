@@ -212,6 +212,7 @@ namespace MyPortal.Database
         private ISubjectStaffMemberRoleRepository _subjectStaffMemberRoles;
         private ISystemSettingRepository _systemSettings;
         private ITaskRepository _tasks;
+        private ITaskReminderRepository _taskReminders;
         private ITaskTypeRepository _taskTypes;
         private ITrainingCertificateRepository _trainingCertificates;
         private ITrainingCertificateStatusRepository _trainingCertificateStatus;
@@ -730,6 +731,9 @@ namespace MyPortal.Database
 
         public ITaskRepository Tasks => _tasks ??= new TaskRepository(_context, _transaction);
 
+        public ITaskReminderRepository TaskReminders =>
+            _taskReminders ??= new TaskReminderRepository(_context, _transaction);
+
         public ITaskTypeRepository TaskTypes => _taskTypes ??= new TaskTypeRepository(_context, _transaction);
 
         public ITrainingCertificateRepository TrainingCertificates =>
@@ -1056,6 +1060,7 @@ namespace MyPortal.Database
             _subjectStaffMemberRoles = null;
             _systemSettings = null;
             _tasks = null;
+            _taskReminders = null;
             _taskTypes = null;
             _trainingCertificates = null;
             _trainingCertificateStatus = null;

@@ -16,7 +16,7 @@ namespace MyPortal.Database.Repositories.Base
 {
     public abstract class BaseReadRepository<TEntity> : BaseRepository, IReadRepository<TEntity> where TEntity : class, IEntity
     {
-        public BaseReadRepository(DbTransaction transaction, string tblAlias = null) : base(transaction)
+        public BaseReadRepository(IDbTransaction transaction, string tblAlias = null) : base(transaction)
         {
             TblName = EntityHelper.GetTableName(typeof(TEntity), out TblAlias, tblAlias);
         }

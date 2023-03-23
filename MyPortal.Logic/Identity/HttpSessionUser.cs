@@ -13,11 +13,11 @@ using MyPortal.Logic.Services;
 
 namespace MyPortal.Logic.Identity;
 
-public class HttpCurrentUser : ICurrentUser
+public class HttpSessionUser : ISessionUser
 {
     private readonly IHttpContextAccessor _contextAccessor;
 
-    public HttpCurrentUser(IHttpContextAccessor contextAccessor)
+    public HttpSessionUser(IHttpContextAccessor contextAccessor)
     {
         _contextAccessor = contextAccessor;
     }

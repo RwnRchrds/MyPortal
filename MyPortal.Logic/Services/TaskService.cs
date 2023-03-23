@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
@@ -20,7 +21,7 @@ namespace MyPortal.Logic.Services
 {
     public class TaskService : BaseUserService, ITaskService
     {
-        public TaskService(ICurrentUser user) : base(user)
+        public TaskService(ISessionUser user) : base(user)
         {
         }
 
@@ -36,7 +37,7 @@ namespace MyPortal.Logic.Services
                 Title = task.Title,
                 Description = task.Description,
                 AssignedToId = task.AssignedToId,
-                AssignedById = task.AssignedById,
+                CreatedById = task.AssignedById,
                 CreatedDate = DateTime.Now,
                 DueDate = task.DueDate,
                 TypeId = task.TypeId,
@@ -68,7 +69,7 @@ namespace MyPortal.Logic.Services
                 throw new NotFoundException("Task not found.");
             }
 
-            if (task.AssignedById == userId)
+            if (task.CreatedById == userId)
             {
                 return true;
             }
@@ -83,7 +84,7 @@ namespace MyPortal.Logic.Services
             return false;
         }
 
-        public async Task<TaskModel> GetById(Guid taskId)
+        public async Task<TaskModel> GetTaskById(Guid taskId)
         {
             await using var unitOfWork = await User.GetConnection();
             
@@ -95,6 +96,75 @@ namespace MyPortal.Logic.Services
             }
 
             return new TaskModel(task);
+        }
+
+        public async Task<TaskReminderModel> GetExistingReminder(Guid taskId, Guid userId)
+        {
+            await using var unitOfWork = await User.GetConnection();
+
+            var reminders = await unitOfWork.TaskReminders.GetRemindersByUser(userId);
+
+            var reminder = reminders.FirstOrDefault(r => r.TaskId == taskId);
+
+            if (reminder != null)
+            {
+                return new TaskReminderModel(reminder);
+            }
+
+            return null;
+        }
+
+        public async Task CreateTaskReminder(TaskReminderRequestModel model)
+        {
+            await using var unitOfWork = await User.GetConnection();
+
+            var reminders = await unitOfWork.TaskReminders.GetRemindersByUser(model.UserId);
+
+            var existingReminder = reminders.FirstOrDefault(r => r.TaskId == model.TaskId);
+
+            if (existingReminder != null)
+            {
+                throw new LogicException("A reminder already exists for this task.");
+            }
+
+            var newReminder = new TaskReminder
+            {
+                Id = Guid.NewGuid(),
+                TaskId = model.TaskId,
+                UserId = model.UserId,
+                RemindTime = model.RemindTime
+            };
+            
+            unitOfWork.TaskReminders.Create(newReminder);
+
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task UpdateTaskReminder(Guid reminderId, TaskReminderRequestModel model)
+        {
+            await using var unitOfWork = await User.GetConnection();
+
+            var existingReminder = await unitOfWork.TaskReminders.GetById(reminderId);
+
+            if (existingReminder == null)
+            {
+                throw new NotFoundException("Task reminder not found.");
+            }
+
+            existingReminder.RemindTime = model.RemindTime;
+
+            await unitOfWork.TaskReminders.Update(existingReminder);
+
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task DeleteTaskReminder(Guid reminderId)
+        {
+            await using var unitOfWork = await User.GetConnection();
+
+            await unitOfWork.TaskReminders.Delete(reminderId);
+
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task UpdateTask(Guid taskId, TaskRequestModel task)

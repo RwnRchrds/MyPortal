@@ -16,7 +16,7 @@ namespace MyPortal.Logic.Services
 {
     public class ParentEveningService : BaseUserService, IParentEveningService
     {
-        public ParentEveningService(ICurrentUser user) : base(user)
+        public ParentEveningService(ISessionUser user) : base(user)
         {
         }
 

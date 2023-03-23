@@ -12,7 +12,7 @@ namespace MyPortal.Logic.Services
 {
     public class SystemSettingService : BaseUserService, ISystemSettingService
     {
-        public SystemSettingService(ICurrentUser user) : base(user)
+        public SystemSettingService(ISessionUser user) : base(user)
         {
         }
 

@@ -22,7 +22,7 @@ namespace MyPortal.Logic.Services;
 
 public class AssessmentService : BaseUserService, IAssessmentService
 {
-    public AssessmentService(ICurrentUser user) : base(user)
+    public AssessmentService(ISessionUser user) : base(user)
     {
     }
 

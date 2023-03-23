@@ -11,9 +11,9 @@ namespace MyPortal.Logic.Services
 {
     public abstract class BaseUserService : BaseService
     {
-        protected ICurrentUser User;
+        protected ISessionUser User;
 
-        public BaseUserService(ICurrentUser user) : base()
+        public BaseUserService(ISessionUser user) : base()
         {
             User = user;
         }

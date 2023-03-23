@@ -22,7 +22,7 @@ namespace MyPortal.Logic.Models.Summary
             LastName = string.IsNullOrWhiteSpace(searchResult.PreferredLastName)
                 ? searchResult.LastName
                 : searchResult.PreferredLastName;
-            Gender = Constants.Gender.GetGenderLabel(searchResult.Gender);
+            Gender = Constants.Sexes.GetGenderLabel(searchResult.Gender);
             HouseName = searchResult.HouseName;
             RegGroupName = searchResult.RegGroupName;
             YearGroupName = searchResult.YearGroupName;

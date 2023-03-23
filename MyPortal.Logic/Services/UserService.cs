@@ -36,7 +36,7 @@ namespace MyPortal.Logic.Services
         private readonly SignInManager<User> _signInManager;
         private readonly IUserClaimsPrincipalFactory<User> _claimsPrincipalFactory;
 
-        public UserService(ICurrentUser user, UserManager<User> userManager, RoleManager<Role> roleManager,
+        public UserService(ISessionUser user, UserManager<User> userManager, RoleManager<Role> roleManager,
             SignInManager<User> signInManager, IUserClaimsPrincipalFactory<User> claimsPrincipalFactory) : base(user)
         {
             _userManager = userManager;

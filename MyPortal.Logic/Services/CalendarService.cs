@@ -24,7 +24,7 @@ namespace MyPortal.Logic.Services
 {
     public class CalendarService : BaseUserService, ICalendarService
     {
-        public CalendarService(ICurrentUser user) : base(user)
+        public CalendarService(ISessionUser user) : base(user)
         {
         }
 

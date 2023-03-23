@@ -23,7 +23,7 @@ namespace MyPortal.Logic.Services
 {
     public class SchoolService : BaseUserService, ISchoolService
     {
-        public SchoolService(ICurrentUser user) : base(user)
+        public SchoolService(ISessionUser user) : base(user)
         {
         }
 

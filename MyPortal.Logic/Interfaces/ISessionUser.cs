@@ -9,7 +9,7 @@ using MyPortal.Logic.Models.Data.Settings;
 
 namespace MyPortal.Logic.Interfaces;
 
-public interface ICurrentUser
+public interface ISessionUser
 {
     Task<IUnitOfWork> GetConnection();
 

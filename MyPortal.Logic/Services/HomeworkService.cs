@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Services;
 
 public class HomeworkService : BaseUserService, IHomeworkService
 {
-    public HomeworkService(ICurrentUser user) : base(user)
+    public HomeworkService(ISessionUser user) : base(user)
     {
     }
 
@@ -61,7 +61,7 @@ public class HomeworkService : BaseUserService, IHomeworkService
                     DueDate = model.DueDate,
                     TypeId = TaskTypes.Homework,
                     AssignedToId = student.PersonId,
-                    AssignedById = model.AssignedById,
+                    CreatedById = model.AssignedById,
                     System = true,
                     CreatedDate = now
                 }
@@ -160,7 +160,7 @@ public class HomeworkService : BaseUserService, IHomeworkService
                 Id = Guid.NewGuid(),
                 DueDate = model.DueDate,
                 AssignedToId = student.PersonId,
-                AssignedById = model.AssignedById,
+                CreatedById = model.AssignedById,
                 System = true,
                 TypeId = TaskTypes.Homework,
                 CreatedDate = now,

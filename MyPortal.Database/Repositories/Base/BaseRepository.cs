@@ -10,10 +10,10 @@ namespace MyPortal.Database.Repositories.Base
 {
     public class BaseRepository
     {
-        protected DbTransaction Transaction;
+        protected IDbTransaction Transaction;
         protected readonly SqlServerCompiler Compiler;
 
-        public BaseRepository(DbTransaction transaction)
+        public BaseRepository(IDbTransaction transaction)
         {
             Transaction = transaction;
             Compiler = new SqlServerCompiler();

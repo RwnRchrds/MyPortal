@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Services
 {
     public class PersonService : BaseUserService, IPersonService
     {
-        public PersonService(ICurrentUser user) : base(user)
+        public PersonService(ISessionUser user) : base(user)
         {
         }
 

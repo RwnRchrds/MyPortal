@@ -16,7 +16,7 @@ namespace MyPortal.Logic.Services
 {
     public class CurriculumService : BaseUserService, ICurriculumService
     {
-        public CurriculumService(ICurrentUser user) : base(user)
+        public CurriculumService(ISessionUser user) : base(user)
         {
         }
     }
