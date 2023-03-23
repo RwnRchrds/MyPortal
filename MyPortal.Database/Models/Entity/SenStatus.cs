@@ -21,7 +21,8 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(1)]
         public string Code { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<Student> Students { get; set; }
+        public virtual ICollection<SenReview> SenReviews { get; set; }
     }
 }

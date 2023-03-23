@@ -26,13 +26,13 @@ namespace MyPortal.Database.Models.Entity
         public bool Locked { get; set; }
 
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<LogNote> LogNotes { get; set; }
         
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<Achievement> Achievements { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<Incident> Incidents { get; set; }
 
         public virtual ICollection<AcademicTerm> AcademicTerms { get; set; }

@@ -16,7 +16,7 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 4)]
         public int DefaultPoints { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<Achievement> Achievements { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace MyPortal.Database.Models.Entity
 
         public bool SubjectLeader { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<SubjectStaffMember> StaffMembers { get; set; }
     }
 }

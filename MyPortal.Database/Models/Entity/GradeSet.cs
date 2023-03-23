@@ -24,10 +24,10 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 5)]
         public bool System { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<Aspect> Aspects { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<Grade> Grades { get; set; }
 
         public virtual ICollection<ExamQualificationLevel> ExamQualificationLevels { get; set; }

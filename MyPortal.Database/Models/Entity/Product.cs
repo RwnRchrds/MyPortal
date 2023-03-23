@@ -48,10 +48,10 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual VatRate VatRate { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<BasketItem> BasketItems { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<BillItem> BillItems { get; set; }
 
         public virtual ICollection<StoreDiscount> ProductDiscounts { get; set; }

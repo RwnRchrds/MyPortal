@@ -13,7 +13,7 @@ namespace MyPortal.Database.Models.Entity
             Events = new HashSet<SenEvent>();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<SenEvent> Events { get; set; }
     }
 }

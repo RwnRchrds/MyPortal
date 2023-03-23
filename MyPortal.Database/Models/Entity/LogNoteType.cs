@@ -25,7 +25,7 @@ namespace MyPortal.Database.Models.Entity
         [Required]
         public string IconClass { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<LogNote> LogNotes { get; set; }
     }
 }

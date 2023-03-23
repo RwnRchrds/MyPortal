@@ -40,10 +40,10 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual AttendanceWeekPattern WeekPattern { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<Session> Sessions { get; set; }
 
         public virtual ICollection<ReportCardEntry> ReportCardSubmissions { get; set; }

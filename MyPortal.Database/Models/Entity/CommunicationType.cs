@@ -13,7 +13,7 @@ namespace MyPortal.Database.Models.Entity
             CommunicationLogs = new HashSet<CommunicationLog>();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<CommunicationLog> CommunicationLogs { get; set; }
     }
 }

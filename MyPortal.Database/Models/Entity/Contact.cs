@@ -33,7 +33,7 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual Person Person { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<StudentContactRelationship> LinkedStudents { get; set; }
     }
 }

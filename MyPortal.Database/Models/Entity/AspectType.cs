@@ -14,7 +14,7 @@ namespace MyPortal.Database.Models.Entity
             Aspects = new HashSet<Aspect>();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<Aspect> Aspects { get; set; }
     }
 }

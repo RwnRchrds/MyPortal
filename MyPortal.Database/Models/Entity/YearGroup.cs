@@ -24,7 +24,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual StudentGroup StudentGroup { get; set; }
         public virtual CurriculumYearGroup CurriculumYearGroup { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<RegGroup> RegGroups { get; set; }
     }
 }

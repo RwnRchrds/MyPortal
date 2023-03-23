@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Models.Data.Calendar;
+using MyPortal.Logic.Models.Data.StaffMembers;
 using MyPortal.Logic.Models.Structures;
 using Task = System.Threading.Tasks.Task;
 
@@ -18,13 +20,35 @@ namespace MyPortal.Logic.Models.Data.Students.SEND
         {
             StudentId = model.StudentId;
             ReviewTypeId = model.ReviewTypeId;
-            Date = model.Date;
-            Description = model.Description;
-            Outcome = model.Outcome;
+            ReviewStatusId = model.ReviewStatusId;
+            SencoId = model.SencoId;
+            EventId = model.EventId;
+            OutcomeSenStatusId = model.OutcomeSenStatusId;
+            Comments = model.Comments;
 
             if (model.Student != null)
             {
                 Student = new StudentModel(model.Student);
+            }
+
+            if (model.Senco != null)
+            {
+                Senco = new StaffMemberModel(model.Senco);
+            }
+
+            if (model.Event != null)
+            {
+                Event = new DiaryEventModel(model.Event);
+            }
+
+            if (model.OutcomeStatus != null)
+            {
+                OutcomeStatus = new SenStatusModel(model.OutcomeStatus);
+            }
+
+            if (model.ReviewStatus != null)
+            {
+                ReviewStatus = new SenReviewStatusModel(model.ReviewStatus);
             }
 
             if (model.ReviewType != null)
@@ -37,17 +61,29 @@ namespace MyPortal.Logic.Models.Data.Students.SEND
         
         public Guid ReviewTypeId { get; set; }
         
-        public DateTime Date { get; set; }
+        public Guid ReviewStatusId { get; set; }
+        
+        public Guid? SencoId { get; set; }
+        
+        public Guid EventId { get; set; }
+        
+        public Guid? OutcomeSenStatusId { get; set; }
         
         [StringLength(256)]
-        public string Description { get; set; }
-        
-        [StringLength(256)]
-        public string Outcome { get; set; }
+        public string Comments { get; set; }
 
         public virtual StudentModel Student { get; set; }
+        
+        public virtual StaffMemberModel Senco { get; set; }
+
+        public virtual DiaryEventModel Event { get; set; }
+
+        public virtual SenStatusModel OutcomeStatus { get; set; }
+
+        public virtual SenReviewStatusModel ReviewStatus { get; set; }
 
         public virtual SenReviewTypeModel ReviewType { get; set; }
+        
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

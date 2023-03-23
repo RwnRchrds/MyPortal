@@ -33,7 +33,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual CurriculumGroup Group { get; set; }
         public virtual Directory Directory { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<Session> Sessions { get; set; }
     }
 }

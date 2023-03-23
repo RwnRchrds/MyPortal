@@ -63,6 +63,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual Room Room { get; set; }
         public virtual ICollection<Detention> Detentions { get; set; }
         public virtual ICollection<ParentEvening> ParentEvenings { get; set; }
+        public virtual ICollection<SenReview> SenReviews { get; set; }
         public virtual ICollection<DiaryEventAttendee> Attendees { get; set; }
     }
 }

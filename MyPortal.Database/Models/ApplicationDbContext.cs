@@ -182,6 +182,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<SenProvision> SenProvisions { get; set; }
         public virtual DbSet<SenProvisionType> SenProvisionTypes { get; set; }
         public virtual DbSet<SenReview> SenReviews { get; set; }
+        public virtual DbSet<SenReviewStatus> SenReviewStatuses { get; set; } 
         public virtual DbSet<SenReviewType> SenReviewTypes { get; set; }
         public virtual DbSet<SenStatus> SenStatuses { get; set; }
         public virtual DbSet<SenType> SenTypes { get; set; }
@@ -913,6 +914,12 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.ParentEvenings)
+                        .WithOne(x => x.Event)
+                        .HasForeignKey(x => x.EventId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.SenReviews)
                         .WithOne(x => x.Event)
                         .HasForeignKey(x => x.EventId)
                         .IsRequired()
@@ -2197,7 +2204,21 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<SenReview>(e => { ConfigureEntity(e); });
+                modelBuilder.Entity<SenReview>(e =>
+                {
+                    ConfigureEntity(e);
+                });
+
+                modelBuilder.Entity<SenReviewStatus>(e =>
+                {
+                    ConfigureEntity(e);
+
+                    e.HasMany(x => x.SenReviews)
+                        .WithOne(x => x.ReviewStatus)
+                        .HasForeignKey(x => x.ReviewStatusId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
 
                 modelBuilder.Entity<SenReviewType>(e =>
                 {
@@ -2217,6 +2238,11 @@ namespace MyPortal.Database.Models
                     e.HasMany(x => x.Students)
                         .WithOne(x => x.SenStatus)
                         .HasForeignKey(x => x.SenStatusId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.SenReviews)
+                        .WithOne(x => x.OutcomeStatus)
+                        .HasForeignKey(x => x.OutcomeSenStatusId)
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.Property(x => x.Code)
@@ -2329,6 +2355,12 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.StaffMemberId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
+                    
+                    e.HasMany(x => x.SenReviews)
+                        .WithOne(x => x.Senco)
+                        .HasForeignKey(x => x.SencoId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<StoreDiscount>(e =>
@@ -2401,6 +2433,12 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.SenEvents)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.SenReviews)
                         .WithOne(x => x.Student)
                         .HasForeignKey(x => x.StudentId)
                         .IsRequired()

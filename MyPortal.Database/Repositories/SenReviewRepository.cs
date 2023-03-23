@@ -33,7 +33,7 @@ namespace MyPortal.Database.Repositories
             review.ReviewTypeId = entity.ReviewTypeId;
             review.Date = entity.Date;
             review.Description = entity.Description;
-            review.Outcome = entity.Outcome;
+            review.Comments = entity.Comments;
         }
     }
 }

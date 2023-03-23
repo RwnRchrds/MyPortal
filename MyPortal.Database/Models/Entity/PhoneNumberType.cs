@@ -13,7 +13,7 @@ namespace MyPortal.Database.Models.Entity
             PhoneNumbers = new HashSet<PhoneNumber>();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<PhoneNumber> PhoneNumbers { get; set; }
     }
 }
