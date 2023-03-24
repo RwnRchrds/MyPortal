@@ -112,9 +112,11 @@ namespace MyPortal.Logic.Services
 
             register.Codes = codes;
 
+            // Get any attendance marks that already exist
             var marks = await unitOfWork.AttendanceMarks
                 .GetRegisterMarks(studentGroupId, periods);
 
+            // Get possible attendance mark "slots" (whether or not an actual mark exists yet in the system)
             var possibleMarks =
                 await unitOfWork.AttendanceMarks.GetPossibleMarksByStudentGroup(studentGroupId, periods);
                 

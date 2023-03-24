@@ -114,7 +114,7 @@ namespace MyPortal.Logic.Models.Data.Attendance.Register
                 if (dataRow != null)
                 {
                     var missingMarks = studentData.Where(d => !dataRow.Marks.Any(m =>
-                        m.WeekId == d.AttendanceWeekId && m.PeriodId == d.PeriodId)).ToArray();
+                        m.WeekId == d.AttendanceWeekId && m.PeriodId == d.PeriodId && d.Exists)).ToArray();
 
                     foreach (var missingMark in missingMarks)
                     {
