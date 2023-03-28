@@ -187,6 +187,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<SenStatus> SenStatuses { get; set; }
         public virtual DbSet<SenType> SenTypes { get; set; }
         public virtual DbSet<Session> Sessions { get; set; }
+        public virtual DbSet<SessionExtraName> SessionExtraNames { get; set; }
         public virtual DbSet<StaffAbsence> StaffAbsences { get; set; }
         public virtual DbSet<StaffAbsenceType> StaffAbsenceTypes { get; set; }
         public virtual DbSet<StaffIllnessType> StaffIllnessTypes { get; set; }
@@ -485,6 +486,12 @@ namespace MyPortal.Database.Models
                     e.HasMany(aw => aw.AttendanceMarks)
                         .WithOne(am => am.Week)
                         .HasForeignKey(am => am.WeekId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                    
+                    e.HasMany(x => x.SessionExtraNames)
+                        .WithOne(x => x.AttendanceWeek)
+                        .HasForeignKey(x => x.AttendanceWeekId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -2260,7 +2267,21 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Session>(e => { ConfigureEntity(e); });
+                modelBuilder.Entity<Session>(e =>
+                {
+                    ConfigureEntity(e);
+
+                    e.HasMany(x => x.SessionExtraNames)
+                        .WithOne(x => x.Session)
+                        .HasForeignKey(x => x.SessionId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<SessionExtraName>(e =>
+                {
+                    ConfigureEntity(e);
+                });
 
                 modelBuilder.Entity<StaffAbsence>(e =>
                 {
@@ -2457,6 +2478,12 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.ParentEveningAppointments)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.SessionExtraNames)
                         .WithOne(x => x.Student)
                         .HasForeignKey(x => x.StudentId)
                         .IsRequired()

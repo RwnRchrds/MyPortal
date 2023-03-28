@@ -27,8 +27,9 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual AcademicTerm AcademicTerm { get; set; }
         public virtual AttendanceWeekPattern WeekPattern { get; set; }
+        
         public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }
-
         public virtual ICollection<ReportCardEntry> ReportCardSubmissions { get; set; }
+        public virtual ICollection<SessionExtraName> SessionExtraNames { get; set; }
     }
 }

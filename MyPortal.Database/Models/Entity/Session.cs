@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models.Entity
@@ -31,5 +32,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual Class Class { get; set; }
 
         public virtual Room Room { get; set; }
+        
+        public virtual ICollection<SessionExtraName> SessionExtraNames { get; set; }
     }
 }
