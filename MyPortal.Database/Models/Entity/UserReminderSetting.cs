@@ -13,5 +13,7 @@ public class UserReminderSetting : BaseTypes.Entity
     public Guid ReminderType { get; set; }
     
     [Column(Order = 4)]
-    public TimeSpan Reminder { get; set; }
+    public TimeSpan RemindBefore { get; set; }
+
+    public virtual User User { get; set; }
 }

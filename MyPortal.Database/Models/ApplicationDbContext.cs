@@ -2801,6 +2801,12 @@ namespace MyPortal.Database.Models
                         .WithOne(x => x.User)
                         .HasForeignKey(x => x.UserId)
                         .IsRequired();
+
+                    e.HasMany(x => x.UserReminderSettings)
+                        .WithOne(x => x.User)
+                        .HasForeignKey(x => x.UserId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<UserClaim>(e =>
