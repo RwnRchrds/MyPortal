@@ -16,7 +16,13 @@ namespace MyPortal.Database.Interfaces.Repositories
         Task<IEnumerable<AttendanceMarkDetailModel>> GetRegisterMarks(Guid studentGroupId,
             AttendancePeriodInstance[] attendancePeriods);
 
+        Task<IEnumerable<AttendanceMarkDetailModel>> GetRegisterMarks(Guid[] studentIds,
+            AttendancePeriodInstance[] attendancePeriods);
+
         Task<IEnumerable<PossibleAttendanceMark>> GetPossibleMarksByStudentGroup(Guid studentGroupId,
-            IEnumerable<AttendancePeriodInstance> attendancePeriods);
+            AttendancePeriodInstance[] attendancePeriods);
+
+        Task<IEnumerable<PossibleAttendanceMark>> GetPossibleMarksByStudents(Guid[] studentIds,
+            AttendancePeriodInstance[] attendancePeriods);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.QueryResults.Attendance;
 using MyPortal.Logic.Models.Summary;
 
@@ -17,6 +18,7 @@ namespace MyPortal.Logic.Models.Data.Attendance.Register
 
         public string Title { get; set; }
 
+        internal AttendancePeriodInstance[] Periods { get; set; }
         public ICollection<AttendanceCodeModel> Codes { get; set; }
         public ICollection<AttendanceRegisterColumnGroupDataModel> ColumnGroups { get; set; }
         public ICollection<AttendanceRegisterStudentDataModel> Students { get; set; }
@@ -55,6 +57,19 @@ namespace MyPortal.Logic.Models.Data.Attendance.Register
                 }
 
                 ColumnGroups.Add(columnGroup);
+            }
+        }
+
+        public void FlagExtraNames(IEnumerable<SessionExtraName> extraNames)
+        {
+            foreach (var sessionExtraName in extraNames)
+            {
+                var student = Students.FirstOrDefault(s => s.StudentId == sessionExtraName.StudentId);
+
+                if (student != null)
+                {
+                    student.ExtraNameId = sessionExtraName.Id;
+                }
             }
         }
 

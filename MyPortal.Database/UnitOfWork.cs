@@ -189,6 +189,7 @@ namespace MyPortal.Database
         private ISenStatusRepository _senStatus;
         private ISenTypeRepository _senTypes;
         private ISessionRepository _sessions;
+        private ISessionExtraNameRepository _sessionExtraNames;
         private IStaffAbsenceRepository _staffAbsences;
         private IStaffAbsenceTypeRepository _staffAbsenceTypes;
         private IStaffIllnessTypeRepository _staffIllnessTypes;
@@ -664,6 +665,9 @@ namespace MyPortal.Database
 
         public ISessionRepository Sessions => _sessions ??= new SessionRepository(_context, _transaction);
 
+        public ISessionExtraNameRepository SessionExtraNames =>
+            _sessionExtraNames ??= new SessionExtraNameRepository(_context, _transaction);
+
         public IStaffMemberRepository StaffMembers =>
             _staffMembers ??= new StaffMemberRepository(_context, _transaction);
 
@@ -1037,6 +1041,7 @@ namespace MyPortal.Database
             _senStatus = null;
             _senTypes = null;
             _sessions = null;
+            _sessionExtraNames = null;
             _staffAbsences = null;
             _staffAbsenceTypes = null;
             _staffIllnessTypes = null;

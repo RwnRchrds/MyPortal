@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
@@ -58,6 +59,17 @@ namespace MyPortal.Database.Repositories
 
             membership.StartDate = entity.StartDate;
             membership.EndDate = entity.EndDate;
+        }
+
+        public async Task<IEnumerable<StudentGroupMembership>> GetMembershipsByGroup(Guid studentGroupId, DateTime dateFrom, DateTime dateTo)
+        {
+            var query = GenerateQuery();
+
+            query.Where("SGM.StudentGroupId", studentGroupId);
+            query.Where("SGM.StartDate", "<=", dateFrom);
+            query.Where("SGM.EndDate", ">", dateTo);
+
+            return await ExecuteQuery(query);
         }
     }
 }

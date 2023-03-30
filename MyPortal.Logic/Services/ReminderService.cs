@@ -22,7 +22,7 @@ public class ReminderService : BaseUserService, IReminderService
     {
         var reminders = new List<ReminderDataModel>();
         
-        await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+        await using var unitOfWork = await User.GetConnection();
 
         var taskReminders = await unitOfWork.TaskReminders.GetRemindersByUser(userId);
 

@@ -18,12 +18,16 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IEnumerable<AttendanceRegisterSummaryModel>> GetRegisters(RegisterSearchRequestModel model);
         Task<AttendanceRegisterDataModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId);
         Task<AttendanceRegisterDataModel> GetRegisterByDateRange(Guid studentGroupId, DateTime dateFrom, DateTime dateTo,
-            Guid? lockToPeriodId = null, string title = null);
+            string title = null, Guid? lockToPeriodId = null);
+        Task<AttendanceRegisterDataModel> GetRegisterByDateRange(IEnumerable<Guid> studentIds,
+            DateTime dateFrom, DateTime dateTo, string title, Guid? lockToPeriodId = null);
         Task UpdateAttendanceMarks(params AttendanceMarkSummaryModel[] marks);
         Task UpdateAttendanceMarks(params AttendanceRegisterStudentDataModel[] markCollections);
         Task DeleteAttendanceMarks(params Guid[] attendanceMarkIds);
         Task<AttendancePeriodModel> GetPeriodById(Guid periodId);
         Task<AttendanceWeekModel> GetWeekById(Guid attendanceWeekId);
         Task<AttendanceWeekModel> GetWeekByDate(DateTime date, bool throwIfNotFound = true);
+        Task AddExtraName(ExtraNameRequestModel model);
+        Task RemoveExtraName(Guid extraNameId);
     }
 }

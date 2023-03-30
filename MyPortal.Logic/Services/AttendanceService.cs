@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using MyPortal.Database;
-using MyPortal.Database.Constants;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Models.QueryResults.Attendance;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Attendance;
@@ -63,8 +55,28 @@ namespace MyPortal.Logic.Services
                 title += $" - {metadata.TeacherName}";
             }
 
-            return await GetRegisterByDateRange(metadata.StudentGroupId, metadata.StartTime,
-                metadata.EndTime, metadata.PeriodId, title);
+            var studentsInSession =
+                await unitOfWork.StudentGroupMemberships.GetMembershipsByGroup(metadata.StudentGroupId,
+                    metadata.StartTime, metadata.EndTime);
+
+            var extraNames = Array.Empty<SessionExtraName>();
+
+            if (metadata.SessionId.HasValue)
+            {
+                extraNames =
+                    (await unitOfWork.SessionExtraNames.GetExtraNamesBySession(metadata.SessionId.Value,
+                        metadata.AttendanceWeekId)).ToArray();
+            }
+
+            var studentIds = studentsInSession.Select(s => s.StudentId)
+                .Union(extraNames.Select(n => n.StudentId)).ToArray();
+
+            var register = await GetRegisterByDateRange(studentIds, metadata.StartTime, metadata.EndTime, title,
+                metadata.PeriodId);
+            
+            register.FlagExtraNames(extraNames);
+
+            return register;
         }
 
         public async Task<IEnumerable<AttendanceRegisterSummaryModel>> GetRegisters(RegisterSearchRequestModel model)
@@ -84,8 +96,54 @@ namespace MyPortal.Logic.Services
             return sessions.Select(s => new AttendanceRegisterSummaryModel(s)).ToArray();
         }
 
+        public async Task<AttendanceRegisterDataModel> GetRegisterByDateRange(IEnumerable<Guid> studentIds,
+            DateTime dateFrom, DateTime dateTo, string title, Guid? lockToPeriodId = null)
+        {
+            await using var unitOfWork = await User.GetConnection();
+
+            var studentCollection = studentIds.ToArray();
+
+            var register = await InitialiseRegister(dateFrom, dateTo, lockToPeriodId, title);
+
+            var existingMarks = 
+                await unitOfWork.AttendanceMarks.GetRegisterMarks(studentCollection, register.Periods);
+
+            var possibleMarks =
+                await unitOfWork.AttendanceMarks.GetPossibleMarksByStudents(studentCollection, register.Periods);
+            
+            register.PopulateMarks(existingMarks);
+            register.PopulateMissingMarks(possibleMarks);
+
+            return register;
+        }
+
+        private async Task<AttendanceRegisterDataModel> InitialiseRegister(DateTime dateFrom, DateTime dateTo,
+            Guid? lockToPeriodId, string title)
+        {
+            await using var unitOfWork = await User.GetConnection();
+
+            var register = new AttendanceRegisterDataModel();
+
+            register.Title = title;
+
+            var periods = (await unitOfWork.AttendancePeriods
+                .GetByDateRange(dateFrom.Date, dateTo.Date)).ToArray();
+
+            register.Periods = periods;
+
+            register.PopulateColumnGroups(periods, lockToPeriodId);
+
+            var codes = (await unitOfWork.AttendanceCodes.GetAll())
+                .Select(c => new AttendanceCodeModel(c))
+                .ToArray();
+
+            register.Codes = codes;
+
+            return register;
+        }
+
         public async Task<AttendanceRegisterDataModel> GetRegisterByDateRange(Guid studentGroupId, DateTime dateFrom,
-            DateTime dateTo, Guid? lockToPeriodId = null, string title = null)
+            DateTime dateTo, string title = null, Guid? lockToPeriodId = null)
         {
             await using var unitOfWork = await User.GetConnection();
             
@@ -95,32 +153,21 @@ namespace MyPortal.Logic.Services
             {
                 throw new NotFoundException("Student group not found.");
             }
-                
-            var register = new AttendanceRegisterDataModel();
 
-            register.Title = string.IsNullOrWhiteSpace(title) ?
+            var registerTitle = string.IsNullOrWhiteSpace(title) ?
                 $"{studentGroup.Description}, {dateFrom:dd/MM/yyyy}-{dateTo:dd/MM/yyyy}" : title;
 
-            var periods = (await unitOfWork.AttendancePeriods
-                .GetByDateRange(dateFrom.Date, dateTo.Date)).ToArray();
-                
-            register.PopulateColumnGroups(periods, lockToPeriodId);
-
-            var codes = (await unitOfWork.AttendanceCodes.GetAll())
-                .Select(c => new AttendanceCodeModel(c))
-                .ToArray();
-
-            register.Codes = codes;
+            var register = await InitialiseRegister(dateFrom, dateTo, lockToPeriodId, registerTitle);
 
             // Get any attendance marks that already exist
-            var marks = await unitOfWork.AttendanceMarks
-                .GetRegisterMarks(studentGroupId, periods);
+            var existingMarks = await unitOfWork.AttendanceMarks
+                .GetRegisterMarks(studentGroupId, register.Periods);
 
             // Get possible attendance mark "slots" (whether or not an actual mark exists yet in the system)
             var possibleMarks =
-                await unitOfWork.AttendanceMarks.GetPossibleMarksByStudentGroup(studentGroupId, periods);
+                await unitOfWork.AttendanceMarks.GetPossibleMarksByStudentGroup(studentGroupId, register.Periods);
                 
-            register.PopulateMarks(marks);
+            register.PopulateMarks(existingMarks);
             register.PopulateMissingMarks(possibleMarks);
 
             return register;
@@ -264,6 +311,40 @@ namespace MyPortal.Logic.Services
             }
 
             return new AttendanceWeekModel(week);
+        }
+
+        public async Task AddExtraName(ExtraNameRequestModel model)
+        {
+            await using var unitOfWork = await User.GetConnection();
+
+            var existingNames =
+                await unitOfWork.SessionExtraNames.GetExtraNamesBySession(model.SessionId, model.AttendanceWeekId);
+
+            if (existingNames.Any(n => n.StudentId == model.StudentId))
+            {
+                throw new LogicException("The student has already been added to this session.");
+            }
+
+            var extraName = new SessionExtraName
+            {
+                Id = Guid.NewGuid(),
+                AttendanceWeekId = model.AttendanceWeekId,
+                SessionId = model.SessionId,
+                StudentId = model.StudentId
+            };
+            
+            unitOfWork.SessionExtraNames.Create(extraName);
+
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task RemoveExtraName(Guid extraNameId)
+        {
+            await using var unitOfWork = await User.GetConnection();
+
+            await unitOfWork.SessionExtraNames.Delete(extraNameId);
+
+            await unitOfWork.SaveChangesAsync();
         }
     }
 }
