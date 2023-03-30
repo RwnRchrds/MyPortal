@@ -1,14 +1,17 @@
 ﻿CREATE TABLE [dbo].[RegGroups] (
-    [Id]             UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
+    [Id]             UNIQUEIDENTIFIER NOT NULL,
+    [ClusterId]      INT              IDENTITY (1, 1) NOT NULL,
     [StudentGroupId] UNIQUEIDENTIFIER NOT NULL,
     [YearGroupId]    UNIQUEIDENTIFIER NOT NULL,
     [RoomId]         UNIQUEIDENTIFIER NULL,
     [StaffMemberId]  UNIQUEIDENTIFIER NULL,
-    CONSTRAINT [PK_RegGroups] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [PK_RegGroups] PRIMARY KEY NONCLUSTERED ([Id] ASC),
     CONSTRAINT [FK_RegGroups_StaffMembers_StaffMemberId] FOREIGN KEY ([StaffMemberId]) REFERENCES [dbo].[StaffMembers] ([Id]),
     CONSTRAINT [FK_RegGroups_StudentGroups_StudentGroupId] FOREIGN KEY ([StudentGroupId]) REFERENCES [dbo].[StudentGroups] ([Id]),
     CONSTRAINT [FK_RegGroups_YearGroups_YearGroupId] FOREIGN KEY ([YearGroupId]) REFERENCES [dbo].[YearGroups] ([Id])
 );
+
+
 
 
 GO
@@ -24,4 +27,9 @@ CREATE NONCLUSTERED INDEX [IX_RegGroups_StudentGroupId]
 GO
 CREATE NONCLUSTERED INDEX [IX_RegGroups_YearGroupId]
     ON [dbo].[RegGroups]([YearGroupId] ASC);
+
+
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[RegGroups]([ClusterId] ASC);
 

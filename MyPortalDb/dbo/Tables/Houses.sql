@@ -1,12 +1,15 @@
 ﻿CREATE TABLE [dbo].[Houses] (
-    [Id]             UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
+    [Id]             UNIQUEIDENTIFIER NOT NULL,
+    [ClusterId]      INT              IDENTITY (1, 1) NOT NULL,
     [StudentGroupId] UNIQUEIDENTIFIER NOT NULL,
     [ColourCode]     NVARCHAR (10)    NULL,
     [StaffMemberId]  UNIQUEIDENTIFIER NULL,
-    CONSTRAINT [PK_Houses] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [PK_Houses] PRIMARY KEY NONCLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Houses_StaffMembers_StaffMemberId] FOREIGN KEY ([StaffMemberId]) REFERENCES [dbo].[StaffMembers] ([Id]),
     CONSTRAINT [FK_Houses_StudentGroups_StudentGroupId] FOREIGN KEY ([StudentGroupId]) REFERENCES [dbo].[StudentGroups] ([Id])
 );
+
+
 
 
 GO
@@ -17,4 +20,9 @@ CREATE NONCLUSTERED INDEX [IX_Houses_StaffMemberId]
 GO
 CREATE NONCLUSTERED INDEX [IX_Houses_StudentGroupId]
     ON [dbo].[Houses]([StudentGroupId] ASC);
+
+
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Houses]([ClusterId] ASC);
 

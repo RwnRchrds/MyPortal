@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [dbo].[Schools] (
-    [Id]                  UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
+    [Id]                  UNIQUEIDENTIFIER NOT NULL,
+    [ClusterId]           INT              IDENTITY (1, 1) NOT NULL,
     [AgencyId]            UNIQUEIDENTIFIER NOT NULL,
     [LocalAuthorityId]    UNIQUEIDENTIFIER NOT NULL,
     [EstablishmentNumber] INT              NOT NULL,
@@ -11,7 +12,7 @@
     [IntakeTypeId]        UNIQUEIDENTIFIER NOT NULL,
     [HeadTeacherId]       UNIQUEIDENTIFIER NULL,
     [Local]               BIT              NOT NULL,
-    CONSTRAINT [PK_Schools] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [PK_Schools] PRIMARY KEY NONCLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Schools_Agencies_AgencyId] FOREIGN KEY ([AgencyId]) REFERENCES [dbo].[Agencies] ([Id]),
     CONSTRAINT [FK_Schools_GovernanceTypes_GovernanceTypeId] FOREIGN KEY ([GovernanceTypeId]) REFERENCES [dbo].[GovernanceTypes] ([Id]),
     CONSTRAINT [FK_Schools_IntakeTypes_IntakeTypeId] FOREIGN KEY ([IntakeTypeId]) REFERENCES [dbo].[IntakeTypes] ([Id]),
@@ -20,6 +21,8 @@
     CONSTRAINT [FK_Schools_SchoolPhases_PhaseId] FOREIGN KEY ([PhaseId]) REFERENCES [dbo].[SchoolPhases] ([Id]),
     CONSTRAINT [FK_Schools_SchoolTypes_TypeId] FOREIGN KEY ([TypeId]) REFERENCES [dbo].[SchoolTypes] ([Id])
 );
+
+
 
 
 GO
@@ -55,4 +58,9 @@ CREATE NONCLUSTERED INDEX [IX_Schools_PhaseId]
 GO
 CREATE NONCLUSTERED INDEX [IX_Schools_TypeId]
     ON [dbo].[Schools]([TypeId] ASC);
+
+
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Schools]([ClusterId] ASC);
 

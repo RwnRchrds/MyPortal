@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [dbo].[Achievements] (
-    [Id]                UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
+    [Id]                UNIQUEIDENTIFIER NOT NULL,
+    [ClusterId]         INT              IDENTITY (1, 1) NOT NULL,
     [AcademicYearId]    UNIQUEIDENTIFIER NOT NULL,
     [AchievementTypeId] UNIQUEIDENTIFIER NOT NULL,
     [LocationId]        UNIQUEIDENTIFIER NULL,
@@ -8,12 +9,14 @@
     [Date]              DATE             NOT NULL,
     [Comments]          NVARCHAR (MAX)   NULL,
     [Deleted]           BIT              NOT NULL,
-    CONSTRAINT [PK_Achievements] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [PK_Achievements] PRIMARY KEY NONCLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Achievements_AcademicYears_AcademicYearId] FOREIGN KEY ([AcademicYearId]) REFERENCES [dbo].[AcademicYears] ([Id]),
     CONSTRAINT [FK_Achievements_AchievementTypes_AchievementTypeId] FOREIGN KEY ([AchievementTypeId]) REFERENCES [dbo].[AchievementTypes] ([Id]),
     CONSTRAINT [FK_Achievements_Locations_LocationId] FOREIGN KEY ([LocationId]) REFERENCES [dbo].[Locations] ([Id]),
     CONSTRAINT [FK_Achievements_Users_CreatedById] FOREIGN KEY ([CreatedById]) REFERENCES [dbo].[Users] ([Id])
 );
+
+
 
 
 GO
@@ -34,4 +37,9 @@ CREATE NONCLUSTERED INDEX [IX_Achievements_CreatedById]
 GO
 CREATE NONCLUSTERED INDEX [IX_Achievements_LocationId]
     ON [dbo].[Achievements]([LocationId] ASC);
+
+
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Achievements]([ClusterId] ASC);
 

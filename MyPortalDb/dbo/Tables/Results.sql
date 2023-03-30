@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [dbo].[Results] (
-    [Id]          UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
+    [Id]          UNIQUEIDENTIFIER NOT NULL,
+    [ClusterId]   INT              IDENTITY (1, 1) NOT NULL,
     [ResultSetId] UNIQUEIDENTIFIER NOT NULL,
     [StudentId]   UNIQUEIDENTIFIER NOT NULL,
     [AspectId]    UNIQUEIDENTIFIER NOT NULL,
@@ -10,13 +11,15 @@
     [Comment]     NVARCHAR (1000)  NULL,
     [ColourCode]  NVARCHAR (MAX)   NULL,
     [Note]        NVARCHAR (MAX)   NULL,
-    CONSTRAINT [PK_Results] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [PK_Results] PRIMARY KEY NONCLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Results_Aspects_AspectId] FOREIGN KEY ([AspectId]) REFERENCES [dbo].[Aspects] ([Id]),
     CONSTRAINT [FK_Results_Grades_GradeId] FOREIGN KEY ([GradeId]) REFERENCES [dbo].[Grades] ([Id]),
     CONSTRAINT [FK_Results_ResultSets_ResultSetId] FOREIGN KEY ([ResultSetId]) REFERENCES [dbo].[ResultSets] ([Id]),
     CONSTRAINT [FK_Results_Students_StudentId] FOREIGN KEY ([StudentId]) REFERENCES [dbo].[Students] ([Id]),
     CONSTRAINT [FK_Results_Users_CreatedById] FOREIGN KEY ([CreatedById]) REFERENCES [dbo].[Users] ([Id])
 );
+
+
 
 
 GO
@@ -42,4 +45,9 @@ CREATE NONCLUSTERED INDEX [IX_Results_ResultSetId]
 GO
 CREATE NONCLUSTERED INDEX [IX_Results_StudentId]
     ON [dbo].[Results]([StudentId] ASC);
+
+
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Results]([ClusterId] ASC);
 

@@ -1,11 +1,14 @@
 ﻿CREATE TABLE [dbo].[ExamElementComponents] (
-    [Id]          UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
+    [Id]          UNIQUEIDENTIFIER NOT NULL,
+    [ClusterId]   INT              IDENTITY (1, 1) NOT NULL,
     [ElementId]   UNIQUEIDENTIFIER NOT NULL,
     [ComponentId] UNIQUEIDENTIFIER NOT NULL,
-    CONSTRAINT [PK_ExamElementComponents] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [PK_ExamElementComponents] PRIMARY KEY NONCLUSTERED ([Id] ASC),
     CONSTRAINT [FK_ExamElementComponents_ExamComponents_ComponentId] FOREIGN KEY ([ComponentId]) REFERENCES [dbo].[ExamComponents] ([Id]),
     CONSTRAINT [FK_ExamElementComponents_ExamElements_ElementId] FOREIGN KEY ([ElementId]) REFERENCES [dbo].[ExamElements] ([Id])
 );
+
+
 
 
 GO
@@ -16,4 +19,9 @@ CREATE NONCLUSTERED INDEX [IX_ExamElementComponents_ComponentId]
 GO
 CREATE NONCLUSTERED INDEX [IX_ExamElementComponents_ElementId]
     ON [dbo].[ExamElementComponents]([ElementId] ASC);
+
+
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[ExamElementComponents]([ClusterId] ASC);
 

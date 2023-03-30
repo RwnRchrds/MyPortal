@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [dbo].[DiaryEvents] (
-    [Id]          UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
+    [Id]          UNIQUEIDENTIFIER NOT NULL,
+    [ClusterId]   INT              IDENTITY (1, 1) NOT NULL,
     [EventTypeId] UNIQUEIDENTIFIER NOT NULL,
     [CreatedById] UNIQUEIDENTIFIER NULL,
     [CreatedDate] DATETIME2 (7)    NOT NULL,
@@ -12,11 +13,13 @@
     [AllDay]      BIT              NOT NULL,
     [Public]      BIT              NOT NULL,
     [System]      BIT              NOT NULL,
-    CONSTRAINT [PK_DiaryEvents] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [PK_DiaryEvents] PRIMARY KEY NONCLUSTERED ([Id] ASC),
     CONSTRAINT [FK_DiaryEvents_DiaryEventTypes_EventTypeId] FOREIGN KEY ([EventTypeId]) REFERENCES [dbo].[DiaryEventTypes] ([Id]),
     CONSTRAINT [FK_DiaryEvents_Rooms_RoomId] FOREIGN KEY ([RoomId]) REFERENCES [dbo].[Rooms] ([Id]),
     CONSTRAINT [FK_DiaryEvents_Users_CreatedById] FOREIGN KEY ([CreatedById]) REFERENCES [dbo].[Users] ([Id])
 );
+
+
 
 
 GO
@@ -32,4 +35,9 @@ CREATE NONCLUSTERED INDEX [IX_DiaryEvents_EventTypeId]
 GO
 CREATE NONCLUSTERED INDEX [IX_DiaryEvents_RoomId]
     ON [dbo].[DiaryEvents]([RoomId] ASC);
+
+
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[DiaryEvents]([ClusterId] ASC);
 

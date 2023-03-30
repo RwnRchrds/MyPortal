@@ -1,14 +1,17 @@
 ﻿CREATE TABLE [dbo].[StudentAchievements] (
-    [Id]            UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
+    [Id]            UNIQUEIDENTIFIER NOT NULL,
+    [ClusterId]     INT              IDENTITY (1, 1) NOT NULL,
     [StudentId]     UNIQUEIDENTIFIER NOT NULL,
     [AchievementId] UNIQUEIDENTIFIER NOT NULL,
     [OutcomeId]     UNIQUEIDENTIFIER NOT NULL,
     [Points]        INT              NOT NULL,
-    CONSTRAINT [PK_StudentAchievements] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [PK_StudentAchievements] PRIMARY KEY NONCLUSTERED ([Id] ASC),
     CONSTRAINT [FK_StudentAchievements_AchievementOutcomes_OutcomeId] FOREIGN KEY ([OutcomeId]) REFERENCES [dbo].[AchievementOutcomes] ([Id]),
     CONSTRAINT [FK_StudentAchievements_Achievements_AchievementId] FOREIGN KEY ([AchievementId]) REFERENCES [dbo].[Achievements] ([Id]),
     CONSTRAINT [FK_StudentAchievements_Students_StudentId] FOREIGN KEY ([StudentId]) REFERENCES [dbo].[Students] ([Id])
 );
+
+
 
 
 GO
@@ -24,4 +27,9 @@ CREATE NONCLUSTERED INDEX [IX_StudentAchievements_OutcomeId]
 GO
 CREATE NONCLUSTERED INDEX [IX_StudentAchievements_StudentId]
     ON [dbo].[StudentAchievements]([StudentId] ASC);
+
+
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[StudentAchievements]([ClusterId] ASC);
 

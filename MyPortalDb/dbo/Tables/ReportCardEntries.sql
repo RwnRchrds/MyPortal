@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [dbo].[ReportCardEntries] (
-    [Id]               UNIQUEIDENTIFIER DEFAULT (newsequentialid()) NOT NULL,
+    [Id]               UNIQUEIDENTIFIER NOT NULL,
+    [ClusterId]        INT              IDENTITY (1, 1) NOT NULL,
     [ReportCardId]     UNIQUEIDENTIFIER NOT NULL,
     [CreatedById]      UNIQUEIDENTIFIER NOT NULL,
     [CreatedDate]      DATETIME2 (7)    NOT NULL,
@@ -7,12 +8,14 @@
     [PeriodId]         UNIQUEIDENTIFIER NOT NULL,
     [Comments]         NVARCHAR (256)   NULL,
     [AttendanceWeekId] UNIQUEIDENTIFIER NULL,
-    CONSTRAINT [PK_ReportCardEntries] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [PK_ReportCardEntries] PRIMARY KEY NONCLUSTERED ([Id] ASC),
     CONSTRAINT [FK_ReportCardEntries_AttendancePeriods_PeriodId] FOREIGN KEY ([PeriodId]) REFERENCES [dbo].[AttendancePeriods] ([Id]) ON DELETE CASCADE,
     CONSTRAINT [FK_ReportCardEntries_AttendanceWeeks_AttendanceWeekId] FOREIGN KEY ([AttendanceWeekId]) REFERENCES [dbo].[AttendanceWeeks] ([Id]),
     CONSTRAINT [FK_ReportCardEntries_ReportCards_ReportCardId] FOREIGN KEY ([ReportCardId]) REFERENCES [dbo].[ReportCards] ([Id]),
     CONSTRAINT [FK_ReportCardEntries_Users_CreatedById] FOREIGN KEY ([CreatedById]) REFERENCES [dbo].[Users] ([Id])
 );
+
+
 
 
 GO
@@ -33,4 +36,9 @@ CREATE NONCLUSTERED INDEX [IX_ReportCardEntries_PeriodId]
 GO
 CREATE NONCLUSTERED INDEX [IX_ReportCardEntries_ReportCardId]
     ON [dbo].[ReportCardEntries]([ReportCardId] ASC);
+
+
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[ReportCardEntries]([ClusterId] ASC);
 
