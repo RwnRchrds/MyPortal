@@ -2,6 +2,6 @@
 
 public class TaskAccessResponse
 {
-    public bool IsOwner { get; set; }
+    public bool IsAssignee { get; set; }
     public bool CanAccess { get; set; }
 }

@@ -43,11 +43,14 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var task = await _taskService.GetTaskById(taskId);
 
-                var accessResponse = await GetPermissionsForTasksPerson(task.AssignedToId, false);
-
-                if (accessResponse.CanAccess || accessResponse.IsOwner)
+                if (task.AssignedToId.HasValue)
                 {
-                    return Ok(task);
+                    var accessResponse = await GetPermissionsForTasksPerson(task.AssignedToId.Value, false);
+
+                    if (accessResponse.CanAccess || accessResponse.IsAssignee)
+                    {
+                        return Ok(task);
+                    }
                 }
 
                 return Error(HttpStatusCode.Forbidden, PermissionMessage);
@@ -67,7 +70,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var accessResponse = await GetPermissionsForTasksPerson(personId, false);
 
-                if (accessResponse.CanAccess || accessResponse.IsOwner)
+                if (accessResponse.CanAccess || accessResponse.IsAssignee)
                 {
                     var tasks = (await _taskService.GetByPerson(personId, searchOptions)).ToArray();
 
@@ -115,7 +118,7 @@ namespace MyPortalWeb.Controllers.Api
 
                 var accessResponse = await GetPermissionsForTasksPerson(requestModel.AssignedToId, true);
 
-                if (accessResponse.CanAccess || accessResponse.IsOwner)
+                if (accessResponse.CanAccess || accessResponse.IsAssignee)
                 {
                     requestModel.AssignedById = userId;
 
@@ -204,16 +207,19 @@ namespace MyPortalWeb.Controllers.Api
             
             var task = await _taskService.GetTaskById(taskId);
 
-            var accessResponse = await GetPermissionsForTasksPerson(task.AssignedToId, true);
-
-            if (accessResponse.CanAccess)
+            if (task.CreatedById != userId && task.AssignedToId.HasValue)
             {
-                return true;
-            }
+                var accessResponse = await GetPermissionsForTasksPerson(task.AssignedToId.Value, true);
 
-            if (accessResponse.IsOwner)
-            {
-                return task.CreatedById == userId || task.AllowEdit;
+                if (accessResponse.CanAccess)
+                {
+                    return true;
+                }
+
+                if (accessResponse.IsAssignee)
+                {
+                    return task.CreatedById == userId || task.AllowEdit;
+                }
             }
 
             return false;
@@ -227,7 +233,7 @@ namespace MyPortalWeb.Controllers.Api
             
             if (user.PersonId != null && user.PersonId.Value == personId)
             {
-                response.IsOwner = true;
+                response.IsAssignee = true;
             }
 
             var person = await PersonService.GetPersonWithTypes(personId);

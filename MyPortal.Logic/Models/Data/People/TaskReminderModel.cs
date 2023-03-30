@@ -18,7 +18,6 @@ public class TaskReminderModel : BaseModelWithLoad
         TaskId = model.TaskId;
         UserId = model.UserId;
         RemindTime = model.RemindTime;
-        Dismissed = model.Dismissed;
 
         if (model.Task != null)
         {
@@ -31,9 +30,7 @@ public class TaskReminderModel : BaseModelWithLoad
     public Guid UserId { get; set; }
     
     public DateTime RemindTime { get; set; }
-    
-    public bool Dismissed { get; set; }
-    
+
     public virtual TaskModel Task { get; set; }
     
     protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)

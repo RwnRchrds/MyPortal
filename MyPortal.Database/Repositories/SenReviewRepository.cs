@@ -30,9 +30,12 @@ namespace MyPortal.Database.Repositories
                 throw new EntityNotFoundException("SEN review not found.");
             }
 
+            review.StudentId = entity.StudentId;
             review.ReviewTypeId = entity.ReviewTypeId;
-            review.Date = entity.Date;
-            review.Description = entity.Description;
+            review.ReviewStatusId = entity.ReviewStatusId;
+            review.SencoId = entity.SencoId;
+            review.EventId = entity.EventId;
+            review.OutcomeSenStatusId = entity.OutcomeSenStatusId;
             review.Comments = entity.Comments;
         }
     }
