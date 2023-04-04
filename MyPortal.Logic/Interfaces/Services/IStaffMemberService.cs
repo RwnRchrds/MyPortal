@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MyPortal.Logic.Models.Data.StaffMembers;
-
+using MyPortal.Logic.Models.Requests.StaffMember;
 
 namespace MyPortal.Logic.Interfaces.Services
 {
@@ -14,5 +14,11 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<StaffMemberModel> GetByPersonId(Guid personId, bool throwIfNotFound = true);
 
         Task<StaffMemberModel> GetByUserId(Guid userId, bool throwIfNotFound = true);
+
+        Task CreateStaffMember(StaffMemberRequestModel model);
+
+        Task UpdateStaffMember(Guid staffMemberId, StaffMemberRequestModel model);
+
+        Task DeleteStaffMember(Guid staffMemberId);
     }
 }
