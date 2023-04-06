@@ -27,9 +27,9 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.LeftJoin("CurriculumBandBlock as BandBlock", "BandBlock.BlockId", $"{TblAlias}.Id");
+            query.LeftJoin("CurriculumBandBlock as CBB", "CBB.BlockId", $"{TblAlias}.Id");
 
-            query.Where("BandBlock.BandId", bandId);
+            query.Where("CBB.BandId", bandId);
 
             return await ExecuteQuery(query);
         }

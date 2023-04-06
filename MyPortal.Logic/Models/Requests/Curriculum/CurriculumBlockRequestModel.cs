@@ -1,12 +1,12 @@
-﻿using System;
-using MyPortal.Logic.Models.Data.Curriculum;
+﻿using System.ComponentModel.DataAnnotations;
 
+namespace MyPortal.Logic.Models.Requests.Curriculum;
 
-namespace MyPortal.Logic.Models.Requests.Curriculum
+public class CurriculumBlockRequestModel
 {
-    public class CurriculumBlockRequestModel
-    {
-        public CurriculumBlockModel BlockModel { get; set; }
-        public Guid[] BandIds { get; set; }
-    }
+    [StringLength(10)]
+    public string Code { get; set; }
+    
+    [StringLength(256)]
+    public string Description { get; set; }
 }

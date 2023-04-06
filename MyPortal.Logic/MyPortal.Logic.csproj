@@ -8,6 +8,7 @@
     <PackageReference Include="Azure.Identity" Version="1.8.0" />
     <PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.4.0" />
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.56.0.2601" />
+    <PackageReference Include="Google.OrTools" Version="9.6.2534" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.16.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.16.0" />
   </ItemGroup>

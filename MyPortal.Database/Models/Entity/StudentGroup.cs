@@ -12,7 +12,7 @@ namespace MyPortal.Database.Models.Entity
     {
         [Column(Order = 4)]
         [Required]
-        [StringLength(50)]
+        [StringLength(10)]
         public string Code { get; set; }
 
         [Column(Order = 5)]
