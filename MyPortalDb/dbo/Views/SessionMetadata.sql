@@ -1,5 +1,7 @@
 ﻿CREATE VIEW SessionMetadata AS
-SELECT
+
+-- Lesson Monitor Sessions
+(SELECT
     S.Id as SessionId,
     API.AttendanceWeekId as AttendanceWeekId,
     API.PeriodId as PeriodId,
@@ -26,4 +28,29 @@ FROM dbo.Sessions S
          LEFT JOIN dbo.Courses CO ON C.CourseId = CO.Id
     OUTER APPLY GetName(SM.PersonId, 2, 0, 1) FNA
 OUTER APPLY GetName(CSM.PersonId, 2, 0, 1) CNA
-WHERE S.StartDate <= API.ActualEndTime AND S.EndDate >= API.ActualStartTime;
+WHERE S.StartDate <= API.ActualEndTime AND S.EndDate >= API.ActualStartTime)
+
+UNION
+
+-- Reg Group Sessions
+(SELECT
+    NULL as SessionId,
+    API.AttendanceWeekId as AttendanceWeekId,
+    API.PeriodId as PeriodId,
+    SG.Id as StudentGroupId,
+    API.ActualStartTime as StartTime,
+    API.ActualEndTime as EndTime,
+    API.Name as PeriodName,
+    SG.Code as ClassCode,
+    SM.Id as TeacherId,
+    FNA.Name as TeacherName,
+    R.Id as RoomId,
+    R.Name as RoomName,
+    0 as IsCover
+FROM dbo.RegGroups RG
+         CROSS JOIN dbo.AttendancePeriodInstances API
+         LEFT JOIN dbo.StudentGroups SG ON RG.StudentGroupId = SG.Id
+         LEFT JOIN dbo.StaffMembers SM ON SG.MainSupervisorId = SM.Id
+         LEFT JOIN Rooms R ON RG.RoomId = R.Id
+    OUTER APPLY GetName(SM.PersonId, 2, 0, 1) FNA
+WHERE API.AmReg = 1 OR API.PmReg = 1);
