@@ -10,12 +10,13 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.QueryResults.Attendance;
+using MyPortal.Database.Models.QueryResults.Curriculum;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Calendar;
-
+using MyPortal.Logic.Models.Data.Curriculum;
 using MyPortal.Logic.Models.Requests.Calendar;
 using MyPortal.Logic.Models.Structures;
 using Task = System.Threading.Tasks.Task;
@@ -49,7 +50,7 @@ namespace MyPortal.Logic.Services
                 
                 // Verify person exists
                 var personService = new PersonService(User);
-                var person = await personService.GetPersonWithTypes(personId);
+                var person = await personService.GetPersonWithTypesById(personId);
 
                 var publicEvents = (await unitOfWork.DiaryEvents.GetPublicEvents(dateFrom, dateTo))
                     .Select(e => new DiaryEventModel(e)).ToList();
@@ -67,7 +68,7 @@ namespace MyPortal.Logic.Services
                 // If person is student or staff, get lesson events
                 if (person.PersonTypes.StudentId.HasValue || person.PersonTypes.StaffId.HasValue)
                 {
-                    IEnumerable<SessionDetailModel> sessions = new List<SessionDetailModel>();
+                    SessionPeriodDetailModel[] sessions = Array.Empty<SessionPeriodDetailModel>();
 
                     var coverEventType = eventTypes.FirstOrDefault(t => t.Id == EventTypes.Cover);
 
@@ -86,21 +87,23 @@ namespace MyPortal.Logic.Services
                     if (person.PersonTypes.StudentId.HasValue)
                     {
                         sessions =
-                            await unitOfWork.Sessions.GetSessionDetailsByStudent(person.PersonTypes.StudentId.Value, dateFrom, dateTo);
+                            (await unitOfWork.SessionPeriods.GetPeriodDetailsByStudent(person.PersonTypes.StudentId.Value, dateFrom, dateTo)).ToArray();
                     }
                     else if (person.PersonTypes.StaffId.HasValue)
                     {
-                      sessions = await unitOfWork.Sessions.GetSessionDetailsByStaffMember(person.PersonTypes.StaffId.Value, dateFrom,
-                            dateTo);
+                      sessions = (await unitOfWork.SessionPeriods.GetPeriodDetailsByStaffMember(person.PersonTypes.StaffId.Value, dateFrom,
+                            dateTo)).ToArray();
                     }
+
+                    var sessionData = SessionHelper.GetSessionData(sessions);
                     
-                    calendarEvents.AddRange(sessions.Select(s =>
+                    calendarEvents.AddRange(sessionData.Select(s =>
                         new CalendarEventModel(s, s.IsCover ? coverEventType.ColourCode : lessonEventType.ColourCode)));
                 }
 
                 return calendarEvents;
         }
-        
+
         public async Task<DiaryEventModel> GetEvent(Guid eventId)
         {
             await using var unitOfWork = await User.GetConnection();

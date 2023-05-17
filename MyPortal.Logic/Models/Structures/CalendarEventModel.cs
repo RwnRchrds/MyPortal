@@ -1,6 +1,8 @@
 ﻿using System;
 using MyPortal.Database.Models.QueryResults.Attendance;
+using MyPortal.Database.Models.QueryResults.Curriculum;
 using MyPortal.Logic.Models.Data.Calendar;
+using MyPortal.Logic.Models.Data.Curriculum;
 
 namespace MyPortal.Logic.Models.Structures
 {
@@ -21,21 +23,21 @@ namespace MyPortal.Logic.Models.Structures
             Color = eventModel.EventType.ColourCode;
         }
 
-        public CalendarEventModel(SessionDetailModel sessionDetailModel, string colour)
+        public CalendarEventModel(SessionDataModel sessionPeriodDetailModel, string colour)
         {
             AllDay = false;
-            Start = sessionDetailModel.StartTime;
-            End = sessionDetailModel.EndTime;
-            Title = $"{sessionDetailModel.ClassCode}";
+            Start = sessionPeriodDetailModel.StartTime;
+            End = sessionPeriodDetailModel.EndTime;
+            Title = $"{sessionPeriodDetailModel.ClassCode}";
             Display = CalendarDisplayModes.Auto;
             Color = colour;
             TextColor = "#FFFFFF";
-            if (sessionDetailModel.RoomId.HasValue && !string.IsNullOrWhiteSpace(sessionDetailModel.RoomName))
+            if (sessionPeriodDetailModel.RoomId.HasValue && !string.IsNullOrWhiteSpace(sessionPeriodDetailModel.RoomName))
             {
                 ExtendedProps = new
                 {
-                    Room = sessionDetailModel.RoomName,
-                    Teacher = sessionDetailModel.TeacherName
+                    Room = sessionPeriodDetailModel.RoomName,
+                    Teacher = sessionPeriodDetailModel.TeacherName
                 };
             }
         }

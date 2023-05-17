@@ -62,7 +62,7 @@ namespace MyPortal.Logic.Services
             return results.Select(r => new PersonSearchResultModel(r)).ToList();
         }
 
-        public async Task<PersonSearchResultModel> GetPersonWithTypes(Guid personId)
+        public async Task<PersonSearchResultModel> GetPersonWithTypesById(Guid personId)
         {
             await using var unitOfWork = await User.GetConnection();
             

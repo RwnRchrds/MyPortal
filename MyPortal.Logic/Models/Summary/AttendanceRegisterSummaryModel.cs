@@ -1,21 +1,22 @@
 ﻿using System;
 using MyPortal.Database.Models.QueryResults.Attendance;
+using MyPortal.Database.Models.QueryResults.Curriculum;
 
 namespace MyPortal.Logic.Models.Summary;
 
 public class AttendanceRegisterSummaryModel
 {
-    internal AttendanceRegisterSummaryModel(SessionDetailModel detailModel)
+    internal AttendanceRegisterSummaryModel(SessionPeriodDetailModel periodDetailModel)
     {
-        StudentGroupId = detailModel.StudentGroupId;
-        AttendanceWeekId = detailModel.AttendanceWeekId;
-        PeriodId = detailModel.PeriodId;
-        PeriodName = detailModel.PeriodName;
-        ClassCode = detailModel.ClassCode;
-        TeacherName = detailModel.TeacherName;
-        RoomName = detailModel.RoomName;
-        StartTime = detailModel.StartTime;
-        EndTime = detailModel.EndTime;
+        StudentGroupId = periodDetailModel.StudentGroupId;
+        AttendanceWeekId = periodDetailModel.AttendanceWeekId;
+        PeriodId = periodDetailModel.PeriodId;
+        PeriodName = periodDetailModel.PeriodName;
+        ClassCode = periodDetailModel.ClassCode;
+        TeacherName = periodDetailModel.TeacherName;
+        RoomName = periodDetailModel.RoomName;
+        StartTime = periodDetailModel.StartTime;
+        EndTime = periodDetailModel.EndTime;
     } 
     
     public Guid StudentGroupId { get; set; }

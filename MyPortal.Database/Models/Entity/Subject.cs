@@ -43,5 +43,7 @@ namespace MyPortal.Database.Models.Entity
 
         
         public virtual ICollection<SubjectStaffMember> StaffMembers { get; set; } 
+        
+        public virtual ICollection<CurriculumGroupSession> CurriculumGroupSessions { get; set; }
     }
 }

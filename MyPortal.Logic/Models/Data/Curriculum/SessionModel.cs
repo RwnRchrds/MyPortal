@@ -1,18 +1,24 @@
 ﻿using System;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Models.Data.Attendance;
 using MyPortal.Logic.Models.Data.School;
 using MyPortal.Logic.Models.Data.StaffMembers;
 using MyPortal.Logic.Models.Structures;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Data.Curriculum
 {
-    public class SessionModel : BaseModel
+    public class SessionModel : BaseModelWithLoad
     {
         public SessionModel(Session model) : base(model)
         {
+            LoadFromModel(model);
+        }
+
+        private void LoadFromModel(Session model)
+        {
             ClassId = model.ClassId;
-            PeriodId = model.PeriodId;
             TeacherId = model.TeacherId;
             RoomId = model.RoomId;
             StartDate = model.StartDate;
@@ -21,11 +27,6 @@ namespace MyPortal.Logic.Models.Data.Curriculum
             if (model.Teacher != null)
             {
                 Teacher = new StaffMemberModel(model.Teacher);
-            }
-
-            if (model.AttendancePeriod != null)
-            {
-                AttendancePeriod = new AttendancePeriodModel(model.AttendancePeriod);
             }
 
             if (model.Class != null)
@@ -40,9 +41,7 @@ namespace MyPortal.Logic.Models.Data.Curriculum
         }
         
         public Guid ClassId { get; set; }
-        
-        public Guid PeriodId { get; set; }
-        
+
         public Guid TeacherId { get; set; }
         
         public Guid? RoomId { get; set; }
@@ -52,11 +51,19 @@ namespace MyPortal.Logic.Models.Data.Curriculum
         public DateTime EndDate { get; set; }
 
         public virtual StaffMemberModel Teacher { get; set; }
-        
-        public virtual AttendancePeriodModel AttendancePeriod { get; set; }
 
         public virtual ClassModel Class { get; set; }
 
         public virtual RoomModel Room { get; set; }
+       
+        protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
+        {
+            if (Id.HasValue)
+            {
+                var model = await unitOfWork.Sessions.GetById(Id.Value);
+                
+                LoadFromModel(model);
+            }
+        }
     }
 }

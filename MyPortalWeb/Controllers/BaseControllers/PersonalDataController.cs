@@ -25,7 +25,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
 
         protected async Task<bool> CanAccessPerson(Guid requestedPersonId)
         {
-            var person = await PersonService.GetPersonWithTypes(requestedPersonId);
+            var person = await PersonService.GetPersonWithTypesById(requestedPersonId);
 
             if (person == null)
             {

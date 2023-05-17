@@ -29,9 +29,9 @@ namespace MyPortalWeb.Controllers.Api
             _calendarService = calendarService;
         }
 
-        private async Task<EventAccessResponse> GetEventAccess(Guid eventId)
+        private async Task<EventAccessModel> GetEventAccess(Guid eventId)
         {
-            var response = new EventAccessResponse();
+            var response = new EventAccessModel();
             
             var userId = User.GetUserId();
             var diaryEvent = await _calendarService.GetEvent(eventId);

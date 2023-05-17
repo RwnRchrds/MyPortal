@@ -36,43 +36,51 @@ namespace MyPortal.Logic.Services
             return new AttendanceMarkModel(attendanceMark);
         }
 
-        public async Task<AttendanceRegisterDataModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId)
+        public async Task<AttendanceRegisterDataModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId, Guid periodId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
-            var metadata = await unitOfWork.Sessions.GetSessionDetails(sessionId, attendanceWeekId);
+
+            var metadata = (await unitOfWork.SessionPeriods.GetPeriodDetailsBySession(sessionId, attendanceWeekId))
+                .ToArray();
 
             if (metadata == null)
             {
                 throw new NotFoundException("Session not found.");
             }
+            
+            var registerPeriod = metadata.FirstOrDefault(p => p.PeriodId == periodId);
+
+            if (registerPeriod == null)
+            {
+                throw new NotFoundException("Session was not found for this period.");
+            }
 
             var title =
-                $"{metadata.PeriodName} {metadata.StartTime.Date: dd/MM/yyyy} ({metadata.ClassCode})";
+                $"{registerPeriod.PeriodName} {registerPeriod.StartTime.Date: dd/MM/yyyy} ({registerPeriod.ClassCode})";
 
-            if (metadata.TeacherId.HasValue)
+            if (registerPeriod.TeacherId.HasValue)
             {
-                title += $" - {metadata.TeacherName}";
+                title += $" - {registerPeriod.TeacherName}";
             }
 
             var studentsInSession =
-                await unitOfWork.StudentGroupMemberships.GetMembershipsByGroup(metadata.StudentGroupId,
-                    metadata.StartTime, metadata.EndTime);
+                await unitOfWork.StudentGroupMemberships.GetMembershipsByGroup(registerPeriod.StudentGroupId,
+                    registerPeriod.StartTime, registerPeriod.EndTime);
 
             var extraNames = Array.Empty<SessionExtraName>();
 
-            if (metadata.SessionId.HasValue)
+            if (registerPeriod.SessionId.HasValue)
             {
                 extraNames =
-                    (await unitOfWork.SessionExtraNames.GetExtraNamesBySession(metadata.SessionId.Value,
-                        metadata.AttendanceWeekId)).ToArray();
+                    (await unitOfWork.SessionExtraNames.GetExtraNamesBySession(registerPeriod.SessionId.Value,
+                        registerPeriod.AttendanceWeekId)).ToArray();
             }
 
             var studentIds = studentsInSession.Select(s => s.StudentId)
                 .Union(extraNames.Select(n => n.StudentId)).ToArray();
 
-            var register = await GetRegisterByDateRange(studentIds, metadata.StartTime, metadata.EndTime, title,
-                metadata.PeriodId);
+            var register = await GetRegisterByDateRange(studentIds, registerPeriod.StartTime, registerPeriod.EndTime, title,
+                metadata.Select(m => m.PeriodId).ToArray());
             
             register.FlagExtraNames(extraNames);
 
@@ -91,19 +99,19 @@ namespace MyPortal.Logic.Services
                 TeacherId = model.TeacherId
             };
                 
-            var sessions = await unitOfWork.Sessions.GetSessionDetails(searchOptions);
+            var sessions = await unitOfWork.SessionPeriods.SearchPeriodDetails(searchOptions);
 
             return sessions.Select(s => new AttendanceRegisterSummaryModel(s)).ToArray();
         }
 
         public async Task<AttendanceRegisterDataModel> GetRegisterByDateRange(IEnumerable<Guid> studentIds,
-            DateTime dateFrom, DateTime dateTo, string title, Guid? lockToPeriodId = null)
+            DateTime dateFrom, DateTime dateTo, string title, Guid[] unlockedPeriods = null)
         {
             await using var unitOfWork = await User.GetConnection();
 
             var studentCollection = studentIds.ToArray();
 
-            var register = await InitialiseRegister(dateFrom, dateTo, lockToPeriodId, title);
+            var register = await InitialiseRegister(dateFrom, dateTo, title, unlockedPeriods);
 
             var existingMarks = 
                 await unitOfWork.AttendanceMarks.GetRegisterMarks(studentCollection, register.Periods);
@@ -118,7 +126,7 @@ namespace MyPortal.Logic.Services
         }
 
         private async Task<AttendanceRegisterDataModel> InitialiseRegister(DateTime dateFrom, DateTime dateTo,
-            Guid? lockToPeriodId, string title)
+            string title, Guid[] unlockedPeriods = null)
         {
             await using var unitOfWork = await User.GetConnection();
 
@@ -131,7 +139,7 @@ namespace MyPortal.Logic.Services
 
             register.Periods = periods;
 
-            register.PopulateColumnGroups(periods, lockToPeriodId);
+            register.PopulateColumnGroups(periods, unlockedPeriods);
 
             var codes = (await unitOfWork.AttendanceCodes.GetAll())
                 .Select(c => new AttendanceCodeModel(c))
@@ -143,7 +151,7 @@ namespace MyPortal.Logic.Services
         }
 
         public async Task<AttendanceRegisterDataModel> GetRegisterByDateRange(Guid studentGroupId, DateTime dateFrom,
-            DateTime dateTo, string title = null, Guid? lockToPeriodId = null)
+            DateTime dateTo, string title = null, Guid[] unlockedPeriods = null)
         {
             await using var unitOfWork = await User.GetConnection();
             
@@ -157,7 +165,7 @@ namespace MyPortal.Logic.Services
             var registerTitle = string.IsNullOrWhiteSpace(title) ?
                 $"{studentGroup.Description}, {dateFrom:dd/MM/yyyy}-{dateTo:dd/MM/yyyy}" : title;
 
-            var register = await InitialiseRegister(dateFrom, dateTo, lockToPeriodId, registerTitle);
+            var register = await InitialiseRegister(dateFrom, dateTo, registerTitle, unlockedPeriods);
 
             // Get any attendance marks that already exist
             var existingMarks = await unitOfWork.AttendanceMarks

@@ -15,9 +15,9 @@ public static class Views
         return query;
     }
 
-    internal static Query GetSessionMetadata(string alias)
+    internal static Query GetSessionPeriodMetadata(string alias)
     {
-        var query = new Query($"SessionMetadata as {alias}");
+        var query = new Query($"SessionPeriodMetadata as {alias}");
 
         query.Select($"{alias}.SessionId", $"{alias}.AttendanceWeekId", $"{alias}.PeriodId", $"{alias}.StudentGroupId",
             $"{alias}.StartTime", $"{alias}.EndTime", $"{alias}.PeriodName", $"{alias}.ClassCode", $"{alias}.TeacherId",

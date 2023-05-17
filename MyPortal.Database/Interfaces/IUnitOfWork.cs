@@ -178,6 +178,7 @@ namespace MyPortal.Database.Interfaces
         ISenTypeRepository SenTypes { get; }
         ISessionRepository Sessions { get; }
         ISessionExtraNameRepository SessionExtraNames { get; }
+        ISessionPeriodRepository SessionPeriods { get; }
         IStaffAbsenceRepository StaffAbsences { get; }
         IStaffAbsenceTypeRepository StaffAbsenceTypes { get; }
         IStaffIllnessTypeRepository StaffIllnessTypes { get; }

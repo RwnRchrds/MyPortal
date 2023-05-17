@@ -23,7 +23,7 @@ namespace MyPortal.Logic.Models.Data.Attendance.Register
         public ICollection<AttendanceRegisterColumnGroupDataModel> ColumnGroups { get; set; }
         public ICollection<AttendanceRegisterStudentDataModel> Students { get; set; }
 
-        public void PopulateColumnGroups(IEnumerable<AttendancePeriodInstance> periodCollection, Guid? lockToPeriodId)
+        public void PopulateColumnGroups(IEnumerable<AttendancePeriodInstance> periodCollection, Guid[] unlockedPeriods)
         {
             var dates =
                 (periodCollection).GroupBy(p =>
@@ -50,7 +50,7 @@ namespace MyPortal.Logic.Models.Data.Attendance.Register
                         Order = j,
                         AttendancePeriodId = period.PeriodId,
                         AttendanceWeekId = period.AttendanceWeekId,
-                        IsReadOnly = lockToPeriodId.HasValue && lockToPeriodId != period.PeriodId
+                        IsReadOnly = unlockedPeriods.Any() && unlockedPeriods.Contains(period.PeriodId)
                     };
 
                     columnGroup.Columns.Add(column);

@@ -16,11 +16,13 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<AttendanceSummary> GetAttendanceSummaryByStudent(Guid studentId, Guid academicYearId);
         Task<AttendanceMarkModel> GetAttendanceMark(Guid studentId, Guid attendanceWeekId, Guid periodId);
         Task<IEnumerable<AttendanceRegisterSummaryModel>> GetRegisters(RegisterSearchRequestModel model);
-        Task<AttendanceRegisterDataModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId);
-        Task<AttendanceRegisterDataModel> GetRegisterByDateRange(Guid studentGroupId, DateTime dateFrom, DateTime dateTo,
-            string title = null, Guid? lockToPeriodId = null);
+        Task<AttendanceRegisterDataModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId, Guid periodId);
+
+        Task<AttendanceRegisterDataModel> GetRegisterByDateRange(Guid studentGroupId, DateTime dateFrom,
+            DateTime dateTo, string title = null, Guid[] unlockedPeriods = null);
+
         Task<AttendanceRegisterDataModel> GetRegisterByDateRange(IEnumerable<Guid> studentIds,
-            DateTime dateFrom, DateTime dateTo, string title, Guid? lockToPeriodId = null);
+            DateTime dateFrom, DateTime dateTo, string title, Guid[] unlockedPeriods = null);
         Task UpdateAttendanceMarks(params AttendanceMarkSummaryModel[] marks);
         Task UpdateAttendanceMarks(params AttendanceRegisterStudentDataModel[] markCollections);
         Task DeleteAttendanceMarks(params Guid[] attendanceMarkIds);

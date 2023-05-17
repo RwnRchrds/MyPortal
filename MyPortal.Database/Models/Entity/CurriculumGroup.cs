@@ -21,6 +21,7 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual CurriculumBlock Block { get; set; }
 
+        public virtual ICollection<CurriculumGroupSession> CurriculumGroupSessions { get; set; }
         public virtual StudentGroup StudentGroup { get; set; }
         public virtual ICollection<Class> Classes { get; set; }
     }

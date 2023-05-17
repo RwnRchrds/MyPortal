@@ -12,7 +12,7 @@ namespace MyPortal.Database.Models.Entity
         public AttendancePeriod()
         {
             AttendanceMarks = new HashSet<AttendanceMark>();
-            Sessions = new HashSet<Session>();
+            SessionPeriods = new HashSet<SessionPeriod>();
         }
 
         [Column(Order = 2)]
@@ -39,13 +39,11 @@ namespace MyPortal.Database.Models.Entity
         public bool PmReg { get; set; }
 
         public virtual AttendanceWeekPattern WeekPattern { get; set; }
-
         
         public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }
 
-        
-        public virtual ICollection<Session> Sessions { get; set; }
-
         public virtual ICollection<ReportCardEntry> ReportCardSubmissions { get; set; }
+        
+        public virtual ICollection<SessionPeriod> SessionPeriods { get; set; }
     }
 }

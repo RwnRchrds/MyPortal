@@ -74,6 +74,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<CurriculumBandBlockAssignment> CurriculumBandBlocks { get; set; }
         public virtual DbSet<CurriculumBlock> CurriculumBlocks { get; set; }
         public virtual DbSet<CurriculumGroup> CurriculumGroups { get; set; }
+        public virtual DbSet<CurriculumGroupSession> CurriculumGroupSessions { get; set; }
         public virtual DbSet<CurriculumYearGroup> CurriculumYearGroups { get; set; }
         public virtual DbSet<Detention> Detentions { get; set; }
         public virtual DbSet<DetentionType> DetentionTypes { get; set; }
@@ -188,6 +189,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<SenType> SenTypes { get; set; }
         public virtual DbSet<Session> Sessions { get; set; }
         public virtual DbSet<SessionExtraName> SessionExtraNames { get; set; }
+        public virtual DbSet<SessionPeriod> SessionPeriods { get; set; }
+        public virtual DbSet<SessionType> SessionTypes { get; set; }
         public virtual DbSet<StaffAbsence> StaffAbsences { get; set; }
         public virtual DbSet<StaffAbsenceType> StaffAbsenceTypes { get; set; }
         public virtual DbSet<StaffIllnessType> StaffIllnessTypes { get; set; }
@@ -472,8 +475,8 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    e.HasMany(ap => ap.Sessions)
-                        .WithOne(s => s.AttendancePeriod)
+                    e.HasMany(ap => ap.SessionPeriods)
+                        .WithOne(s => s.Period)
                         .HasForeignKey(s => s.PeriodId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
@@ -863,6 +866,17 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.CurriculumGroupId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.CurriculumGroupSessions)
+                        .WithOne(x => x.CurriculumGroup)
+                        .HasForeignKey(x => x.CurriculumGroupId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+                modelBuilder.Entity<CurriculumGroupSession>(e =>
+                {
+                    ConfigureEntity(e);
                 });
 
                 modelBuilder.Entity<CurriculumYearGroup>(e =>
@@ -2276,11 +2290,33 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.SessionId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.SessionPeriods)
+                        .WithOne(x => x.Session)
+                        .HasForeignKey(x => x.SessionId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<SessionExtraName>(e =>
                 {
                     ConfigureEntity(e);
+                });
+                
+                modelBuilder.Entity<SessionPeriod>(e =>
+                {
+                    ConfigureEntity(e);
+                });
+                
+                modelBuilder.Entity<SessionType>(e =>
+                {
+                    ConfigureEntity(e);
+
+                    e.HasMany(x => x.CurriculumGroupSessions)
+                        .WithOne(x => x.SessionType)
+                        .HasForeignKey(x => x.SessionTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<StaffAbsence>(e =>
@@ -2648,6 +2684,12 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
 
                     e.HasMany(x => x.GiftedTalentedStudents)
+                        .WithOne(x => x.Subject)
+                        .HasForeignKey(x => x.SubjectId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasMany(x => x.CurriculumGroupSessions)
                         .WithOne(x => x.Subject)
                         .HasForeignKey(x => x.SubjectId)
                         .IsRequired()

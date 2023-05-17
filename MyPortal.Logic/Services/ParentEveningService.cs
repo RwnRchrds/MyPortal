@@ -64,13 +64,13 @@ namespace MyPortal.Logic.Services
                     var templateRange = template.GetDateRange();
 
                     if (appointments != null &&
-                        appointments.Any(a => templateRange.Overlaps(new DateRange(a.Start, a.End))))
+                        appointments.Any(a => templateRange.Overlaps(new DateRange(a.Start, a.End), false)))
                     {
                         template.Available = false;
                     }
 
                     if (template.Available && breaks != null &&
-                        breaks.Any(b => templateRange.Overlaps(new DateRange(b.Start, b.End))))
+                        breaks.Any(b => templateRange.Overlaps(new DateRange(b.Start, b.End), false)))
                     {
                         template.Available = false;
                     }
