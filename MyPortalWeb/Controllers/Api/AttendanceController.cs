@@ -13,6 +13,7 @@ using MyPortal.Logic.Models.Requests.Attendance;
 using MyPortal.Logic.Models.Summary;
 using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
+using MyPortalWeb.Models.Requests.Attendance;
 
 namespace MyPortalWeb.Controllers.Api
 {
@@ -44,6 +45,42 @@ namespace MyPortalWeb.Controllers.Api
             }
         }
 
+        [HttpPost]
+        [Route("registers/extraName")]
+        [Permission(PermissionValue.AttendanceEditAttendanceMarks)]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> AddExtraName([FromBody] ExtraNameRequestModel model)
+        {
+            try
+            {
+                await _attendanceService.AddExtraName(model);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        [HttpDelete]
+        [Route("registers/extraName/{extraNameId}")]
+        [Permission(PermissionValue.AttendanceEditAttendanceMarks)]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> RemoveExtraName([FromRoute] Guid extraNameId)
+        {
+            try
+            {
+                await _attendanceService.RemoveExtraName(extraNameId);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
         [HttpGet]
         [Route("registers")]
         [Authorize(Policy = Policies.UserType.Staff)]
@@ -64,16 +101,58 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("weeks/{attendanceWeekId}/registers/{sessionId}")]
+        [Route("registers/session")]
         [Authorize(Policy = Policies.UserType.Staff)]
-        [Permission(PermissionValue.AttendanceViewAttendanceMarks)]
+        [Permission(PermissionValue.AttendanceEditAttendanceMarks)]
         [ProducesResponseType(typeof(AttendanceRegisterDataModel), 200)]
-        public async Task<IActionResult> GetRegister([FromRoute] Guid attendanceWeekId, [FromRoute] Guid sessionId)
+        public async Task<IActionResult> GetRegister([FromQuery] SessionRegisterRequestModel model)
         {
             try
             {
-                var register = await _attendanceService.GetRegisterBySession(attendanceWeekId, sessionId);
+                var register =
+                    await _attendanceService.GetRegisterBySession(model.AttendanceWeekId, model.SessionId,
+                        model.PeriodId);
 
+                return Ok(register);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        [HttpGet]
+        [Route("registers/studentGroup")]
+        [Authorize(Policy = Policies.UserType.Staff)]
+        [Permission(PermissionValue.AttendanceEditAttendanceMarks)]
+        [ProducesResponseType(typeof(AttendanceRegisterDataModel), 200)]
+        public async Task<IActionResult> GetRegister([FromQuery] StudentGroupRegisterRequestModel model)
+        {
+            try
+            {
+                var register = await _attendanceService.GetRegisterByStudentGroup(model.StudentGroupId,
+                    model.AttendanceWeekId, model.PeriodId);
+                
+                return Ok(register);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        [HttpGet]
+        [Route("registers/custom")]
+        [Authorize(Policy = Policies.UserType.Staff)]
+        [Permission(PermissionValue.AttendanceEditAttendanceMarks)]
+        [ProducesResponseType(typeof(AttendanceRegisterDataModel), 200)]
+        public async Task<IActionResult> GetRegister([FromQuery] CustomRegisterRequestModel model)
+        {
+            try
+            {
+                var register =
+                    await _attendanceService.GetRegisterByDateRange(model.StudentGroupId, model.DateFrom, model.DateTo);
+                
                 return Ok(register);
             }
             catch (Exception e)

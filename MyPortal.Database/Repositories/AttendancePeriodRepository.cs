@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
@@ -72,30 +73,24 @@ namespace MyPortal.Database.Repositories
             period.Name = entity.Name;
         }
 
-        public async Task<IEnumerable<AttendancePeriodInstance>> GetByDateRange(DateTime dateFrom, DateTime dateTo)
+        public async Task<IEnumerable<AttendancePeriodInstance>> GetInstancesByDateRange(DateTime dateFrom, DateTime dateTo)
         {
-            var query = GenerateEmptyQuery(typeof(AttendancePeriod), "AP");
+            var query = Views.GetAttendancePeriodInstances("API");
 
-            query.Select(
-                "CONVERT(DATETIME, CONVERT(CHAR(8), DATEADD(DAY, CASE WHEN P.Weekday = 0 THEN 6 ELSE P.Weekday - 1 END, W.Beginning), 112) + ' ' + CONVERT(CHAR(8), P.StartTime, 108)) AS ActualStartTime");
-
-            query.Select(
-                "CONVERT(DATETIME, CONVERT(CHAR(8), DATEADD(DAY, CASE WHEN P.Weekday = 0 THEN 6 ELSE P.Weekday - 1 END, W.Beginning), 112) + ' ' + CONVERT(CHAR(8), P.EndTime, 108)) AS ActualEndTime");
-
-            query.Select("AP.Id as PeriodId", "AW.Id as AttendanceWeekId", "P.WeekPatternId as WeekPatternId",
-                "P.Weekday as Weekday", "P.Name as Name", "P.StartTime as StartTime", "P.EndTime as EndTime",
-                "P.AmReg as AmReg", "P.PmReg as PmReg");
-
-            query.LeftJoin("AttendanceWeekPatterns as AWP", "AWP.Id", $"AP.WeekPatternId");
-
-            query.LeftJoin("AttendanceWeeks AS AW", "AW.WeekPatternId", "AWP.Id");
-
-            query.Where("AW.IsNonTimeTable", false);
-
-            query.Where("ActualStartTime", ">=", dateFrom.Date);
-            query.Where("ActualEndTime", "<", dateTo.Date.AddDays(1));
+            query.Where("API.ActualStartTime", ">=", dateFrom.Date);
+            query.Where("API.ActualEndTime", "<", dateTo.Date.AddDays(1));
 
             return await ExecuteQuery<AttendancePeriodInstance>(query);
+        }
+
+        public async Task<AttendancePeriodInstance> GetInstanceByPeriodId(Guid attendanceWeekId, Guid periodId)
+        {
+            var query = Views.GetAttendancePeriodInstances("API");
+
+            query.Where("API.AttendanceWeekId", attendanceWeekId);
+            query.Where("API.PeriodId", periodId);
+
+            return await ExecuteQueryFirstOrDefault<AttendancePeriodInstance>(query);
         }
     }
 }

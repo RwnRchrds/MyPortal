@@ -10,6 +10,7 @@ namespace MyPortal.Database.Interfaces.Repositories
     public interface IAttendancePeriodRepository : IReadWriteRepository<AttendancePeriod>,
         IUpdateRepository<AttendancePeriod>
     {
-        Task<IEnumerable<AttendancePeriodInstance>> GetByDateRange(DateTime dateFrom, DateTime dateTo);
+        Task<IEnumerable<AttendancePeriodInstance>> GetInstancesByDateRange(DateTime dateFrom, DateTime dateTo);
+        Task<AttendancePeriodInstance> GetInstanceByPeriodId(Guid attendanceWeekId, Guid periodId);
     }
 }

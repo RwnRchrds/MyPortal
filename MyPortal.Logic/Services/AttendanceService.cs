@@ -87,6 +87,20 @@ namespace MyPortal.Logic.Services
             return register;
         }
 
+        public async Task<AttendanceRegisterDataModel> GetRegisterByStudentGroup(Guid studentGroupId, Guid attendanceWeekId, Guid periodId)
+        {
+            await using var unitOfWork = await User.GetConnection();
+
+            var period = await unitOfWork.AttendancePeriods.GetInstanceByPeriodId(attendanceWeekId, periodId);
+
+            if (period == null)
+            {
+                throw new NotFoundException("The attendance period was not found.");
+            }
+
+            return await GetRegisterByDateRange(studentGroupId, period.ActualStartTime.Date, period.ActualEndTime.Date);
+        }
+
         public async Task<IEnumerable<AttendanceRegisterSummaryModel>> GetRegisters(RegisterSearchRequestModel model)
         {
             await using var unitOfWork = await User.GetConnection();
@@ -135,7 +149,7 @@ namespace MyPortal.Logic.Services
             register.Title = title;
 
             var periods = (await unitOfWork.AttendancePeriods
-                .GetByDateRange(dateFrom.Date, dateTo.Date)).ToArray();
+                .GetInstancesByDateRange(dateFrom.Date, dateTo.Date)).ToArray();
 
             register.Periods = periods;
 
