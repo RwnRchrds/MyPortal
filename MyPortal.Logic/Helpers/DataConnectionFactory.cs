@@ -23,13 +23,13 @@ namespace MyPortal.Logic.Helpers
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
             DbContextOptions<ApplicationDbContext> options;
 
-            switch (Configuration.Instance.DatabaseProvider)
+            switch (Configuration.Configuration.Instance.DatabaseProvider)
             {
                 case DatabaseProvider.MsSqlServer:
-                    options = builder.UseSqlServer(Configuration.Instance.ConnectionString).Options;
+                    options = builder.UseSqlServer(Configuration.Configuration.Instance.ConnectionString).Options;
                     break;
                 case DatabaseProvider.MySql:
-                    options = builder.UseMySQL(Configuration.Instance.ConnectionString).Options;
+                    options = builder.UseMySQL(Configuration.Configuration.Instance.ConnectionString).Options;
                     break;
                 default:
                     throw new ConfigurationException("A database provider has not been set.");
@@ -42,7 +42,7 @@ namespace MyPortal.Logic.Helpers
         {
             CheckConnectionString();
 
-            var connection = new SqlConnection(Configuration.Instance.ConnectionString);
+            var connection = new SqlConnection(Configuration.Configuration.Instance.ConnectionString);
 
             return connection;
         }
@@ -63,7 +63,7 @@ namespace MyPortal.Logic.Helpers
 
         private static void CheckConnectionString()
         {
-            if (string.IsNullOrWhiteSpace(Configuration.Instance.ConnectionString))
+            if (string.IsNullOrWhiteSpace(Configuration.Configuration.Instance.ConnectionString))
             {
                 throw new ConnectionStringException("The connection string has not been set.");
             }

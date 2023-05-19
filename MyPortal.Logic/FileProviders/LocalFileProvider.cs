@@ -15,7 +15,7 @@ namespace MyPortal.Logic.FileProviders
 
         public LocalFileProvider()
         {
-            var installPath = Configuration.Instance.InstallLocation;
+            var installPath = Configuration.Configuration.Instance.InstallLocation;
 
             if (string.IsNullOrWhiteSpace(installPath))
             {
@@ -45,7 +45,7 @@ namespace MyPortal.Logic.FileProviders
                 sourceData = ms.ToArray();
             }
             
-            var key = Configuration.Instance.FileEncryptionKey;
+            var key = Configuration.Configuration.Instance.FileEncryptionKey;
             var encryptionResult = await CryptoHelper.EncryptAsync(sourceData, key);
 
             // Store the file and the IV together
@@ -77,7 +77,7 @@ namespace MyPortal.Logic.FileProviders
 
             if (File.Exists(path))
             {
-                var key = Configuration.Instance.FileEncryptionKey;
+                var key = Configuration.Configuration.Instance.FileEncryptionKey;
                 
                 var encryptedData = await File.ReadAllBytesAsync(path);
 

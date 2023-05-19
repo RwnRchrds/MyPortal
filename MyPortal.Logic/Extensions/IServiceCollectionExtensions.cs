@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyPortal.Database.Models;
+using MyPortal.Logic.Configuration;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
@@ -16,9 +17,25 @@ namespace MyPortal.Logic.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddMyPortal(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddMyPortal(this IServiceCollection services, string connectionString)
         {
-            SetConfiguration(config);
+            var builder = new ConfigBuilder(connectionString);
+            
+            builder.Build();
+
+            services.AddApplicationDbContext();
+            services.AddBusinessServices();
+
+            return services;
+        }
+        
+        public static IServiceCollection AddMyPortal(this IServiceCollection services, Action<ConfigBuilder> configBuilder)
+        {
+            var builder = new ConfigBuilder("");
+
+            configBuilder(builder);
+            
+            builder.Build();
 
             services.AddApplicationDbContext();
             services.AddBusinessServices();
@@ -28,14 +45,14 @@ namespace MyPortal.Logic.Extensions
 
         private static IServiceCollection AddApplicationDbContext(this IServiceCollection services)
         {
-            Configuration.CheckConfiguration();
+            Configuration.Configuration.CheckConfiguration();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                switch (Configuration.Instance.DatabaseProvider)
+                switch (Configuration.Configuration.Instance.DatabaseProvider)
                 {
                     case DatabaseProvider.MsSqlServer:
-                        options.UseSqlServer(Configuration.Instance.ConnectionString);
+                        options.UseSqlServer(Configuration.Configuration.Instance.ConnectionString);
                         break;
                     /*case DatabaseProvider.MySql:
                         options.UseMySQL(Configuration.Instance.ConnectionString);
@@ -79,54 +96,6 @@ namespace MyPortal.Logic.Extensions
             services.AddScoped<IUserService, UserService>();
 
             return services;
-        }
-
-        private static string GetSecret(IConfiguration config, string configKey, string secretName)
-        {
-            var secretSource = config[configKey];
-
-            if (secretSource.ToLower() == "azure")
-            {
-                var keyVaultName = Environment.GetEnvironmentVariable("MYPORTAL_KEYVAULT");
-                var keyVaultSecret = Environment.GetEnvironmentVariable($"MYPORTAL_{secretName.ToUpper()}");
-
-                var secret = AzureKeyVaultHelper.GetSecret(keyVaultName, keyVaultSecret);
-
-                return secret;
-            }   
-            
-            if (secretSource.ToLower() == "environment")
-            {
-                var secret = Environment.GetEnvironmentVariable($"MYPORTAL_{secretName.ToUpper()}");
-                
-                return secret;
-            }
-            
-            return secretSource;
-        }
-
-        private static string GetConnectionString(IConfiguration config)
-        {
-            return GetSecret(config, "DataSource:ConnectionString", "cs");
-        }
-
-        private static string GetFileEncryptionKey(IConfiguration config)
-        {
-            return GetSecret(config, "DataSource:FileEncryptionKey", "fek");
-        }
-
-        private static void SetConfiguration(IConfiguration config)
-        {
-            var connectionString = GetConnectionString(config);
-            var fileEncryptionKey = GetFileEncryptionKey(config);
-            
-            var databaseProvider = config["DataSource:DbProvider"];
-            var fileProvider = config["DataSource:FileProvider"];
-
-            Configuration.CreateInstance(databaseProvider, fileProvider, connectionString);
-            
-            Configuration.Instance.InstallLocation = Environment.CurrentDirectory;
-            Configuration.Instance.FileEncryptionKey = fileEncryptionKey;
         }
     }
 }

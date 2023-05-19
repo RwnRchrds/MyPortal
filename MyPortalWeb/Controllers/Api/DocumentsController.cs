@@ -49,7 +49,7 @@ namespace MyPortalWeb.Controllers.Api
                 return new LocalFileService(new LocalFileProvider());
             }
             
-            if (Configuration.Instance.FileProvider == FileProvider.Google)
+            if (Configuration.Instance.FileProvider == FileProvider.GoogleDrive)
             {
                 var accessToken = Request.Headers["file-access-token"];
                 

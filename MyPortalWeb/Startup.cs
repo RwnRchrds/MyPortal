@@ -26,7 +26,10 @@ namespace MyPortalWeb
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMyPortal(Configuration);
+            services.AddMyPortal(builder =>
+            {
+                builder.FromConfig(Configuration);
+            });
 
             services.AddControllers();
             services.AddCors();

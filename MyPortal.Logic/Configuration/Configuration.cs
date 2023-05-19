@@ -1,14 +1,13 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using Microsoft.Data.SqlClient;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 
 [assembly:InternalsVisibleTo("MyPortal.Tests")]
-namespace MyPortal.Logic
+namespace MyPortal.Logic.Configuration
 {
-    public class Configuration
+    internal class Configuration
     {
         public static Configuration Instance;
 
@@ -53,47 +52,20 @@ namespace MyPortal.Logic
             Instance.FileEncryptionKey = CryptoHelper.GenerateEncryptionKey();
         }
 
-        internal static void CreateInstance(string databaseProvider, string fileProvider, string connectionString)
+        internal static void CreateInstance(ConfigBuilder builder)
         {
             if (Instance != null)
             {
                 throw new ConfigurationException("A configuration has already been added.");
             }
 
-            DatabaseProvider databaseProviderValue;
-            FileProvider fileProviderValue;
-
-            switch (databaseProvider.ToLower())
-            {
-                case "mssql":
-                    databaseProviderValue = DatabaseProvider.MsSqlServer;
-                    break;
-                /*case "mysql":
-                    databaseProviderValue = DatabaseProvider.MySql;
-                    break;*/
-                default:
-                    throw new NotSupportedException($"The database provider '{databaseProvider}' is not supported.");
-            }
-
-            switch (fileProvider.ToLower())
-            {
-                case "local":
-                    fileProviderValue = FileProvider.Local;
-                    break;
-                case "google":
-                    fileProviderValue = FileProvider.Google;
-                    break;
-                default:
-                    throw new NotSupportedException($"The file provider '{fileProvider}' is not supported");
-            }
-
-            TestConnection(connectionString);
+            TestConnection(builder.ConnectionString);
 
             Instance = new Configuration();
 
-            Instance.DatabaseProvider = databaseProviderValue;
-            Instance.FileProvider = fileProviderValue;
-            Instance.ConnectionString = connectionString;
+            Instance.DatabaseProvider = builder.DatabaseProvider;
+            Instance.FileProvider = builder.FileProvider;
+            Instance.ConnectionString = builder.ConnectionString;
         }
 
         private static void TestConnection(string connectionString)
