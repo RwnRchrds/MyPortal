@@ -10,6 +10,7 @@ using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic;
+using MyPortal.Logic.Configuration;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
@@ -71,9 +72,6 @@ namespace MyPortalWeb.Extensions
                             {
                                 case DatabaseProvider.MsSqlServer:
                                     builder.UseSqlServer(Configuration.Instance.ConnectionString);
-                                    break;
-                                case DatabaseProvider.MySql:
-                                    builder.UseMySQL(Configuration.Instance.ConnectionString);
                                     break;
                                 default:
                                     throw new ConfigurationException("A database provider has not been set.");

@@ -7,7 +7,7 @@ using MyPortal.Logic.Helpers;
 [assembly:InternalsVisibleTo("MyPortal.Tests")]
 namespace MyPortal.Logic.Configuration
 {
-    internal class Configuration
+    public class Configuration
     {
         public static Configuration Instance;
 
