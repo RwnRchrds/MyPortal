@@ -26,17 +26,20 @@ namespace MyPortal.Logic.FileProviders
                 var actions = new List<WebAction>();
             
                 var request = driveService.Files.Get(fileId);
+                
+                request.Fields = "id, name, mimeType, webViewLink, webContentLink";
 
                 var data = await request.ExecuteAsync();
 
-                request.Fields = "id, name, mimeType, webViewLink";
+                if (data != null)
+                {
+                    var webViewAction = new WebAction("View on Web", data.WebViewLink);
+                    var downloadAction = new WebAction("Download", data.WebContentLink);
 
-                var webViewAction = new WebAction("View on Web", data.WebViewLink);
-                var downloadAction = new WebAction("Download", data.WebContentLink);
-
-                actions.Add(webViewAction);
-                actions.Add(downloadAction);
-
+                    actions.Add(webViewAction);
+                    actions.Add(downloadAction);
+                }
+                
                 return actions;
             }
         }

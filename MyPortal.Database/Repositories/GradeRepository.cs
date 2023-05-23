@@ -80,7 +80,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Grade>> GetByGradeSet(Guid gradeSetId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where("GS.Id", gradeSetId);
 

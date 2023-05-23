@@ -115,8 +115,7 @@ namespace MyPortal.Database.Helpers
         public static Query ApplyName(this Query query, string nameAlias, string personIdColumn,
             NameFormat format = NameFormat.Default, bool usePreferredName = false, bool includeMiddleName = true)
         {
-            return ApplyNameWithoutFunction(query, nameAlias, personIdColumn, format, usePreferredName,
-                includeMiddleName);
+            var nameQuery = Functions.GetName(nameAlias, personIdColumn)
         }
 
         public static Query WhereStudentGroup(this Query query, string studentGroupMembershipAlias,

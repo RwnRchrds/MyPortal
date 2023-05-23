@@ -9,8 +9,9 @@ namespace MyPortal.Logic.Interfaces.Services
 {
     public interface IAcademicYearService : IService
     {
-        Task<bool> IsAcademicYearLocked(Guid academicYearId, bool throwException = false);
-        Task<bool> IsAcademicYearLockedByWeek(Guid attendanceWeekId, bool throwException = false);
+        Task ThrowIfAcademicYearLocked(Guid academicYearId);
+        Task<bool> IsAcademicYearLocked(Guid academicYearId);
+        Task<bool> IsAcademicYearLockedByWeek(Guid attendanceWeekId);
         Task<AcademicYearModel> GetCurrentAcademicYear(bool getLatestIfNull = false);
         Task<AcademicYearModel> GetAcademicYearById(Guid academicYearId);
         Task<IEnumerable<AcademicYearModel>> GetAcademicYears();

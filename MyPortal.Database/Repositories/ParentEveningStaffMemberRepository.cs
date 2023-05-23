@@ -58,7 +58,7 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<ParentEveningStaffMember>> GetLinkedParentEveningsByStaffMember(
             Guid staffMemberId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.StaffMemberId");
 
@@ -67,7 +67,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<ParentEveningStaffMember> GetInstanceByStaffMember(Guid parentEveningId, Guid staffMemberId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.ParentEveningId", parentEveningId);
             query.Where($"{TblAlias}.StaffMemberId", staffMemberId);

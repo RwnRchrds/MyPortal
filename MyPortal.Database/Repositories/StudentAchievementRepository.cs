@@ -60,7 +60,7 @@ public class StudentAchievementRepository : BaseReadWriteRepository<StudentAchie
     
     public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
     {
-        var sql = GenerateEmptyQuery().AsCount();
+        var sql = GetEmptyQuery().AsCount();
 
         sql.Where($"{TblAlias}.StudentId", "=", studentId);
         sql.Where("A.AcademicYearId", "=", academicYearId);
@@ -70,7 +70,7 @@ public class StudentAchievementRepository : BaseReadWriteRepository<StudentAchie
 
     public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
     {
-        var sql = GenerateEmptyQuery().AsSum($"{TblAlias}.Points");
+        var sql = GetEmptyQuery().AsSum($"{TblAlias}.Points");
         sql.Where($"{TblAlias}.StudentId", studentId);
         sql.Where("A.AcademicYearId", academicYearId);
 
@@ -79,7 +79,7 @@ public class StudentAchievementRepository : BaseReadWriteRepository<StudentAchie
 
     public async Task<IEnumerable<StudentAchievement>> GetByStudent(Guid studentId, Guid academicYearId)
     {
-        var query = GenerateQuery();
+        var query = GetDefaultQuery();
 
         query.Where($"{TblAlias}.StudentId" ,"=", studentId);
         query.Where("A.AcademicYearId", "=", academicYearId);
@@ -89,7 +89,7 @@ public class StudentAchievementRepository : BaseReadWriteRepository<StudentAchie
 
     public async Task<int> GetPointsToday()
     {
-        var sql = GenerateEmptyQuery().AsSum($"{TblAlias}.Points");
+        var sql = GetEmptyQuery().AsSum($"{TblAlias}.Points");
 
         var dateToday = DateTime.Today;
 

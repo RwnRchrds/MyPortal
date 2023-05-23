@@ -59,7 +59,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<GiftedTalented>> GetByStudent(Guid studentId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.StudentId", studentId);
 

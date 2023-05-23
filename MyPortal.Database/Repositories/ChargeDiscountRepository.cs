@@ -58,7 +58,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<ChargeDiscount>> GetByDiscount(Guid discountId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.DiscountId", discountId);
 
@@ -67,7 +67,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<ChargeDiscount>> GetByStudent(Guid studentId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Join("StudentChargeDiscounts as SCD", "SCD.ChargeDiscountId", $"{TblAlias}.Id");
 

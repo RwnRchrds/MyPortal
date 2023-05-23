@@ -23,7 +23,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Address>> GetAddressesByPerson(Guid personId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.LeftJoin("AddressPeople AS AP", "AP.AddressId", $"{TblAlias}.Id");
 
@@ -82,7 +82,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Address>> GetAll(AddressSearchOptions searchOptions)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
             
             ApplySearch(query, searchOptions);
 

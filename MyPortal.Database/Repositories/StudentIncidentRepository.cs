@@ -67,7 +67,7 @@ public class StudentIncidentRepository : BaseReadWriteRepository<StudentIncident
     
     public async Task<IEnumerable<StudentIncident>> GetByStudent(Guid studentId, Guid academicYearId)
     {
-        var query = GenerateQuery();
+        var query = GetDefaultQuery();
 
         query.Where("S.Id", studentId);
         query.Where("I.AcademicYearId", academicYearId);
@@ -77,7 +77,7 @@ public class StudentIncidentRepository : BaseReadWriteRepository<StudentIncident
 
     public async Task<IEnumerable<StudentIncident>> GetByIncident(Guid incidentId)
     {
-        var query = GenerateQuery();
+        var query = GetDefaultQuery();
 
         query.Where("I.Id", incidentId);
 
@@ -86,7 +86,7 @@ public class StudentIncidentRepository : BaseReadWriteRepository<StudentIncident
 
     public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
     {
-        var query = GenerateQuery().AsCount();
+        var query = GetDefaultQuery().AsCount();
     
         query.Where($"{TblAlias}.StudentId", studentId);
         query.Where("I.AcademicYearId", academicYearId);
@@ -96,7 +96,7 @@ public class StudentIncidentRepository : BaseReadWriteRepository<StudentIncident
 
     public async Task<int> GetCountByIncident(Guid incidentId)
     {
-        var query = GenerateQuery().AsCount();
+        var query = GetDefaultQuery().AsCount();
 
         query.Where("I.Id", incidentId);
 
@@ -105,7 +105,7 @@ public class StudentIncidentRepository : BaseReadWriteRepository<StudentIncident
 
     public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
     {
-        var query = GenerateEmptyQuery().AsSum($"{TblAlias}.Points");
+        var query = GetEmptyQuery().AsSum($"{TblAlias}.Points");
     
         query.Where("I.StudentId", studentId);
         query.Where("I.AcademicYearId", academicYearId);

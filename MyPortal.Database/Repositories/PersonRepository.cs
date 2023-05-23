@@ -75,7 +75,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Person> GetByUserId(Guid userId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.LeftJoin("Users as U", "U.PersonId", $"{TblAlias}.Id");
 
@@ -86,7 +86,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<PersonSearchResult> GetPersonWithTypesById(Guid personId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.Id", personId);
 
@@ -95,7 +95,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<PersonSearchResult> GetPersonWithTypesByUserId(Guid userId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
             
             IncludePersonTypes(query);
 
@@ -106,7 +106,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<PersonSearchResult> GetPersonWithTypesByDirectoryId(Guid directoryId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.DirectoryId", directoryId);
 
@@ -115,7 +115,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Person>> GetAll(PersonSearchOptions searchParams)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
             
             searchParams.ApplySearch(query, TblAlias);
 
@@ -124,7 +124,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<PersonSearchResult>> GetAllWithTypes(PersonSearchOptions searchParams)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             searchParams.ApplySearch(query, TblAlias);
 

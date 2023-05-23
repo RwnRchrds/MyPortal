@@ -60,7 +60,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<AttendanceWeek> GetByDate(DateTime date)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.WhereDate("AttendanceWeek.Beginning", "<=", date);
             query.WhereDate("DATEADD(DAY, 6, AttendanceWeek.Beginning)", ">=", date);
@@ -70,7 +70,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<AttendanceWeek>> GetByDateRange(DateTime startDate, DateTime endDate)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.WhereDate("AttendanceWeek.Beginning", "<=", startDate);
             query.WhereDate("DATEADD(DAY, 6, AttendanceWeek.Beginning)", ">=", endDate);

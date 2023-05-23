@@ -23,7 +23,7 @@ namespace MyPortal.Database.Repositories
            
         }
 
-        protected override Query GenerateQuery(bool includeSoftDeleted = false)
+        protected override Query GetDefaultQuery(bool includeSoftDeleted = false)
         {
             var query = new Query($"{TblName} as {TblAlias}");
 
@@ -87,7 +87,7 @@ namespace MyPortal.Database.Repositories
 
         public async System.Threading.Tasks.Task<IEnumerable<Task>> GetByAssignedTo(Guid personId, TaskSearchOptions searchOptions = null)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.AssignedToId", personId);
 

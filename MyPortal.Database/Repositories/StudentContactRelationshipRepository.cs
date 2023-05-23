@@ -42,7 +42,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<StudentContactRelationship>> GetRelationshipsByContact(Guid contactId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where("C.Id", contactId);
 
@@ -51,7 +51,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<StudentContactRelationship>> GetRelationshipsByStudent(Guid studentId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where("S.Id", studentId);
 

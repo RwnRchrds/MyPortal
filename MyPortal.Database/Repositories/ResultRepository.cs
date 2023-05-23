@@ -134,7 +134,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Result> GetResult(Guid studentId, Guid aspectId, Guid resultSetId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.StudentId", studentId);
             query.Where($"{TblAlias}.AspectId", aspectId);
@@ -147,7 +147,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Result>> GetPreviousResults(Guid studentId, Guid aspectId, DateTime dateTo)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
             
             query.Where($"{TblAlias}.StudentId", studentId);
             query.Where($"{TblAlias}.AspectId", aspectId);

@@ -57,7 +57,7 @@ public class SessionExtraNameRepository : BaseReadWriteRepository<SessionExtraNa
 
     public async Task<IEnumerable<SessionExtraName>> GetExtraNamesBySession(Guid sessionId, Guid attendanceWeekId)
     {
-        var query = GenerateQuery();
+        var query = GetDefaultQuery();
 
         query.Where("SEN.SessionId", sessionId);
         query.Where("SEN.AttendanceWeekId", attendanceWeekId);

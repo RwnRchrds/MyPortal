@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -13,16 +11,14 @@ using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.FileProviders;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Documents;
-
 using MyPortal.Logic.Models.Requests.Documents;
 using MyPortal.Logic.Models.Summary;
 using MyPortal.Logic.Models.Web;
 using MyPortal.Logic.Services;
 using MyPortalWeb.Controllers.BaseControllers;
-using Configuration = MyPortal.Logic.Configuration;
+using Configuration = MyPortal.Logic.Configuration.Configuration;
 
 namespace MyPortalWeb.Controllers.Api
 {
@@ -252,7 +248,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return BadRequest(
-                    "MyPortal is currently configured to use a 3rd party file provider. Please use LinkHostedFile endpoint instead.");
+                    "MyPortal is currently configured to use a third party file provider. Please use LinkHostedFile endpoint instead.");
             }
             catch (Exception e)
             {

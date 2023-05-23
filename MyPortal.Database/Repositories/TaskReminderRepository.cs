@@ -67,7 +67,7 @@ public class TaskReminderRepository : BaseReadWriteRepository<TaskReminder>, ITa
 
     public async Task<IEnumerable<TaskReminder>> GetRemindersByTask(Guid taskId)
     {
-        var query = GenerateQuery();
+        var query = GetDefaultQuery();
 
         query.Where("TR.TaskId", taskId);
         query.Where("T.Completed", false);
@@ -77,7 +77,7 @@ public class TaskReminderRepository : BaseReadWriteRepository<TaskReminder>, ITa
 
     public async Task<IEnumerable<TaskReminder>> GetRemindersByUser(Guid userId)
     {
-        var query = GenerateQuery();
+        var query = GetDefaultQuery();
 
         query.Where("TR.UserId", userId);
         query.Where("T.Completed", false);

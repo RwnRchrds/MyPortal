@@ -65,7 +65,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Document>> GetByDirectory(Guid directoryId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.DirectoryId", directoryId);
 

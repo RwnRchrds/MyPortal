@@ -26,7 +26,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<DocumentType>> Get(DocumentTypeFilter filter)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             if (filter.Active)
             {

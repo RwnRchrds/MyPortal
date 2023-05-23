@@ -26,7 +26,7 @@ namespace MyPortal.Database.Repositories
 
         private Query GetRegisterMarksFromPeriodsQuery(AttendancePeriodInstance[] attendancePeriods)
         {
-            var query = GenerateEmptyQuery(typeof(AttendanceMark), "AM");
+            var query = GetEmptyQuery(typeof(AttendanceMark), "AM");
 
             JoinRelated(query);
 
@@ -170,7 +170,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<AttendanceMark>> GetByStudent(Guid studentId, Guid academicYearId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.LeftJoin("AttendanceWeeks as AW", "AW.Id", $"{TblAlias}.WeekId");
             query.LeftJoin("AcademicTerms AS AT", "AT.Id", "AW.AcademicTermId");
@@ -218,7 +218,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<AttendanceMark> GetMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
             
             query.LeftJoin("AttendanceWeeks as AW", "AW.Id", $"{TblAlias}.WeekId");
 

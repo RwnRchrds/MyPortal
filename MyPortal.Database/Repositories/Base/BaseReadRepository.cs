@@ -54,7 +54,7 @@ namespace MyPortal.Database.Repositories.Base
             return result.FirstOrDefault();
         }
 
-        protected virtual Query GenerateQuery(bool includeSoftDeleted = false)
+        protected virtual Query GetDefaultQuery(bool includeSoftDeleted = false)
         {
             var query = new Query($"{TblName} as {TblAlias}").SelectAllColumns(typeof(TEntity), TblAlias);
             
@@ -69,7 +69,7 @@ namespace MyPortal.Database.Repositories.Base
             return query;
         }
 
-        protected Query GenerateQuery(Type t, bool includeSoftDeleted = false)
+        protected Query GetDefaultQuery(Type t, bool includeSoftDeleted = false)
         {
             var tblName = EntityHelper.GetTableName(t, out string tblAlias);
             
@@ -85,14 +85,14 @@ namespace MyPortal.Database.Repositories.Base
 
         public async Task<IEnumerable<TEntity>> GetAll()
         {
-            var sql = GenerateQuery();
+            var sql = GetDefaultQuery();
 
             return await ExecuteQuery(sql);
         }
 
         public async Task<TEntity> GetById(Guid id)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.Id", id);
 
@@ -106,12 +106,12 @@ namespace MyPortal.Database.Repositories.Base
             return await Transaction.Connection.QueryFirstOrDefaultAsync<T>(sql.Sql, sql.NamedBindings, Transaction);
         }
 
-        protected Query GenerateEmptyQuery()
+        protected Query GetEmptyQuery()
         {
-            return GenerateEmptyQuery(typeof(TEntity), TblAlias);
+            return GetEmptyQuery(typeof(TEntity), TblAlias);
         }
 
-        protected Query GenerateEmptyQuery(Type t, string alias = null)
+        protected Query GetEmptyQuery(Type t, string alias = null)
         {
             var tableName = EntityHelper.GetTableName(t);
             var table = string.IsNullOrWhiteSpace(alias) ? tableName : $"{tableName} as {alias}";

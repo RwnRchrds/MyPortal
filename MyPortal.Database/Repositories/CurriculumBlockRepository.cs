@@ -25,7 +25,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<CurriculumBlock>> GetByCurriculumBand(Guid bandId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.LeftJoin("CurriculumBandBlock as CBB", "CBB.BlockId", $"{TblAlias}.Id");
 
@@ -52,7 +52,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<bool> CheckUniqueCode(Guid academicYearId, string code)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.LeftJoin("CurriculumBandBlockAssignment as Assignment", "Assignment.BlockId", $"{TblAlias}.Id");
             query.LeftJoin("CurriculumBand as Band", "Band.Id", "Assignment.BandId");

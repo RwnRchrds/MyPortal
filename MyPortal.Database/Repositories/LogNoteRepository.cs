@@ -64,7 +64,7 @@ namespace MyPortal.Database.Repositories
 
         public Task<IEnumerable<LogNote>> GetByStudent(Guid studentId, Guid academicYearId, bool includePrivate)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.StudentId", studentId);
             query.Where($"{TblAlias}.AcademicYearId", academicYearId);

@@ -60,7 +60,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<CurriculumBand>> GetCurriculumBandsByYearGroup(Guid yearGroupId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.CurriculumYearGroupId", yearGroupId);
 

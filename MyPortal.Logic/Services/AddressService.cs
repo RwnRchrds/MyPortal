@@ -51,6 +51,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateAddressForPerson(Guid personId, EntityAddressRequestModel model)
         {
+            Validate(model);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var person = await unitOfWork.People.GetById(personId);
@@ -84,6 +86,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateAddressForAgency(Guid agencyId, EntityAddressRequestModel model)
         {
+            Validate(model);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var agency = await unitOfWork.Agencies.GetById(agencyId);
@@ -117,6 +121,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateAddressLinkForPerson(Guid addressPersonId, LinkAddressRequestModel model)
         {
+            Validate(model);
+            
             await using var unitOfWork = await User.GetConnection();
             var addressPerson = await unitOfWork.AddressPeople.GetById(addressPersonId);
 
@@ -136,6 +142,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateAddressLinkForAgency(Guid addressAgencyId, LinkAddressRequestModel model)
         {
+            Validate(model);
+            
             await using var unitOfWork = await User.GetConnection();
             var addressAgency = await unitOfWork.AddressAgencies.GetById(addressAgencyId);
 
@@ -155,6 +163,8 @@ namespace MyPortal.Logic.Services
 
         public async Task UpdateAddress(Guid addressId, AddressRequestModel model)
         {
+            Validate(model);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var address = await unitOfWork.Addresses.GetById(addressId);
@@ -181,6 +191,8 @@ namespace MyPortal.Logic.Services
 
         public async Task LinkAddressToPerson(LinkAddressRequestModel model)
         {
+            Validate(model);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var address = await unitOfWork.Addresses.GetById(model.AddressId);
@@ -213,6 +225,8 @@ namespace MyPortal.Logic.Services
 
         public async Task LinkAddressToAgency(LinkAddressRequestModel model)
         {
+            Validate(model);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var address = await unitOfWork.Addresses.GetById(model.AddressId);

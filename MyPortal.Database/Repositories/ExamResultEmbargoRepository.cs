@@ -65,7 +65,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<ExamResultEmbargo> GetByResultSetId(Guid resultSetId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.ResultSetId", resultSetId);
 

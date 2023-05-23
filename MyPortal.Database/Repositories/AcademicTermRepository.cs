@@ -67,7 +67,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<AcademicTerm>> GetByAcademicYear(Guid academicYearId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.AcademicYearId", academicYearId);
 

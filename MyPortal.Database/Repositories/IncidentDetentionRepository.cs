@@ -55,7 +55,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<StudentIncidentDetention> GetSpecific(Guid detentionId, Guid studentIncidentId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where("D.Id", detentionId);
             query.Where("SI.Id", studentIncidentId);
@@ -65,7 +65,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<StudentIncidentDetention>> GetByStudentIncident(Guid studentIncidentId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where("SI.Id", studentIncidentId);
 

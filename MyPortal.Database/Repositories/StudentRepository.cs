@@ -158,7 +158,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Student> GetByUserId(Guid userId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where("StudentPerson.UserId", userId);
 
@@ -167,7 +167,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Student> GetByPersonId(Guid personId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where("Student.PersonId", personId);
 
@@ -176,7 +176,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Student>> GetAll(StudentSearchOptions searchParams)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
             
             ApplySearch(query, searchParams, TblAlias, "P");
             
@@ -185,7 +185,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<StudentSearchResult>> SearchAll(StudentSearchOptions searchOptions)
         {
-            var query = GenerateEmptyQuery();
+            var query = GetEmptyQuery();
             query.With("StudentHouse", HouseCte);
             query.With("StudentRegGroup", RegGroupCte);
             query.With("StudentYearGroup", YearGroupCte);
@@ -203,7 +203,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Student>> GetByContact(Guid contactId, bool reportableOnly)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.LeftJoin("StudentContactRelationships as SCR", "SCR.StudentId", "Student.Id");
 
@@ -239,7 +239,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Student>> GetGiftedTalented()
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where("Student.GiftedAndTalented", true);
 

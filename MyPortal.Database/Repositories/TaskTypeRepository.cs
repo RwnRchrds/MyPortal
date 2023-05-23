@@ -21,7 +21,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<TaskType>> GetAll(bool personalOnly, bool activeOnly, bool includeSystem)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             if (personalOnly)
             {

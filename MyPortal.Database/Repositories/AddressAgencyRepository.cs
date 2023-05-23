@@ -70,7 +70,7 @@ internal class AddressAgencyRepository : BaseReadWriteRepository<AddressAgency>,
 
     public async Task<IEnumerable<AddressAgency>> GetByAgency(Guid agencyId)
     {
-        var query = GenerateQuery();
+        var query = GetDefaultQuery();
 
         query.Where("AG.Id", agencyId);
 
@@ -79,7 +79,7 @@ internal class AddressAgencyRepository : BaseReadWriteRepository<AddressAgency>,
 
     public async Task<IEnumerable<AddressAgency>> GetByAddress(Guid addressId)
     {
-        var query = GenerateQuery();
+        var query = GetDefaultQuery();
 
         query.Where("A.Id", addressId);
 

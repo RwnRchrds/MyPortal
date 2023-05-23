@@ -22,7 +22,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<DiaryEventType>> GetAll(bool includeReserved)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             if (!includeReserved)
             {

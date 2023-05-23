@@ -8,10 +8,10 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IAcademicYearRepository : IReadWriteRepository<AcademicYear>, IUpdateRepository<AcademicYear>
     {
-        Task<AcademicYear> GetCurrent();
-        Task<AcademicYear> GetLatest();
-        Task<IEnumerable<AcademicYear>> GetAllToDate();
-        Task<bool> IsLocked(Guid academicYearId);
-        Task<bool> IsLockedByWeek(Guid attendanceWeekId);
+        Task<AcademicYear> GetCurrentAcademicYear();
+        Task<AcademicYear> GetLatestAcademicYear();
+        Task<AcademicYear> GetAcademicYearByWeek(Guid attendanceWeekId);
+        Task<IEnumerable<AcademicYear>> GetAllAcademicYears();
+        Task<bool> IsYearLocked(Guid academicYearId);
     }
 }

@@ -22,9 +22,9 @@ namespace MyPortal.Database.Repositories
             
         }
 
-        public async Task<AcademicYear> GetCurrent()
+        public async Task<AcademicYear> GetCurrentAcademicYear()
         {
-            var sql = GenerateQuery();
+            var sql = GetDefaultQuery();
 
             sql.LeftJoin("AcademicTerms AS AT", $"{TblAlias}.Id", "AT.AcademicYearId");
 
@@ -38,9 +38,9 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQueryFirstOrDefault(sql);
         }
 
-        public async Task<AcademicYear> GetLatest()
+        public async Task<AcademicYear> GetLatestAcademicYear()
         {
-            var sql = GenerateQuery();
+            var sql = GetDefaultQuery();
 
             sql.LeftJoin("AcademicTerms AS AT", $"{TblAlias}.Id", "AT.AcademicYearId");
             sql.OrderByDesc("AT.FirstDate");
@@ -50,9 +50,21 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQueryFirstOrDefault(sql);
         }
 
-        public async Task<IEnumerable<AcademicYear>> GetAllToDate()
+        public async Task<AcademicYear> GetAcademicYearByWeek(Guid attendanceWeekId)
         {
-            var sql = GenerateQuery();
+            var sql = GetDefaultQuery();
+
+            sql.LeftJoin("AcademicTerms as AT", $"{TblAlias}.Id", "AT.AcademicYearId");
+            sql.LeftJoin("AcademicWeeks as AW", $"AT.Id", "AW.AcademicTermId");
+
+            sql.Where("AW.Id", attendanceWeekId);
+
+            return await ExecuteQueryFirstOrDefault<AcademicYear>(sql);
+        }
+
+        public async Task<IEnumerable<AcademicYear>> GetAllAcademicYears()
+        {
+            var sql = GetDefaultQuery();
 
             sql.LeftJoin("AcademicTerms AS AT", $"{TblAlias}.Id", "AT.AcademicYearId");
 
@@ -63,27 +75,13 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(sql);
         }
 
-        public async Task<bool> IsLocked(Guid academicYearId)
+        public async Task<bool> IsYearLocked(Guid academicYearId)
         {
-            var query = GenerateEmptyQuery();
+            var query = GetEmptyQuery();
 
             query.Select("Locked");
 
             query.Where($"{TblAlias}.Id", academicYearId);
-
-            return await ExecuteQueryFirstOrDefault<bool>(query);
-        }
-
-        public async Task<bool> IsLockedByWeek(Guid attendanceWeekId)
-        {
-            var query = GenerateEmptyQuery();
-
-            query.Select("Locked");
-
-            query.LeftJoin("AcademicTerms as AT", "AT.AcademicYearId", $"{TblAlias}.Id");
-            query.LeftJoin("AttendanceWeeks as AW", "AW.AcademicTermId", "AT.Id");
-
-            query.Where("AW.Id", attendanceWeekId);
 
             return await ExecuteQueryFirstOrDefault<bool>(query);
         }

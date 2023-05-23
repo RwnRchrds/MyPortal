@@ -22,7 +22,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<AchievementType>> GetTypesWithRecordedAchievementsByYear(Guid academicYearId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.LeftJoin("Achievements as A", "A.AchievementTypeId", $"{TblAlias}.Id");
 

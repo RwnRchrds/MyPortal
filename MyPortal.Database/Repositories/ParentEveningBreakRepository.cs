@@ -54,7 +54,7 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<ParentEveningBreak>> GetBreaksByStaffMember(Guid parentEveningId,
             Guid staffMemberId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where("PESM.ParentEveningId", parentEveningId);
             query.Where("PESM.StaffMemberId", staffMemberId);

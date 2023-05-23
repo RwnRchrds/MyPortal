@@ -26,32 +26,28 @@ namespace MyPortal.Logic.Services
         {
         }
 
-        public async Task<bool> IsAcademicYearLocked(Guid academicYearId, bool throwException = false)
+        public async Task<bool> IsAcademicYearLocked(Guid academicYearId)
         {
             await using var unitOfWork = await User.GetConnection();
-            if (await unitOfWork.AcademicYears.IsLocked(academicYearId))
-            {
-                if (throwException)
-                {
-                    throw new YearLockedException("This academic year is locked and cannot be modified.");
-                }
-                    
-                return true;
-            }
+            
+            return await unitOfWork.AcademicYears.IsYearLocked(academicYearId);
+        }
 
-            return false;
+        public async Task ThrowIfAcademicYearLocked(Guid academicYearId)
+        {
+            if (await IsAcademicYearLocked(academicYearId))
+            {
+                throw new YearLockedException("This academic year is locked and cannot be modified.");
+            }
         }
         
-        public async Task<bool> IsAcademicYearLockedByWeek(Guid attendanceWeekId, bool throwException = false)
+        public async Task<bool> IsAcademicYearLockedByWeek(Guid attendanceWeekId)
         {
             await using var unitOfWork = await User.GetConnection();
-            if (await unitOfWork.AcademicYears.IsLockedByWeek(attendanceWeekId))
+            var academicYear = await unitOfWork.AcademicYears.GetAcademicYearByWeek(attendanceWeekId);
+            
+            if (await IsAcademicYearLocked(academicYear.Id))
             {
-                if (throwException)
-                {
-                    throw new YearLockedException("This academic year is locked and cannot be modified.");
-                }
-                    
                 return true;
             }
 
@@ -61,13 +57,13 @@ namespace MyPortal.Logic.Services
         public async Task<AcademicYearModel> GetCurrentAcademicYear(bool getLatestIfNull = false)
         {
             await using var unitOfWork = await User.GetConnection();
-            var acadYear = await unitOfWork.AcademicYears.GetCurrent();
+            var acadYear = await unitOfWork.AcademicYears.GetCurrentAcademicYear();
 
             if (acadYear == null)
             {
                 if (getLatestIfNull)
                 {
-                    acadYear = await unitOfWork.AcademicYears.GetLatest();
+                    acadYear = await unitOfWork.AcademicYears.GetLatestAcademicYear();
 
                     if (acadYear == null)
                     {

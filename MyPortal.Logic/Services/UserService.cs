@@ -200,6 +200,7 @@ namespace MyPortal.Logic.Services
                 throw new NotFoundException("User not found.");
             }
 
+            user.UserName = updateUserRequest.Username;
             user.PersonId = updateUserRequest.PersonId;
 
             await _userManager.UpdateAsync(user);

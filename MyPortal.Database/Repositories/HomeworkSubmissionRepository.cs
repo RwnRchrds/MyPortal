@@ -78,7 +78,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<HomeworkSubmission>> GetHomeworkSubmissionsByStudent(Guid studentId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where("S.Id", studentId);
 
@@ -89,7 +89,7 @@ namespace MyPortal.Database.Repositories
         {
             var now = DateTime.Now;
             
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.JoinStudentGroupsByStudent("S", "SGM");
 

@@ -188,7 +188,7 @@ namespace MyPortal.Logic.Services
                 throw new NotFoundException("Local school not found.");
             }
 
-            var academicYear = await unitOfWork.AcademicYears.GetCurrent();
+            var academicYear = await unitOfWork.AcademicYears.GetCurrentAcademicYear();
 
             if (academicYear == null)
             {

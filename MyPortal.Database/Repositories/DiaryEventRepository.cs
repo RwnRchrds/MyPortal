@@ -86,7 +86,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<DiaryEvent>> GetByDateRange(DateTime firstDate, DateTime lastDate, bool includePrivateEvents = false)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.WhereDate($"{TblAlias}.StartTime", ">=", firstDate.Date);
             query.WhereDate($"{TblAlias}.EndTime", "<", lastDate.Date.AddDays(1));
@@ -101,7 +101,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<DiaryEvent>> GetByPerson(DateTime firstDate, DateTime lastDate, Guid personId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.LeftJoin("DiaryEventAttendees as A", "A.EventId", $"{TblAlias}.Id");
 
@@ -130,7 +130,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<DiaryEvent>> GetPublicEvents(DateTime firstDate, DateTime lastDate)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.Public", true);
 
@@ -139,7 +139,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<DiaryEvent>> GetByRoom(DateTime firstDate, DateTime lastDate, Guid roomId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
             
             query.WhereDate($"{TblAlias}.StartTime", ">=", firstDate.Date);
             

@@ -69,7 +69,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<HomeworkItem>> GetHomework(HomeworkSearchOptions searchOptions)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.LeftJoin("LessonPlanHomeworkItems as LPHI", "HI.Id", "LPHI.HomeworkItemId");
             query.LeftJoin("LessonPlans as LP", "LPHI.LessonPlanId", "LP.Id");

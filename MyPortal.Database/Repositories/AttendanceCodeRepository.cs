@@ -54,7 +54,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<AttendanceCode> GetByCode(string code)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.Code", "=", code);
 
@@ -63,7 +63,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<AttendanceCode>> GetAll(bool activeOnly, bool includeRestricted)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             if (activeOnly)
             {

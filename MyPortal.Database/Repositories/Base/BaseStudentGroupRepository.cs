@@ -49,7 +49,7 @@ namespace MyPortal.Database.Repositories.Base
 
         public async Task<TEntity> GetByStudent(Guid studentId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.LeftJoin("StudentGroupMemberships as SGM", "SGM.StudentGroupId", "SG.Id");
 

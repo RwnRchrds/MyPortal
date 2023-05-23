@@ -15,7 +15,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<LocalAuthority> GetCurrent()
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.LeftJoin("Schools as School", "School.LocalAuthorityId", $"{TblAlias}.Id");
 

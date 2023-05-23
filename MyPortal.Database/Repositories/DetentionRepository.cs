@@ -62,7 +62,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Detention>> GetByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
             
             query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", $"{TblAlias}.Id");
             query.LeftJoin("Incident", "Incident.Id", "IncidentDetention.IncidentId");
@@ -78,7 +78,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Detention>> GetByStudent(Guid studentId, Guid academicYearId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", $"{TblAlias}.Id");
             query.LeftJoin("Incident", "Incident.Id", "IncidentDetention.IncidentId");
@@ -92,7 +92,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Detention> GetByIncident(Guid incidentId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
             
             query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", $"{TblAlias}.Id");
             query.LeftJoin("Incident", "Incident.Id", "IncidentDetention.IncidentId");
@@ -104,7 +104,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Detention>> GetAll(DetentionSearchOptions searchOptions)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             if (searchOptions.DetentionType != null && searchOptions.DetentionType != Guid.Empty)
             {

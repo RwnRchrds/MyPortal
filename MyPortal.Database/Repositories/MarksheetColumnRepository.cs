@@ -75,7 +75,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<MarksheetColumn>> GetByMarksheet(Guid marksheetId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.LeftJoin("Marksheets as M", "M.MarksheetTemplateId", "MT.Id");
 

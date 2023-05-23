@@ -337,6 +337,8 @@ namespace MyPortal.Logic.Services
 
         public async Task AddExtraName(ExtraNameRequestModel model)
         {
+            Validate(model);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var existingNames =

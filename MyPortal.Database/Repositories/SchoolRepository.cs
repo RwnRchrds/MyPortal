@@ -73,7 +73,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<string> GetLocalSchoolName()
         {
-            var query = GenerateEmptyQuery();
+            var query = GetEmptyQuery();
 
             JoinRelated(query);
 
@@ -86,7 +86,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<School> GetLocal()
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.Local", true);
 

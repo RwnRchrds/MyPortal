@@ -63,7 +63,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<StudentGroupMembership>> GetMembershipsByGroup(Guid studentGroupId, DateTime dateFrom, DateTime dateTo)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where("SGM.StudentGroupId", studentGroupId);
             query.Where("SGM.StartDate", "<=", dateFrom);

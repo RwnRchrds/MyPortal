@@ -75,7 +75,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<AddressPerson>> GetByPerson(Guid personId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where("P.Id", personId);
 
@@ -84,7 +84,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<AddressPerson>> GetByAddress(Guid addressId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where("A.Id", addressId);
 

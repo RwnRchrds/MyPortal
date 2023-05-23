@@ -50,7 +50,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<bool> UserExists(string username)
         {
-            var query = GenerateEmptyQuery(typeof(User), "User");
+            var query = GetEmptyQuery(typeof(User), "User");
 
             query.Where($"{TblAlias}.UserName", username);
 
@@ -63,7 +63,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<User> GetByUsername(string username)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.UserName", username);
 

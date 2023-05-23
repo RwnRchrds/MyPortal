@@ -64,7 +64,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<int> GetCountByStudent(Guid studentId)
         {
-            var query = GenerateQuery().AsCount();
+            var query = GetDefaultQuery().AsCount();
 
             query.Where($"{TblAlias}.StudentId", studentId);
 
@@ -73,7 +73,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Exclusion>> GetByStudent(Guid studentId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.StudentId", studentId);
 

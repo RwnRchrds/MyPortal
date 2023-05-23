@@ -65,7 +65,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<DiaryEventAttendee>> GetByEvent(Guid eventId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.Id", eventId);
 
@@ -74,7 +74,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<DiaryEventAttendee> GetAttendee(Guid eventId, Guid personId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.EventId", eventId);
             query.Where($"{TblAlias}.PersonId");

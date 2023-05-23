@@ -24,7 +24,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<File> GetByDocumentId(Guid documentId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.DocumentId", documentId);
 

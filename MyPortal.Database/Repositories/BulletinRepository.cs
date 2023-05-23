@@ -123,7 +123,7 @@ namespace MyPortal.Database.Repositories
 
             var data = await ExecuteQuery<BulletinDetailModel>(query);
 
-            var countQuery = GenerateEmptyQuery();
+            var countQuery = GetEmptyQuery();
             
             ApplySearch(countQuery, searchOptions);
 
@@ -163,7 +163,7 @@ CROSS APPLY GetDisplayName({TblAlias}.CreatedById, 2, 1, 1) D");
 
         public async Task<IEnumerable<Bulletin>> GetBulletins(BulletinSearchOptions searchOptions)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             ApplySearch(query, searchOptions);
 
@@ -172,7 +172,7 @@ CROSS APPLY GetDisplayName({TblAlias}.CreatedById, 2, 1, 1) D");
 
         public async Task<IEnumerable<Bulletin>> GetOwn(Guid authorId)
         {
-            var query = GenerateQuery();
+            var query = GetDefaultQuery();
 
             query.Where($"{TblAlias}.AuthorId", "=", authorId);
 
