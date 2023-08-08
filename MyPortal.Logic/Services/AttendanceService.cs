@@ -204,7 +204,7 @@ namespace MyPortal.Logic.Services
                 Validate(model);
 
                 var academicYearService = new AcademicYearService(User);
-                await academicYearService.IsAcademicYearLockedByWeek(model.WeekId, true);
+                await academicYearService.IsAcademicYearLockedByWeek(model.WeekId);
 
                 if (!model.CodeId.HasValue || model.CodeId == Guid.Empty)
                 {

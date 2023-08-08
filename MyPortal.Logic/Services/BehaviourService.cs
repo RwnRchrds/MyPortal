@@ -88,7 +88,7 @@ namespace MyPortal.Logic.Services
             var now = DateTime.Now;
 
             var academicYearService = new AcademicYearService(User);
-            await academicYearService.IsAcademicYearLocked(achievement.AcademicYearId, true);
+            await academicYearService.IsAcademicYearLocked(achievement.AcademicYearId);
 
             var model = new StudentAchievement
             {
@@ -129,7 +129,7 @@ namespace MyPortal.Logic.Services
             }
 
             var academicYearService = new AcademicYearService(User);
-            await academicYearService.IsAcademicYearLocked(achievementInDb.Achievement.AcademicYearId, true);
+            await academicYearService.IsAcademicYearLocked(achievementInDb.Achievement.AcademicYearId);
 
             achievementInDb.Achievement.AchievementTypeId = achievement.AchievementTypeId;
             achievementInDb.Achievement.LocationId = achievement.LocationId;
@@ -147,7 +147,7 @@ namespace MyPortal.Logic.Services
             var achievement = await GetStudentAchievementById(achievementId);
 
             var academicYearService = new AcademicYearService(User);
-            await academicYearService.IsAcademicYearLocked(achievement.Achievement.AcademicYearId, true);
+            await academicYearService.IsAcademicYearLocked(achievement.Achievement.AcademicYearId);
 
             await using var unitOfWork = await User.GetConnection();
             

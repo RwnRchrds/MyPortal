@@ -28,9 +28,6 @@ namespace MyPortal.Logic.Helpers
                 case DatabaseProvider.MsSqlServer:
                     options = builder.UseSqlServer(Configuration.Configuration.Instance.ConnectionString).Options;
                     break;
-                case DatabaseProvider.MySql:
-                    options = builder.UseMySQL(Configuration.Configuration.Instance.ConnectionString).Options;
-                    break;
                 default:
                     throw new ConfigurationException("A database provider has not been set.");
             }

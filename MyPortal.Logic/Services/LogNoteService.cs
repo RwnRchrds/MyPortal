@@ -63,7 +63,7 @@ namespace MyPortal.Logic.Services
             await using var unitOfWork = await User.GetConnection();
 
             var academicYearService = new AcademicYearService(User);
-            await academicYearService.IsAcademicYearLocked(logNoteModel.AcademicYearId, true);
+            await academicYearService.IsAcademicYearLocked(logNoteModel.AcademicYearId);
 
             var createDate = DateTime.Now;
 
@@ -92,7 +92,7 @@ namespace MyPortal.Logic.Services
             var logNote = await unitOfWork.LogNotes.GetById(logNoteId);
                     
             var academicYearService = new AcademicYearService(User);
-            await academicYearService.IsAcademicYearLocked(logNote.AcademicYearId, true);
+            await academicYearService.IsAcademicYearLocked(logNote.AcademicYearId);
 
             if (logNote == null)
             {
@@ -114,7 +114,7 @@ namespace MyPortal.Logic.Services
             var logNote = await GetLogNoteById(logNoteId);
 
             var academicYearService = new AcademicYearService(User);
-            await academicYearService.IsAcademicYearLocked(logNote.AcademicYearId, true);
+            await academicYearService.IsAcademicYearLocked(logNote.AcademicYearId);
 
             await unitOfWork.LogNotes.Delete(logNoteId);
 

@@ -33,10 +33,6 @@ namespace MyPortalWeb.Controllers.Api
             {
                 await _academicYearService.CreateAcademicYear(requestModel);
                 
-                if (User.IsAuthenticated())
-                
-                HttpContext.Response.WriteJsonAsync()
-
                 return Ok();
             }
             catch (Exception e)
