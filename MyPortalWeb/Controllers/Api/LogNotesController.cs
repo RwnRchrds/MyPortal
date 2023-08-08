@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Entity;
+using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Students;
 using MyPortal.Logic.Models.Requests.Student.LogNotes;
-using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api

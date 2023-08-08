@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Search;
+using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Attendance.Register;
 using MyPortal.Logic.Models.Requests.Attendance;
 using MyPortal.Logic.Models.Summary;
-using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 using MyPortalWeb.Models.Requests.Attendance;
 

@@ -1,4 +1,4 @@
-﻿namespace MyPortalWeb.Models.Response
+﻿namespace MyPortal.Logic.Models.Response
 {
     public class ErrorResponseModel
     {

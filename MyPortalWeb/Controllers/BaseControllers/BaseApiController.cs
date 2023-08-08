@@ -13,7 +13,7 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Settings;
-
+using MyPortal.Logic.Models.Response;
 using MyPortalWeb.Models.Response;
 
 namespace MyPortalWeb.Controllers.BaseControllers

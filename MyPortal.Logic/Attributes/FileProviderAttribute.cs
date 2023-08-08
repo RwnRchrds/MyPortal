@@ -1,7 +1,7 @@
 ﻿using System;
 using MyPortal.Logic.Enums;
 
-namespace MyPortalWeb.Attributes;
+namespace MyPortal.Logic.Attributes;
 
 [AttributeUsage(AttributeTargets.Method)]
 public class FileProviderAttribute : Attribute

@@ -1,13 +1,12 @@
 ﻿using System.Threading.Tasks;
-using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortalWeb.Attributes;
-using MyPortalWeb.Models.Response;
+using MyPortal.Logic.Models.Response;
 
-namespace MyPortalWeb.Middleware
+namespace MyPortal.Logic.Middleware
 {
     public class PermissionMiddleware
     {

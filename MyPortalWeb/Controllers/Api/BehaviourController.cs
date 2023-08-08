@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
+using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -14,7 +15,6 @@ using MyPortal.Logic.Models.Data.Students;
 using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
 using MyPortal.Logic.Models.Requests.Behaviour.Incidents;
 using MyPortal.Logic.Models.Summary;
-using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api

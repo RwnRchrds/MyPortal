@@ -11,7 +11,6 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Requests.Calendar;
 using MyPortal.Logic.Models.Structures;
-using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 using MyPortalWeb.Models;
 

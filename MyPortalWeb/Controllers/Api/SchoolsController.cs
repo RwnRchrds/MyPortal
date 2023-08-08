@@ -7,6 +7,7 @@ using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Database.Models.Search;
+using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
@@ -15,7 +16,6 @@ using MyPortal.Logic.Models.Data.School;
 
 using MyPortal.Logic.Models.Requests.School.Bulletins;
 using MyPortal.Logic.Models.Summary;
-using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 using MyPortalWeb.Models.Requests;
 using MyPortalWeb.Models.Response;

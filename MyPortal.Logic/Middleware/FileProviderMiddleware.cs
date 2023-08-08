@@ -1,14 +1,13 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using MyPortal.Logic.Configuration;
-using MyPortalWeb.Attributes;
-using MyPortalWeb.Models.Response;
+using MyPortal.Logic.Attributes;
+using MyPortal.Logic.Extensions;
+using MyPortal.Logic.Models.Response;
 
-namespace MyPortalWeb.Middleware;
+namespace MyPortal.Logic.Middleware;
 
 public class FileProviderMiddleware
 {
@@ -26,7 +25,7 @@ public class FileProviderMiddleware
 
         if (attribute != null)
         {
-            if (attribute.FileProviders.Contains(Configuration.Instance.FileProvider))
+            if (attribute.FileProviders.Contains(Configuration.Configuration.Instance.FileProvider))
             {
                 await _next(context);
                 return;

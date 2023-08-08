@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
+using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Requests.Curriculum;
-using MyPortalWeb.Attributes;
 using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
@@ -31,6 +32,10 @@ namespace MyPortalWeb.Controllers.Api
             try
             {
                 await _academicYearService.CreateAcademicYear(requestModel);
+                
+                if (User.IsAuthenticated())
+                
+                HttpContext.Response.WriteJsonAsync()
 
                 return Ok();
             }

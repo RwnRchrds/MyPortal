@@ -2,7 +2,7 @@
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Enums;
 
-namespace MyPortalWeb.Attributes
+namespace MyPortal.Logic.Attributes
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class PermissionAttribute : Attribute

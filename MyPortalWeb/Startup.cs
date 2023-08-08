@@ -6,8 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MyPortal.Logic.Extensions;
+using MyPortal.Logic.Middleware;
 using MyPortalWeb.Extensions;
-using MyPortalWeb.Middleware;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace MyPortalWeb
@@ -75,7 +75,8 @@ namespace MyPortalWeb
             app.UseAuthentication();
             app.UseIdentityServer();
             app.UseAuthorization();
-            app.UseMiddleware<PermissionMiddleware>();
+            
+            app.UseMyPortal();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();

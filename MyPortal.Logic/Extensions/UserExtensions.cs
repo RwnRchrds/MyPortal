@@ -3,6 +3,7 @@ using System.Collections;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Google.Apis.Drive.v3.Data;
 using Microsoft.IdentityModel.Tokens;
@@ -47,6 +48,11 @@ namespace MyPortal.Logic.Extensions
         {
             return await PermissionHelper.UserHasPermission(principal.GetUserId(), userService, requirement,
                 permissionValues);
+        }
+        
+        public static bool IsAuthenticated(this IPrincipal principal)
+        {
+            return principal != null && principal.Identity != null && principal.Identity.IsAuthenticated;
         }
     }
 }
