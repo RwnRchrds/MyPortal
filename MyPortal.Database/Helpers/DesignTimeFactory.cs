@@ -10,7 +10,8 @@ namespace MyPortal.Database.Helpers
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var connectionString =
-                Environment.GetEnvironmentVariable("MyPortalConnection", EnvironmentVariableTarget.Machine);
+                Environment.GetEnvironmentVariable("MyPortalConnection", EnvironmentVariableTarget.Machine) ??
+                string.Empty;
 
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 

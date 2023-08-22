@@ -78,8 +78,8 @@ namespace MyPortalWeb
             
             app.UseMyPortal();
 
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
+            //app.UseDefaultFiles();
+            //app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {

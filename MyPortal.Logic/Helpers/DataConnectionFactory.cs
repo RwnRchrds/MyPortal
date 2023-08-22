@@ -1,9 +1,4 @@
-﻿using System;
-using System.Data;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Drive.v3;
+﻿using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database;
