@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32.SafeHandles;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -20,9 +15,8 @@ namespace MyPortal.Database.Repositories
 {
     public class ContactRepository : BaseReadWriteRepository<Contact>, IContactRepository
     {
-        public ContactRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ContactRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-     
         }
 
         protected override Query JoinRelated(Query query)
@@ -43,20 +37,20 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var contacts = await Transaction.Connection.QueryAsync<Contact, Person, Contact>(sql.Sql,
+            var contacts = await DbUser.Transaction.Connection.QueryAsync<Contact, Person, Contact>(sql.Sql,
                 (contact, person) =>
                 {
                     contact.Person = person;
 
                     return contact;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return contacts;
         }
 
         public async Task Update(Contact entity)
         {
-            var contact = await Context.Contacts.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var contact = await DbUser.Context.Contacts.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (contact == null)
             {

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
@@ -18,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class DetentionRepository : BaseReadWriteRepository<Detention>, IDetentionRepository
     {
-        public DetentionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public DetentionRepository(DbUserWithContext dbUser) : base(dbUser)
         {
 
         }
@@ -46,7 +45,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var detentions =
-                await Transaction.Connection.QueryAsync<Detention, DetentionType, DiaryEvent, StaffMember, Detention>(
+                await DbUser.Transaction.Connection.QueryAsync<Detention, DetentionType, DiaryEvent, StaffMember, Detention>(
                     sql.Sql,
                     (detention, type, diaryEvent, supervisor) =>
                     {
@@ -55,7 +54,7 @@ namespace MyPortal.Database.Repositories
                         detention.Supervisor = supervisor;
 
                         return detention;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return detentions;
         }
@@ -123,7 +122,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(Detention entity)
         {
-            var detention = await Context.Detentions.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var detention = await DbUser.Context.Detentions.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (detention == null)
             {

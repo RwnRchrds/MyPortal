@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -8,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -18,9 +17,8 @@ namespace MyPortal.Database.Repositories
 {
     public class DirectoryRepository : BaseReadWriteRepository<Directory>, IDirectoryRepository
     {
-        public DirectoryRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public DirectoryRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-           
         }
 
         protected override Query JoinRelated(Query query)
@@ -41,13 +39,13 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var directories = await Transaction.Connection.QueryAsync<Directory, Directory, Directory>(sql.Sql,
+            var directories = await DbUser.Transaction.Connection.QueryAsync<Directory, Directory, Directory>(sql.Sql,
                 (directory, parent) =>
                 {
                     directory.Parent = parent;
 
                     return directory;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return directories;
         }
@@ -73,23 +71,24 @@ namespace MyPortal.Database.Repositories
                 throw new Exception("Cannot delete school directory.");
             }
 
-            var subdirectories = await Context.Directories.Where(d => d.ParentId == directoryId).ToArrayAsync();
+            var subdirectories = await DbUser.Context.Directories.Where(d => d.ParentId == directoryId).ToArrayAsync();
 
             foreach (var subdirectory in subdirectories)
             {
                 await DeleteWithChildren(subdirectory.Id);
             }
 
-            var documents = await Context.Documents.Where(d => d.DirectoryId == directoryId).ToArrayAsync();
+            var documents = await DbUser.Context.Documents.Include(d => d.Attachment)
+                .Where(d => d.DirectoryId == directoryId).ToArrayAsync();
 
             foreach (var document in documents)
             {
                 if (document.FileId.HasValue)
                 {
-                    Context.Files.Remove(document.Attachment);
+                    DbUser.Context.Files.Remove(document.Attachment);
                 }
 
-                Context.Documents.Remove(document);
+                DbUser.Context.Documents.Remove(document);
             }
 
             await Delete(directoryId);
@@ -97,7 +96,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(Directory entity)
         {
-            var directory = await Context.Directories.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var directory = await DbUser.Context.Directories.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (directory == null)
             {

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -17,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AchievementRepository : BaseReadWriteRepository<Achievement>, IAchievementRepository
     {
-        public AchievementRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public AchievementRepository(DbUserWithContext dbUser) : base(dbUser)
         {
            
         }
@@ -46,7 +44,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var achievements = await Transaction.Connection
+            var achievements = await DbUser.Transaction.Connection
                 .QueryAsync<Achievement, AchievementType, Location, AcademicYear, User, Achievement>(
                     sql.Sql,
                     (achievement, type, location, year, user) =>
@@ -57,14 +55,14 @@ namespace MyPortal.Database.Repositories
                         achievement.CreatedBy = user;
 
                         return achievement;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return achievements;
         }
 
         public async Task Update(Achievement entity)
         {
-            var achievement = await Context.Achievements.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var achievement = await DbUser.Context.Achievements.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (achievement == null)
             {

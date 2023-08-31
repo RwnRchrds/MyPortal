@@ -7,6 +7,7 @@ using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class StudyTopicRepository : BaseReadWriteRepository<StudyTopic>, IStudyTopicRepository
     {
-        public StudyTopicRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public StudyTopicRepository(DbUserWithContext dbUser) : base(dbUser)
         {
 
         }
@@ -39,20 +40,20 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var studyTopics = await Transaction.Connection.QueryAsync<StudyTopic, Course, StudyTopic>(sql.Sql,
+            var studyTopics = await DbUser.Transaction.Connection.QueryAsync<StudyTopic, Course, StudyTopic>(sql.Sql,
                 (topic, course) =>
                 {
                     topic.Course = course;
 
                     return topic;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return studyTopics;
         }
 
         public async Task Update(StudyTopic entity)
         {
-            var studyTopic = await Context.StudyTopics.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var studyTopic = await DbUser.Context.StudyTopics.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (studyTopic == null)
             {

@@ -1,21 +1,20 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class PersonDietaryRequirementRepository : BaseReadWriteRepository<PersonDietaryRequirement>, IPersonDietaryRequirementRepository
+    public class PersonDietaryRequirementRepository : BaseReadWriteRepository<PersonDietaryRequirement>,
+        IPersonDietaryRequirementRepository
     {
-        public PersonDietaryRequirementRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public PersonDietaryRequirementRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         protected override Query JoinRelated(Query query)
@@ -38,7 +37,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var pdrs = await Transaction.Connection
+            var pdrs = await DbUser.Transaction.Connection
                 .QueryAsync<PersonDietaryRequirement, Person, DietaryRequirement, PersonDietaryRequirement>(sql.Sql,
                     (pdr, person, dietaryReq) =>
                     {
@@ -46,7 +45,7 @@ namespace MyPortal.Database.Repositories
                         pdr.DietaryRequirement = dietaryReq;
 
                         return pdr;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return pdrs;
         }

@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ExamCandidateRepository : BaseReadWriteRepository<ExamCandidate>, IExamCandidateRepository
     {
-        public ExamCandidateRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExamCandidateRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -38,20 +37,21 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var candidates = await Transaction.Connection.QueryAsync<ExamCandidate, Student, ExamCandidate>(sql.Sql,
+            var candidates = await DbUser.Transaction.Connection.QueryAsync<ExamCandidate, Student, ExamCandidate>(
+                sql.Sql,
                 (candidate, student) =>
                 {
                     candidate.Student = student;
 
                     return candidate;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return candidates;
         }
 
         public async Task Update(ExamCandidate entity)
         {
-            var candidate = await Context.ExamCandidates.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var candidate = await DbUser.Context.ExamCandidates.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (candidate == null)
             {

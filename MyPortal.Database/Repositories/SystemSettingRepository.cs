@@ -1,11 +1,10 @@
-﻿using System.Data.Common;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using SqlKata;
 using SqlKata.Compilers;
@@ -15,13 +14,11 @@ namespace MyPortal.Database.Repositories
 {
     public class SystemSettingRepository : ISystemSettingRepository
     {
-        private readonly ApplicationDbContext _context;
-        private readonly DbTransaction _transaction;
+        private readonly DbUserWithContext _dbUser;
 
-        public SystemSettingRepository(ApplicationDbContext context, DbTransaction transaction)
+        public SystemSettingRepository(DbUserWithContext dbUser)
         {
-            _transaction = transaction;
-            _context = context;
+            _dbUser = dbUser;
         }
 
         public async Task<SystemSetting> Get(string name)
@@ -34,12 +31,13 @@ namespace MyPortal.Database.Repositories
 
             var sql = new SqlServerCompiler().Compile(query);
 
-            return (await _transaction.Connection.QueryAsync<SystemSetting>(sql.Sql, sql.NamedBindings, _transaction)).FirstOrDefault();
+            return (await _dbUser.Transaction.Connection.QueryAsync<SystemSetting>(sql.Sql, sql.NamedBindings,
+                _dbUser.Transaction)).FirstOrDefault();
         }
 
         public async Task Update(string name, string value)
         {
-            var setting = await _context.SystemSettings.FirstOrDefaultAsync(x => x.Name == name);
+            var setting = await _dbUser.Context.SystemSettings.FirstOrDefaultAsync(x => x.Name == name);
 
             if (setting == null)
             {

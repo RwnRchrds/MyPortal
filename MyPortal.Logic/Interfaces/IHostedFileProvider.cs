@@ -10,7 +10,7 @@ namespace MyPortal.Logic.Interfaces
 {
     public interface IHostedFileProvider
     {
-        Task<IEnumerable<WebAction>> GetWebActions(string accessToken, string fileId); 
-        Task<File> CreateFileFromId(string accessToken, string fileId);
+        Task<IEnumerable<WebAction>> GetWebActions(string fileId); 
+        Task<File> CreateFileFromId(string fileId);
     }
 }

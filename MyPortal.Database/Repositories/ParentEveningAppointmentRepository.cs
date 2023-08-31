@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -15,9 +14,10 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class ParentEveningAppointmentRepository : BaseReadWriteRepository<ParentEveningAppointment>, IParentEveningAppointmentRepository
+    public class ParentEveningAppointmentRepository : BaseReadWriteRepository<ParentEveningAppointment>,
+        IParentEveningAppointmentRepository
     {
-        public ParentEveningAppointmentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ParentEveningAppointmentRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -42,7 +42,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var appointments =
-                await Transaction.Connection
+                await DbUser.Transaction.Connection
                     .QueryAsync<ParentEveningAppointment, ParentEveningStaffMember, Student, ParentEveningAppointment>(
                         sql.Sql,
                         (appointment, staff, student) =>
@@ -51,14 +51,15 @@ namespace MyPortal.Database.Repositories
                             appointment.Student = student;
 
                             return appointment;
-                        }, sql.NamedBindings, Transaction);
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return appointments;
         }
 
         public async Task Update(ParentEveningAppointment entity)
         {
-            var appointment = await Context.ParentEveningAppointments.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var appointment =
+                await DbUser.Context.ParentEveningAppointments.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (appointment == null)
             {
@@ -80,18 +81,21 @@ namespace MyPortal.Database.Repositories
 
             return await ExecuteQuery(query);
         }
-        
-        public async Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByContact(Guid parentEveningId, Guid contactId)
+
+        public async Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByContact(Guid parentEveningId,
+            Guid contactId)
         {
             return null;
         }
 
-        public async Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByStaffMember(Guid staffMemberId, DateTime fromDate, DateTime toDate)
+        public async Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByStaffMember(Guid staffMemberId,
+            DateTime fromDate, DateTime toDate)
         {
             return null;
         }
 
-        public async Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByContact(Guid contactId, DateTime fromDate, DateTime toDate)
+        public async Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByContact(Guid contactId,
+            DateTime fromDate, DateTime toDate)
         {
             return null;
         }

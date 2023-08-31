@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -8,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.QueryResults.Attendance;
 using MyPortal.Database.Repositories.Base;
@@ -19,9 +18,8 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceMarkRepository : BaseReadWriteRepository<AttendanceMark>, IAttendanceMarkRepository
     {
-        public AttendanceMarkRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public AttendanceMarkRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-       
         }
 
         private Query GetRegisterMarksFromPeriodsQuery(AttendancePeriodInstance[] attendancePeriods)
@@ -73,7 +71,7 @@ namespace MyPortal.Database.Repositories
             var dateFrom = orderedPeriods.Select(x => x.ActualStartTime).FirstOrDefault();
 
             var dateTo = orderedPeriods.Select(x => x.ActualStartTime).LastOrDefault();
-            
+
             var query = new Query("Students as S");
 
             query.Select("SGM.StudentId as StudentId", "AW.Id as AttendanceWeekId", "AP.Id as PeriodId");
@@ -92,7 +90,7 @@ namespace MyPortal.Database.Repositories
 
             query.GroupBy("SGM.StudentId", "AW.Id", "AP.Id");
             query.GroupByRaw("CASE WHEN AM.Id IS NOT NULL THEN 1 ELSE 0 END");
-            
+
             query.WhereStudentGroupMembershipValid("SGM", dateFrom, dateTo);
             query.Where(q =>
             {
@@ -151,8 +149,9 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var marks = await Transaction.Connection
-                .QueryAsync<AttendanceMark, AttendanceCode, AttendancePeriod, AttendanceWeek, Student, User, AttendanceMark>(
+            var marks = await DbUser.Transaction.Connection
+                .QueryAsync<AttendanceMark, AttendanceCode, AttendancePeriod, AttendanceWeek, Student, User,
+                    AttendanceMark>(
                     sql.Sql,
                     (mark, code, period, week, student, user) =>
                     {
@@ -163,7 +162,7 @@ namespace MyPortal.Database.Repositories
                         mark.CreatedBy = user;
 
                         return mark;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return marks;
         }
@@ -182,7 +181,8 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
-        public async Task<IEnumerable<AttendanceMarkDetailModel>> GetRegisterMarks(Guid[] studentIds, AttendancePeriodInstance[] attendancePeriods)
+        public async Task<IEnumerable<AttendanceMarkDetailModel>> GetRegisterMarks(Guid[] studentIds,
+            AttendancePeriodInstance[] attendancePeriods)
         {
             if (attendancePeriods.Any())
             {
@@ -192,7 +192,7 @@ namespace MyPortal.Database.Repositories
 
                 return await ExecuteQuery<AttendanceMarkDetailModel>(query);
             }
-            
+
             return Array.Empty<AttendanceMarkDetailModel>();
         }
 
@@ -200,7 +200,7 @@ namespace MyPortal.Database.Repositories
             AttendancePeriodInstance[] attendancePeriods)
         {
             var query = GetPossibleMarksFromPeriodsQuery(attendancePeriods);
-            
+
             query.Where("SG.Id", studentGroupId);
 
             return await ExecuteQuery<PossibleAttendanceMark>(query);
@@ -219,7 +219,7 @@ namespace MyPortal.Database.Repositories
         public async Task<AttendanceMark> GetMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
             var query = GetDefaultQuery();
-            
+
             query.LeftJoin("AttendanceWeeks as AW", "AW.Id", $"{TblAlias}.WeekId");
 
             query.Where($"{TblAlias}.StudentId", "=", studentId);
@@ -253,7 +253,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(AttendanceMark mark)
         {
-            var attendanceMark = await Context.AttendanceMarks.FirstOrDefaultAsync(x => x.Id == mark.Id);
+            var attendanceMark = await DbUser.Context.AttendanceMarks.FirstOrDefaultAsync(x => x.Id == mark.Id);
 
             if (attendanceMark == null)
             {

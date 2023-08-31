@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -8,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.QueryResults.Person;
 using MyPortal.Database.Models.Search;
@@ -20,9 +19,8 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonRepository : BaseReadWriteRepository<Person>, IPersonRepository
     {
-        public PersonRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public PersonRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-     
         }
 
         protected override Query JoinRelated(Query query)
@@ -33,7 +31,7 @@ namespace MyPortal.Database.Repositories
 
             return query;
         }
-        
+
         protected override Query SelectAllRelated(Query query)
         {
             query.SelectAllColumns(typeof(Ethnicity), "E");
@@ -47,7 +45,8 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var people = await Transaction.Connection.QueryAsync<Person, Ethnicity, Directory, Photo, Person>(sql.Sql,
+            var people = await DbUser.Transaction.Connection.QueryAsync<Person, Ethnicity, Directory, Photo, Person>(
+                sql.Sql,
                 (person, ethnicity, dir, photo) =>
                 {
                     person.Ethnicity = ethnicity;
@@ -55,7 +54,7 @@ namespace MyPortal.Database.Repositories
                     person.Photo = photo;
 
                     return person;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return people;
         }
@@ -96,7 +95,7 @@ namespace MyPortal.Database.Repositories
         public async Task<PersonSearchResult> GetPersonWithTypesByUserId(Guid userId)
         {
             var query = GetDefaultQuery();
-            
+
             IncludePersonTypes(query);
 
             query.Where("U.Id", userId);
@@ -116,7 +115,7 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<Person>> GetAll(PersonSearchOptions searchParams)
         {
             var query = GetDefaultQuery();
-            
+
             searchParams.ApplySearch(query, TblAlias);
 
             return await ExecuteQuery(query);
@@ -134,28 +133,29 @@ namespace MyPortal.Database.Repositories
         protected async Task<IEnumerable<PersonSearchResult>> ExecuteQueryWithTypes(Query query)
         {
             IncludePersonTypes(query);
-            
-            var sql = Compiler.Compile(query);
-            
-            var people = await Transaction.Connection.QueryAsync<Person, Ethnicity, Directory, Photo, PersonTypeIndicator, PersonSearchResult>(sql.Sql,
-                (person, ethnicity, dir, photo, types) =>
-                {
-                    var result = new PersonSearchResult();
-                    result.Person = person;
-                    person.Ethnicity = ethnicity;
-                    person.Directory = dir;
-                    person.Photo = photo;
-                    result.PersonTypes = types;
 
-                    return result;
-                }, sql.NamedBindings, Transaction, splitOn:"Id, Id, Id, IsUser");
+            var sql = Compiler.Compile(query);
+
+            var people = await DbUser.Transaction.Connection
+                .QueryAsync<Person, Ethnicity, Directory, Photo, PersonTypeIndicator, PersonSearchResult>(sql.Sql,
+                    (person, ethnicity, dir, photo, types) =>
+                    {
+                        var result = new PersonSearchResult();
+                        result.Person = person;
+                        person.Ethnicity = ethnicity;
+                        person.Directory = dir;
+                        person.Photo = photo;
+                        result.PersonTypes = types;
+
+                        return result;
+                    }, sql.NamedBindings, DbUser.Transaction, splitOn: "Id, Id, Id, IsUser");
 
             return people;
         }
 
         public async Task Update(Person entity)
         {
-            var person = await Context.People.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var person = await DbUser.Context.People.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (person == null)
             {

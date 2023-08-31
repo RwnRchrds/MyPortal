@@ -6,6 +6,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using Org.BouncyCastle.Crypto.Tls;
@@ -15,7 +16,7 @@ namespace MyPortal.Database.Repositories;
 
 public class SessionExtraNameRepository : BaseReadWriteRepository<SessionExtraName>, ISessionExtraNameRepository
 {
-    public SessionExtraNameRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+    public SessionExtraNameRepository(DbUserWithContext dbUser) : base(dbUser)
     {
     }
 
@@ -41,7 +42,7 @@ public class SessionExtraNameRepository : BaseReadWriteRepository<SessionExtraNa
     {
         var sql = Compiler.Compile(query);
 
-        var extraNames = await Transaction.Connection
+        var extraNames = await DbUser.Transaction.Connection
             .QueryAsync<SessionExtraName, AttendanceWeek, Session, Student, SessionExtraName>(sql.Sql,
                 (extraName, week, session, student) =>
                 {
@@ -50,7 +51,7 @@ public class SessionExtraNameRepository : BaseReadWriteRepository<SessionExtraNa
                     extraName.Student = student;
 
                     return extraName;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
         return extraNames;
     }

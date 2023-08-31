@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ExamComponentRepository : BaseReadWriteRepository<ExamComponent>, IExamComponentRepository
     {
-        public ExamComponentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExamComponentRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -44,7 +43,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var components = await Transaction.Connection
+            var components = await DbUser.Transaction.Connection
                 .QueryAsync<ExamComponent, ExamBaseComponent, ExamSeries, ExamAssessmentMode, ExamDate,
                     ExamComponent>(sql.Sql,
                     (component, baseComponent, series, mode, date) =>
@@ -55,14 +54,14 @@ namespace MyPortal.Database.Repositories
                         component.ExamDate = date;
 
                         return component;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return components;
         }
 
         public async Task Update(ExamComponent entity)
         {
-            var component = await Context.ExamComponents.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var component = await DbUser.Context.ExamComponents.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (component == null)
             {

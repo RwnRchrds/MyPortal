@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Middleware;
 using MyPortalWeb.Extensions;
 using Swashbuckle.AspNetCore.SwaggerGen;
 

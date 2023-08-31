@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.QueryResults.Attendance;
 using MyPortal.Database.Repositories.Base;
@@ -21,7 +18,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendancePeriodRepository : BaseReadWriteRepository<AttendancePeriod>, IAttendancePeriodRepository
     {
-        public AttendancePeriodRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public AttendancePeriodRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -44,21 +41,22 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var periods =
-                await Transaction.Connection.QueryAsync<AttendancePeriod, AttendanceWeekPattern, AttendancePeriod>(
-                    sql.Sql,
-                    (period, pattern) =>
-                    {
-                        period.WeekPattern = pattern;
+                await DbUser.Transaction.Connection
+                    .QueryAsync<AttendancePeriod, AttendanceWeekPattern, AttendancePeriod>(
+                        sql.Sql,
+                        (period, pattern) =>
+                        {
+                            period.WeekPattern = pattern;
 
-                        return period;
-                    }, sql.NamedBindings, Transaction);
+                            return period;
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return periods;
         }
 
         public async Task Update(AttendancePeriod entity)
         {
-            var period = await Context.AttendancePeriods.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var period = await DbUser.Context.AttendancePeriods.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (period == null)
             {
@@ -73,7 +71,8 @@ namespace MyPortal.Database.Repositories
             period.Name = entity.Name;
         }
 
-        public async Task<IEnumerable<AttendancePeriodInstance>> GetInstancesByDateRange(DateTime dateFrom, DateTime dateTo)
+        public async Task<IEnumerable<AttendancePeriodInstance>> GetInstancesByDateRange(DateTime dateFrom,
+            DateTime dateTo)
         {
             var query = Views.GetAttendancePeriodInstances("API");
 

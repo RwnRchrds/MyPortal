@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -13,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ExamCandidateSpecialArrangementRepository : BaseReadWriteRepository<ExamCandidateSpecialArrangement>, IExamCandidateSpecialArrangementRepository
     {
-        public ExamCandidateSpecialArrangementRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExamCandidateSpecialArrangementRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -37,7 +38,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var candidateSpecialArrangements = await Transaction.Connection
+            var candidateSpecialArrangements = await DbUser.Transaction.Connection
                 .QueryAsync<ExamCandidateSpecialArrangement, ExamCandidate, ExamSpecialArrangement,
                     ExamCandidateSpecialArrangement>(sql.Sql,
                     (ecsa, candidate, specialArrangement) =>
@@ -46,7 +47,7 @@ namespace MyPortal.Database.Repositories
                         ecsa.SpecialArrangement = specialArrangement;
 
                         return ecsa;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return candidateSpecialArrangements;
         }

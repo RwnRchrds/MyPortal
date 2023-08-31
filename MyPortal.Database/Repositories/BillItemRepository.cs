@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -13,9 +12,8 @@ namespace MyPortal.Database.Repositories
 {
     public class BillItemRepository : BaseReadWriteRepository<BillItem>, IBillItemRepository
     {
-        public BillItemRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public BillItemRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)
@@ -38,14 +36,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var billItems = await Transaction.Connection.QueryAsync<BillItem, Bill, Product, BillItem>(sql.Sql,
+            var billItems = await DbUser.Transaction.Connection.QueryAsync<BillItem, Bill, Product, BillItem>(sql.Sql,
                 (item, bill, product) =>
                 {
                     item.Bill = bill;
                     item.Product = product;
 
                     return item;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return billItems;
         }

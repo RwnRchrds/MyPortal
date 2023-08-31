@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -15,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class UserRepository : BaseReadWriteRepository<User>, IUserRepository
     {
-        public UserRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public UserRepository(DbUserWithContext dbUser) : base(dbUser)
         {
 
         }
@@ -38,12 +37,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var users = await Transaction.Connection.QueryAsync<User, Person, User>(sql.Sql, (user, person) =>
+            var users = await DbUser.Transaction.Connection.QueryAsync<User, Person, User>(sql.Sql, (user, person) =>
             {
                 user.Person = person;
 
                 return user;
-            }, sql.NamedBindings, Transaction);
+            }, sql.NamedBindings, DbUser.Transaction);
 
             return users;
         }
@@ -72,7 +71,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(User entity)
         {
-            var user = await Context.Users.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var user = await DbUser.Context.Users.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             user.AccessFailedCount = entity.AccessFailedCount;
             user.Email = entity.Email;

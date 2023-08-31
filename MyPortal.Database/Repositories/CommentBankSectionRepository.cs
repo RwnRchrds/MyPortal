@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -13,7 +12,7 @@ namespace MyPortal.Database.Repositories;
 
 public class CommentBankSectionRepository : BaseReadWriteRepository<CommentBankSection>, ICommentBankSectionRepository
 {
-    public CommentBankSectionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+    public CommentBankSectionRepository(DbUserWithContext dbUser) : base(dbUser)
     {
     }
 
@@ -35,14 +34,15 @@ public class CommentBankSectionRepository : BaseReadWriteRepository<CommentBankS
     {
         var sql = Compiler.Compile(query);
 
-        var sections = await Transaction.Connection.QueryAsync<CommentBankSection, CommentBankArea, CommentBankSection>(
-            sql.Sql,
-            (section, area) =>
-            {
-                section.Area = area;
+        var sections = await DbUser.Transaction.Connection
+            .QueryAsync<CommentBankSection, CommentBankArea, CommentBankSection>(
+                sql.Sql,
+                (section, area) =>
+                {
+                    section.Area = area;
 
-                return section;
-            }, sql.NamedBindings, Transaction);
+                    return section;
+                }, sql.NamedBindings, DbUser.Transaction);
 
         return sections;
     }

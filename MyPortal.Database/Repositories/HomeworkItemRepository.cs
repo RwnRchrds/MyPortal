@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
@@ -20,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class HomeworkItemRepository : BaseReadWriteRepository<HomeworkItem>, IHomeworkItemRepository
     {
-        public HomeworkItemRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public HomeworkItemRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -42,20 +38,21 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var homeworkItems = await Transaction.Connection.QueryAsync<HomeworkItem, Directory, HomeworkItem>(sql.Sql,
+            var homeworkItems = await DbUser.Transaction.Connection.QueryAsync<HomeworkItem, Directory, HomeworkItem>(
+                sql.Sql,
                 (homework, directory) =>
                 {
                     homework.Directory = directory;
 
                     return homework;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return homeworkItems;
         }
 
         public async Task Update(HomeworkItem entity)
         {
-            var homeworkItem = await Context.Homework.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var homeworkItem = await DbUser.Context.Homework.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (homeworkItem == null)
             {

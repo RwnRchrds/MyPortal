@@ -13,15 +13,22 @@ namespace MyPortal.Logic.FileProviders
 {
     public class GoogleFileProvider : IHostedFileProvider
     {
-        private DriveService CreateDriveService(string accessToken)
+        private readonly string _accessToken;
+
+        public GoogleFileProvider(string accessToken)
         {
-            var initializer = GoogleHelper.GetInitializer(accessToken, DriveService.Scope.Drive);
+            _accessToken = accessToken;
+        }
+        
+        private DriveService CreateDriveService()
+        {
+            var initializer = GoogleHelper.GetInitializer(_accessToken, DriveService.Scope.Drive);
             return new DriveService(initializer);
         }
 
-        public async Task<IEnumerable<WebAction>> GetWebActions(string accessToken, string fileId)
+        public async Task<IEnumerable<WebAction>> GetWebActions(string fileId)
         {
-            using (var driveService = CreateDriveService(accessToken))
+            using (var driveService = CreateDriveService())
             {
                 var actions = new List<WebAction>();
             
@@ -44,9 +51,9 @@ namespace MyPortal.Logic.FileProviders
             }
         }
 
-        public async Task<File> CreateFileFromId(string accessToken, string fileId)
+        public async Task<File> CreateFileFromId(string fileId)
         {
-            using (var driveService = CreateDriveService(accessToken))
+            using (var driveService = CreateDriveService())
             {
                 var request = driveService.Files.Get(fileId);
 

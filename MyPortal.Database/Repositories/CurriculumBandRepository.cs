@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -17,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumBandRepository : BaseReadWriteRepository<CurriculumBand>, ICurriculumBandRepository
     {
-        public CurriculumBandRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public CurriculumBandRepository(DbUserWithContext dbUser) : base(dbUser)
         {
             
         }
@@ -44,7 +43,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var bands = await Transaction.Connection
+            var bands = await DbUser.Transaction.Connection
                 .QueryAsync<CurriculumBand, AcademicYear, CurriculumYearGroup, StudentGroup, CurriculumBand>(sql.Sql,
                     (band, academicYear, yearGroup, studentGroup) =>
                     {
@@ -53,7 +52,7 @@ namespace MyPortal.Database.Repositories
                         band.StudentGroup = studentGroup;
 
                         return band;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return bands;
         }
@@ -69,7 +68,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(CurriculumBand entity)
         {
-            var band = await Context.CurriculumBands.FirstOrDefaultAsync(b => b.Id == entity.Id);
+            var band = await DbUser.Context.CurriculumBands.FirstOrDefaultAsync(b => b.Id == entity.Id);
 
             if (band == null)
             {

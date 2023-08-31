@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -20,9 +15,8 @@ namespace MyPortal.Database.Repositories
 {
     public class CommunicationLogRepository : BaseReadWriteRepository<CommunicationLog>, ICommunicationLogRepository
     {
-        public CommunicationLogRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public CommunicationLogRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-      
         }
 
         protected override Query JoinRelated(Query query)
@@ -46,22 +40,23 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var communicationLogs =
-                await Transaction.Connection.QueryAsync<CommunicationLog, Contact, CommunicationType, CommunicationLog>(
-                    sql.Sql,
-                    (log, contact, type) =>
-                    {
-                        log.Contact = contact;
-                        log.Type = type;
+                await DbUser.Transaction.Connection
+                    .QueryAsync<CommunicationLog, Contact, CommunicationType, CommunicationLog>(
+                        sql.Sql,
+                        (log, contact, type) =>
+                        {
+                            log.Contact = contact;
+                            log.Type = type;
 
-                        return log;
-                    }, sql.NamedBindings, Transaction);
+                            return log;
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return communicationLogs;
         }
 
         public async Task Update(CommunicationLog entity)
         {
-            var log = await Context.CommunicationLogs.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var log = await DbUser.Context.CommunicationLogs.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (log == null)
             {

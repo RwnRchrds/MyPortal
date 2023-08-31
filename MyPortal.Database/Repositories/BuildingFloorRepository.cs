@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class BuildingFloorRepository : BaseReadWriteRepository<BuildingFloor>, IBuildingFloorRepository
     {
-        public BuildingFloorRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public BuildingFloorRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -38,21 +37,21 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var buildingFloors = await Transaction.Connection.QueryAsync<BuildingFloor, Building, BuildingFloor>(
+            var buildingFloors = await DbUser.Transaction.Connection.QueryAsync<BuildingFloor, Building, BuildingFloor>(
                 sql.Sql,
                 (floor, building) =>
                 {
                     floor.Building = building;
 
                     return floor;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return buildingFloors;
         }
 
         public async Task Update(BuildingFloor entity)
         {
-            var floor = await Context.BuildingFloors.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var floor = await DbUser.Context.BuildingFloors.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (floor == null)
             {

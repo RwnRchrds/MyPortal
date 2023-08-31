@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -18,9 +16,8 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumBlockRepository : BaseReadWriteRepository<CurriculumBlock>, ICurriculumBlockRepository
     {
-        public CurriculumBlockRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public CurriculumBlockRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         public async Task<IEnumerable<CurriculumBlock>> GetByCurriculumBand(Guid bandId)
@@ -47,7 +44,8 @@ namespace MyPortal.Database.Repositories
 
             var sql = Compiler.Compile(query);
 
-            return (await Transaction.Connection.QueryAsync<Guid>(sql.Sql, sql.NamedBindings, Transaction)).FirstOrDefault();
+            return (await DbUser.Transaction.Connection.QueryAsync<Guid>(sql.Sql, sql.NamedBindings,
+                DbUser.Transaction)).FirstOrDefault();
         }
 
         public async Task<bool> CheckUniqueCode(Guid academicYearId, string code)
@@ -69,7 +67,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(CurriculumBlock entity)
         {
-            var block = await Context.CurriculumBlocks.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var block = await DbUser.Context.CurriculumBlocks.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (block == null)
             {

@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CoverArrangementRepository : BaseReadWriteRepository<CoverArrangement>, ICoverArrangementRepository
     {
-        public CoverArrangementRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public CoverArrangementRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -45,7 +44,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var coverArrangements =
-                await Transaction.Connection
+                await DbUser.Transaction.Connection
                     .QueryAsync<CoverArrangement, AttendanceWeek, Session, StaffMember, Room, CoverArrangement>(sql.Sql,
                         (arrangement, week, session, teacher, room) =>
                         {
@@ -55,14 +54,14 @@ namespace MyPortal.Database.Repositories
                             arrangement.Room = room;
 
                             return arrangement;
-                        }, sql.NamedBindings, Transaction);
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return coverArrangements;
         }
 
         public async Task Update(CoverArrangement entity)
         {
-            var coverArrangement = await Context.CoverArrangements.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var coverArrangement = await DbUser.Context.CoverArrangements.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (coverArrangement == null)
             {

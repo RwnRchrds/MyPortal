@@ -1,25 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
     public class ChargeDiscountRepository : BaseReadWriteRepository<ChargeDiscount>, IChargeDiscountRepository
     {
-        public ChargeDiscountRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ChargeDiscountRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -44,14 +38,15 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var chargeDiscounts =
-                await Transaction.Connection.QueryAsync<ChargeDiscount, Charge, Discount, ChargeDiscount>(sql.Sql,
+                await DbUser.Transaction.Connection.QueryAsync<ChargeDiscount, Charge, Discount, ChargeDiscount>(
+                    sql.Sql,
                     (chargeDiscount, charge, discount) =>
                     {
                         chargeDiscount.Charge = charge;
                         chargeDiscount.Discount = discount;
 
                         return chargeDiscount;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return chargeDiscounts;
         }

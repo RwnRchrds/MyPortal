@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class MedicalEventRepository : BaseReadWriteRepository<MedicalEvent>, IMedicalEventRepository
     {
-        public MedicalEventRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public MedicalEventRepository(DbUserWithContext dbUser) : base(dbUser)
         {
             
         }
@@ -41,7 +40,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var medicalEvents = await Transaction.Connection.QueryAsync<MedicalEvent, User, Person, MedicalEvent>(
+            var medicalEvents = await DbUser.Transaction.Connection.QueryAsync<MedicalEvent, User, Person, MedicalEvent>(
                 sql.Sql,
                 (medicalEvent, user, student) =>
                 {
@@ -49,14 +48,14 @@ namespace MyPortal.Database.Repositories
                     medicalEvent.Person = student;
 
                     return medicalEvent;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return medicalEvents;
         }
 
         public async Task Update(MedicalEvent entity)
         {
-            var medicalEvent = await Context.MedicalEvents.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var medicalEvent = await DbUser.Context.MedicalEvents.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (medicalEvent == null)
             {

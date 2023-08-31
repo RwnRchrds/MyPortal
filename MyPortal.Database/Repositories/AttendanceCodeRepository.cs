@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -8,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -18,9 +16,8 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceCodeRepository : BaseReadWriteRepository<AttendanceCode>, IAttendanceCodeRepository
     {
-        public AttendanceCodeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public AttendanceCodeRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         protected override Query JoinRelated(Query query)
@@ -41,13 +38,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var codes = await Transaction.Connection.QueryAsync<AttendanceCode, AttendanceCodeType, AttendanceCode>(sql.Sql,
-                (code, meaning) =>
-                {
-                    code.CodeType = meaning;
+            var codes = await DbUser.Transaction.Connection
+                .QueryAsync<AttendanceCode, AttendanceCodeType, AttendanceCode>(sql.Sql,
+                    (code, meaning) =>
+                    {
+                        code.CodeType = meaning;
 
-                    return code;
-                }, sql.NamedBindings, Transaction);
+                        return code;
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return codes;
         }
@@ -80,7 +78,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(AttendanceCode entity)
         {
-            var code = await Context.AttendanceCodes.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var code = await DbUser.Context.AttendanceCodes.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (code == null)
             {

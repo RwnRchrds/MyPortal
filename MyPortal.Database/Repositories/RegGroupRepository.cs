@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
-using MyPortal.Database.Constants;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -15,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class RegGroupRepository : BaseStudentGroupRepository<RegGroup>, IRegGroupRepository
     {
-        public RegGroupRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public RegGroupRepository(DbUserWithContext dbUser) : base(dbUser)
         {
             
         }
@@ -40,7 +37,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var regGroups = await Transaction.Connection.QueryAsync<RegGroup, StudentGroup, YearGroup, RegGroup>(
+            var regGroups = await DbUser.Transaction.Connection.QueryAsync<RegGroup, StudentGroup, YearGroup, RegGroup>(
                 sql.Sql,
                 (reg, studentGroup, year) =>
                 {
@@ -48,7 +45,7 @@ namespace MyPortal.Database.Repositories
                     reg.YearGroup = year;
 
                     return reg;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return regGroups;
         }

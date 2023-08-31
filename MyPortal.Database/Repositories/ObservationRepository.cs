@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ObservationRepository : BaseReadWriteRepository<Observation>, IObservationRepository
     {
-        public ObservationRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ObservationRepository(DbUserWithContext dbUser) : base(dbUser)
         {
             
         }
@@ -44,7 +43,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var observations =
-                await Transaction.Connection
+                await DbUser.Transaction.Connection
                     .QueryAsync<Observation, StaffMember, StaffMember, ObservationOutcome, Observation>(sql.Sql,
                         (observation, observee, observer, outcome) =>
                         {
@@ -53,14 +52,14 @@ namespace MyPortal.Database.Repositories
                             observation.Outcome = outcome;
 
                             return observation;
-                        }, sql.NamedBindings, Transaction);
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return observations;
         }
 
         public async Task Update(Observation entity)
         {
-            var observation = await Context.Observations.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var observation = await DbUser.Context.Observations.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (observation == null)
             {

@@ -7,6 +7,7 @@ using MyPortal.Database.Models;
 using MyPortal.Logic.Configuration;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.FileProviders;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Identity;
 using MyPortal.Logic.Interfaces;
@@ -94,6 +95,17 @@ namespace MyPortal.Logic.Extensions
             services.AddScoped<ISystemSettingService, SystemSettingService>();
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<IUserService, UserService>();
+
+            if (Configuration.Configuration.Instance.FileProvider == FileProvider.GoogleDrive)
+            {
+                services.AddScoped<IFileService, HostedFileService>();
+                services.AddScoped<IHostedFileProviderFactory, HttpHostedFileProviderFactory>();
+            }
+            else
+            {
+                services.AddScoped<IFileService, LocalFileService>();
+                services.AddScoped<ILocalFileProvider, LocalFileProvider>();
+            }
 
             return services;
         }

@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,9 +15,8 @@ namespace MyPortal.Database.Repositories
 {
     public class ExamAwardRepository : BaseReadWriteRepository<ExamAward>, IExamAwardRepository
     {
-        public ExamAwardRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExamAwardRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)
@@ -43,7 +41,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var examAwards = await Transaction.Connection
+            var examAwards = await DbUser.Transaction.Connection
                 .QueryAsync<ExamAward, ExamAssessment, ExamQualification, Course, ExamAward>(sql.Sql,
                     (award, assessment, qualification, course) =>
                     {
@@ -52,14 +50,14 @@ namespace MyPortal.Database.Repositories
                         award.Course = course;
 
                         return award;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return examAwards;
         }
 
         public async Task Update(ExamAward entity)
         {
-            var examAward = await Context.ExamAwards.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var examAward = await DbUser.Context.ExamAwards.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (examAward == null)
             {

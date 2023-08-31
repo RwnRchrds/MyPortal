@@ -10,6 +10,7 @@ using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.QueryResults.Assessment;
 using MyPortal.Database.Repositories.Base;
@@ -20,7 +21,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ResultRepository : BaseReadWriteRepository<Result>, IResultRepository
     {
-        public ResultRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ResultRepository(DbUserWithContext dbUser) : base(dbUser)
         {
             
         }
@@ -86,7 +87,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var results = await Transaction.Connection.QueryAsync<Result, ResultSet, Aspect, Student, Grade, User, Result>(
+            var results = await DbUser.Transaction.Connection.QueryAsync<Result, ResultSet, Aspect, Student, Grade, User, Result>(
                 sql.Sql,
                 (result, set, aspect, student, grade, user) =>
                 {
@@ -97,14 +98,14 @@ namespace MyPortal.Database.Repositories
                     result.CreatedBy = user;
 
                     return result;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return results;
         }
 
         public async Task Update(Result entity)
         {
-            var result = await Context.Results.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var result = await DbUser.Context.Results.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (result == null)
             {

@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using SqlKata;
 using Task = System.Threading.Tasks.Task;
 
@@ -18,18 +13,18 @@ namespace MyPortal.Database.Repositories.Base
 {
     public abstract class BaseReadWriteRepository<TEntity> : BaseReadRepository<TEntity>, IReadWriteRepository<TEntity> where TEntity : class, IEntity
     {
-        protected readonly ApplicationDbContext Context;
-
-        protected BaseReadWriteRepository(ApplicationDbContext context, DbTransaction transaction, string tblAlias = null) : base(transaction, tblAlias)
+        protected BaseReadWriteRepository(DbUserWithContext dbUserWithContext, string tblAlias = null) : base(dbUserWithContext, tblAlias)
         {
-            Context = context;
+            
         }
+
+        protected override DbUserWithContext DbUser => base.DbUser as DbUserWithContext;
 
         protected async Task<int> ExecuteNonQuery(Query query)
         {
             var compiled = Compiler.Compile(query);
 
-            var result = await Transaction.Connection.ExecuteAsync(compiled.Sql, compiled.NamedBindings, Transaction);
+            var result = await DbUser.Transaction.Connection.ExecuteAsync(compiled.Sql, compiled.NamedBindings, DbUser.Transaction);
 
             return result;
         }
@@ -40,13 +35,13 @@ namespace MyPortal.Database.Repositories.Base
             {
                 throw ExceptionHelper.UpdateSystemEntityException;
             }
-
-            var result = Context.Set<TEntity>().Add(entity);
+            
+            var result = DbUser.Context.Set<TEntity>().Add(entity);
         }
 
         public async Task Delete(Guid id)
         {
-            var entity = await Context.Set<TEntity>().FindAsync(id);
+            var entity = await DbUser.Context.Set<TEntity>().FindAsync(id);
 
             if (entity == null)
             {
@@ -62,7 +57,7 @@ namespace MyPortal.Database.Repositories.Base
                     softDeleteObject.Deleted = true;
                     break;
                 default:
-                    Context.Set<TEntity>().Remove(entity);
+                    DbUser.Context.Set<TEntity>().Remove(entity);
                     break;
             }
         }

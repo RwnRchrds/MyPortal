@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.Enums;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.QueryResults.Student;
 using MyPortal.Database.Models.Search;
@@ -22,9 +19,8 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentRepository : BaseReadWriteRepository<Student>, IStudentRepository
     {
-        public StudentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public StudentRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         private static Query HouseCte
@@ -85,7 +81,7 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("SenTypes as ST", "ST.Id", $"{TblAlias}.SenTypeId");
             query.LeftJoin("EnrolmentStatus as ES", "ES.Id", $"{TblAlias}.EnrolmentStatusId");
             query.LeftJoin("BoarderStatus as BS", "BS.Id", $"{TblAlias}.BoarderStatusId");
-            
+
             return query;
         }
 
@@ -104,7 +100,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var students = await Transaction.Connection
+            var students = await DbUser.Transaction.Connection
                 .QueryAsync<Student, Person, SenStatus, SenType, EnrolmentStatus, BoarderStatus, Student>(sql.Sql,
                     (student, person, senStatus, senType, enrolmentStatus, boarderStatus) =>
                     {
@@ -115,7 +111,7 @@ namespace MyPortal.Database.Repositories
                         student.BoarderStatus = boarderStatus;
 
                         return student;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return students;
         }
@@ -129,7 +125,7 @@ namespace MyPortal.Database.Repositories
             if (string.IsNullOrWhiteSpace(studentHouseAlias))
             {
                 studentHouseAlias = "SH";
-                
+
                 query.With("StudentHouse", HouseCte);
                 query.LeftJoin($"StudentHouse as {studentHouseAlias}", $"{studentHouseAlias}.StudentId",
                     $"{studentAlias}.Id");
@@ -153,7 +149,8 @@ namespace MyPortal.Database.Repositories
                     $"{studentAlias}.Id");
             }
 
-            search.ApplySearch(query, studentAlias, personAlias, studentHouseAlias, studentRegGroupAlias, studentYearGroupAlias);
+            search.ApplySearch(query, studentAlias, personAlias, studentHouseAlias, studentRegGroupAlias,
+                studentYearGroupAlias);
         }
 
         public async Task<Student> GetByUserId(Guid userId)
@@ -177,9 +174,9 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<Student>> GetAll(StudentSearchOptions searchParams)
         {
             var query = GetDefaultQuery();
-            
+
             ApplySearch(query, searchParams, TblAlias, "P");
-            
+
             return await ExecuteQuery(query);
         }
 
@@ -248,13 +245,13 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(Student entity)
         {
-            var student = await Context.Students.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var student = await DbUser.Context.Students.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (student == null)
             {
                 throw new EntityNotFoundException("Student not found.");
             }
-            
+
             student.AdmissionNumber = entity.AdmissionNumber;
             student.DateStarting = entity.DateStarting;
             student.DateLeaving = entity.DateLeaving;

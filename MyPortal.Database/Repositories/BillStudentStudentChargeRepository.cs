@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class BillStudentStudentChargeRepository : BaseReadWriteRepository<BillStudentCharge>, IBillStudentChargeRepository
+    public class BillStudentStudentChargeRepository : BaseReadWriteRepository<BillStudentCharge>,
+        IBillStudentChargeRepository
     {
-        public BillStudentStudentChargeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public BillStudentStudentChargeRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -37,14 +37,15 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var billCharges = await Transaction.Connection.QueryAsync<BillStudentCharge, Bill, StudentCharge, BillStudentCharge>(sql.Sql,
-                (bc, bill, studentCharge) =>
-                {
-                    bc.Bill = bill;
-                    bc.StudentCharge = studentCharge;
+            var billCharges = await DbUser.Transaction.Connection
+                .QueryAsync<BillStudentCharge, Bill, StudentCharge, BillStudentCharge>(sql.Sql,
+                    (bc, bill, studentCharge) =>
+                    {
+                        bc.Bill = bill;
+                        bc.StudentCharge = studentCharge;
 
-                    return bc;
-                }, sql.NamedBindings, Transaction);
+                        return bc;
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return billCharges;
         }

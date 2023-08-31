@@ -8,6 +8,7 @@ using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -17,7 +18,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AcademicTermRepository : BaseReadWriteRepository<AcademicTerm>, IAcademicTermRepository
     {
-        public AcademicTermRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public AcademicTermRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -39,20 +40,20 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var terms = await Transaction.Connection.QueryAsync<AcademicTerm, AcademicYear, AcademicTerm>(sql.Sql,
+            var terms = await DbUser.Transaction.Connection.QueryAsync<AcademicTerm, AcademicYear, AcademicTerm>(sql.Sql,
                 (term, year) =>
                 {
                     term.AcademicYear = year;
 
                     return term;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return terms;
         }
 
         public async Task Update(AcademicTerm entity)
         {
-            var term = await Context.AcademicTerms.FirstOrDefaultAsync(t => t.Id == entity.Id);
+            var term = await DbUser.Context.AcademicTerms.FirstOrDefaultAsync(t => t.Id == entity.Id);
 
             if (term == null)
             {

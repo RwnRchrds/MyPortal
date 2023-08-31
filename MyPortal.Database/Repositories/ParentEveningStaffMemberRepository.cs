@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -15,9 +14,10 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class ParentEveningStaffMemberRepository : BaseReadWriteRepository<ParentEveningStaffMember>, IParentEveningStaffMemberRepository
+    public class ParentEveningStaffMemberRepository : BaseReadWriteRepository<ParentEveningStaffMember>,
+        IParentEveningStaffMemberRepository
     {
-        public ParentEveningStaffMemberRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ParentEveningStaffMemberRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -42,7 +42,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var staffMembers =
-                await Transaction.Connection
+                await DbUser.Transaction.Connection
                     .QueryAsync<ParentEveningStaffMember, ParentEvening, StaffMember, ParentEveningStaffMember>(sql.Sql,
                         (pesm, evening, staffMember) =>
                         {
@@ -50,7 +50,7 @@ namespace MyPortal.Database.Repositories
                             pesm.StaffMember = staffMember;
 
                             return pesm;
-                        }, sql.NamedBindings, Transaction);
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return staffMembers;
         }
@@ -77,7 +77,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(ParentEveningStaffMember entity)
         {
-            var pesm = await Context.ParentEveningStaffMembers.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var pesm = await DbUser.Context.ParentEveningStaffMembers.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (pesm == null)
             {

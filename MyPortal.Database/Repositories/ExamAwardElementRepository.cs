@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -13,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ExamAwardElementRepository : BaseReadWriteRepository<ExamAwardElement>, IExamAwardElementRepository
     {
-        public ExamAwardElementRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExamAwardElementRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -38,15 +37,16 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var examAwardElements =
-                await Transaction.Connection.QueryAsync<ExamAwardElement, ExamAward, ExamElement, ExamAwardElement>(
-                    sql.Sql,
-                    (eae, award, element) =>
-                    {
-                        eae.Award = award;
-                        eae.Element = element;
+                await DbUser.Transaction.Connection
+                    .QueryAsync<ExamAwardElement, ExamAward, ExamElement, ExamAwardElement>(
+                        sql.Sql,
+                        (eae, award, element) =>
+                        {
+                            eae.Award = award;
+                            eae.Element = element;
 
-                        return eae;
-                    }, sql.NamedBindings, Transaction);
+                            return eae;
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return examAwardElements;
         }

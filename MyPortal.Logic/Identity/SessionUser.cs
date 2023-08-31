@@ -23,15 +23,22 @@ public class SessionUser : ISessionUser
 
     public async Task<IUnitOfWork> GetConnection()
     {
-        return await DataConnectionFactory.CreateUnitOfWork();
+        return await DataConnectionFactory.CreateUnitOfWork(_userId);
     }
     
     public async Task<bool> HasPermission(IUserService userService, PermissionRequirement requirement, params PermissionValue[] permissionValues)
     {
-        return await PermissionHelper.UserHasPermission(GetUserId(), userService, requirement, permissionValues);
+        var userId = GetUserId();
+
+        if (userId != null)
+        {
+            return await PermissionHelper.UserHasPermission(userId.Value, userService, requirement, permissionValues);   
+        }
+
+        return false;
     }
 
-    public Guid GetUserId()
+    public Guid? GetUserId()
     {
         return _userId;
     }

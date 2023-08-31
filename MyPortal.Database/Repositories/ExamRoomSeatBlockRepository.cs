@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ExamRoomSeatBlockRepository : BaseReadWriteRepository<ExamRoomSeatBlock>, IExamRoomSeatBlockRepository
     {
-        public ExamRoomSeatBlockRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExamRoomSeatBlockRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -38,21 +37,22 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var seatBlocks = await Transaction.Connection.QueryAsync<ExamRoomSeatBlock, ExamRoom, ExamRoomSeatBlock>(
-                sql.Sql,
-                (block, room) =>
-                {
-                    block.ExamRoom = room;
+            var seatBlocks =
+                await DbUser.Transaction.Connection.QueryAsync<ExamRoomSeatBlock, ExamRoom, ExamRoomSeatBlock>(
+                    sql.Sql,
+                    (block, room) =>
+                    {
+                        block.ExamRoom = room;
 
-                    return block;
-                }, sql.NamedBindings, Transaction);
+                        return block;
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return seatBlocks;
         }
 
         public async Task Update(ExamRoomSeatBlock entity)
         {
-            var seatBlock = await Context.ExamRoomSeatBlocks.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var seatBlock = await DbUser.Context.ExamRoomSeatBlocks.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (seatBlock == null)
             {

@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Database.Models.Paging;
@@ -25,7 +21,7 @@ namespace MyPortal.Database.Repositories
 {
     public class BulletinRepository : BaseReadWriteRepository<Bulletin>, IBulletinRepository
     {
-        public BulletinRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public BulletinRepository(DbUserWithContext dbUser) : base(dbUser)
         {
        
         }
@@ -81,14 +77,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var bulletins = await Transaction.Connection.QueryAsync<Bulletin, User, Directory, Bulletin>(sql.Sql,
+            var bulletins = await DbUser.Transaction.Connection.QueryAsync<Bulletin, User, Directory, Bulletin>(sql.Sql,
                 (bulletin, user, dir) =>
                 {
                     bulletin.CreatedBy = user;
                     bulletin.Directory = dir;
 
                     return bulletin;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return bulletins;
         }
@@ -181,7 +177,7 @@ CROSS APPLY GetDisplayName({TblAlias}.CreatedById, 2, 1, 1) D");
 
         public async Task Update(Bulletin entity)
         {
-            var bulletin = await Context.Bulletins.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var bulletin = await DbUser.Context.Bulletins.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (bulletin == null)
             {

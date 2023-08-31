@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -14,9 +13,10 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class StudentAgentRelationshipRepository : BaseReadWriteRepository<StudentAgentRelationship>, IStudentAgentRelationshipRepository
+    public class StudentAgentRelationshipRepository : BaseReadWriteRepository<StudentAgentRelationship>,
+        IStudentAgentRelationshipRepository
     {
-        public StudentAgentRelationshipRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public StudentAgentRelationshipRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -37,13 +37,13 @@ namespace MyPortal.Database.Repositories
 
             return query;
         }
-        
+
         protected override async Task<IEnumerable<StudentAgentRelationship>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
             var relationships =
-                await Transaction.Connection
+                await DbUser.Transaction.Connection
                     .QueryAsync<StudentAgentRelationship, Student, Agent, RelationshipType, StudentAgentRelationship>(
                         sql.Sql,
                         (sar, student, agent, type) =>
@@ -53,14 +53,15 @@ namespace MyPortal.Database.Repositories
                             sar.RelationshipType = type;
 
                             return sar;
-                        }, sql.NamedBindings, Transaction);
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return relationships;
         }
 
         public async Task Update(StudentAgentRelationship entity)
         {
-            var relationship = await Context.StudentAgentRelationships.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var relationship =
+                await DbUser.Context.StudentAgentRelationships.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (relationship == null)
             {

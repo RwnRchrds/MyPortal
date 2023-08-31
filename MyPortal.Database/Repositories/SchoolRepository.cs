@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -7,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -17,9 +16,8 @@ namespace MyPortal.Database.Repositories
 {
     public class SchoolRepository : BaseReadWriteRepository<School>, ISchoolRepository
     {
-        public SchoolRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public SchoolRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         protected override Query JoinRelated(Query query)
@@ -31,7 +29,7 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("IntakeTypes as IT", "IT.Id", $"{TblAlias}.IntakeTypeId");
             query.LeftJoin("People as HT", "HT.Id", $"{TblAlias}.HeadTeacherId");
             query.LeftJoin("LocalAuthorities as LA", "LA.Id", $"{TblAlias}.LocalAuthorityId");
-            
+
             return query;
         }
 
@@ -52,9 +50,13 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var schools = await Transaction.Connection
+            var schools = await DbUser.Transaction.Connection
                 .QueryAsync(sql.Sql,
-                    new [] { typeof(School), typeof(Agency), typeof(SchoolPhase), typeof(SchoolType), typeof(GovernanceType), typeof(IntakeType), typeof(Person), typeof(LocalAuthority)}, (objects) =>
+                    new[]
+                    {
+                        typeof(School), typeof(Agency), typeof(SchoolPhase), typeof(SchoolType), typeof(GovernanceType),
+                        typeof(IntakeType), typeof(Person), typeof(LocalAuthority)
+                    }, (objects) =>
                     {
                         var school = (School)objects[0];
                         school.Agency = (Agency)objects[1];
@@ -66,7 +68,7 @@ namespace MyPortal.Database.Repositories
                         school.LocalAuthority = (LocalAuthority)objects[7];
 
                         return school;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return schools;
         }
@@ -95,13 +97,13 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(School entity)
         {
-            var school = await Context.Schools.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var school = await DbUser.Context.Schools.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (school == null)
             {
                 throw new EntityNotFoundException("School not found.");
             }
-            
+
             school.LocalAuthorityId = entity.LocalAuthorityId;
             school.EstablishmentNumber = entity.EstablishmentNumber;
             school.Urn = entity.Urn;

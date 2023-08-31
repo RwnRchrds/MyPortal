@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -18,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ExclusionRepository : BaseReadWriteRepository<Exclusion>, IExclusionRepository
     {
-        public ExclusionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExclusionRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -46,7 +44,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var exclusions = await Transaction.Connection
+            var exclusions = await DbUser.Transaction.Connection
                 .QueryAsync<Exclusion, Student, ExclusionType, ExclusionReason, ExclusionAppealResult, Exclusion>(
                     sql.Sql,
                     (exclusion, student, type, reason, appealResult) =>
@@ -57,7 +55,7 @@ namespace MyPortal.Database.Repositories
                         exclusion.AppealResult = appealResult;
 
                         return exclusion;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return exclusions;
         }
@@ -82,7 +80,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(Exclusion entity)
         {
-            var exclusion = await Context.Exclusions.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var exclusion = await DbUser.Context.Exclusions.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (exclusion == null)
             {

@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class IncidentDetentionRepository : BaseReadWriteRepository<StudentIncidentDetention>, IIncidentDetentionRepository
+    public class IncidentDetentionRepository : BaseReadWriteRepository<StudentIncidentDetention>,
+        IIncidentDetentionRepository
     {
-        public IncidentDetentionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public IncidentDetentionRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)
@@ -40,15 +39,16 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var incidentDetentions =
-                await Transaction.Connection.QueryAsync<StudentIncidentDetention, StudentIncident, Detention, StudentIncidentDetention>(
-                    sql.Sql,
-                    (incidentDetention, incident, detention) =>
-                    {
-                        incidentDetention.StudentIncident = incident;
-                        incidentDetention.Detention = detention;
+                await DbUser.Transaction.Connection
+                    .QueryAsync<StudentIncidentDetention, StudentIncident, Detention, StudentIncidentDetention>(
+                        sql.Sql,
+                        (incidentDetention, incident, detention) =>
+                        {
+                            incidentDetention.StudentIncident = incident;
+                            incidentDetention.Detention = detention;
 
-                        return incidentDetention;
-                    }, sql.NamedBindings, Transaction);
+                            return incidentDetention;
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return incidentDetentions;
         }

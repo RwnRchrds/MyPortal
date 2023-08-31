@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ExamRoomRepository : BaseReadWriteRepository<ExamRoom>, IExamRoomRepository
     {
-        public ExamRoomRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExamRoomRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -33,25 +32,25 @@ namespace MyPortal.Database.Repositories
 
             return query;
         }
-        
+
         protected override async Task<IEnumerable<ExamRoom>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            var examRooms = await Transaction.Connection.QueryAsync<ExamRoom, Room, ExamRoom>(sql.Sql,
+            var examRooms = await DbUser.Transaction.Connection.QueryAsync<ExamRoom, Room, ExamRoom>(sql.Sql,
                 (examRoom, room) =>
                 {
                     examRoom.Room = room;
 
                     return examRoom;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return examRooms;
         }
 
         public async Task Update(ExamRoom entity)
         {
-            var examRoom = await Context.ExamRooms.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var examRoom = await DbUser.Context.ExamRooms.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (examRoom == null)
             {

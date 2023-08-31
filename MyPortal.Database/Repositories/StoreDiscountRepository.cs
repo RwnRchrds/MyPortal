@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class StoreDiscountRepository : BaseReadWriteRepository<StoreDiscount>, IStoreDiscountRepository
     {
-        public StoreDiscountRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public StoreDiscountRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -43,23 +42,24 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var discounts =
-                await Transaction.Connection.QueryAsync<StoreDiscount, Product, ProductType, Discount, StoreDiscount>(
-                    sql.Sql,
-                    (pd, product, productType, discount) =>
-                    {
-                        pd.Product = product;
-                        pd.ProductType = productType;
-                        pd.Discount = discount;
+                await DbUser.Transaction.Connection
+                    .QueryAsync<StoreDiscount, Product, ProductType, Discount, StoreDiscount>(
+                        sql.Sql,
+                        (pd, product, productType, discount) =>
+                        {
+                            pd.Product = product;
+                            pd.ProductType = productType;
+                            pd.Discount = discount;
 
-                        return pd;
-                    }, sql.NamedBindings, Transaction);
+                            return pd;
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return discounts;
         }
 
         public async Task Update(StoreDiscount entity)
         {
-            var storeDiscount = await Context.StoreDiscounts.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var storeDiscount = await DbUser.Context.StoreDiscounts.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (storeDiscount == null)
             {

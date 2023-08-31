@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -17,7 +16,7 @@ namespace MyPortal.Database.Repositories;
 
 public class StudentAchievementRepository : BaseReadWriteRepository<StudentAchievement>, IStudentAchievementRepository
 {
-    public StudentAchievementRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+    public StudentAchievementRepository(DbUserWithContext dbUser) : base(dbUser)
     {
     }
 
@@ -44,7 +43,7 @@ public class StudentAchievementRepository : BaseReadWriteRepository<StudentAchie
         var sql = Compiler.Compile(query);
 
         var studentAchievements =
-            await Transaction.Connection
+            await DbUser.Transaction.Connection
                 .QueryAsync<StudentAchievement, Student, Achievement, AchievementOutcome, StudentAchievement>(sql.Sql,
                     (sa, student, achievement, outcome) =>
                     {
@@ -53,11 +52,11 @@ public class StudentAchievementRepository : BaseReadWriteRepository<StudentAchie
                         sa.Outcome = outcome;
 
                         return sa;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
         return studentAchievements;
     }
-    
+
     public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
     {
         var sql = GetEmptyQuery().AsCount();
@@ -81,7 +80,7 @@ public class StudentAchievementRepository : BaseReadWriteRepository<StudentAchie
     {
         var query = GetDefaultQuery();
 
-        query.Where($"{TblAlias}.StudentId" ,"=", studentId);
+        query.Where($"{TblAlias}.StudentId", "=", studentId);
         query.Where("A.AcademicYearId", "=", academicYearId);
 
         return await ExecuteQuery(query);
@@ -104,7 +103,7 @@ public class StudentAchievementRepository : BaseReadWriteRepository<StudentAchie
 
     public async Task Update(StudentAchievement entity)
     {
-        var sa = await Context.StudentAchievements.FirstOrDefaultAsync(x => x.Id == entity.Id);
+        var sa = await DbUser.Context.StudentAchievements.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
         if (sa == null)
         {

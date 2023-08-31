@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentGroupMembershipRepository : BaseReadWriteRepository<StudentGroupMembership>, IStudentGroupMembershipRepository
     {
-        public StudentGroupMembershipRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public StudentGroupMembershipRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -40,7 +39,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var memberships = await Transaction.Connection
+            var memberships = await DbUser.Transaction.Connection
                 .QueryAsync<StudentGroupMembership, Student, StudentGroup, StudentGroupMembership>(sql.Sql,
                     (membership, student, group) =>
                     {
@@ -48,14 +47,14 @@ namespace MyPortal.Database.Repositories
                         membership.StudentGroup = group;
 
                         return membership;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return memberships;
         }
 
         public async Task Update(StudentGroupMembership entity)
         {
-            var membership = await Context.StudentGroupMemberships.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var membership = await DbUser.Context.StudentGroupMemberships.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             membership.StartDate = entity.StartDate;
             membership.EndDate = entity.EndDate;

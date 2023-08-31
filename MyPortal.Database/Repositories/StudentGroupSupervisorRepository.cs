@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentGroupSupervisorRepository : BaseReadWriteRepository<StudentGroupSupervisor>, IStudentGroupSupervisorRepository
     {
-        public StudentGroupSupervisorRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public StudentGroupSupervisorRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -40,7 +39,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var supervisors = await Transaction.Connection
+            var supervisors = await DbUser.Transaction.Connection
                 .QueryAsync<StudentGroupSupervisor, StudentGroup, StaffMember,
                     StudentGroupSupervisor>(sql.Sql,
                     (supervisor, group, staff) =>
@@ -49,14 +48,14 @@ namespace MyPortal.Database.Repositories
                         supervisor.Supervisor = staff;
 
                         return supervisor;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return supervisors;
         }
 
         public async Task Update(StudentGroupSupervisor entity)
         {
-            var supervisor = await Context.StudentGroupSupervisors.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var supervisor = await DbUser.Context.StudentGroupSupervisors.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (supervisor == null)
             {

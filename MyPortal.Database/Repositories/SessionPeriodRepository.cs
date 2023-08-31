@@ -7,6 +7,7 @@ using MyPortal.Database.Constants;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.QueryResults.Attendance;
 using MyPortal.Database.Models.QueryResults.Curriculum;
@@ -17,8 +18,7 @@ namespace MyPortal.Database.Repositories;
 
 public class SessionPeriodRepository : BaseReadWriteRepository<SessionPeriod>, ISessionPeriodRepository
 {
-    public SessionPeriodRepository(ApplicationDbContext context, DbTransaction transaction, string tblAlias = null) :
-        base(context, transaction, tblAlias)
+    public SessionPeriodRepository(DbUserWithContext dbUser) : base(dbUser)
     {
     }
 

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -18,7 +17,7 @@ namespace MyPortal.Database.Repositories;
 
 public class TaskReminderRepository : BaseReadWriteRepository<TaskReminder>, ITaskReminderRepository
 {
-    public TaskReminderRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+    public TaskReminderRepository(DbUserWithContext dbUser) : base(dbUser)
     {
     }
 
@@ -40,20 +39,20 @@ public class TaskReminderRepository : BaseReadWriteRepository<TaskReminder>, ITa
     {
         var sql = Compiler.Compile(query);
 
-        var taskReminders = await Transaction.Connection.QueryAsync<TaskReminder, MyPortalTask, TaskReminder>(sql.Sql,
+        var taskReminders = await DbUser.Transaction.Connection.QueryAsync<TaskReminder, MyPortalTask, TaskReminder>(sql.Sql,
             (reminder, task) =>
             {
                 reminder.Task = task;
 
                 return reminder;
-            }, sql.NamedBindings, Transaction);
+            }, sql.NamedBindings, DbUser.Transaction);
 
         return taskReminders;
     }
 
     public async Task Update(TaskReminder entity)
     {
-        var taskReminder = await Context.TaskReminders.FirstOrDefaultAsync(x => x.Id == entity.Id);
+        var taskReminder = await DbUser.Context.TaskReminders.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
         if (taskReminder == null)
         {

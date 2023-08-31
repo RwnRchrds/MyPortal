@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
@@ -16,9 +15,8 @@ namespace MyPortal.Database.Repositories
 {
     public class AddressRepository : BaseReadWriteRepository<Address>, IAddressRepository
     {
-        public AddressRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public AddressRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         public async Task<IEnumerable<Address>> GetAddressesByPerson(Guid personId)
@@ -43,12 +41,12 @@ namespace MyPortal.Database.Repositories
             {
                 query.WhereStarts($"{TblAlias}.BuildingName", searchOptions.BuildingName);
             }
-            
+
             if (!string.IsNullOrWhiteSpace(searchOptions.BuildingNumber))
             {
                 query.WhereStarts($"{TblAlias}.BuildingNumber", searchOptions.BuildingNumber);
             }
-            
+
             if (!string.IsNullOrWhiteSpace(searchOptions.Street))
             {
                 query.WhereStarts($"{TblAlias}.Street", searchOptions.Street);
@@ -58,7 +56,7 @@ namespace MyPortal.Database.Repositories
             {
                 query.WhereStarts($"{TblAlias}.District", searchOptions.District);
             }
-            
+
             if (!string.IsNullOrWhiteSpace(searchOptions.Town))
             {
                 query.WhereStarts($"{TblAlias}.Town", searchOptions.Town);
@@ -73,7 +71,7 @@ namespace MyPortal.Database.Repositories
             {
                 query.WhereStarts($"{TblAlias}.Country", searchOptions.Country);
             }
-            
+
             if (!string.IsNullOrWhiteSpace(searchOptions.Postcode))
             {
                 query.WhereStarts($"{TblAlias}.Postcode", searchOptions.Postcode);
@@ -83,7 +81,7 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<Address>> GetAll(AddressSearchOptions searchOptions)
         {
             var query = GetDefaultQuery();
-            
+
             ApplySearch(query, searchOptions);
 
             return await ExecuteQuery(query);
@@ -91,7 +89,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(Address entity)
         {
-            var address = await Context.Addresses.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var address = await DbUser.Context.Addresses.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (address == null)
             {
@@ -110,4 +108,4 @@ namespace MyPortal.Database.Repositories
             address.Validated = entity.Validated;
         }
     }
-}    
+}

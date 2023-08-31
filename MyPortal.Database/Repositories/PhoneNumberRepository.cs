@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,9 +15,8 @@ namespace MyPortal.Database.Repositories
 {
     public class PhoneNumberRepository : BaseReadWriteRepository<PhoneNumber>, IPhoneNumberRepository
     {
-        public PhoneNumberRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public PhoneNumberRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-           
         }
 
         protected override Query JoinRelated(Query query)
@@ -44,23 +42,24 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var phoneNumbers =
-                await Transaction.Connection.QueryAsync<PhoneNumber, PhoneNumberType, Person, Agency, PhoneNumber>(
-                    sql.Sql,
-                    (number, type, person, agency) =>
-                    {
-                        number.Type = type;
-                        number.Person = person;
-                        number.Agency = agency;
+                await DbUser.Transaction.Connection
+                    .QueryAsync<PhoneNumber, PhoneNumberType, Person, Agency, PhoneNumber>(
+                        sql.Sql,
+                        (number, type, person, agency) =>
+                        {
+                            number.Type = type;
+                            number.Person = person;
+                            number.Agency = agency;
 
-                        return number;
-                    }, sql.NamedBindings, Transaction);
+                            return number;
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return phoneNumbers;
         }
 
         public async Task Update(PhoneNumber entity)
         {
-            var phoneNumber = await Context.PhoneNumbers.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var phoneNumber = await DbUser.Context.PhoneNumbers.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (phoneNumber == null)
             {

@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using Task = System.Threading.Tasks.Task;
@@ -14,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class TaskTypeRepository : BaseReadWriteRepository<TaskType>, ITaskTypeRepository
     {
-        public TaskTypeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public TaskTypeRepository(DbUserWithContext dbUser) : base(dbUser)
         {
 
         }
@@ -40,7 +39,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(TaskType entity)
         {
-            var taskType = await Context.TaskTypes.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var taskType = await DbUser.Context.TaskTypes.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (taskType == null)
             {

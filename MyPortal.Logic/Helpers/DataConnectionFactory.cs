@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database;
@@ -47,10 +48,10 @@ namespace MyPortal.Logic.Helpers
             await connection.CloseAsync();
         }
 
-        internal static async Task<IUnitOfWork> CreateUnitOfWork()
+        internal static async Task<IUnitOfWork> CreateUnitOfWork(Guid userId)
         {
             var context = CreateContext();
-            return await UnitOfWork.Create(context);
+            return await UnitOfWork.Create(userId, context);
         }
 
         private static void CheckConnectionString()

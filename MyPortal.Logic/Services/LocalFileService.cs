@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models;
-using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DocumentProvision;
@@ -18,14 +13,14 @@ namespace MyPortal.Logic.Services
     {
         private readonly ILocalFileProvider _fileProvider;
 
-        public LocalFileService(ILocalFileProvider fileProvider)
+        public LocalFileService(ISessionUser sessionUser, ILocalFileProvider fileProvider) : base(sessionUser)
         {
             _fileProvider = fileProvider;
         }
 
         public async Task UploadFileToDocument(FileUploadRequestModel upload)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var document = await unitOfWork.Documents.GetById(upload.DocumentId);
 
@@ -50,7 +45,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<FileDownload> GetDownloadByDocument(Guid documentId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
@@ -61,7 +56,7 @@ namespace MyPortal.Logic.Services
 
         public async Task RemoveFileFromDocument(Guid documentId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var file = await unitOfWork.Files.GetByDocumentId(documentId);
 

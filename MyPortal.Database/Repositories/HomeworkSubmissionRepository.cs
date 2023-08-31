@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -17,11 +14,11 @@ using Task = MyPortal.Database.Models.Entity.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class HomeworkSubmissionRepository : BaseReadWriteRepository<HomeworkSubmission>, IHomeworkSubmissionRepository
+    public class HomeworkSubmissionRepository : BaseReadWriteRepository<HomeworkSubmission>,
+        IHomeworkSubmissionRepository
     {
-        public HomeworkSubmissionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public HomeworkSubmissionRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)
@@ -48,7 +45,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var submissions = await Transaction.Connection
+            var submissions = await DbUser.Transaction.Connection
                 .QueryAsync<HomeworkSubmission, HomeworkItem, Student, Task, Document, HomeworkSubmission>(sql.Sql,
                     (submission, item, student, task, document) =>
                     {
@@ -58,20 +55,21 @@ namespace MyPortal.Database.Repositories
                         submission.SubmittedWork = document;
 
                         return submission;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return submissions;
         }
 
         public async System.Threading.Tasks.Task Update(HomeworkSubmission entity)
         {
-            var homeworkSubmission = await Context.HomeworkSubmissions.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var homeworkSubmission =
+                await DbUser.Context.HomeworkSubmissions.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (homeworkSubmission == null)
             {
                 throw new EntityNotFoundException("Homework submission not found.");
             }
-            
+
             homeworkSubmission.DocumentId = entity.DocumentId;
             homeworkSubmission.PointsAchieved = entity.PointsAchieved;
         }
@@ -88,7 +86,7 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<HomeworkSubmission>> GetHomeworkSubmissionsByStudentGroup(Guid studentGroupId)
         {
             var now = DateTime.Now;
-            
+
             var query = GetDefaultQuery();
 
             query.JoinStudentGroupsByStudent("S", "SGM");

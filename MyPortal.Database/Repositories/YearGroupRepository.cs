@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,9 +15,8 @@ namespace MyPortal.Database.Repositories
 {
     public class YearGroupRepository : BaseStudentGroupRepository<YearGroup>, IYearGroupRepository
     {
-        public YearGroupRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public YearGroupRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)
@@ -42,7 +40,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var yearGroups =
-                await Transaction.Connection.QueryAsync<YearGroup, StudentGroup, CurriculumYearGroup, YearGroup>(
+                await DbUser.Transaction.Connection.QueryAsync<YearGroup, StudentGroup, CurriculumYearGroup, YearGroup>(
                     sql.Sql,
                     (yearGroup, studentGroup, curriculumYear) =>
                     {
@@ -50,14 +48,14 @@ namespace MyPortal.Database.Repositories
                         yearGroup.CurriculumYearGroup = curriculumYear;
 
                         return yearGroup;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return yearGroups;
         }
 
         public async Task Update(YearGroup entity)
         {
-            var yearGroup = await Context.YearGroups.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var yearGroup = await DbUser.Context.YearGroups.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (yearGroup == null)
             {

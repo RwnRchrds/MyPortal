@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SubjectRepository : BaseReadWriteRepository<Subject>, ISubjectRepository
     {
-        public SubjectRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public SubjectRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -38,20 +37,20 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var subjects = await Transaction.Connection.QueryAsync<Subject, SubjectCode, Subject>(sql.Sql,
+            var subjects = await DbUser.Transaction.Connection.QueryAsync<Subject, SubjectCode, Subject>(sql.Sql,
                 (subject, code) =>
                 {
                     subject.SubjectCode = code;
 
                     return subject;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return subjects;
         }
 
         public async Task Update(Subject entity)
         {
-            var subject = await Context.Subjects.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var subject = await DbUser.Context.Subjects.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (subject == null)
             {

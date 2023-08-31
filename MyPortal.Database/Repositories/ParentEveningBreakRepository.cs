@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -15,9 +14,10 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class ParentEveningBreakRepository : BaseReadWriteRepository<ParentEveningBreak>, IParentEveningBreakRepository
+    public class ParentEveningBreakRepository : BaseReadWriteRepository<ParentEveningBreak>,
+        IParentEveningBreakRepository
     {
-        public ParentEveningBreakRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ParentEveningBreakRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -39,14 +39,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var eveBreaks = await Transaction.Connection
+            var eveBreaks = await DbUser.Transaction.Connection
                 .QueryAsync<ParentEveningBreak, ParentEveningStaffMember, ParentEveningBreak>(sql.Sql,
                     (eveBreak, staff) =>
                     {
                         eveBreak.ParentEveningStaffMember = staff;
 
                         return eveBreak;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return eveBreaks;
         }
@@ -64,7 +64,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(ParentEveningBreak entity)
         {
-            var eveBreak = await Context.ParentEveningBreaks.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var eveBreak = await DbUser.Context.ParentEveningBreaks.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (eveBreak == null)
             {

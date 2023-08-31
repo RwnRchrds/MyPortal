@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ExamDateRepository : BaseReadWriteRepository<ExamDate>, IExamDateRepository
     {
-        public ExamDateRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExamDateRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -38,20 +37,20 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var examDates = await Transaction.Connection.QueryAsync<ExamDate, ExamSession, ExamDate>(sql.Sql,
+            var examDates = await DbUser.Transaction.Connection.QueryAsync<ExamDate, ExamSession, ExamDate>(sql.Sql,
                 (date, session) =>
                 {
                     date.Session = session;
 
                     return date;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return examDates;
         }
 
         public async Task Update(ExamDate entity)
         {
-            var examDate = await Context.ExamDates.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var examDate = await DbUser.Context.ExamDates.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (examDate == null)
             {

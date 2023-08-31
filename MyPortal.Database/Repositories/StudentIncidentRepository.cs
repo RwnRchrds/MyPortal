@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -17,7 +16,7 @@ namespace MyPortal.Database.Repositories;
 
 public class StudentIncidentRepository : BaseReadWriteRepository<StudentIncident>, IStudentIncidentRepository
 {
-    public StudentIncidentRepository(ApplicationDbContext context, DbTransaction transaction, string tblAlias = null) : base(context, transaction, tblAlias)
+    public StudentIncidentRepository(DbUserWithContext dbUser) : base(dbUser)
     {
     }
 
@@ -48,7 +47,7 @@ public class StudentIncidentRepository : BaseReadWriteRepository<StudentIncident
         var sql = Compiler.Compile(query);
 
         var studentIncidents =
-            await Transaction.Connection
+            await DbUser.Transaction.Connection
                 .QueryAsync<StudentIncident, Student, Incident, BehaviourRoleType, BehaviourOutcome, BehaviourStatus,
                     StudentIncident>(sql.Sql,
                     (studentIncident, student, incident, roleType, outcome, status) =>
@@ -60,18 +59,18 @@ public class StudentIncidentRepository : BaseReadWriteRepository<StudentIncident
                         studentIncident.Status = status;
 
                         return studentIncident;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
         return studentIncidents;
     }
-    
+
     public async Task<IEnumerable<StudentIncident>> GetByStudent(Guid studentId, Guid academicYearId)
     {
         var query = GetDefaultQuery();
 
         query.Where("S.Id", studentId);
         query.Where("I.AcademicYearId", academicYearId);
-    
+
         return await ExecuteQuery(query);
     }
 
@@ -87,10 +86,10 @@ public class StudentIncidentRepository : BaseReadWriteRepository<StudentIncident
     public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
     {
         var query = GetDefaultQuery().AsCount();
-    
+
         query.Where($"{TblAlias}.StudentId", studentId);
         query.Where("I.AcademicYearId", academicYearId);
-    
+
         return await ExecuteQueryIntResult(query) ?? 0;
     }
 
@@ -106,16 +105,16 @@ public class StudentIncidentRepository : BaseReadWriteRepository<StudentIncident
     public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
     {
         var query = GetEmptyQuery().AsSum($"{TblAlias}.Points");
-    
+
         query.Where("I.StudentId", studentId);
         query.Where("I.AcademicYearId", academicYearId);
-    
+
         return await ExecuteQueryIntResult(query) ?? 0;
     }
 
     public async Task Update(StudentIncident entity)
     {
-        var studentIncident = await Context.StudentIncidents.FirstOrDefaultAsync(x => x.Id == entity.Id);
+        var studentIncident = await DbUser.Context.StudentIncidents.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
         if (studentIncident == null)
         {

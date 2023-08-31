@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -17,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class LogNoteRepository : BaseReadWriteRepository<LogNote>, ILogNoteRepository
     {
-        public LogNoteRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public LogNoteRepository(DbUserWithContext dbUser) : base(dbUser)
         {
            
         }
@@ -47,7 +46,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var logNotes =
-                await Transaction.Connection.QueryAsync<LogNote, User, Student, AcademicYear, LogNoteType, LogNote>(
+                await DbUser.Transaction.Connection.QueryAsync<LogNote, User, Student, AcademicYear, LogNoteType, LogNote>(
                     sql.Sql,
                     (note, user, student, year, type) =>
                     {
@@ -57,7 +56,7 @@ namespace MyPortal.Database.Repositories
                         note.LogNoteType = type;
 
                         return note;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return logNotes;
         }
@@ -79,7 +78,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(LogNote entity)
         {
-            var logNote = await Context.LogNotes.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var logNote = await DbUser.Context.LogNotes.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (logNote == null)
             {

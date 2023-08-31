@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.QueryResults.Assessment;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
     public class MarksheetRepository : BaseReadWriteRepository<Marksheet>, IMarksheetRepository
     {
-        public MarksheetRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public MarksheetRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -83,7 +81,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var templateGroups =
-                await Transaction.Connection
+                await DbUser.Transaction.Connection
                     .QueryAsync<Marksheet, StudentGroup, MarksheetTemplate, Marksheet>(
                         sql.Sql,
                         (templateGroup, studentGroup, template) =>
@@ -92,7 +90,7 @@ namespace MyPortal.Database.Repositories
                             templateGroup.Template = template;
 
                             return templateGroup;
-                        }, sql.NamedBindings, Transaction);
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return templateGroups;
         }

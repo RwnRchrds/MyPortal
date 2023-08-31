@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -21,7 +17,7 @@ namespace MyPortal.Database.Repositories
     public class DiaryEventAttendeeRepository : BaseReadWriteRepository<DiaryEventAttendee>,
         IDiaryEventAttendeeRepository
     {
-        public DiaryEventAttendeeRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public DiaryEventAttendeeRepository(DbUserWithContext dbUser) : base(dbUser)
         {
 
         }
@@ -48,7 +44,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var attendees = await Transaction.Connection
+            var attendees = await DbUser.Transaction.Connection
                 .QueryAsync<DiaryEventAttendee, DiaryEvent, Person, DiaryEventAttendeeResponse, DiaryEventAttendee>(
                     sql.Sql,
                     (attendee, diaryEvent, person, response) =>
@@ -58,7 +54,7 @@ namespace MyPortal.Database.Repositories
                         attendee.Response = response;
 
                         return attendee;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return attendees;
         }
@@ -84,7 +80,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(DiaryEventAttendee entity)
         {
-            var attendee = await Context.DiaryEventAttendees.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var attendee = await DbUser.Context.DiaryEventAttendees.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (attendee == null)
             {

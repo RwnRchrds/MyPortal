@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -14,9 +13,10 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class ExamSeatAllocationRepository : BaseReadWriteRepository<ExamSeatAllocation>, IExamSeatAllocationRepository
+    public class ExamSeatAllocationRepository : BaseReadWriteRepository<ExamSeatAllocation>,
+        IExamSeatAllocationRepository
     {
-        public ExamSeatAllocationRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExamSeatAllocationRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -41,7 +41,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var seatAllocations =
-                await Transaction.Connection
+                await DbUser.Transaction.Connection
                     .QueryAsync<ExamSeatAllocation, ExamComponentSitting, ExamCandidate, ExamSeatAllocation>(sql.Sql,
                         (seatAllocation, sitting, candidate) =>
                         {
@@ -49,14 +49,14 @@ namespace MyPortal.Database.Repositories
                             seatAllocation.Candidate = candidate;
 
                             return seatAllocation;
-                        }, sql.NamedBindings, Transaction);
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return seatAllocations;
         }
 
         public async Task Update(ExamSeatAllocation entity)
         {
-            var seatAllocation = await Context.ExamSeatAllocations.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var seatAllocation = await DbUser.Context.ExamSeatAllocations.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (seatAllocation == null)
             {

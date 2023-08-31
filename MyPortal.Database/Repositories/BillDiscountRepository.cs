@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class BillDiscountRepository : BaseReadWriteRepository<BillDiscount>, IBillDiscountRepository
     {
-        public BillDiscountRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public BillDiscountRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -41,7 +40,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var discounts =
-                await Transaction.Connection.QueryAsync<BillDiscount, Bill, Discount, BillDiscount>(
+                await DbUser.Transaction.Connection.QueryAsync<BillDiscount, Bill, Discount, BillDiscount>(
                     sql.Sql,
                     (bd, bill, discount) =>
                     {
@@ -49,14 +48,14 @@ namespace MyPortal.Database.Repositories
                         bd.Discount = discount;
 
                         return bd;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return discounts;
         }
 
         public async Task Update(BillDiscount entity)
         {
-            var bcd = await Context.BillChargeDiscounts.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var bcd = await DbUser.Context.BillChargeDiscounts.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (bcd == null)
             {

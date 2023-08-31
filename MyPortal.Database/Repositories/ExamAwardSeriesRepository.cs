@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -13,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ExamAwardSeriesRepository : BaseReadWriteRepository<ExamAwardSeries>, IExamAwardSeriesRepository
     {
-        public ExamAwardSeriesRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExamAwardSeriesRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -38,7 +37,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var examAwardSeries =
-                await Transaction.Connection.QueryAsync<ExamAwardSeries, ExamAward, ExamSeries, ExamAwardSeries>(
+                await DbUser.Transaction.Connection.QueryAsync<ExamAwardSeries, ExamAward, ExamSeries, ExamAwardSeries>(
                     sql.Sql,
                     (eas, award, series) =>
                     {
@@ -46,7 +45,7 @@ namespace MyPortal.Database.Repositories
                         eas.Series = series;
 
                         return eas;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return examAwardSeries;
         }

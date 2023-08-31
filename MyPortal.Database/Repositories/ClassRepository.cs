@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -20,9 +15,8 @@ namespace MyPortal.Database.Repositories
 {
     public class ClassRepository : BaseReadWriteRepository<Class>, IClassRepository
     {
-        public ClassRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ClassRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         protected override Query JoinRelated(Query query)
@@ -45,21 +39,21 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var classes = await Transaction.Connection.QueryAsync<Class, Course, CurriculumGroup, Class>(sql.Sql,
+            var classes = await DbUser.Transaction.Connection.QueryAsync<Class, Course, CurriculumGroup, Class>(sql.Sql,
                 (currClass, course, group) =>
                 {
                     currClass.Course = course;
                     currClass.Group = group;
 
                     return currClass;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return classes;
         }
 
         public async Task Update(Class entity)
         {
-            var currClass = await Context.Classes.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var currClass = await DbUser.Context.Classes.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (currClass == null)
             {

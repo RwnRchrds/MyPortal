@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,11 +13,11 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class DiaryEventTemplateRepository : BaseReadWriteRepository<DiaryEventTemplate>, IDiaryEventTemplateRepository
+    public class DiaryEventTemplateRepository : BaseReadWriteRepository<DiaryEventTemplate>,
+        IDiaryEventTemplateRepository
     {
-        public DiaryEventTemplateRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public DiaryEventTemplateRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)
@@ -42,20 +39,21 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var templates =
-                await Transaction.Connection.QueryAsync<DiaryEventTemplate, DiaryEventType, DiaryEventTemplate>(sql.Sql,
+                await DbUser.Transaction.Connection.QueryAsync<DiaryEventTemplate, DiaryEventType, DiaryEventTemplate>(
+                    sql.Sql,
                     (template, type) =>
                     {
                         template.DiaryEventType = type;
 
                         return template;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return templates;
         }
 
         public async Task Update(DiaryEventTemplate entity)
         {
-            var template = await Context.DiaryEventTemplates.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var template = await DbUser.Context.DiaryEventTemplates.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (template == null)
             {

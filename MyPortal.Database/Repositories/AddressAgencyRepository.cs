@@ -8,6 +8,7 @@ using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -17,7 +18,7 @@ namespace MyPortal.Database.Repositories;
 
 internal class AddressAgencyRepository : BaseReadWriteRepository<AddressAgency>, IAddressAgencyRepository
 {
-    public AddressAgencyRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+    public AddressAgencyRepository(DbUserWithContext dbUser) : base(dbUser)
     {
     }
 
@@ -41,22 +42,23 @@ internal class AddressAgencyRepository : BaseReadWriteRepository<AddressAgency>,
     {
         var sql = Compiler.Compile(query);
 
-        var addressPeople = await Transaction.Connection.QueryAsync<AddressAgency, Address, Agency, AddressAgency>(
-            sql.Sql,
-            (addressAgency, address, agency) =>
-            {
-                addressAgency.Address = address;
-                addressAgency.Agency = agency;
+        var addressPeople =
+            await DbUser.Transaction.Connection.QueryAsync<AddressAgency, Address, Agency, AddressAgency>(
+                sql.Sql,
+                (addressAgency, address, agency) =>
+                {
+                    addressAgency.Address = address;
+                    addressAgency.Agency = agency;
 
-                return addressAgency;
-            }, sql.NamedBindings, Transaction);
+                    return addressAgency;
+                }, sql.NamedBindings, DbUser.Transaction);
 
         return addressPeople;
     }
 
     public async Task Update(AddressAgency entity)
     {
-        var addressPerson = await Context.AddressAgencies.FirstOrDefaultAsync(x => x.Id == entity.Id);
+        var addressPerson = await DbUser.Context.AddressAgencies.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
         if (addressPerson == null)
         {

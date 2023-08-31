@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -14,9 +13,10 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class ExamComponentSittingRepository : BaseReadWriteRepository<ExamComponentSitting>, IExamComponentSittingRepository
+    public class ExamComponentSittingRepository : BaseReadWriteRepository<ExamComponentSitting>,
+        IExamComponentSittingRepository
     {
-        public ExamComponentSittingRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExamComponentSittingRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -40,7 +40,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var sittings = await Transaction.Connection
+            var sittings = await DbUser.Transaction.Connection
                 .QueryAsync<ExamComponentSitting, ExamComponent, ExamRoom, ExamComponentSitting>(sql.Sql,
                     (sitting, component, room) =>
                     {
@@ -48,14 +48,14 @@ namespace MyPortal.Database.Repositories
                         sitting.Room = room;
 
                         return sitting;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return sittings;
         }
 
         public async Task Update(ExamComponentSitting entity)
         {
-            var sitting = await Context.ExamComponentSittings.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var sitting = await DbUser.Context.ExamComponentSittings.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (sitting == null)
             {

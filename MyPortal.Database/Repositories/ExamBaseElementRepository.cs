@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -17,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ExamBaseElementRepository : BaseReadWriteRepository<ExamBaseElement>, IExamBaseElementRepository
     {
-        public ExamBaseElementRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExamBaseElementRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -44,7 +42,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var baseElements =
-                await Transaction.Connection
+                await DbUser.Transaction.Connection
                     .QueryAsync<ExamBaseElement, ExamAssessment, SubjectCode, ExamQualificationLevel, ExamBaseElement>(
                         sql.Sql,
                         (baseElement, assessment, code, level) =>
@@ -54,14 +52,14 @@ namespace MyPortal.Database.Repositories
                             baseElement.Level = level;
 
                             return baseElement;
-                        }, sql.NamedBindings, Transaction);
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return baseElements;
         }
 
         public async Task Update(ExamBaseElement entity)
         {
-            var baseElement = await Context.ExamBaseElements.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var baseElement = await DbUser.Context.ExamBaseElements.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (baseElement == null)
             {

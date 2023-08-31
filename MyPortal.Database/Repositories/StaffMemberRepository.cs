@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -8,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -18,9 +17,8 @@ namespace MyPortal.Database.Repositories
 {
     public class StaffMemberRepository : BaseReadWriteRepository<StaffMember>, IStaffMemberRepository
     {
-        public StaffMemberRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public StaffMemberRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-           
         }
 
         protected override Query JoinRelated(Query query)
@@ -43,15 +41,16 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var staffMembers = await Transaction.Connection.QueryAsync<StaffMember, Person, StaffMember, StaffMember>(
-                sql.Sql,
-                (staff, person, lineManager) =>
-                {
-                    staff.Person = person;
-                    staff.LineManager = lineManager;
+            var staffMembers =
+                await DbUser.Transaction.Connection.QueryAsync<StaffMember, Person, StaffMember, StaffMember>(
+                    sql.Sql,
+                    (staff, person, lineManager) =>
+                    {
+                        staff.Person = person;
+                        staff.LineManager = lineManager;
 
-                    return staff;
-                }, sql.NamedBindings, Transaction);
+                        return staff;
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return staffMembers;
         }
@@ -76,7 +75,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(StaffMember entity)
         {
-            var employee = await Context.StaffMembers.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var employee = await DbUser.Context.StaffMembers.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (employee == null)
             {

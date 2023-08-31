@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class NextOfKinRepository : BaseReadWriteRepository<NextOfKin>, INextOfKinRepository
     {
-        public NextOfKinRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public NextOfKinRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -42,7 +41,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var nextOfKin = await Transaction.Connection
+            var nextOfKin = await DbUser.Transaction.Connection
                 .QueryAsync<NextOfKin, StaffMember, Person, NextOfKinRelationshipType, NextOfKin>(sql.Sql,
                     (kin, staff, person, relationshipType) =>
                     {
@@ -51,14 +50,14 @@ namespace MyPortal.Database.Repositories
                         kin.RelationshipType = relationshipType;
 
                         return kin;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return nextOfKin;
         }
 
         public async Task Update(NextOfKin entity)
         {
-            var nextOfKin = await Context.NextOfKin.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var nextOfKin = await DbUser.Context.NextOfKin.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (nextOfKin == null)
             {

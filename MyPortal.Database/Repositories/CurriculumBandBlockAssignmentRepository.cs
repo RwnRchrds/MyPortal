@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,11 +13,11 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class CurriculumBandBlockAssignmentRepository : BaseReadWriteRepository<CurriculumBandBlockAssignment>, ICurriculumBandBlockAssignmentRepository
+    public class CurriculumBandBlockAssignmentRepository : BaseReadWriteRepository<CurriculumBandBlockAssignment>,
+        ICurriculumBandBlockAssignmentRepository
     {
-        public CurriculumBandBlockAssignmentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public CurriculumBandBlockAssignmentRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)
@@ -43,7 +40,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var assignments = await Transaction.Connection
+            var assignments = await DbUser.Transaction.Connection
                 .QueryAsync<CurriculumBandBlockAssignment, CurriculumBand, CurriculumBlock,
                     CurriculumBandBlockAssignment>(sql.Sql,
                     (assignment, band, block) =>
@@ -52,14 +49,14 @@ namespace MyPortal.Database.Repositories
                         assignment.Block = block;
 
                         return assignment;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return assignments;
         }
 
         public async Task Update(CurriculumBandBlockAssignment entity)
         {
-            var blockAssignment = await Context.CurriculumBandBlocks.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var blockAssignment = await DbUser.Context.CurriculumBandBlocks.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (blockAssignment == null)
             {

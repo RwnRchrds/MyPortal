@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using MyPortal.Database.Interfaces;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.DocumentProvision;
 using MyPortal.Logic.Models.Web;
 using Task = System.Threading.Tasks.Task;
 
@@ -16,17 +12,15 @@ namespace MyPortal.Logic.Services
     public class HostedFileService : BaseService, IFileService
     {
         private readonly IHostedFileProvider _fileProvider;
-        private readonly string _accessToken;
 
-        public HostedFileService(IHostedFileProvider fileProvider, string accessToken)
+        public HostedFileService(ISessionUser sessionUser, IHostedFileProviderFactory fileProviderFactory) : base(sessionUser)
         {
-            _fileProvider = fileProvider;
-            _accessToken = accessToken;
+            _fileProvider = fileProviderFactory.CreateHostedFileProvider();
         }
 
         public async Task AttachFileToDocument(Guid documentId, string fileId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var document = await unitOfWork.Documents.GetById(documentId);
 
@@ -35,7 +29,7 @@ namespace MyPortal.Logic.Services
                 throw new NotFoundException("Document not found.");
             }
 
-            var file = await _fileProvider.CreateFileFromId(_accessToken, fileId);
+            var file = await _fileProvider.CreateFileFromId(fileId);
 
             document.Attachment = file;
                 
@@ -46,7 +40,7 @@ namespace MyPortal.Logic.Services
 
         public async Task RemoveFileFromDocument(Guid documentId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
@@ -62,11 +56,11 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<WebAction>> GetWebActionsByDocument(Guid documentId)
         {
-            await using var unitOfWork = await DataConnectionFactory.CreateUnitOfWork();
+            await using var unitOfWork = await User.GetConnection();
             
             var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
-            var webActions = await _fileProvider.GetWebActions(_accessToken, file.FileId);
+            var webActions = await _fileProvider.GetWebActions(file.FileId);
 
             return webActions;
         }

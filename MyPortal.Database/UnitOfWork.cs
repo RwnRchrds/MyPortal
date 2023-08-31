@@ -8,6 +8,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories;
 using Task = System.Threading.Tasks.Task;
@@ -20,7 +21,6 @@ namespace MyPortal.Database
         private int _batchSize;
         private int _batchLimit = 1000;
         private readonly string _connectionString;
-
         private DbTransaction _transaction;
         private IAcademicTermRepository _academicTerms;
         private IAcademicYearRepository _academicYears;
@@ -223,549 +223,560 @@ namespace MyPortal.Database
         private IUserRoleRepository _userRoles;
         private IVatRateRepository _vatRates;
         private IYearGroupRepository _yearGroups;
+        private readonly Guid _userId;
 
         public IAcademicTermRepository AcademicTerms =>
-            _academicTerms ??= new AcademicTermRepository(_context, _transaction);
+            _academicTerms ??= new AcademicTermRepository(GetDbUserWithContext());
 
         public IAcademicYearRepository AcademicYears =>
-            _academicYears ??= new AcademicYearRepository(_context, _transaction);
+            _academicYears ??= new AcademicYearRepository(GetDbUserWithContext());
 
         public IAccountTransactionRepository AccountTransactions =>
-            _accountTransactions ??= new AccountTransactionRepository(_context, _transaction);
+            _accountTransactions ??= new AccountTransactionRepository(GetDbUserWithContext());
 
         public IAchievementOutcomeRepository AchievementOutcomes =>
-            _achievementOutcomes ??= new AchievementOutcomeRepository(_context, _transaction);
+            _achievementOutcomes ??= new AchievementOutcomeRepository(GetDbUserWithContext());
 
         public IAchievementRepository Achievements =>
-            _achievements ??= new AchievementRepository(_context, _transaction);
+            _achievements ??= new AchievementRepository(GetDbUserWithContext());
 
         public IAchievementTypeRepository AchievementTypes =>
-            _achievementTypes ??= new AchievementTypeRepository(_context, _transaction);
+            _achievementTypes ??= new AchievementTypeRepository(GetDbUserWithContext());
 
         public IActivityRepository Activities =>
-            _activities ??= new ActivityRepository(_context, _transaction);
+            _activities ??= new ActivityRepository(GetDbUserWithContext());
 
         public IAddressAgencyRepository AddressAgencies =>
-            _addressAgencies ??= new AddressAgencyRepository(_context, _transaction);
+            _addressAgencies ??= new AddressAgencyRepository(GetDbUserWithContext());
 
         public IAddressPersonRepository AddressPeople =>
-            _addressPeople ??= new AddressPersonRepository(_context, _transaction);
+            _addressPeople ??= new AddressPersonRepository(GetDbUserWithContext());
 
         public IAddressRepository Addresses =>
-            _addresses ??= new AddressRepository(_context, _transaction);
+            _addresses ??= new AddressRepository(GetDbUserWithContext());
 
         public IAddressTypeRepository AddressTypes =>
-            _addressTypes ??= new AddressTypeRepository(_transaction);
+            _addressTypes ??= new AddressTypeRepository(GetDbUser());
 
-        public IAgencyRepository Agencies => _agencies ??= new AgencyRepository(_context, _transaction);
+        public IAgencyRepository Agencies => _agencies ??= new AgencyRepository(GetDbUserWithContext());
 
-        public IAgentRepository Agents => _agents ??= new AgentRepository(_context, _transaction);
+        public IAgentRepository Agents => _agents ??= new AgentRepository(GetDbUserWithContext());
 
-        public IAgentTypeRepository AgentTypes => _agentTypes ??= new AgentTypeRepository(_transaction);
+        public IAgentTypeRepository AgentTypes => _agentTypes ??= new AgentTypeRepository(GetDbUser());
 
         public IAspectRepository Aspects =>
-            _aspects ??= new AspectRepository(_context, _transaction);
+            _aspects ??= new AspectRepository(GetDbUserWithContext());
 
         public IAspectTypeRepository AspectTypes =>
-            _aspectTypes ??= new AspectTypeRepository(_transaction);
+            _aspectTypes ??= new AspectTypeRepository(GetDbUser());
 
         public IAttendanceCodeTypeRepository AttendanceCodeTypes =>
-            _attendanceCodeTypes ??= new AttendanceCodeTypeRepository(_transaction);
+            _attendanceCodeTypes ??= new AttendanceCodeTypeRepository(GetDbUser());
 
         public IAttendanceCodeRepository AttendanceCodes =>
-            _attendanceCodes = new AttendanceCodeRepository(_context, _transaction);
+            _attendanceCodes = new AttendanceCodeRepository(GetDbUserWithContext());
 
         public IAttendanceMarkRepository AttendanceMarks =>
-            _attendanceMarks ??= new AttendanceMarkRepository(_context, _transaction);
+            _attendanceMarks ??= new AttendanceMarkRepository(GetDbUserWithContext());
 
         public IAttendancePeriodRepository AttendancePeriods =>
-            _attendancePeriods ??= new AttendancePeriodRepository(_context, _transaction);
+            _attendancePeriods ??= new AttendancePeriodRepository(GetDbUserWithContext());
 
         public IAttendanceWeekRepository AttendanceWeeks =>
-            _attendanceWeeks ??= new AttendanceWeekRepository(_context, _transaction);
+            _attendanceWeeks ??= new AttendanceWeekRepository(GetDbUserWithContext());
 
         public IAttendanceWeekPatternRepository AttendanceWeekPatterns => _attendanceWeekPatterns ??=
-            new AttendanceWeekPatternRepository(_context, _transaction);
+            new AttendanceWeekPatternRepository(GetDbUserWithContext());
 
         public IBasketItemRepository BasketItems =>
-            _basketItems ??= new BasketItemRepository(_context, _transaction);
+            _basketItems ??= new BasketItemRepository(GetDbUserWithContext());
 
         public IBehaviourOutcomeRepository BehaviourOutcomes =>
-            _behaviourOutcomes ??= new BehaviourOutcomeRepository(_context, _transaction);
+            _behaviourOutcomes ??= new BehaviourOutcomeRepository(GetDbUserWithContext());
 
         public IBehaviourRoleTypeRepository BehaviourRoleTypes =>
-            _behaviourRoleTypes ??= new BehaviourRoleTypeRepository(_context, _transaction);
+            _behaviourRoleTypes ??= new BehaviourRoleTypeRepository(GetDbUserWithContext());
 
         public IBehaviourStatusRepository BehaviourStatus =>
-            _behaviourStatus ??= new BehaviourStatusRepository(_transaction);
+            _behaviourStatus ??= new BehaviourStatusRepository(GetDbUser());
 
         public IBehaviourTargetRepository BehaviourTargets =>
-            _behaviourTargets ??= new BehaviourTargetRepository(_context, _transaction);
+            _behaviourTargets ??= new BehaviourTargetRepository(GetDbUserWithContext());
 
-        public IBillItemRepository BillItems => _billItems ??= new BillItemRepository(_context, _transaction);
+        public IBillItemRepository BillItems => _billItems ??= new BillItemRepository(GetDbUserWithContext());
 
-        public IBillRepository Bills => _bills ??= new BillRepository(_context, _transaction);
+        public IBillRepository Bills => _bills ??= new BillRepository(GetDbUserWithContext());
 
         public IBillAccountTransactionRepository BillAccountTransactions => _billAccountTransactions ??=
-            new BillAccountTransactionRepository(_context, _transaction);
+            new BillAccountTransactionRepository(GetDbUserWithContext());
 
         public IBillDiscountRepository BillDiscounts =>
-            _billDiscounts ??= new BillDiscountRepository(_context, _transaction);
+            _billDiscounts ??= new BillDiscountRepository(GetDbUserWithContext());
 
-        public IBillStudentChargeRepository BillStudentCharges => _billStudentCharges ??= new BillStudentStudentChargeRepository(_context, _transaction);
+        public IBillStudentChargeRepository BillStudentCharges => _billStudentCharges ??= new BillStudentStudentChargeRepository(GetDbUserWithContext());
 
-        public IBoarderStatusRepository BoarderStatus => _boarderStatus ??= new BoarderStatusRepository(_transaction);
+        public IBoarderStatusRepository BoarderStatus => _boarderStatus ??= new BoarderStatusRepository(GetDbUser());
 
-        public IBuildingRepository Buildings => _buildings ??= new BuildingRepository(_context, _transaction);
+        public IBuildingRepository Buildings => _buildings ??= new BuildingRepository(GetDbUserWithContext());
 
         public IBuildingFloorRepository BuildingFloors =>
-            _buildingFloors ??= new BuildingFloorRepository(_context, _transaction);
+            _buildingFloors ??= new BuildingFloorRepository(GetDbUserWithContext());
 
-        public IBulletinRepository Bulletins => _bulletins ??= new BulletinRepository(_context, _transaction);
+        public IBulletinRepository Bulletins => _bulletins ??= new BulletinRepository(GetDbUserWithContext());
 
         public IChargeBillingPeriodRepository ChargeBillingPeriods =>
-            _chargeBillingPeriods ??= new ChargeBillingPeriodRepository(_context, _transaction);
+            _chargeBillingPeriods ??= new ChargeBillingPeriodRepository(GetDbUserWithContext());
 
         public IChargeDiscountRepository ChargeDiscounts =>
-            _chargeDiscounts ??= new ChargeDiscountRepository(_context, _transaction);
+            _chargeDiscounts ??= new ChargeDiscountRepository(GetDbUserWithContext());
 
-        public IChargeRepository Charges => _charges ??= new ChargeRepository(_context, _transaction);
+        public IChargeRepository Charges => _charges ??= new ChargeRepository(GetDbUserWithContext());
 
-        public IClassRepository Classes => _classes ??= new ClassRepository(_context, _transaction);
+        public IClassRepository Classes => _classes ??= new ClassRepository(GetDbUserWithContext());
 
         public ICommentBankRepository CommentBanks =>
-            _commentBanks ??= new CommentBankRepository(_context, _transaction);
+            _commentBanks ??= new CommentBankRepository(GetDbUserWithContext());
 
         public ICommentBankAreaRepository CommentBankAreas =>
-            _commentBankAreas ??= new CommentBankAreaRepository(_context, _transaction);
+            _commentBankAreas ??= new CommentBankAreaRepository(GetDbUserWithContext());
 
         public ICommentBankSectionRepository CommentBankSections =>
-            _commentBankSections ??= new CommentBankSectionRepository(_context, _transaction);
+            _commentBankSections ??= new CommentBankSectionRepository(GetDbUserWithContext());
 
-        public ICommentRepository Comments => _comments ??= new CommentRepository(_context, _transaction);
+        public ICommentRepository Comments => _comments ??= new CommentRepository(GetDbUserWithContext());
 
         public ICommunicationLogRepository CommunicationLogs =>
-            _communicationLogs ??= new CommunicationLogRepository(_context, _transaction);
+            _communicationLogs ??= new CommunicationLogRepository(GetDbUserWithContext());
 
         public ICommunicationTypeRepository CommunicationTypes =>
-            _communicationTypes ??= new CommunicationTypeRepository(_transaction);
+            _communicationTypes ??= new CommunicationTypeRepository(GetDbUser());
 
-        public IContactRepository Contacts => _contacts ??= new ContactRepository(_context, _transaction);
+        public IContactRepository Contacts => _contacts ??= new ContactRepository(GetDbUserWithContext());
 
-        public ICourseRepository Courses => _courses ??= new CourseRepository(_context, _transaction);
+        public ICourseRepository Courses => _courses ??= new CourseRepository(GetDbUserWithContext());
 
         public ICoverArrangementRepository CoverArrangements =>
-            _coverArrangements ??= new CoverArrangementRepository(_context, _transaction);
+            _coverArrangements ??= new CoverArrangementRepository(GetDbUserWithContext());
 
         public ICurriculumBandBlockAssignmentRepository CurriculumBandBlockAssignments =>
-            _curriculumBandBlockAssignments ??= new CurriculumBandBlockAssignmentRepository(_context, _transaction);
+            _curriculumBandBlockAssignments ??= new CurriculumBandBlockAssignmentRepository(GetDbUserWithContext());
 
         public ICurriculumBandRepository CurriculumBands =>
-            _curriculumBands ??= new CurriculumBandRepository(_context, _transaction);
+            _curriculumBands ??= new CurriculumBandRepository(GetDbUserWithContext());
 
         public ICurriculumBlockRepository CurriculumBlocks =>
-            _curriculumBlocks ??= new CurriculumBlockRepository(_context, _transaction);
+            _curriculumBlocks ??= new CurriculumBlockRepository(GetDbUserWithContext());
 
         public ICurriculumGroupRepository CurriculumGroups =>
-            _curriculumGroups ??= new CurriculumGroupRepository(_context, _transaction);
+            _curriculumGroups ??= new CurriculumGroupRepository(GetDbUserWithContext());
 
         public ICurriculumYearGroupRepository CurriculumYearGroups =>
-            _curriculumYearGroups ??= new CurriculumYearGroupRepository(_transaction);
+            _curriculumYearGroups ??= new CurriculumYearGroupRepository(GetDbUser());
 
-        public IDetentionRepository Detentions => _detentions ??= new DetentionRepository(_context, _transaction);
+        public IDetentionRepository Detentions => _detentions ??= new DetentionRepository(GetDbUserWithContext());
 
         public IDetentionTypeRepository DetentionTypes =>
-            _detentionTypes ??= new DetentionTypeRepository(_context, _transaction);
+            _detentionTypes ??= new DetentionTypeRepository(GetDbUserWithContext());
 
         public IDiaryEventAttendeeRepository DiaryEventAttendees =>
-            _diaryEventAttendees ??= new DiaryEventAttendeeRepository(_context, _transaction);
+            _diaryEventAttendees ??= new DiaryEventAttendeeRepository(GetDbUserWithContext());
 
         public IDiaryEventAttendeeResponseRepository DiaryEventAttendeeResponses => _diaryEventAttendeeResponses ??=
-            new DiaryEventAttendeeResponseRepository(_transaction);
+            new DiaryEventAttendeeResponseRepository(GetDbUser());
 
-        public IDiaryEventRepository DiaryEvents => _diaryEvents ??= new DiaryEventRepository(_context, _transaction);
+        public IDiaryEventRepository DiaryEvents => _diaryEvents ??= new DiaryEventRepository(GetDbUserWithContext());
 
         public IDiaryEventTemplateRepository DiaryEventTemplates =>
-            _diaryEventTemplates ??= new DiaryEventTemplateRepository(_context, _transaction);
+            _diaryEventTemplates ??= new DiaryEventTemplateRepository(GetDbUserWithContext());
 
         public IDiaryEventTypeRepository DiaryEventTypes =>
-            _diaryEventTypes ??= new DiaryEventTypeRepository(_context, _transaction);
+            _diaryEventTypes ??= new DiaryEventTypeRepository(GetDbUserWithContext());
 
         public IDietaryRequirementRepository DietaryRequirements =>
-            _dietaryRequirements ??= new DietaryRequirementRepository(_context, _transaction);
+            _dietaryRequirements ??= new DietaryRequirementRepository(GetDbUserWithContext());
 
-        public IDirectoryRepository Directories => _directories ??= new DirectoryRepository(_context, _transaction);
+        public IDirectoryRepository Directories => _directories ??= new DirectoryRepository(GetDbUserWithContext());
 
-        public IDiscountRepository Discounts => _discounts ??= new DiscountRepository(_context, _transaction);
+        public IDiscountRepository Discounts => _discounts ??= new DiscountRepository(GetDbUserWithContext());
 
-        public IDocumentRepository Documents => _documents ??= new DocumentRepository(_context, _transaction);
+        public IDocumentRepository Documents => _documents ??= new DocumentRepository(GetDbUserWithContext());
 
         public IDocumentTypeRepository DocumentTypes =>
-            _documentTypes ??= new DocumentTypeRepository(_context, _transaction);
+            _documentTypes ??= new DocumentTypeRepository(GetDbUserWithContext());
 
         public IEmailAddressRepository EmailAddresses =>
-            _emailAddresses ??= new EmailAddressRepository(_context, _transaction);
+            _emailAddresses ??= new EmailAddressRepository(GetDbUserWithContext());
 
         public IEmailAddressTypeRepository EmailAddressTypes =>
-            _emailAddressTypes ??= new EmailAddressTypeRepository(_transaction);
+            _emailAddressTypes ??= new EmailAddressTypeRepository(GetDbUser());
 
         public IEnrolmentStatusRepository EnrolmentStatus =>
-            _enrolmentStatus ??= new EnrolmentStatusRepository(_transaction);
+            _enrolmentStatus ??= new EnrolmentStatusRepository(GetDbUser());
 
-        public IEthnicityRepository Ethnicities => _ethnicities ??= new EthnicityRepository(_transaction);
+        public IEthnicityRepository Ethnicities => _ethnicities ??= new EthnicityRepository(GetDbUser());
 
         public IExamAssessmentAspectRepository ExamAssessmentAspects => _examAssessmentAspects ??=
-            new ExamAssessmentAspectRepository(_context, _transaction);
+            new ExamAssessmentAspectRepository(GetDbUserWithContext());
 
         public IExamAssessmentRepository ExamAssessments =>
-            _examAssessments ??= new ExamAssessmentRepository(_context, _transaction);
+            _examAssessments ??= new ExamAssessmentRepository(GetDbUserWithContext());
 
         public IExamAssessmentModeRepository ExamAssessmentModes =>
-            _examAssessmentModes ??= new ExamAssessmentModeRepository(_transaction);
+            _examAssessmentModes ??= new ExamAssessmentModeRepository(GetDbUser());
 
         public IExamAwardElementRepository ExamAwardElements =>
-            _examAwardElements ??= new ExamAwardElementRepository(_context, _transaction);
+            _examAwardElements ??= new ExamAwardElementRepository(GetDbUserWithContext());
 
-        public IExamAwardRepository ExamAwards => _examAwards ??= new ExamAwardRepository(_context, _transaction);
+        public IExamAwardRepository ExamAwards => _examAwards ??= new ExamAwardRepository(GetDbUserWithContext());
 
         public IExamAwardSeriesRepository ExamAwardSeries =>
-            _examAwardSeries ??= new ExamAwardSeriesRepository(_context, _transaction);
+            _examAwardSeries ??= new ExamAwardSeriesRepository(GetDbUserWithContext());
 
         public IExamBaseComponentRepository ExamBaseComponents =>
-            _examBaseComponents ??= new ExamBaseComponentRepository(_context, _transaction);
+            _examBaseComponents ??= new ExamBaseComponentRepository(GetDbUserWithContext());
 
         public IExamBaseElementRepository ExamBaseElements =>
-            _examBaseElements ??= new ExamBaseElementRepository(_context, _transaction);
+            _examBaseElements ??= new ExamBaseElementRepository(GetDbUserWithContext());
 
-        public IExamBoardRepository ExamBoards => _examBoards ??= new ExamBoardRepository(_context, _transaction);
+        public IExamBoardRepository ExamBoards => _examBoards ??= new ExamBoardRepository(GetDbUserWithContext());
 
         public IExamCandidateRepository ExamCandidates =>
-            _examCandidates ??= new ExamCandidateRepository(_context, _transaction);
+            _examCandidates ??= new ExamCandidateRepository(GetDbUserWithContext());
 
         public IExamCandidateSeriesRepository ExamCandidateSeries =>
-            _examCandidateSeries ??= new ExamCandidateSeriesRepository(_context, _transaction);
+            _examCandidateSeries ??= new ExamCandidateSeriesRepository(GetDbUserWithContext());
 
         public IExamCandidateSpecialArrangementRepository ExamCandidateSpecialArrangements =>
-            _examCandidateSpecialArrangements ??= new ExamCandidateSpecialArrangementRepository(_context, _transaction);
+            _examCandidateSpecialArrangements ??= new ExamCandidateSpecialArrangementRepository(GetDbUserWithContext());
 
         public IExamComponentRepository ExamComponents =>
-            _examComponents ??= new ExamComponentRepository(_context, _transaction);
+            _examComponents ??= new ExamComponentRepository(GetDbUserWithContext());
 
         public IExamComponentSittingRepository ExamComponentSittings => _examComponentSittings ??=
-            new ExamComponentSittingRepository(_context, _transaction);
+            new ExamComponentSittingRepository(GetDbUserWithContext());
 
-        public IExamDateRepository ExamDates => _examDates ??= new ExamDateRepository(_context, _transaction);
+        public IExamDateRepository ExamDates => _examDates ??= new ExamDateRepository(GetDbUserWithContext());
 
         public IExamElementComponentRepository ExamElementComponents => _examElementComponents ??=
-            new ExamElementComponentRepository(_context, _transaction);
+            new ExamElementComponentRepository(GetDbUserWithContext());
 
         public IExamElementRepository ExamElements =>
-            _examElements ??= new ExamElementRepository(_context, _transaction);
+            _examElements ??= new ExamElementRepository(GetDbUserWithContext());
 
         public IExamEnrolmentRepository ExamEnrolments =>
-            _examEnrolments ??= new ExamEnrolmentRepository(_context, _transaction);
+            _examEnrolments ??= new ExamEnrolmentRepository(GetDbUserWithContext());
 
         public IExamQualificationLevelRepository ExamQualificationLevels => _examQualificationLevels ??=
-            new ExamQualificationLevelRepository(_context, _transaction);
+            new ExamQualificationLevelRepository(GetDbUserWithContext());
 
         public IExamQualificationRepository ExamQualifications =>
-            _examQualifications ??= new ExamQualificationRepository(_context, _transaction);
+            _examQualifications ??= new ExamQualificationRepository(GetDbUserWithContext());
 
         public IExamResultEmbargoRepository ExamResultEmbargoes =>
-            _examResultEmbargoes ??= new ExamResultEmbargoRepository(_context, _transaction);
+            _examResultEmbargoes ??= new ExamResultEmbargoRepository(GetDbUserWithContext());
 
-        public IExamRoomRepository ExamRooms => _examRooms ??= new ExamRoomRepository(_context, _transaction);
+        public IExamRoomRepository ExamRooms => _examRooms ??= new ExamRoomRepository(GetDbUserWithContext());
 
         public IExamRoomSeatBlockRepository ExamRoomSeatBlocks =>
-            _examRoomSeatBlocks ??= new ExamRoomSeatBlockRepository(_context, _transaction);
+            _examRoomSeatBlocks ??= new ExamRoomSeatBlockRepository(GetDbUserWithContext());
 
-        public IExamSeasonRepository ExamSeasons => _examSeasons ??= new ExamSeasonRepository(_context, _transaction);
+        public IExamSeasonRepository ExamSeasons => _examSeasons ??= new ExamSeasonRepository(GetDbUserWithContext());
 
         public IExamSeatAllocationRepository ExamSeatAllocations =>
-            _examSeatAllocations ??= new ExamSeatAllocationRepository(_context, _transaction);
+            _examSeatAllocations ??= new ExamSeatAllocationRepository(GetDbUserWithContext());
 
-        public IExamSeriesRepository ExamSeries => _examSeries ??= new ExamSeriesRepository(_context, _transaction);
+        public IExamSeriesRepository ExamSeries => _examSeries ??= new ExamSeriesRepository(GetDbUserWithContext());
 
         public IExamSessionRepository ExamSessions =>
-            _examSessions ??= new ExamSessionRepository(_context, _transaction);
+            _examSessions ??= new ExamSessionRepository(GetDbUserWithContext());
 
         public IExamSpecialArrangementRepository ExamSpecialArrangements => _examSpecialArrangements ??=
-            new ExamSpecialArrangementRepository(_context, _transaction);
+            new ExamSpecialArrangementRepository(GetDbUserWithContext());
 
-        public IExclusionRepository Exclusions => _exclusions ??= new ExclusionRepository(_context, _transaction);
+        public IExclusionRepository Exclusions => _exclusions ??= new ExclusionRepository(GetDbUserWithContext());
 
         public IExclusionAppealResultRepository ExclusionAppealResults =>
-            _exclusionAppealResults ??= new ExclusionAppealResultRepository(_transaction);
+            _exclusionAppealResults ??= new ExclusionAppealResultRepository(GetDbUser());
 
         public IExclusionReasonRepository ExclusionReasons =>
-            _exclusionReasons ??= new ExclusionReasonRepository(_context, _transaction);
+            _exclusionReasons ??= new ExclusionReasonRepository(GetDbUserWithContext());
 
-        public IExclusionTypeRepository ExclusionTypes => _exclusionTypes ??= new ExclusionTypeRepository(_transaction);
+        public IExclusionTypeRepository ExclusionTypes => _exclusionTypes ??= new ExclusionTypeRepository(GetDbUser());
 
-        public IFileRepository Files => _files ??= new FileRepository(_context, _transaction);
+        public IFileRepository Files => _files ??= new FileRepository(GetDbUserWithContext());
 
         public IGiftedTalentedRepository GiftedTalented =>
-            _giftedTalented ??= new GiftedTalentedRepository(_context, _transaction);
+            _giftedTalented ??= new GiftedTalentedRepository(GetDbUserWithContext());
 
         public IGovernanceTypeRepository GovernanceTypes =>
-            _governanceTypes ??= new GovernanceTypeRepository(_transaction);
+            _governanceTypes ??= new GovernanceTypeRepository(GetDbUser());
 
-        public IGradeRepository Grades => _grades ??= new GradeRepository(_context, _transaction);
+        public IGradeRepository Grades => _grades ??= new GradeRepository(GetDbUserWithContext());
 
-        public IGradeSetRepository GradeSets => _gradeSets ??= new GradeSetRepository(_context, _transaction);
+        public IGradeSetRepository GradeSets => _gradeSets ??= new GradeSetRepository(GetDbUserWithContext());
 
         public IHomeworkItemRepository HomeworkItems =>
-            _homeworkItems ??= new HomeworkItemRepository(_context, _transaction);
+            _homeworkItems ??= new HomeworkItemRepository(GetDbUserWithContext());
 
         public IHomeworkSubmissionRepository HomeworkSubmissions =>
-            _homeworkSubmissions ??= new HomeworkSubmissionRepository(_context, _transaction);
+            _homeworkSubmissions ??= new HomeworkSubmissionRepository(GetDbUserWithContext());
 
-        public IHouseRepository Houses => _houses ??= new HouseRepository(_context, _transaction);
+        public IHouseRepository Houses => _houses ??= new HouseRepository(GetDbUserWithContext());
 
         public IIncidentDetentionRepository IncidentDetentions =>
-            _incidentDetentions ??= new IncidentDetentionRepository(_context, _transaction);
+            _incidentDetentions ??= new IncidentDetentionRepository(GetDbUserWithContext());
 
-        public IIncidentRepository Incidents => _incidents ??= new IncidentRepository(_context, _transaction);
+        public IIncidentRepository Incidents => _incidents ??= new IncidentRepository(GetDbUserWithContext());
 
         public IIncidentTypeRepository IncidentTypes =>
-            _incidentTypes ??= new IncidentTypeRepository(_context, _transaction);
+            _incidentTypes ??= new IncidentTypeRepository(GetDbUserWithContext());
 
-        public IIntakeTypeRepository IntakeTypes => _intakeTypes ??= new IntakeTypeRepository(_transaction);
+        public IIntakeTypeRepository IntakeTypes => _intakeTypes ??= new IntakeTypeRepository(GetDbUser());
 
-        public ILanguageRepository Languages => _languages ??= new LanguageRepository(_transaction);
+        public ILanguageRepository Languages => _languages ??= new LanguageRepository(GetDbUser());
 
-        public ILessonPlanRepository LessonPlans => _lessonPlans ??= new LessonPlanRepository(_context, _transaction);
+        public ILessonPlanRepository LessonPlans => _lessonPlans ??= new LessonPlanRepository(GetDbUserWithContext());
 
         public ILessonPlanHomeworkItemRepository LessonPlanHomeworkItems => _lessonPlanHomeworkItems ??=
-            new LessonPlanHomeworkItemRepository(_context, _transaction);
+            new LessonPlanHomeworkItemRepository(GetDbUserWithContext());
 
         public ILessonPlanTemplateRepository LessonPlanTemplates =>
-            _lessonPlanTemplates ??= new LessonPlanTemplateRepository(_context, _transaction);
+            _lessonPlanTemplates ??= new LessonPlanTemplateRepository(GetDbUserWithContext());
 
         public ILocalAuthorityRepository LocalAuthorities =>
-            _localAuthorities ??= new LocalAuthorityRepository(_transaction);
+            _localAuthorities ??= new LocalAuthorityRepository(GetDbUser());
 
-        public ILocationRepository Locations => _locations ??= new LocationRepository(_context, _transaction);
+        public ILocationRepository Locations => _locations ??= new LocationRepository(GetDbUserWithContext());
 
-        public ILogNoteRepository LogNotes => _logNotes ??= new LogNoteRepository(_context, _transaction);
+        public ILogNoteRepository LogNotes => _logNotes ??= new LogNoteRepository(GetDbUserWithContext());
 
-        public ILogNoteTypeRepository LogNoteTypes => _logNoteTypes ??= new LogNoteTypeRepository(_context, _transaction);
+        public ILogNoteTypeRepository LogNoteTypes => _logNoteTypes ??= new LogNoteTypeRepository(GetDbUserWithContext());
 
         public IMarksheetColumnRepository MarksheetColumns =>
-            _marksheetColumns ??= new MarksheetColumnRepository(_context, _transaction);
+            _marksheetColumns ??= new MarksheetColumnRepository(GetDbUserWithContext());
 
         public IMarksheetRepository Marksheets => _marksheets ??=
-            new MarksheetRepository(_context, _transaction);
+            new MarksheetRepository(GetDbUserWithContext());
 
         public IMarksheetTemplateRepository MarksheetTemplates =>
-            _marksheetTemplates ??= new MarksheetTemplateRepository(_context, _transaction);
+            _marksheetTemplates ??= new MarksheetTemplateRepository(GetDbUserWithContext());
 
         public IMedicalConditionRepository MedicalConditions =>
-            _medicalConditions ??= new MedicalConditionRepository(_context, _transaction);
+            _medicalConditions ??= new MedicalConditionRepository(GetDbUserWithContext());
 
         public IMedicalEventRepository MedicalEvents =>
-            _medicalEvents ??= new MedicalEventRepository(_context, _transaction);
+            _medicalEvents ??= new MedicalEventRepository(GetDbUserWithContext());
 
-        public INextOfKinRepository NextOfKin => _nextOfKin ??= new NextOfKinRepository(_context, _transaction);
+        public INextOfKinRepository NextOfKin => _nextOfKin ??= new NextOfKinRepository(GetDbUserWithContext());
 
         public INextOfKinRelationshipTypeRepository NextOfKinRelationshipTypes => _nextOfKinRelationshipTypes ??=
-            new NextOfKinRelationshipTypeRepository(_transaction);
+            new NextOfKinRelationshipTypeRepository(GetDbUser());
 
         public IObservationOutcomeRepository ObservationOutcomes =>
-            _observationOutcomes ??= new ObservationOutcomeRepository(_transaction);
+            _observationOutcomes ??= new ObservationOutcomeRepository(GetDbUser());
 
         public IObservationRepository Observations =>
-            _observations ??= new ObservationRepository(_context, _transaction);
+            _observations ??= new ObservationRepository(GetDbUserWithContext());
 
         public IParentEveningAppointmentRepository ParentEveningAppointments => _parentEveningAppointments ??=
-            new ParentEveningAppointmentRepository(_context, _transaction);
+            new ParentEveningAppointmentRepository(GetDbUserWithContext());
 
         public IParentEveningBreakRepository ParentEveningBreaks =>
-            _parentEveningBreaks ??= new ParentEveningBreakRepository(_context, _transaction);
+            _parentEveningBreaks ??= new ParentEveningBreakRepository(GetDbUserWithContext());
 
         public IParentEveningGroupRepository ParentEveningGroups =>
-            _parentEveningGroups ??= new ParentEveningGroupRepository(_context, _transaction);
+            _parentEveningGroups ??= new ParentEveningGroupRepository(GetDbUserWithContext());
 
         public IParentEveningRepository ParentEvenings =>
-            _parentEvenings ??= new ParentEveningRepository(_context, _transaction);
+            _parentEvenings ??= new ParentEveningRepository(GetDbUserWithContext());
 
         public IParentEveningStaffMemberRepository ParentEveningStaffMembers => _parentEveningStaffMembers ??=
-            new ParentEveningStaffMemberRepository(_context, _transaction);
+            new ParentEveningStaffMemberRepository(GetDbUserWithContext());
 
         public IPersonConditionRepository PersonConditions =>
-            _personConditions ??= new PersonConditionRepository(_context, _transaction);
+            _personConditions ??= new PersonConditionRepository(GetDbUserWithContext());
 
         public IPersonDietaryRequirementRepository PersonDietaryRequirements => _personDietaryRequirements ??=
-            new PersonDietaryRequirementRepository(_context, _transaction);
+            new PersonDietaryRequirementRepository(GetDbUserWithContext());
 
-        public IPersonRepository People => _people ??= new PersonRepository(_context, _transaction);
+        public IPersonRepository People => _people ??= new PersonRepository(GetDbUserWithContext());
 
         public IPhoneNumberRepository PhoneNumbers =>
-            _phoneNumbers ??= new PhoneNumberRepository(_context, _transaction);
+            _phoneNumbers ??= new PhoneNumberRepository(GetDbUserWithContext());
 
         public IPhoneNumberTypeRepository PhoneNumberTypes =>
-            _phoneNumberTypes ??= new PhoneNumberTypeRepository(_transaction);
+            _phoneNumberTypes ??= new PhoneNumberTypeRepository(GetDbUser());
         
-        public IPhotoRepository Photos => _photos ??= new PhotoRepository(_context, _transaction);
+        public IPhotoRepository Photos => _photos ??= new PhotoRepository(GetDbUserWithContext());
 
-        public IProductRepository Products => _products ??= new ProductRepository(_context, _transaction);
+        public IProductRepository Products => _products ??= new ProductRepository(GetDbUserWithContext());
 
-        public IRegGroupRepository RegGroups => _regGroups ??= new RegGroupRepository(_context, _transaction);
+        public IRegGroupRepository RegGroups => _regGroups ??= new RegGroupRepository(GetDbUserWithContext());
 
         public IRelationshipTypeRepository RelationshipTypes =>
-            _relationshipTypes ??= new RelationshipTypeRepository(_transaction);
+            _relationshipTypes ??= new RelationshipTypeRepository(GetDbUser());
 
         public IReportCardEntryRepository ReportCardEntries =>
-            _reportCardEntries ??= new ReportCardEntryRepository(_context, _transaction);
+            _reportCardEntries ??= new ReportCardEntryRepository(GetDbUserWithContext());
 
-        public IReportCardRepository ReportCards => _reportCards ??= new ReportCardRepository(_context, _transaction);
+        public IReportCardRepository ReportCards => _reportCards ??= new ReportCardRepository(GetDbUserWithContext());
 
         public IReportCardTargetEntryRepository ReportCardTargetEntries => _reportCardTargetEntries ??=
-            new ReportCardTargetEntryRepository(_context, _transaction);
+            new ReportCardTargetEntryRepository(GetDbUserWithContext());
 
         public IReportCardTargetRepository ReportCardTargets =>
-            _reportCardTargets ??= new ReportCardTargetRepository(_context, _transaction);
+            _reportCardTargets ??= new ReportCardTargetRepository(GetDbUserWithContext());
 
-        public IResultRepository Results => _results ??= new ResultRepository(_context, _transaction);
+        public IResultRepository Results => _results ??= new ResultRepository(GetDbUserWithContext());
 
-        public IResultSetRepository ResultSets => _resultSets ??= new ResultSetRepository(_context, _transaction);
+        public IResultSetRepository ResultSets => _resultSets ??= new ResultSetRepository(GetDbUserWithContext());
 
-        public IRoleRepository Roles => _roles ??= new RoleRepository(_context, _transaction);
+        public IRoleRepository Roles => _roles ??= new RoleRepository(GetDbUserWithContext());
 
-        public IRoomRepository Rooms => _rooms ??= new RoomRepository(_context, _transaction);
+        public IRoomRepository Rooms => _rooms ??= new RoomRepository(GetDbUserWithContext());
 
         public IRoomClosureReasonRepository RoomClosureReasons =>
-            _roomClosureReasons ??= new RoomClosureReasonRepository(_context, _transaction);
+            _roomClosureReasons ??= new RoomClosureReasonRepository(GetDbUserWithContext());
 
         public IRoomClosureRepository RoomClosures =>
-            _roomClosures ??= new RoomClosureRepository(_context, _transaction);
+            _roomClosures ??= new RoomClosureRepository(GetDbUserWithContext());
 
-        public ISchoolPhaseRepository SchoolPhases => _schoolPhases ??= new SchoolPhaseRepository(_transaction);
+        public ISchoolPhaseRepository SchoolPhases => _schoolPhases ??= new SchoolPhaseRepository(GetDbUser());
 
-        public ISchoolRepository Schools => _schools ??= new SchoolRepository(_context, _transaction);
+        public ISchoolRepository Schools => _schools ??= new SchoolRepository(GetDbUserWithContext());
 
-        public ISchoolTypeRepository SchoolTypes => _schoolTypes ??= new SchoolTypeRepository(_transaction);
+        public ISchoolTypeRepository SchoolTypes => _schoolTypes ??= new SchoolTypeRepository(GetDbUser());
 
-        public ISenEventRepository SenEvents => _senEvents ??= new SenEventRepository(_context, _transaction);
+        public ISenEventRepository SenEvents => _senEvents ??= new SenEventRepository(GetDbUserWithContext());
 
-        public ISenEventTypeRepository SenEventTypes => _senEventTypes ??= new SenEventTypeRepository(_transaction);
+        public ISenEventTypeRepository SenEventTypes => _senEventTypes ??= new SenEventTypeRepository(GetDbUser());
 
         public ISenProvisionRepository SenProvisions =>
-            _senProvisions ??= new SenProvisionRepository(_context, _transaction);
+            _senProvisions ??= new SenProvisionRepository(GetDbUserWithContext());
 
         public ISenProvisionTypeRepository SenProvisionTypes =>
-            _senProvisionTypes ??= new SenProvisionTypeRepository(_transaction);
+            _senProvisionTypes ??= new SenProvisionTypeRepository(GetDbUser());
 
-        public ISenReviewRepository SenReviews => _senReviews ??= new SenReviewRepository(_context, _transaction);
+        public ISenReviewRepository SenReviews => _senReviews ??= new SenReviewRepository(GetDbUserWithContext());
 
-        public ISenReviewTypeRepository SenReviewTypes => _senReviewTypes ??= new SenReviewTypeRepository(_transaction);
+        public ISenReviewTypeRepository SenReviewTypes => _senReviewTypes ??= new SenReviewTypeRepository(GetDbUser());
 
-        public ISenStatusRepository SenStatus => _senStatus ??= new SenStatusRepository(_transaction);
+        public ISenStatusRepository SenStatus => _senStatus ??= new SenStatusRepository(GetDbUser());
 
-        public ISenTypeRepository SenTypes => _senTypes ??= new SenTypeRepository(_transaction);
+        public ISenTypeRepository SenTypes => _senTypes ??= new SenTypeRepository(GetDbUser());
 
-        public ISessionRepository Sessions => _sessions ??= new SessionRepository(_context, _transaction);
+        public ISessionRepository Sessions => _sessions ??= new SessionRepository(GetDbUserWithContext());
 
         public ISessionExtraNameRepository SessionExtraNames =>
-            _sessionExtraNames ??= new SessionExtraNameRepository(_context, _transaction);
+            _sessionExtraNames ??= new SessionExtraNameRepository(GetDbUserWithContext());
 
         public ISessionPeriodRepository SessionPeriods =>
-            _sessionPeriods ??= new SessionPeriodRepository(_context, _transaction);
+            _sessionPeriods ??= new SessionPeriodRepository(GetDbUserWithContext());
 
         public IStaffMemberRepository StaffMembers =>
-            _staffMembers ??= new StaffMemberRepository(_context, _transaction);
+            _staffMembers ??= new StaffMemberRepository(GetDbUserWithContext());
 
         public IStaffAbsenceRepository StaffAbsences =>
-            _staffAbsences ??= new StaffAbsenceRepository(_context, _transaction);
+            _staffAbsences ??= new StaffAbsenceRepository(GetDbUserWithContext());
 
         public IStaffAbsenceTypeRepository StaffAbsenceTypes =>
-            _staffAbsenceTypes ??= new StaffAbsenceTypeRepository(_context, _transaction);
+            _staffAbsenceTypes ??= new StaffAbsenceTypeRepository(GetDbUserWithContext());
 
         public IStaffIllnessTypeRepository StaffIllnessTypes =>
-            _staffIllnessTypes ??= new StaffIllnessTypeRepository(_context, _transaction);
+            _staffIllnessTypes ??= new StaffIllnessTypeRepository(GetDbUserWithContext());
 
         public IStoreDiscountRepository StoreDiscounts =>
-            _storeDiscounts ??= new StoreDiscountRepository(_context, _transaction);
+            _storeDiscounts ??= new StoreDiscountRepository(GetDbUserWithContext());
 
         public IStudentAchievementRepository StudentAchievements =>
-            _studentAchievements ??= new StudentAchievementRepository(_context, _transaction);
+            _studentAchievements ??= new StudentAchievementRepository(GetDbUserWithContext());
 
         public IStudentAgentRelationshipRepository StudentAgentRelationships => _studentAgentRelationships ??=
-            new StudentAgentRelationshipRepository(_context, _transaction);
+            new StudentAgentRelationshipRepository(GetDbUserWithContext());
 
         public IStudentChargeRepository StudentCharges =>
-            _studentCharges ??= new StudentChargeRepository(_context, _transaction);
+            _studentCharges ??= new StudentChargeRepository(GetDbUserWithContext());
 
         public IStudentContactRelationshipRepository StudentContactRelationships => _studentContactRelationships ??=
-            new StudentContactRelationshipRepository(_context, _transaction);
+            new StudentContactRelationshipRepository(GetDbUserWithContext());
 
         public IStudentChargeDiscountRepository StudentChargeDiscounts => _studentChargeDiscounts ??=
-            new StudentChargeDiscountRepository(_context, _transaction);
+            new StudentChargeDiscountRepository(GetDbUserWithContext());
 
         public IStudentChargeDiscountRepository StudentDiscounts =>
-            _studentChargeDiscounts ??= new StudentChargeDiscountRepository(_context, _transaction);
+            _studentChargeDiscounts ??= new StudentChargeDiscountRepository(GetDbUserWithContext());
 
-        public IStudentRepository Students => _students ??= new StudentRepository(_context, _transaction);
+        public IStudentRepository Students => _students ??= new StudentRepository(GetDbUserWithContext());
 
         public IStudentGroupRepository StudentGroups =>
-            _studentGroups ??= new StudentGroupRepository(_context, _transaction);
+            _studentGroups ??= new StudentGroupRepository(GetDbUserWithContext());
 
         public IStudentGroupMembershipRepository StudentGroupMemberships => _studentGroupMemberships ??=
-            new StudentGroupMembershipRepository(_context, _transaction);
+            new StudentGroupMembershipRepository(GetDbUserWithContext());
 
         public IStudentGroupSupervisorRepository StudentGroupSupervisors => _studentGroupSupervisors ??=
-            new StudentGroupSupervisorRepository(_context, _transaction);
+            new StudentGroupSupervisorRepository(GetDbUserWithContext());
 
         public IStudentIncidentRepository StudentIncidents =>
-            _studentIncidents ??= new StudentIncidentRepository(_context, _transaction);
+            _studentIncidents ??= new StudentIncidentRepository(GetDbUserWithContext());
 
-        public IStudyTopicRepository StudyTopics => _studyTopics ??= new StudyTopicRepository(_context, _transaction);
+        public IStudyTopicRepository StudyTopics => _studyTopics ??= new StudyTopicRepository(GetDbUserWithContext());
 
-        public ISubjectCodeRepository SubjectCodes => _subjectCodes ??= new SubjectCodeRepository(_transaction);
+        public ISubjectCodeRepository SubjectCodes => _subjectCodes ??= new SubjectCodeRepository(GetDbUser());
 
         public ISubjectCodeSetRepository SubjectCodeSets =>
-            _subjectCodeSets ??= new SubjectCodeSetRepository(_transaction);
+            _subjectCodeSets ??= new SubjectCodeSetRepository(GetDbUser());
 
-        public ISubjectRepository Subjects => _subjects ??= new SubjectRepository(_context, _transaction);
+        public ISubjectRepository Subjects => _subjects ??= new SubjectRepository(GetDbUserWithContext());
 
         public ISubjectStaffMemberRepository SubjectStaffMembers =>
-            _subjectStaffMembers ??= new SubjectStaffMemberRepository(_context, _transaction);
+            _subjectStaffMembers ??= new SubjectStaffMemberRepository(GetDbUserWithContext());
 
         public ISubjectStaffMemberRoleRepository SubjectStaffMemberRoles => _subjectStaffMemberRoles ??=
-            new SubjectStaffMemberRoleRepository(_context, _transaction);
+            new SubjectStaffMemberRoleRepository(GetDbUserWithContext());
 
         public ISystemSettingRepository SystemSettings =>
-            _systemSettings ??= new SystemSettingRepository(_context, _transaction);
+            _systemSettings ??= new SystemSettingRepository(GetDbUserWithContext());
 
-        public ITaskRepository Tasks => _tasks ??= new TaskRepository(_context, _transaction);
+        public ITaskRepository Tasks => _tasks ??= new TaskRepository(GetDbUserWithContext());
 
         public ITaskReminderRepository TaskReminders =>
-            _taskReminders ??= new TaskReminderRepository(_context, _transaction);
+            _taskReminders ??= new TaskReminderRepository(GetDbUserWithContext());
 
-        public ITaskTypeRepository TaskTypes => _taskTypes ??= new TaskTypeRepository(_context, _transaction);
+        public ITaskTypeRepository TaskTypes => _taskTypes ??= new TaskTypeRepository(GetDbUserWithContext());
 
         public ITrainingCertificateRepository TrainingCertificates =>
-            _trainingCertificates ??= new TrainingCertificateRepository(_context, _transaction);
+            _trainingCertificates ??= new TrainingCertificateRepository(GetDbUserWithContext());
 
         public ITrainingCertificateStatusRepository TrainingCertificateStatus => _trainingCertificateStatus ??=
-            new TrainingCertificateStatusRepository(_context, _transaction);
+            new TrainingCertificateStatusRepository(GetDbUserWithContext());
 
         public ITrainingCourseRepository TrainingCourses =>
-            _trainingCourses ??= new TrainingCourseRepository(_context, _transaction);
+            _trainingCourses ??= new TrainingCourseRepository(GetDbUserWithContext());
 
-        public IUserRoleRepository UserRoles => _userRoles ??= new UserRoleRepository(_context, _transaction);
+        public IUserRoleRepository UserRoles => _userRoles ??= new UserRoleRepository(GetDbUserWithContext());
 
-        public IUserRepository Users => _users ??= new UserRepository(_context, _transaction);
+        public IUserRepository Users => _users ??= new UserRepository(GetDbUserWithContext());
 
-        public IVatRateRepository VatRates => _vatRates ??= new VatRateRepository(_context, _transaction);
+        public IVatRateRepository VatRates => _vatRates ??= new VatRateRepository(GetDbUserWithContext());
 
-        public IYearGroupRepository YearGroups => _yearGroups ??= new YearGroupRepository(_context, _transaction);
+        public IYearGroupRepository YearGroups => _yearGroups ??= new YearGroupRepository(GetDbUserWithContext());
 
-        public static async Task<IUnitOfWork> Create(ApplicationDbContext context)
+        public static async Task<IUnitOfWork> Create(Guid userId, ApplicationDbContext context)
         {
-            var unitOfWork = new UnitOfWork(context);
+            var unitOfWork = new UnitOfWork(userId, context);
             await unitOfWork.Initialise();
             return unitOfWork;
+        }
+
+        private DbUser GetDbUser()
+        {
+            return new DbUser(_userId, _transaction);
+        }
+
+        private DbUserWithContext GetDbUserWithContext()
+        {
+            return new DbUserWithContext(_userId, _transaction, _context);
         }
 
         private async Task<DbTransaction> GetDbTransaction(bool useContext)
@@ -802,8 +813,9 @@ namespace MyPortal.Database
             _transaction = await GetDbTransaction(false);
         }
 
-        private UnitOfWork(ApplicationDbContext context)
+        private UnitOfWork(Guid userId, ApplicationDbContext context)
         {
+            _userId = userId;
             _context = context;
             _connectionString = context.Database.GetConnectionString();
         }
@@ -1083,6 +1095,8 @@ namespace MyPortal.Database
 
         public async ValueTask DisposeAsync()
         {
+            ResetRepositories();
+            
             var connection = _transaction.Connection;
 
             if (_transaction != null)
@@ -1092,7 +1106,6 @@ namespace MyPortal.Database
 
             if (connection != null)
             {
-                await connection.CloseAsync();
                 await connection.DisposeAsync();
             }
 

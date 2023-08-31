@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -18,9 +16,8 @@ namespace MyPortal.Database.Repositories
 {
     public class DocumentRepository : BaseReadWriteRepository<Document>, IDocumentRepository
     {
-        public DocumentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public DocumentRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-           
         }
 
         protected override Query JoinRelated(Query query)
@@ -48,7 +45,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var documents =
-                await Transaction.Connection.QueryAsync<Document, User, Directory, DocumentType, File, Document>(
+                await DbUser.Transaction.Connection.QueryAsync<Document, User, Directory, DocumentType, File, Document>(
                     sql.Sql,
                     (document, createdBy, dir, type, attachment) =>
                     {
@@ -58,7 +55,7 @@ namespace MyPortal.Database.Repositories
                         document.Directory = dir;
 
                         return document;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return documents;
         }
@@ -74,7 +71,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(Document entity)
         {
-            var document = await Context.Documents.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var document = await DbUser.Context.Documents.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (document == null)
             {
@@ -89,7 +86,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task UpdateWithAttachment(Document entity)
         {
-            var document = await Context.Documents.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var document = await DbUser.Context.Documents.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (document == null)
             {

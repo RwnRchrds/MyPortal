@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ExamEnrolmentRepository : BaseReadWriteRepository<ExamEnrolment>, IExamEnrolmentRepository
     {
-        public ExamEnrolmentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExamEnrolmentRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -41,21 +40,21 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var enrolments =
-                await Transaction.Connection.QueryAsync<ExamEnrolment, ExamAward, ExamCandidate, ExamEnrolment>(sql.Sql,
+                await DbUser.Transaction.Connection.QueryAsync<ExamEnrolment, ExamAward, ExamCandidate, ExamEnrolment>(sql.Sql,
                     (enrolment, award, candidate) =>
                     {
                         enrolment.Award = award;
                         enrolment.Candidate = candidate;
 
                         return enrolment;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return enrolments;
         }
 
         public async Task Update(ExamEnrolment entity)
         {
-            var enrolment = await Context.ExamEnrolments.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var enrolment = await DbUser.Context.ExamEnrolments.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (enrolment == null)
             {

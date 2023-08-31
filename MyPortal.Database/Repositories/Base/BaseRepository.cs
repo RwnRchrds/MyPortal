@@ -4,19 +4,21 @@ using System.Data;
 using System.Data.Common;
 using System.Text;
 using Microsoft.EntityFrameworkCore.Storage;
+using MyPortal.Database.Models.Connection;
 using SqlKata.Compilers;
 
 namespace MyPortal.Database.Repositories.Base
 {
-    public class BaseRepository
+    public abstract class BaseRepository
     {
-        protected IDbTransaction Transaction;
         protected readonly SqlServerCompiler Compiler;
 
-        public BaseRepository(IDbTransaction transaction)
+        protected BaseRepository(DbUser dbUser)
         {
-            Transaction = transaction;
+            DbUser = dbUser;
             Compiler = new SqlServerCompiler();
         }
+
+        protected virtual DbUser DbUser { get; }
     }
 }

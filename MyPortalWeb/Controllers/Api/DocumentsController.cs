@@ -8,9 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Enums;
-using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
-using MyPortal.Logic.FileProviders;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Documents;
 using MyPortal.Logic.Models.Requests.Documents;
@@ -18,7 +16,6 @@ using MyPortal.Logic.Models.Summary;
 using MyPortal.Logic.Models.Web;
 using MyPortal.Logic.Services;
 using MyPortalWeb.Controllers.BaseControllers;
-using Configuration = MyPortal.Logic.Configuration.Configuration;
 
 namespace MyPortalWeb.Controllers.Api
 {
@@ -27,44 +24,23 @@ namespace MyPortalWeb.Controllers.Api
     public class DocumentsController : BaseApiController
     {
         private readonly IDocumentService _documentService;
+        private readonly IFileService _fileService;
         private readonly IPersonService _personService;
         private readonly IStaffMemberService _staffMemberService;
 
-        public DocumentsController(IUserService userService, IDocumentService documentService,
+        public DocumentsController(IUserService userService, IDocumentService documentService, IFileService fileService,
             IPersonService personService, IStaffMemberService staffMemberService) : base(userService)
         {
             _documentService = documentService;
+            _fileService = fileService;
             _personService = personService;
             _staffMemberService = staffMemberService;
-        }   
-
-        private IFileService CreateFileService()
-        {
-            if (Configuration.Instance.FileProvider == FileProvider.Local)
-            {
-                return new LocalFileService(new LocalFileProvider());
-            }
-            
-            if (Configuration.Instance.FileProvider == FileProvider.GoogleDrive)
-            {
-                var accessToken = Request.Headers["file-access-token"];
-                
-                if (string.IsNullOrWhiteSpace(accessToken))
-                {
-                    throw new UnauthorisedException("No file access token was provided.");
-                }
-                
-                var fileProvider = new GoogleFileProvider();
-                return new HostedFileService(fileProvider, accessToken);
-            }
-
-            return null;
         }
 
         private async Task<bool> CanAccessDirectory(Guid directoryId, bool edit)
         {
             var user = await GetLoggedInUser();
-            
+
             if (await _documentService.IsSchoolDirectory(directoryId))
             {
                 var publicPermission =
@@ -88,7 +64,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 if (dirOwner.PersonTypes.StaffId.HasValue)
-                { 
+                {
                     var allStaffPermission =
                         edit
                             ? PermissionValue.PeopleEditAllStaffDocuments
@@ -103,7 +79,7 @@ namespace MyPortalWeb.Controllers.Api
                         edit
                             ? PermissionValue.PeopleEditManagedStaffDocuments
                             : PermissionValue.PeopleViewManagedStaffDocuments;
-                    
+
                     if (await User.HasPermission(UserService, PermissionRequirement.RequireAll,
                             allStaffPermission))
                     {
@@ -146,7 +122,7 @@ namespace MyPortalWeb.Controllers.Api
                         edit
                             ? PermissionValue.StudentEditStudentDocuments
                             : PermissionValue.StudentViewStudentDocuments;
-                    
+
                     if (await User.HasPermission(UserService, PermissionRequirement.RequireAll,
                             studentPermission))
                     {
@@ -159,11 +135,11 @@ namespace MyPortalWeb.Controllers.Api
 
             return true;
         }
-        
+
         private async Task<bool> CanAccessDocument(Guid documentId, bool edit)
         {
             var user = await GetLoggedInUser();
-            
+
             var document = await _documentService.GetDocumentById(documentId);
 
             if (await CanAccessDirectory(document.DirectoryId, edit))
@@ -212,7 +188,7 @@ namespace MyPortalWeb.Controllers.Api
                 {
                     await _documentService.CreateDocument(model);
 
-                    return Ok();   
+                    return Ok();
                 }
 
                 return PermissionError();
@@ -227,18 +203,17 @@ namespace MyPortalWeb.Controllers.Api
         [Route("{documentId}/file")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> UploadFile([FromRoute] Guid documentId, [FromBody] FileUploadRequestModel requestModel)
+        public async Task<IActionResult> UploadFile([FromRoute] Guid documentId,
+            [FromBody] FileUploadRequestModel requestModel)
         {
             try
             {
-                var fileService = CreateFileService();
-                
-                if (fileService is LocalFileService localFileService)
+                if (_fileService is LocalFileService localFileService)
                 {
                     if (await CanAccessDocument(documentId, true))
                     {
                         requestModel.DocumentId = documentId;
-                        
+
                         await localFileService.UploadFileToDocument(requestModel);
 
                         return Ok();
@@ -264,9 +239,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var fileService = CreateFileService();
-                
-                if (fileService is HostedFileService hostedFileService)
+                if (_fileService is HostedFileService hostedFileService)
                 {
                     if (await CanAccessDocument(requestModel.DocumentId, true))
                     {
@@ -294,11 +267,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var fileService = CreateFileService();
-                
                 if (await CanAccessDocument(documentId, true))
                 {
-                    await fileService.RemoveFileFromDocument(documentId);
+                    await _fileService.RemoveFileFromDocument(documentId);
 
                     return Ok();
                 }
@@ -314,15 +285,14 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPut]
         [Route("{documentId}")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateDocument([FromRoute] Guid documentId, [FromBody] DocumentRequestModel model)
+        public async Task<IActionResult> UpdateDocument([FromRoute] Guid documentId,
+            [FromBody] DocumentRequestModel model)
         {
             try
             {
                 if (await CanAccessDocument(documentId, true))
                 {
-                    var userId = User.GetUserId();
-
-                    await _documentService.UpdateDocument(userId, model);
+                    await _documentService.UpdateDocument(documentId, model);
 
                     return Ok();
                 }
@@ -346,7 +316,7 @@ namespace MyPortalWeb.Controllers.Api
                 {
                     await _documentService.DeleteDocument(documentId);
 
-                    return Ok();   
+                    return Ok();
                 }
 
                 return PermissionError();
@@ -365,9 +335,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var fileService = CreateFileService();
-                
-                if (fileService is HostedFileService hostedFileService)
+                if (_fileService is HostedFileService hostedFileService)
                 {
                     if (await CanAccessDocument(documentId, false))
                     {
@@ -386,7 +354,7 @@ namespace MyPortalWeb.Controllers.Api
                 return HandleException(e);
             }
         }
-        
+
         [HttpGet]
         [Route("directories/{directoryId}/children")]
         [ProducesResponseType(typeof(DirectoryChildWrapper), 200)]
@@ -436,7 +404,7 @@ namespace MyPortalWeb.Controllers.Api
                 {
                     return Error(HttpStatusCode.BadRequest, "A parent directory was not provided.");
                 }
-                
+
                 if (await CanAccessDirectory(requestModel.ParentId.Value, true))
                 {
                     await _documentService.CreateDirectory(requestModel);
@@ -455,7 +423,8 @@ namespace MyPortalWeb.Controllers.Api
         [HttpPut]
         [Route("directories/{directoryId}")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Update([FromRoute] Guid directoryId, [FromBody] DirectoryRequestModel requestModel)
+        public async Task<IActionResult> Update([FromRoute] Guid directoryId,
+            [FromBody] DirectoryRequestModel requestModel)
         {
             try
             {

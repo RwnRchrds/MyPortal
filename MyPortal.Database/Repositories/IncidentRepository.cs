@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -17,9 +15,8 @@ namespace MyPortal.Database.Repositories
 {
     public class IncidentRepository : BaseReadWriteRepository<Incident>, IIncidentRepository
     {
-        public IncidentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public IncidentRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)
@@ -46,7 +43,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var incidents = await Transaction.Connection.QueryAsync(sql.Sql,
+            var incidents = await DbUser.Transaction.Connection.QueryAsync(sql.Sql,
                 new[]
                 {
                     typeof(Incident), typeof(IncidentType), typeof(Location), typeof(AcademicYear), typeof(User)
@@ -68,7 +65,7 @@ namespace MyPortal.Database.Repositories
                     }
 
                     return incident;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return incidents;
         }
@@ -92,7 +89,7 @@ namespace MyPortal.Database.Repositories
         //
         //     return await ExecuteQueryIntResult(query) ?? 0;
         // }
-        
+
         // public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
         // {
         //     var query = new Query(TblName).AsSum("Incident.Points");
@@ -105,7 +102,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(Incident entity)
         {
-            var incident = await Context.Incidents.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var incident = await DbUser.Context.Incidents.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (incident == null)
             {

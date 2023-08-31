@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class BillAccountTransactionRepository : BaseReadWriteRepository<BillAccountTransaction>, IBillAccountTransactionRepository
+    public class BillAccountTransactionRepository : BaseReadWriteRepository<BillAccountTransaction>,
+        IBillAccountTransactionRepository
     {
-        public BillAccountTransactionRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public BillAccountTransactionRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -32,13 +32,13 @@ namespace MyPortal.Database.Repositories
 
             return query;
         }
-        
+
         protected override async Task<IEnumerable<BillAccountTransaction>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
             var accountTransactions =
-                await Transaction.Connection
+                await DbUser.Transaction.Connection
                     .QueryAsync<BillAccountTransaction, Bill, AccountTransaction, BillAccountTransaction>(sql.Sql,
                         (bat, bill, transaction) =>
                         {
@@ -46,7 +46,7 @@ namespace MyPortal.Database.Repositories
                             bat.AccountTransaction = transaction;
 
                             return bat;
-                        }, sql.NamedBindings, Transaction);
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return accountTransactions;
         }

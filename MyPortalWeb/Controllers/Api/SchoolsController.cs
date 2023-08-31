@@ -10,12 +10,14 @@ using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Extensions;
+using MyPortal.Logic.Identity;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.School;
 
 using MyPortal.Logic.Models.Requests.School.Bulletins;
 using MyPortal.Logic.Models.Summary;
+using MyPortal.Logic.Services;
 using MyPortalWeb.Controllers.BaseControllers;
 using MyPortalWeb.Models.Requests;
 using MyPortalWeb.Models.Response;
@@ -60,7 +62,12 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var schoolName = await _schoolService.GetLocalSchoolName();
+                // MyPortal services require a user to be set in the session
+                // Use system user for anonymous requests
+                // This should be fine as anonymous users should only be able to access public data
+                var schoolService = new SchoolService(SessionUser.System);
+                
+                var schoolName = await schoolService.GetLocalSchoolName();
 
                 return Ok(new StringResponseModel(schoolName));
             }

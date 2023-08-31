@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumGroupRepository : BaseReadWriteRepository<CurriculumGroup>, ICurriculumGroupRepository
     {
-        public CurriculumGroupRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public CurriculumGroupRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -40,7 +39,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var groups = await Transaction.Connection
+            var groups = await DbUser.Transaction.Connection
                 .QueryAsync<CurriculumGroup, CurriculumBlock, StudentGroup, CurriculumGroup>(sql.Sql,
                     (group, block, studentGroup) =>
                     {
@@ -48,14 +47,14 @@ namespace MyPortal.Database.Repositories
                         group.StudentGroup = studentGroup;
 
                         return group;
-                    }, sql.NamedBindings, Transaction);
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return groups;
         }
 
         public async Task Update(CurriculumGroup entity)
         {
-            var group = await Context.CurriculumGroups.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var group = await DbUser.Context.CurriculumGroups.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (group == null)
             {

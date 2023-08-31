@@ -7,6 +7,7 @@ using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {
     public class RoomRepository : BaseReadWriteRepository<Room>, IRoomRepository
     {
-        public RoomRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public RoomRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -38,19 +39,19 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var rooms = await Transaction.Connection.QueryAsync<Room, BuildingFloor, Room>(sql.Sql, (room, floor) =>
+            var rooms = await DbUser.Transaction.Connection.QueryAsync<Room, BuildingFloor, Room>(sql.Sql, (room, floor) =>
             {
                 room.BuildingFloor = floor;
 
                 return room;
-            }, sql.NamedBindings, Transaction);
+            }, sql.NamedBindings, DbUser.Transaction);
 
             return rooms;
         }
 
         public async Task Update(Room entity)
         {
-            var room = await Context.Rooms.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var room = await DbUser.Context.Rooms.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (room == null)
             {

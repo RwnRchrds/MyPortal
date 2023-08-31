@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,11 +13,11 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class TrainingCertificateRepository : BaseReadWriteRepository<TrainingCertificate>, ITrainingCertificateRepository
+    public class TrainingCertificateRepository : BaseReadWriteRepository<TrainingCertificate>,
+        ITrainingCertificateRepository
     {
-        public TrainingCertificateRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public TrainingCertificateRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)
@@ -46,7 +43,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var certificates =
-                await Transaction.Connection
+                await DbUser.Transaction.Connection
                     .QueryAsync<TrainingCertificate, StaffMember, TrainingCourse, TrainingCertificateStatus,
                         TrainingCertificate>(sql.Sql,
                         (certificate, staff, course, status) =>
@@ -56,14 +53,14 @@ namespace MyPortal.Database.Repositories
                             certificate.Status = status;
 
                             return certificate;
-                        }, sql.NamedBindings, Transaction);
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return certificates;
         }
 
         public async Task Update(TrainingCertificate entity)
         {
-            var certificate = await Context.TrainingCertificates.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var certificate = await DbUser.Context.TrainingCertificates.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (certificate == null)
             {

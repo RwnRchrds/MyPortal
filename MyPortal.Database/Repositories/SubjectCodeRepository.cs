@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SubjectCodeRepository : BaseReadRepository<SubjectCode>, ISubjectCodeRepository
     {
-        public SubjectCodeRepository(DbTransaction transaction) : base(transaction)
+        public SubjectCodeRepository(DbUser dbUser) : base(dbUser)
         {
         }
 
@@ -34,14 +34,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var subjectCodes = await Transaction.Connection.QueryAsync<SubjectCode, SubjectCodeSet, SubjectCode>(
+            var subjectCodes = await DbUser.Transaction.Connection.QueryAsync<SubjectCode, SubjectCodeSet, SubjectCode>(
                 sql.Sql,
                 (code, set) =>
                 {
                     code.SubjectCodeSet = set;
 
                     return code;
-                }, sql.NamedBindings, Transaction);
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return subjectCodes;
         }

@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,9 +15,8 @@ namespace MyPortal.Database.Repositories
 {
     public class EmailAddressRepository : BaseReadWriteRepository<EmailAddress>, IEmailAddressRepository
     {
-        public EmailAddressRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public EmailAddressRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)
@@ -44,23 +42,24 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var emailAddresses =
-                await Transaction.Connection.QueryAsync<EmailAddress, Agency, Person, EmailAddressType, EmailAddress>(
-                    sql.Sql,
-                    (email, agency, person, type) =>
-                    {
-                        email.Agency = agency;
-                        email.Person = person;
-                        email.Type = type;
+                await DbUser.Transaction.Connection
+                    .QueryAsync<EmailAddress, Agency, Person, EmailAddressType, EmailAddress>(
+                        sql.Sql,
+                        (email, agency, person, type) =>
+                        {
+                            email.Agency = agency;
+                            email.Person = person;
+                            email.Type = type;
 
-                        return email;
-                    }, sql.NamedBindings, Transaction);
+                            return email;
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return emailAddresses;
         }
 
         public async Task Update(EmailAddress entity)
         {
-            var emailAddress = await Context.EmailAddresses.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var emailAddress = await DbUser.Context.EmailAddresses.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (emailAddress == null)
             {

@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.Constants;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -19,9 +16,8 @@ namespace MyPortal.Database.Repositories
 {
     public class DiaryEventRepository : BaseReadWriteRepository<DiaryEvent>, IDiaryEventRepository
     {
-        public DiaryEventRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public DiaryEventRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         protected override Query JoinRelated(Query query)
@@ -48,7 +44,7 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("StudentIncidents as SI", "SID.StudentIncidentId", "SI.Id");
             query.LeftJoin("Students as DetentionStudents", "SI.StudentId", "DetentionStudents.Id");
             query.LeftJoin("StaffMembers as DetentionStaff", "D.SupervisorId", "DetentionStaff.Id");
-            
+
             // Parent Evenings
             query.LeftJoin("ParentEveningStaffMembers as PESM", "PE.Id", "PESM.ParentEveningId");
             query.LeftJoin("ParentEveningAppointments as PEA", "PESM.Id", "PEA.ParentEveningStaffId");
@@ -71,20 +67,23 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var events = await Transaction.Connection.QueryAsync<DiaryEvent, DiaryEventType, Room, User, DiaryEvent>(sql.Sql,
-                (diaryEvent, type, room, user) =>
-                {
-                    diaryEvent.EventType = type;
-                    diaryEvent.Room = room;
-                    diaryEvent.CreatedBy = user;
+            var events =
+                await DbUser.Transaction.Connection.QueryAsync<DiaryEvent, DiaryEventType, Room, User, DiaryEvent>(
+                    sql.Sql,
+                    (diaryEvent, type, room, user) =>
+                    {
+                        diaryEvent.EventType = type;
+                        diaryEvent.Room = room;
+                        diaryEvent.CreatedBy = user;
 
-                    return diaryEvent;
-                }, sql.NamedBindings, Transaction);
+                        return diaryEvent;
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return events;
         }
 
-        public async Task<IEnumerable<DiaryEvent>> GetByDateRange(DateTime firstDate, DateTime lastDate, bool includePrivateEvents = false)
+        public async Task<IEnumerable<DiaryEvent>> GetByDateRange(DateTime firstDate, DateTime lastDate,
+            bool includePrivateEvents = false)
         {
             var query = GetDefaultQuery();
 
@@ -107,9 +106,9 @@ namespace MyPortal.Database.Repositories
 
             JoinEventTypeEntities(query);
             JoinEventTypePeople(query);
-            
+
             query.Where($"{TblAlias}.StartTime", ">=", firstDate.Date);
-            
+
             // Events might start today but go on for 2 weeks (unlikely but still a use case)
             // we want to include these events but exclude events that start after the end date
             query.Where($"{TblAlias}.StartTime", "<=", lastDate.Date.AddTicks(TimeSpan.TicksPerDay - 1));
@@ -124,7 +123,7 @@ namespace MyPortal.Database.Repositories
 
                 return q;
             });
-            
+
             return await ExecuteQuery(query);
         }
 
@@ -140,9 +139,9 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<DiaryEvent>> GetByRoom(DateTime firstDate, DateTime lastDate, Guid roomId)
         {
             var query = GetDefaultQuery();
-            
+
             query.WhereDate($"{TblAlias}.StartTime", ">=", firstDate.Date);
-            
+
             // Events might start today but go on for 2 weeks (unlikely but still a use case)
             // we want to include these events but exclude events that start after the end date
             query.WhereDate($"{TblAlias}.StartTime", "<=", lastDate.Date.AddTicks(TimeSpan.TicksPerDay - 1));
@@ -154,7 +153,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(DiaryEvent entity)
         {
-            var diaryEvent = await Context.DiaryEvents.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var diaryEvent = await DbUser.Context.DiaryEvents.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (diaryEvent == null)
             {

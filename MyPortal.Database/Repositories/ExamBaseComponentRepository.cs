@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
+using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
@@ -16,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ExamBaseComponentRepository : BaseReadWriteRepository<ExamBaseComponent>, IExamBaseComponentRepository
     {
-        public ExamBaseComponentRepository(ApplicationDbContext context, DbTransaction transaction) : base(context, transaction)
+        public ExamBaseComponentRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
@@ -41,7 +40,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var examBaseComponents =
-                await Transaction.Connection
+                await DbUser.Transaction.Connection
                     .QueryAsync<ExamBaseComponent, ExamAssessmentMode, ExamAssessment, ExamBaseComponent>(sql.Sql,
                         (component, mode, assessment) =>
                         {
@@ -49,14 +48,14 @@ namespace MyPortal.Database.Repositories
                             component.Assessment = assessment;
 
                             return component;
-                        }, sql.NamedBindings, Transaction);
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return examBaseComponents;
         }
 
         public async Task Update(ExamBaseComponent entity)
         {
-            var baseComponent = await Context.ExamBaseComponents.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var baseComponent = await DbUser.Context.ExamBaseComponents.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
             if (baseComponent == null)
             {
