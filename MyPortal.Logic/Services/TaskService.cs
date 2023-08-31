@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.People;
@@ -22,7 +19,7 @@ using TaskStatus = MyPortal.Database.Models.Search.TaskStatus;
 
 namespace MyPortal.Logic.Services
 {
-    public class TaskService : BaseUserService, ITaskService
+    public class TaskService : BaseService, ITaskService
     {
         private readonly IUserService _userService;
         private readonly IPersonService _personService;
@@ -308,33 +305,42 @@ namespace MyPortal.Logic.Services
 
         private async Task<TaskAccessModel> GetPermissionsForTasksPerson(Guid personId)
         {
-            var response = new TaskAccessModel {PersonId = personId};
+            var userId = User.GetUserId();
 
-            var user = await _userService.GetUserById(User.GetUserId());
-
-            if (user.PersonId.HasValue && user.PersonId.Value == personId)
+            if (userId != null)
             {
-                response.IsAssignee = true;
+                var response = new TaskAccessModel {PersonId = personId};
+
+                var user = await _userService.GetUserById(userId.Value);
+
+                if (user.PersonId.HasValue && user.PersonId.Value == personId)
+                {
+                    response.IsAssignee = true;
+                }
+
+                var person = await _personService.GetPersonWithTypesById(personId);
+
+                if (person.PersonTypes.StaffId.HasValue)
+                {
+                    await GetPermissionsForTasksStaffUser(response, user, person);
+                }
+
+                if (person.PersonTypes.StudentId.HasValue)
+                {
+                    await GetPermissionsForTasksStudentUser(response, user, person);
+                }
+
+                if (person.PersonTypes.ContactId.HasValue)
+                {
+                    await GetPermissionsForTasksContactUser(response, user, person);
+                }
+
+                return response;
             }
-
-            var person = await _personService.GetPersonWithTypesById(personId);
-
-            if (person.PersonTypes.StaffId.HasValue)
+            else
             {
-                await GetPermissionsForTasksStaffUser(response, user, person);
+                throw Unauthenticated();
             }
-
-            if (person.PersonTypes.StudentId.HasValue)
-            {
-                await GetPermissionsForTasksStudentUser(response, user, person);
-            }
-
-            if (person.PersonTypes.ContactId.HasValue)
-            {
-                await GetPermissionsForTasksContactUser(response, user, person);
-            }
-
-            return response;
         }
 
         private async Task<TaskAccessModel> GetPermissionsForTasksStaffUser(TaskAccessModel response, UserModel user,

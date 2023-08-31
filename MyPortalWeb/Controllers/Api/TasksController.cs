@@ -94,11 +94,18 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var userId = User.GetUserId();
 
-                requestModel.AssignedById = userId;
+                if (userId != null)
+                {
+                    requestModel.AssignedById = userId.Value;
 
-                await _taskService.CreateTask(requestModel);
+                    await _taskService.CreateTask(requestModel);
 
-                return Ok();
+                    return Ok();
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
             catch (Exception e)
             {

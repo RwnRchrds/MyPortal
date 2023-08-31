@@ -37,11 +37,14 @@ namespace MyPortalWeb.Controllers.BaseControllers
                 // Students can only access resources involving themselves
                 var userId = User.GetUserId();
 
-                var student = await StudentService.GetStudentByUserId(userId);
-
-                if (student.PersonId == requestedPersonId)
+                if (userId != null)
                 {
-                    return true;
+                    var student = await StudentService.GetStudentByUserId(userId.Value);
+
+                    if (student.PersonId == requestedPersonId)
+                    {
+                        return true;
+                    }
                 }
             }
             else if (User.IsType(UserTypes.Staff))
@@ -67,21 +70,25 @@ namespace MyPortalWeb.Controllers.BaseControllers
             {
                 // Parents can only access resources involving students that they have parental responsibility for
                 var userId = User.GetUserId();
-                var userPerson = await PersonService.GetPersonWithTypesByUser(userId);
-                if (userPerson.PersonTypes.ContactId.HasValue)
+
+                if (userId != null)
                 {
-                    var students =
-                        await StudentService.GetStudentsByContact(userPerson.PersonTypes.ContactId.Value, true);
-
-                    return students.Any(s =>
+                    var userPerson = await PersonService.GetPersonWithTypesByUser(userId.Value);
+                    if (userPerson.PersonTypes.ContactId.HasValue)
                     {
-                        if (s.Person.Id.HasValue && person.Person.Id.HasValue)
-                        {
-                            return s.Person.Id.Value == person.Person.Id.Value;
-                        }
+                        var students =
+                            await StudentService.GetStudentsByContact(userPerson.PersonTypes.ContactId.Value, true);
 
-                        return false;
-                    });
+                        return students.Any(s =>
+                        {
+                            if (s.Person.Id.HasValue && person.Person.Id.HasValue)
+                            {
+                                return s.Person.Id.Value == person.Person.Id.Value;
+                            }
+
+                            return false;
+                        });
+                    }
                 }
             }
 

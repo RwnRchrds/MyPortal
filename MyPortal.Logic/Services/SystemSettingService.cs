@@ -10,7 +10,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class SystemSettingService : BaseUserService, ISystemSettingService
+    public class SystemSettingService : BaseService, ISystemSettingService
     {
         public SystemSettingService(ISessionUser user) : base(user)
         {

@@ -17,7 +17,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class AttendanceService : BaseUserService, IAttendanceService
+    public class AttendanceService : BaseService, IAttendanceService
     {
         public AttendanceService(ISessionUser user) : base(user)
         {

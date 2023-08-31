@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using MyPortal.Database;
 using MyPortal.Database.Constants;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
-using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Behaviour.Achievements;
 using MyPortal.Logic.Models.Data.Behaviour.Detentions;
 using MyPortal.Logic.Models.Data.Behaviour.Incidents;
 using MyPortal.Logic.Models.Data.Students;
-
 using MyPortal.Logic.Models.Requests.Behaviour.Achievements;
 using MyPortal.Logic.Models.Requests.Behaviour.Detentions;
 using MyPortal.Logic.Models.Requests.Behaviour.Incidents;
@@ -28,7 +21,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class BehaviourService : BaseUserService, IBehaviourService
+    public class BehaviourService : BaseService, IBehaviourService
     {
         public BehaviourService(ISessionUser user) : base(user)
         {
@@ -82,37 +75,46 @@ namespace MyPortal.Logic.Services
         public async Task<StudentAchievementModel> CreateAchievement(AchievementRequestModel achievement)
         {
             Validate(achievement);
-            
-            await using var unitOfWork = await User.GetConnection();
-            
-            var now = DateTime.Now;
 
-            var academicYearService = new AcademicYearService(User);
-            await academicYearService.IsAcademicYearLocked(achievement.AcademicYearId);
+            var userId = User.GetUserId();
 
-            var model = new StudentAchievement
+            if (userId.HasValue)
             {
-                Id = Guid.NewGuid(),
-                StudentId = achievement.StudentId,
-                OutcomeId = achievement.OutcomeId,
-                Points = achievement.Points,
-                Achievement = new Achievement
+                await using var unitOfWork = await User.GetConnection();
+            
+                var now = DateTime.Now;
+
+                var academicYearService = new AcademicYearService(User);
+                await academicYearService.IsAcademicYearLocked(achievement.AcademicYearId);
+
+                var model = new StudentAchievement
                 {
                     Id = Guid.NewGuid(),
-                    AcademicYearId = achievement.AcademicYearId,
-                    AchievementTypeId = achievement.AchievementTypeId,
-                    LocationId = achievement.LocationId,
-                    Comments = achievement.Comments,
-                    CreatedById = User.GetUserId(),
-                    CreatedDate = now
-                }
-            };
+                    StudentId = achievement.StudentId,
+                    OutcomeId = achievement.OutcomeId,
+                    Points = achievement.Points,
+                    Achievement = new Achievement
+                    {
+                        Id = Guid.NewGuid(),
+                        AcademicYearId = achievement.AcademicYearId,
+                        AchievementTypeId = achievement.AchievementTypeId,
+                        LocationId = achievement.LocationId,
+                        Comments = achievement.Comments,
+                        CreatedById = userId.Value,
+                        CreatedDate = now
+                    }
+                };
 
-            unitOfWork.StudentAchievements.Create(model);
+                unitOfWork.StudentAchievements.Create(model);
 
-            await unitOfWork.SaveChangesAsync();
+                await unitOfWork.SaveChangesAsync();
 
-            return new StudentAchievementModel(model);
+                return new StudentAchievementModel(model);
+            }
+            else
+            {
+                throw Unauthenticated();   
+            }
         }
 
         public async Task UpdateAchievement(Guid achievementId, AchievementRequestModel achievement)
@@ -217,40 +219,49 @@ namespace MyPortal.Logic.Services
         {
             Validate(incident);
 
-            var studentIncident = new StudentIncident
+            var userId = User.GetUserId();
+
+            if (userId != null)
             {
-                Id = Guid.NewGuid(),
-                Points = incident.Points,
-                OutcomeId = incident.OutcomeId,
-                StatusId = incident.StatusId,
-                StudentId = incident.StudentId,
-                Incident = new Incident
+                var studentIncident = new StudentIncident
                 {
                     Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.Now,
-                    BehaviourTypeId = incident.BehaviourTypeId,
-                    LocationId = incident.LocationId,
-                    CreatedById = User.GetUserId(),
-                    Comments = incident.Comments,
-                    AcademicYearId = incident.AcademicYearId,
-                }
-            };
+                    Points = incident.Points,
+                    OutcomeId = incident.OutcomeId,
+                    StatusId = incident.StatusId,
+                    StudentId = incident.StudentId,
+                    Incident = new Incident
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedDate = DateTime.Now,
+                        BehaviourTypeId = incident.BehaviourTypeId,
+                        LocationId = incident.LocationId,
+                        CreatedById = userId.Value,
+                        Comments = incident.Comments,
+                        AcademicYearId = incident.AcademicYearId,
+                    }
+                };
 
-            foreach (var detentionId in incident.DetentionIds)
-            {
-                studentIncident.LinkedDetentions.Add(new StudentIncidentDetention
+                foreach (var detentionId in incident.DetentionIds)
                 {
-                    DetentionId = detentionId
-                });
-            }
+                    studentIncident.LinkedDetentions.Add(new StudentIncidentDetention
+                    {
+                        DetentionId = detentionId
+                    });
+                }
 
-            await using var unitOfWork = await User.GetConnection();
+                await using var unitOfWork = await User.GetConnection();
             
-            unitOfWork.StudentIncidents.Create(studentIncident);
+                unitOfWork.StudentIncidents.Create(studentIncident);
 
-            await unitOfWork.SaveChangesAsync();
+                await unitOfWork.SaveChangesAsync();
 
-            return new StudentIncidentModel(studentIncident);
+                return new StudentIncidentModel(studentIncident);
+            }
+            else
+            {
+                throw Unauthenticated();
+            }
         }
 
         public async Task UpdateIncident(Guid incidentId, IncidentRequestModel incident)

@@ -11,7 +11,7 @@ using MyPortal.Logic.Models.Data.School;
 
 namespace MyPortal.Logic.Services;
 
-public class ReminderService : BaseUserService, IReminderService
+public class ReminderService : BaseService, IReminderService
 {
     public ReminderService(ISessionUser user) : base(user)
     {

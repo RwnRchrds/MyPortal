@@ -12,7 +12,7 @@ using MyPortal.Logic.Models.Data.School;
 
 namespace MyPortal.Logic.Services
 {
-    public class LocationService : BaseUserService, ILocationService
+    public class LocationService : BaseService, ILocationService
     {
         public LocationService(ISessionUser user) : base(user)
         {

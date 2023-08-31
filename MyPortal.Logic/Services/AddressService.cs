@@ -15,7 +15,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class AddressService : BaseUserService, IAddressService
+    public class AddressService : BaseService, IAddressService
     {
         public AddressService(ISessionUser user) : base(user)
         {

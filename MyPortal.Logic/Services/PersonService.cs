@@ -17,7 +17,7 @@ using MyPortal.Logic.Models.Requests.Person;
 
 namespace MyPortal.Logic.Services
 {
-    public class PersonService : BaseUserService, IPersonService
+    public class PersonService : BaseService, IPersonService
     {
         public PersonService(ISessionUser user) : base(user)
         {

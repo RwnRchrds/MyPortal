@@ -15,5 +15,6 @@ public interface ISessionUser
 
     Task<bool> HasPermission(IUserService userService, PermissionRequirement requirement,
         params PermissionValue[] permissionValues);
-    Guid GetUserId();
+    
+    Guid? GetUserId();
 }

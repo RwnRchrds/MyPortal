@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
@@ -21,7 +17,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class SchoolService : BaseUserService, ISchoolService
+    public class SchoolService : BaseService, ISchoolService
     {
         public SchoolService(ISessionUser user) : base(user)
         {
@@ -77,31 +73,40 @@ namespace MyPortal.Logic.Services
         public async Task<BulletinModel> CreateBulletin(BulletinRequestModel model)
         {
             Validate(model);
-            
-            await using var unitOfWork = await User.GetConnection();
-            
-            var bulletin = new Bulletin
+
+            var userId = User.GetUserId();
+
+            if (userId != null)
             {
-                Id = Guid.NewGuid(),
-                Title = model.Title,
-                Detail = model.Detail,
-                CreatedDate = DateTime.Now,
-                CreatedById = User.GetUserId(),
-                ExpireDate = model.ExpireDate,
-                Private = model.Private,
-                Directory = new Directory
+                await using var unitOfWork = await User.GetConnection();
+            
+                var bulletin = new Bulletin
                 {
-                    Name = "bulletin-root",
-                    Private = model.Private
-                },
-                Approved = false
-            };
+                    Id = Guid.NewGuid(),
+                    Title = model.Title,
+                    Detail = model.Detail,
+                    CreatedDate = DateTime.Now,
+                    CreatedById = userId.Value,
+                    ExpireDate = model.ExpireDate,
+                    Private = model.Private,
+                    Directory = new Directory
+                    {
+                        Name = "bulletin-root",
+                        Private = model.Private
+                    },
+                    Approved = false
+                };
                     
-            unitOfWork.Bulletins.Create(bulletin);
+                unitOfWork.Bulletins.Create(bulletin);
 
-            await unitOfWork.SaveChangesAsync();
+                await unitOfWork.SaveChangesAsync();
 
-            return new BulletinModel(bulletin);
+                return new BulletinModel(bulletin);
+            }
+            else
+            {
+                throw Unauthenticated();
+            }
         }
 
         public async Task UpdateBulletin(Guid bulletinId, BulletinRequestModel model)

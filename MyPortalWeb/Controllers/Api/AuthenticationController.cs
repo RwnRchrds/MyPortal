@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Settings;
 using MyPortal.Logic.Models.Requests.Settings.Users;
@@ -26,9 +25,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var userId = User.GetUserId();
-
-                var userInfo = await UserService.GetUserInfo(userId);
+                var userInfo = await UserService.GetUserInfo();
 
                 return Ok(userInfo);
             }
@@ -47,10 +44,16 @@ namespace MyPortalWeb.Controllers.Api
             try
             {
                 var userId = User.GetUserId();
-                
-                await UserService.ChangePassword(userId, model.CurrentPassword, model.NewPassword);
 
-                return Ok();
+                if (userId != null)
+                {
+                    await UserService.ChangePassword(userId.Value, model.CurrentPassword, model.NewPassword);
+                    return Ok();
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
             catch (Exception e)
             {

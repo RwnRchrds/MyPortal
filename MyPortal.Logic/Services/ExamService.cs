@@ -11,7 +11,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services;
 
-public class ExamService : BaseUserService, IExamService
+public class ExamService : BaseService, IExamService
 {
     public ExamService(ISessionUser user) : base(user)
     {

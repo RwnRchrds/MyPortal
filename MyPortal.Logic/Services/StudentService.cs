@@ -19,7 +19,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class StudentService : BaseUserService, IStudentService
+    public class StudentService : BaseService, IStudentService
     {
         public StudentService(ISessionUser user) : base(user)
         {

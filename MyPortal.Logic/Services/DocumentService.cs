@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
-using MyPortal.Database.Enums;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Documents;
@@ -19,7 +15,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class DocumentService : BaseUserService, IDocumentService
+    public class DocumentService : BaseService, IDocumentService
     {
         public DocumentService(ISessionUser user) : base(user)
         {
@@ -28,39 +24,48 @@ namespace MyPortal.Logic.Services
         public async Task CreateDocument(DocumentRequestModel document)
         {
             Validate(document);
-            
-            await using var unitOfWork = await User.GetConnection();
-            
-            var directory = await unitOfWork.Directories.GetById(document.DirectoryId);
 
-            if (directory == null)
-            {
-                throw new NotFoundException("Directory not found.");
-            }
+            var userId = User.GetUserId();
 
-            try
+            if (userId != null)
             {
-                var docToAdd = new Document
+                await using var unitOfWork = await User.GetConnection();
+            
+                var directory = await unitOfWork.Directories.GetById(document.DirectoryId);
+
+                if (directory == null)
                 {
-                    Id = Guid.NewGuid(),
-                    TypeId = document.TypeId,
-                    Title = document.Title,
-                    Description = document.Description,
-                    CreatedDate = DateTime.Today,
-                    DirectoryId = document.DirectoryId,
-                    CreatedById = User.GetUserId(),
-                    Deleted = false,
-                    Private = document.Private
-                };
+                    throw new NotFoundException("Directory not found.");
+                }
 
-                unitOfWork.Documents.Create(docToAdd);
+                try
+                {
+                    var docToAdd = new Document
+                    {
+                        Id = Guid.NewGuid(),
+                        TypeId = document.TypeId,
+                        Title = document.Title,
+                        Description = document.Description,
+                        CreatedDate = DateTime.Today,
+                        DirectoryId = document.DirectoryId,
+                        CreatedById = userId.Value,
+                        Deleted = false,
+                        Private = document.Private
+                    };
+
+                    unitOfWork.Documents.Create(docToAdd);
+                }
+                catch (Exception e)
+                {
+                    throw e.GetBaseException();
+                }
+
+                await unitOfWork.SaveChangesAsync();
             }
-            catch (Exception e)
+            else
             {
-                throw e.GetBaseException();
+                throw Unauthenticated();
             }
-
-            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task UpdateDocument(Guid documentId, DocumentRequestModel document)

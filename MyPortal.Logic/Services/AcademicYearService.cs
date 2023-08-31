@@ -20,7 +20,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class AcademicYearService : BaseUserService, IAcademicYearService
+    public class AcademicYearService : BaseService, IAcademicYearService
     {
         public AcademicYearService(ISessionUser user) : base(user)
         {

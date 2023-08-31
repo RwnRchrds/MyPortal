@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using MyPortal.Database;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Students;
@@ -18,7 +13,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class LogNoteService : BaseUserService, ILogNoteService
+    public class LogNoteService : BaseService, ILogNoteService
     {
         public LogNoteService(ISessionUser user) : base(user)
         {
@@ -59,28 +54,37 @@ namespace MyPortal.Logic.Services
         public async Task CreateLogNote(LogNoteRequestModel logNoteModel)
         {
             Validate(logNoteModel);
-            
-            await using var unitOfWork = await User.GetConnection();
 
-            var academicYearService = new AcademicYearService(User);
-            await academicYearService.IsAcademicYearLocked(logNoteModel.AcademicYearId);
+            var userId = User.GetUserId();
 
-            var createDate = DateTime.Now;
-
-            var logNote = new LogNote
+            if (userId != null)
             {
-                Id = Guid.NewGuid(),
-                TypeId = logNoteModel.TypeId,
-                Message = logNoteModel.Message,
-                StudentId = logNoteModel.StudentId,
-                CreatedDate = createDate,
-                CreatedById = User.GetUserId(),
-                AcademicYearId = logNoteModel.AcademicYearId
-            };
+                await using var unitOfWork = await User.GetConnection();
 
-            unitOfWork.LogNotes.Create(logNote);
+                var academicYearService = new AcademicYearService(User);
+                await academicYearService.IsAcademicYearLocked(logNoteModel.AcademicYearId);
 
-            await unitOfWork.SaveChangesAsync();
+                var createDate = DateTime.Now;
+
+                var logNote = new LogNote
+                {
+                    Id = Guid.NewGuid(),
+                    TypeId = logNoteModel.TypeId,
+                    Message = logNoteModel.Message,
+                    StudentId = logNoteModel.StudentId,
+                    CreatedDate = createDate,
+                    CreatedById = userId.Value,
+                    AcademicYearId = logNoteModel.AcademicYearId
+                };
+
+                unitOfWork.LogNotes.Create(logNote);
+
+                await unitOfWork.SaveChangesAsync();
+            }
+            else
+            {
+                throw Unauthenticated();
+            }
         }
 
         public async Task UpdateLogNote(Guid logNoteId, LogNoteRequestModel logNoteModel)

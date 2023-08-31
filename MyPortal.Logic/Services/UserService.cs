@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Enums;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Authentication;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Settings;
@@ -29,7 +22,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class UserService : BaseUserService, IUserService
+    public class UserService : BaseService, IUserService
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
@@ -99,6 +92,20 @@ namespace MyPortal.Logic.Services
             }
 
             return permissionValues;
+        }
+
+        public async Task<UserInfoModel> GetUserInfo()
+        {
+            var userId = User.GetUserId();
+
+            if (userId != null)
+            {
+                return await GetUserInfo(userId.Value);
+            }
+            else
+            {
+                throw Unauthenticated();
+            }
         }
 
         public async Task<UserInfoModel> GetUserInfo(Guid userId)
@@ -430,7 +437,14 @@ namespace MyPortal.Logic.Services
         {
             var userId = principal.GetUserId();
 
-            return await GetUserById(userId);
+            if (userId != null)
+            {
+                return await GetUserById(userId.Value);
+            }
+            else
+            {
+                throw Unauthenticated();
+            }
         }
     }
 }

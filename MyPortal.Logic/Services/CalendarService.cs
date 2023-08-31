@@ -1,29 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using MyPortal.Database;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Exceptions;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Models.QueryResults.Attendance;
 using MyPortal.Database.Models.QueryResults.Curriculum;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Calendar;
-using MyPortal.Logic.Models.Data.Curriculum;
 using MyPortal.Logic.Models.Requests.Calendar;
 using MyPortal.Logic.Models.Structures;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class CalendarService : BaseUserService, ICalendarService
+    public class CalendarService : BaseService, ICalendarService
     {
         public CalendarService(ISessionUser user) : base(user)
         {
@@ -136,66 +130,75 @@ namespace MyPortal.Logic.Services
         public async Task CreateEvent(EventRequestModel model)
         {
             Validate(model);
-            
-            await using var unitOfWork = await User.GetConnection();
 
-            var eventTypes = (await GetEventTypes()).ToArray();
+            var userId = User.GetUserId();
 
-            var user = await unitOfWork.Users.GetById(User.GetUserId());
-
-            if (user == null)
+            if (userId != null)
             {
-                throw new EntityNotFoundException("User not found.");
-            }
+                await using var unitOfWork = await User.GetConnection();
 
-            var eventType = eventTypes.FirstOrDefault(t => t.Id == model.EventTypeId);
+                var eventTypes = (await GetEventTypes()).ToArray();
 
-            if (eventType == null)
-            {
-                throw new NotFoundException("Event type not found.");
-            }
+                var user = await unitOfWork.Users.GetById(userId.Value);
 
-            if (eventType.System)
-            {
-                throw new SystemEntityException("Events of this type cannot be created manually.");
-            }
+                if (user == null)
+                {
+                    throw new EntityNotFoundException("User not found.");
+                }
 
-            var diaryEvent = new DiaryEvent
-            {
-                Id = Guid.NewGuid(),
-                EventTypeId = model.EventTypeId,
-                RoomId = model.RoomId,
-                Subject = model.Subject,
-                Description = model.Description,
-                Location = model.Location,
-                StartTime = model.StartTime,
-                EndTime = model.EndTime,
-                Public = model.IsPublic,
-                AllDay = model.IsAllDay,
-                CreatedById = User.GetUserId()
-            };
+                var eventType = eventTypes.FirstOrDefault(t => t.Id == model.EventTypeId);
 
-            if (model.IsAllDay)
-            {
-                diaryEvent.StartTime = diaryEvent.StartTime.Date;
-                diaryEvent.EndTime = diaryEvent.EndTime.Date;
-            }
+                if (eventType == null)
+                {
+                    throw new NotFoundException("Event type not found.");
+                }
 
-            if (user.PersonId.HasValue)
-            {
-                diaryEvent.Attendees.Add(new DiaryEventAttendee
+                if (eventType.System)
+                {
+                    throw new SystemEntityException("Events of this type cannot be created manually.");
+                }
+
+                var diaryEvent = new DiaryEvent
                 {
                     Id = Guid.NewGuid(),
-                    PersonId = user.PersonId.Value,
-                    Required = true,
-                    ResponseId = AttendeeResponses.Accepted,
-                    CanEditEvent = true
-                });
+                    EventTypeId = model.EventTypeId,
+                    RoomId = model.RoomId,
+                    Subject = model.Subject,
+                    Description = model.Description,
+                    Location = model.Location,
+                    StartTime = model.StartTime,
+                    EndTime = model.EndTime,
+                    Public = model.IsPublic,
+                    AllDay = model.IsAllDay,
+                    CreatedById = User.GetUserId()
+                };
+
+                if (model.IsAllDay)
+                {
+                    diaryEvent.StartTime = diaryEvent.StartTime.Date;
+                    diaryEvent.EndTime = diaryEvent.EndTime.Date;
+                }
+
+                if (user.PersonId.HasValue)
+                {
+                    diaryEvent.Attendees.Add(new DiaryEventAttendee
+                    {
+                        Id = Guid.NewGuid(),
+                        PersonId = user.PersonId.Value,
+                        Required = true,
+                        ResponseId = AttendeeResponses.Accepted,
+                        CanEditEvent = true
+                    });
+                }
+
+                unitOfWork.DiaryEvents.Create(diaryEvent);
+
+                await unitOfWork.SaveChangesAsync();
             }
-
-            unitOfWork.DiaryEvents.Create(diaryEvent);
-
-            await unitOfWork.SaveChangesAsync();
+            else
+            {
+                throw Unauthenticated();
+            }
         }
 
         public async Task UpdateEvent(Guid eventId, EventRequestModel model)

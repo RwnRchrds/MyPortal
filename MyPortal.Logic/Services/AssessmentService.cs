@@ -20,7 +20,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services;
 
-public class AssessmentService : BaseUserService, IAssessmentService
+public class AssessmentService : BaseService, IAssessmentService
 {
     public AssessmentService(ISessionUser user) : base(user)
     {
