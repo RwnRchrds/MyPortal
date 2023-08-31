@@ -11,16 +11,17 @@ using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class IncidentDetentionRepository : BaseReadWriteRepository<StudentIncidentDetention>,
-        IIncidentDetentionRepository
+    public class StudentDetentionRepository : BaseReadWriteRepository<StudentDetention>,
+        IStudentDetentionRepository
     {
-        public IncidentDetentionRepository(DbUserWithContext dbUser) : base(dbUser)
+        public StudentDetentionRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
 
         protected override Query JoinRelated(Query query)
         {
-            query.LeftJoin("StudentIncidents as SI", "SI.Id", $"{TblAlias}.StudentIncidentId");
+            query.LeftJoin("Students as S", "S.Id", $"{TblAlias}.StudentId");
+            query.LeftJoin("StudentIncidents as SI", "SI.Id", $"{TblAlias}.LinkedIncidentId");
             query.LeftJoin("Detentions as D", "D.Id", $"{TblAlias}.DetentionId");
 
             return query;
@@ -34,36 +35,37 @@ namespace MyPortal.Database.Repositories
             return query;
         }
 
-        protected override async Task<IEnumerable<StudentIncidentDetention>> ExecuteQuery(Query query)
+        protected override async Task<IEnumerable<StudentDetention>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
             var incidentDetentions =
                 await DbUser.Transaction.Connection
-                    .QueryAsync<StudentIncidentDetention, StudentIncident, Detention, StudentIncidentDetention>(
+                    .QueryAsync<StudentDetention, Student, StudentIncident, Detention, StudentDetention>(
                         sql.Sql,
-                        (incidentDetention, incident, detention) =>
+                        (studentDetention, student, incident, detention) =>
                         {
-                            incidentDetention.StudentIncident = incident;
-                            incidentDetention.Detention = detention;
+                            studentDetention.Student = student;
+                            studentDetention.LinkedIncident = incident;
+                            studentDetention.Detention = detention;
 
-                            return incidentDetention;
+                            return studentDetention;
                         }, sql.NamedBindings, DbUser.Transaction);
 
             return incidentDetentions;
         }
 
-        public async Task<StudentIncidentDetention> GetSpecific(Guid detentionId, Guid studentIncidentId)
+        public async Task<StudentDetention> GetSpecific(Guid detentionId, Guid studentId)
         {
             var query = GetDefaultQuery();
 
             query.Where("D.Id", detentionId);
-            query.Where("SI.Id", studentIncidentId);
+            query.Where("S.Id", studentId);
 
             return await ExecuteQueryFirstOrDefault(query);
         }
 
-        public async Task<IEnumerable<StudentIncidentDetention>> GetByStudentIncident(Guid studentIncidentId)
+        public async Task<IEnumerable<StudentDetention>> GetByStudentIncident(Guid studentIncidentId)
         {
             var query = GetDefaultQuery();
 

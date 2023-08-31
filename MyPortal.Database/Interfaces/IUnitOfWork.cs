@@ -120,7 +120,7 @@ namespace MyPortal.Database.Interfaces
         IHomeworkItemRepository HomeworkItems { get; }
         IHomeworkSubmissionRepository HomeworkSubmissions { get; }
         IHouseRepository Houses { get; }
-        IIncidentDetentionRepository IncidentDetentions { get; }
+        IStudentDetentionRepository StudentDetentions { get; }
         IIncidentRepository Incidents { get; }
         IIncidentTypeRepository IncidentTypes { get; }
         IIntakeTypeRepository IntakeTypes { get; }

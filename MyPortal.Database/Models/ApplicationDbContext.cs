@@ -133,7 +133,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<HomeworkSubmission> HomeworkSubmissions { get; set; }
         public virtual DbSet<House> Houses { get; set; }
         public virtual DbSet<Incident> Incidents { get; set; }
-        public virtual DbSet<StudentIncidentDetention> IncidentDetentions { get; set; }
+        public virtual DbSet<StudentDetention> StudentDetentions { get; set; }
         public virtual DbSet<IncidentType> IncidentTypes { get; set; }
         public virtual DbSet<IntakeType> IntakeTypes { get; set; }
         public virtual DbSet<Language> Languages { get; set; }
@@ -900,7 +900,7 @@ namespace MyPortal.Database.Models
                 {
                     ConfigureEntity(e);
 
-                    e.HasMany(x => x.Incidents)
+                    e.HasMany(x => x.Students)
                         .WithOne(x => x.Detention)
                         .HasForeignKey(x => x.DetentionId)
                         .IsRequired()
@@ -1629,7 +1629,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<StudentIncidentDetention>(e =>
+                modelBuilder.Entity<StudentDetention>(e =>
                 {
                     ConfigureEntity(e);
                 });
@@ -2525,6 +2525,12 @@ namespace MyPortal.Database.Models
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    e.HasMany(x => x.Detentions)
+                        .WithOne(x => x.Student)
+                        .HasForeignKey(x => x.StudentId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     e.Property(x => x.Upn)
                         .IsUnicode(false);
                 });
@@ -2644,9 +2650,8 @@ namespace MyPortal.Database.Models
                     ConfigureEntity(e);
 
                     e.HasMany(x => x.LinkedDetentions)
-                        .WithOne(x => x.StudentIncident)
-                        .HasForeignKey(x => x.StudentIncidentId)
-                        .IsRequired()
+                        .WithOne(x => x.LinkedIncident)
+                        .HasForeignKey(x => x.LinkedIncidentId)
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

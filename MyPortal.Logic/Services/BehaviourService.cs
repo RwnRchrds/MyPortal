@@ -244,8 +244,9 @@ namespace MyPortal.Logic.Services
 
                 foreach (var detentionId in incident.DetentionIds)
                 {
-                    studentIncident.LinkedDetentions.Add(new StudentIncidentDetention
+                    studentIncident.LinkedDetentions.Add(new StudentDetention()
                     {
+                        StudentId = incident.StudentId,
                         DetentionId = detentionId
                     });
                 }
@@ -286,7 +287,7 @@ namespace MyPortal.Logic.Services
 
             await unitOfWork.StudentIncidents.Update(studentIncidentInDb);
 
-            var linkedDetentions = await unitOfWork.IncidentDetentions.GetByStudentIncident(studentIncidentInDb.Id);
+            var linkedDetentions = await unitOfWork.StudentDetentions.GetByStudentIncident(studentIncidentInDb.Id);
 
             var detentionsToAdd = incident.DetentionIds.Where(d => linkedDetentions.All(ld => ld.DetentionId != d))
                 .ToArray();
@@ -522,17 +523,23 @@ namespace MyPortal.Logic.Services
         public async Task AddDetentions(Guid studentIncidentId, Guid[] detentionIds)
         {
             await using var unitOfWork = await User.GetConnection();
+
+            var studentIncident = await unitOfWork.StudentIncidents.GetById(studentIncidentId);
+
+            if (studentIncident == null)
+            {
+                throw new NotFoundException("Student incident not found.");
+            }
             
             foreach (var detentionId in detentionIds)
             {
-                var incidentDetention = new StudentIncidentDetention
+                var incidentDetention = new StudentDetention()
                 {
-                    Id = Guid.NewGuid(),
-                    DetentionId = detentionId,
-                    StudentIncidentId = studentIncidentId
+                    StudentId = studentIncident.StudentId,
+                    DetentionId = detentionId
                 };
 
-                unitOfWork.IncidentDetentions.Create(incidentDetention);
+                unitOfWork.StudentDetentions.Create(incidentDetention);
             }
 
             await unitOfWork.SaveChangesAsync();
@@ -545,14 +552,14 @@ namespace MyPortal.Logic.Services
             foreach (var detentionId in detentionIds)
             {
                 var relatedIncident =
-                    await unitOfWork.IncidentDetentions.GetSpecific(detentionId, studentIncidentId);
+                    await unitOfWork.StudentDetentions.GetSpecific(detentionId, studentIncidentId);
 
                 if (relatedIncident == null)
                 {
                     throw new NotFoundException("Detention not found.");
                 }
 
-                await unitOfWork.IncidentDetentions.Delete(relatedIncident.Id);
+                await unitOfWork.StudentDetentions.Delete(relatedIncident.Id);
             }
 
             await unitOfWork.SaveChangesAsync();

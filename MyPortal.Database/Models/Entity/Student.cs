@@ -24,6 +24,7 @@ namespace MyPortal.Database.Models.Entity
             GiftedTalentedSubjects = new HashSet<GiftedTalented>();
             StudentContacts = new HashSet<StudentContactRelationship>();
             HomeworkSubmissions = new HashSet<HomeworkSubmission>();
+            Detentions = new HashSet<StudentDetention>();
         }
 
         [Column(Order = 2)]
@@ -128,5 +129,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<ExamCandidate> ExamCandidates { get; set; }
         
         public virtual ICollection<SessionExtraName> SessionExtraNames { get; set; }
+        
+        public virtual ICollection<StudentDetention> Detentions { get; set; }
     }
 }

@@ -7,6 +7,11 @@ namespace MyPortal.Database.Models.Entity;
 [Table("StudentIncidents")]
 public class StudentIncident : BaseTypes.Entity
 {
+    public StudentIncident()
+    {
+        LinkedDetentions = new HashSet<StudentDetention>();
+    }
+    
     [Column(Order = 2)]
     public Guid StudentId { get; set; }
     
@@ -30,6 +35,6 @@ public class StudentIncident : BaseTypes.Entity
     public virtual BehaviourRoleType RoleType { get; set; }
     public virtual BehaviourOutcome Outcome { get; set; }
     public virtual BehaviourStatus Status { get; set; }
-
-    public virtual ICollection<StudentIncidentDetention> LinkedDetentions { get; set; }
+    
+    public virtual ICollection<StudentDetention> LinkedDetentions { get; set; }
 }

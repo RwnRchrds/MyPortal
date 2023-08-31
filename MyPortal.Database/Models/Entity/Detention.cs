@@ -9,7 +9,7 @@ namespace MyPortal.Database.Models.Entity
     {
         public Detention()
         {
-            Incidents = new HashSet<StudentIncidentDetention>();
+            Students = new HashSet<StudentDetention>();
         }
 
         [Column(Order = 2)]
@@ -24,6 +24,6 @@ namespace MyPortal.Database.Models.Entity
         public virtual DetentionType Type { get; set; }
         public virtual DiaryEvent Event { get; set; }
         public virtual StaffMember Supervisor { get; set; }
-        public virtual ICollection<StudentIncidentDetention> Incidents { get; set; }
+        public virtual ICollection<StudentDetention> Students { get; set; }
     }
 }

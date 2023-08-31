@@ -132,7 +132,7 @@ namespace MyPortal.Database
         private IHomeworkItemRepository _homeworkItems;
         private IHomeworkSubmissionRepository _homeworkSubmissions;
         private IHouseRepository _houses;
-        private IIncidentDetentionRepository _incidentDetentions;
+        private IStudentDetentionRepository _studentDetentions;
         private IIncidentRepository _incidents;
         private IIncidentTypeRepository _incidentTypes;
         private IIntakeTypeRepository _intakeTypes;
@@ -523,8 +523,8 @@ namespace MyPortal.Database
 
         public IHouseRepository Houses => _houses ??= new HouseRepository(GetDbUserWithContext());
 
-        public IIncidentDetentionRepository IncidentDetentions =>
-            _incidentDetentions ??= new IncidentDetentionRepository(GetDbUserWithContext());
+        public IStudentDetentionRepository StudentDetentions =>
+            _studentDetentions ??= new StudentDetentionRepository(GetDbUserWithContext());
 
         public IIncidentRepository Incidents => _incidents ??= new IncidentRepository(GetDbUserWithContext());
 
@@ -1000,7 +1000,7 @@ namespace MyPortal.Database
             _homeworkItems = null;
             _homeworkSubmissions = null;
             _houses = null;
-            _incidentDetentions = null;
+            _studentDetentions = null;
             _incidents = null;
             _incidentTypes = null;
             _intakeTypes = null;
