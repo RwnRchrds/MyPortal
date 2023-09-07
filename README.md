@@ -6,7 +6,7 @@ A powerful, versatile, online school management system you can build and shape t
 
 - Cloud-based, accessible anywhere, any time
 - Intuitive and easy to use
-- Easy to host in Microsoft Azure
+- Easy to host on Windows and Linux
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5bed7857561f4de18124c6d622f2aa5f)](https://www.codacy.com/gh/RwnRchrds/MyPortal/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=RwnRchrds/MyPortal&amp;utm_campaign=Badge_Grade)
