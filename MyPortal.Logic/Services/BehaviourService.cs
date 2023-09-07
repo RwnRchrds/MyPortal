@@ -348,7 +348,7 @@ namespace MyPortal.Logic.Services
             return status.Select(s => new BehaviourStatusModel(s)).ToList();
         }
         
-        public async Task<IEnumerable<DetentionModel>> Get(DetentionSearchOptions searchOptions)
+        public async Task<IEnumerable<DetentionModel>> GetDetentions(DetentionSearchOptions searchOptions)
         {
             await using var unitOfWork = await User.GetConnection();
             
@@ -357,7 +357,7 @@ namespace MyPortal.Logic.Services
             return detentions.Select(d => new DetentionModel(d));
         }
 
-        public async Task<DetentionModel> GetById(Guid detentionId)
+        public async Task<DetentionModel> GetDetentionById(Guid detentionId)
         {
             await using var unitOfWork = await User.GetConnection();
             
@@ -366,7 +366,7 @@ namespace MyPortal.Logic.Services
             return new DetentionModel(detention);
         }
 
-        public async Task<DetentionModel> GetByIncident(Guid incidentId)
+        public async Task<DetentionModel> GetDetentionByIncident(Guid incidentId)
         {
             await using var unitOfWork = await User.GetConnection();
             

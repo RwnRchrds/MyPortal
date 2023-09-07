@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
+using Newtonsoft.Json;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
@@ -87,6 +89,8 @@ namespace MyPortal.Database.Repositories
         {
             var academicYear = await DbUser.Context.AcademicYears.FirstOrDefaultAsync(x => x.Id == entity.Id);
 
+            var oldValue = JsonConvert.SerializeObject(entity);
+
             if (academicYear == null)
             {
                 throw new EntityNotFoundException("Academic year not found.");
@@ -94,6 +98,8 @@ namespace MyPortal.Database.Repositories
 
             academicYear.Name = entity.Name;
             academicYear.Locked = entity.Locked;
+            
+            WriteAuditRaw(entity.Id, AuditActions.Update, oldValue);
         }
     }
 }

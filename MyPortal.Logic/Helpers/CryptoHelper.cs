@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Helpers;
 
 public static class CryptoHelper
 {
-    public static string GenerateEncryptionKey()
+    internal static string GenerateEncryptionKey()
     {
         using (var aes = Aes.Create())
         {
@@ -22,35 +22,35 @@ public static class CryptoHelper
         }
     }
     
-    public static async Task<EncryptionResult> EncryptAsync(string text, string keyBase64)
+    internal static async Task<EncryptionResult> EncryptAsync(string text, string keyBase64)
     {
         var data = Encoding.UTF8.GetBytes(text);
 
         return await EncryptAsync(data, keyBase64);
     }
 
-    public static async Task<EncryptionResult> EncryptAsync(byte[] data, string keyBase64)
+    internal static async Task<EncryptionResult> EncryptAsync(byte[] data, string keyBase64)
     {
         var key = Convert.FromBase64String(keyBase64);
 
         return await EncryptAesAsync(data, key);
     }
     
-    public static async Task<string> DecryptAsync(string dataBase64, string keyBase64, string vectorBase64)
+    internal static async Task<string> DecryptAsync(string dataBase64, string keyBase64, string vectorBase64)
     {
         var data = Convert.FromBase64String(dataBase64);
 
         return Encoding.UTF8.GetString(await DecryptAsync(data, keyBase64, vectorBase64));
     }
 
-    public static async Task<byte[]> DecryptAsync(byte[] encryptedData, string keyBase64, byte[] vector)
+    internal static async Task<byte[]> DecryptAsync(byte[] encryptedData, string keyBase64, byte[] vector)
     {
         var key = Convert.FromBase64String(keyBase64);
 
         return await DecryptAesAsync(encryptedData, key, vector);
     }
 
-    public static async Task<byte[]> DecryptAsync(byte[] encryptedData, string keyBase64, string vectorBase64)
+    internal static async Task<byte[]> DecryptAsync(byte[] encryptedData, string keyBase64, string vectorBase64)
     {
         var key = Convert.FromBase64String(keyBase64);
         var iv = Convert.FromBase64String(vectorBase64);

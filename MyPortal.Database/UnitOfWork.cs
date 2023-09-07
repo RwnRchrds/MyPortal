@@ -18,6 +18,7 @@ namespace MyPortal.Database
     public class UnitOfWork : IUnitOfWork
     {
         private ApplicationDbContext _context;
+        private bool _auditEnabled;
         private int _batchSize;
         private int _batchLimit = 1000;
         private readonly string _connectionString;
@@ -225,6 +226,21 @@ namespace MyPortal.Database
         private IYearGroupRepository _yearGroups;
         private readonly Guid _userId;
 
+        public bool AuditEnabled
+        {
+            get => _auditEnabled;
+            set
+            {
+                if (_auditEnabled == value)
+                {
+                    return;
+                }
+                
+                _auditEnabled = value;
+                ResetRepositories();
+            }
+        }
+        
         public IAcademicTermRepository AcademicTerms =>
             _academicTerms ??= new AcademicTermRepository(GetDbUserWithContext());
 
@@ -765,18 +781,23 @@ namespace MyPortal.Database
         public static async Task<IUnitOfWork> Create(Guid userId, ApplicationDbContext context)
         {
             var unitOfWork = new UnitOfWork(userId, context);
+            var auditSetting = await unitOfWork.SystemSettings.Get(Constants.SystemSettings.AuditEnabled);
+            if (auditSetting.Setting == "1")
+            {
+                unitOfWork.AuditEnabled = true;
+            }
             await unitOfWork.Initialise();
             return unitOfWork;
         }
 
         private DbUser GetDbUser()
         {
-            return new DbUser(_userId, _transaction);
+            return new DbUser(_userId, _transaction, AuditEnabled);
         }
 
         private DbUserWithContext GetDbUserWithContext()
         {
-            return new DbUserWithContext(_userId, _transaction, _context);
+            return new DbUserWithContext(_userId, _transaction, _context, AuditEnabled);
         }
 
         private async Task<DbTransaction> GetDbTransaction(bool useContext)

@@ -89,7 +89,7 @@ namespace MyPortalWeb.Controllers.Api
                         return Error(HttpStatusCode.NotFound, "No academic year was found.");
                     }
 
-                    var studentStats = await StudentService.GetStatsById(studentId, academicYearId.Value);
+                    var studentStats = await StudentService.GetStatsByStudentId(studentId, academicYearId.Value);
 
                     return Ok(studentStats);
                 }

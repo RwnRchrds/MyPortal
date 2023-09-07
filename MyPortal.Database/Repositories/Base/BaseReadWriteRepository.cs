@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Dapper;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models.Connection;
+using MyPortal.Database.Models.Entity;
+using Newtonsoft.Json;
 using SqlKata;
 using Task = System.Threading.Tasks.Task;
 
@@ -37,6 +40,29 @@ namespace MyPortal.Database.Repositories.Base
             }
             
             var result = DbUser.Context.Set<TEntity>().Add(entity);
+
+            WriteAudit(entity.Id, AuditActions.Create, null);
+        }
+
+        protected void WriteAudit(Guid entityId, Guid action, TEntity oldValue)
+        {
+            WriteAuditRaw(entityId, action, oldValue != null ? JsonConvert.SerializeObject(oldValue) : null);
+        }
+
+        protected void WriteAuditRaw(Guid entityId, Guid action, string oldValue)
+        {
+            if (DbUser.AuditEnabled)
+            {
+                DbUser.Context.AuditLogs.Add(new AuditLog
+                {
+                    TableName = TblName,
+                    EntityId = entityId,
+                    AuditActionId = action,
+                    CreatedDate = DateTime.Now,
+                    UserId = DbUser.UserId,
+                    OldValue = oldValue
+                });
+            }
         }
 
         public async Task Delete(Guid id)
@@ -60,6 +86,8 @@ namespace MyPortal.Database.Repositories.Base
                     DbUser.Context.Set<TEntity>().Remove(entity);
                     break;
             }
+            
+            WriteAudit(id, AuditActions.Delete, entity);
         }
     }
 }

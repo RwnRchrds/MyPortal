@@ -6,7 +6,7 @@ namespace MyPortal.Logic.Helpers
 {
     internal class GoogleHelper
     {
-        public static BaseClientService.Initializer GetInitializer(string accessToken, params string[] scopes)
+        internal static BaseClientService.Initializer GetInitializer(string accessToken, params string[] scopes)
         {
             var originCredential =
                 (ServiceAccountCredential)GoogleCredential.FromAccessToken(accessToken)

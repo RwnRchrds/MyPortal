@@ -12,14 +12,14 @@ namespace MyPortal.Logic.Helpers
 {
     internal class PermissionHelper
     {
-        public static BitArray CreatePermissionArray()
+        internal static BitArray CreatePermissionArray()
         {
             var array = new BitArray(Enum.GetNames(typeof(PermissionValue)).Length);
 
             return array;
         }
         
-        public static async Task<bool> UserHasPermission(Guid userId, IUserService userService,
+        internal static async Task<bool> UserHasPermission(Guid userId, IUserService userService,
             PermissionRequirement requirement, params PermissionValue[] permissionValues)
         {
             if (!permissionValues.Any())

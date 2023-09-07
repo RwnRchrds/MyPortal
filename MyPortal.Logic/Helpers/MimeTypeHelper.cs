@@ -650,10 +650,7 @@ namespace MyPortal.Logic.Helpers
 
             foreach (var mapping in cache)
             {
-                if (!genericTypes.ContainsKey(mapping.Value))
-                {
-                    genericTypes.Add(mapping.Value, mapping.Key);
-                }
+                Mappings.Value.TryAdd(mapping.Value, mapping.Key);
             }
 
             return genericTypes;

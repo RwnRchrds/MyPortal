@@ -213,6 +213,7 @@ namespace MyPortal.Database.Interfaces
         IYearGroupRepository YearGroups { get; }
 
         int BatchLimit { get; set; }
+        bool AuditEnabled { get; set; }
         Task BatchSaveChangesAsync();
         Task SaveChangesAsync();
         Task<bool> GetLock(string name, int timeout = 0);

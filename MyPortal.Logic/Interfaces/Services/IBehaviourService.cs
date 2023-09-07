@@ -48,9 +48,9 @@ namespace MyPortal.Logic.Interfaces.Services
         #endregion
         
         #region Detentions
-        Task<IEnumerable<DetentionModel>> Get(DetentionSearchOptions searchOptions);
-        Task<DetentionModel> GetById(Guid detentionId);
-        Task<DetentionModel> GetByIncident(Guid incidentId);
+        Task<IEnumerable<DetentionModel>> GetDetentions(DetentionSearchOptions searchOptions);
+        Task<DetentionModel> GetDetentionById(Guid detentionId);
+        Task<DetentionModel> GetDetentionByIncident(Guid incidentId);
         Task<DetentionModel> CreateDetention(DetentionRequestModel detentionModel);
         Task UpdateDetention(Guid detentionId, DetentionRequestModel detentionModel);
         Task DeleteDetention(Guid detentionId);

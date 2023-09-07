@@ -9,9 +9,9 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Audit;
 using MyPortal.Logic.Models.Data.Attendance;
 using MyPortal.Logic.Models.Data.Students;
-
 using MyPortal.Logic.Models.Reporting;
 using MyPortal.Logic.Models.Requests.Student;
 using MyPortal.Logic.Models.Summary;
@@ -23,6 +23,12 @@ namespace MyPortal.Logic.Services
     {
         public StudentService(ISessionUser user) : base(user)
         {
+        }
+
+        public async Task<IEnumerable<HistoryItem>> GetHistoryByStudentId(Guid studentId)
+        {
+            await using var unitOfWork = await User.GetConnection();
+            return await GetHistory(unitOfWork.Students, studentId);
         }
 
         public async Task<StudentModel> GetStudentById(Guid studentId)
@@ -38,7 +44,7 @@ namespace MyPortal.Logic.Services
             return new StudentModel(student);
         }
 
-        public async Task<StudentStatsModel> GetStatsById(Guid studentId, Guid academicYearId)
+        public async Task<StudentStatsModel> GetStatsByStudentId(Guid studentId, Guid academicYearId)
         {
             var stats = new StudentStatsModel();
 
