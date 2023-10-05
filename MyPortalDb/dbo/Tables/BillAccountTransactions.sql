@@ -9,6 +9,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[BillAccountTransactions]([ClusterId] ASC);
 
 
 GO
@@ -19,9 +22,4 @@ CREATE NONCLUSTERED INDEX [IX_BillAccountTransactions_AccountTransactionId]
 GO
 CREATE NONCLUSTERED INDEX [IX_BillAccountTransactions_BillId]
     ON [dbo].[BillAccountTransactions]([BillId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[BillAccountTransactions]([ClusterId] ASC);
 

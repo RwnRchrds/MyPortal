@@ -12,6 +12,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[MedicalEvents]([ClusterId] ASC);
 
 
 GO
@@ -22,9 +25,4 @@ CREATE NONCLUSTERED INDEX [IX_MedicalEvents_CreatedById]
 GO
 CREATE NONCLUSTERED INDEX [IX_MedicalEvents_PersonId]
     ON [dbo].[MedicalEvents]([PersonId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[MedicalEvents]([ClusterId] ASC);
 

@@ -14,6 +14,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[EmailAddresses]([ClusterId] ASC);
 
 
 GO
@@ -29,9 +32,4 @@ CREATE NONCLUSTERED INDEX [IX_EmailAddresses_PersonId]
 GO
 CREATE NONCLUSTERED INDEX [IX_EmailAddresses_TypeId]
     ON [dbo].[EmailAddresses]([TypeId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[EmailAddresses]([ClusterId] ASC);
 

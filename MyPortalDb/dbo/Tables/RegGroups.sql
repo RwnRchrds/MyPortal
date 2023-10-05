@@ -12,6 +12,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[RegGroups]([ClusterId] ASC);
 
 
 GO
@@ -27,9 +30,4 @@ CREATE NONCLUSTERED INDEX [IX_RegGroups_StudentGroupId]
 GO
 CREATE NONCLUSTERED INDEX [IX_RegGroups_YearGroupId]
     ON [dbo].[RegGroups]([YearGroupId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[RegGroups]([ClusterId] ASC);
 

@@ -23,6 +23,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[People]([ClusterId] ASC);
 
 
 GO
@@ -38,9 +41,4 @@ CREATE NONCLUSTERED INDEX [IX_People_EthnicityId]
 GO
 CREATE NONCLUSTERED INDEX [IX_People_PhotoId]
     ON [dbo].[People]([PhotoId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[People]([ClusterId] ASC);
 

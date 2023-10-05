@@ -19,10 +19,9 @@
 );
 
 
-
-
 GO
-
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Tasks]([ClusterId] ASC);
 
 
 GO
@@ -31,16 +30,11 @@ CREATE NONCLUSTERED INDEX [IX_Tasks_AssignedToId]
 
 
 GO
-CREATE NONCLUSTERED INDEX [IX_Tasks_TypeId]
-    ON [dbo].[Tasks]([TypeId] ASC);
-
-
-GO
 CREATE NONCLUSTERED INDEX [IX_Tasks_CreatedById]
     ON [dbo].[Tasks]([CreatedById] ASC);
 
 
 GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[Tasks]([ClusterId] ASC);
+CREATE NONCLUSTERED INDEX [IX_Tasks_TypeId]
+    ON [dbo].[Tasks]([TypeId] ASC);
 

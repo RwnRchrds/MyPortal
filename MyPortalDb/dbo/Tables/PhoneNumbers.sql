@@ -13,6 +13,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[PhoneNumbers]([ClusterId] ASC);
 
 
 GO
@@ -28,9 +31,4 @@ CREATE NONCLUSTERED INDEX [IX_PhoneNumbers_PersonId]
 GO
 CREATE NONCLUSTERED INDEX [IX_PhoneNumbers_TypeId]
     ON [dbo].[PhoneNumbers]([TypeId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[PhoneNumbers]([ClusterId] ASC);
 

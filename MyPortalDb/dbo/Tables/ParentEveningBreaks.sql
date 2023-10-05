@@ -9,14 +9,12 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[ParentEveningBreaks]([ClusterId] ASC);
 
 
 GO
 CREATE NONCLUSTERED INDEX [IX_ParentEveningBreaks_ParentEveningStaffMemberId]
     ON [dbo].[ParentEveningBreaks]([ParentEveningStaffMemberId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[ParentEveningBreaks]([ClusterId] ASC);
 

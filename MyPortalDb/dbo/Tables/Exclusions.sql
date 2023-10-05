@@ -19,6 +19,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Exclusions]([ClusterId] ASC);
 
 
 GO
@@ -39,9 +42,4 @@ CREATE NONCLUSTERED INDEX [IX_Exclusions_ExclusionTypeId]
 GO
 CREATE NONCLUSTERED INDEX [IX_Exclusions_StudentId]
     ON [dbo].[Exclusions]([StudentId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[Exclusions]([ClusterId] ASC);
 

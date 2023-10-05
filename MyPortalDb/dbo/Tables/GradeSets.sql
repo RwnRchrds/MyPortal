@@ -9,8 +9,6 @@
 );
 
 
-
-
 GO
 CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
     ON [dbo].[GradeSets]([ClusterId] ASC);

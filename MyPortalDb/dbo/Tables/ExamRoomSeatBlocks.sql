@@ -10,8 +10,6 @@
 );
 
 
-
-
 GO
 CREATE NONCLUSTERED INDEX [IX_ExamRoomSeatBlocks_ExamRoomId]
     ON [dbo].[ExamRoomSeatBlocks]([ExamRoomId] ASC);

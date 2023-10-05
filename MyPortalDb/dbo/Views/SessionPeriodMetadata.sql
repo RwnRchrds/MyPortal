@@ -53,4 +53,4 @@ UNION
           LEFT JOIN dbo.StaffMembers SM ON SG.MainSupervisorId = SM.Id
           LEFT JOIN Rooms R ON RG.RoomId = R.Id
      OUTER APPLY GetName(SM.PersonId, 2, 0, 1) FNA
- WHERE API.AmReg = 1 OR API.PmReg = 1);
+ WHERE API.AmReg = 1 OR API.PmReg = 1)

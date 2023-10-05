@@ -56,4 +56,4 @@
 
                FROM dbo.People P
 
-               WHERE P.Id = @PersonId;
+               WHERE P.Id = @PersonId

@@ -10,11 +10,11 @@
 
 
 GO
-CREATE NONCLUSTERED INDEX [IX_TaskReminders_TaskId]
-    ON [dbo].[TaskReminders]([TaskId] ASC);
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[TaskReminders]([ClusterId] ASC);
 
 
 GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[TaskReminders]([ClusterId] ASC);
+CREATE NONCLUSTERED INDEX [IX_TaskReminders_TaskId]
+    ON [dbo].[TaskReminders]([TaskId] ASC);
 

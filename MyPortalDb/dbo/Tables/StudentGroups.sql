@@ -3,7 +3,7 @@
     [ClusterId]        INT              IDENTITY (1, 1) NOT NULL,
     [Description]      NVARCHAR (256)   NOT NULL,
     [Active]           BIT              NOT NULL,
-    [Code]             NVARCHAR (50)    NOT NULL,
+    [Code]             NVARCHAR (10)    NOT NULL,
     [PromoteToGroupId] UNIQUEIDENTIFIER NULL,
     [MainSupervisorId] UNIQUEIDENTIFIER NULL,
     [MaxMembers]       INT              NULL,
@@ -15,6 +15,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[StudentGroups]([ClusterId] ASC);
 
 
 GO
@@ -25,9 +28,4 @@ CREATE NONCLUSTERED INDEX [IX_StudentGroups_MainSupervisorId]
 GO
 CREATE NONCLUSTERED INDEX [IX_StudentGroups_PromoteToGroupId]
     ON [dbo].[StudentGroups]([PromoteToGroupId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[StudentGroups]([ClusterId] ASC);
 

@@ -10,8 +10,6 @@
 );
 
 
-
-
 GO
 CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
     ON [dbo].[ResultSets]([ClusterId] ASC);

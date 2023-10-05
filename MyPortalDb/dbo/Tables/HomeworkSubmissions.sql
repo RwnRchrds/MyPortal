@@ -15,6 +15,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[HomeworkSubmissions]([ClusterId] ASC);
 
 
 GO
@@ -35,9 +38,4 @@ CREATE NONCLUSTERED INDEX [IX_HomeworkSubmissions_StudentId]
 GO
 CREATE NONCLUSTERED INDEX [IX_HomeworkSubmissions_TaskId]
     ON [dbo].[HomeworkSubmissions]([TaskId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[HomeworkSubmissions]([ClusterId] ASC);
 

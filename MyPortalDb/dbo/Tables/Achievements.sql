@@ -17,6 +17,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Achievements]([ClusterId] ASC);
 
 
 GO
@@ -37,9 +40,4 @@ CREATE NONCLUSTERED INDEX [IX_Achievements_CreatedById]
 GO
 CREATE NONCLUSTERED INDEX [IX_Achievements_LocationId]
     ON [dbo].[Achievements]([LocationId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[Achievements]([ClusterId] ASC);
 

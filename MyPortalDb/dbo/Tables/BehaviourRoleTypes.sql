@@ -7,5 +7,3 @@
     CONSTRAINT [PK_BehaviourRoleTypes] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-

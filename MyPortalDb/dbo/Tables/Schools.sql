@@ -23,6 +23,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Schools]([ClusterId] ASC);
 
 
 GO
@@ -58,9 +61,4 @@ CREATE NONCLUSTERED INDEX [IX_Schools_PhaseId]
 GO
 CREATE NONCLUSTERED INDEX [IX_Schools_TypeId]
     ON [dbo].[Schools]([TypeId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[Schools]([ClusterId] ASC);
 

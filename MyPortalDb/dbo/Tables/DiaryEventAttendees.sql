@@ -14,6 +14,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[DiaryEventAttendees]([ClusterId] ASC);
 
 
 GO
@@ -29,9 +32,4 @@ CREATE NONCLUSTERED INDEX [IX_DiaryEventAttendees_PersonId]
 GO
 CREATE NONCLUSTERED INDEX [IX_DiaryEventAttendees_ResponseId]
     ON [dbo].[DiaryEventAttendees]([ResponseId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[DiaryEventAttendees]([ClusterId] ASC);
 

@@ -11,14 +11,12 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[HomeworkItems]([ClusterId] ASC);
 
 
 GO
 CREATE NONCLUSTERED INDEX [IX_HomeworkItems_DirectoryId]
     ON [dbo].[HomeworkItems]([DirectoryId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[HomeworkItems]([ClusterId] ASC);
 

@@ -10,6 +10,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Comments]([ClusterId] ASC);
 
 
 GO
@@ -20,9 +23,4 @@ CREATE NONCLUSTERED INDEX [IX_Comments_CommentBankSectionId]
 GO
 CREATE NONCLUSTERED INDEX [IX_Comments_CommentTypeId]
     ON [dbo].[Comments]([CommentTypeId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[Comments]([ClusterId] ASC);
 

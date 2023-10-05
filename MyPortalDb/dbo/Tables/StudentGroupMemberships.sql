@@ -11,6 +11,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[StudentGroupMemberships]([ClusterId] ASC);
 
 
 GO
@@ -21,9 +24,4 @@ CREATE NONCLUSTERED INDEX [IX_StudentGroupMemberships_StudentGroupId]
 GO
 CREATE NONCLUSTERED INDEX [IX_StudentGroupMemberships_StudentId]
     ON [dbo].[StudentGroupMemberships]([StudentId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[StudentGroupMemberships]([ClusterId] ASC);
 

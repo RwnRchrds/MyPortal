@@ -11,6 +11,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[SubjectStaffMembers]([ClusterId] ASC);
 
 
 GO
@@ -26,9 +29,4 @@ CREATE NONCLUSTERED INDEX [IX_SubjectStaffMembers_StaffMemberId]
 GO
 CREATE NONCLUSTERED INDEX [IX_SubjectStaffMembers_SubjectId]
     ON [dbo].[SubjectStaffMembers]([SubjectId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[SubjectStaffMembers]([ClusterId] ASC);
 

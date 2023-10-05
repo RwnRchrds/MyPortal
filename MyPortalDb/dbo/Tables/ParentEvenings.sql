@@ -10,14 +10,12 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[ParentEvenings]([ClusterId] ASC);
 
 
 GO
 CREATE NONCLUSTERED INDEX [IX_ParentEvenings_EventId]
     ON [dbo].[ParentEvenings]([EventId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[ParentEvenings]([ClusterId] ASC);
 

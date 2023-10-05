@@ -12,14 +12,12 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[AttendanceCodes]([ClusterId] ASC);
 
 
 GO
 CREATE NONCLUSTERED INDEX [IX_AttendanceCodes_AttendanceCodeTypeId]
     ON [dbo].[AttendanceCodes]([AttendanceCodeTypeId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[AttendanceCodes]([ClusterId] ASC);
 

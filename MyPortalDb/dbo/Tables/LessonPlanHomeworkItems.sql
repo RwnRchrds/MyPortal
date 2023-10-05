@@ -9,6 +9,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[LessonPlanHomeworkItems]([ClusterId] ASC);
 
 
 GO
@@ -19,9 +22,4 @@ CREATE NONCLUSTERED INDEX [IX_LessonPlanHomeworkItems_HomeworkItemId]
 GO
 CREATE NONCLUSTERED INDEX [IX_LessonPlanHomeworkItems_LessonPlanId]
     ON [dbo].[LessonPlanHomeworkItems]([LessonPlanId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[LessonPlanHomeworkItems]([ClusterId] ASC);
 

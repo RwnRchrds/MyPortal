@@ -14,6 +14,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Rooms]([ClusterId] ASC);
 
 
 GO
@@ -24,9 +27,4 @@ CREATE NONCLUSTERED INDEX [IX_Rooms_BuildingFloorId]
 GO
 CREATE NONCLUSTERED INDEX [IX_Rooms_LocationId]
     ON [dbo].[Rooms]([LocationId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[Rooms]([ClusterId] ASC);
 

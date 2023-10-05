@@ -10,14 +10,12 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Courses]([ClusterId] ASC);
 
 
 GO
 CREATE NONCLUSTERED INDEX [IX_Courses_SubjectId]
     ON [dbo].[Courses]([SubjectId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[Courses]([ClusterId] ASC);
 

@@ -9,6 +9,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[ExamCandidateSpecialArrangements]([ClusterId] ASC);
 
 
 GO
@@ -19,9 +22,4 @@ CREATE NONCLUSTERED INDEX [IX_ExamCandidateSpecialArrangements_CandidateId]
 GO
 CREATE NONCLUSTERED INDEX [IX_ExamCandidateSpecialArrangements_SpecialArrangementId]
     ON [dbo].[ExamCandidateSpecialArrangements]([SpecialArrangementId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[ExamCandidateSpecialArrangements]([ClusterId] ASC);
 

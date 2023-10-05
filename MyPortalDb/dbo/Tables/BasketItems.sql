@@ -10,6 +10,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[BasketItems]([ClusterId] ASC);
 
 
 GO
@@ -20,9 +23,4 @@ CREATE NONCLUSTERED INDEX [IX_BasketItems_ProductId]
 GO
 CREATE NONCLUSTERED INDEX [IX_BasketItems_StudentId]
     ON [dbo].[BasketItems]([StudentId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[BasketItems]([ClusterId] ASC);
 

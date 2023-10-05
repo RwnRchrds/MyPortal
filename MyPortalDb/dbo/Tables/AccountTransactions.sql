@@ -9,14 +9,12 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[AccountTransactions]([ClusterId] ASC);
 
 
 GO
 CREATE NONCLUSTERED INDEX [IX_AccountTransactions_StudentId]
     ON [dbo].[AccountTransactions]([StudentId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[AccountTransactions]([ClusterId] ASC);
 

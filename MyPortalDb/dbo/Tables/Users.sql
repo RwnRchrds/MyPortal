@@ -23,8 +23,6 @@
 );
 
 
-
-
 GO
 CREATE NONCLUSTERED INDEX [EmailIndex]
     ON [dbo].[Users]([NormalizedEmail] ASC);

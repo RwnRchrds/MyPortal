@@ -52,4 +52,4 @@ GROUP BY CONVERT(DATETIME, CONVERT(CHAR(8),
          AP.StartTime,
          AP.EndTime,
          AP.AmReg,
-         AP.PmReg;
+         AP.PmReg

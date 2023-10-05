@@ -13,6 +13,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Observations]([ClusterId] ASC);
 
 
 GO
@@ -28,9 +31,4 @@ CREATE NONCLUSTERED INDEX [IX_Observations_ObserverId]
 GO
 CREATE NONCLUSTERED INDEX [IX_Observations_OutcomeId]
     ON [dbo].[Observations]([OutcomeId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[Observations]([ClusterId] ASC);
 

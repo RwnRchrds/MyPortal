@@ -12,13 +12,8 @@
 
 
 GO
-CREATE NONCLUSTERED INDEX [IX_SessionExtraNames_StudentId]
-    ON [dbo].[SessionExtraNames]([StudentId] ASC);
-
-
-GO
-CREATE NONCLUSTERED INDEX [IX_SessionExtraNames_SessionId]
-    ON [dbo].[SessionExtraNames]([SessionId] ASC);
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[SessionExtraNames]([ClusterId] ASC);
 
 
 GO
@@ -27,6 +22,11 @@ CREATE NONCLUSTERED INDEX [IX_SessionExtraNames_AttendanceWeekId]
 
 
 GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[SessionExtraNames]([ClusterId] ASC);
+CREATE NONCLUSTERED INDEX [IX_SessionExtraNames_SessionId]
+    ON [dbo].[SessionExtraNames]([SessionId] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_SessionExtraNames_StudentId]
+    ON [dbo].[SessionExtraNames]([StudentId] ASC);
 

@@ -9,6 +9,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[ParentEveningGroup]([ClusterId] ASC);
 
 
 GO
@@ -19,9 +22,4 @@ CREATE NONCLUSTERED INDEX [IX_ParentEveningGroup_ParentEveningId]
 GO
 CREATE NONCLUSTERED INDEX [IX_ParentEveningGroup_StudentGroupId]
     ON [dbo].[ParentEveningGroup]([StudentGroupId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[ParentEveningGroup]([ClusterId] ASC);
 

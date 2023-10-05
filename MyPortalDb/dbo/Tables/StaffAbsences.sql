@@ -15,6 +15,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[StaffAbsences]([ClusterId] ASC);
 
 
 GO
@@ -30,9 +33,4 @@ CREATE NONCLUSTERED INDEX [IX_StaffAbsences_IllnessTypeId]
 GO
 CREATE NONCLUSTERED INDEX [IX_StaffAbsences_StaffMemberId]
     ON [dbo].[StaffAbsences]([StaffMemberId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[StaffAbsences]([ClusterId] ASC);
 

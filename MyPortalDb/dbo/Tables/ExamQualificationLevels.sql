@@ -13,6 +13,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[ExamQualificationLevels]([ClusterId] ASC);
 
 
 GO
@@ -23,9 +26,4 @@ CREATE NONCLUSTERED INDEX [IX_ExamQualificationLevels_DefaultGradeSetId]
 GO
 CREATE NONCLUSTERED INDEX [IX_ExamQualificationLevels_QualificationId]
     ON [dbo].[ExamQualificationLevels]([QualificationId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[ExamQualificationLevels]([ClusterId] ASC);
 

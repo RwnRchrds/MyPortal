@@ -9,14 +9,12 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Directories]([ClusterId] ASC);
 
 
 GO
 CREATE NONCLUSTERED INDEX [IX_Directories_ParentId]
     ON [dbo].[Directories]([ParentId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[Directories]([ClusterId] ASC);
 

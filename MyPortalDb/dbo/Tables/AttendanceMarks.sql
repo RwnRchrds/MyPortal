@@ -17,6 +17,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[AttendanceMarks]([ClusterId] ASC);
 
 
 GO
@@ -42,9 +45,4 @@ CREATE NONCLUSTERED INDEX [IX_AttendanceMarks_StudentId]
 GO
 CREATE NONCLUSTERED INDEX [IX_AttendanceMarks_WeekId]
     ON [dbo].[AttendanceMarks]([WeekId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[AttendanceMarks]([ClusterId] ASC);
 

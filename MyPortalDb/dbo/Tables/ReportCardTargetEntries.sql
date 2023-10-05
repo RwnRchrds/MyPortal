@@ -10,6 +10,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[ReportCardTargetEntries]([ClusterId] ASC);
 
 
 GO
@@ -20,9 +23,4 @@ CREATE NONCLUSTERED INDEX [IX_ReportCardTargetEntries_EntryId]
 GO
 CREATE NONCLUSTERED INDEX [IX_ReportCardTargetEntries_TargetId]
     ON [dbo].[ReportCardTargetEntries]([TargetId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[ReportCardTargetEntries]([ClusterId] ASC);
 

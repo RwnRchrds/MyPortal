@@ -18,31 +18,9 @@
 );
 
 
-
-
 GO
-CREATE NONCLUSTERED INDEX [IX_SenReviews_ReviewTypeId]
-    ON [dbo].[SenReviews]([ReviewTypeId] ASC);
-
-
-GO
-CREATE NONCLUSTERED INDEX [IX_SenReviews_StudentId]
-    ON [dbo].[SenReviews]([StudentId] ASC);
-
-
-GO
-CREATE NONCLUSTERED INDEX [IX_SenReviews_SencoId]
-    ON [dbo].[SenReviews]([SencoId] ASC);
-
-
-GO
-CREATE NONCLUSTERED INDEX [IX_SenReviews_ReviewStatusId]
-    ON [dbo].[SenReviews]([ReviewStatusId] ASC);
-
-
-GO
-CREATE NONCLUSTERED INDEX [IX_SenReviews_OutcomeSenStatusId]
-    ON [dbo].[SenReviews]([OutcomeSenStatusId] ASC);
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[SenReviews]([ClusterId] ASC);
 
 
 GO
@@ -51,6 +29,26 @@ CREATE NONCLUSTERED INDEX [IX_SenReviews_EventId]
 
 
 GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[SenReviews]([ClusterId] ASC);
+CREATE NONCLUSTERED INDEX [IX_SenReviews_OutcomeSenStatusId]
+    ON [dbo].[SenReviews]([OutcomeSenStatusId] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_SenReviews_ReviewStatusId]
+    ON [dbo].[SenReviews]([ReviewStatusId] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_SenReviews_ReviewTypeId]
+    ON [dbo].[SenReviews]([ReviewTypeId] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_SenReviews_SencoId]
+    ON [dbo].[SenReviews]([SencoId] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_SenReviews_StudentId]
+    ON [dbo].[SenReviews]([StudentId] ASC);
 

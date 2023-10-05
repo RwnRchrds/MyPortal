@@ -13,14 +13,12 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Charges]([ClusterId] ASC);
 
 
 GO
 CREATE NONCLUSTERED INDEX [IX_Charges_VatRateId]
     ON [dbo].[Charges]([VatRateId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[Charges]([ClusterId] ASC);
 

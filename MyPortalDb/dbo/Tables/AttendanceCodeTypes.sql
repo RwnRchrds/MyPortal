@@ -6,8 +6,6 @@
 );
 
 
-
-
 GO
 CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
     ON [dbo].[AttendanceCodeTypes]([ClusterId] ASC);

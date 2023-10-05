@@ -11,8 +11,6 @@
 );
 
 
-
-
 GO
 CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
     ON [dbo].[Discounts]([ClusterId] ASC);

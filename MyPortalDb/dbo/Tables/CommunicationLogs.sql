@@ -12,6 +12,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[CommunicationLogs]([ClusterId] ASC);
 
 
 GO
@@ -22,9 +25,4 @@ CREATE NONCLUSTERED INDEX [IX_CommunicationLogs_CommunicationTypeId]
 GO
 CREATE NONCLUSTERED INDEX [IX_CommunicationLogs_ContactId]
     ON [dbo].[CommunicationLogs]([ContactId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[CommunicationLogs]([ClusterId] ASC);
 

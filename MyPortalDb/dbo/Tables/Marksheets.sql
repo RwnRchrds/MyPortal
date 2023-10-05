@@ -10,6 +10,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[Marksheets]([ClusterId] ASC);
 
 
 GO
@@ -20,9 +23,4 @@ CREATE NONCLUSTERED INDEX [IX_Marksheets_MarksheetTemplateId]
 GO
 CREATE NONCLUSTERED INDEX [IX_Marksheets_StudentGroupId]
     ON [dbo].[Marksheets]([StudentGroupId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[Marksheets]([ClusterId] ASC);
 

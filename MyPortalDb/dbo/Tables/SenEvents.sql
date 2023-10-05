@@ -11,6 +11,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[SenEvents]([ClusterId] ASC);
 
 
 GO
@@ -21,9 +24,4 @@ CREATE NONCLUSTERED INDEX [IX_SenEvents_EventTypeId]
 GO
 CREATE NONCLUSTERED INDEX [IX_SenEvents_StudentId]
     ON [dbo].[SenEvents]([StudentId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[SenEvents]([ClusterId] ASC);
 

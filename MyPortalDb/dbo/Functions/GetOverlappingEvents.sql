@@ -20,4 +20,4 @@
                        DE.System
                FROM dbo.DiaryEvents DE
                WHERE (DE.EndTime >= @StartTime AND ((DE.AllDay = 1 AND DE.StartTime < DATEADD(DAY, 1, @EndTime)) OR DE.StartTime <= @EndTime))
-                 AND (@EventTypeFilter IS NULL OR DE.EventTypeId = @EventTypeFilter);
+                 AND (@EventTypeFilter IS NULL OR DE.EventTypeId = @EventTypeFilter)

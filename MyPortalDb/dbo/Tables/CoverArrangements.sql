@@ -14,6 +14,9 @@
 );
 
 
+GO
+CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
+    ON [dbo].[CoverArrangements]([ClusterId] ASC);
 
 
 GO
@@ -34,9 +37,4 @@ CREATE NONCLUSTERED INDEX [IX_CoverArrangements_TeacherId]
 GO
 CREATE NONCLUSTERED INDEX [IX_CoverArrangements_WeekId]
     ON [dbo].[CoverArrangements]([WeekId] ASC);
-
-
-GO
-CREATE UNIQUE CLUSTERED INDEX [CIX_ClusterId]
-    ON [dbo].[CoverArrangements]([ClusterId] ASC);
 
