@@ -3317,6 +3317,8 @@ MERGE INTO [dbo].[StaffAbsenceTypes] as Target
 USING (VALUES
            ('6bdf1ac6-63de-4f2c-a3ca-1ef69eda2b90', 'Illness', 1, 1, 1),
            ('1c0bb33a-d5a3-4e40-8c4f-9ac29f95be1a', 'Holiday', 1, 1, 1),
+           ('2e0c6c0f-4ea0-40dc-bac3-19de84327454', 'Jury Service', 1, 1, 1),
+           ('33c1ac6b-7ff4-4f3e-88d5-df8f8c0d2c66', 'Compassionate Leave', 1, 1, 1),
            ('171f0b15-56a7-4420-971c-81342cb737e8', 'Unknown', 1, 1, 0)
            )
 AS Source (Id, Description, Active, System, Authorised)
