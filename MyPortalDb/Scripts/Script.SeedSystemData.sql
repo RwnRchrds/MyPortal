@@ -3286,6 +3286,20 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
     VALUES (Id, Description, Active);
 
+MERGE INTO [dbo].[BehaviourRoleTypes] AS Target
+USING (VALUES
+           ('3c487bc5-110a-4619-9ab3-be4005f2d1ef', 'Aggressor', 1, 1),
+           ('83c30d68-1b9e-4e3d-94ac-525209713a8b', 'Participant', 1, 1),
+           ('1ec5b055-515b-48c0-8afa-ef4320bef310', 'Witness', 1, 0),
+           ('0336da30-3bc4-4582-8859-a1d4f35b5053', 'Target', 1, 0)
+           )
+AS Source (Id, Description, Active, DefaultPoints)
+ON Target.Id = Source.Id
+
+WHEN NOT MATCHED THEN
+INSERT (Id, Description, Active, DefaultPoints)
+VALUES (Id, Description, Active, DefaultPoints);
+
 EXEC sp_MSforeachtable @command1="print '?'", @command2="ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all";
 
 IF(@@ERROR > 0)
