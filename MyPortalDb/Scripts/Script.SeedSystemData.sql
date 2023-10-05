@@ -3300,6 +3300,20 @@ WHEN NOT MATCHED THEN
 INSERT (Id, Description, Active, DefaultPoints)
 VALUES (Id, Description, Active, DefaultPoints);
 
+MERGE INTO [dbo].[BoarderStatus] as Target
+USING (VALUES
+           ('4dbc575c-a035-4409-917a-3a116d51258f', 'Boarder', 1, 'B'),
+           ('83b4978a-702c-4e58-9f87-c955a138dc61', 'Boarder - Night not Specified', 1, 'N'),
+           ('9abf7871-f189-4a99-a7a5-e29aeab40772', 'Not a Boarder', 1, 'X')
+           )
+AS Source (Id, Description, Active, Code)
+ON Target.Id = Source.Id
+
+WHEN NOT MATCHED THEN
+INSERT (Id, Description, Active, Code)
+VALUES (Id, Description, Active, Code);
+
+
 EXEC sp_MSforeachtable @command1="print '?'", @command2="ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all";
 
 IF(@@ERROR > 0)
