@@ -23,7 +23,7 @@ ON Target.Name = Source.Name
 
 WHEN NOT MATCHED THEN
     INSERT (Name, Setting)
-    VALUES (Name, Setting);     
+    VALUES (Name, Setting);
 
 MERGE INTO [dbo].[Roles] AS Target
 USING (VALUES
@@ -75,7 +75,7 @@ WHEN MATCHED THEN
     UPDATE SET Name = Source.Name
 WHEN NOT MATCHED THEN
     INSERT (Id, Name, NormalizedName, Description, Permissions, System)
-    VALUES (Id, Name, NormalizedName, Description, Permissions, 1);      
+    VALUES (Id, Name, NormalizedName, Description, Permissions, 1);
 
 MERGE INTO [dbo].[Users] AS Target
 USING (VALUES
@@ -86,7 +86,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, UserName, NormalizedUserName, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, CreatedDate, UserType, Enabled)
-    VALUES (Id, UserName, NormalizedUserName, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, CreatedDate, UserType, Enabled);       
+    VALUES (Id, UserName, NormalizedUserName, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, CreatedDate, UserType, Enabled);
 
 MERGE INTO [dbo].[UserRoles] AS Target
 USING (VALUES
@@ -97,7 +97,7 @@ ON Target.UserId = Source.UserId AND Target.RoleId = Source.RoleId
 
 WHEN NOT MATCHED THEN
     INSERT (UserId, RoleId)
-    VALUES (UserId, RoleId);    
+    VALUES (UserId, RoleId);
 
 MERGE INTO [dbo].[AspectTypes] AS Target
 USING (VALUES
@@ -114,7 +114,7 @@ WHEN NOT MATCHED THEN
     VALUES (Id, Description, 1)
 
 WHEN MATCHED THEN
-    UPDATE SET Description = Source.Description;    
+    UPDATE SET Description = Source.Description;
 
 MERGE INTO [dbo].[GradeSets] AS Target
 USING (VALUES
@@ -231,7 +231,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Name, Description, Active, System)
-    VALUES (Id, Name, Description, Active, System);    
+    VALUES (Id, Name, Description, Active, System);
 
 MERGE INTO [dbo].[Grades] AS Target
 USING (VALUES
@@ -1143,7 +1143,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, GradeSetId, Code, Value, Description)
-    VALUES (Id, GradeSetId, Code, Value, Description);        
+    VALUES (Id, GradeSetId, Code, Value, Description);
 
 MERGE INTO [dbo].[ExamQualifications] AS Target
 USING (VALUES
@@ -1227,7 +1227,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active, JcQualificationCode, System)
-    VALUES (Id, Description, Active, JcQualificationCode, 1);    
+    VALUES (Id, Description, Active, JcQualificationCode, 1);
 
 MERGE INTO [dbo].[ExamQualificationLevels] AS Target
 USING (VALUES
@@ -1578,7 +1578,7 @@ WHEN MATCHED THEN UPDATE SET DefaultGradeSetId = Source.DefaultGradeSetId
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active, QualificationId, DefaultGradeSetId, JcLevelCode, System)
-    VALUES (Id, Description, 1, QualificationId, DefaultGradeSetId, JcLevelCode, 1);    
+    VALUES (Id, Description, 1, QualificationId, DefaultGradeSetId, JcLevelCode, 1);
 
 MERGE INTO [dbo].[AttendanceCodeTypes] AS Target
 USING (VALUES
@@ -1597,7 +1597,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description)
-    VALUES (Id, Description);    
+    VALUES (Id, Description);
 
 MERGE INTO [dbo].[AttendanceCodes] AS Target
 USING (VALUES
@@ -1635,7 +1635,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Code, Description, AttendanceCodeTypeId, Active, Restricted, System)
-    VALUES (Id, Code, Description, AttendanceCodeTypeId, Active, 0, 1);    
+    VALUES (Id, Code, Description, AttendanceCodeTypeId, Active, 0, 1);
 
 MERGE INTO [dbo].[AchievementOutcomes] AS Target
 USING (VALUES
@@ -1673,7 +1673,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, Active);    
+    VALUES (Id, Description, Active);
 
 MERGE INTO [dbo].[AchievementTypes] AS Target
 USING (VALUES
@@ -1697,7 +1697,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, DefaultPoints, Active)
-    VALUES (Id, Description, DefaultPoints, 1);    
+    VALUES (Id, Description, DefaultPoints, 1);
 
 MERGE INTO [dbo].[BehaviourOutcomes] AS Target
 USING (VALUES
@@ -1752,7 +1752,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active, System)
-    VALUES (Id, Description, Active, System);    
+    VALUES (Id, Description, Active, System);
 
 MERGE INTO [dbo].[BehaviourStatus] AS Target
 USING (VALUES
@@ -1773,7 +1773,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active, Resolved)
-    VALUES (Id, Description, Active, Resolved);    
+    VALUES (Id, Description, Active, Resolved);
 
 MERGE INTO [dbo].[IncidentTypes] AS Target
 USING (VALUES
@@ -1812,7 +1812,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, DefaultPoints, Active)
-    VALUES (Id, Description, DefaultPoints, Active);    
+    VALUES (Id, Description, DefaultPoints, Active);
 
 MERGE INTO [dbo].[CommentTypes] AS Target
 USING (VALUES
@@ -1825,7 +1825,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, Active);    
+    VALUES (Id, Description, Active);
 
 MERGE INTO [dbo].[CommunicationTypes] AS Target
 USING (VALUES
@@ -1840,7 +1840,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, 1);    
+    VALUES (Id, Description, 1);
 
 MERGE INTO [dbo].[AddressTypes] AS Target
 USING (VALUES
@@ -1852,7 +1852,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, 1);    
+    VALUES (Id, Description, 1);
 
 MERGE INTO [dbo].[EmailAddressTypes] AS Target
 USING (VALUES
@@ -1865,7 +1865,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, 1);    
+    VALUES (Id, Description, 1);
 
 MERGE INTO [dbo].[PhoneNumberTypes] AS Target
 USING (VALUES
@@ -1879,7 +1879,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, 1);    
+    VALUES (Id, Description, 1);
 
 MERGE INTO [dbo].[DocumentTypes] AS Target
 USING (VALUES
@@ -1899,7 +1899,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Student, Staff, Contact, General, Sen, Active, System)
-    VALUES (Id, Description, Student, Staff, Contact, General, Sen, 1, 1);    
+    VALUES (Id, Description, Student, Staff, Contact, General, Sen, 1, 1);
 
 MERGE INTO [dbo].[ProductTypes] AS Target
 USING (VALUES
@@ -1917,7 +1917,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, IsMeal, Active)
-    VALUES (Id, Description, IsMeal, 1);    
+    VALUES (Id, Description, IsMeal, 1);
 
 MERGE INTO [dbo].[MedicalConditions] AS Target
 USING (VALUES
@@ -1936,7 +1936,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, Active);    
+    VALUES (Id, Description, Active);
 
 MERGE INTO [dbo].[DietaryRequirements] AS Target
 USING (VALUES
@@ -1955,7 +1955,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, 1);    
+    VALUES (Id, Description, 1);
 
 MERGE INTO [dbo].[RelationshipTypes] AS Target
 USING (VALUES
@@ -1980,7 +1980,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, 1);    
+    VALUES (Id, Description, 1);
 
 MERGE INTO [dbo].[ObservationOutcomes] AS Target
 USING (VALUES
@@ -1997,7 +1997,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, ColourCode, Active)
-    VALUES (Id, Description, ColourCode, 1);    
+    VALUES (Id, Description, ColourCode, 1);
 
 MERGE INTO [dbo].[TrainingCertificateStatus] AS Target
 USING (VALUES
@@ -2011,7 +2011,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, ColourCode, Active)
-    VALUES (Id, Description, ColourCode, 1);    
+    VALUES (Id, Description, ColourCode, 1);
 
 MERGE INTO [dbo].[CommentBanks] AS Target
 USING (VALUES
@@ -2042,7 +2042,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, Active);    
+    VALUES (Id, Description, Active);
 
 MERGE INTO [dbo].[LogNoteTypes] AS Target
 USING (VALUES
@@ -2060,7 +2060,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, ColourCode, IconClass, Active)
-    VALUES (Id, Description, ColourCode, IconClass, 1);    
+    VALUES (Id, Description, ColourCode, IconClass, 1);
 
 MERGE INTO [dbo].[GovernanceTypes] AS Target
 USING (VALUES
@@ -2078,7 +2078,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Code, Active)
-    VALUES (Id, Description, Code, 1);    
+    VALUES (Id, Description, Code, 1);
 
 MERGE INTO [dbo].[IntakeTypes] AS Target
 USING (VALUES
@@ -2095,7 +2095,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Code, Active)
-    VALUES (Id, Description, Code, 1);    
+    VALUES (Id, Description, Code, 1);
 
 MERGE INTO [dbo].[Locations] AS Target
 USING (VALUES
@@ -2120,7 +2120,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, System)
-    VALUES (Id, Description, 1);    
+    VALUES (Id, Description, 1);
 
 MERGE INTO [dbo].[SchoolPhases] AS Target
 USING (VALUES
@@ -2138,7 +2138,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Code, Active)
-    VALUES (Id, Description, Code, 1);    
+    VALUES (Id, Description, Code, 1);
 
 MERGE INTO [dbo].[SchoolTypes] AS Target
 USING (VALUES
@@ -2166,7 +2166,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Code, Active)
-    VALUES (Id, Description, Code, 1);    
+    VALUES (Id, Description, Code, 1);
 
 MERGE INTO [dbo].[SenEventTypes] AS Target
 USING (VALUES
@@ -2189,7 +2189,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, 1);    
+    VALUES (Id, Description, 1);
 
 MERGE INTO [dbo].[SenProvisionTypes] AS Target
 USING (VALUES
@@ -2210,7 +2210,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, 1);    
+    VALUES (Id, Description, 1);
 
 MERGE INTO [dbo].[SenReviewTypes] AS Target
 USING (VALUES
@@ -2227,7 +2227,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, 1);    
+    VALUES (Id, Description, 1);
 
 MERGE INTO [dbo].[SenStatus] AS Target
 USING (VALUES
@@ -2248,7 +2248,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Code, Description, Active)
-    VALUES (Id, Code, Description, 1);    
+    VALUES (Id, Code, Description, 1);
 
 MERGE INTO [dbo].[SenTypes] AS Target
 USING (VALUES
@@ -2273,7 +2273,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Code, Description, Active)
-    VALUES (Id, Code, Description, 1);    
+    VALUES (Id, Code, Description, 1);
 
 MERGE INTO [dbo].[DiaryEventAttendeeResponses] AS Target
 USING (VALUES
@@ -2289,7 +2289,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, 1);    
+    VALUES (Id, Description, 1);
 
 MERGE INTO [dbo].[LocalAuthorities] AS Target
 USING (VALUES
@@ -2452,7 +2452,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT(Id, LeaCode, Name)
-    VALUES (Id, LeaCode, Name);    
+    VALUES (Id, LeaCode, Name);
 
 MERGE INTO [dbo].[CurriculumYearGroups] AS Target
 USING (VALUES
@@ -2484,7 +2484,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Name, KeyStage, Code)
-    VALUES (Id, Name, KeyStage, Code);    
+    VALUES (Id, Name, KeyStage, Code);
 
 MERGE INTO [dbo].[Directories] AS Target
 USING (VALUES
@@ -2498,7 +2498,7 @@ WHEN MATCHED THEN
 
 WHEN NOT MATCHED THEN
     INSERT (Id, ParentId, Name, Private)
-    VALUES (Id, ParentId, Name, Private);    
+    VALUES (Id, ParentId, Name, Private);
 
 MERGE INTO [dbo].[DiaryEventTypes] AS Target
 USING (VALUES
@@ -2518,7 +2518,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active, ColourCode, System)
-    VALUES (Id, Description, Active, ColourCode, System);    
+    VALUES (Id, Description, Active, ColourCode, System);
 
 MERGE INTO [dbo].[TaskTypes] AS Target
 USING (VALUES
@@ -2534,7 +2534,7 @@ WHEN NOT MATCHED THEN
     VALUES (Id, Description, Active, Personal, ColourCode, System)
 
 WHEN MATCHED THEN
-    UPDATE SET Description = Source.Description, Active = Source.Active, Personal = Source.Personal, ColourCode = Source.ColourCode, System = Source.System;    
+    UPDATE SET Description = Source.Description, Active = Source.Active, Personal = Source.Personal, ColourCode = Source.ColourCode, System = Source.System;
 
 MERGE INTO [dbo].[Ethnicities] AS Target
 USING (VALUES
@@ -2563,7 +2563,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Code, Active)
-    VALUES (Id, Description, Code, 1);    
+    VALUES (Id, Description, Code, 1);
 
 MERGE INTO [dbo].[VatRates] AS Target
 USING (VALUES
@@ -2575,7 +2575,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active, Value)
-    VALUES (Id, Description, Active, Value);    
+    VALUES (Id, Description, Active, Value);
 
 MERGE INTO [dbo].[SubjectCodeSets] AS Target
 USING (VALUES
@@ -2586,7 +2586,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, Active);    
+    VALUES (Id, Description, Active);
 
 MERGE INTO [dbo].[SubjectCodes] AS Target
 USING (VALUES
@@ -3186,7 +3186,7 @@ USING (VALUES
 ON Target.Id = Source.Id
 WHEN NOT MATCHED THEN
     INSERT (Id, SubjectCodeSetId, Description, Active, Code)
-    VALUES (Id, SubjectCodeSetId, Description, Active, Code);    
+    VALUES (Id, SubjectCodeSetId, Description, Active, Code);
 
 MERGE INTO [dbo].[ExclusionTypes] AS Target
 USING (VALUES
@@ -3198,7 +3198,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Code, Description, Active, System)
-    VALUES (Id, Code, Description, Active, System);    
+    VALUES (Id, Code, Description, Active, System);
 
 MERGE INTO [dbo].[ExclusionReasons] AS Target
 USING (VALUES
@@ -3224,7 +3224,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active, System)
-    VALUES (Id, Description, Active, System);    
+    VALUES (Id, Description, Active, System);
 
 MERGE INTO [dbo].[AgencyTypes] AS Target
 USING (VALUES
@@ -3248,7 +3248,7 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, Active);    
+    VALUES (Id, Description, Active);
 
 MERGE INTO [dbo].[AgentTypes] AS Target
 USING (VALUES
@@ -3271,15 +3271,28 @@ ON Target.Id = Source.Id
 
 WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
-    VALUES (Id, Description, Active);    
+    VALUES (Id, Description, Active);
+
+MERGE INTO [dbo].[AuditActions] AS Target
+USING (VALUES
+           ('041BA7B4-30F0-44D5-83D4-D9EEFF9A9A04', 'Create', 1),
+           ('0649E5D6-ADBE-4B31-885B-C91D987E897E', 'Update', 1),
+           ('1DB06C2E-4BB8-426A-A9B9-1A69AC45B46A', 'Delete', 1)
+           )
+AS Source (Id, Description, Active)
+ON Target.Id = Source.Id
+
+WHEN NOT MATCHED THEN
+    INSERT (Id, Description, Active)
+    VALUES (Id, Description, Active);
 
 EXEC sp_MSforeachtable @command1="print '?'", @command2="ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all";
 
-IF(@@ERROR > 0)  
-BEGIN  
+IF(@@ERROR > 0)
+BEGIN
     ROLLBACK TRANSACTION;
-END  
-ELSE  
-BEGIN  
+END
+ELSE
+BEGIN
    COMMIT TRANSACTION;
 END
