@@ -550,6 +550,17 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+                modelBuilder.Entity<BehaviourRoleType>(e =>
+                {
+                    ConfigureEntity(e);
+
+                    e.HasMany(x => x.LinkedIncidents)
+                        .WithOne(x => x.RoleType)
+                        .HasForeignKey(x => x.RoleTypeId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict)
+                });
+
                 modelBuilder.Entity<BehaviourStatus>(e =>
                 {
                     ConfigureEntity(e);
