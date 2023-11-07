@@ -17,7 +17,6 @@ namespace MyPortal.Database.Repositories
     {
         public MedicalEventRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)
@@ -40,15 +39,16 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var medicalEvents = await DbUser.Transaction.Connection.QueryAsync<MedicalEvent, User, Person, MedicalEvent>(
-                sql.Sql,
-                (medicalEvent, user, student) =>
-                {
-                    medicalEvent.CreatedBy = user;
-                    medicalEvent.Person = student;
+            var medicalEvents =
+                await DbUser.Transaction.Connection.QueryAsync<MedicalEvent, User, Person, MedicalEvent>(
+                    sql.Sql,
+                    (medicalEvent, user, student) =>
+                    {
+                        medicalEvent.CreatedBy = user;
+                        medicalEvent.Person = student;
 
-                    return medicalEvent;
-                }, sql.NamedBindings, DbUser.Transaction);
+                        return medicalEvent;
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return medicalEvents;
         }

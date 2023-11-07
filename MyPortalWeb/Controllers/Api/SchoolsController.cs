@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +10,11 @@ using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Identity;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.School;
-
 using MyPortal.Logic.Models.Requests.School.Bulletins;
-using MyPortal.Logic.Models.Summary;
 using MyPortal.Logic.Services;
 using MyPortalWeb.Controllers.BaseControllers;
-using MyPortalWeb.Models.Requests;
 using MyPortalWeb.Models.Response;
 
 namespace MyPortalWeb.Controllers.Api
@@ -42,11 +37,13 @@ namespace MyPortalWeb.Controllers.Api
                 searchOptions.IncludeUnapproved = false;
                 searchOptions.IncludeExpired = false;
             }
+
             if (searchOptions.IncludeUnapproved)
             {
                 var userId = User.GetUserId();
                 searchOptions.IncludeCreatedBy = userId;
             }
+
             if (!await UserHasPermission(PermissionValue.SchoolApproveSchoolBulletins))
             {
                 searchOptions.IncludeUnapproved = false;
@@ -66,7 +63,7 @@ namespace MyPortalWeb.Controllers.Api
                 // Use system user for anonymous requests
                 // This should be fine as anonymous users should only be able to access public data
                 var schoolService = new SchoolService(SessionUser.System);
-                
+
                 var schoolName = await schoolService.GetLocalSchoolName();
 
                 return Ok(new StringResponseModel(schoolName));
@@ -80,7 +77,8 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Route("local/bulletins")]
         [ProducesResponseType(typeof(BulletinPageResponse), 200)]
-        public async Task<IActionResult> GetSchoolBulletins([FromQuery] BulletinSearchOptions searchOptions, [FromQuery] PageFilter filter)
+        public async Task<IActionResult> GetSchoolBulletins([FromQuery] BulletinSearchOptions searchOptions,
+            [FromQuery] PageFilter filter)
         {
             try
             {
@@ -119,7 +117,8 @@ namespace MyPortalWeb.Controllers.Api
         [Authorize(Policies.UserType.Staff)]
         [Permission(PermissionValue.SchoolEditSchoolBulletins)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateBulletin([FromRoute] Guid bulletinId, [FromBody] BulletinRequestModel model)
+        public async Task<IActionResult> UpdateBulletin([FromRoute] Guid bulletinId,
+            [FromBody] BulletinRequestModel model)
         {
             try
             {
@@ -137,7 +136,8 @@ namespace MyPortalWeb.Controllers.Api
         [Authorize(Policies.UserType.Staff)]
         [Permission(PermissionValue.SchoolApproveSchoolBulletins)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> ApproveBulletin([FromRoute] Guid bulletinId, [FromBody] ApproveBulletinRequestModel model)
+        public async Task<IActionResult> ApproveBulletin([FromRoute] Guid bulletinId,
+            [FromBody] ApproveBulletinRequestModel model)
         {
             try
             {

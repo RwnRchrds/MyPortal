@@ -11,7 +11,7 @@ public class BulletinMetadataPageResponse : IPageResponse
         Data = data;
         TotalRecords = totalRecords;
     }
-    
+
     public IEnumerable<BulletinDetailModel> Data { get; }
     public int TotalRecords { get; }
 }

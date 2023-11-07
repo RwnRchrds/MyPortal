@@ -30,7 +30,7 @@ namespace MyPortal.Logic.Middleware
                     await _next(context);
                     return;
                 }
-                
+
                 context.Response.StatusCode = 403;
                 var error = new ErrorResponseModel("You do not have permission to access this resource.");
                 await context.Response.WriteJsonAsync(error);

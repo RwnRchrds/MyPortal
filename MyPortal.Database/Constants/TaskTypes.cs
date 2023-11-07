@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MyPortal.Database.Constants
 {
@@ -11,7 +9,7 @@ namespace MyPortal.Database.Constants
 
         public static bool IsReserved(Guid taskTypeId)
         {
-            var reservedTypes = new Guid[] {Homework};
+            var reservedTypes = new[] { Homework };
 
             return reservedTypes.Contains(taskTypeId);
         }

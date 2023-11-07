@@ -6,7 +6,7 @@
         {
             Error = error;
         }
-        
+
         public string Error { get; set; }
     }
 }

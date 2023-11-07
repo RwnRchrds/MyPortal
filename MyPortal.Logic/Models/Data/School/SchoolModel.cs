@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Logic.Models.Data.Agents;
 using MyPortal.Logic.Models.Data.People;
 using MyPortal.Logic.Models.Structures;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Models.Data.School
 {
@@ -33,7 +33,7 @@ namespace MyPortal.Logic.Models.Data.School
             {
                 Agency = new AgencyModel(model.Agency);
             }
-            
+
             if (model.SchoolPhase != null)
             {
                 SchoolPhase = new SchoolPhaseModel(model.SchoolPhase);
@@ -66,27 +66,23 @@ namespace MyPortal.Logic.Models.Data.School
         }
 
         public Guid AgencyId { get; set; }
-        
+
         public Guid? LocalAuthorityId { get; set; }
-        
+
         public int EstablishmentNumber { get; set; }
-        
-        [Required]
-        [StringLength(128)]
-        public string Urn { get; set; }
-        
-        [Required]
-        [StringLength(128)]
-        public string Uprn { get; set; }
-        
+
+        [Required] [StringLength(128)] public string Urn { get; set; }
+
+        [Required] [StringLength(128)] public string Uprn { get; set; }
+
         public Guid PhaseId { get; set; }
-        
+
         public Guid TypeId { get; set; }
-        
+
         public Guid GovernanceTypeId { get; set; }
-        
+
         public Guid IntakeTypeId { get; set; }
-        
+
         public Guid? HeadTeacherId { get; set; }
 
         public bool Local { get; set; }
@@ -98,12 +94,13 @@ namespace MyPortal.Logic.Models.Data.School
         public virtual IntakeTypeModel IntakeType { get; set; }
         public virtual PersonModel HeadTeacher { get; set; }
         public virtual LocalAuthorityModel LocalAuthority { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Schools.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

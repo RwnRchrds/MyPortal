@@ -2,8 +2,8 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IExamSeatAllocationRepository : IReadWriteRepository<ExamSeatAllocation>, IUpdateRepository<ExamSeatAllocation>
+    public interface IExamSeatAllocationRepository : IReadWriteRepository<ExamSeatAllocation>,
+        IUpdateRepository<ExamSeatAllocation>
     {
-        
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Logic.Models.Data.Attendance;
 using MyPortal.Logic.Models.Data.School;
 using MyPortal.Logic.Models.Data.StaffMembers;
 using MyPortal.Logic.Models.Structures;
@@ -39,15 +38,15 @@ namespace MyPortal.Logic.Models.Data.Curriculum
                 Room = new RoomModel(model.Room);
             }
         }
-        
+
         public Guid ClassId { get; set; }
 
         public Guid TeacherId { get; set; }
-        
+
         public Guid? RoomId { get; set; }
-        
+
         public DateTime StartDate { get; set; }
-        
+
         public DateTime EndDate { get; set; }
 
         public virtual StaffMemberModel Teacher { get; set; }
@@ -55,13 +54,13 @@ namespace MyPortal.Logic.Models.Data.Curriculum
         public virtual ClassModel Class { get; set; }
 
         public virtual RoomModel Room { get; set; }
-       
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Sessions.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

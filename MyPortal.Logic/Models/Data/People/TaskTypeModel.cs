@@ -12,12 +12,11 @@ namespace MyPortal.Logic.Models.Data.People
             ColourCode = model.ColourCode;
             System = model.System;
         }
-        
+
         public bool Personal { get; set; }
-        
-        [Required]
-        public string ColourCode { get; set; }
-        
+
+        [Required] public string ColourCode { get; set; }
+
         public bool System { get; set; }
     }
 }

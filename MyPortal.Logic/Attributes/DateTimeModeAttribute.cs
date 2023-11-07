@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using MyPortal.Logic.Enums;
 
 namespace MyPortal.Logic.Attributes
@@ -13,12 +12,12 @@ namespace MyPortal.Logic.Attributes
         {
             _dateTimeMode = dateTimeMode;
         }
-        
+
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var date = (DateTime?) value;
+            var date = (DateTime?)value;
             var today = DateTime.Today;
-            
+
             if (_dateTimeMode == DateTimeMode.Future)
             {
                 if (date != null && date <= today)

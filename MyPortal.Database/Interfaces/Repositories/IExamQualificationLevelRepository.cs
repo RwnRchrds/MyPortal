@@ -2,8 +2,8 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IExamQualificationLevelRepository : IReadWriteRepository<ExamQualificationLevel>, IUpdateRepository<ExamQualificationLevel>
+    public interface IExamQualificationLevelRepository : IReadWriteRepository<ExamQualificationLevel>,
+        IUpdateRepository<ExamQualificationLevel>
     {
-        
     }
 }

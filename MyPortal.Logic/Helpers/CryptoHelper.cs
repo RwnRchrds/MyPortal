@@ -21,7 +21,7 @@ public static class CryptoHelper
             return Convert.ToBase64String(key);
         }
     }
-    
+
     internal static async Task<EncryptionResult> EncryptAsync(string text, string keyBase64)
     {
         var data = Encoding.UTF8.GetBytes(text);
@@ -35,7 +35,7 @@ public static class CryptoHelper
 
         return await EncryptAesAsync(data, key);
     }
-    
+
     internal static async Task<string> DecryptAsync(string dataBase64, string keyBase64, string vectorBase64)
     {
         var data = Convert.FromBase64String(dataBase64);
@@ -76,14 +76,14 @@ public static class CryptoHelper
     private static async Task<byte[]> PerformCryptoTransformAsync(ICryptoTransform cryptoTransform, byte[] data)
     {
         byte[] transformedData;
-        
+
         using (MemoryStream ms = new MemoryStream())
         {
             using (CryptoStream cs = new CryptoStream(ms, cryptoTransform, CryptoStreamMode.Write))
             {
                 await cs.WriteAsync(data);
             }
-            
+
             transformedData = ms.ToArray();
 
             return transformedData;

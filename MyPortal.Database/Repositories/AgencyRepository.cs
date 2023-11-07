@@ -17,7 +17,6 @@ namespace MyPortal.Database.Repositories
     {
         public AgencyRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)

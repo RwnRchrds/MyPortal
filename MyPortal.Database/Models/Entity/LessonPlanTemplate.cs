@@ -11,8 +11,6 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(256)]
         public string Name { get; set; }
 
-        [Column(Order = 3)]
-        [Required]
-        public string PlanTemplate { get; set; }
+        [Column(Order = 3)] [Required] public string PlanTemplate { get; set; }
     }
 }

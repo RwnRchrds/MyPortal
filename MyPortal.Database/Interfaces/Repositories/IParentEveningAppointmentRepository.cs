@@ -5,7 +5,8 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IParentEveningAppointmentRepository : IReadWriteRepository<ParentEveningAppointment>, IUpdateRepository<ParentEveningAppointment>
+    public interface IParentEveningAppointmentRepository : IReadWriteRepository<ParentEveningAppointment>,
+        IUpdateRepository<ParentEveningAppointment>
     {
         Task<IEnumerable<ParentEveningAppointment>> GetAppointmentsByStaffMember(Guid staffMemberId, DateTime fromDate,
             DateTime toDate);

@@ -30,7 +30,7 @@ public class FileProviderMiddleware
                 await _next(context);
                 return;
             }
-            
+
             context.Response.StatusCode = (int)HttpStatusCode.MethodNotAllowed;
             var error = new ErrorResponseModel(
                 "The file provider required to complete this request is not configured.");

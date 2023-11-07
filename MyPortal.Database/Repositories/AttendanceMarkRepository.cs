@@ -28,7 +28,7 @@ namespace MyPortal.Database.Repositories
 
             JoinRelated(query);
 
-            query.LeftJoin("People as P", "P.Id", $"S.PersonId");
+            query.LeftJoin("People as P", "P.Id", "S.PersonId");
 
             query.Select("AM.Id as AttendanceMarkId", "AM.StudentId as StudentId", "AM.WeekId as WeekId",
                 "AM.PeriodId as PeriodId", "AM.CodeId as CodeId", "AM.CreatedById as CreatedById",
@@ -47,13 +47,13 @@ namespace MyPortal.Database.Repositories
                     if (i == 0)
                     {
                         q.Where(sq =>
-                            sq.Where($"AM.PeriodId", period.PeriodId).Where($"AM.WeekId",
+                            sq.Where("AM.PeriodId", period.PeriodId).Where("AM.WeekId",
                                 period.AttendanceWeekId));
                     }
                     else
                     {
                         q.OrWhere(sq =>
-                            sq.Where($"AM.PeriodId", period.PeriodId).Where($"AM.WeekId",
+                            sq.Where("AM.PeriodId", period.PeriodId).Where("AM.WeekId",
                                 period.AttendanceWeekId));
                     }
                 }
@@ -101,13 +101,13 @@ namespace MyPortal.Database.Repositories
                     if (i == 0)
                     {
                         q.Where(sq =>
-                            sq.Where($"AM.PeriodId", period.PeriodId).Where($"AM.WeekId",
+                            sq.Where("AM.PeriodId", period.PeriodId).Where("AM.WeekId",
                                 period.AttendanceWeekId));
                     }
                     else
                     {
                         q.OrWhere(sq =>
-                            sq.Where($"AM.PeriodId", period.PeriodId).Where($"AM.WeekId",
+                            sq.Where("AM.PeriodId", period.PeriodId).Where("AM.WeekId",
                                 period.AttendanceWeekId));
                     }
                 }

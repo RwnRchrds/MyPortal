@@ -10,7 +10,7 @@ namespace MyPortal.Logic.Models.Data.Examinations
             Description = model.Description;
             System = model.System;
         }
-        
+
         public string Description { get; set; }
         public bool System { get; set; }
     }

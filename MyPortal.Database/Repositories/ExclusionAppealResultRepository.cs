@@ -5,7 +5,8 @@ using MyPortal.Database.Repositories.Base;
 
 namespace MyPortal.Database.Repositories
 {
-    public class ExclusionAppealResultRepository : BaseReadRepository<ExclusionAppealResult>, IExclusionAppealResultRepository
+    public class ExclusionAppealResultRepository : BaseReadRepository<ExclusionAppealResult>,
+        IExclusionAppealResultRepository
     {
         public ExclusionAppealResultRepository(DbUser dbUser) : base(dbUser)
         {

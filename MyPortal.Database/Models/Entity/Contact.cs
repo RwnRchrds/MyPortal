@@ -13,11 +13,9 @@ namespace MyPortal.Database.Models.Entity
             LinkedStudents = new HashSet<StudentContactRelationship>();
         }
 
-        [Column(Order = 2)]
-        public Guid PersonId { get; set; }
+        [Column(Order = 2)] public Guid PersonId { get; set; }
 
-        [Column(Order = 3)]
-        public bool ParentalBallot { get; set; }
+        [Column(Order = 3)] public bool ParentalBallot { get; set; }
 
         [Column(Order = 4)]
         [StringLength(256)]
@@ -33,7 +31,7 @@ namespace MyPortal.Database.Models.Entity
 
         public virtual Person Person { get; set; }
 
-        
+
         public virtual ICollection<StudentContactRelationship> LinkedStudents { get; set; }
     }
 }

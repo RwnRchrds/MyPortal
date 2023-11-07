@@ -13,7 +13,8 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class StudentGroupSupervisorRepository : BaseReadWriteRepository<StudentGroupSupervisor>, IStudentGroupSupervisorRepository
+    public class StudentGroupSupervisorRepository : BaseReadWriteRepository<StudentGroupSupervisor>,
+        IStudentGroupSupervisorRepository
     {
         public StudentGroupSupervisorRepository(DbUserWithContext dbUser) : base(dbUser)
         {
@@ -34,7 +35,7 @@ namespace MyPortal.Database.Repositories
 
             return query;
         }
-        
+
         protected override async Task<IEnumerable<StudentGroupSupervisor>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);

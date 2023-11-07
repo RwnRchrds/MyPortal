@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Attributes;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Data.Assessment;
 using MyPortal.Logic.Models.Requests.Assessment;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -18,7 +15,7 @@ public sealed class AssessmentController : PersonalDataController
     private readonly IAssessmentService _assessmentService;
 
     public AssessmentController(IUserService userService, IPersonService personService, IStudentService studentService,
-        IAssessmentService assessmentService) 
+        IAssessmentService assessmentService)
         : base(userService, personService, studentService)
     {
         _assessmentService = assessmentService;

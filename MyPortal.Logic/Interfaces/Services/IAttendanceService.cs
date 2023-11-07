@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Data.Attendance;
 using MyPortal.Logic.Models.Data.Attendance.Register;
-
 using MyPortal.Logic.Models.Reporting;
 using MyPortal.Logic.Models.Requests.Attendance;
 using MyPortal.Logic.Models.Summary;
@@ -26,6 +24,7 @@ namespace MyPortal.Logic.Interfaces.Services
 
         Task<AttendanceRegisterDataModel> GetRegisterByDateRange(IEnumerable<Guid> studentIds,
             DateTime dateFrom, DateTime dateTo, string title, Guid[] unlockedPeriods = null);
+
         Task UpdateAttendanceMarks(params AttendanceMarkSummaryModel[] marks);
         Task UpdateAttendanceMarks(params AttendanceRegisterStudentDataModel[] markCollections);
         Task DeleteAttendanceMarks(params Guid[] attendanceMarkIds);

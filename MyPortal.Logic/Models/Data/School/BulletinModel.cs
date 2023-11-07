@@ -37,24 +37,21 @@ namespace MyPortal.Logic.Models.Data.School
                 Directory = new DirectoryModel(model.Directory);
             }
         }
-        
+
         public Guid DirectoryId { get; set; }
-        
+
         public Guid CreatedById { get; set; }
-        
+
         public DateTime CreateDate { get; set; }
-        
+
         public DateTime? ExpireDate { get; set; }
-        
-        [Required]
-        [StringLength(128)]
-        public string Title { get; set; }
-        
-        [Required]
-        public string Detail { get; set; }
-        
+
+        [Required] [StringLength(128)] public string Title { get; set; }
+
+        [Required] public string Detail { get; set; }
+
         public bool Private { get; set; }
-        
+
         public bool Approved { get; set; }
 
         public UserModel CreatedBy { get; set; }

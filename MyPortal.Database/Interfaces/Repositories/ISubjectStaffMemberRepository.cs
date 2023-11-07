@@ -1,9 +1,9 @@
-﻿using MyPortal.Database.Models;
-using MyPortal.Database.Models.Entity;
+﻿using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface ISubjectStaffMemberRepository : IReadWriteRepository<SubjectStaffMember>, IUpdateRepository<SubjectStaffMember>
+    public interface ISubjectStaffMemberRepository : IReadWriteRepository<SubjectStaffMember>,
+        IUpdateRepository<SubjectStaffMember>
     {
     }
 }

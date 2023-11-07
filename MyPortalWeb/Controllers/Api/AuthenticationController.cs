@@ -50,10 +50,8 @@ namespace MyPortalWeb.Controllers.Api
                     await UserService.ChangePassword(userId.Value, model.CurrentPassword, model.NewPassword);
                     return Ok();
                 }
-                else
-                {
-                    return Unauthorized();
-                }
+
+                return Unauthorized();
             }
             catch (Exception e)
             {

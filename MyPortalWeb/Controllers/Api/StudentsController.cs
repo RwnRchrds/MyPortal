@@ -9,11 +9,8 @@ using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Constants;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Students;
-
-using MyPortal.Logic.Models.Requests.Student;
 using MyPortal.Logic.Models.Summary;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -26,7 +23,7 @@ namespace MyPortalWeb.Controllers.Api
         private readonly IAcademicYearService _academicYearService;
 
         public StudentsController(IUserService userService, IPersonService personService,
-            IStudentService studentService, IAcademicYearService academicYearService) 
+            IStudentService studentService, IAcademicYearService academicYearService)
             : base(userService, personService, studentService)
         {
             _academicYearService = academicYearService;
@@ -53,7 +50,7 @@ namespace MyPortalWeb.Controllers.Api
             try
             {
                 var student = await StudentService.GetStudentById(studentId);
-                
+
                 if (await CanAccessPerson(student.PersonId))
                 {
                     return Ok(student);
@@ -76,7 +73,7 @@ namespace MyPortalWeb.Controllers.Api
             try
             {
                 var student = await StudentService.GetStudentById(studentId);
-                
+
                 if (await CanAccessPerson(student.PersonId))
                 {
                     if (academicYearId == null || academicYearId == Guid.Empty)

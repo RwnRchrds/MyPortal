@@ -10,7 +10,8 @@ using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class ParentEveningGroupRepository : BaseReadWriteRepository<ParentEveningGroup>, IParentEveningGroupRepository
+    public class ParentEveningGroupRepository : BaseReadWriteRepository<ParentEveningGroup>,
+        IParentEveningGroupRepository
     {
         public ParentEveningGroupRepository(DbUserWithContext dbUser) : base(dbUser)
         {

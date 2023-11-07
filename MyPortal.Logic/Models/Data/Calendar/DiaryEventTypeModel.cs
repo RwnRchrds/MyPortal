@@ -6,7 +6,7 @@ namespace MyPortal.Logic.Models.Data.Calendar
     public class DiaryEventTypeModel : LookupItemModel
     {
         public string ColourCode { get; set; }
-        
+
         public bool System { get; set; }
 
         public DiaryEventTypeModel(DiaryEventType model) : base(model)

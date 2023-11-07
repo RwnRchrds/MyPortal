@@ -11,7 +11,7 @@ namespace MyPortal.Database.Models.Entity
         {
             Products = new HashSet<Product>();
         }
-        
+
         [Column(Order = 4, TypeName = "decimal(10,2)")]
         public decimal Value { get; set; }
 

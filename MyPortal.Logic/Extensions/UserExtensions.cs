@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Google.Apis.Drive.v3.Data;
 using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
@@ -35,7 +33,7 @@ namespace MyPortal.Logic.Extensions
 
             return null;
         }
-        
+
         public static bool IsType(this ClaimsPrincipal principal, int userType)
         {
             var hasType = int.TryParse(principal.FindFirst(ApplicationClaimTypes.UserType)?.Value, out var claimValue);
@@ -43,7 +41,7 @@ namespace MyPortal.Logic.Extensions
             return hasType && claimValue == userType;
         }
 
-        public static async Task<bool> HasPermission(this ClaimsPrincipal principal, IUserService userService, 
+        public static async Task<bool> HasPermission(this ClaimsPrincipal principal, IUserService userService,
             PermissionRequirement requirement, params PermissionValue[] permissionValues)
         {
             var userId = principal.GetUserId();
@@ -56,7 +54,7 @@ namespace MyPortal.Logic.Extensions
 
             return false;
         }
-        
+
         public static bool IsAuthenticated(this IPrincipal principal)
         {
             return principal != null && principal.Identity != null && principal.Identity.IsAuthenticated;

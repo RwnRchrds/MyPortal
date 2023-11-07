@@ -7,13 +7,14 @@ namespace MyPortal.Database.Models.Entity
     [Table("SenEventTypes")]
     public class SenEventType : LookupItem
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SenEventType()
         {
             Events = new HashSet<SenEvent>();
         }
 
-        
+
         public virtual ICollection<SenEvent> Events { get; set; }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Data.Addresses;
 using MyPortal.Logic.Models.Data.Contacts;
 using MyPortal.Logic.Models.Requests.Addresses;
-
 
 namespace MyPortal.Logic.Interfaces.Services
 {

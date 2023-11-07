@@ -9,8 +9,7 @@ namespace MyPortal.Database.Models.Entity
     {
         // TODO: Populate Data
 
-        [Column(Order = 4)] 
-        public bool ExternallyAssessed { get; set; }
+        [Column(Order = 4)] public bool ExternallyAssessed { get; set; }
 
         public ExamAssessmentMode()
         {

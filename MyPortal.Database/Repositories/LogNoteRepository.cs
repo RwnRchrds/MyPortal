@@ -18,7 +18,6 @@ namespace MyPortal.Database.Repositories
     {
         public LogNoteRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-           
         }
 
         protected override Query JoinRelated(Query query)
@@ -46,17 +45,18 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var logNotes =
-                await DbUser.Transaction.Connection.QueryAsync<LogNote, User, Student, AcademicYear, LogNoteType, LogNote>(
-                    sql.Sql,
-                    (note, user, student, year, type) =>
-                    {
-                        note.CreatedBy = user;
-                        note.Student = student;
-                        note.AcademicYear = year;
-                        note.LogNoteType = type;
+                await DbUser.Transaction.Connection
+                    .QueryAsync<LogNote, User, Student, AcademicYear, LogNoteType, LogNote>(
+                        sql.Sql,
+                        (note, user, student, year, type) =>
+                        {
+                            note.CreatedBy = user;
+                            note.Student = student;
+                            note.AcademicYear = year;
+                            note.LogNoteType = type;
 
-                        return note;
-                    }, sql.NamedBindings, DbUser.Transaction);
+                            return note;
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return logNotes;
         }
@@ -84,7 +84,7 @@ namespace MyPortal.Database.Repositories
             {
                 throw new EntityNotFoundException("Log note not found.");
             }
-            
+
             logNote.Message = entity.Message;
             logNote.TypeId = entity.TypeId;
             logNote.Private = entity.Private;

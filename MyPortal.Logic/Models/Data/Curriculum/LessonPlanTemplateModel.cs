@@ -11,12 +11,9 @@ namespace MyPortal.Logic.Models.Data.Curriculum
             Name = model.Name;
             PlanTemplate = model.PlanTemplate;
         }
-        
-        [Required]
-        [StringLength(256)]
-        public string Name { get; set; }
 
-        [Required]
-        public string PlanTemplate { get; set; }
+        [Required] [StringLength(256)] public string Name { get; set; }
+
+        [Required] public string PlanTemplate { get; set; }
     }
 }

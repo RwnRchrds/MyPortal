@@ -11,7 +11,7 @@ public class BulletinPageResponse
         Bulletins = pageResponse.Data;
         TotalRecords = pageResponse.TotalRecords;
     }
-    
+
     public IEnumerable<BulletinDetailModel> Bulletins { get; set; }
     public int TotalRecords { get; set; }
 }

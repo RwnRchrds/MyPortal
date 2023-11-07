@@ -8,7 +8,7 @@ public class AttendanceRegisterColumnGroupDataModel
     {
         Columns = new List<AttendanceRegisterColumnDataModel>();
     }
-    
+
     public string Header { get; set; }
     public int Order { get; set; }
     public ICollection<AttendanceRegisterColumnDataModel> Columns { get; set; }

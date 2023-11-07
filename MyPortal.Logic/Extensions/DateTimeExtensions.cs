@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Requests.Calendar;
@@ -9,7 +8,8 @@ namespace MyPortal.Logic.Extensions
 {
     internal static class DateTimeExtensions
     {
-        internal static DateTime GetDayOfWeek(this DateTime dateTime, DayOfWeek dayOfWeek, SundayPosition sundayPosition = SundayPosition.WeekEnd)
+        internal static DateTime GetDayOfWeek(this DateTime dateTime, DayOfWeek dayOfWeek,
+            SundayPosition sundayPosition = SundayPosition.WeekEnd)
         {
             var currentDayOfWeek = (int)dateTime.DayOfWeek;
 
@@ -20,7 +20,8 @@ namespace MyPortal.Logic.Extensions
 
         internal static DateTime? GetNextOccurrence(this DateTime dateTime, RecurringRequestModel recurringModel)
         {
-            if (recurringModel.Frequency == EventFrequency.Daily && recurringModel.Days != null && recurringModel.LastOccurrence.HasValue)
+            if (recurringModel.Frequency == EventFrequency.Daily && recurringModel.Days != null &&
+                recurringModel.LastOccurrence.HasValue)
             {
                 var weeklyPattern = new WeeklyPatternModel(recurringModel.Days, recurringModel.LastOccurrence.Value);
 

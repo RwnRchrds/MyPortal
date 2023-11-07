@@ -10,8 +10,7 @@ namespace MyPortal.Logic.Models.Data.StaffMembers
         {
             ColourCode = model.ColourCode;
         }
-        
-        [StringLength(128)]
-        public string ColourCode { get; set; }
+
+        [StringLength(128)] public string ColourCode { get; set; }
     }
 }

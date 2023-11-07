@@ -30,10 +30,11 @@ public class ConfigBuilder
                     DatabaseProvider = DatabaseProvider.MsSqlServer;
                     break;
                 default:
-                    throw new ConfigurationException($"The database provider '{databaseProvider.Value}' is not supported.");
+                    throw new ConfigurationException(
+                        $"The database provider '{databaseProvider.Value}' is not supported.");
             }
         }
-        
+
         var connectionStringVerbatim = config.GetSection(Keys.ConfigConnectionStringKey);
         if (connectionStringVerbatim.Exists())
         {
@@ -84,7 +85,7 @@ public class ConfigBuilder
             DirectoryPath = directoryPath.Value;
         }
     }
-    
+
     private static string GetSecret(IConfiguration config, string configKey, string secretName)
     {
         var secretSource = config[configKey];
@@ -97,15 +98,15 @@ public class ConfigBuilder
             var secret = AzureKeyVaultHelper.GetSecret(keyVaultName, keyVaultSecret);
 
             return secret;
-        }   
-            
+        }
+
         if (secretSource.ToLower() == "environment")
         {
             var secret = Environment.GetEnvironmentVariable($"MYPORTAL_{secretName.ToUpper()}");
-                
+
             return secret;
         }
-            
+
         return secretSource;
     }
 
@@ -125,7 +126,7 @@ public class ConfigBuilder
         {
             throw new ConfigurationException("No database connection details have been provided.");
         }
-        
+
         Configuration.CreateInstance(this);
     }
 }

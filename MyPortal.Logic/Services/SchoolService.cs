@@ -10,7 +10,6 @@ using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.School;
-
 using MyPortal.Logic.Models.Requests.School.Bulletins;
 using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
@@ -26,7 +25,7 @@ namespace MyPortal.Logic.Services
         private async Task<string> GetLocalSchoolNameFromDb()
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var localSchoolName = await unitOfWork.Schools.GetLocalSchoolName();
 
             return localSchoolName;
@@ -44,7 +43,7 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<BulletinModel>> GetBulletins(BulletinSearchOptions searchOptions)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var bulletins = await unitOfWork.Bulletins.GetBulletins(searchOptions);
 
             return bulletins.Select(b => new BulletinModel(b));
@@ -53,16 +52,17 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<BulletinSummaryModel>> GetBulletinSummaries(BulletinSearchOptions searchOptions)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var bulletins = await unitOfWork.Bulletins.GetBulletinDetails(searchOptions);
 
             return bulletins.Select(b => new BulletinSummaryModel(b));
         }
 
-        public async Task<BulletinPageResponse> GetBulletinSummaries(BulletinSearchOptions searchOptions, PageFilter filter)
+        public async Task<BulletinPageResponse> GetBulletinSummaries(BulletinSearchOptions searchOptions,
+            PageFilter filter)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var bulletins = await unitOfWork.Bulletins.GetBulletinDetails(searchOptions, filter);
 
             var response = new BulletinPageResponse(bulletins);
@@ -79,7 +79,7 @@ namespace MyPortal.Logic.Services
             if (userId != null)
             {
                 await using var unitOfWork = await User.GetConnection();
-            
+
                 var bulletin = new Bulletin
                 {
                     Id = Guid.NewGuid(),
@@ -96,25 +96,23 @@ namespace MyPortal.Logic.Services
                     },
                     Approved = false
                 };
-                    
+
                 unitOfWork.Bulletins.Create(bulletin);
 
                 await unitOfWork.SaveChangesAsync();
 
                 return new BulletinModel(bulletin);
             }
-            else
-            {
-                throw Unauthenticated();
-            }
+
+            throw Unauthenticated();
         }
 
         public async Task UpdateBulletin(Guid bulletinId, BulletinRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
-            
+
             var bulletin = await unitOfWork.Bulletins.GetById(bulletinId);
 
             if (bulletin == null)
@@ -136,7 +134,7 @@ namespace MyPortal.Logic.Services
         public async Task DeleteBulletin(Guid bulletinId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var bulletin = await unitOfWork.Bulletins.GetById(bulletinId);
 
             if (bulletin == null)
@@ -150,7 +148,7 @@ namespace MyPortal.Logic.Services
         public async Task SetBulletinApproved(ApproveBulletinRequestModel model)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var bulletin = await unitOfWork.Bulletins.GetById(model.BulletinId);
 
             if (bulletin == null)

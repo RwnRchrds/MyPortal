@@ -5,7 +5,8 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IMarksheetColumnRepository : IReadWriteRepository<MarksheetColumn>, IUpdateRepository<MarksheetColumn>
+    public interface IMarksheetColumnRepository : IReadWriteRepository<MarksheetColumn>,
+        IUpdateRepository<MarksheetColumn>
     {
         Task<IEnumerable<MarksheetColumn>> GetByMarksheet(Guid marksheetId);
     }

@@ -14,11 +14,12 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories.Base
 {
-    public abstract class BaseReadWriteRepository<TEntity> : BaseReadRepository<TEntity>, IReadWriteRepository<TEntity> where TEntity : class, IEntity
+    public abstract class BaseReadWriteRepository<TEntity> : BaseReadRepository<TEntity>, IReadWriteRepository<TEntity>
+        where TEntity : class, IEntity
     {
-        protected BaseReadWriteRepository(DbUserWithContext dbUserWithContext, string tblAlias = null) : base(dbUserWithContext, tblAlias)
+        protected BaseReadWriteRepository(DbUserWithContext dbUserWithContext, string tblAlias = null) : base(
+            dbUserWithContext, tblAlias)
         {
-            
         }
 
         protected override DbUserWithContext DbUser => base.DbUser as DbUserWithContext;
@@ -27,7 +28,9 @@ namespace MyPortal.Database.Repositories.Base
         {
             var compiled = Compiler.Compile(query);
 
-            var result = await DbUser.Transaction.Connection.ExecuteAsync(compiled.Sql, compiled.NamedBindings, DbUser.Transaction);
+            var result =
+                await DbUser.Transaction.Connection.ExecuteAsync(compiled.Sql, compiled.NamedBindings,
+                    DbUser.Transaction);
 
             return result;
         }
@@ -38,7 +41,7 @@ namespace MyPortal.Database.Repositories.Base
             {
                 throw ExceptionHelper.UpdateSystemEntityException;
             }
-            
+
             var result = DbUser.Context.Set<TEntity>().Add(entity);
 
             WriteAudit(entity.Id, AuditActions.Create, null);
@@ -73,11 +76,11 @@ namespace MyPortal.Database.Repositories.Base
             {
                 throw new EntityNotFoundException($"Entity with ID {id} was not found.");
             }
-            
+
             switch (entity)
             {
                 case IReadOnlyEntity:
-                case ISystemEntity {System: true}:
+                case ISystemEntity { System: true }:
                     throw ExceptionHelper.DeleteSystemEntityException;
                 case ISoftDeleteEntity softDeleteObject:
                     softDeleteObject.Deleted = true;
@@ -86,7 +89,7 @@ namespace MyPortal.Database.Repositories.Base
                     DbUser.Context.Set<TEntity>().Remove(entity);
                     break;
             }
-            
+
             WriteAudit(id, AuditActions.Delete, entity);
         }
     }

@@ -2,8 +2,8 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IExamCandidateSeriesRepository : IReadWriteRepository<ExamCandidateSeries>, IUpdateRepository<ExamCandidateSeries>
+    public interface IExamCandidateSeriesRepository : IReadWriteRepository<ExamCandidateSeries>,
+        IUpdateRepository<ExamCandidateSeries>
     {
-        
     }
 }

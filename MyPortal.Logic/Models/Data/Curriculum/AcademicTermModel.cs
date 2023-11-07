@@ -26,16 +26,15 @@ namespace MyPortal.Logic.Models.Data.Curriculum
                 AcademicYear = new AcademicYearModel(model.AcademicYear);
             }
         }
-        
+
         public Guid AcademicYearId { get; set; }
 
-        [StringLength(128)]
-        public string Name { get; set; }    
+        [StringLength(128)] public string Name { get; set; }
 
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
-        
+
         public AcademicYearModel AcademicYear { get; set; }
 
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)

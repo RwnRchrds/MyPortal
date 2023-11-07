@@ -37,12 +37,10 @@ namespace MyPortal.Logic.Models.Data.Settings
                 Person = new PersonModel(model.Person);
             }
         }
-        
-        [StringLength(256)]
-        public string UserName { get; set; }
 
-        [StringLength(256)]
-        public string Email { get; set; }
+        [StringLength(256)] public string UserName { get; set; }
+
+        [StringLength(256)] public string Email { get; set; }
 
         public bool EmailConfirmed { get; set; }
 
@@ -57,16 +55,17 @@ namespace MyPortal.Logic.Models.Data.Settings
         public int AccessFailedCount { get; set; }
 
         public DateTime CreatedDate { get; set; }
-        
+
         public Guid? PersonId { get; set; }
-        
+
         public int UserType { get; set; }
-        
+
         public bool Enabled { get; set; }
 
         public PersonModel Person { get; set; }
 
-        public string GetDisplayName(NameFormat format = NameFormat.Default, bool usePreferred = false, bool includeMiddleName = true)
+        public string GetDisplayName(NameFormat format = NameFormat.Default, bool usePreferred = false,
+            bool includeMiddleName = true)
         {
             return Person != null ? Person.GetName(format, usePreferred, includeMiddleName) : UserName;
         }
@@ -90,7 +89,7 @@ namespace MyPortal.Logic.Models.Data.Settings
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Users.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

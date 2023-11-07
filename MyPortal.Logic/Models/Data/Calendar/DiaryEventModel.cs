@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Enums;
@@ -21,7 +19,6 @@ namespace MyPortal.Logic.Models.Data.Calendar
 
         private DiaryEventModel()
         {
-            
         }
 
         public DiaryEventModel(DiaryEvent model) : base(model)
@@ -62,7 +59,7 @@ namespace MyPortal.Logic.Models.Data.Calendar
         public IEnumerable<DiaryEventModel> CreateSeries(EventFrequency frequency, DateTime endDate)
         {
             var series = new List<DiaryEventModel>();
-            
+
             series.Add(this);
 
             DateTime? nextStartTime = StartTime.GetNextOccurrence(frequency);
@@ -70,7 +67,7 @@ namespace MyPortal.Logic.Models.Data.Calendar
 
             while (nextStartTime.HasValue && nextStartTime <= endDate)
             {
-                var newEvent = (DiaryEventModel) Clone();
+                var newEvent = (DiaryEventModel)Clone();
                 newEvent.StartTime = nextStartTime.Value;
                 newEvent.EndTime = nextStartTime.Value.Add(duration);
                 series.Add(newEvent);
@@ -84,7 +81,7 @@ namespace MyPortal.Logic.Models.Data.Calendar
         public IEnumerable<DiaryEventModel> CreateSeries(WeeklyPatternModel weeklyPattern, DateTime endDate)
         {
             var series = new List<DiaryEventModel>();
-            
+
             series.Add(this);
 
             DateTime? nextStartTime = StartTime.GetNextOccurrence(weeklyPattern);
@@ -108,18 +105,14 @@ namespace MyPortal.Logic.Models.Data.Calendar
         public Guid? CreatedById { get; set; }
 
         public DateTime CreatedDate { get; set; }
-        
+
         public Guid? RoomId { get; set; }
-        
-        [Required]
-        [StringLength(256)]
-        public string Subject { get; set; }
-        
-        [StringLength(256)]
-        public string Description { get; set; }
-        
-        [StringLength(256)]
-        public string Location { get; set; }
+
+        [Required] [StringLength(256)] public string Subject { get; set; }
+
+        [StringLength(256)] public string Description { get; set; }
+
+        [StringLength(256)] public string Location { get; set; }
 
         public DateTime StartTime
         {
@@ -140,13 +133,14 @@ namespace MyPortal.Logic.Models.Data.Calendar
         public virtual DiaryEventTypeModel EventType { get; set; }
         public virtual UserModel CreatedBy { get; set; }
         public virtual RoomModel Room { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.DiaryEvents.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
 

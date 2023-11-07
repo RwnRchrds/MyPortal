@@ -2,18 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyPortal.Database;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Exceptions;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Assessment;
 using MyPortal.Logic.Models.Data.Assessment.MarksheetEntry;
-
 using MyPortal.Logic.Models.Requests.Assessment;
 using MyPortal.Logic.Models.Summary;
 using Task = System.Threading.Tasks.Task;
@@ -29,7 +25,7 @@ public class AssessmentService : BaseService, IAssessmentService
     public async Task<IEnumerable<ResultModel>> GetPreviousResults(Guid studentId, Guid aspectId, DateTime dateTo)
     {
         await using var unitOfWork = await User.GetConnection();
-        
+
         var results = await unitOfWork.Results.GetPreviousResults(studentId, aspectId, dateTo);
 
         return results.Select(r => new ResultModel(r)).ToList();
@@ -92,7 +88,7 @@ public class AssessmentService : BaseService, IAssessmentService
         {
             marksheet.Title += $" - {metadata.OwnerName}";
         }
-            
+
         marksheet.Completed = metadata.Completed;
 
         var marksheetColumns = (await unitOfWork.MarksheetColumns.GetByMarksheet(marksheetId))
@@ -105,10 +101,11 @@ public class AssessmentService : BaseService, IAssessmentService
         return marksheet;
     }
 
-    private async Task PopulateMarksheetColumns(MarksheetEntryDataModel marksheet, IEnumerable<MarksheetColumnModel> columnCollection)
+    private async Task PopulateMarksheetColumns(MarksheetEntryDataModel marksheet,
+        IEnumerable<MarksheetColumnModel> columnCollection)
     {
         await using var unitOfWork = await User.GetConnection();
-        
+
         Dictionary<Guid, GradeModel[]> gradeSets = new Dictionary<Guid, GradeModel[]>();
 
         foreach (var columnModel in columnCollection)
@@ -117,7 +114,7 @@ public class AssessmentService : BaseService, IAssessmentService
             {
                 var grades = (await unitOfWork.Grades.GetByGradeSet(columnModel.Aspect.GradeSetId.Value))
                     .Select(g => new GradeModel(g)).ToArray();
-                
+
                 if (grades.Any())
                 {
                     gradeSets.Add(columnModel.Aspect.GradeSetId.Value, grades);
@@ -152,7 +149,7 @@ public class AssessmentService : BaseService, IAssessmentService
                 column.MinMark = columnModel.Aspect.MinMark;
                 column.MaxMark = columnModel.Aspect.MaxMark;
             }
-            
+
             marksheet.Columns.Add(column);
         }
     }
@@ -174,7 +171,7 @@ public class AssessmentService : BaseService, IAssessmentService
         };
 
         await using var unitOfWork = await User.GetConnection();
-        
+
         unitOfWork.Aspects.Create(aspect);
 
         await unitOfWork.SaveChangesAsync();
@@ -185,9 +182,9 @@ public class AssessmentService : BaseService, IAssessmentService
     public async Task UpdateAspect(Guid aspectId, AspectRequestModel model)
     {
         Validate(model);
-        
+
         await using var unitOfWork = await User.GetConnection();
-        
+
         var aspect = await unitOfWork.Aspects.GetById(aspectId);
 
         if (aspect == null)
@@ -207,7 +204,7 @@ public class AssessmentService : BaseService, IAssessmentService
     public async Task DeleteAspect(Guid aspectId)
     {
         await using var unitOfWork = await User.GetConnection();
-        
+
         var aspect = await unitOfWork.Aspects.GetById(aspectId);
 
         if (aspect == null)
@@ -225,7 +222,7 @@ public class AssessmentService : BaseService, IAssessmentService
         List<Aspect> cachedAspects = new List<Aspect>();
         List<ResultSet> cachedResultSets = new List<ResultSet>();
         List<Grade> cachedGrades = new List<Grade>();
-        
+
         await using var unitOfWork = await User.GetConnection();
 
         foreach (var model in models)
@@ -301,7 +298,7 @@ public class AssessmentService : BaseService, IAssessmentService
                     throw new InvalidDataException("A grade was not provided.");
                 }
 
-                Grade grade = null;
+                Grade grade;
 
                 grade = cachedGrades.FirstOrDefault(x => x.Id == model.GradeId);
 
@@ -358,7 +355,7 @@ public class AssessmentService : BaseService, IAssessmentService
     public async Task DeleteResult(Guid resultId)
     {
         await using var unitOfWork = await User.GetConnection();
-        
+
         var result = await unitOfWork.Results.GetById(resultId);
 
         if (result == null)

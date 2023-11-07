@@ -5,7 +5,6 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.DocumentProvision;
 using MyPortal.Logic.Models.Requests.Documents;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
@@ -21,7 +20,7 @@ namespace MyPortal.Logic.Services
         public async Task UploadFileToDocument(FileUploadRequestModel upload)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var document = await unitOfWork.Documents.GetById(upload.DocumentId);
 
             if (document == null)
@@ -37,16 +36,16 @@ namespace MyPortal.Logic.Services
             var file = await _fileProvider.SaveFile(upload);
 
             document.Attachment = file;
-                
+
             await unitOfWork.Documents.Update(document);
-                
+
             await unitOfWork.SaveChangesAsync();
         }
 
         public async Task<FileDownload> GetDownloadByDocument(Guid documentId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
             var stream = await _fileProvider.LoadFileAsStream(file.FileId);
@@ -57,7 +56,7 @@ namespace MyPortal.Logic.Services
         public async Task RemoveFileFromDocument(Guid documentId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
             if (file == null)

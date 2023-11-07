@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Entity;

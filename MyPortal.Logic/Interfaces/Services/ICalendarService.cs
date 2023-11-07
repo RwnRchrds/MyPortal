@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Logic.Models.Data.Calendar;
-
 using MyPortal.Logic.Models.Requests.Calendar;
 using MyPortal.Logic.Models.Structures;
 
@@ -18,7 +17,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<DiaryEventModel> GetEvent(Guid eventId);
 
         Task<IEnumerable<DiaryEventAttendeeModel>> GetAttendeesByEvent(Guid eventId);
-        
+
         Task<DiaryEventAttendeeModel> GetEventAttendee(Guid eventId, Guid personId);
 
         Task CreateEvent(EventRequestModel model);

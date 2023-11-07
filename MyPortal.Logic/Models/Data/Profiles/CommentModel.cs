@@ -24,13 +24,13 @@ namespace MyPortal.Logic.Models.Data.Profiles
                 Section = new CommentBankSectionModel(model.Section);
             }
         }
-        
+
         public Guid CommentBankSectionId { get; set; }
 
-        [Required]
-        public string Value { get; set; }
+        [Required] public string Value { get; set; }
 
         public CommentBankSectionModel Section { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

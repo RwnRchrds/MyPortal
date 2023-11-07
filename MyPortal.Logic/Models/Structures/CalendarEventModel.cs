@@ -1,6 +1,4 @@
 ﻿using System;
-using MyPortal.Database.Models.QueryResults.Attendance;
-using MyPortal.Database.Models.QueryResults.Curriculum;
 using MyPortal.Logic.Models.Data.Calendar;
 using MyPortal.Logic.Models.Data.Curriculum;
 
@@ -15,6 +13,7 @@ namespace MyPortal.Logic.Models.Structures
             {
                 Id = eventModel.Id.Value.ToString("N");
             }
+
             AllDay = eventModel.AllDay;
             Start = eventModel.StartTime;
             End = eventModel.EndTime;
@@ -32,7 +31,8 @@ namespace MyPortal.Logic.Models.Structures
             Display = CalendarDisplayModes.Auto;
             Color = colour;
             TextColor = "#FFFFFF";
-            if (sessionPeriodDetailModel.RoomId.HasValue && !string.IsNullOrWhiteSpace(sessionPeriodDetailModel.RoomName))
+            if (sessionPeriodDetailModel.RoomId.HasValue &&
+                !string.IsNullOrWhiteSpace(sessionPeriodDetailModel.RoomName))
             {
                 ExtendedProps = new
                 {
@@ -43,21 +43,21 @@ namespace MyPortal.Logic.Models.Structures
         }
 
         public string Id { get; set; }
-        
+
         public string GroupId { get; set; }
         public bool AllDay { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public string Title { get; set; }
-        
+
         public string Url { get; set; }
 
         public string[] ClassNames { get; set; }
-        
+
         public string[] ResourceIds { get; set; }
-        
+
         public bool Editable { get; set; }
-        
+
         public bool Overlap { get; set; }
         public string Display { get; set; }
         public string Color { get; set; }

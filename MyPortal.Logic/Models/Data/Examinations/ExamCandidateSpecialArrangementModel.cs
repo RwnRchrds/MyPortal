@@ -30,18 +30,19 @@ namespace MyPortal.Logic.Models.Data.Examinations
         }
 
         public Guid CandidateId { get; set; }
-        
+
         public Guid SpecialArrangementId { get; set; }
 
         public virtual ExamCandidateModel Candidate { get; set; }
         public virtual ExamSpecialArrangementModel SpecialArrangement { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamCandidateSpecialArrangements.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

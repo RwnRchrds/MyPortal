@@ -7,13 +7,14 @@ namespace MyPortal.Database.Models.Entity
     [Table("SenProvisionTypes")]
     public class SenProvisionType : LookupItem
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SenProvisionType()
         {
             SenProvisions = new HashSet<SenProvision>();
         }
 
-        
+
         public virtual ICollection<SenProvision> SenProvisions { get; set; }
     }
 }

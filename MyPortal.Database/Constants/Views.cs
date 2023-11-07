@@ -11,7 +11,7 @@ public static class Views
         query.Select($"{alias}.ActualStartTime", $"{alias}.ActualEndTime", $"{alias}.PeriodId",
             $"{alias}.AttendanceWeekId", $"{alias}.WeekPatternId", $"{alias}.Weekday", $"{alias}.Name",
             $"{alias}.StartTime", $"{alias}.EndTime", $"{alias}.AmReg", $"{alias}.PmReg");
-        
+
         return query;
     }
 
@@ -22,7 +22,7 @@ public static class Views
         query.Select($"{alias}.SessionId", $"{alias}.AttendanceWeekId", $"{alias}.PeriodId", $"{alias}.StudentGroupId",
             $"{alias}.StartTime", $"{alias}.EndTime", $"{alias}.PeriodName", $"{alias}.ClassCode", $"{alias}.TeacherId",
             $"{alias}.TeacherName", $"{alias}.RoomId", $"{alias}.RoomName", $"{alias}.IsCover");
-        
+
         return query;
     }
 }

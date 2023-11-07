@@ -28,19 +28,20 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 Component = new ExamComponentModel(model.Component);
             }
         }
-        
+
         public Guid ElementId { get; set; }
         public Guid ComponentId { get; set; }
 
         public virtual ExamElementModel Element { get; set; }
         public virtual ExamComponentModel Component { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamElementComponents.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

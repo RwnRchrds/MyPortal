@@ -4,11 +4,8 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Constants;
-using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.People;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -18,7 +15,7 @@ namespace MyPortalWeb.Controllers.Api
     [Authorize]
     public class PersonController : PersonalDataController
     {
-        public PersonController(IUserService userService, IPersonService personService, IStudentService studentService) 
+        public PersonController(IUserService userService, IPersonService personService, IStudentService studentService)
             : base(userService, personService, studentService)
         {
         }
@@ -40,7 +37,7 @@ namespace MyPortalWeb.Controllers.Api
                 return HandleException(e);
             }
         }
-        
+
         [HttpGet]
         [Route("api/users/{userId}/person")]
         [ProducesResponseType(typeof(PersonModel), 200)]

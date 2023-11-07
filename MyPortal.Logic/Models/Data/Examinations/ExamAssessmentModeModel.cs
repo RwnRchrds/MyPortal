@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Models.Data.Examinations
         {
             ExternallyAssessed = model.ExternallyAssessed;
         }
-        
+
         public bool ExternallyAssessed { get; set; }
     }
 }

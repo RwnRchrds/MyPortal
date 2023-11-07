@@ -26,82 +26,84 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<DiaryEventTypeModel>> GetEventTypes(bool includeReserved = false)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var eventTypes = await unitOfWork.DiaryEventTypes.GetAll(includeReserved);
 
             return eventTypes.Select(t => new DiaryEventTypeModel(t)).ToList();
         }
-        
+
         public async Task<IEnumerable<CalendarEventModel>> GetCalendarEventsByPerson(Guid personId, DateTime dateFrom,
             DateTime dateTo)
         {
             var calendarEvents = new List<CalendarEventModel>();
-            
+
             await using var unitOfWork = await User.GetConnection();
 
             // Get event type data so events can be coloured correctly
-                var eventTypes = (await unitOfWork.DiaryEventTypes.GetAll(true)).ToList();
-                
-                // Verify person exists
-                var personService = new PersonService(User);
-                var person = await personService.GetPersonWithTypesById(personId);
+            var eventTypes = (await unitOfWork.DiaryEventTypes.GetAll(true)).ToList();
 
-                var publicEvents = (await unitOfWork.DiaryEvents.GetPublicEvents(dateFrom, dateTo))
-                    .Select(e => new DiaryEventModel(e)).ToList();
+            // Verify person exists
+            var personService = new PersonService(User);
+            var person = await personService.GetPersonWithTypesById(personId);
 
-                // Get all generic events for person
-                var events =
-                    (await unitOfWork.DiaryEvents.GetByPerson(dateFrom, dateTo, personId))
-                    .Select(e => new DiaryEventModel(e)).ToList();
+            var publicEvents = (await unitOfWork.DiaryEvents.GetPublicEvents(dateFrom, dateTo))
+                .Select(e => new DiaryEventModel(e)).ToList();
 
-                foreach (var diaryEvent in events.Union(publicEvents))
+            // Get all generic events for person
+            var events =
+                (await unitOfWork.DiaryEvents.GetByPerson(dateFrom, dateTo, personId))
+                .Select(e => new DiaryEventModel(e)).ToList();
+
+            foreach (var diaryEvent in events.Union(publicEvents))
+            {
+                calendarEvents.Add(new CalendarEventModel(diaryEvent));
+            }
+
+            // If person is student or staff, get lesson events
+            if (person.PersonTypes.StudentId.HasValue || person.PersonTypes.StaffId.HasValue)
+            {
+                SessionPeriodDetailModel[] sessions = Array.Empty<SessionPeriodDetailModel>();
+
+                var coverEventType = eventTypes.FirstOrDefault(t => t.Id == EventTypes.Cover);
+
+                if (coverEventType == null)
                 {
-                    calendarEvents.Add(new CalendarEventModel(diaryEvent));
+                    throw new NotFoundException("Could not find cover event type.");
                 }
 
-                // If person is student or staff, get lesson events
-                if (person.PersonTypes.StudentId.HasValue || person.PersonTypes.StaffId.HasValue)
+                var lessonEventType = eventTypes.FirstOrDefault(t => t.Id == EventTypes.Lesson);
+
+                if (lessonEventType == null)
                 {
-                    SessionPeriodDetailModel[] sessions = Array.Empty<SessionPeriodDetailModel>();
-
-                    var coverEventType = eventTypes.FirstOrDefault(t => t.Id == EventTypes.Cover);
-
-                    if (coverEventType == null)
-                    {
-                        throw new NotFoundException("Could not find cover event type.");
-                    }
-
-                    var lessonEventType = eventTypes.FirstOrDefault(t => t.Id == EventTypes.Lesson);
-
-                    if (lessonEventType == null)
-                    {
-                        throw new NotFoundException("Could not find lesson event type.");
-                    }
-
-                    if (person.PersonTypes.StudentId.HasValue)
-                    {
-                        sessions =
-                            (await unitOfWork.SessionPeriods.GetPeriodDetailsByStudent(person.PersonTypes.StudentId.Value, dateFrom, dateTo)).ToArray();
-                    }
-                    else if (person.PersonTypes.StaffId.HasValue)
-                    {
-                      sessions = (await unitOfWork.SessionPeriods.GetPeriodDetailsByStaffMember(person.PersonTypes.StaffId.Value, dateFrom,
-                            dateTo)).ToArray();
-                    }
-
-                    var sessionData = SessionHelper.GetSessionData(sessions);
-                    
-                    calendarEvents.AddRange(sessionData.Select(s =>
-                        new CalendarEventModel(s, s.IsCover ? coverEventType.ColourCode : lessonEventType.ColourCode)));
+                    throw new NotFoundException("Could not find lesson event type.");
                 }
 
-                return calendarEvents;
+                if (person.PersonTypes.StudentId.HasValue)
+                {
+                    sessions =
+                        (await unitOfWork.SessionPeriods.GetPeriodDetailsByStudent(person.PersonTypes.StudentId.Value,
+                            dateFrom, dateTo)).ToArray();
+                }
+                else if (person.PersonTypes.StaffId.HasValue)
+                {
+                    sessions = (await unitOfWork.SessionPeriods.GetPeriodDetailsByStaffMember(
+                        person.PersonTypes.StaffId.Value, dateFrom,
+                        dateTo)).ToArray();
+                }
+
+                var sessionData = SessionHelper.GetSessionData(sessions);
+
+                calendarEvents.AddRange(sessionData.Select(s =>
+                    new CalendarEventModel(s, s.IsCover ? coverEventType.ColourCode : lessonEventType.ColourCode)));
+            }
+
+            return calendarEvents;
         }
 
         public async Task<DiaryEventModel> GetEvent(Guid eventId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var diaryEvent = new DiaryEventModel(await unitOfWork.DiaryEvents.GetById(eventId));
 
             return diaryEvent;
@@ -110,7 +112,7 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<DiaryEventAttendeeModel>> GetAttendeesByEvent(Guid eventId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var attendees =
                 (await unitOfWork.DiaryEventAttendees.GetByEvent(eventId)).Select(a =>
                     new DiaryEventAttendeeModel(a));
@@ -121,7 +123,7 @@ namespace MyPortal.Logic.Services
         public async Task<DiaryEventAttendeeModel> GetEventAttendee(Guid eventId, Guid personId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var attendee = await unitOfWork.DiaryEventAttendees.GetAttendee(eventId, personId);
 
             return new DiaryEventAttendeeModel(attendee);
@@ -204,9 +206,9 @@ namespace MyPortal.Logic.Services
         public async Task UpdateEvent(Guid eventId, EventRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
-            
+
             var eventTypes = (await GetEventTypes()).ToArray();
 
             var eventInDb = await unitOfWork.DiaryEvents.GetById(eventId);
@@ -241,7 +243,7 @@ namespace MyPortal.Logic.Services
         public async Task DeleteEvent(Guid eventId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             await unitOfWork.DiaryEvents.Delete(eventId);
 
             await unitOfWork.SaveChangesAsync();
@@ -250,13 +252,13 @@ namespace MyPortal.Logic.Services
         public async Task CreateOrUpdateEventAttendees(Guid eventId, EventAttendeesRequestModel model)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var attendees = (await unitOfWork.DiaryEventAttendees.GetByEvent(eventId)).ToArray();
 
             foreach (var attendee in model.Attendees)
             {
                 Validate(attendee);
-                    
+
                 var existingAttendee = attendees.FirstOrDefault(a => a.PersonId == attendee.PersonId);
 
                 if (existingAttendee != null)
@@ -280,7 +282,7 @@ namespace MyPortal.Logic.Services
                         ResponseId = attendee.ResponseId,
                         Attended = attendee.Attended
                     };
-                            
+
                     unitOfWork.DiaryEventAttendees.Create(newAttendee);
                 }
             }
@@ -291,7 +293,7 @@ namespace MyPortal.Logic.Services
         public async Task DeleteEventAttendee(Guid eventId, Guid personId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var attendees = await unitOfWork.DiaryEventAttendees.GetByEvent(eventId);
 
             foreach (var attendee in attendees.Where(a => a.PersonId == personId))

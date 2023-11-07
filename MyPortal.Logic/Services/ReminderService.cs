@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.People;
-using MyPortal.Logic.Models.Data.School;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services;
@@ -24,7 +21,7 @@ public class ReminderService : BaseService, IReminderService
     public async Task<ReminderDataModel> GetTaskReminderById(Guid reminderId)
     {
         await using var unitOfWork = await User.GetConnection();
-        
+
         TaskReminder reminder = await unitOfWork.TaskReminders.GetById(reminderId);
 
         if (reminder == null)
@@ -42,11 +39,11 @@ public class ReminderService : BaseService, IReminderService
             EntityId = reminder.TaskId
         };
     }
-    
+
     public async Task<IEnumerable<ReminderDataModel>> GetActiveRemindersByUser(Guid userId)
     {
         var reminders = new List<ReminderDataModel>();
-        
+
         await using var unitOfWork = await User.GetConnection();
 
         IEnumerable<TaskReminder> taskReminders = await unitOfWork.TaskReminders.GetRemindersByUser(userId);
@@ -73,14 +70,14 @@ public class ReminderService : BaseService, IReminderService
     public async Task DismissTaskReminder(Guid reminderId)
     {
         await using var unitOfWork = await User.GetConnection();
-        
+
         TaskReminder reminder = await unitOfWork.TaskReminders.GetById(reminderId);
 
         if (reminder == null)
         {
             throw new NotFoundException("Task reminder not found.");
         }
-        
+
         await unitOfWork.TaskReminders.Delete(reminderId);
     }
 }

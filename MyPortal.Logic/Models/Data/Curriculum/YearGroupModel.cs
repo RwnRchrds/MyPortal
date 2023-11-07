@@ -28,19 +28,20 @@ namespace MyPortal.Logic.Models.Data.Curriculum
                 CurriculumYearGroup = new CurriculumYearGroupModel(model.CurriculumYearGroup);
             }
         }
-        
+
         public Guid StudentGroupId { get; set; }
-        
+
         public Guid CurriculumYearGroupId { get; set; }
 
         public virtual StudentGroupModel StudentGroup { get; set; }
         public virtual CurriculumYearGroupModel CurriculumYearGroup { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.YearGroups.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

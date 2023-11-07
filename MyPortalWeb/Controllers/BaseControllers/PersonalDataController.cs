@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-
 
 namespace MyPortalWeb.Controllers.BaseControllers
 {
@@ -31,7 +28,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
             {
                 return false;
             }
-            
+
             if (User.IsType(UserTypes.Student))
             {
                 // Students can only access resources involving themselves
@@ -54,12 +51,14 @@ namespace MyPortalWeb.Controllers.BaseControllers
                     // Staff members can access resources for all students if they have ViewStudentDetails permission
                     return await UserHasPermission(PermissionValue.StudentViewStudentDetails);
                 }
+
                 if (person.PersonTypes.StaffId.HasValue)
                 {
                     // Staff members can access other basic staff information if they have the ViewBasicDetails permission
                     // Non basic details (e.g employment details) should require further permission checks
                     return await UserHasPermission(PermissionValue.PeopleViewStaffBasicDetails);
                 }
+
                 if (person.PersonTypes.ContactId.HasValue)
                 {
                     // Staff members can access all contacts if they have ViewContactDetails permission

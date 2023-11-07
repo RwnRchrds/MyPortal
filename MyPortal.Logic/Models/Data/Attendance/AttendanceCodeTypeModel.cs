@@ -11,8 +11,6 @@ namespace MyPortal.Logic.Models.Data.Attendance
             Description = model.Description;
         }
 
-        [Required]
-        [StringLength(256)]
-        public string Description { get; set; }
+        [Required] [StringLength(256)] public string Description { get; set; }
     }
 }

@@ -8,9 +8,8 @@ namespace MyPortal.Logic.Models.Data.Curriculum
     {
         public SubjectCodeModel(SubjectCode model) : base(model)
         {
-            
         }
-        
+
         public string Code { get; set; }
 
         public Guid SubjectCodeSetId { get; set; }

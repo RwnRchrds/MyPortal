@@ -37,27 +37,28 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 Level = new ExamQualificationLevelModel(model.Level);
             }
         }
-        
+
         public Guid AssessmentId { get; set; }
-        
+
         public Guid LevelId { get; set; }
-        
+
         public Guid QcaCodeId { get; set; }
-        
+
         public string QualAccrNumber { get; set; }
-        
+
         public string ElementCode { get; set; }
 
         public virtual ExamAssessmentModel Assessment { get; set; }
         public virtual SubjectCodeModel QcaCode { get; set; }
         public virtual ExamQualificationLevelModel Level { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamBaseElements.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

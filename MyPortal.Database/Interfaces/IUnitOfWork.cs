@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models.Entity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Interfaces
 {
@@ -17,7 +13,7 @@ namespace MyPortal.Database.Interfaces
         IAchievementRepository Achievements { get; }
         IAchievementTypeRepository AchievementTypes { get; }
         IActivityRepository Activities { get; }
-        IAddressAgencyRepository AddressAgencies {get;}
+        IAddressAgencyRepository AddressAgencies { get; }
         IAddressPersonRepository AddressPeople { get; }
         IAddressRepository Addresses { get; }
         IAddressTypeRepository AddressTypes { get; }
@@ -68,7 +64,7 @@ namespace MyPortal.Database.Interfaces
         IDetentionTypeRepository DetentionTypes { get; }
         IDiaryEventAttendeeRepository DiaryEventAttendees { get; }
         IDiaryEventAttendeeResponseRepository DiaryEventAttendeeResponses { get; }
-        IDiaryEventRepository DiaryEvents { get; }  
+        IDiaryEventRepository DiaryEvents { get; }
         IDiaryEventTemplateRepository DiaryEventTemplates { get; }
         IDiaryEventTypeRepository DiaryEventTypes { get; }
         IDietaryRequirementRepository DietaryRequirements { get; }

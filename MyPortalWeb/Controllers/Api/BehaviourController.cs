@@ -27,7 +27,7 @@ namespace MyPortalWeb.Controllers.Api
 
         public BehaviourController(IUserService userService, IPersonService personService,
             IStudentService studentService, IBehaviourService behaviourService,
-                IAcademicYearService academicYearService)
+            IAcademicYearService academicYearService)
             : base(userService, personService, studentService)
         {
             _academicYearService = academicYearService;
@@ -69,18 +69,18 @@ namespace MyPortalWeb.Controllers.Api
             try
             {
                 var student = await StudentService.GetStudentById(studentId);
-                
+
                 if (await CanAccessPerson(student.PersonId))
                 {
-                    var fromAcademicYearId = academicYearId 
+                    var fromAcademicYearId = academicYearId
                                              ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id;
 
                     if (fromAcademicYearId == null)
                     {
                         return Error(HttpStatusCode.BadRequest, "No academic year is currently selected.");
                     }
-                    
-                    var achievements = 
+
+                    var achievements =
                         await _behaviourService.GetAchievementsByStudent(studentId, fromAcademicYearId.Value);
 
                     return Ok(achievements);
@@ -119,7 +119,8 @@ namespace MyPortalWeb.Controllers.Api
         [Permission(PermissionValue.BehaviourEditAchievements)]
         [Route("achievements/{achievementId}")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateAchievement([FromQuery] Guid achievementId, [FromBody] AchievementRequestModel achievement)
+        public async Task<IActionResult> UpdateAchievement([FromQuery] Guid achievementId,
+            [FromBody] AchievementRequestModel achievement)
         {
             try
             {
@@ -151,7 +152,7 @@ namespace MyPortalWeb.Controllers.Api
                 return HandleException(e);
             }
         }
-        
+
         [HttpGet]
         [Route("incidents/{incidentId}", Name = "ApiIncidentGetById")]
         [Permission(PermissionValue.BehaviourViewIncidents)]
@@ -161,7 +162,7 @@ namespace MyPortalWeb.Controllers.Api
             try
             {
                 var incident = await _behaviourService.GetIncidentById(incidentId);
-                
+
                 var student = await StudentService.GetStudentById(incident.StudentId);
 
                 if (await CanAccessPerson(student.PersonId))
@@ -181,23 +182,24 @@ namespace MyPortalWeb.Controllers.Api
         [Route("students/{studentId}/incidents")]
         [Permission(PermissionValue.BehaviourViewIncidents)]
         [ProducesResponseType(typeof(IEnumerable<StudentIncidentSummaryModel>), 200)]
-        public async Task<IActionResult> GetIncidentsByStudent([FromRoute] Guid studentId, [FromQuery] Guid? academicYearId)
+        public async Task<IActionResult> GetIncidentsByStudent([FromRoute] Guid studentId,
+            [FromQuery] Guid? academicYearId)
         {
             try
             {
                 var student = await StudentService.GetStudentById(studentId);
-                
+
                 if (await CanAccessPerson(student.PersonId))
                 {
-                    var fromAcademicYearId = academicYearId 
+                    var fromAcademicYearId = academicYearId
                                              ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id;
 
                     if (fromAcademicYearId == null)
                     {
                         return Error(HttpStatusCode.BadRequest, "No academic year is currently selected.");
                     }
-                    
-                    var incidents = 
+
+                    var incidents =
                         (await _behaviourService.GetIncidentsByStudent(studentId, fromAcademicYearId.Value)).ToList();
 
                     return Ok(incidents);
@@ -235,7 +237,8 @@ namespace MyPortalWeb.Controllers.Api
         [Permission(PermissionValue.BehaviourEditIncidents)]
         [Route("incidents/{incidentId}", Name = "ApiIncidentUpdate")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Update([FromRoute] Guid incidentId, [FromBody] IncidentRequestModel requestModel)
+        public async Task<IActionResult> Update([FromRoute] Guid incidentId,
+            [FromBody] IncidentRequestModel requestModel)
         {
             try
             {
@@ -254,7 +257,8 @@ namespace MyPortalWeb.Controllers.Api
         [Permission(PermissionValue.BehaviourEditIncidents)]
         [Route("incidents/{incidentId}", Name = "ApiIncidentDelete")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Delete([FromRoute] Guid incidentId) {
+        public async Task<IActionResult> Delete([FromRoute] Guid incidentId)
+        {
             try
             {
                 await _behaviourService.DeleteIncident(incidentId);

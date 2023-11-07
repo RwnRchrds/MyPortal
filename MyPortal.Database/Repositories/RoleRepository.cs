@@ -12,7 +12,6 @@ namespace MyPortal.Database.Repositories
     {
         public RoleRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         public async Task Update(Role entity)

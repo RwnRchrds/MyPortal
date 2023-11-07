@@ -10,7 +10,7 @@ namespace MyPortal.Logic.Models.Data.StaffMembers
             System = model.System;
             Authorised = model.Authorised;
         }
-        
+
         public bool System { get; set; }
         public bool Authorised { get; set; }
     }

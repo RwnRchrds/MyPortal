@@ -50,18 +50,15 @@ namespace MyPortal.Logic.Models.Data.Students
             }
         }
 
-        [NotDefault]
-        public Guid TypeId { get; set; }
+        [NotDefault] public Guid TypeId { get; set; }
 
         public Guid CreatedById { get; set; }
 
-        [NotDefault]
-        public Guid StudentId { get; set; }
+        [NotDefault] public Guid StudentId { get; set; }
 
         public Guid AcademicYearId { get; set; }
 
-        [Required]
-        public string Message { get; set; }
+        [Required] public string Message { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
@@ -87,8 +84,8 @@ namespace MyPortal.Logic.Models.Data.Students
             if (Id.HasValue)
             {
                 var model = await unitOfWork.LogNotes.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

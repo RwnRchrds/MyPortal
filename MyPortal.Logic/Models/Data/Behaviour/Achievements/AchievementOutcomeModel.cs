@@ -15,7 +15,7 @@ namespace MyPortal.Logic.Models.Data.Behaviour.Achievements
             Description = model.Description;
             Active = model.Active;
         }
-        
+
         public bool System { get; set; }
     }
 }

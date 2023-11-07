@@ -13,8 +13,7 @@ namespace MyPortal.Logic.Models.Data.Students
         public Guid StudentId { get; set; }
         public Guid SubjectId { get; set; }
 
-        [Required]
-        public string Notes { get; set; }
+        [Required] public string Notes { get; set; }
 
         public virtual StudentModel Student { get; set; }
         public virtual SubjectModel Subject { get; set; }
@@ -46,8 +45,8 @@ namespace MyPortal.Logic.Models.Data.Students
             if (Id.HasValue)
             {
                 var model = await unitOfWork.GiftedTalented.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

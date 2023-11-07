@@ -32,22 +32,20 @@ namespace MyPortal.Logic.Models.Data.Agents
                 Directory = new DirectoryModel(model.Directory);
             }
         }
-        
+
         public Guid TypeId { get; set; }
 
         public Guid DirectoryId { get; set; }
 
-        [StringLength(256)]
-        public string Name { get; set; }
+        [StringLength(256)] public string Name { get; set; }
 
-        [Url]
-        [StringLength(100)]
-        public string Website { get; set; }
+        [Url] [StringLength(100)] public string Website { get; set; }
 
         public bool Deleted { get; set; }
 
         public virtual AgencyTypeModel AgencyType { get; set; }
         public virtual DirectoryModel Directory { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

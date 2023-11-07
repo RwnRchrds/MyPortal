@@ -28,20 +28,21 @@ namespace MyPortal.Logic.Models.Data.Behaviour.ReportCards
                 Target = new BehaviourTargetModel(model.Target);
             }
         }
-        
+
         public Guid ReportCardId { get; set; }
-        
+
         public Guid TargetId { get; set; }
 
         public virtual ReportCardModel ReportCard { get; set; }
         public virtual BehaviourTargetModel Target { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ReportCardTargets.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

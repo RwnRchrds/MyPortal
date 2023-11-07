@@ -11,11 +11,9 @@ namespace MyPortal.Logic.Models.Data.Curriculum
             Code = model.Code;
             Description = model.Description;
         }
-        
-        [StringLength(10)]
-        public string Code { get; set; }
-        
-        [StringLength(256)]
-        public string Description { get; set; }
+
+        [StringLength(10)] public string Code { get; set; }
+
+        [StringLength(256)] public string Description { get; set; }
     }
 }

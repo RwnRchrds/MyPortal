@@ -33,28 +33,27 @@ namespace MyPortal.Logic.Models.Data.Contacts
                 Person = new PersonModel(model.Person);
             }
         }
-        
+
         public Guid TypeId { get; set; }
 
         public Guid? PersonId { get; set; }
 
         public Guid? AgencyId { get; set; }
 
-        [Phone]
-        [StringLength(128)]
-        public string Number { get; set; }
+        [Phone] [StringLength(128)] public string Number { get; set; }
 
         public bool Main { get; set; }
 
         public virtual PhoneNumberTypeModel Type { get; set; }
         public virtual PersonModel Person { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.PhoneNumbers.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

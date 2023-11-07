@@ -32,21 +32,21 @@ namespace MyPortal.Logic.Models.Data.Students.SEND
                 Type = new SenProvisionTypeModel(model.Type);
             }
         }
-        
+
         public Guid StudentId { get; set; }
-        
+
         public Guid ProvisionTypeId { get; set; }
-        
+
         public DateTime StartDate { get; set; }
-        
+
         public DateTime EndDate { get; set; }
-        
-        [Required]
-        public string Note { get; set; }
+
+        [Required] public string Note { get; set; }
 
         public virtual StudentModel Student { get; set; }
 
         public virtual SenProvisionTypeModel Type { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

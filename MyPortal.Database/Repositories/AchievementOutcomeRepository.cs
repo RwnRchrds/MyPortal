@@ -10,11 +10,11 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class AchievementOutcomeRepository : BaseReadWriteRepository<AchievementOutcome>, IAchievementOutcomeRepository
+    public class AchievementOutcomeRepository : BaseReadWriteRepository<AchievementOutcome>,
+        IAchievementOutcomeRepository
     {
         public AchievementOutcomeRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         public async Task Update(AchievementOutcome entity)
@@ -30,7 +30,7 @@ namespace MyPortal.Database.Repositories
 
             outcome.Description = entity.Description;
             outcome.Active = entity.Active;
-            
+
             WriteAuditRaw(entity.Id, AuditActions.Update, oldValue);
         }
     }

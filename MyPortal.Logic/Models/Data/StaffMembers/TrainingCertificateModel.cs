@@ -34,11 +34,11 @@ namespace MyPortal.Logic.Models.Data.StaffMembers
                 Status = new TrainingCertificateStatusModel(model.Status);
             }
         }
-        
+
         public Guid CourseId { get; set; }
-        
+
         public Guid StaffId { get; set; }
-        
+
         public Guid StatusId { get; set; }
 
         public virtual StaffMemberModel StaffMember { get; set; }
@@ -46,12 +46,13 @@ namespace MyPortal.Logic.Models.Data.StaffMembers
         public virtual TrainingCourseModel TrainingCourse { get; set; }
 
         public virtual TrainingCertificateStatusModel Status { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.TrainingCertificates.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

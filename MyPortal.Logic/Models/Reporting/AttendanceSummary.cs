@@ -5,7 +5,6 @@ using MyPortal.Database.Constants;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Models.Data.Attendance;
 
-
 namespace MyPortal.Logic.Models.Reporting
 {
     public class AttendanceSummary
@@ -87,14 +86,16 @@ namespace MyPortal.Logic.Models.Reporting
         {
             var series = new ChartSeries<CategoricalChartDataPoint>(seriesTitle);
 
-            series.AddPoint(new CategoricalChartDataPoint("Present", asPercentage ? MathHelper.Percent(Present, TotalMarks, 1) : Present));
-            series.AddPoint(new CategoricalChartDataPoint("Authorised Absence", asPercentage ? MathHelper.Percent(AuthorisedAbsence, TotalMarks, 1) : AuthorisedAbsence));
+            series.AddPoint(new CategoricalChartDataPoint("Present",
+                asPercentage ? MathHelper.Percent(Present, TotalMarks, 1) : Present));
+            series.AddPoint(new CategoricalChartDataPoint("Authorised Absence",
+                asPercentage ? MathHelper.Percent(AuthorisedAbsence, TotalMarks, 1) : AuthorisedAbsence));
             series.AddPoint(new CategoricalChartDataPoint("Unauthorised Absence", UnauthorisedAbsence));
             series.AddPoint(new CategoricalChartDataPoint("Approved Educational Activity", ApprovedEdActivity));
             series.AddPoint(new CategoricalChartDataPoint("Attendance Not Required", NotRequired));
 
             var chart = new ChartData<CategoricalChartDataPoint>("Attendance Summary", "Type", "Marks");
-            
+
             chart.AddSeries(series);
 
             return chart;

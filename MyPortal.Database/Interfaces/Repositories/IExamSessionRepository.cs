@@ -4,6 +4,5 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IExamSessionRepository : IReadWriteRepository<ExamSession>, IUpdateRepository<ExamSession>
     {
-        
     }
 }

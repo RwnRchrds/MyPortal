@@ -26,26 +26,24 @@ namespace MyPortal.Logic.Models.Data.Assessment
                 GradeSet = new GradeSetModel(model.GradeSet);
             }
         }
-        
+
         public Guid GradeSetId { get; set; }
-        
-        [Required]
-        [StringLength(25)]
-        public string Code { get; set; }
-        
-        [StringLength(50)]
-        public string Description { get; set; }
-        
+
+        [Required] [StringLength(25)] public string Code { get; set; }
+
+        [StringLength(50)] public string Description { get; set; }
+
         public decimal Value { get; set; }
 
         public virtual GradeSetModel GradeSet { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Grades.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

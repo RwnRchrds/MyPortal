@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MyPortal.Logic.Enums
+﻿namespace MyPortal.Logic.Enums
 {
     public enum NameFormat
     {
@@ -10,18 +6,22 @@ namespace MyPortal.Logic.Enums
         /// E.g. Bloggs, Joe Thomas
         /// </summary>
         Default,
+
         /// <summary>
         /// E.g. Mr Joe Thomas Bloggs
         /// </summary>
         FullName,
+
         /// <summary>
         /// E.g. Mr J T Bloggs
         /// </summary>
         FullNameAbbreviated,
+
         /// <summary>
         /// E.g. Joe Thomas Bloggs
         /// </summary>
         FullNameNoTitle,
+
         /// <summary>
         /// E.g. JTB
         /// </summary>

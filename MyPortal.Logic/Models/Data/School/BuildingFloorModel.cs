@@ -27,7 +27,7 @@ namespace MyPortal.Logic.Models.Data.School
         public Guid BuildingId { get; set; }
 
         public BuildingModel Building { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

@@ -12,7 +12,6 @@ using MyPortal.Logic.Models.Data.Contacts;
 using MyPortal.Logic.Models.Requests.Addresses;
 using Task = System.Threading.Tasks.Task;
 
-
 namespace MyPortal.Logic.Services
 {
     public class AddressService : BaseService, IAddressService
@@ -52,7 +51,7 @@ namespace MyPortal.Logic.Services
         public async Task CreateAddressForPerson(Guid personId, EntityAddressRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
 
             var person = await unitOfWork.People.GetById(personId);
@@ -61,7 +60,7 @@ namespace MyPortal.Logic.Services
             {
                 throw new NotFoundException("Person not found.");
             }
-            
+
             if (model.Main)
             {
                 var personAddresses = await unitOfWork.AddressPeople.GetByPerson(person.Id);
@@ -80,14 +79,14 @@ namespace MyPortal.Logic.Services
                 AddressTypeId = model.AddressTypeId,
                 Main = model.Main
             });
-            
+
             await unitOfWork.SaveChangesAsync();
         }
 
         public async Task CreateAddressForAgency(Guid agencyId, EntityAddressRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
 
             var agency = await unitOfWork.Agencies.GetById(agencyId);
@@ -107,7 +106,7 @@ namespace MyPortal.Logic.Services
                     await unitOfWork.AddressAgencies.Update(linkedAddress);
                 }
             }
-            
+
             agency.AddressAgencies.Add(new AddressAgency
             {
                 Id = Guid.NewGuid(),
@@ -122,7 +121,7 @@ namespace MyPortal.Logic.Services
         public async Task UpdateAddressLinkForPerson(Guid addressPersonId, LinkAddressRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
             var addressPerson = await unitOfWork.AddressPeople.GetById(addressPersonId);
 
@@ -143,7 +142,7 @@ namespace MyPortal.Logic.Services
         public async Task UpdateAddressLinkForAgency(Guid addressAgencyId, LinkAddressRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
             var addressAgency = await unitOfWork.AddressAgencies.GetById(addressAgencyId);
 
@@ -164,7 +163,7 @@ namespace MyPortal.Logic.Services
         public async Task UpdateAddress(Guid addressId, AddressRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
 
             var address = await unitOfWork.Addresses.GetById(addressId);
@@ -192,7 +191,7 @@ namespace MyPortal.Logic.Services
         public async Task LinkAddressToPerson(LinkAddressRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
 
             var address = await unitOfWork.Addresses.GetById(model.AddressId);
@@ -217,7 +216,7 @@ namespace MyPortal.Logic.Services
                 AddressTypeId = model.AddressTypeId,
                 Main = model.Main
             };
-            
+
             unitOfWork.AddressPeople.Create(addressPerson);
 
             await unitOfWork.SaveChangesAsync();
@@ -226,7 +225,7 @@ namespace MyPortal.Logic.Services
         public async Task LinkAddressToAgency(LinkAddressRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
 
             var address = await unitOfWork.Addresses.GetById(model.AddressId);
@@ -251,7 +250,7 @@ namespace MyPortal.Logic.Services
                 AddressTypeId = model.AddressTypeId,
                 Main = model.Main
             };
-            
+
             unitOfWork.AddressAgencies.Create(addressAgency);
 
             await unitOfWork.SaveChangesAsync();
@@ -262,7 +261,7 @@ namespace MyPortal.Logic.Services
             await using var unitOfWork = await User.GetConnection();
             var addressPeople = await unitOfWork.AddressPeople.GetByPerson(personId);
             var results = addressPeople.Select(ap => new AddressLinkDataModel(ap)).ToArray();
-            
+
             return results;
         }
 
@@ -271,7 +270,7 @@ namespace MyPortal.Logic.Services
             await using var unitOfWork = await User.GetConnection();
             var addressAgencies = await unitOfWork.AddressAgencies.GetByAgency(agencyId);
             var results = addressAgencies.Select(ap => new AddressLinkDataModel(ap)).ToArray();
-            
+
             return results;
         }
 
@@ -287,12 +286,12 @@ namespace MyPortal.Logic.Services
                 AgencyLinks = addressAgencies.Select(al => new AddressLinkDataModel(al)).ToArray()
             };
         }
-        
+
         private async Task DeleteAddressIfUnused(Guid addressId)
         {
             await using var unitOfWork = await User.GetConnection();
             var addressLinks = await GetAddressLinksByAddress(addressId);
-            
+
             var numberOfLinks = addressLinks.PersonLinks.Length + addressLinks.AgencyLinks.Length;
 
             if (numberOfLinks <= 0)
@@ -305,7 +304,7 @@ namespace MyPortal.Logic.Services
         public async Task DeleteAddressLinkForPerson(Guid addressPersonId)
         {
             Guid addressId;
-            
+
             await using (var unitOfWork = await User.GetConnection())
             {
                 var addressPerson = await unitOfWork.AddressPeople.GetById(addressPersonId);
@@ -321,14 +320,14 @@ namespace MyPortal.Logic.Services
 
                 await unitOfWork.SaveChangesAsync();
             }
-            
+
             await DeleteAddressIfUnused(addressId);
         }
 
         public async Task DeleteAddressLinkForAgency(Guid addressAgencyId)
         {
             Guid addressId;
-            
+
             await using (var unitOfWork = await User.GetConnection())
             {
                 var addressAgency = await unitOfWork.AddressAgencies.GetById(addressAgencyId);
@@ -344,7 +343,7 @@ namespace MyPortal.Logic.Services
 
                 await unitOfWork.SaveChangesAsync();
             }
-            
+
             await DeleteAddressIfUnused(addressId);
         }
     }

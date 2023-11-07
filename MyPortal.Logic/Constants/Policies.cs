@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using MyPortal.Database.Constants;
-
-namespace MyPortal.Logic.Constants
+﻿namespace MyPortal.Logic.Constants
 {
     public static class Policies
     {

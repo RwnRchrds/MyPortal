@@ -7,7 +7,6 @@ namespace MyPortal.Logic.Models.Data.Students
     {
         public RelationshipTypeModel(RelationshipType model) : base(model)
         {
-            
         }
     }
 }

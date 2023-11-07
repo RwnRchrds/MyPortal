@@ -28,7 +28,7 @@ namespace MyPortal.Logic.Models.Data.Curriculum
             }
         }
 
-        public int MaxPoints { get; set; }  
+        public int MaxPoints { get; set; }
 
         public Guid DirectoryId { get; set; }
         public string Title { get; set; }
@@ -36,13 +36,14 @@ namespace MyPortal.Logic.Models.Data.Curriculum
         public bool SubmitOnline { get; set; }
 
         public virtual DirectoryModel Directory { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.HomeworkItems.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

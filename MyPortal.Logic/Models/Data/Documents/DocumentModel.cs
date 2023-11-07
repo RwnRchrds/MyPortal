@@ -55,12 +55,9 @@ namespace MyPortal.Logic.Models.Data.Documents
 
         public Guid DirectoryId { get; set; }
 
-        [Required]
-        [StringLength(128)]
-        public string Title { get; set; }
+        [Required] [StringLength(128)] public string Title { get; set; }
 
-        [StringLength(256)]
-        public string Description { get; set; }
+        [StringLength(256)] public string Description { get; set; }
 
         public Guid CreatedById { get; set; }
 

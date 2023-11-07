@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Text;
-using Microsoft.EntityFrameworkCore.Storage;
-using MyPortal.Database.Models.Connection;
+﻿using MyPortal.Database.Models.Connection;
 using SqlKata.Compilers;
 
 namespace MyPortal.Database.Repositories.Base

@@ -8,7 +8,8 @@ namespace MyPortal.Database.Models.Entity
     [Table("Locations")]
     public class Location : BaseTypes.Entity, ISystemEntity
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Location()
         {
             BehaviourAchievements = new HashSet<Achievement>();
@@ -21,16 +22,15 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(128)]
         public string Description { get; set; }
 
-        [Column(Order = 3)]
-        public bool System { get; set; }
+        [Column(Order = 3)] public bool System { get; set; }
 
-        
+
         public virtual ICollection<Achievement> BehaviourAchievements { get; set; }
 
-        
+
         public virtual ICollection<Incident> BehaviourIncidents { get; set; }
 
-        
+
         public virtual ICollection<Room> Rooms { get; set; }
     }
 }

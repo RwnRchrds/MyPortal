@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MyPortal.Logic.Interfaces;
 
 namespace MyPortal.Logic.Models.Reporting
@@ -27,7 +24,8 @@ namespace MyPortal.Logic.Models.Reporting
             YLabel = yLabel;
         }
 
-        public ChartData(string title, string xLabel, string yLabel, IEnumerable<ChartSeries<TDataPoint>> series) : this(title, xLabel, yLabel)
+        public ChartData(string title, string xLabel, string yLabel, IEnumerable<ChartSeries<TDataPoint>> series) :
+            this(title, xLabel, yLabel)
         {
             _series = series.ToList();
         }

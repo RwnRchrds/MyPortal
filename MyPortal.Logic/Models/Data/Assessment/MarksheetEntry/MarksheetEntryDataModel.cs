@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using MyPortal.Database.Constants;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.QueryResults.Assessment;
-using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Models.Summary;
 
 namespace MyPortal.Logic.Models.Data.Assessment.MarksheetEntry;
@@ -17,7 +12,7 @@ public class MarksheetEntryDataModel
         Columns = new List<MarksheetColumnDataModel>();
         Students = new List<MarksheetStudentDataModel>();
     }
-    
+
     public string Title { get; set; }
     public bool Completed { get; set; }
 
@@ -46,7 +41,7 @@ public class MarksheetEntryDataModel
                 {
                     dataRow.StudentName = result.StudentName;
                 }
-                
+
                 dataRow.Results.Add(new ResultSummaryModel
                 {
                     StudentId = result.StudentId,
@@ -59,11 +54,10 @@ public class MarksheetEntryDataModel
                     ColourCode = result.ColourCode
                 });
             }
-            
+
             data.Add(dataRow);
         }
 
         Students = data.OrderBy(d => d.StudentName).ToArray();
     }
-    
 }

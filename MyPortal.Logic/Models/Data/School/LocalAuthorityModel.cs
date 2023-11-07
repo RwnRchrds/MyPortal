@@ -12,12 +12,10 @@ namespace MyPortal.Logic.Models.Data.School
             Name = model.Name;
             Website = model.Website;
         }
-        
+
         public int LeaCode { get; set; }
 
-        [Required]
-        [StringLength(128)]
-        public string Name { get; set; }
+        [Required] [StringLength(128)] public string Name { get; set; }
 
         public string Website { get; set; }
     }

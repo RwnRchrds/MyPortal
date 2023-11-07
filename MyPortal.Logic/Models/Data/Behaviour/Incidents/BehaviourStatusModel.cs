@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Models.Data.Behaviour.Incidents
         {
             Resolved = model.Resolved;
         }
-        
+
         public bool Resolved { get; set; }
     }
 }

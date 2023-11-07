@@ -7,7 +7,6 @@ namespace MyPortal.Logic.Models.Data.Agents
     {
         public AgentTypeModel(AgentType model) : base(model)
         {
-            
         }
     }
 }

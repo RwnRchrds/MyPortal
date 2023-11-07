@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Models.Data.Examinations
         {
             JcQualificationCode = model.JcQualificationCode;
         }
-        
+
         public string JcQualificationCode { get; set; }
     }
 }

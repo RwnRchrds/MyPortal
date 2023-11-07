@@ -45,37 +45,37 @@ namespace MyPortal.Logic.Models.Data.Examinations
         }
 
         public Guid BaseComponentId { get; set; }
-        
+
         public Guid ExamSeriesId { get; set; }
-        
+
         public Guid AssessmentModeId { get; set; }
 
         public Guid? ExamDateId { get; set; }
 
-        
+
         public DateTime? DateDue { get; set; }
 
-        
+
         public DateTime? DateSubmitted { get; set; }
 
 
         public bool IsTimetabled => ExamDateId.HasValue;
 
-        
+
         public int MaximumMark { get; set; }
 
         public virtual ExamBaseComponentModel BaseComponent { get; set; }
         public virtual ExamSeriesModel Series { get; set; }
         public virtual ExamAssessmentModeModel AssessmentMode { get; set; }
         public virtual ExamDateModel ExamDate { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamComponents.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

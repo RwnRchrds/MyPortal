@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace MyPortal.Database.Constants
 {
@@ -11,6 +10,4 @@ namespace MyPortal.Database.Constants
         public static Guid UnauthorisedAbsence { get; } = Guid.Parse("59036720-D349-46D3-B8A6-60FFA9263DB3");
         public static Guid AttendanceNotRequired { get; } = Guid.Parse("59036721-D349-46D3-B8A6-60FFA9263DB3");
     }
-
-
 }

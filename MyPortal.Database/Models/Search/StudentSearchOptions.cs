@@ -36,8 +36,6 @@ namespace MyPortal.Database.Models.Search
                 case StudentStatus.Future:
                     query.WhereDate($"{studentAlias}.DateStarting", ">", DateTime.Today);
                     break;
-                default:
-                    break;
             }
 
             if (SenStatusId != null)

@@ -8,7 +8,8 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class TrainingCertificateStatusRepository : BaseReadWriteRepository<TrainingCertificateStatus>, ITrainingCertificateStatusRepository
+    public class TrainingCertificateStatusRepository : BaseReadWriteRepository<TrainingCertificateStatus>,
+        ITrainingCertificateStatusRepository
     {
         public TrainingCertificateStatusRepository(DbUserWithContext dbUser) : base(dbUser)
         {

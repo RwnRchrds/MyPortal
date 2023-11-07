@@ -12,7 +12,6 @@ namespace MyPortal.Database.Repositories
     {
         public DetentionTypeRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         public async Task Update(DetentionType entity)

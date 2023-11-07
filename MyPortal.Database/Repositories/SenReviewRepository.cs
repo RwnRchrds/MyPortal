@@ -12,7 +12,6 @@ namespace MyPortal.Database.Repositories
     {
         public SenReviewRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         public async Task Update(SenReview entity)

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Data.Curriculum;
-
 using MyPortal.Logic.Models.Requests.Curriculum.Homework;
 
 namespace MyPortal.Logic.Interfaces.Services;

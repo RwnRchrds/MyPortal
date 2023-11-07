@@ -46,24 +46,21 @@ namespace MyPortal.Logic.Models.Data.Curriculum
 
         public Guid DirectoryId { get; set; }
 
-        [Required] 
-        [StringLength(256)] 
-        public string Title { get; set; }
+        [Required] [StringLength(256)] public string Title { get; set; }
 
-        [Required] 
-        public string PlanContent { get; set; }
+        [Required] public string PlanContent { get; set; }
 
         public virtual DirectoryModel Directory { get; set; }
         public virtual UserModel CreatedBy { get; set; }
         public virtual StudyTopicModel StudyTopic { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.LessonPlans.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

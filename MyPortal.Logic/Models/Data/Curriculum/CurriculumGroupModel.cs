@@ -34,14 +34,14 @@ namespace MyPortal.Logic.Models.Data.Curriculum
 
         public CurriculumBlockModel Block { get; set; }
         public StudentGroupModel StudentGroup { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.CurriculumGroups.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

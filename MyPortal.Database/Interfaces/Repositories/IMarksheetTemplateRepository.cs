@@ -2,8 +2,8 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IMarksheetTemplateRepository : IReadWriteRepository<MarksheetTemplate>, IUpdateRepository<MarksheetTemplate>
+    public interface IMarksheetTemplateRepository : IReadWriteRepository<MarksheetTemplate>,
+        IUpdateRepository<MarksheetTemplate>
     {
-        
     }
 }

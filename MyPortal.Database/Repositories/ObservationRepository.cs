@@ -17,7 +17,6 @@ namespace MyPortal.Database.Repositories
     {
         public ObservationRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)

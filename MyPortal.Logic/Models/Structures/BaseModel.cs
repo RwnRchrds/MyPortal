@@ -16,7 +16,6 @@ namespace MyPortal.Logic.Models.Structures
 
         protected BaseModel()
         {
-            
         }
 
         public Guid? Id { get; set; }
@@ -31,9 +30,8 @@ namespace MyPortal.Logic.Models.Structures
 
         protected BaseModelWithLoad()
         {
-            
         }
-        
+
         protected abstract Task LoadFromDatabase(IUnitOfWork unitOfWork);
 
         internal virtual async Task Load(IUnitOfWork unitOfWork)
@@ -70,9 +68,9 @@ namespace MyPortal.Logic.Models.Structures
         {
             Id = model.Id;
         }
-        
+
         protected virtual BaseModelWithTreeLoad ParentModel { get; set; }
-        
+
         protected abstract Task LoadFromDatabase(IUnitOfWork unitOfWork);
 
         internal virtual async Task Load(IUnitOfWork unitOfWork, bool deep = false)

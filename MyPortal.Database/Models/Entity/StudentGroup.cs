@@ -15,21 +15,17 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(10)]
         public string Code { get; set; }
 
-        [Column(Order = 5)]
-        public Guid? PromoteToGroupId { get; set; }
+        [Column(Order = 5)] public Guid? PromoteToGroupId { get; set; }
 
-        [Column(Order = 6)]
-        public Guid? MainSupervisorId { get; set; }
-        
-        [Column(Order = 7)]
-        public int? MaxMembers { get; set; }
-        
+        [Column(Order = 6)] public Guid? MainSupervisorId { get; set; }
+
+        [Column(Order = 7)] public int? MaxMembers { get; set; }
+
         [Column(Order = 8)]
         [StringLength(256)]
         public string Notes { get; set; }
-        
-        [Column(Order = 9)]
-        public bool System { get; set; }
+
+        [Column(Order = 9)] public bool System { get; set; }
 
         public virtual StudentGroup PromoteToGroup { get; set; }
         public virtual StudentGroupSupervisor MainSupervisor { get; set; }

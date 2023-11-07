@@ -14,7 +14,7 @@ public class CommentBankAreaModel : BaseModel
     {
         LoadFromModel(model);
     }
-    
+
     public void LoadFromModel(CommentBankArea model)
     {
         CommentBankId = model.CommentBankId;
@@ -37,18 +37,16 @@ public class CommentBankAreaModel : BaseModel
         if (Id.HasValue)
         {
             var commentBankArea = await unitOfWork.CommentBankAreas.GetById(Id.Value);
-            
+
             LoadFromModel(commentBankArea);
         }
     }
 
     public Guid CommentBankId { get; set; }
-    
+
     public Guid CourseId { get; set; }
-    
-    [Required]
-    [StringLength(256)]
-    public string Name { get; set; }
+
+    [Required] [StringLength(256)] public string Name { get; set; }
 
     public virtual CommentBankModel CommentBank { get; set; }
     public virtual CourseModel Course { get; set; }

@@ -12,7 +12,6 @@ namespace MyPortal.Database.Repositories
     {
         public CommentBankRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         public async Task Update(CommentBank entity)

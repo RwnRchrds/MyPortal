@@ -36,19 +36,19 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 Series = new ExamSeriesModel(model.Series);
             }
         }
-        
+
         public Guid AssessmentId { get; set; }
-        
+
         public Guid AspectId { get; set; }
-        
+
         public Guid SeriesId { get; set; }
-        
+
         public int AspectOrder { get; set; }
 
         public virtual AspectModel Aspect { get; set; }
         public virtual ExamAssessmentModel Assessment { get; set; }
         public virtual ExamSeriesModel Series { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

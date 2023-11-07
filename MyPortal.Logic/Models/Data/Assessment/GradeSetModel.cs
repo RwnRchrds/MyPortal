@@ -12,10 +12,8 @@ namespace MyPortal.Logic.Models.Data.Assessment
             System = model.System;
         }
 
-        [Required]
-        [StringLength(256)]
-        public string Name { get; set; }
-        
+        [Required] [StringLength(256)] public string Name { get; set; }
+
         public bool System { get; set; }
     }
 }

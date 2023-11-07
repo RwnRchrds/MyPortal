@@ -28,12 +28,13 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 Series = new ExamSeriesModel(model.Series);
             }
         }
-        
+
         public Guid AwardId { get; set; }
         public Guid SeriesId { get; set; }
 
         public virtual ExamAwardModel Award { get; set; }
         public virtual ExamSeriesModel Series { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

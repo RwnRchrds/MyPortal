@@ -19,7 +19,6 @@ namespace MyPortal.Database.Repositories
     {
         public DiaryEventAttendeeRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         protected override Query JoinRelated(Query query)

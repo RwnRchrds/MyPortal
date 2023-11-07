@@ -35,22 +35,23 @@ namespace MyPortal.Logic.Models.Data.Curriculum
                 Role = new SubjectStaffMemberRoleModel(model.Role);
             }
         }
-        
+
         public Guid SubjectId { get; set; }
-        
+
         public Guid StaffMemberId { get; set; }
-        
+
         public Guid RoleId { get; set; }
 
         public virtual SubjectModel Subject { get; set; }
         public virtual StaffMemberModel StaffMember { get; set; }
         public virtual SubjectStaffMemberRoleModel Role { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.SubjectStaffMembers.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

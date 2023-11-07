@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {

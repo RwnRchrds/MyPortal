@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
-using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Constants;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Attendance.Register;
 using MyPortal.Logic.Models.Requests.Attendance;
@@ -132,7 +130,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var register = await _attendanceService.GetRegisterByStudentGroup(model.StudentGroupId,
                     model.AttendanceWeekId, model.PeriodId);
-                
+
                 return Ok(register);
             }
             catch (Exception e)
@@ -152,7 +150,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var register =
                     await _attendanceService.GetRegisterByDateRange(model.StudentGroupId, model.DateFrom, model.DateTo);
-                
+
                 return Ok(register);
             }
             catch (Exception e)

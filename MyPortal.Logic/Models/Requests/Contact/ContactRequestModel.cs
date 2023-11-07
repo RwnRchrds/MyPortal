@@ -6,14 +6,11 @@ namespace MyPortal.Logic.Models.Requests.Contact
     public class ContactRequestModel : PersonRequestModel
     {
         public bool ParentalBallot { get; set; }
-        
-        [StringLength(256)]
-        public string PlaceOfWork { get; set; }
-        
-        [StringLength(256)]
-        public string JobTitle { get; set; }
-        
-        [StringLength(128)]
-        public string NiNumber { get; set; }
+
+        [StringLength(256)] public string PlaceOfWork { get; set; }
+
+        [StringLength(256)] public string JobTitle { get; set; }
+
+        [StringLength(128)] public string NiNumber { get; set; }
     }
 }

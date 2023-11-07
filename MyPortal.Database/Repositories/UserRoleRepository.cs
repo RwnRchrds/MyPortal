@@ -55,7 +55,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Where($"U.Id", userId);
+            query.Where("U.Id", userId);
 
             return await ExecuteQuery(query);
         }

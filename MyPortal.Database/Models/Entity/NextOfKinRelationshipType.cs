@@ -8,8 +8,7 @@ namespace MyPortal.Database.Models.Entity
     [Table("NextOfKinRelationshipTypes")]
     public class NextOfKinRelationshipType : LookupItem, ISystemEntity
     {
-        [Column(Order = 4)]
-        public bool System { get; set; }
+        [Column(Order = 4)] public bool System { get; set; }
 
         public virtual ICollection<NextOfKin> NextOfKin { get; set; }
     }

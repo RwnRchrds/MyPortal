@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
@@ -15,8 +13,7 @@ namespace MyPortal.Database.Models.Entity
             Students = new HashSet<Student>();
         }
 
-        [Column(Order = 4)]
-        public string Code { get; set; }
+        [Column(Order = 4)] public string Code { get; set; }
 
         public virtual ICollection<Student> Students { get; set; }
     }

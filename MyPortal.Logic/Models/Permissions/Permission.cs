@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyPortal.Database.Enums;
+﻿using MyPortal.Database.Enums;
 
 namespace MyPortal.Logic.Models.Permissions
 {

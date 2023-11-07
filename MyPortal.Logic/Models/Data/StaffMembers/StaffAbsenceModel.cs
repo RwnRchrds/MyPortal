@@ -38,30 +38,31 @@ namespace MyPortal.Logic.Models.Data.StaffMembers
                 IllnessType = new StaffIllnessTypeModel(model.IllnessType);
             }
         }
-        
+
         public Guid StaffMemberId { get; set; }
-        
+
         public Guid AbsenceTypeId { get; set; }
-        
+
         public Guid? IllnessTypeId { get; set; }
-        
+
         public DateTime StartDate { get; set; }
-        
+
         public DateTime EndDate { get; set; }
 
         public bool Confidential { get; set; }
-        
+
         public string Notes { get; set; }
 
         public virtual StaffMemberModel StaffMember { get; set; }
         public virtual StaffAbsenceTypeModel AbsenceType { get; set; }
         public virtual StaffIllnessTypeModel IllnessType { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.StaffAbsences.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

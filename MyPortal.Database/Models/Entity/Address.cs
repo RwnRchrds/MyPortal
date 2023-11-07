@@ -54,9 +54,8 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(128)]
         public string Country { get; set; }
 
-        [Column(Order = 11)]
-        public bool Validated { get; set; }
-        
+        [Column(Order = 11)] public bool Validated { get; set; }
+
         public virtual ICollection<AddressAgency> AddressAgencies { get; set; }
         public virtual ICollection<AddressPerson> AddressPeople { get; set; }
     }

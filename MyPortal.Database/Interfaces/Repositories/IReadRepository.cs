@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories

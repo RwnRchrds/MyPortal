@@ -34,25 +34,25 @@ namespace MyPortal.Logic.Models.Data.Contacts
                 Type = new EmailAddressTypeModel(model.Type);
             }
         }
-        
+
         public Guid TypeId { get; set; }
-        
+
         public Guid? PersonId { get; set; }
-        
+
         public Guid? AgencyId { get; set; }
-        
+
         [Required]
         [EmailAddress]
         [StringLength(128)]
         public string Address { get; set; }
-        
+
         public bool Main { get; set; }
-        
+
         public string Notes { get; set; }
 
         public virtual PersonModel Person { get; set; }
         public virtual EmailAddressTypeModel Type { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

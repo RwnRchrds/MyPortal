@@ -9,7 +9,8 @@ namespace MyPortal.Database.Models.Entity
     [Table("ResultSets")]
     public class ResultSet : LookupItem
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ResultSet()
         {
             Results = new HashSet<Result>();
@@ -20,13 +21,11 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(256)]
         public string Name { get; set; }
 
-        [Column(Order = 5, TypeName = "date")] 
-        public DateTime? PublishDate { get; set; }
-        
-        [Column(Order = 6)] 
-        public bool Locked { get; set; }
+        [Column(Order = 5, TypeName = "date")] public DateTime? PublishDate { get; set; }
 
-        
+        [Column(Order = 6)] public bool Locked { get; set; }
+
+
         public virtual ICollection<Result> Results { get; set; }
         public virtual ICollection<ExamSeason> ExamSeasons { get; set; }
         public virtual ICollection<ExamResultEmbargo> ExamResultEmbargoes { get; set; }

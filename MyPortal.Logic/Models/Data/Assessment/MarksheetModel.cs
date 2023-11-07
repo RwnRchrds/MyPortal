@@ -33,20 +33,21 @@ namespace MyPortal.Logic.Models.Data.Assessment
 
         public string Name => $"{Template.Name} ({StudentGroup.Code})";
 
-        public bool Completed { get; set; } 
+        public bool Completed { get; set; }
 
         public Guid MarksheetTemplateId { get; set; }
         public Guid StudentGroupId { get; set; }
 
         public virtual MarksheetTemplateModel Template { get; set; }
         public virtual StudentGroupModel StudentGroup { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Marksheets.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

@@ -37,14 +37,15 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var parentEvenings = await DbUser.Transaction.Connection.QueryAsync<ParentEvening, DiaryEvent, ParentEvening>(
-                sql.Sql,
-                (evening, diaryEvent) =>
-                {
-                    evening.Event = diaryEvent;
+            var parentEvenings =
+                await DbUser.Transaction.Connection.QueryAsync<ParentEvening, DiaryEvent, ParentEvening>(
+                    sql.Sql,
+                    (evening, diaryEvent) =>
+                    {
+                        evening.Event = diaryEvent;
 
-                    return evening;
-                }, sql.NamedBindings, DbUser.Transaction);
+                        return evening;
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return parentEvenings;
         }

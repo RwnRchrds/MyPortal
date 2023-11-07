@@ -13,7 +13,7 @@ namespace MyPortal.Logic.Models.Data.Documents
             General = model.General;
             Sen = model.Sen;
         }
-        
+
         public bool Staff { get; set; }
         public bool Student { get; set; }
         public bool Contact { get; set; }

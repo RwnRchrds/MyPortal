@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Linq;
 using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +11,9 @@ using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Settings;
 using MyPortal.Logic.Models.Response;
-using MyPortalWeb.Models.Response;
 
 namespace MyPortalWeb.Controllers.BaseControllers
 {
-
     [Authorize]
     [ApiController]
     public abstract class BaseApiController : ControllerBase
@@ -36,8 +31,9 @@ namespace MyPortalWeb.Controllers.BaseControllers
         }
 
         protected string PermissionMessage => "You do not have permission to access this resource.";
-        
-        protected async Task<bool> UserHasPermission(PermissionRequirement requirement, params PermissionValue[] permissionValues)
+
+        protected async Task<bool> UserHasPermission(PermissionRequirement requirement,
+            params PermissionValue[] permissionValues)
         {
             return await User.HasPermission(UserService, requirement, permissionValues);
         }
@@ -76,7 +72,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
                     break;
             }
 
-            return Error((int) statusCode, message);
+            return Error((int)statusCode, message);
         }
 
         protected IActionResult PermissionError()
@@ -87,7 +83,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
         protected IActionResult Error(int statusCode, string errorMessage)
         {
             var error = new ErrorResponseModel(errorMessage);
-            
+
             return StatusCode(statusCode, error);
         }
 

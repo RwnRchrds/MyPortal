@@ -32,25 +32,25 @@ namespace MyPortal.Logic.Models.Data.People
                 MedicalCondition = new MedicalConditionModel(model.MedicalCondition);
             }
         }
-        
+
         public Guid PersonId { get; set; }
 
         public Guid ConditionId { get; set; }
 
         public bool MedicationTaken { get; set; }
 
-        [StringLength(256)]
-        public string Medication { get; set; }
+        [StringLength(256)] public string Medication { get; set; }
 
         public virtual PersonModel Person { get; set; }
         public virtual MedicalConditionModel MedicalCondition { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.PersonConditions.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

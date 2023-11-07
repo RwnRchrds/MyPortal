@@ -9,7 +9,7 @@ public class EncryptionResult
         Data = data;
         Iv = iv;
     }
-    
+
     public byte[] Data { get; private set; }
     public byte[] Iv { get; private set; }
 

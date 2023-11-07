@@ -7,7 +7,6 @@ namespace MyPortal.Logic.Models.Data.Students.SEND
     {
         public SenReviewTypeModel(SenReviewType model) : base(model)
         {
-            
         }
     }
 }

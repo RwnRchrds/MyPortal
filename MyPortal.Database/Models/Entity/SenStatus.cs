@@ -7,7 +7,7 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models.Entity
 {
     [Table("SenStatus")]
-    public partial class SenStatus : LookupItem, ICensusEntity
+    public class SenStatus : LookupItem, ICensusEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
             "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,7 +21,7 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(1)]
         public string Code { get; set; }
 
-        
+
         public virtual ICollection<Student> Students { get; set; }
         public virtual ICollection<SenReview> SenReviews { get; set; }
     }

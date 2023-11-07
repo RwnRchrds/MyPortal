@@ -8,7 +8,8 @@ using MyPortal.Database.Repositories.Base;
 
 namespace MyPortal.Database.Repositories
 {
-    public class StudentChargeDiscountRepository : BaseReadWriteRepository<StudentChargeDiscount>, IStudentChargeDiscountRepository
+    public class StudentChargeDiscountRepository : BaseReadWriteRepository<StudentChargeDiscount>,
+        IStudentChargeDiscountRepository
     {
         public StudentChargeDiscountRepository(DbUserWithContext dbUser) : base(dbUser)
         {

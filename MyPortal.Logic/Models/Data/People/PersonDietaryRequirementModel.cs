@@ -29,20 +29,21 @@ namespace MyPortal.Logic.Models.Data.People
                 DietaryRequirement = new DietaryRequirementModel(model.DietaryRequirement);
             }
         }
-        
+
         public Guid PersonId { get; set; }
 
         public Guid DietaryRequirementId { get; set; }
 
         public virtual DietaryRequirementModel DietaryRequirement { get; set; }
         public virtual PersonModel Person { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.PersonDietaryRequirements.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

@@ -32,25 +32,26 @@ namespace MyPortal.Logic.Models.Data.Students
                 Student = new StudentModel(model.Student);
             }
         }
-        
+
         public Guid ParentEveningStaffId { get; set; }
-        
+
         public Guid StudentId { get; set; }
-        
+
         public DateTime Start { get; set; }
-        
+
         public DateTime End { get; set; }
-        
+
         public bool? Attended { get; set; }
 
         public ParentEveningStaffMemberModel ParentEveningStaffMember { get; set; }
         public StudentModel Student { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ParentEveningAppointments.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

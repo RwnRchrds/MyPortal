@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-namespace MyPortal.Database.Constants
+﻿namespace MyPortal.Database.Constants
 {
     public static class ApplicationClaimTypes
     {

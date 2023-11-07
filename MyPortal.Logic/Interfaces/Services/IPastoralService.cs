@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using MyPortal.Logic.Models.Data.Curriculum;
 
-
 namespace MyPortal.Logic.Interfaces.Services;
 
 public interface IPastoralService : IService

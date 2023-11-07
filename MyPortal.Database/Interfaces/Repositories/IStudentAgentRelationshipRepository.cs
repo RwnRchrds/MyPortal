@@ -2,8 +2,8 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IStudentAgentRelationshipRepository : IReadWriteRepository<StudentAgentRelationship>, IUpdateRepository<StudentAgentRelationship>
+    public interface IStudentAgentRelationshipRepository : IReadWriteRepository<StudentAgentRelationship>,
+        IUpdateRepository<StudentAgentRelationship>
     {
-        
     }
 }

@@ -10,13 +10,12 @@ namespace MyPortal.Database.BaseTypes
         {
             Active = true;
         }
-        
+
         [Required]
         [Column(Order = 2)]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [Column(Order = 3)]
-        public bool Active { get; set; }
+        [Column(Order = 3)] public bool Active { get; set; }
     }
 }

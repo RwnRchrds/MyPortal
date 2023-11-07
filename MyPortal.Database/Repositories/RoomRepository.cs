@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
@@ -39,12 +37,13 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var rooms = await DbUser.Transaction.Connection.QueryAsync<Room, BuildingFloor, Room>(sql.Sql, (room, floor) =>
-            {
-                room.BuildingFloor = floor;
+            var rooms = await DbUser.Transaction.Connection.QueryAsync<Room, BuildingFloor, Room>(sql.Sql,
+                (room, floor) =>
+                {
+                    room.BuildingFloor = floor;
 
-                return room;
-            }, sql.NamedBindings, DbUser.Transaction);
+                    return room;
+                }, sql.NamedBindings, DbUser.Transaction);
 
             return rooms;
         }
@@ -64,7 +63,6 @@ namespace MyPortal.Database.Repositories
             room.MaxGroupSize = entity.MaxGroupSize;
             room.TelephoneNo = entity.TelephoneNo;
             room.ExcludeFromCover = entity.ExcludeFromCover;
-            
         }
     }
 }

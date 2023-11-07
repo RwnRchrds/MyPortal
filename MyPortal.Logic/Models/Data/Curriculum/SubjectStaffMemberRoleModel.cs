@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Models.Data.Curriculum
         {
             SubjectLeader = model.SubjectLeader;
         }
-        
+
         public bool SubjectLeader { get; set; }
     }
 }

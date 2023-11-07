@@ -10,7 +10,7 @@ namespace MyPortal.Logic.Models.Data.Students
             ColourCode = model.ColourCode;
             IconClass = model.IconClass;
         }
-        
+
         public string ColourCode { get; set; }
         public string IconClass { get; set; }
     }

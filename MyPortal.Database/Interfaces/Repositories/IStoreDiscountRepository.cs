@@ -4,6 +4,5 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IStoreDiscountRepository : IReadWriteRepository<StoreDiscount>, IUpdateRepository<StoreDiscount>
     {
-
     }
 }

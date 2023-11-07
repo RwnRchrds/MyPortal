@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Middleware;
 
 namespace MyPortal.Logic.Extensions;

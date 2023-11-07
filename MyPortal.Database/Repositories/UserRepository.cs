@@ -16,7 +16,6 @@ namespace MyPortal.Database.Repositories
     {
         public UserRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         protected override Query JoinRelated(Query query)

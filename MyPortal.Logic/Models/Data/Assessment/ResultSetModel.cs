@@ -11,10 +11,8 @@ namespace MyPortal.Logic.Models.Data.Assessment
             Name = model.Name;
             Locked = model.Locked;
         }
-        
-        [Required]
-        [StringLength(256)]
-        public string Name { get; set; }
+
+        [Required] [StringLength(256)] public string Name { get; set; }
 
         public bool Locked { get; set; }
     }

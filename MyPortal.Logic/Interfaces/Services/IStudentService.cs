@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Audit;
 using MyPortal.Logic.Models.Data.Students;
-
 using MyPortal.Logic.Models.Requests.Student;
 using MyPortal.Logic.Models.Summary;
 

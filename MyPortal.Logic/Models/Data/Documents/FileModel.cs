@@ -13,13 +13,10 @@ namespace MyPortal.Logic.Models.Data.Documents
             ContentType = model.ContentType;
         }
 
-        [Required]
-        public string FileId { get; set; }
+        [Required] public string FileId { get; set; }
 
-        [Required]
-        public string FileName { get; set; }
+        [Required] public string FileName { get; set; }
 
-        [Required]
-        public string ContentType { get; set; }
+        [Required] public string ContentType { get; set; }
     }
 }

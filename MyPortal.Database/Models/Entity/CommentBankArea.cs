@@ -7,13 +7,11 @@ namespace MyPortal.Database.Models.Entity;
 
 [Table("CommentBankAreas")]
 public class CommentBankArea : BaseTypes.Entity
-{ 
-    [Column(Order = 2)]
-    public Guid CommentBankId { get; set; }
-    
-    [Column(Order = 3)]
-    public Guid CourseId { get; set; }
-    
+{
+    [Column(Order = 2)] public Guid CommentBankId { get; set; }
+
+    [Column(Order = 3)] public Guid CourseId { get; set; }
+
     [Required]
     [StringLength(256)]
     [Column(Order = 4)]

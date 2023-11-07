@@ -10,11 +10,11 @@ namespace MyPortal.Logic.Models.Structures
             Description = model.Description;
             Active = model.Active;
         }
-        
+
         [Required(ErrorMessage = "Description is required.")]
         [StringLength(256)]
         public string Description { get; set; }
-        
+
         public bool Active { get; set; }
     }
 
@@ -25,11 +25,11 @@ namespace MyPortal.Logic.Models.Structures
             Description = model.Description;
             Active = model.Active;
         }
-        
+
         [Required(ErrorMessage = "Description is required.")]
         [StringLength(256)]
         public string Description { get; set; }
-        
+
         public bool Active { get; set; }
     }
 }

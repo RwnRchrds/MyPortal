@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Logic.Models.Data.Students;
-
 using MyPortal.Logic.Models.Requests.Student.LogNotes;
 
 namespace MyPortal.Logic.Interfaces.Services

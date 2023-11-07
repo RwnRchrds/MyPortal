@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Models.Data.Behaviour.Incidents
         {
             DefaultPoints = model.DefaultPoints;
         }
-        
+
         public int DefaultPoints { get; set; }
     }
 }

@@ -30,26 +30,27 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 Room = new ExamRoomModel(model.Room);
             }
         }
-        
+
         public Guid ComponentId { get; set; }
-        
+
         public Guid ExamRoomId { get; set; }
-        
+
         public DateTime ExamDate { get; set; }
-        
+
         public TimeSpan? ActualStartTime { get; set; }
-        
+
         public int ExtraTimePercent { get; set; }
 
         public virtual ExamComponentModel Component { get; set; }
         public virtual ExamRoomModel Room { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamComponentSittings.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

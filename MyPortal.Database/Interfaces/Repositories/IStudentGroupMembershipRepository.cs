@@ -5,8 +5,10 @@ using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IStudentGroupMembershipRepository : IReadWriteRepository<StudentGroupMembership>, IUpdateRepository<StudentGroupMembership>
+    public interface IStudentGroupMembershipRepository : IReadWriteRepository<StudentGroupMembership>,
+        IUpdateRepository<StudentGroupMembership>
     {
-        Task<IEnumerable<StudentGroupMembership>> GetMembershipsByGroup(Guid studentGroupId, DateTime dateFrom, DateTime dateTo);
+        Task<IEnumerable<StudentGroupMembership>> GetMembershipsByGroup(Guid studentGroupId, DateTime dateFrom,
+            DateTime dateTo);
     }
 }

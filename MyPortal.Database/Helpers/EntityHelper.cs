@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Security.Principal;
-using System.Text;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Helpers
@@ -110,14 +106,15 @@ namespace MyPortal.Database.Helpers
             var props = new List<PropertyInfo>();
 
             props.AddRange(t.GetProperties().Where(p => Attribute.IsDefined(p, typeof(ColumnAttribute))).OrderBy(p =>
-                ((ColumnAttribute) Attribute.GetCustomAttribute(p, typeof(ColumnAttribute)))?.Order).ToList());
+                ((ColumnAttribute)Attribute.GetCustomAttribute(p, typeof(ColumnAttribute)))?.Order).ToList());
 
             return props;
         }
 
-        internal static string GetTableName(Type t, out string outputAlias, string tblAlias = null, bool includeSchema = false, string schema = "dbo")
+        internal static string GetTableName(Type t, out string outputAlias, string tblAlias = null,
+            bool includeSchema = false, string schema = "dbo")
         {
-            var entityTable = ((TableAttribute) t.GetCustomAttribute(typeof(TableAttribute)))?.Name ?? t.Name;
+            var entityTable = ((TableAttribute)t.GetCustomAttribute(typeof(TableAttribute)))?.Name ?? t.Name;
 
             if (!string.IsNullOrWhiteSpace(tblAlias))
             {
@@ -125,9 +122,9 @@ namespace MyPortal.Database.Helpers
 
                 if (includeSchema)
                 {
-                    return $"{schema}.{entityTable}";   
+                    return $"{schema}.{entityTable}";
                 }
-                
+
                 return $"{entityTable}";
             }
 
@@ -136,9 +133,9 @@ namespace MyPortal.Database.Helpers
 
             if (includeSchema)
             {
-                return $"{schema}.{entityTable}";   
+                return $"{schema}.{entityTable}";
             }
-            
+
             return $"{entityTable}";
         }
 

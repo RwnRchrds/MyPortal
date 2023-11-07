@@ -2,8 +2,8 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IRoomClosureReasonRepository : IReadWriteRepository<RoomClosureReason>, IUpdateRepository<RoomClosureReason>
+    public interface IRoomClosureReasonRepository : IReadWriteRepository<RoomClosureReason>,
+        IUpdateRepository<RoomClosureReason>
     {
-        
     }
 }

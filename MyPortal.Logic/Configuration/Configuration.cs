@@ -4,7 +4,8 @@ using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 
-[assembly:InternalsVisibleTo("MyPortal.Tests")]
+[assembly: InternalsVisibleTo("MyPortal.Tests")]
+
 namespace MyPortal.Logic.Configuration
 {
     public class Configuration
@@ -85,10 +86,7 @@ namespace MyPortal.Logic.Configuration
         public DatabaseProvider DatabaseProvider
         {
             get { return _databaseProvider; }
-            private set
-            {
-                _databaseProvider = value;
-            }
+            private set { _databaseProvider = value; }
         }
 
         public string ConnectionString
@@ -104,10 +102,7 @@ namespace MyPortal.Logic.Configuration
         public string FileEncryptionKey
         {
             get { return _fileEncryptionKey; }
-            internal set
-            {
-                _fileEncryptionKey = value;
-            }
+            internal set { _fileEncryptionKey = value; }
         }
 
         public FileProvider FileProvider

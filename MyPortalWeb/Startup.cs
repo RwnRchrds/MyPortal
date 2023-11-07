@@ -22,10 +22,7 @@ namespace MyPortalWeb
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMyPortal(builder =>
-            {
-                builder.FromConfig(Configuration);
-            });
+            services.AddMyPortal(builder => { builder.FromConfig(Configuration); });
 
             services.AddControllers();
             services.AddCors();
@@ -74,7 +71,7 @@ namespace MyPortalWeb
             app.UseAuthentication();
             app.UseIdentityServer();
             app.UseAuthorization();
-            
+
             app.UseMyPortal();
 
             //app.UseDefaultFiles();

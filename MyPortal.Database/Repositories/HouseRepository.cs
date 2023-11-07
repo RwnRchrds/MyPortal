@@ -12,9 +12,8 @@ namespace MyPortal.Database.Repositories
     {
         public HouseRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-           
         }
-        
+
         public async Task Update(House entity)
         {
             var house = await DbUser.Context.Houses.FirstOrDefaultAsync(x => x.Id == entity.Id);
@@ -23,7 +22,7 @@ namespace MyPortal.Database.Repositories
             {
                 throw new EntityNotFoundException("House not found.");
             }
-            
+
             house.ColourCode = entity.ColourCode;
         }
     }

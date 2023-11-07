@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -25,7 +23,7 @@ namespace MyPortal.Logic.Helpers
 
         public async Task Purge(object key)
         {
-            if (!_cache.TryGetValue(key, out _))// Look for cache key.
+            if (!_cache.TryGetValue(key, out _)) // Look for cache key.
             {
                 SemaphoreSlim mylock = _locks.GetOrAdd(key, k => new SemaphoreSlim(1, 1));
 
@@ -44,7 +42,8 @@ namespace MyPortal.Logic.Helpers
             }
         }
 
-        public async Task<TItem> GetOrCreate(object key, Func<Task<TItem>> createItem, TimeSpan? cacheEntryLifespan = null)
+        public async Task<TItem> GetOrCreate(object key, Func<Task<TItem>> createItem,
+            TimeSpan? cacheEntryLifespan = null)
         {
             if (!cacheEntryLifespan.HasValue)
             {
@@ -52,7 +51,7 @@ namespace MyPortal.Logic.Helpers
                 cacheEntryLifespan = TimeSpan.FromHours(8);
             }
 
-            if (!_cache.TryGetValue(key, out TItem cacheEntry))// Look for cache key.
+            if (!_cache.TryGetValue(key, out TItem cacheEntry)) // Look for cache key.
             {
                 SemaphoreSlim mylock = _locks.GetOrAdd(key, k => new SemaphoreSlim(1, 1));
 
@@ -74,6 +73,7 @@ namespace MyPortal.Logic.Helpers
                     mylock.Release();
                 }
             }
+
             return cacheEntry;
         }
     }

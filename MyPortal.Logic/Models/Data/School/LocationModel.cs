@@ -11,10 +11,8 @@ namespace MyPortal.Logic.Models.Data.School
             Description = model.Description;
             System = model.System;
         }
-        
-        [Required]
-        [StringLength(128)]
-        public string Description { get; set; }
+
+        [Required] [StringLength(128)] public string Description { get; set; }
 
         public bool System { get; set; }
     }

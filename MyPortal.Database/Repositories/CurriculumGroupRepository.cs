@@ -60,7 +60,7 @@ namespace MyPortal.Database.Repositories
             {
                 throw new EntityNotFoundException("Curriculum group not found.");
             }
-            
+
             group.BlockId = entity.BlockId;
         }
     }

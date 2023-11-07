@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
-using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Students;
 using MyPortal.Logic.Models.Requests.Student.LogNotes;
@@ -25,7 +22,7 @@ namespace MyPortalWeb.Controllers.Api
         private readonly IAcademicYearService _academicYearService;
 
         public LogNotesController(IUserService userService, IPersonService personService,
-            IStudentService studentService, ILogNoteService logNoteService, IAcademicYearService academicYearService) 
+            IStudentService studentService, ILogNoteService logNoteService, IAcademicYearService academicYearService)
             : base(userService, personService, studentService)
         {
             _academicYearService = academicYearService;
@@ -101,13 +98,19 @@ namespace MyPortalWeb.Controllers.Api
                         academicYearId = (await _academicYearService.GetCurrentAcademicYear(true)).Id;
                     }
 
-                    var viewRestricted = User.IsType(UserTypes.Staff);
-                    
-                    var logNotes = await _logNoteService.GetLogNotesByStudent(studentId, academicYearId.Value, viewRestricted);
+                    if (academicYearId.HasValue)
+                    {
+                        var viewRestricted = User.IsType(UserTypes.Staff);
 
-                    var result = logNotes;
+                        var logNotes =
+                            await _logNoteService.GetLogNotesByStudent(studentId, academicYearId.Value, viewRestricted);
 
-                    return Ok(result);
+                        var result = logNotes;
+
+                        return Ok(result);
+                    }
+
+                    return BadRequest("Academic year not found.");
                 }
 
                 return PermissionError();

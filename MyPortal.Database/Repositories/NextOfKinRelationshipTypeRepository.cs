@@ -5,7 +5,8 @@ using MyPortal.Database.Repositories.Base;
 
 namespace MyPortal.Database.Repositories
 {
-    public class NextOfKinRelationshipTypeRepository : BaseReadRepository<NextOfKinRelationshipType>, INextOfKinRelationshipTypeRepository
+    public class NextOfKinRelationshipTypeRepository : BaseReadRepository<NextOfKinRelationshipType>,
+        INextOfKinRelationshipTypeRepository
     {
         public NextOfKinRelationshipTypeRepository(DbUser dbUser) : base(dbUser)
         {

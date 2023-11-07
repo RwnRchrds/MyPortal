@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,7 +13,7 @@ namespace MyPortal.Database.Models.Entity
             Periods = new HashSet<AttendancePeriod>();
         }
 
-        [Column(Order = 2)] 
+        [Column(Order = 2)]
         [Required]
         [StringLength(128)]
         public string Description { get; set; }

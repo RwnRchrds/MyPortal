@@ -17,7 +17,6 @@ namespace MyPortal.Database.Repositories
     {
         public PersonConditionRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-           
         }
 
         protected override Query JoinRelated(Query query)
@@ -41,15 +40,16 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var personConditions =
-                await DbUser.Transaction.Connection.QueryAsync<PersonCondition, Person, MedicalCondition, PersonCondition>(
-                    sql.Sql,
-                    (pc, person, condition) =>
-                    {
-                        pc.Person = person;
-                        pc.MedicalCondition = condition;
+                await DbUser.Transaction.Connection
+                    .QueryAsync<PersonCondition, Person, MedicalCondition, PersonCondition>(
+                        sql.Sql,
+                        (pc, person, condition) =>
+                        {
+                            pc.Person = person;
+                            pc.MedicalCondition = condition;
 
-                        return pc;
-                    }, sql.NamedBindings, DbUser.Transaction);
+                            return pc;
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return personConditions;
         }

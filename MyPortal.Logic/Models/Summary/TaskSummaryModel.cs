@@ -2,7 +2,6 @@
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Data.People;
 
-
 namespace MyPortal.Logic.Models.Summary
 {
     public class TaskSummaryModel
@@ -20,8 +19,9 @@ namespace MyPortal.Logic.Models.Summary
         {
             if (model.Id.HasValue)
             {
-                Id = model.Id.Value;   
+                Id = model.Id.Value;
             }
+
             DueDate = model.DueDate;
             AssignedByName = model.CreatedBy.GetDisplayName(NameFormat.FullNameAbbreviated);
             TaskTypeName = model.Type?.Description;

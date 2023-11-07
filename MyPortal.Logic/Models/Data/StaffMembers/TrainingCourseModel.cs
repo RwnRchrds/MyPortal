@@ -11,13 +11,9 @@ namespace MyPortal.Logic.Models.Data.StaffMembers
             Code = model.Code;
             Name = model.Name;
         }
-        
-        [Required]
-        [StringLength(128)]
-        public string Code { get; set; }
-        
-        [Required]
-        [StringLength(128)]
-        public string Name { get; set; }
+
+        [Required] [StringLength(128)] public string Code { get; set; }
+
+        [Required] [StringLength(128)] public string Name { get; set; }
     }
 }

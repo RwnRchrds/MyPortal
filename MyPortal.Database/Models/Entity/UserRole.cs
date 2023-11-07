@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
-using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models.Entity
 {

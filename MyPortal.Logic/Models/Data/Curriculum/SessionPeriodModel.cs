@@ -11,7 +11,6 @@ public class SessionPeriodModel : BaseModelWithLoad
 {
     public SessionPeriodModel(SessionPeriod model) : base(model)
     {
-        
     }
 
     private void LoadFromModel(SessionPeriod model)
@@ -29,20 +28,20 @@ public class SessionPeriodModel : BaseModelWithLoad
             Period = new AttendancePeriodModel(model.Period);
         }
     }
-    
+
     public Guid SessionId { get; set; }
     public Guid PeriodId { get; set; }
 
     public virtual SessionModel Session { get; set; }
     public virtual AttendancePeriodModel Period { get; set; }
-    
-    
+
+
     protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
     {
         if (Id.HasValue)
         {
             var model = await unitOfWork.SessionPeriods.GetById(Id.Value);
-            
+
             LoadFromModel(model);
         }
     }

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using MyPortal.Logic.Exceptions;
 
 namespace MyPortal.Logic.Helpers
@@ -14,7 +11,7 @@ namespace MyPortal.Logic.Helpers
         public static bool ValidateUpn(string upn)
         {
             upn = upn.Replace(" ", "");
-            
+
             if (upn.Length != 13)
             {
                 return false;
@@ -38,18 +35,18 @@ namespace MyPortal.Logic.Helpers
             {
                 throw new ArgumentException("Please enter the base UPN only", nameof(baseUpn));
             }
-            
+
             var alpha = new[]
             {
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'T', 'U', 'V', 'W', 'X',
                 'Y', 'Z'
             };
-            
+
             var check = 0;
 
             for (var i = 1; i < baseUpn.Length + 1; i++)
             {
-                if (int.TryParse(baseUpn[i-1].ToString(), out var x))
+                if (int.TryParse(baseUpn[i - 1].ToString(), out var x))
                 {
                     var n = x * (i + 1);
                     check += n;
@@ -88,7 +85,7 @@ namespace MyPortal.Logic.Helpers
                     return false;
                 }
             }
-                
+
             var validationResult = 11 - result % 11;
 
             if (validationResult == 10) return false;

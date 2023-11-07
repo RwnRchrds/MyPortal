@@ -40,9 +40,7 @@ public class CommentBankSectionModel : BaseModelWithLoad
 
     public Guid CommentBankAreaId { get; set; }
 
-    [Required]
-    [StringLength(256)]
-    public string Name { get; set; }
-    
+    [Required] [StringLength(256)] public string Name { get; set; }
+
     public virtual CommentBankAreaModel Area { get; set; }
 }

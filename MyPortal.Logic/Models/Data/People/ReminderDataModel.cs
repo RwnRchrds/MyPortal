@@ -1,6 +1,4 @@
 ﻿using System;
-using MyPortal.Logic.Constants;
-using MyPortal.Logic.Enums;
 
 namespace MyPortal.Logic.Models.Data.People;
 

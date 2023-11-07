@@ -10,6 +10,6 @@ public class AuditAction : BaseTypes.LookupItem
     {
         AuditLogs = new HashSet<AuditLog>();
     }
-    
+
     public virtual ICollection<AuditLog> AuditLogs { get; set; }
 }

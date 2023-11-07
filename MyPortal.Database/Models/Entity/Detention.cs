@@ -12,14 +12,11 @@ namespace MyPortal.Database.Models.Entity
             Students = new HashSet<StudentDetention>();
         }
 
-        [Column(Order = 2)]
-        public Guid DetentionTypeId { get; set; }
+        [Column(Order = 2)] public Guid DetentionTypeId { get; set; }
 
-        [Column(Order = 3)]
-        public Guid EventId { get; set; }
+        [Column(Order = 3)] public Guid EventId { get; set; }
 
-        [Column(Order = 4)]
-        public Guid? SupervisorId { get; set; }
+        [Column(Order = 4)] public Guid? SupervisorId { get; set; }
 
         public virtual DetentionType Type { get; set; }
         public virtual DiaryEvent Event { get; set; }

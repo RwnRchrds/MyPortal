@@ -29,13 +29,14 @@ namespace MyPortal.Logic.Models.Data.Contacts
                 Person = new PersonModel(model.Person);
             }
         }
-        
+
         public Guid AddressId { get; set; }
 
         public Guid? PersonId { get; set; }
 
         public virtual AddressModel Address { get; set; }
         public virtual PersonModel Person { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

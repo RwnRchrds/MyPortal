@@ -56,24 +56,23 @@ namespace MyPortal.Logic.Models.Data.Students.SEND
                 ReviewType = new SenReviewTypeModel(model.ReviewType);
             }
         }
-        
+
         public Guid StudentId { get; set; }
-        
+
         public Guid ReviewTypeId { get; set; }
-        
+
         public Guid ReviewStatusId { get; set; }
-        
+
         public Guid? SencoId { get; set; }
-        
+
         public Guid EventId { get; set; }
-        
+
         public Guid? OutcomeSenStatusId { get; set; }
-        
-        [StringLength(256)]
-        public string Comments { get; set; }
+
+        [StringLength(256)] public string Comments { get; set; }
 
         public virtual StudentModel Student { get; set; }
-        
+
         public virtual StaffMemberModel Senco { get; set; }
 
         public virtual DiaryEventModel Event { get; set; }
@@ -83,13 +82,13 @@ namespace MyPortal.Logic.Models.Data.Students.SEND
         public virtual SenReviewStatusModel ReviewStatus { get; set; }
 
         public virtual SenReviewTypeModel ReviewType { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.SenReviews.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

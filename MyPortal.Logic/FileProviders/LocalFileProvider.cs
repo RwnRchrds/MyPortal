@@ -36,7 +36,7 @@ namespace MyPortal.Logic.FileProviders
             var path = Path.Combine(_fileStoragePath, fileName);
 
             byte[] sourceData;
-            
+
             // Encrypt file contents before saving
 
             using (var ms = new MemoryStream())
@@ -44,7 +44,7 @@ namespace MyPortal.Logic.FileProviders
                 await upload.Attachment.CopyToAsync(ms);
                 sourceData = ms.ToArray();
             }
-            
+
             var key = Configuration.Configuration.Instance.FileEncryptionKey;
             var encryptionResult = await CryptoHelper.EncryptAsync(sourceData, key);
 
@@ -78,7 +78,7 @@ namespace MyPortal.Logic.FileProviders
             if (File.Exists(path))
             {
                 var key = Configuration.Configuration.Instance.FileEncryptionKey;
-                
+
                 var encryptedData = await File.ReadAllBytesAsync(path);
 
                 var iv = encryptedData.Take(16).ToArray();

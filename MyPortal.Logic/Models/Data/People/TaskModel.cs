@@ -56,30 +56,28 @@ namespace MyPortal.Logic.Models.Data.People
 
         public DateTime? CompletedDate { get; set; }
 
-        [Required]
-        [StringLength(128)]
-        public string Title { get; set; }
+        [Required] [StringLength(128)] public string Title { get; set; }
 
-        [StringLength(256)]
-        public string Description { get; set; }
+        [StringLength(256)] public string Description { get; set; }
 
         public bool Completed { get; set; }
 
         // Allow the assignee to edit the task
         public bool AllowEdit { get; set; }
         public bool System { get; set; }
-        
+
         public virtual PersonModel AssignedTo { get; set; }
         public virtual UserModel CreatedBy { get; set; }
         public virtual TaskTypeModel Type { get; set; }
 
         public bool Overdue => !Completed && DueDate <= DateTime.Now;
+
         protected override async System.Threading.Tasks.Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Tasks.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

@@ -6,7 +6,7 @@ namespace MyPortal.Logic.Models.Requests.Behaviour.Incidents;
 public class StudentIncidentRequestModel
 {
     public Guid IncidentId { get; set; }
-    
+
     public Guid AcademicYearId { get; set; }
 
     public Guid StudentId { get; set; }

@@ -14,7 +14,6 @@ namespace MyPortal.Database.Repositories
     {
         public RegGroupRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)

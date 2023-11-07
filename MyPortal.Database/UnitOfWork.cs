@@ -9,9 +9,7 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Connection;
-using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database
 {
@@ -235,12 +233,12 @@ namespace MyPortal.Database
                 {
                     return;
                 }
-                
+
                 _auditEnabled = value;
                 ResetRepositories();
             }
         }
-        
+
         public IAcademicTermRepository AcademicTerms =>
             _academicTerms ??= new AcademicTermRepository(GetDbUserWithContext());
 
@@ -290,7 +288,7 @@ namespace MyPortal.Database
             _attendanceCodeTypes ??= new AttendanceCodeTypeRepository(GetDbUser());
 
         public IAttendanceCodeRepository AttendanceCodes =>
-            _attendanceCodes = new AttendanceCodeRepository(GetDbUserWithContext());
+            _attendanceCodes ??= new AttendanceCodeRepository(GetDbUserWithContext());
 
         public IAttendanceMarkRepository AttendanceMarks =>
             _attendanceMarks ??= new AttendanceMarkRepository(GetDbUserWithContext());
@@ -329,7 +327,8 @@ namespace MyPortal.Database
         public IBillDiscountRepository BillDiscounts =>
             _billDiscounts ??= new BillDiscountRepository(GetDbUserWithContext());
 
-        public IBillStudentChargeRepository BillStudentCharges => _billStudentCharges ??= new BillStudentStudentChargeRepository(GetDbUserWithContext());
+        public IBillStudentChargeRepository BillStudentCharges =>
+            _billStudentCharges ??= new BillStudentStudentChargeRepository(GetDbUserWithContext());
 
         public IBoarderStatusRepository BoarderStatus => _boarderStatus ??= new BoarderStatusRepository(GetDbUser());
 
@@ -566,7 +565,8 @@ namespace MyPortal.Database
 
         public ILogNoteRepository LogNotes => _logNotes ??= new LogNoteRepository(GetDbUserWithContext());
 
-        public ILogNoteTypeRepository LogNoteTypes => _logNoteTypes ??= new LogNoteTypeRepository(GetDbUserWithContext());
+        public ILogNoteTypeRepository LogNoteTypes =>
+            _logNoteTypes ??= new LogNoteTypeRepository(GetDbUserWithContext());
 
         public IMarksheetColumnRepository MarksheetColumns =>
             _marksheetColumns ??= new MarksheetColumnRepository(GetDbUserWithContext());
@@ -622,7 +622,7 @@ namespace MyPortal.Database
 
         public IPhoneNumberTypeRepository PhoneNumberTypes =>
             _phoneNumberTypes ??= new PhoneNumberTypeRepository(GetDbUser());
-        
+
         public IPhotoRepository Photos => _photos ??= new PhotoRepository(GetDbUserWithContext());
 
         public IProductRepository Products => _products ??= new ProductRepository(GetDbUserWithContext());
@@ -786,6 +786,7 @@ namespace MyPortal.Database
             {
                 unitOfWork.AuditEnabled = true;
             }
+
             await unitOfWork.Initialise();
             return unitOfWork;
         }
@@ -809,7 +810,7 @@ namespace MyPortal.Database
                 var transaction = contextTransaction.GetDbTransaction();
                 return transaction;
             }
-            
+
             // Use this to create a transaction separate from the context
             if (!string.IsNullOrWhiteSpace(_connectionString))
             {
@@ -883,7 +884,7 @@ namespace MyPortal.Database
                 {
                     await _transaction.CommitAsync();
                 }
-                
+
                 _batchSize = 0;
             }
             catch (Exception)
@@ -892,7 +893,7 @@ namespace MyPortal.Database
                 {
                     await _transaction.RollbackAsync();
                 }
-                
+
                 throw;
             }
             finally
@@ -1117,7 +1118,7 @@ namespace MyPortal.Database
         public async ValueTask DisposeAsync()
         {
             ResetRepositories();
-            
+
             var connection = _transaction.Connection;
 
             if (_transaction != null)

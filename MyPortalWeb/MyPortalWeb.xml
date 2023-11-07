@@ -6,7 +6,7 @@
     <members>
         <member name="M:MyPortalWeb.Controllers.Api.UsersController.CreateUser(MyPortal.Logic.Models.Requests.Admin.Users.CreateUserRequestModel)">
             <summary>
-            Create a new user.
+                Create a new user.
             </summary>
             <response code="200">The user was created successfully.</response>
             <response code="401">The current user is not authenticated.</response>
@@ -14,7 +14,7 @@
         </member>
         <member name="M:MyPortalWeb.Controllers.Api.UsersController.DeleteUser(System.Guid)">
             <summary>
-            Delete a user.
+                Delete a user.
             </summary>
             <response code="200">The user was deleted successfully.</response>
             <response code="401">The current user is not authenticated.</response>
@@ -22,7 +22,7 @@
         </member>
         <member name="M:MyPortalWeb.Controllers.Api.UsersController.SetPassword(MyPortal.Logic.Models.Requests.Admin.Users.SetPasswordRequestModel)">
             <summary>
-            Set a user's password.
+                Set a user's password.
             </summary>
             <response code="200">The user's password was updated successfully.</response>
             <response code="401">The current user is not authenticated.</response>
@@ -30,7 +30,7 @@
         </member>
         <member name="M:MyPortalWeb.Controllers.Api.UsersController.SetEnabled(MyPortal.Logic.Models.Requests.Admin.Users.SetUserEnabledRequestModel)">
             <summary>
-            Set whether a user is enabled/disabled.
+                Set whether a user is enabled/disabled.
             </summary>
             <response code="200">The user was enabled/disabled successfully.</response>
             <response code="401">The current user is not authenticated.</response>

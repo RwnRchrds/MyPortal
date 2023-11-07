@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Models.Data.StaffMembers
         {
             System = model.System;
         }
-        
+
         public bool System { get; set; }
     }
 }

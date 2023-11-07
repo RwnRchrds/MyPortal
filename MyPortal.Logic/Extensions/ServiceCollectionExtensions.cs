@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Configuration;
@@ -21,7 +20,7 @@ namespace MyPortal.Logic.Extensions
         public static IServiceCollection AddMyPortal(this IServiceCollection services, string connectionString)
         {
             var builder = new ConfigBuilder(connectionString);
-            
+
             builder.Build();
 
             services.AddApplicationDbContext();
@@ -29,13 +28,14 @@ namespace MyPortal.Logic.Extensions
 
             return services;
         }
-        
-        public static IServiceCollection AddMyPortal(this IServiceCollection services, Action<ConfigBuilder> configBuilder)
+
+        public static IServiceCollection AddMyPortal(this IServiceCollection services,
+            Action<ConfigBuilder> configBuilder)
         {
             var builder = new ConfigBuilder("");
 
             configBuilder(builder);
-            
+
             builder.Build();
 
             services.AddApplicationDbContext();

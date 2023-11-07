@@ -14,11 +14,9 @@ namespace MyPortal.Database.Models.Entity
             Exclusions = new HashSet<Exclusion>();
         }
 
-        [Column(Order = 4)]
-        public string Code { get; set; }
+        [Column(Order = 4)] public string Code { get; set; }
 
-        [Column(Order = 5)]
-        public bool System { get; set; }
+        [Column(Order = 5)] public bool System { get; set; }
 
         public virtual ICollection<Exclusion> Exclusions { get; set; }
     }

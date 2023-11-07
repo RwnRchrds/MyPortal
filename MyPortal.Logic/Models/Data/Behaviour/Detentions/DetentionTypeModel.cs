@@ -7,7 +7,7 @@ namespace MyPortal.Logic.Models.Data.Behaviour.Detentions
     public class DetentionTypeModel : LookupItemModel
     {
         public TimeSpan StartTime { get; set; }
-        
+
         public TimeSpan EndTime { get; set; }
 
         public DetentionTypeModel(DetentionType model) : base(model)

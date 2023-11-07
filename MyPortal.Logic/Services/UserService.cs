@@ -15,7 +15,6 @@ using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Settings;
-
 using MyPortal.Logic.Models.Requests.Auth;
 using MyPortal.Logic.Models.Requests.Settings.Users;
 using Task = System.Threading.Tasks.Task;
@@ -64,7 +63,7 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<int>> GetPermissionValuesByUser(Guid userId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var rolePermissions = (await unitOfWork.UserRoles.GetByUser(userId)).ToList();
 
             BitArray userPermissions = null;
@@ -102,16 +101,14 @@ namespace MyPortal.Logic.Services
             {
                 return await GetUserInfo(userId.Value);
             }
-            else
-            {
-                throw Unauthenticated();
-            }
+
+            throw Unauthenticated();
         }
 
         public async Task<UserInfoModel> GetUserInfo(Guid userId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var response = new UserInfoModel();
 
             var user = await unitOfWork.Users.GetById(userId);
@@ -199,7 +196,7 @@ namespace MyPortal.Logic.Services
         public async Task UpdateUser(Guid userId, UserRequestModel updateUserRequest)
         {
             Validate(updateUserRequest);
-            
+
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user == null)
@@ -232,7 +229,7 @@ namespace MyPortal.Logic.Services
         public async Task DeleteUser(Guid userId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var userRoles = await unitOfWork.UserRoles.GetByUser(userId);
 
             await RemoveFromRoles(userId, userRoles.Select(ur => ur.RoleId).ToArray());
@@ -388,7 +385,7 @@ namespace MyPortal.Logic.Services
             foreach (var roleName in roleNames)
             {
                 var role = await _roleManager.FindByNameAsync(roleName);
-                
+
                 roles.Add(new RoleModel(role));
             }
 
@@ -426,7 +423,7 @@ namespace MyPortal.Logic.Services
             if (user.PersonId.HasValue)
             {
                 await using var unitOfWork = await User.GetConnection();
-                
+
                 user.Person = await unitOfWork.People.GetById(user.PersonId.Value);
             }
 
@@ -441,10 +438,8 @@ namespace MyPortal.Logic.Services
             {
                 return await GetUserById(userId.Value);
             }
-            else
-            {
-                throw Unauthenticated();
-            }
+
+            throw Unauthenticated();
         }
     }
 }

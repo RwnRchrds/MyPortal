@@ -15,7 +15,7 @@ namespace MyPortal.Database.Repositories
         public ActivityRepository(DbUserWithContext dbUser) : base(dbUser)
         {
         }
-        
+
         protected override Query JoinRelated(Query query)
         {
             query.LeftJoin("StudentGroups as SG", "SG.Id", $"{TblAlias}.StudentGroupId");

@@ -32,27 +32,27 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 Series = new ExamSeriesModel(model.Series);
             }
         }
-        
+
         public Guid BaseElementId { get; set; }
-        
+
         public Guid SeriesId { get; set; }
-        
-        [StringLength(256)]
-        public string Description { get; set; }
-        
+
+        [StringLength(256)] public string Description { get; set; }
+
         public decimal? ExamFee { get; set; }
 
         public bool Submitted { get; set; }
 
         public virtual ExamBaseElementModel BaseElement { get; set; }
         public virtual ExamSeriesModel Series { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamElements.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

@@ -1,26 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Settings;
-
 using MyPortal.Logic.Models.Requests.Settings.Users;
 using MyPortalWeb.Controllers.BaseControllers;
-using MyPortalWeb.Models;
 using MyPortalWeb.Models.Response;
 
 namespace MyPortalWeb.Controllers.Api
-{ 
+{
     [Authorize]
     [Route("api/users")]
     public class UsersController : BaseApiController
@@ -48,7 +42,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var userId = (await UserService.CreateUser(model)).FirstOrDefault();
 
-                return Ok(new NewEntityResponseModel {Id = userId});
+                return Ok(new NewEntityResponseModel { Id = userId });
             }
             catch (Exception e)
             {
@@ -154,7 +148,8 @@ namespace MyPortalWeb.Controllers.Api
         [Route("{userId}/password")]
         [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> SetPassword([FromRoute] Guid userId, [FromBody] SetPasswordRequestModel request)
+        public async Task<IActionResult> SetPassword([FromRoute] Guid userId,
+            [FromBody] SetPasswordRequestModel request)
         {
             try
             {
@@ -172,7 +167,8 @@ namespace MyPortalWeb.Controllers.Api
         [Route("{userId}/enabled")]
         [Permission(PermissionValue.SystemEditUsers)]
         [ProducesResponseType(typeof(bool), 200)]
-        public async Task<IActionResult> SetEnabled([FromRoute] Guid userId, [FromBody] SetUserEnabledRequestModel model)
+        public async Task<IActionResult> SetEnabled([FromRoute] Guid userId,
+            [FromBody] SetUserEnabledRequestModel model)
         {
             try
             {

@@ -10,7 +10,7 @@ namespace MyPortal.Logic.Models.Data.Students
             Code = model.Code;
             System = model.System;
         }
-        
+
         public string Code { get; set; }
 
         public bool System { get; set; }

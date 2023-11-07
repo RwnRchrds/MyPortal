@@ -4,7 +4,6 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Data.Students;
 
-
 namespace MyPortal.Logic.Models.Summary
 {
     public class StudentIncidentSummaryModel
@@ -23,7 +22,7 @@ namespace MyPortal.Logic.Models.Summary
         {
             if (model.Id.HasValue)
             {
-                Id = model.Id.Value;   
+                Id = model.Id.Value;
             }
 
             TypeName = model.Incident.Type.Description;
@@ -36,7 +35,8 @@ namespace MyPortal.Logic.Models.Summary
             Points = model.Points;
         }
 
-        public static async Task<StudentIncidentSummaryModel> GetSummary(IUnitOfWork unitOfWork, StudentIncidentModel model)
+        public static async Task<StudentIncidentSummaryModel> GetSummary(IUnitOfWork unitOfWork,
+            StudentIncidentModel model)
         {
             await model.Incident.Load(unitOfWork);
             await model.Student.Load(unitOfWork);

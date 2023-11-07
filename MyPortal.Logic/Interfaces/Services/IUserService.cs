@@ -6,10 +6,8 @@ using MyPortal.Database.Enums;
 using MyPortal.Logic.Authentication;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Data.Settings;
-
 using MyPortal.Logic.Models.Requests.Auth;
 using MyPortal.Logic.Models.Requests.Settings.Users;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Interfaces.Services
 {

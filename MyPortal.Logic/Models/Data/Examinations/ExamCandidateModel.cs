@@ -29,7 +29,7 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 Student = new StudentModel(model.Student);
             }
         }
-        
+
         public Guid StudentId { get; set; }
 
         public string Uci { get; set; }
@@ -43,15 +43,16 @@ namespace MyPortal.Logic.Models.Data.Examinations
         public bool SpecialConsideration { get; set; }
 
         public string Note { get; set; }
-        
+
         public virtual StudentModel Student { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamCandidates.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

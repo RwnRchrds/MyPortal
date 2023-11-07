@@ -13,7 +13,7 @@ public class MarksheetColumnDataModel
     public string ResultSetName { get; set; }
     public int Order { get; set; }
     public bool IsReadOnly { get; set; }
-    
+
     public ICollection<GradeModel> Grades { get; set; }
     public decimal? MinMark { get; set; }
     public decimal? MaxMark { get; set; }

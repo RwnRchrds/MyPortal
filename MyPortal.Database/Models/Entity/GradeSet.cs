@@ -9,7 +9,8 @@ namespace MyPortal.Database.Models.Entity
     [Table("GradeSets")]
     public class GradeSet : LookupItem, ISystemEntity
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public GradeSet()
         {
             Grades = new HashSet<Grade>();
@@ -21,13 +22,12 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(256)]
         public string Name { get; set; }
 
-        [Column(Order = 5)]
-        public bool System { get; set; }
+        [Column(Order = 5)] public bool System { get; set; }
 
-        
+
         public virtual ICollection<Aspect> Aspects { get; set; }
 
-        
+
         public virtual ICollection<Grade> Grades { get; set; }
 
         public virtual ICollection<ExamQualificationLevel> ExamQualificationLevels { get; set; }

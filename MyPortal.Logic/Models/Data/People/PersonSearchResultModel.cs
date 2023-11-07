@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Models.Data.People
             Person = new PersonModel(result.Person);
             PersonTypes = result.PersonTypes;
         }
-        
+
         public PersonModel Person { get; set; }
         public PersonTypeIndicator PersonTypes { get; set; }
     }

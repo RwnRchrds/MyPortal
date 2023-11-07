@@ -62,13 +62,13 @@ public class StudentIncidentModel : BaseModelWithLoad
     public Guid StatusId { get; set; }
 
     public int Points { get; set; }
-    
+
     public StudentModel Student { get; set; }
     public IncidentModel Incident { get; set; }
     public BehaviourRoleTypeModel RoleType { get; set; }
     public BehaviourOutcomeModel Outcome { get; set; }
     public BehaviourStatusModel Status { get; set; }
-    
+
     public BehaviourInvolvedStudentSummaryModel[] InvolvedStudents { get; set; }
 
     protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
@@ -76,11 +76,11 @@ public class StudentIncidentModel : BaseModelWithLoad
         if (Id.HasValue)
         {
             var model = await unitOfWork.StudentIncidents.GetById(Id.Value);
-            
+
             LoadFromModel(model);
         }
     }
-    
+
     internal async Task<StudentIncidentSummaryModel> ToListModel(IUnitOfWork unitOfWork)
     {
         return await StudentIncidentSummaryModel.GetSummary(unitOfWork, this);

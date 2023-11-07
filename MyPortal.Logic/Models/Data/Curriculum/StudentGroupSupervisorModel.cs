@@ -43,7 +43,7 @@ public class StudentGroupSupervisorModel : BaseModel
             }
         }
     }
-    
+
     public Guid StudentGroupId { get; set; }
     public Guid SupervisorId { get; set; }
     public string Title { get; set; }

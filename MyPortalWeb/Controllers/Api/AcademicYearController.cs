@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Attributes;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Requests.Curriculum;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -18,7 +16,8 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly IAcademicYearService _academicYearService;
 
-        public AcademicYearController(IUserService userService, IAcademicYearService academicYearService) : base(userService)
+        public AcademicYearController(IUserService userService, IAcademicYearService academicYearService) : base(
+            userService)
         {
             _academicYearService = academicYearService;
         }
@@ -32,7 +31,7 @@ namespace MyPortalWeb.Controllers.Api
             try
             {
                 await _academicYearService.CreateAcademicYear(requestModel);
-                
+
                 return Ok();
             }
             catch (Exception e)

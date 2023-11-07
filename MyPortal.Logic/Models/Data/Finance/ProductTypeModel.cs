@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Models.Data.Finance
         {
             IsMeal = model.IsMeal;
         }
-        
+
         public bool IsMeal { get; set; }
     }
 }

@@ -33,27 +33,28 @@ namespace MyPortal.Logic.Models.Data.StaffMembers
                 StaffMember = new StaffMemberModel(model.StaffMember);
             }
         }
-        
+
         public Guid ParentEveningId { get; set; }
-        
+
         public Guid StaffMemberId { get; set; }
-        
+
         public DateTime? AvailableFrom { get; set; }
-        
+
         public DateTime? AvailableTo { get; set; }
-        
+
         public int AppointmentLength { get; set; }
-        
+
         public int BreakLimit { get; set; }
-        
+
         public virtual ParentEveningModel ParentEvening { get; set; }
         public virtual StaffMemberModel StaffMember { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ParentEveningStaffMembers.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

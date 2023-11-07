@@ -10,7 +10,6 @@ namespace MyPortal.Logic.Models.Data.Examinations
     {
         public ExamAwardElementModel(ExamAwardElement model) : base(model)
         {
-            
         }
 
         private void LoadFromModel(ExamAwardElement model)
@@ -28,14 +27,14 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 Element = new ExamElementModel(model.Element);
             }
         }
-        
+
         public Guid AwardId { get; set; }
-        
+
         public Guid ElementId { get; set; }
 
         public virtual ExamAwardModel Award { get; set; }
         public virtual ExamElementModel Element { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

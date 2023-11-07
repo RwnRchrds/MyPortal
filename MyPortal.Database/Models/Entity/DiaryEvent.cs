@@ -14,17 +14,13 @@ namespace MyPortal.Database.Models.Entity
             Attendees = new HashSet<DiaryEventAttendee>();
         }
 
-        [Column(Order = 2)]
-        public Guid EventTypeId { get; set; }
-        
-        [Column(Order = 3)] 
-        public Guid? CreatedById { get; set; }
-        
-        [Column(Order = 4)] 
-        public DateTime CreatedDate { get; set; }
+        [Column(Order = 2)] public Guid EventTypeId { get; set; }
 
-        [Column(Order = 5)]
-        public Guid? RoomId { get; set; }
+        [Column(Order = 3)] public Guid? CreatedById { get; set; }
+
+        [Column(Order = 4)] public DateTime CreatedDate { get; set; }
+
+        [Column(Order = 5)] public Guid? RoomId { get; set; }
 
         [Column(Order = 6)]
         [Required]
@@ -39,14 +35,11 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(256)]
         public string Location { get; set; }
 
-        [Column(Order = 9)]
-        public DateTime StartTime { get; set; }
+        [Column(Order = 9)] public DateTime StartTime { get; set; }
 
-        [Column(Order = 10)]
-        public DateTime EndTime { get; set; }
+        [Column(Order = 10)] public DateTime EndTime { get; set; }
 
-        [Column(Order = 11)]
-        public bool AllDay { get; set; }
+        [Column(Order = 11)] public bool AllDay { get; set; }
 
         /// <summary>
         /// Public events are visible to all users on the school diary
@@ -54,10 +47,9 @@ namespace MyPortal.Database.Models.Entity
         [Column(Order = 12)]
         public bool Public { get; set; }
 
-        [Column(Order = 13)]
-        public bool System { get; set; }
-        
-        
+        [Column(Order = 13)] public bool System { get; set; }
+
+
         public virtual DiaryEventType EventType { get; set; }
         public virtual User CreatedBy { get; set; }
         public virtual Room Room { get; set; }

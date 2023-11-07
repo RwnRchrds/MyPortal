@@ -7,7 +7,6 @@ namespace MyPortal.Logic.Models.Data.Assessment
     {
         public AspectTypeModel(AspectType model) : base(model)
         {
-            
         }
     }
 }

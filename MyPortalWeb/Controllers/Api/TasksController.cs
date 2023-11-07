@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using MyPortal.Database.Constants;
-using MyPortal.Database.Enums;
-using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Search;
-using MyPortal.Logic.Enums;
 using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.People;
 using MyPortal.Logic.Models.Requests.Person.Tasks;
 using MyPortalWeb.Controllers.BaseControllers;
-using MyPortalWeb.Models;
 using MyPortalWeb.Models.Requests;
 
 namespace MyPortalWeb.Controllers.Api
@@ -24,14 +16,12 @@ namespace MyPortalWeb.Controllers.Api
     public class TasksController : PersonalDataController
     {
         private readonly ITaskService _taskService;
-        private readonly IStaffMemberService _staffMemberService;
 
         public TasksController(IUserService userService, IPersonService personService, IStudentService studentService,
-            ITaskService taskService, IStaffMemberService staffMemberService) 
+            ITaskService taskService)
             : base(userService, personService, studentService)
         {
             _taskService = taskService;
-            _staffMemberService = staffMemberService;
         }
 
         [HttpGet]
@@ -54,7 +44,8 @@ namespace MyPortalWeb.Controllers.Api
         [HttpGet]
         [Route("api/people/{personId}/tasks")]
         [ProducesResponseType(typeof(IEnumerable<TaskModel>), 200)]
-        public async Task<IActionResult> GetByPerson([FromRoute] Guid personId, [FromQuery] TaskSearchOptions searchOptions)
+        public async Task<IActionResult> GetByPerson([FromRoute] Guid personId,
+            [FromQuery] TaskSearchOptions searchOptions)
         {
             try
             {
@@ -102,10 +93,8 @@ namespace MyPortalWeb.Controllers.Api
 
                     return Ok();
                 }
-                else
-                {
-                    return Unauthorized();
-                }
+
+                return Unauthorized();
             }
             catch (Exception e)
             {

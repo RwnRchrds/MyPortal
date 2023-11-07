@@ -24,21 +24,21 @@ public class TaskReminderModel : BaseModelWithLoad
             Task = new TaskModel(model.Task);
         }
     }
-    
+
     public Guid TaskId { get; set; }
-    
+
     public Guid UserId { get; set; }
-    
+
     public DateTime RemindTime { get; set; }
 
     public virtual TaskModel Task { get; set; }
-    
+
     protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
     {
         if (Id.HasValue)
         {
             var model = await unitOfWork.TaskReminders.GetById(Id.Value);
-                
+
             LoadFromModel(model);
         }
     }

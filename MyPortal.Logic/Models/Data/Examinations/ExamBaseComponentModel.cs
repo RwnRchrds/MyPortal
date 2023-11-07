@@ -29,22 +29,23 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 Assessment = new ExamAssessmentModel(model.Assessment);
             }
         }
-        
+
         public Guid AssessmentModeId { get; set; }
-        
+
         public Guid ExamAssessmentId { get; set; }
-        
+
         public string ComponentCode { get; set; }
 
         public virtual ExamAssessmentModeModel AssessmentMode { get; set; }
         public virtual ExamAssessmentModel Assessment { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamBaseComponents.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

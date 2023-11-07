@@ -66,4 +66,4 @@ namespace MyPortal.Database.Repositories
             bcd.GrossAmount = entity.GrossAmount;
         }
     }
-};
+}

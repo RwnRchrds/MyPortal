@@ -27,9 +27,9 @@ namespace MyPortal.Logic.Models.Data.Examinations
         }
 
         public Guid RoomId { get; set; }
-        
+
         public int Columns { get; set; }
-        
+
         public int Rows { get; set; }
 
         public virtual RoomModel Room { get; set; }
@@ -40,8 +40,8 @@ namespace MyPortal.Logic.Models.Data.Examinations
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamRooms.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

@@ -34,9 +34,7 @@ namespace MyPortal.Logic.Models.Data.Attendance
 
         public DayOfWeek Weekday { get; set; }
 
-        [Required]
-        [StringLength(128)]
-        public string Name { get; set; }
+        [Required] [StringLength(128)] public string Name { get; set; }
 
         public TimeSpan StartTime { get; set; }
 
@@ -47,6 +45,7 @@ namespace MyPortal.Logic.Models.Data.Attendance
         public bool PmReg { get; set; }
 
         public AttendanceWeekPatternModel WeekPattern { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

@@ -14,11 +14,9 @@ namespace MyPortal.Database.Models.Entity
             Agents = new HashSet<Agent>();
         }
 
-        [Column(Order = 2)]
-        public Guid TypeId { get; set; }
+        [Column(Order = 2)] public Guid TypeId { get; set; }
 
-        [Column(Order = 3)]
-        public Guid DirectoryId { get; set; }
+        [Column(Order = 3)] public Guid DirectoryId { get; set; }
 
         [Column(Order = 4)]
         [StringLength(256)]
@@ -29,8 +27,7 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(100)]
         public string Website { get; set; }
 
-        [Column(Order = 6)]
-        public bool Deleted { get; set; }
+        [Column(Order = 6)] public bool Deleted { get; set; }
 
         public virtual AgencyType AgencyType { get; set; }
         public virtual Directory Directory { get; set; }

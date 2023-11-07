@@ -19,18 +19,14 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(128)]
         public string Description { get; set; }
 
-        [Column(Order = 4)]
-        public Guid AttendanceCodeTypeId { get; set; }
+        [Column(Order = 4)] public Guid AttendanceCodeTypeId { get; set; }
 
-        [Column(Order = 5)]
-        public bool Active { get; set; }
+        [Column(Order = 5)] public bool Active { get; set; }
 
         // Only users with the UseRestrictedCodes permission can use these
-        [Column(Order = 6)]
-        public bool Restricted { get; set; }
-        
-        [Column(Order = 7)]
-        public bool System { get; set; }
+        [Column(Order = 6)] public bool Restricted { get; set; }
+
+        [Column(Order = 7)] public bool System { get; set; }
 
         public virtual AttendanceCodeType CodeType { get; set; }
 

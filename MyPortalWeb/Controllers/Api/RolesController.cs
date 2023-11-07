@@ -6,14 +6,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Attributes;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Settings;
-
 using MyPortal.Logic.Models.Requests.Settings.Roles;
 using MyPortal.Logic.Models.Structures;
 using MyPortalWeb.Controllers.BaseControllers;
-using MyPortalWeb.Models;
 using MyPortalWeb.Models.Response;
 
 namespace MyPortalWeb.Controllers.Api
@@ -39,7 +36,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var newId = (await _roleService.CreateRole(model)).FirstOrDefault();
 
-                return Ok(new NewEntityResponseModel {Id = newId});
+                return Ok(new NewEntityResponseModel { Id = newId });
             }
             catch (Exception e)
             {

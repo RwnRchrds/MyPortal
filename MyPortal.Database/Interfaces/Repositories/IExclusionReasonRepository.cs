@@ -2,8 +2,8 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IExclusionReasonRepository : IReadWriteRepository<ExclusionReason>, IUpdateRepository<ExclusionReason>
+    public interface IExclusionReasonRepository : IReadWriteRepository<ExclusionReason>,
+        IUpdateRepository<ExclusionReason>
     {
-        
     }
 }

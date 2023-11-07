@@ -7,13 +7,14 @@ namespace MyPortal.Database.Models.Entity
     [Table("DietaryRequirements")]
     public class DietaryRequirement : LookupItem
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public DietaryRequirement()
         {
             PersonDietaryRequirements = new HashSet<PersonDietaryRequirement>();
         }
 
-        
+
         public virtual ICollection<PersonDietaryRequirement> PersonDietaryRequirements { get; set; }
     }
 }

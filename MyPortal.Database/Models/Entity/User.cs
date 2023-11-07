@@ -24,20 +24,19 @@ namespace MyPortal.Database.Models.Entity
             ReportCardSubmissions = new HashSet<ReportCardEntry>();
             AuditLogs = new HashSet<AuditLog>();
         }
-        
+
         public DateTime CreatedDate { get; set; }
-        
+
         public Guid? PersonId { get; set; }
-        
-        [StringLength(1)]
-        public int UserType { get; set; }
-        
+
+        [StringLength(1)] public int UserType { get; set; }
+
         public bool Enabled { get; set; }
 
         public virtual Person Person { get; set; }
 
         public virtual ICollection<UserRole> UserRoles { get; set; }
-        
+
         public virtual ICollection<Result> Results { get; set; }
 
         public virtual ICollection<LogNote> LogNotesCreated { get; set; }
@@ -63,11 +62,11 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<UserLogin> UserLogins { get; set; }
 
         public virtual ICollection<UserToken> UserTokens { get; set; }
-        
+
         public virtual ICollection<DiaryEvent> DiaryEvents { get; set; }
 
         public virtual ICollection<UserReminderSetting> UserReminderSettings { get; set; }
-        
+
         public virtual ICollection<AuditLog> AuditLogs { get; set; }
     }
 }

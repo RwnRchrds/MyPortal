@@ -11,7 +11,7 @@ namespace MyPortal.Logic.Models.Data.School
     {
         public RoomModel(Room model) : base(model)
         {
-           LoadFromModel(model);
+            LoadFromModel(model);
         }
 
         private void LoadFromModel(Room model)
@@ -28,14 +28,12 @@ namespace MyPortal.Logic.Models.Data.School
                 BuildingFloor = new BuildingFloorModel(model.BuildingFloor);
             }
         }
-        
+
         public Guid? BuildingFloorId { get; set; }
 
-        [StringLength(10)]
-        public string Code { get; set; }
+        [StringLength(10)] public string Code { get; set; }
 
-        [StringLength(256)]
-        public string Name { get; set; }
+        [StringLength(256)] public string Name { get; set; }
 
         public int MaxGroupSize { get; set; }
 
@@ -44,13 +42,14 @@ namespace MyPortal.Logic.Models.Data.School
         public bool ExcludeFromCover { get; set; }
 
         public virtual BuildingFloorModel BuildingFloor { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Rooms.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

@@ -7,7 +7,7 @@ namespace MyPortal.Logic.Attributes
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if (ValidationHelper.ValidateNhsNumber((string) value))
+            if (ValidationHelper.ValidateNhsNumber((string)value))
             {
                 return ValidationResult.Success;
             }

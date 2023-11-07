@@ -38,22 +38,21 @@ namespace MyPortal.Logic.Models.Data.Agents
                 AgentType = new AgentTypeModel(model.AgentType);
             }
         }
-        
+
         public Guid AgencyId { get; set; }
 
         public Guid PersonId { get; set; }
 
         public Guid AgentTypeId { get; set; }
 
-        [StringLength(128)]
-        public string JobTitle { get; set; }
+        [StringLength(128)] public string JobTitle { get; set; }
 
         public bool Deleted { get; set; }
 
         public virtual AgencyModel Agency { get; set; }
         public virtual PersonModel Person { get; set; }
         public virtual AgentTypeModel AgentType { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

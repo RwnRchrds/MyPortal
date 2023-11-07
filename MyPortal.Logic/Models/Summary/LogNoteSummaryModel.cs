@@ -2,7 +2,6 @@
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Models.Data.Students;
 
-
 namespace MyPortal.Logic.Models.Summary
 {
     public class LogNoteSummaryModel
@@ -20,8 +19,9 @@ namespace MyPortal.Logic.Models.Summary
         {
             if (model.Id.HasValue)
             {
-                Id = model.Id.Value;   
+                Id = model.Id.Value;
             }
+
             CreatedDate = model.CreatedDate;
             AuthorName = model.CreatedBy.GetDisplayName(NameFormat.FullNameAbbreviated);
             LogTypeName = model.LogNoteType.Description;

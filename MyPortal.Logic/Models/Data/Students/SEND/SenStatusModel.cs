@@ -10,9 +10,7 @@ namespace MyPortal.Logic.Models.Data.Students.SEND
         {
             Code = model.Code;
         }
-        
-        [Required]
-        [StringLength(1)]
-        public string Code { get; set; }
+
+        [Required] [StringLength(1)] public string Code { get; set; }
     }
 }

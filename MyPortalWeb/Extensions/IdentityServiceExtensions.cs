@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,13 +7,11 @@ using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Logic;
 using MyPortal.Logic.Configuration;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Identity;
-using MyPortal.Logic.Interfaces;
 using MyPortalWeb.Services;
 using Task = System.Threading.Tasks.Task;
 
@@ -55,10 +51,7 @@ namespace MyPortalWeb.Extensions
                     };
                 });
 
-            services.AddIdentityServer(options =>
-                {
-                    
-                })
+            services.AddIdentityServer(_ => { })
                 .AddAspNetIdentity<User>()
                 .AddProfileService<ProfileService>()
                 .AddInMemoryApiScopes(Config.ApiScopes)
@@ -89,12 +82,12 @@ namespace MyPortalWeb.Extensions
                 options.AddPolicy(Policies.UserType.Parent,
                     policy => policy.RequireClaim(ApplicationClaimTypes.UserType, UserTypes.Parent.ToString()));
             });
-            
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.Events.OnRedirectToLogin = context =>
                 {
-                    context.Response.StatusCode = 401;    
+                    context.Response.StatusCode = 401;
                     return Task.CompletedTask;
                 };
             });

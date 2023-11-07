@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 
 namespace MyPortalWeb
@@ -11,7 +10,7 @@ namespace MyPortalWeb
             {
                 new ApiScope("myportal", "MyPortal API")
             };
-        
+
         public static IEnumerable<Client> Clients =>
             new List<Client>
             {

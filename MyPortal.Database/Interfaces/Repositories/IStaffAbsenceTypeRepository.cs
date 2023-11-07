@@ -2,8 +2,8 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IStaffAbsenceTypeRepository : IReadWriteRepository<StaffAbsenceType>, IUpdateRepository<StaffAbsenceType>
+    public interface IStaffAbsenceTypeRepository : IReadWriteRepository<StaffAbsenceType>,
+        IUpdateRepository<StaffAbsenceType>
     {
-
     }
 }

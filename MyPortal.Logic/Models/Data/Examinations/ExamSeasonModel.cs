@@ -29,29 +29,30 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 ResultSet = new ResultSetModel(model.ResultSet);
             }
         }
-        
+
         public Guid ResultSetId { get; set; }
-        
+
         public int CalendarYear { get; set; }
-        
+
         public DateTime StartDate { get; set; }
-        
+
         public DateTime EndDate { get; set; }
-        
+
         public string Name { get; set; }
-        
+
         public string Description { get; set; }
-        
+
         public bool Default { get; set; }
 
         public virtual ResultSetModel ResultSet { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamSeasons.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

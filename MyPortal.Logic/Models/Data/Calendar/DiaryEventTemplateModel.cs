@@ -9,13 +9,13 @@ namespace MyPortal.Logic.Models.Data.Calendar
     public class DiaryEventTemplateModel : LookupItemModelWithLoad
     {
         public Guid EventTypeId { get; set; }
-        
+
         public int Minutes { get; set; }
-        
+
         public int Hours { get; set; }
-        
+
         public int Days { get; set; }
-        
+
         public DiaryEventTypeModel DiaryEventType { get; set; }
 
         public DiaryEventTemplateModel(DiaryEventTemplate model) : base(model)
@@ -41,8 +41,8 @@ namespace MyPortal.Logic.Models.Data.Calendar
             if (Id.HasValue)
             {
                 var model = await unitOfWork.DiaryEventTemplates.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

@@ -53,8 +53,7 @@ namespace MyPortal.Logic.Models.Data.Attendance
 
         public Guid CodeId { get; set; }
 
-        [StringLength(256)]
-        public string Comments { get; set; }
+        [StringLength(256)] public string Comments { get; set; }
 
         public int MinutesLate { get; set; }
 
@@ -65,6 +64,7 @@ namespace MyPortal.Logic.Models.Data.Attendance
         public StudentModel Student { get; set; }
 
         public AttendanceWeekModel Week { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

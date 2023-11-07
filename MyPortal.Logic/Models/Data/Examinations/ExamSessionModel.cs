@@ -10,7 +10,7 @@ namespace MyPortal.Logic.Models.Data.Examinations
         {
             StartTime = model.StartTime;
         }
-        
+
         public TimeSpan StartTime { get; set; }
     }
 }

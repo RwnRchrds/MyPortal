@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MyPortal.Database.Interfaces
+﻿namespace MyPortal.Database.Interfaces
 {
     /// <summary>
     /// Defines an entity that is able to be created by MyPortal.

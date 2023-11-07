@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using MyPortal.Database.Models.Entity;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MyPortal.Logic.Models.Requests.Curriculum
 {
     public class AcademicYearRequestModel
     {
-        [Required]
-        [StringLength(128)]
-        public string Name { get; set; }
+        [Required] [StringLength(128)] public string Name { get; set; }
 
         public bool Locked { get; set; }
 

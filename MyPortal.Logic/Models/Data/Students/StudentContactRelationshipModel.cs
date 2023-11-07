@@ -39,30 +39,31 @@ namespace MyPortal.Logic.Models.Data.Students
                 Contact = new ContactModel(model.Contact);
             }
         }
-        
+
         public Guid RelationshipTypeId { get; set; }
-        
+
         public Guid StudentId { get; set; }
-        
+
         public Guid ContactId { get; set; }
-        
+
         public bool Correspondence { get; set; }
-        
+
         public bool ParentalResponsibility { get; set; }
-        
+
         public bool PupilReport { get; set; }
-        
+
         public bool CourtOrder { get; set; }
 
         public virtual RelationshipTypeModel RelationshipType { get; set; }
         public virtual StudentModel Student { get; set; }
         public virtual ContactModel Contact { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.StudentContactRelationships.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

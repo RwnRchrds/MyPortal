@@ -14,8 +14,7 @@ namespace MyPortal.Database.Models.Entity
             Documents = new HashSet<Document>();
         }
 
-        [Column(Order = 2)]
-        public Guid? ParentId { get; set; }
+        [Column(Order = 2)] public Guid? ParentId { get; set; }
 
         [Column(Order = 3)]
         [Required]
@@ -23,8 +22,7 @@ namespace MyPortal.Database.Models.Entity
         public string Name { get; set; }
 
         // Only visible to staff users and the owner
-        [Column(Order = 4)]
-        public bool Private { get; set; }
+        [Column(Order = 4)] public bool Private { get; set; }
 
         public virtual Directory Parent { get; set; }
         public virtual ICollection<Agency> Agencies { get; set; }

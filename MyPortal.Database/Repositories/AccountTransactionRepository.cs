@@ -10,11 +10,11 @@ using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class AccountTransactionRepository : BaseReadWriteRepository<AccountTransaction>, IAccountTransactionRepository
+    public class AccountTransactionRepository : BaseReadWriteRepository<AccountTransaction>,
+        IAccountTransactionRepository
     {
         public AccountTransactionRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         protected override Query JoinRelated(Query query)
@@ -35,13 +35,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var transactions = await DbUser.Transaction.Connection.QueryAsync<AccountTransaction, Student, AccountTransaction>(sql.Sql,
-                (transaction, student) =>
-                {
-                    transaction.Student = student;
+            var transactions =
+                await DbUser.Transaction.Connection.QueryAsync<AccountTransaction, Student, AccountTransaction>(sql.Sql,
+                    (transaction, student) =>
+                    {
+                        transaction.Student = student;
 
-                    return transaction;
-                }, sql.NamedBindings, DbUser.Transaction);
+                        return transaction;
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return transactions;
         }

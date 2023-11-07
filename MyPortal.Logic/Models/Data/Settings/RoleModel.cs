@@ -15,7 +15,7 @@ namespace MyPortal.Logic.Models.Data.Settings
             Permissions = model.Permissions;
             System = model.System;
         }
-        
+
         public string Name { get; set; }
         public string ConcurrencyStamp { get; set; }
         public string NormalizedName { get; set; }
@@ -30,10 +30,7 @@ namespace MyPortal.Logic.Models.Data.Settings
 
         public BitArray PermissionArray
         {
-            get
-            {
-                return new BitArray(Permissions);
-            }
+            get { return new BitArray(Permissions); }
         }
     }
 }

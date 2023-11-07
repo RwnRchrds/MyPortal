@@ -2,8 +2,8 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IAttendanceWeekPatternRepository : IReadWriteRepository<AttendanceWeekPattern>, IUpdateRepository<AttendanceWeekPattern>
+    public interface IAttendanceWeekPatternRepository : IReadWriteRepository<AttendanceWeekPattern>,
+        IUpdateRepository<AttendanceWeekPattern>
     {
-        
     }
 }

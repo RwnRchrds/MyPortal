@@ -11,7 +11,7 @@ namespace MyPortal.Logic.Models.Data.Finance
     {
         public BasketItemModel(BasketItem model) : base(model)
         {
-           LoadFromModel(model);
+            LoadFromModel(model);
         }
 
         private void LoadFromModel(BasketItem model)
@@ -30,7 +30,7 @@ namespace MyPortal.Logic.Models.Data.Finance
                 Product = new ProductModel(model.Product);
             }
         }
-        
+
         public Guid StudentId { get; set; }
 
         public Guid ProductId { get; set; }
@@ -40,6 +40,7 @@ namespace MyPortal.Logic.Models.Data.Finance
         public virtual StudentModel Student { get; set; }
 
         public virtual ProductModel Product { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

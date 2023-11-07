@@ -1,4 +1,4 @@
-﻿namespace MyPortalWeb.Models;
+﻿namespace MyPortal.Logic.Models.Permissions;
 
 public class EventAccessModel
 {

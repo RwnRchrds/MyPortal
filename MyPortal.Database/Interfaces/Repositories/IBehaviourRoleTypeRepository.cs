@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Interfaces.Repositories;
 
-public interface IBehaviourRoleTypeRepository : IReadWriteRepository<BehaviourRoleType>, IUpdateRepository<BehaviourRoleType>
+public interface IBehaviourRoleTypeRepository : IReadWriteRepository<BehaviourRoleType>,
+    IUpdateRepository<BehaviourRoleType>
 {
-    
 }

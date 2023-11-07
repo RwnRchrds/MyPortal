@@ -17,15 +17,15 @@ namespace MyPortal.Logic.Models.Data.Curriculum
         {
             SubjectId = model.SubjectId;
             Name = model.Name;
-            
+
             if (model.Subject != null)
             {
                 Subject = new SubjectModel(model.Subject);
             }
         }
-        
+
         public Guid SubjectId { get; set; }
-        
+
         public string Name { get; set; }
 
         public virtual SubjectModel Subject { get; set; }

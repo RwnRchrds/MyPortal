@@ -38,14 +38,15 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var embargoes = await DbUser.Transaction.Connection.QueryAsync<ExamResultEmbargo, ResultSet, ExamResultEmbargo>(
-                sql.Sql,
-                (embargo, resultSet) =>
-                {
-                    embargo.ResultSet = resultSet;
+            var embargoes =
+                await DbUser.Transaction.Connection.QueryAsync<ExamResultEmbargo, ResultSet, ExamResultEmbargo>(
+                    sql.Sql,
+                    (embargo, resultSet) =>
+                    {
+                        embargo.ResultSet = resultSet;
 
-                    return embargo;
-                }, sql.NamedBindings, DbUser.Transaction);
+                        return embargo;
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return embargoes;
         }
@@ -58,7 +59,7 @@ namespace MyPortal.Database.Repositories
             {
                 throw new EntityNotFoundException("Result embargo not found.");
             }
-            
+
             embargo.EndTime = entity.EndTime;
         }
 

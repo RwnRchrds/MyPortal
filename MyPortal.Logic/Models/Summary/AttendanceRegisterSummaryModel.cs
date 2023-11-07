@@ -1,5 +1,4 @@
 ﻿using System;
-using MyPortal.Database.Models.QueryResults.Attendance;
 using MyPortal.Database.Models.QueryResults.Curriculum;
 
 namespace MyPortal.Logic.Models.Summary;
@@ -17,8 +16,8 @@ public class AttendanceRegisterSummaryModel
         RoomName = periodDetailModel.RoomName;
         StartTime = periodDetailModel.StartTime;
         EndTime = periodDetailModel.EndTime;
-    } 
-    
+    }
+
     public Guid StudentGroupId { get; set; }
     public Guid AttendanceWeekId { get; set; }
     public Guid PeriodId { get; set; }

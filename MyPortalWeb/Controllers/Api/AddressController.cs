@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Enums;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Addresses;
-using MyPortal.Logic.Models.Data.Contacts;
 using MyPortal.Logic.Models.Requests.Addresses;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -19,8 +16,8 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly IAddressService _addressService;
 
-        public AddressController(IUserService userService, IPersonService personService, 
-            IStudentService studentService, IAddressService addressService) 
+        public AddressController(IUserService userService, IPersonService personService,
+            IStudentService studentService, IAddressService addressService)
             : base(userService, personService, studentService)
         {
             _addressService = addressService;
@@ -69,7 +66,8 @@ namespace MyPortalWeb.Controllers.Api
         [Permission(PermissionRequirement.RequireAny, PermissionValue.PeopleEditContactDetails,
             PermissionValue.StudentEditStudentDetails, PermissionValue.PeopleEditAgentDetails,
             PermissionValue.PeopleEditStaffBasicDetails)]
-        public async Task<IActionResult> CreatePersonAddress([FromRoute] Guid personId, [FromBody] EntityAddressRequestModel personAddress)
+        public async Task<IActionResult> CreatePersonAddress([FromRoute] Guid personId,
+            [FromBody] EntityAddressRequestModel personAddress)
         {
             try
             {

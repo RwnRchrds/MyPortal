@@ -57,43 +57,42 @@ namespace MyPortal.Logic.Models.Data.Students
                 BoarderStatus = new BoarderStatusModel(model.BoarderStatus);
             }
         }
-        
+
         public Guid PersonId { get; set; }
 
 
         public int AdmissionNumber { get; set; }
 
-        
+
         public DateTime? DateStarting { get; set; }
 
-        
+
         public DateTime? DateLeaving { get; set; }
 
-        
+
         public bool FreeSchoolMeals { get; set; }
 
-        
+
         public Guid? SenStatusId { get; set; }
 
-        
+
         public Guid? SenTypeId { get; set; }
 
-        
+
         public Guid? EnrolmentStatusId { get; set; }
 
-        
+
         public Guid? BoarderStatusId { get; set; }
 
-        
+
         public bool PupilPremium { get; set; }
 
-        
-        [StringLength(13)]
-        public string Upn { get; set; }
 
-        
+        [StringLength(13)] public string Upn { get; set; }
+
+
         public bool Deleted { get; set; }
-        
+
         public virtual PersonModel Person { get; set; }
 
         public virtual SenStatusModel SenStatus { get; set; }
@@ -103,12 +102,13 @@ namespace MyPortal.Logic.Models.Data.Students
         public virtual EnrolmentStatusModel EnrolmentStatus { get; set; }
 
         public virtual BoarderStatusModel BoarderStatus { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Students.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

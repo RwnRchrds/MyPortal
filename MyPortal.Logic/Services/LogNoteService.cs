@@ -7,7 +7,6 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Students;
-
 using MyPortal.Logic.Models.Requests.Student.LogNotes;
 using Task = System.Threading.Tasks.Task;
 
@@ -22,7 +21,7 @@ namespace MyPortal.Logic.Services
         public async Task<LogNoteModel> GetLogNoteById(Guid logNoteId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var logNote = await unitOfWork.LogNotes.GetById(logNoteId);
 
             if (logNote == null)
@@ -33,10 +32,11 @@ namespace MyPortal.Logic.Services
             return new LogNoteModel(logNote);
         }
 
-        public async Task<IEnumerable<LogNoteModel>> GetLogNotesByStudent(Guid studentId, Guid academicYearId, bool includePrivate)
+        public async Task<IEnumerable<LogNoteModel>> GetLogNotesByStudent(Guid studentId, Guid academicYearId,
+            bool includePrivate)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var logNotes = await unitOfWork.LogNotes.GetByStudent(studentId, academicYearId, includePrivate);
 
             return logNotes.OrderByDescending(n => n.CreatedDate).Select(l => new LogNoteModel(l)).ToList();
@@ -45,7 +45,7 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<LogNoteTypeModel>> GetLogNoteTypes()
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var logNoteTypes = await unitOfWork.LogNoteTypes.GetAll();
 
             return logNoteTypes.Select(t => new LogNoteTypeModel(t));
@@ -90,11 +90,11 @@ namespace MyPortal.Logic.Services
         public async Task UpdateLogNote(Guid logNoteId, LogNoteRequestModel logNoteModel)
         {
             Validate(logNoteModel);
-            
+
             await using var unitOfWork = await User.GetConnection();
-            
+
             var logNote = await unitOfWork.LogNotes.GetById(logNoteId);
-                    
+
             var academicYearService = new AcademicYearService(User);
             await academicYearService.IsAcademicYearLocked(logNote.AcademicYearId);
 
@@ -114,7 +114,7 @@ namespace MyPortal.Logic.Services
         public async Task DeleteLogNote(Guid logNoteId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var logNote = await GetLogNoteById(logNoteId);
 
             var academicYearService = new AcademicYearService(User);

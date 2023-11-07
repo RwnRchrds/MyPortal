@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
 using MyPortal.Database.Models.QueryResults.School;
-using MyPortal.Logic.Enums;
-using MyPortal.Logic.Helpers;
-
 
 namespace MyPortal.Logic.Models.Summary;
 

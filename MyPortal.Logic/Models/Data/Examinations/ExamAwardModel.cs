@@ -38,23 +38,23 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 Course = new CourseModel(model.Course);
             }
         }
-        
+
         public Guid QualificationId { get; set; }
-        
+
         public Guid AssessmentId { get; set; }
-        
+
         public Guid? CourseId { get; set; }
-        
+
         public string Description { get; set; }
-        
+
         public string AwardCode { get; set; }
-        
+
         public DateTime? ExpiryDate { get; set; }
 
         public virtual ExamAssessmentModel Assessment { get; set; }
         public virtual ExamQualificationModel Qualification { get; set; }
         public virtual CourseModel Course { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

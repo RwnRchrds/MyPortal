@@ -12,7 +12,6 @@ namespace MyPortal.Database.Repositories
     {
         public SessionRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         public async Task Update(Session entity)

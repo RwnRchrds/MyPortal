@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
-
-namespace MyPortal.Logic.Exceptions
+﻿namespace MyPortal.Logic.Exceptions
 {
     public class ConnectionStringException : ConfigurationException
     {

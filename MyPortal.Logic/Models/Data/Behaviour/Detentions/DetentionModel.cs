@@ -36,24 +36,24 @@ namespace MyPortal.Logic.Models.Data.Behaviour.Detentions
                 Supervisor = new StaffMemberModel(model.Supervisor);
             }
         }
-        
+
         public Guid DetentionTypeId { get; set; }
-        
+
         public Guid EventId { get; set; }
-        
+
         public Guid? SupervisorId { get; set; }
 
         public DetentionTypeModel Type { get; set; }
         public DiaryEventModel Event { get; set; }
         public StaffMemberModel Supervisor { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Detentions.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

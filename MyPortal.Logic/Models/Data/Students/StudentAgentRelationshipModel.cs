@@ -35,22 +35,23 @@ namespace MyPortal.Logic.Models.Data.Students
                 RelationshipType = new RelationshipTypeModel(model.RelationshipType);
             }
         }
-        
+
         public Guid StudentId { get; set; }
-        
+
         public Guid AgentId { get; set; }
-        
+
         public Guid RelationshipTypeId { get; set; }
 
         public virtual StudentModel Student { get; set; }
         public virtual AgentModel Agent { get; set; }
         public virtual RelationshipTypeModel RelationshipType { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.StudentAgentRelationships.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

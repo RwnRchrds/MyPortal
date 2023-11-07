@@ -9,7 +9,6 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Attendance;
 using MyPortal.Logic.Models.Data.Attendance.Register;
-
 using MyPortal.Logic.Models.Reporting;
 using MyPortal.Logic.Models.Requests.Attendance;
 using MyPortal.Logic.Models.Summary;
@@ -36,7 +35,8 @@ namespace MyPortal.Logic.Services
             return new AttendanceMarkModel(attendanceMark);
         }
 
-        public async Task<AttendanceRegisterDataModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId, Guid periodId)
+        public async Task<AttendanceRegisterDataModel> GetRegisterBySession(Guid attendanceWeekId, Guid sessionId,
+            Guid periodId)
         {
             await using var unitOfWork = await User.GetConnection();
 
@@ -47,7 +47,7 @@ namespace MyPortal.Logic.Services
             {
                 throw new NotFoundException("Session not found.");
             }
-            
+
             var registerPeriod = metadata.FirstOrDefault(p => p.PeriodId == periodId);
 
             if (registerPeriod == null)
@@ -79,15 +79,17 @@ namespace MyPortal.Logic.Services
             var studentIds = studentsInSession.Select(s => s.StudentId)
                 .Union(extraNames.Select(n => n.StudentId)).ToArray();
 
-            var register = await GetRegisterByDateRange(studentIds, registerPeriod.StartTime, registerPeriod.EndTime, title,
+            var register = await GetRegisterByDateRange(studentIds, registerPeriod.StartTime, registerPeriod.EndTime,
+                title,
                 metadata.Select(m => m.PeriodId).ToArray());
-            
+
             register.FlagExtraNames(extraNames);
 
             return register;
         }
 
-        public async Task<AttendanceRegisterDataModel> GetRegisterByStudentGroup(Guid studentGroupId, Guid attendanceWeekId, Guid periodId)
+        public async Task<AttendanceRegisterDataModel> GetRegisterByStudentGroup(Guid studentGroupId,
+            Guid attendanceWeekId, Guid periodId)
         {
             await using var unitOfWork = await User.GetConnection();
 
@@ -104,7 +106,7 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<AttendanceRegisterSummaryModel>> GetRegisters(RegisterSearchRequestModel model)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var searchOptions = new RegisterSearchOptions
             {
                 DateFrom = model.Date.Date,
@@ -112,7 +114,7 @@ namespace MyPortal.Logic.Services
                 PeriodId = model.PeriodId,
                 TeacherId = model.TeacherId
             };
-                
+
             var sessions = await unitOfWork.SessionPeriods.SearchPeriodDetails(searchOptions);
 
             return sessions.Select(s => new AttendanceRegisterSummaryModel(s)).ToArray();
@@ -127,12 +129,12 @@ namespace MyPortal.Logic.Services
 
             var register = await InitialiseRegister(dateFrom, dateTo, title, unlockedPeriods);
 
-            var existingMarks = 
+            var existingMarks =
                 await unitOfWork.AttendanceMarks.GetRegisterMarks(studentCollection, register.Periods);
 
             var possibleMarks =
                 await unitOfWork.AttendanceMarks.GetPossibleMarksByStudents(studentCollection, register.Periods);
-            
+
             register.PopulateMarks(existingMarks);
             register.PopulateMissingMarks(possibleMarks);
 
@@ -168,7 +170,7 @@ namespace MyPortal.Logic.Services
             DateTime dateTo, string title = null, Guid[] unlockedPeriods = null)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var studentGroup = await unitOfWork.StudentGroups.GetById(studentGroupId);
 
             if (studentGroup == null)
@@ -176,8 +178,9 @@ namespace MyPortal.Logic.Services
                 throw new NotFoundException("Student group not found.");
             }
 
-            var registerTitle = string.IsNullOrWhiteSpace(title) ?
-                $"{studentGroup.Description}, {dateFrom:dd/MM/yyyy}-{dateTo:dd/MM/yyyy}" : title;
+            var registerTitle = string.IsNullOrWhiteSpace(title)
+                ? $"{studentGroup.Description}, {dateFrom:dd/MM/yyyy}-{dateTo:dd/MM/yyyy}"
+                : title;
 
             var register = await InitialiseRegister(dateFrom, dateTo, registerTitle, unlockedPeriods);
 
@@ -188,7 +191,7 @@ namespace MyPortal.Logic.Services
             // Get possible attendance mark "slots" (whether or not an actual mark exists yet in the system)
             var possibleMarks =
                 await unitOfWork.AttendanceMarks.GetPossibleMarksByStudentGroup(studentGroupId, register.Periods);
-                
+
             register.PopulateMarks(existingMarks);
             register.PopulateMissingMarks(possibleMarks);
 
@@ -198,7 +201,7 @@ namespace MyPortal.Logic.Services
         public async Task UpdateAttendanceMarks(params AttendanceMarkSummaryModel[] marks)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             foreach (var model in marks)
             {
                 Validate(model);
@@ -210,7 +213,7 @@ namespace MyPortal.Logic.Services
                 {
                     throw new AttendanceCodeException("Cannot insert blank attendance codes.");
                 }
-                
+
                 var markInDb = await GetAttendanceMark(model.StudentId, model.WeekId, model.PeriodId);
 
                 if (markInDb != null && markInDb.Id.HasValue)
@@ -255,7 +258,7 @@ namespace MyPortal.Logic.Services
         public async Task DeleteAttendanceMarks(params Guid[] attendanceMarkIds)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             foreach (var attendanceMarkId in attendanceMarkIds)
             {
                 await unitOfWork.AttendanceMarks.Delete(attendanceMarkId);
@@ -279,7 +282,7 @@ namespace MyPortal.Logic.Services
         public async Task<AttendanceSummary> GetAttendanceSummaryByStudent(Guid studentId, Guid academicYearId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var codes = (await unitOfWork.AttendanceCodes.GetAll())
                 .Select(c => new AttendanceCodeModel(c))
                 .ToList();
@@ -292,11 +295,11 @@ namespace MyPortal.Logic.Services
 
             return summary;
         }
-        
+
         public async Task<AttendancePeriodModel> GetPeriodById(Guid periodId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var period = await unitOfWork.AttendancePeriods.GetById(periodId);
 
             if (period == null)
@@ -306,11 +309,11 @@ namespace MyPortal.Logic.Services
 
             return new AttendancePeriodModel(period);
         }
-        
+
         public async Task<AttendanceWeekModel> GetWeekById(Guid attendanceWeekId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var attendanceWeek = await unitOfWork.AttendanceWeeks.GetById(attendanceWeekId);
 
             if (attendanceWeek == null)
@@ -324,7 +327,7 @@ namespace MyPortal.Logic.Services
         public async Task<AttendanceWeekModel> GetWeekByDate(DateTime date, bool throwIfNotFound = true)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var week = await unitOfWork.AttendanceWeeks.GetByDate(date);
 
             if (week == null && throwIfNotFound)
@@ -338,7 +341,7 @@ namespace MyPortal.Logic.Services
         public async Task AddExtraName(ExtraNameRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
 
             var existingNames =
@@ -356,7 +359,7 @@ namespace MyPortal.Logic.Services
                 SessionId = model.SessionId,
                 StudentId = model.StudentId
             };
-            
+
             unitOfWork.SessionExtraNames.Create(extraName);
 
             await unitOfWork.SaveChangesAsync();

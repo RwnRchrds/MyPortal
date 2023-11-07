@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Constants;
 
 namespace MyPortal.Logic.Attributes
@@ -11,14 +10,14 @@ namespace MyPortal.Logic.Attributes
         {
             if (value is string stringValue)
             {
-                var validValues = new string[] { Sexes.Male, Sexes.Female, Sexes.Other, Sexes.Unknown };
+                var validValues = new[] { Sexes.Male, Sexes.Female, Sexes.Other, Sexes.Unknown };
 
                 if (validValues.Contains(stringValue))
                 {
                     return ValidationResult.Success;
                 }
             }
-            
+
             return new ValidationResult("Gender is invalid.");
         }
     }

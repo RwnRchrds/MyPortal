@@ -5,7 +5,7 @@ using MyPortal.Database.BaseTypes;
 namespace MyPortal.Database.Models.Entity
 {
     [Table("ProductTypes")]
-    public partial class ProductType : LookupItem
+    public class ProductType : LookupItem
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
             "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -14,10 +14,9 @@ namespace MyPortal.Database.Models.Entity
             Products = new HashSet<Product>();
         }
 
-        [Column(Order = 4)]
-        public bool IsMeal { get; set; }
+        [Column(Order = 4)] public bool IsMeal { get; set; }
 
-        
+
         public virtual ICollection<Product> Products { get; set; }
 
         public virtual ICollection<StoreDiscount> ProductTypeDiscounts { get; set; }

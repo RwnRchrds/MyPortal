@@ -35,7 +35,7 @@ namespace MyPortal.Logic.Models.Data.Behaviour.ReportCards
                 BehaviourType = new IncidentTypeModel(model.BehaviourType);
             }
         }
-        
+
         public Guid StudentId { get; set; }
 
         public Guid BehaviourTypeId { get; set; }
@@ -44,20 +44,20 @@ namespace MyPortal.Logic.Models.Data.Behaviour.ReportCards
 
         public DateTime EndDate { get; set; }
 
-        [StringLength(256)]
-        public string Comments { get; set; }
+        [StringLength(256)] public string Comments { get; set; }
 
         public bool Active { get; set; }
 
         public virtual StudentModel Student { get; set; }
         public virtual IncidentTypeModel BehaviourType { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ReportCards.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

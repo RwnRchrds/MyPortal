@@ -7,7 +7,6 @@ namespace MyPortal.Logic.Models.Data.Medical
     {
         public MedicalConditionModel(MedicalCondition model) : base(model)
         {
-            
         }
     }
 }

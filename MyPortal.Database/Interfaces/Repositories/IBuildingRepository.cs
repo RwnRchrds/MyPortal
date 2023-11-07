@@ -4,6 +4,5 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IBuildingRepository : IReadWriteRepository<Building>, IUpdateRepository<Building>
     {
-        
     }
 }

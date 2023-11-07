@@ -7,20 +7,15 @@ namespace MyPortal.Database.Models.Entity
     [Table("SenReviews")]
     public class SenReview : BaseTypes.Entity
     {
-        [Column(Order = 2)]
-        public Guid StudentId { get; set; }
+        [Column(Order = 2)] public Guid StudentId { get; set; }
 
-        [Column(Order = 3)]
-        public Guid ReviewTypeId { get; set; }
+        [Column(Order = 3)] public Guid ReviewTypeId { get; set; }
 
-        [Column(Order = 4)]
-        public Guid ReviewStatusId { get; set; }
+        [Column(Order = 4)] public Guid ReviewStatusId { get; set; }
 
-        [Column(Order = 5)]
-        public Guid? SencoId { get; set; }
+        [Column(Order = 5)] public Guid? SencoId { get; set; }
 
-        [Column(Order = 6)]
-        public Guid EventId { get; set; }
+        [Column(Order = 6)] public Guid EventId { get; set; }
 
         [Column(Order = 7)]
         // When this gets updated, the student's SEN status should also be updated
@@ -31,7 +26,7 @@ namespace MyPortal.Database.Models.Entity
         public string Comments { get; set; }
 
         public virtual Student Student { get; set; }
-        
+
         public virtual StaffMember Senco { get; set; }
 
         public virtual DiaryEvent Event { get; set; }

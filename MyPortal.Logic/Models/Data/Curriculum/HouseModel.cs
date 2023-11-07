@@ -25,21 +25,22 @@ namespace MyPortal.Logic.Models.Data.Curriculum
                 StudentGroup = new StudentGroupModel(model.StudentGroup);
             }
         }
-        
+
         public Guid StudentGroupId { get; set; }
-        
+
         [StringLength(128)]
         [RegularExpression(RegularExpressions.ColourCode)]
         public string ColourCode { get; set; }
-        
+
         public virtual StudentGroupModel StudentGroup { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Houses.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

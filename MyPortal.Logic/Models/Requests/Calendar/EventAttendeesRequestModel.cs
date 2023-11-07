@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MyPortal.Logic.Models.Requests.Calendar
+﻿namespace MyPortal.Logic.Models.Requests.Calendar
 {
     public class EventAttendeesRequestModel
     {

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Logic.Models.Data.Settings;
-
 using MyPortal.Logic.Models.Requests.Settings.Roles;
 using MyPortal.Logic.Models.Structures;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Interfaces.Services
 {

@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.QueryResults.Assessment;
@@ -23,9 +20,8 @@ namespace MyPortal.Database.Repositories
     {
         public ResultRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
-        
+
         private Query WithResults(Query query, string alias)
         {
             var cteQuery = new Query("Results as R").Distinct();
@@ -41,7 +37,7 @@ namespace MyPortal.Database.Repositories
             cteQuery.LeftJoin("Students as S", "S.Id", "R.StudentId");
             cteQuery.ApplyName("SN", "S.PersonId");
             cteQuery.ApplyName("CBN", "U.PersonId", NameFormat.FullNameAbbreviated);
-            
+
             return query.With(alias, cteQuery);
         }
 
@@ -87,18 +83,19 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var results = await DbUser.Transaction.Connection.QueryAsync<Result, ResultSet, Aspect, Student, Grade, User, Result>(
-                sql.Sql,
-                (result, set, aspect, student, grade, user) =>
-                {
-                    result.ResultSet = set;
-                    result.Aspect = aspect;
-                    result.Student = student;
-                    result.Grade = grade;
-                    result.CreatedBy = user;
+            var results = await DbUser.Transaction.Connection
+                .QueryAsync<Result, ResultSet, Aspect, Student, Grade, User, Result>(
+                    sql.Sql,
+                    (result, set, aspect, student, grade, user) =>
+                    {
+                        result.ResultSet = set;
+                        result.Aspect = aspect;
+                        result.Student = student;
+                        result.Grade = grade;
+                        result.CreatedBy = user;
 
-                    return result;
-                }, sql.NamedBindings, DbUser.Transaction);
+                        return result;
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return results;
         }
@@ -149,7 +146,7 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<Result>> GetPreviousResults(Guid studentId, Guid aspectId, DateTime dateTo)
         {
             var query = GetDefaultQuery();
-            
+
             query.Where($"{TblAlias}.StudentId", studentId);
             query.Where($"{TblAlias}.AspectId", aspectId);
             query.Where($"{TblAlias}.Date", "<", dateTo);

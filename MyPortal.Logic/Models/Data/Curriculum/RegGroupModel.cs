@@ -30,19 +30,20 @@ namespace MyPortal.Logic.Models.Data.Curriculum
         }
 
         public Guid StudentGroupId { get; set; }
-        
+
         public Guid YearGroupId { get; set; }
 
         public virtual StudentGroupModel StudentGroup { get; set; }
 
         public virtual YearGroupModel YearGroup { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.RegGroups.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

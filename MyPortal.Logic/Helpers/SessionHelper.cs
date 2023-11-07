@@ -10,7 +10,7 @@ public static class SessionHelper
     public static SessionDataModel[] GetSessionData(SessionPeriodDetailModel[] sessionPeriods)
     {
         var sessionData = new List<SessionDataModel>();
-            
+
         var sessions = sessionPeriods.GroupBy(sp => sp.SessionId).ToArray();
 
         foreach (var sessionGroup in sessions)
@@ -20,7 +20,7 @@ public static class SessionHelper
             if (firstPeriod != null)
             {
                 var periodData = new List<SessionPeriodDataModel>();
-                
+
                 var sessionDataItem = new SessionDataModel
                 {
                     SessionId = firstPeriod.SessionId,

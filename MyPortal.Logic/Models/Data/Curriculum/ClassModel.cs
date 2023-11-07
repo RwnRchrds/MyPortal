@@ -37,20 +37,19 @@ namespace MyPortal.Logic.Models.Data.Curriculum
                 Directory = new DirectoryModel(model.Directory);
             }
         }
-        
+
         public Guid CourseId { get; set; }
 
         public Guid CurriculumGroupId { get; set; }
 
         public Guid DirectoryId { get; set; }
 
-        [Required]
-        [StringLength(10)]
-        public string Code { get; set; }
+        [Required] [StringLength(10)] public string Code { get; set; }
 
         public DirectoryModel Directory { get; set; }
         public CourseModel Course { get; set; }
         public CurriculumGroupModel Group { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

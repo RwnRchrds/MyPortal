@@ -29,22 +29,23 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 Candidate = new ExamCandidateModel(model.Candidate);
             }
         }
-        
+
         public Guid SeriesId { get; set; }
-        
+
         public Guid CandidateId { get; set; }
-        
+
         public string Flag { get; set; }
-        
+
         public virtual ExamSeriesModel Series { get; set; }
         public virtual ExamCandidateModel Candidate { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamCandidateSeries.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

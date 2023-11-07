@@ -10,7 +10,7 @@ namespace MyPortal.Database.Models.Entity
         {
             AddressPersons = new HashSet<AddressPerson>();
         }
-        
+
         public virtual ICollection<AddressPerson> AddressPersons { get; set; }
         public virtual ICollection<AddressAgency> AddressAgencies { get; set; }
     }

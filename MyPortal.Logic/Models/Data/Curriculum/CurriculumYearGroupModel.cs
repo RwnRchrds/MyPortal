@@ -12,15 +12,11 @@ namespace MyPortal.Logic.Models.Data.Curriculum
             KeyStage = model.KeyStage;
             Code = model.Code;
         }
-        
-        [Required]
-        [StringLength(128)]
-        public string Name { get; set; }
-        
+
+        [Required] [StringLength(128)] public string Name { get; set; }
+
         public int KeyStage { get; set; }
-        
-        [Required]
-        [StringLength(10)]
-        public string Code { get; set; }
+
+        [Required] [StringLength(10)] public string Code { get; set; }
     }
 }

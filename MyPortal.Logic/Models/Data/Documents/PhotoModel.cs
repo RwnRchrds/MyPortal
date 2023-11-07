@@ -22,7 +22,7 @@ namespace MyPortal.Logic.Models.Data.Documents
 
             return stream;
         }
-        
+
         public byte[] Data { get; set; }
 
         public DateTime PhotoDate { get; set; }

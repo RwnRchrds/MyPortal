@@ -3,7 +3,7 @@
 public static class Keys
 {
     public static readonly string DefaultEncryptionKey = @"v9y$B&E)H+MbQeThWmZq4t7w!z%C*F-J";
-    
+
     internal static readonly string ConfigDatabaseProviderKey = @"DataSource:DatabaseProvider";
     internal static readonly string ConfigConnectionStringKey = @"DataSource:ConnectionString";
     internal static readonly string ConfigConnectionStringSourceKey = @"DataSource:ConnectionStringSource";

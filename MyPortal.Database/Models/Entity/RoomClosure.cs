@@ -7,17 +7,13 @@ namespace MyPortal.Database.Models.Entity
     [Table("RoomClosures")]
     public class RoomClosure : BaseTypes.Entity
     {
-        [Column(Order = 2)]
-        public Guid RoomId { get; set; }
+        [Column(Order = 2)] public Guid RoomId { get; set; }
 
-        [Column(Order = 3)]
-        public Guid ReasonId { get; set; }
+        [Column(Order = 3)] public Guid ReasonId { get; set; }
 
-        [Column(Order = 4)]
-        public DateTime StartDate { get; set; }
+        [Column(Order = 4)] public DateTime StartDate { get; set; }
 
-        [Column(Order = 5)]
-        public DateTime EndDate { get; set; }
+        [Column(Order = 5)] public DateTime EndDate { get; set; }
 
         [Column(Order = 6)]
         [StringLength(256)]

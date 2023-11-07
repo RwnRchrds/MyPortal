@@ -98,7 +98,7 @@ namespace MyPortalWeb.Controllers.Api
                     if (await User.HasPermission(UserService, PermissionRequirement.RequireAll,
                             managedStaffPermission))
                     {
-                        if (user.PersonId.HasValue)
+                        if (user.PersonId.HasValue && dirOwner.Person.Id.HasValue)
                         {
                             var staffMember = await _staffMemberService.GetByPersonId(dirOwner.Person.Id.Value);
                             var lineManager = await _staffMemberService.GetByPersonId(user.PersonId.Value);

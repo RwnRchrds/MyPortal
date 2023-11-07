@@ -7,7 +7,6 @@ namespace MyPortal.Logic.Models.Data.Contacts
     {
         public PhoneNumberTypeModel(PhoneNumberType model) : base(model)
         {
-            
         }
     }
 }

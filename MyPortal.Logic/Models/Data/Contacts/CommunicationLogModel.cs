@@ -31,15 +31,15 @@ namespace MyPortal.Logic.Models.Data.Contacts
                 Contact = new ContactModel(model.Contact);
             }
         }
-        
+
         public Guid ContactId { get; set; }
-        
+
         public Guid CommunicationTypeId { get; set; }
-        
+
         public DateTime Date { get; set; }
-        
+
         public string Notes { get; set; }
-        
+
         public bool Outgoing { get; set; }
 
         public CommunicationTypeModel Type { get; set; }

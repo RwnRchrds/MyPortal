@@ -14,15 +14,11 @@ namespace MyPortal.Database.Models.Entity
             Tasks = new HashSet<Task>();
         }
 
-        [Column(Order = 4)] 
-        public bool Personal { get; set; }
+        [Column(Order = 4)] public bool Personal { get; set; }
 
-        [Column(Order = 5)]
-        [Required]
-        public string ColourCode { get; set; }
+        [Column(Order = 5)] [Required] public string ColourCode { get; set; }
 
-        [Column(Order = 6)] 
-        public bool System { get; set; }
+        [Column(Order = 6)] public bool System { get; set; }
 
         public virtual ICollection<Task> Tasks { get; set; }
     }

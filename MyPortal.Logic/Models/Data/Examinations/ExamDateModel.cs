@@ -24,21 +24,21 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 Session = new ExamSessionModel(model.Session);
             }
         }
-        
+
         public Guid SessionId { get; set; }
-        
+
         public int Duration { get; set; }
-        
+
         public DateTime SittingDate { get; set; }
 
         public virtual ExamSessionModel Session { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamDates.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

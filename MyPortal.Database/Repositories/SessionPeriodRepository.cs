@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
-using MyPortal.Database.Models.QueryResults.Attendance;
 using MyPortal.Database.Models.QueryResults.Curriculum;
 using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories.Base;
@@ -22,7 +18,8 @@ public class SessionPeriodRepository : BaseReadWriteRepository<SessionPeriod>, I
     {
     }
 
-    public async Task<IEnumerable<SessionPeriodDetailModel>> GetPeriodDetailsBySession(Guid sessionId, DateTime dateFrom, DateTime dateTo)
+    public async Task<IEnumerable<SessionPeriodDetailModel>> GetPeriodDetailsBySession(Guid sessionId,
+        DateTime dateFrom, DateTime dateTo)
     {
         var query = Views.GetSessionPeriodMetadata("SM");
 
@@ -32,8 +29,9 @@ public class SessionPeriodRepository : BaseReadWriteRepository<SessionPeriod>, I
 
         return await ExecuteQuery<SessionPeriodDetailModel>(query);
     }
-    
-    public async Task<IEnumerable<SessionPeriodDetailModel>> GetPeriodDetailsBySession(Guid sessionId, Guid attendanceWeekId)
+
+    public async Task<IEnumerable<SessionPeriodDetailModel>> GetPeriodDetailsBySession(Guid sessionId,
+        Guid attendanceWeekId)
     {
         var query = Views.GetSessionPeriodMetadata("SM");
 
@@ -47,7 +45,7 @@ public class SessionPeriodRepository : BaseReadWriteRepository<SessionPeriod>, I
         DateTime dateFrom, DateTime dateTo)
     {
         var query = Views.GetSessionPeriodMetadata("SM");
-            
+
         query.LeftJoin("StudentGroupMemberships AS SGM", "SGM.StudentGroupId", "SM.StudentGroupId");
         query.LeftJoin("Students AS S", "S.Id", "SGM.StudentId");
 
@@ -65,18 +63,18 @@ public class SessionPeriodRepository : BaseReadWriteRepository<SessionPeriod>, I
         var query = Views.GetSessionPeriodMetadata("SM");
 
         query.LeftJoin("StaffMembers AS S", "S.Id", "SM.TeacherId");
-            
+
         query.Where("S.Id", staffMemberId);
         query.WhereDate("SM.StartTime", ">=", dateFrom);
         query.WhereDate("SM.EndTime", "<=", dateTo);
-            
+
         return await ExecuteQuery<SessionPeriodDetailModel>(query);
     }
 
     public async Task<IEnumerable<SessionPeriodDetailModel>> SearchPeriodDetails(RegisterSearchOptions searchOptions)
     {
         var query = Views.GetSessionPeriodMetadata("SM");
-            
+
         query.WhereDate("SM.StartTime", ">=", searchOptions.DateFrom);
         query.WhereDate("SM.EndTime", "<=", searchOptions.DateTo);
 

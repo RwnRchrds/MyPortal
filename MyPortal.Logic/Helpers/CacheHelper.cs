@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MyPortal.Database.Models.Entity;
+﻿using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Logic.Helpers
 {
@@ -9,6 +6,7 @@ namespace MyPortal.Logic.Helpers
     {
         public const string LocalSchoolName = "LocalSchoolName";
     }
+
     internal class CacheHelper
     {
         internal static readonly ThreadSafeMemoryCache<string> StringCache = new ThreadSafeMemoryCache<string>();

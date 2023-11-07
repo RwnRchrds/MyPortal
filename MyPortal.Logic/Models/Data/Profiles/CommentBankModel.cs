@@ -7,7 +7,6 @@ namespace MyPortal.Logic.Models.Data.Profiles
     {
         public CommentBankModel(CommentBank model) : base(model)
         {
-            
         }
     }
 }

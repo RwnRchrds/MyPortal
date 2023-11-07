@@ -9,7 +9,8 @@ namespace MyPortal.Database.Models.Entity
     [Table("SchoolTypes")]
     public class SchoolType : LookupItem, ICensusEntity
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SchoolType()
         {
             Schools = new HashSet<School>();
@@ -20,7 +21,7 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(10)]
         public string Code { get; set; }
 
-        
+
         public virtual ICollection<School> Schools { get; set; }
     }
 }

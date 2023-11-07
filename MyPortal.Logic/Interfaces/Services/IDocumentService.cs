@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Logic.Models.Data.Documents;
-using MyPortal.Logic.Models.DocumentProvision;
-
 using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortal.Logic.Interfaces.Services

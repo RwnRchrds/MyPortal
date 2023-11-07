@@ -10,7 +10,7 @@ namespace MyPortal.Logic.Models.Data.Assessment
     {
         public MarksheetColumnModel(MarksheetColumn model) : base(model)
         {
-           LoadFromModel(model);
+            LoadFromModel(model);
         }
 
         private void LoadFromModel(MarksheetColumn model)
@@ -36,7 +36,7 @@ namespace MyPortal.Logic.Models.Data.Assessment
                 ResultSet = new ResultSetModel(model.ResultSet);
             }
         }
-        
+
         public Guid TemplateId { get; set; }
         public Guid AspectId { get; set; }
         public Guid ResultSetId { get; set; }
@@ -46,14 +46,14 @@ namespace MyPortal.Logic.Models.Data.Assessment
         public virtual MarksheetTemplateModel Template { get; set; }
         public virtual AspectModel Aspect { get; set; }
         public virtual ResultSetModel ResultSet { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.MarksheetColumns.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

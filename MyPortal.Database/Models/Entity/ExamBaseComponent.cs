@@ -7,14 +7,11 @@ namespace MyPortal.Database.Models.Entity
     [Table("ExamBaseComponents")]
     public class ExamBaseComponent : BaseTypes.Entity
     {
-        [Column(Order = 2)]
-        public Guid AssessmentModeId { get; set; }
+        [Column(Order = 2)] public Guid AssessmentModeId { get; set; }
 
-        [Column(Order = 3)]
-        public Guid ExamAssessmentId { get; set; }
-        
-        [Column(Order = 4)]
-        public string ComponentCode { get; set; }
+        [Column(Order = 3)] public Guid ExamAssessmentId { get; set; }
+
+        [Column(Order = 4)] public string ComponentCode { get; set; }
 
         public virtual ExamAssessmentMode AssessmentMode { get; set; }
         public virtual ExamAssessment Assessment { get; set; }

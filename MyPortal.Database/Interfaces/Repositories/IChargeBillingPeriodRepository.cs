@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Interfaces.Repositories;
 
-public interface IChargeBillingPeriodRepository : IReadWriteRepository<ChargeBillingPeriod>, IUpdateRepository<ChargeBillingPeriod>
+public interface IChargeBillingPeriodRepository : IReadWriteRepository<ChargeBillingPeriod>,
+    IUpdateRepository<ChargeBillingPeriod>
 {
-    
 }

@@ -32,21 +32,21 @@ namespace MyPortal.Logic.Models.Data.School
                 Reason = new RoomClosureReasonModel(model.Reason);
             }
         }
-        
-        
+
+
         public Guid RoomId { get; set; }
-        
+
         public Guid ReasonId { get; set; }
-        
+
         public DateTime StartDate { get; set; }
-        
+
         public DateTime EndDate { get; set; }
-        
-        [StringLength(256)]
-        public string Notes { get; set; }
+
+        [StringLength(256)] public string Notes { get; set; }
 
         public virtual RoomModel Room { get; set; }
         public virtual RoomClosureReasonModel Reason { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

@@ -24,20 +24,19 @@ namespace MyPortal.Logic.Models.Data.Curriculum
                 Course = new CourseModel(model.Course);
             }
         }
-        
+
         public Guid CourseId { get; set; }
 
-        [Required]
-        [StringLength(128)]
-        public string Name { get; set; }
+        [Required] [StringLength(128)] public string Name { get; set; }
 
         public virtual CourseModel Course { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.StudyTopics.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

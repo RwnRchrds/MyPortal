@@ -12,8 +12,8 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.People;
 using MyPortal.Logic.Models.Data.Settings;
+using MyPortal.Logic.Models.Permissions;
 using MyPortal.Logic.Models.Requests.Person.Tasks;
-using MyPortalWeb.Models;
 using Task = System.Threading.Tasks.Task;
 using TaskStatus = MyPortal.Database.Models.Search.TaskStatus;
 
@@ -25,7 +25,8 @@ namespace MyPortal.Logic.Services
         private readonly IPersonService _personService;
         private readonly IStaffMemberService _staffMemberService;
 
-        public TaskService(ISessionUser user, IUserService userService, IPersonService personService, IStaffMemberService staffMemberService) : base(user)
+        public TaskService(ISessionUser user, IUserService userService, IPersonService personService,
+            IStaffMemberService staffMemberService) : base(user)
         {
             _userService = userService;
             _personService = personService;
@@ -35,7 +36,7 @@ namespace MyPortal.Logic.Services
         public async Task CreateTask(TaskRequestModel task)
         {
             Validate(task);
-            
+
             if (TaskTypes.IsReserved(task.TypeId))
             {
                 throw new LogicException("Tasks of this type cannot be created manually.");
@@ -46,7 +47,7 @@ namespace MyPortal.Logic.Services
             if (access.CanEdit || access.IsAssignee)
             {
                 await using var unitOfWork = await User.GetConnection();
-            
+
                 var taskToAdd = new Database.Models.Entity.Task
                 {
                     Id = Guid.NewGuid(),
@@ -73,7 +74,7 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<TaskTypeModel>> GetTypes(bool personalOnly, bool activeOnly = true)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var taskTypes = await unitOfWork.TaskTypes.GetAll(personalOnly, activeOnly, false);
 
             return taskTypes.Select(t => new TaskTypeModel(t));
@@ -82,7 +83,7 @@ namespace MyPortal.Logic.Services
         public async Task<bool> IsTaskOwner(Guid taskId, Guid userId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var task = await unitOfWork.Tasks.GetById(taskId);
 
             if (task == null)
@@ -104,7 +105,7 @@ namespace MyPortal.Logic.Services
 
             return false;
         }
-        
+
         private async Task<TaskModel> CheckAccessAndReturn(MyPortal.Database.Models.Entity.Task task)
         {
             if (task.AssignedToId.HasValue)
@@ -115,7 +116,7 @@ namespace MyPortal.Logic.Services
                 {
                     return new TaskModel(task);
                 }
-                
+
                 throw new PermissionException("You do not have permission to view this task.");
             }
 
@@ -125,7 +126,7 @@ namespace MyPortal.Logic.Services
         public async Task<TaskModel> GetTaskById(Guid taskId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var task = await unitOfWork.Tasks.GetById(taskId);
 
             if (task == null)
@@ -172,7 +173,7 @@ namespace MyPortal.Logic.Services
                 UserId = model.UserId,
                 RemindTime = model.RemindTime
             };
-            
+
             unitOfWork.TaskReminders.Create(newReminder);
 
             await unitOfWork.SaveChangesAsync();
@@ -261,7 +262,7 @@ namespace MyPortal.Logic.Services
             if (await CanUpdateTask(taskId))
             {
                 await using var unitOfWork = await User.GetConnection();
-            
+
                 var taskInDb = await unitOfWork.Tasks.GetById(taskId);
 
                 if (taskInDb.System)
@@ -292,14 +293,14 @@ namespace MyPortal.Logic.Services
                 {
                     searchOptions = new TaskSearchOptions { Status = TaskStatus.Active };
                 }
-            
+
                 await using var unitOfWork = await User.GetConnection();
 
                 var tasks = await unitOfWork.Tasks.GetByAssignedTo(personId, searchOptions);
 
                 return tasks.Select(t => new TaskModel(t));
             }
-            
+
             throw new PermissionException("You do not have permission to access tasks for this person.");
         }
 
@@ -309,7 +310,7 @@ namespace MyPortal.Logic.Services
 
             if (userId != null)
             {
-                var response = new TaskAccessModel {PersonId = personId};
+                var response = new TaskAccessModel { PersonId = personId };
 
                 var user = await _userService.GetUserById(userId.Value);
 
@@ -337,10 +338,8 @@ namespace MyPortal.Logic.Services
 
                 return response;
             }
-            else
-            {
-                throw Unauthenticated();
-            }
+
+            throw Unauthenticated();
         }
 
         private async Task<TaskAccessModel> GetPermissionsForTasksStaffUser(TaskAccessModel response, UserModel user,
@@ -357,7 +356,7 @@ namespace MyPortal.Logic.Services
             {
                 response.CanEdit = true;
             }
-            
+
             var canViewManagedStaffTasks = await User.HasPermission(_userService, PermissionRequirement.RequireAll,
                 PermissionValue.PeopleViewManagedStaffTasks);
 
@@ -373,7 +372,7 @@ namespace MyPortal.Logic.Services
 
                     if (staffMember is { Id: { } } && userPerson is { Id: { } })
                     {
-                        if (await _staffMemberService.IsLineManager(staffMember.Id.Value, 
+                        if (await _staffMemberService.IsLineManager(staffMember.Id.Value,
                                 userPerson.Id.Value))
                         {
                             response.CanView = canViewManagedStaffTasks;
@@ -407,11 +406,11 @@ namespace MyPortal.Logic.Services
 
             return response;
         }
-        
+
         private async Task<bool> CanUpdateTask(Guid taskId)
         {
             var userId = User.GetUserId();
-            
+
             var task = await GetTaskById(taskId);
 
             if (task.CreatedById != userId && task.AssignedToId.HasValue)

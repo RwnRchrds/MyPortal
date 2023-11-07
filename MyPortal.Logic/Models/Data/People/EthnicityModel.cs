@@ -10,9 +10,7 @@ namespace MyPortal.Logic.Models.Data.People
         {
             Code = model.Code;
         }
-        
-        [Required]
-        [StringLength(10)]
-        public string Code { get; set; }
+
+        [Required] [StringLength(10)] public string Code { get; set; }
     }
 }

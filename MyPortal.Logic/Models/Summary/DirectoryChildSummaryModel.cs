@@ -1,7 +1,6 @@
 ﻿using System;
 using MyPortal.Logic.Models.Data.Documents;
 
-
 namespace MyPortal.Logic.Models.Summary
 {
     public class DirectoryChildSummaryModel
@@ -17,8 +16,9 @@ namespace MyPortal.Logic.Models.Summary
         {
             if (directory.Id.HasValue)
             {
-                Id = directory.Id.Value;   
+                Id = directory.Id.Value;
             }
+
             ParentId = directory.ParentId;
             IsDirectory = true;
             Name = directory.Name;
@@ -31,6 +31,7 @@ namespace MyPortal.Logic.Models.Summary
             {
                 Id = document.Id.Value;
             }
+
             ParentId = document.DirectoryId;
             IsDirectory = false;
             Name = document.Title;

@@ -47,25 +47,25 @@ namespace MyPortal.Logic.Models.Data.Behaviour.Incidents
                 CreatedBy = new UserModel(model.CreatedBy);
             }
         }
-        
+
         public Guid AcademicYearId { get; set; }
-        
+
         [Required(ErrorMessage = "Behaviour type is required.")]
         public Guid BehaviourTypeId { get; set; }
 
         public Guid? LocationId { get; set; }
-        
+
         public Guid CreatedById { get; set; }
 
         public DateTime CreatedDate { get; set; }
-        
+
         public string Comments { get; set; }
 
         public bool Deleted { get; set; }
 
         public virtual IncidentTypeModel Type { get; set; }
 
-        public virtual LocationModel Location{ get; set; }
+        public virtual LocationModel Location { get; set; }
 
         public virtual AcademicYearModel AcademicYear { get; set; }
 
@@ -76,8 +76,8 @@ namespace MyPortal.Logic.Models.Data.Behaviour.Incidents
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Incidents.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

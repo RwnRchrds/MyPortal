@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using MyPortal.Database;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Students;
-
 using MyPortal.Logic.Models.Requests.Contact;
 using Task = System.Threading.Tasks.Task;
 
@@ -26,7 +21,7 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<StudentModel>> GetReportableStudents(Guid contactId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var students = await unitOfWork.Students.GetByContact(contactId, true);
 
             return students.Select(s => new StudentModel(s));
@@ -35,9 +30,9 @@ namespace MyPortal.Logic.Services
         public async Task CreateContact(ContactRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
-            
+
             var contact = new Contact
             {
                 Id = Guid.NewGuid(),
@@ -47,7 +42,7 @@ namespace MyPortal.Logic.Services
                 ParentalBallot = model.ParentalBallot,
                 Person = PersonHelper.CreatePersonFromModel(model)
             };
-                    
+
             unitOfWork.Contacts.Create(contact);
 
             await unitOfWork.SaveChangesAsync();
@@ -56,16 +51,16 @@ namespace MyPortal.Logic.Services
         public async Task UpdateContact(Guid contactId, ContactRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
-            
+
             var contact = await unitOfWork.Contacts.GetById(contactId);
 
             contact.JobTitle = model.JobTitle;
             contact.NiNumber = model.NiNumber;
             contact.PlaceOfWork = model.PlaceOfWork;
             contact.ParentalBallot = model.ParentalBallot;
-                    
+
             PersonHelper.UpdatePersonFromModel(contact.Person, model);
 
             await unitOfWork.People.Update(contact.Person);
@@ -77,7 +72,7 @@ namespace MyPortal.Logic.Services
         public async Task DeleteContact(Guid contactId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             await unitOfWork.Contacts.Delete(contactId);
         }
     }

@@ -10,19 +10,19 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Audit;
 using MyPortal.Logic.Models.Data.Settings;
 
-
 namespace MyPortal.Logic.Services
 {
     public abstract class BaseService
     {
         protected readonly ISessionUser User;
 
-        protected BaseService(ISessionUser user) : base()
+        protected BaseService(ISessionUser user)
         {
             User = user;
         }
 
-        protected async Task<IEnumerable<HistoryItem>> GetHistory<T>(IReadRepository<T> repository, Guid entityId) where T : class, IEntity
+        protected async Task<IEnumerable<HistoryItem>> GetHistory<T>(IReadRepository<T> repository, Guid entityId)
+            where T : class, IEntity
         {
             await using var unitOfWork = await User.GetConnection();
 
@@ -44,10 +44,10 @@ namespace MyPortal.Logic.Services
                     OldValue = auditLog.OldValue,
                     UserDisplayName = user.GetDisplayName(NameFormat.FullNameAbbreviated)
                 });
-                
+
                 historyItems.Add(historyItem);
             }
-            
+
             return historyItems;
         }
 

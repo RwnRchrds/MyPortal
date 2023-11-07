@@ -49,7 +49,7 @@ namespace MyPortal.Logic.Services
         public async Task CreateCurriculumBand(CurriculumBandRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
 
             var band = new CurriculumBand
@@ -59,9 +59,9 @@ namespace MyPortal.Logic.Services
                 CurriculumYearGroupId = model.CurriculumYearGroupId,
                 StudentGroup = StudentGroupHelper.CreateStudentGroupFromModel(model)
             };
-            
+
             unitOfWork.CurriculumBands.Create(band);
-            
+
             await unitOfWork.SaveChangesAsync();
         }
 
@@ -80,7 +80,7 @@ namespace MyPortal.Logic.Services
 
             bandInDb.AcademicYearId = model.AcademicYearId;
             bandInDb.CurriculumYearGroupId = model.CurriculumYearGroupId;
-            
+
             StudentGroupHelper.UpdateStudentGroupFromModel(bandInDb.StudentGroup, model);
 
             await unitOfWork.StudentGroups.Update(bandInDb.StudentGroup);

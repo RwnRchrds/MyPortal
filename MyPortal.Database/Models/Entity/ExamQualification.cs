@@ -10,11 +10,9 @@ namespace MyPortal.Database.Models.Entity
     {
         // TODO: Populate Data
 
-        [Column(Order = 4)] 
-        public string JcQualificationCode { get; set; }
+        [Column(Order = 4)] public string JcQualificationCode { get; set; }
 
-        [Column(Order = 5)]
-        public bool System { get; set; }
+        [Column(Order = 5)] public bool System { get; set; }
 
         public virtual ICollection<ExamQualificationLevel> Levels { get; set; }
         public virtual ICollection<ExamAward> Awards { get; set; }

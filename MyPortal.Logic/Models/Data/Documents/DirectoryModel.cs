@@ -29,13 +29,11 @@ namespace MyPortal.Logic.Models.Data.Documents
         }
 
         public DirectoryModel Parent => ParentModel as DirectoryModel;
-        
+
         public Guid? ParentId { get; set; }
-        
-        [Required]
-        [StringLength(128)]
-        public string Name { get; set; }
-        
+
+        [Required] [StringLength(128)] public string Name { get; set; }
+
         public bool Private { get; set; }
 
 
@@ -44,7 +42,7 @@ namespace MyPortal.Logic.Models.Data.Documents
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Directories.GetById(Id.Value);
-            
+
                 LoadFromModel(model);
             }
         }
@@ -55,7 +53,7 @@ namespace MyPortal.Logic.Models.Data.Documents
             {
                 return Parent;
             }
-            
+
             if (ParentId.HasValue)
             {
                 var parent = await unitOfWork.Directories.GetById(ParentId.Value);
@@ -65,7 +63,7 @@ namespace MyPortal.Logic.Models.Data.Documents
 
             return null;
         }
-        
+
         public DirectoryChildSummaryModel GetListModel()
         {
             return new DirectoryChildSummaryModel(this);

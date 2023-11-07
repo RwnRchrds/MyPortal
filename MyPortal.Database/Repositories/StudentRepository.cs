@@ -220,7 +220,7 @@ namespace MyPortal.Database.Repositories
 
             query.Select("S.Upn");
 
-            query.WhereLike("S.Upn", $"{leaCode}{establishmentNo}{allocationYear}", false);
+            query.WhereLike("S.Upn", $"{leaCode}{establishmentNo}{allocationYear}");
 
             return await ExecuteQuery<string>(query);
         }

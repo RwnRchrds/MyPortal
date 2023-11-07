@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Extensions;
 using NUnit.Framework;
@@ -30,7 +29,7 @@ public class DateTimeExtensionTests
     public void GetNextOccurrence_ReturnsCorrectDate(DateTime input, EventFrequency frequency, DateTime expected)
     {
         var result = input.GetNextOccurrence(frequency);
-        
+
         Assert.That(result, Is.EqualTo(expected));
     }
 }

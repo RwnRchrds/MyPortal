@@ -17,7 +17,6 @@ namespace MyPortal.Database.Repositories
     {
         public TaskRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-           
         }
 
         protected override Query GetDefaultQuery(bool includeSoftDeleted = false)
@@ -40,7 +39,7 @@ namespace MyPortal.Database.Repositories
             query.Select($"{TblAlias}.Completed");
             query.Select($"{TblAlias}.AllowEdit");
             query.Select($"{TblAlias}.System");
-            
+
             JoinRelated(query);
             SelectAllRelated(query);
 
@@ -61,7 +60,7 @@ namespace MyPortal.Database.Repositories
             query.SelectAllColumns(typeof(Person), "AT");
             query.SelectAllColumns(typeof(User), "AB");
             query.SelectAllColumns(typeof(TaskType), "TT");
-            
+
             return query;
         }
 
@@ -82,7 +81,8 @@ namespace MyPortal.Database.Repositories
             return tasks;
         }
 
-        public async System.Threading.Tasks.Task<IEnumerable<Task>> GetByAssignedTo(Guid personId, TaskSearchOptions searchOptions = null)
+        public async System.Threading.Tasks.Task<IEnumerable<Task>> GetByAssignedTo(Guid personId,
+            TaskSearchOptions searchOptions = null)
         {
             var query = GetDefaultQuery();
 

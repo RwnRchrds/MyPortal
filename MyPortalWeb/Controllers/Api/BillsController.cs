@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Constants;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Finance;
 using MyPortalWeb.Controllers.BaseControllers;

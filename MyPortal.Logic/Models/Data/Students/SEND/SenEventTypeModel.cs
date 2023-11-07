@@ -7,7 +7,6 @@ namespace MyPortal.Logic.Models.Data.Students.SEND
     {
         public SenEventTypeModel(SenEventType model) : base(model)
         {
-            
         }
     }
 }

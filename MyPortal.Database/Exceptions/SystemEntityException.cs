@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MyPortal.Database.Exceptions
 {
@@ -8,7 +6,6 @@ namespace MyPortal.Database.Exceptions
     {
         public SystemEntityException(string message) : base(message)
         {
-
         }
     }
 }

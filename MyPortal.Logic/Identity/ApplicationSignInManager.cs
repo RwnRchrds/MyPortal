@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MyPortal.Database.Models.Entity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Identity
 {
@@ -27,7 +26,7 @@ namespace MyPortal.Logic.Identity
                     await UserManager.GetUserIdAsync(user));
                 return false;
             }
-            
+
             return await base.CanSignInAsync(user);
         }
     }

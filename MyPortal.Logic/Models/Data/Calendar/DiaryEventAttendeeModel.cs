@@ -38,31 +38,31 @@ namespace MyPortal.Logic.Models.Data.Calendar
                 Response = new DiaryEventAttendeeResponseModel(model.Response);
             }
         }
-            
-        
+
+
         public Guid EventId { get; set; }
-        
+
         public Guid PersonId { get; set; }
-        
+
         public Guid? ResponseId { get; set; }
-        
+
         public bool Required { get; set; }
 
         public bool CanEdit { get; set; }
-        
+
         public bool? Attended { get; set; }
 
         public virtual DiaryEventModel Event { get; set; }
         public virtual PersonModel Person { get; set; }
         public virtual DiaryEventAttendeeResponseModel Response { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.DiaryEventAttendees.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

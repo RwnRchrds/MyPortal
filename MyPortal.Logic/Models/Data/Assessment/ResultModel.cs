@@ -53,13 +53,13 @@ namespace MyPortal.Logic.Models.Data.Assessment
                 CreatedBy = new UserModel(model.CreatedBy);
             }
         }
-        
+
         public Guid ResultSetId { get; set; }
 
         public Guid StudentId { get; set; }
 
         public Guid AspectId { get; set; }
-        
+
         public Guid CreatedById { get; set; }
 
         public DateTime Date { get; set; }
@@ -81,16 +81,16 @@ namespace MyPortal.Logic.Models.Data.Assessment
         public virtual StudentModel Student { get; set; }
 
         public virtual GradeModel Grade { get; set; }
-        
+
         public virtual UserModel CreatedBy { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Results.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

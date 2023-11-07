@@ -7,7 +7,6 @@ namespace MyPortal.Logic.Models.Data.Curriculum
     {
         public SubjectCodeSetModel(SubjectCodeSet model) : base(model)
         {
-            
         }
     }
 }

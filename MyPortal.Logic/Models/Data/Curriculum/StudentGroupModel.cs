@@ -33,27 +33,28 @@ namespace MyPortal.Logic.Models.Data.Curriculum
                 MainSupervisor = new StudentGroupSupervisorModel(model.MainSupervisor);
             }
         }
-        
+
         public string Code { get; set; }
 
         public Guid? PromoteToGroupId { get; set; }
 
         public Guid? MainSupervisorId { get; set; }
-        
+
         public int? MaxMembers { get; set; }
-        
+
         public string Notes { get; set; }
-        
+
         public bool System { get; set; }
-        
+
         public StudentGroupModel PromoteToGroup { get; set; }
         public StudentGroupSupervisorModel MainSupervisor { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.StudentGroups.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

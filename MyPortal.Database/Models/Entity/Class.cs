@@ -9,20 +9,18 @@ namespace MyPortal.Database.Models.Entity
     [Table("Classes")]
     public class Class : BaseTypes.Entity, IDirectoryEntity
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Class()
         {
             Sessions = new HashSet<Session>();
         }
 
-        [Column(Order = 2)]
-        public Guid CourseId { get; set; }
+        [Column(Order = 2)] public Guid CourseId { get; set; }
 
-        [Column(Order = 3)]
-        public Guid CurriculumGroupId { get; set; }
+        [Column(Order = 3)] public Guid CurriculumGroupId { get; set; }
 
-        [Column(Order = 4)]
-        public Guid DirectoryId { get; set; }
+        [Column(Order = 4)] public Guid DirectoryId { get; set; }
 
         [Column(Order = 5)]
         [Required]
@@ -33,7 +31,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual CurriculumGroup Group { get; set; }
         public virtual Directory Directory { get; set; }
 
-        
+
         public virtual ICollection<Session> Sessions { get; set; }
     }
 }

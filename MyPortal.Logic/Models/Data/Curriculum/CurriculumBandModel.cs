@@ -35,23 +35,20 @@ namespace MyPortal.Logic.Models.Data.Curriculum
                 StudentGroup = new StudentGroupModel(model.StudentGroup);
             }
         }
-        
+
         public Guid AcademicYearId { get; set; }
-        
+
         public Guid CurriculumYearGroupId { get; set; }
-        
+
         public Guid StudentGroupId { get; set; }
-        
-        [Required]
-        [StringLength(10)]
-        public string Code { get; set; }
-        
-        [StringLength(256)]
-        public string Description { get; set; }
+
+        [Required] [StringLength(10)] public string Code { get; set; }
+
+        [StringLength(256)] public string Description { get; set; }
 
         public AcademicYearModel AcademicYear { get; set; }
         public CurriculumYearGroupModel CurriculumYearGroup { get; set; }
-        
+
         public StudentGroupModel StudentGroup { get; set; }
 
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
@@ -59,8 +56,8 @@ namespace MyPortal.Logic.Models.Data.Curriculum
             if (Id.HasValue)
             {
                 var model = await unitOfWork.CurriculumBands.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

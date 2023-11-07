@@ -44,14 +44,14 @@ namespace MyPortal.Logic.Models.Data.StaffMembers
         public virtual StaffMemberModel Observee { get; set; }
         public virtual StaffMemberModel Observer { get; set; }
         public virtual ObservationOutcomeModel Outcome { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Observations.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

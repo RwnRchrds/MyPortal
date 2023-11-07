@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MyPortal.Logic.Models.Data.Curriculum;
 

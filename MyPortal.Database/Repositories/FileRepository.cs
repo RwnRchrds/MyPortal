@@ -14,7 +14,6 @@ namespace MyPortal.Database.Repositories
     {
         public FileRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         public async Task<File> GetByDocumentId(Guid documentId)

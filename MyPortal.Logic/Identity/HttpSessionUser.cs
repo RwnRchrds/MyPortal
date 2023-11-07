@@ -9,7 +9,6 @@ using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Services;
 
 namespace MyPortal.Logic.Identity;
 
@@ -28,21 +27,22 @@ public class HttpSessionUser : ISessionUser
 
         if (userId.HasValue)
         {
-            return await DataConnectionFactory.CreateUnitOfWork(userId.Value);   
+            return await DataConnectionFactory.CreateUnitOfWork(userId.Value);
         }
 
         return null;
     }
 
-    public async Task<bool> HasPermission(IUserService userService, PermissionRequirement requirement, params PermissionValue[] permissionValues)
+    public async Task<bool> HasPermission(IUserService userService, PermissionRequirement requirement,
+        params PermissionValue[] permissionValues)
     {
         var userId = GetUserId();
 
         if (userId.HasValue)
         {
-            return await PermissionHelper.UserHasPermission(userId.Value, userService, requirement, permissionValues);   
+            return await PermissionHelper.UserHasPermission(userId.Value, userService, requirement, permissionValues);
         }
-        
+
         return false;
     }
 

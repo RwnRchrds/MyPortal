@@ -10,8 +10,8 @@ using MyPortal.Database.Models.Connection;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Repositories.Base;
 using SqlKata;
-using Task = System.Threading.Tasks.Task;
 using MyPortalTask = MyPortal.Database.Models.Entity.Task;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories;
 
@@ -39,7 +39,8 @@ public class TaskReminderRepository : BaseReadWriteRepository<TaskReminder>, ITa
     {
         var sql = Compiler.Compile(query);
 
-        var taskReminders = await DbUser.Transaction.Connection.QueryAsync<TaskReminder, MyPortalTask, TaskReminder>(sql.Sql,
+        var taskReminders = await DbUser.Transaction.Connection.QueryAsync<TaskReminder, MyPortalTask, TaskReminder>(
+            sql.Sql,
             (reminder, task) =>
             {
                 reminder.Task = task;

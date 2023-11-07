@@ -32,7 +32,7 @@ namespace MyPortal.Logic.Models.Data.Finance
                 Product = new ProductModel(model.Product);
             }
         }
-        
+
         public Guid BillId { get; set; }
 
         public Guid ProductId { get; set; }
@@ -40,7 +40,7 @@ namespace MyPortal.Logic.Models.Data.Finance
         public int Quantity { get; set; }
 
         public decimal NetAmount { get; set; }
-        
+
         public decimal VatAmount { get; set; }
 
         public decimal GrossAmount => NetAmount + VatAmount;
@@ -51,7 +51,7 @@ namespace MyPortal.Logic.Models.Data.Finance
 
         public virtual BillModel Bill { get; set; }
         public virtual ProductModel Product { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

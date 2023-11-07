@@ -39,15 +39,16 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var closures = await DbUser.Transaction.Connection.QueryAsync<RoomClosure, Room, RoomClosureReason, RoomClosure>(
-                sql.Sql,
-                (closure, room, reason) =>
-                {
-                    closure.Room = room;
-                    closure.Reason = reason;
+            var closures = await DbUser.Transaction.Connection
+                .QueryAsync<RoomClosure, Room, RoomClosureReason, RoomClosure>(
+                    sql.Sql,
+                    (closure, room, reason) =>
+                    {
+                        closure.Room = room;
+                        closure.Reason = reason;
 
-                    return closure;
-                }, sql.NamedBindings, DbUser.Transaction);
+                        return closure;
+                    }, sql.NamedBindings, DbUser.Transaction);
 
             return closures;
         }

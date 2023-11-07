@@ -15,20 +15,17 @@ namespace MyPortal.Logic.Models.Data.Examinations
             UseEdi = model.UseEdi;
             Active = model.Active;
         }
-        
-        [StringLength(20)]
-        public string Abbreviation { get; set; }
-        
-        [StringLength(128)]
-        public string FullName { get; set; }
-        
-        [StringLength(5)]
-        public string Code { get; set; }
-        
+
+        [StringLength(20)] public string Abbreviation { get; set; }
+
+        [StringLength(128)] public string FullName { get; set; }
+
+        [StringLength(5)] public string Code { get; set; }
+
         public bool Domestic { get; set; }
-        
+
         public bool UseEdi { get; set; }
-        
+
         public bool Active { get; set; }
     }
 }

@@ -13,18 +13,15 @@ namespace MyPortal.Database.Models.Entity
             StaffMembers = new HashSet<ParentEveningStaffMember>();
         }
 
-        [Column(Order = 2)]
-        public Guid EventId { get; set; }
-        
+        [Column(Order = 2)] public Guid EventId { get; set; }
+
         [Column(Order = 3)]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [Column(Order = 4)]
-        public DateTime BookingOpened { get; set; }
+        [Column(Order = 4)] public DateTime BookingOpened { get; set; }
 
-        [Column(Order = 5)]
-        public DateTime BookingClosed { get; set; } 
+        [Column(Order = 5)] public DateTime BookingClosed { get; set; }
 
         public virtual DiaryEvent Event { get; set; }
         public virtual ICollection<ParentEveningStaffMember> StaffMembers { get; set; }

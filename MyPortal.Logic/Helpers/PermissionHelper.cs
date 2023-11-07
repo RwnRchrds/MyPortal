@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Enums;
@@ -18,7 +16,7 @@ namespace MyPortal.Logic.Helpers
 
             return array;
         }
-        
+
         internal static async Task<bool> UserHasPermission(Guid userId, IUserService userService,
             PermissionRequirement requirement, params PermissionValue[] permissionValues)
         {
@@ -42,7 +40,7 @@ namespace MyPortal.Logic.Helpers
                     {
                         if (requirement == PermissionRequirement.RequireAny)
                         {
-                            return true;   
+                            return true;
                         }
                     }
                     else if (requirement == PermissionRequirement.RequireAll)

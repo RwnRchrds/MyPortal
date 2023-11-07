@@ -7,7 +7,6 @@ namespace MyPortal.Logic.Models.Data.Behaviour.ReportCards
     {
         public BehaviourTargetModel(BehaviourTarget model) : base(model)
         {
-            
         }
     }
 }

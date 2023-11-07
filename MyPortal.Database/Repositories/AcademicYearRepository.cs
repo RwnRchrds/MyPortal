@@ -18,7 +18,6 @@ namespace MyPortal.Database.Repositories
     {
         public AcademicYearRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         public async Task<AcademicYear> GetCurrentAcademicYear()
@@ -54,7 +53,7 @@ namespace MyPortal.Database.Repositories
             var sql = GetDefaultQuery();
 
             sql.LeftJoin("AcademicTerms as AT", $"{TblAlias}.Id", "AT.AcademicYearId");
-            sql.LeftJoin("AcademicWeeks as AW", $"AT.Id", "AW.AcademicTermId");
+            sql.LeftJoin("AcademicWeeks as AW", "AT.Id", "AW.AcademicTermId");
 
             sql.Where("AW.Id", attendanceWeekId);
 
@@ -98,7 +97,7 @@ namespace MyPortal.Database.Repositories
 
             academicYear.Name = entity.Name;
             academicYear.Locked = entity.Locked;
-            
+
             WriteAuditRaw(entity.Id, AuditActions.Update, oldValue);
         }
     }

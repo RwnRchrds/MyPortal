@@ -7,7 +7,6 @@ namespace MyPortal.Logic.Models.Data.Contacts
     {
         public CommunicationTypeModel(CommunicationType model) : base(model)
         {
-            
         }
     }
 }

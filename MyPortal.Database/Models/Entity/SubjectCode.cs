@@ -13,11 +13,9 @@ namespace MyPortal.Database.Models.Entity
             Elements = new HashSet<ExamBaseElement>();
         }
 
-        [Column(Order = 4)]
-        public string Code { get; set; }
+        [Column(Order = 4)] public string Code { get; set; }
 
-        [Column(Order = 5)] 
-        public Guid SubjectCodeSetId { get; set; }
+        [Column(Order = 5)] public Guid SubjectCodeSetId { get; set; }
 
         public virtual SubjectCodeSet SubjectCodeSet { get; set; }
         public virtual ICollection<ExamBaseElement> Elements { get; set; }

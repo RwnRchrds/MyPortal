@@ -29,15 +29,16 @@ namespace MyPortal.Logic.Models.Data.Behaviour.ReportCards
                 Target = new ReportCardTargetModel(model.Target);
             }
         }
-        
+
         public Guid EntryId { get; set; }
-        
+
         public Guid TargetId { get; set; }
-        
+
         public bool TargetCompleted { get; set; }
 
         public virtual ReportCardEntryModel Entry { get; set; }
         public virtual ReportCardTargetModel Target { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

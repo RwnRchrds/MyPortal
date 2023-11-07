@@ -24,34 +24,35 @@ namespace MyPortal.Logic.Models.Data.Behaviour.Detentions
             {
                 Student = new StudentModel(model.Student);
             }
-            
+
             if (model.Detention != null)
             {
                 Detention = new DetentionModel(model.Detention);
             }
-            
+
             if (model.LinkedIncident != null)
             {
                 LinkedIncident = new StudentIncidentModel(model.LinkedIncident);
             }
         }
-        
+
         public Guid StudentId { get; set; }
-        
+
         public Guid DetentionId { get; set; }
-        
+
         public Guid? LinkedIncidentId { get; set; }
 
         public virtual StudentModel Student { get; set; }
         public virtual StudentIncidentModel LinkedIncident { get; set; }
         public virtual DetentionModel Detention { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.StudentDetentions.GetById(Id.Value);
-            
-                LoadFromModel(model);  
+
+                LoadFromModel(model);
             }
         }
     }

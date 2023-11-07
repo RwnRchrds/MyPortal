@@ -56,7 +56,7 @@ namespace MyPortal.Database.Repositories
                     {
                         typeof(School), typeof(Agency), typeof(SchoolPhase), typeof(SchoolType), typeof(GovernanceType),
                         typeof(IntakeType), typeof(Person), typeof(LocalAuthority)
-                    }, (objects) =>
+                    }, objects =>
                     {
                         var school = (School)objects[0];
                         school.Agency = (Agency)objects[1];

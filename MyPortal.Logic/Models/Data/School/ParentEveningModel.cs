@@ -27,23 +27,23 @@ namespace MyPortal.Logic.Models.Data.School
                 Event = new DiaryEventModel(model.Event);
             }
         }
-        
+
         public Guid EventId { get; set; }
-        
-        [StringLength(128)]
-        public string Name { get; set; }
-        
+
+        [StringLength(128)] public string Name { get; set; }
+
         public DateTime BookingOpened { get; set; }
-        
-        public DateTime BookingClosed { get; set; } 
+
+        public DateTime BookingClosed { get; set; }
 
         public virtual DiaryEventModel Event { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ParentEvenings.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

@@ -5,7 +5,6 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Web;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
@@ -13,7 +12,8 @@ namespace MyPortal.Logic.Services
     {
         private readonly IHostedFileProvider _fileProvider;
 
-        public HostedFileService(ISessionUser sessionUser, IHostedFileProviderFactory fileProviderFactory) : base(sessionUser)
+        public HostedFileService(ISessionUser sessionUser, IHostedFileProviderFactory fileProviderFactory) : base(
+            sessionUser)
         {
             _fileProvider = fileProviderFactory.CreateHostedFileProvider();
         }
@@ -21,7 +21,7 @@ namespace MyPortal.Logic.Services
         public async Task AttachFileToDocument(Guid documentId, string fileId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var document = await unitOfWork.Documents.GetById(documentId);
 
             if (document == null)
@@ -32,7 +32,7 @@ namespace MyPortal.Logic.Services
             var file = await _fileProvider.CreateFileFromId(fileId);
 
             document.Attachment = file;
-                
+
             await unitOfWork.Documents.Update(document);
 
             await unitOfWork.SaveChangesAsync();
@@ -41,7 +41,7 @@ namespace MyPortal.Logic.Services
         public async Task RemoveFileFromDocument(Guid documentId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
             if (file == null)
@@ -57,7 +57,7 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<WebAction>> GetWebActionsByDocument(Guid documentId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var file = await unitOfWork.Files.GetByDocumentId(documentId);
 
             var webActions = await _fileProvider.GetWebActions(file.FileId);

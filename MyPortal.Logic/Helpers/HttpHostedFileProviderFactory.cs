@@ -14,11 +14,11 @@ public class HttpHostedFileProviderFactory : IHostedFileProviderFactory
     {
         _contextAccessor = contextAccessor;
     }
-    
+
     public IHostedFileProvider CreateHostedFileProvider()
     {
         var accessToken = _contextAccessor.HttpContext?.Request.Headers["file-access-token"];
-        
+
         if (string.IsNullOrWhiteSpace(accessToken))
         {
             throw new UnauthorisedException("No file access token was provided.");

@@ -19,10 +19,9 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(128)]
         public string ColourCode { get; set; }
 
-        [Column(Order = 5)] 
-        public bool System { get; set; }
+        [Column(Order = 5)] public bool System { get; set; }
 
-        public virtual  ICollection<DiaryEventTemplate> DiaryEventTemplates { get; set; }
-        public virtual  ICollection<DiaryEvent> DiaryEvents { get; set; }
+        public virtual ICollection<DiaryEventTemplate> DiaryEventTemplates { get; set; }
+        public virtual ICollection<DiaryEvent> DiaryEvents { get; set; }
     }
 }

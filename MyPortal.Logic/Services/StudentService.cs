@@ -34,7 +34,7 @@ namespace MyPortal.Logic.Services
         public async Task<StudentModel> GetStudentById(Guid studentId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var student = await unitOfWork.Students.GetById(studentId);
             if (student == null)
             {
@@ -49,7 +49,7 @@ namespace MyPortal.Logic.Services
             var stats = new StudentStatsModel();
 
             await using var unitOfWork = await User.GetConnection();
-            
+
             var achievements = await unitOfWork.StudentAchievements.GetPointsByStudent(studentId, academicYearId);
             var incidents = await unitOfWork.StudentIncidents.GetPointsByStudent(studentId, academicYearId);
             var attendanceMarks = await unitOfWork.AttendanceMarks.GetByStudent(studentId, academicYearId);
@@ -72,7 +72,7 @@ namespace MyPortal.Logic.Services
         public async Task<StudentModel> GetStudentByUserId(Guid userId, bool throwNotFound = true)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var student = await unitOfWork.Students.GetByUserId(userId);
 
             if (student == null && throwNotFound)
@@ -86,7 +86,7 @@ namespace MyPortal.Logic.Services
         public async Task<StudentModel> GetStudentByPersonId(Guid personId, bool throwIfNotFound = true)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var student = await unitOfWork.Students.GetByPersonId(personId);
 
             if (student == null && throwIfNotFound)
@@ -112,7 +112,7 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<StudentModel>> GetStudents(StudentSearchOptions searchOptions)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var students = await unitOfWork.Students.GetAll(searchOptions);
 
             return students.Select(s => new StudentModel(s)).ToList();
@@ -121,7 +121,7 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<StudentModel>> GetStudentsByContact(Guid contactId, bool reportableOnly)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var students = await unitOfWork.Students.GetByContact(contactId, reportableOnly);
 
             return students.Select(s => new StudentModel(s)).ToList();
@@ -130,7 +130,7 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<StudentSummaryModel>> SearchStudents(StudentSearchOptions searchOptions)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var students = await unitOfWork.Students.SearchAll(searchOptions);
 
             return students.Select(s => new StudentSummaryModel(s)).ToList();
@@ -139,7 +139,7 @@ namespace MyPortal.Logic.Services
         public async Task CreateStudent(StudentRequestModel request)
         {
             Validate(request);
-            
+
             await using var unitOfWork = await User.GetConnection();
 
             var admissionNumbers = (await unitOfWork.Students.GetAdmissionNumbers()).ToArray();
@@ -147,13 +147,13 @@ namespace MyPortal.Logic.Services
             var nextAdmissionNumber = admissionNumbers.Any() ? admissionNumbers.Max() + 1 : 1;
 
             var createDate = DateTime.Now;
-            var groupIds = new List<Guid>() {request.YearGroupId, request.RegGroupId};
+            var groupIds = new List<Guid> { request.YearGroupId, request.RegGroupId };
 
             if (request.HouseId.HasValue)
             {
                 groupIds.Add(request.HouseId.Value);
             }
-                    
+
             var student = new Student
             {
                 Id = Guid.NewGuid(),
@@ -177,7 +177,7 @@ namespace MyPortal.Logic.Services
                     StartDate = createDate
                 });
             }
-                    
+
             unitOfWork.Students.Create(student);
 
             await unitOfWork.SaveChangesAsync();
@@ -186,7 +186,7 @@ namespace MyPortal.Logic.Services
         public async Task<string> GenerateUpn()
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var school = await unitOfWork.Schools.GetLocal();
 
             if (school == null)
@@ -232,7 +232,7 @@ namespace MyPortal.Logic.Services
         public async Task UpdateStudent(Guid studentId, StudentRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
 
             var student = await unitOfWork.Students.GetById(studentId);
@@ -245,7 +245,7 @@ namespace MyPortal.Logic.Services
             student.BoarderStatusId = model.BoarderStatusId;
             student.PupilPremium = model.PupilPremium;
             student.Upn = model.Upn;
-                    
+
             PersonHelper.UpdatePersonFromModel(student.Person, model);
 
             await unitOfWork.People.Update(student.Person);

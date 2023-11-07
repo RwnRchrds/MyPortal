@@ -17,7 +17,6 @@ namespace MyPortal.Database.Repositories
     {
         public ProductRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         protected override Query JoinRelated(Query query)
@@ -40,7 +39,8 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            var products = await DbUser.Transaction.Connection.QueryAsync<Product, ProductType, VatRate, Product>(sql.Sql,
+            var products = await DbUser.Transaction.Connection.QueryAsync<Product, ProductType, VatRate, Product>(
+                sql.Sql,
                 (product, type, vatRate) =>
                 {
                     product.Type = type;

@@ -4,15 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
-using MyPortal.Logic.Constants;
 using MyPortal.Logic.Enums;
 using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Permissions;
 using MyPortal.Logic.Models.Requests.Calendar;
 using MyPortal.Logic.Models.Structures;
 using MyPortalWeb.Controllers.BaseControllers;
-using MyPortalWeb.Models;
 
 namespace MyPortalWeb.Controllers.Api
 {
@@ -22,7 +20,7 @@ namespace MyPortalWeb.Controllers.Api
         private readonly ICalendarService _calendarService;
 
         public CalendarController(IUserService userService, IPersonService personService,
-            IStudentService studentService, ICalendarService calendarService) 
+            IStudentService studentService, ICalendarService calendarService)
             : base(userService, personService, studentService)
         {
             _calendarService = calendarService;
@@ -31,10 +29,10 @@ namespace MyPortalWeb.Controllers.Api
         private async Task<EventAccessModel> GetEventAccess(Guid eventId)
         {
             var response = new EventAccessModel();
-            
+
             var userId = User.GetUserId();
             var diaryEvent = await _calendarService.GetEvent(eventId);
-            
+
             if (diaryEvent.CreatedById == userId)
             {
                 response.CanView = true;
@@ -67,7 +65,7 @@ namespace MyPortalWeb.Controllers.Api
                     response.CanEdit = attendee.CanEdit;
                 }
             }
-            
+
             return response;
         }
 
@@ -91,7 +89,7 @@ namespace MyPortalWeb.Controllers.Api
                     {
                         dateRange = new DateRange(dateFrom.Value, dateTo.Value);
                     }
-                    
+
                     var events =
                         await _calendarService.GetCalendarEventsByPerson(personId, dateRange.Start, dateRange.End);
 
@@ -118,7 +116,7 @@ namespace MyPortalWeb.Controllers.Api
                 {
                     return Error(403, "You do not have permission to edit the school diary.");
                 }
-                
+
                 await _calendarService.CreateEvent(model);
 
                 return Ok();
@@ -144,7 +142,7 @@ namespace MyPortalWeb.Controllers.Api
 
                     return Ok();
                 }
-                
+
                 return Error(403, "You do not have permission to edit this event.");
             }
             catch (Exception e)
@@ -176,11 +174,12 @@ namespace MyPortalWeb.Controllers.Api
                 return HandleException(e);
             }
         }
-        
+
         [HttpPut]
         [Route("events/{eventId}/attendees")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> CreateOrUpdateAttendees([FromRoute] Guid eventId, [FromBody] EventAttendeesRequestModel model)
+        public async Task<IActionResult> CreateOrUpdateAttendees([FromRoute] Guid eventId,
+            [FromBody] EventAttendeesRequestModel model)
         {
             try
             {
@@ -192,7 +191,7 @@ namespace MyPortalWeb.Controllers.Api
 
                     return Ok();
                 }
-                
+
                 return Error(403, "You do not have permission to edit this event.");
             }
             catch (Exception e)

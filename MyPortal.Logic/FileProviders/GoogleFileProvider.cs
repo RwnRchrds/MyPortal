@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Google.Apis.Drive.v3;
-using Google.Apis.Drive.v3.Data;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Web;
-using File = MyPortal.Database.Models.Entity.File;
 
 namespace MyPortal.Logic.FileProviders
 {
@@ -19,7 +17,7 @@ namespace MyPortal.Logic.FileProviders
         {
             _accessToken = accessToken;
         }
-        
+
         private DriveService CreateDriveService()
         {
             var initializer = GoogleHelper.GetInitializer(_accessToken, DriveService.Scope.Drive);
@@ -31,9 +29,9 @@ namespace MyPortal.Logic.FileProviders
             using (var driveService = CreateDriveService())
             {
                 var actions = new List<WebAction>();
-            
+
                 var request = driveService.Files.Get(fileId);
-                
+
                 request.Fields = "id, name, mimeType, webViewLink, webContentLink";
 
                 var data = await request.ExecuteAsync();
@@ -46,7 +44,7 @@ namespace MyPortal.Logic.FileProviders
                     actions.Add(webViewAction);
                     actions.Add(downloadAction);
                 }
-                
+
                 return actions;
             }
         }

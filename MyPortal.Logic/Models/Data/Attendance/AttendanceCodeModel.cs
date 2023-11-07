@@ -27,14 +27,10 @@ namespace MyPortal.Logic.Models.Data.Attendance
                 CodeType = new AttendanceCodeTypeModel(model.CodeType);
             }
         }
-        
-        [Required]
-        [StringLength(1)]
-        public string Code { get; set; }
 
-        [Required]
-        [StringLength(128)]
-        public string Description { get; set; }
+        [Required] [StringLength(1)] public string Code { get; set; }
+
+        [Required] [StringLength(128)] public string Description { get; set; }
 
         public Guid AttendanceCodeTypeId { get; set; }
 
@@ -43,7 +39,7 @@ namespace MyPortal.Logic.Models.Data.Attendance
         public bool Restricted { get; set; }
 
         public virtual AttendanceCodeTypeModel CodeType { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

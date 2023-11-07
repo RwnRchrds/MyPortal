@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
@@ -15,7 +11,6 @@ using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Settings;
-
 using MyPortal.Logic.Models.Permissions;
 using MyPortal.Logic.Models.Requests.Settings.Roles;
 using MyPortal.Logic.Models.Structures;
@@ -46,7 +41,7 @@ namespace MyPortal.Logic.Services
         private async Task SetPermissions(Guid roleId, params int[] permValues)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var role = await unitOfWork.Roles.GetById(roleId);
 
             var permArray = PermissionHelper.CreatePermissionArray();
@@ -66,7 +61,7 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<Guid>> CreateRole(RoleRequestModel request)
         {
             Validate(request);
-            
+
             var newIds = new List<Guid>();
 
             var role = new Role
@@ -99,7 +94,7 @@ namespace MyPortal.Logic.Services
         public async Task UpdateRole(Guid roleId, RoleRequestModel request)
         {
             Validate(request);
-            
+
             var roleInDb = await _roleManager.FindByIdAsync(roleId.ToString());
 
             if (roleInDb.System)
@@ -123,7 +118,7 @@ namespace MyPortal.Logic.Services
         public async Task DeleteRole(Guid roleId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             await unitOfWork.UserRoles.DeleteAllByRole(roleId);
 
             await unitOfWork.SaveChangesAsync();
@@ -157,7 +152,7 @@ namespace MyPortal.Logic.Services
         public async Task<RoleModel> GetRoleById(Guid roleId, bool useCache)
         {
             Role role;
-            
+
             if (useCache)
             {
                 // Eliminates latency between the web app and database during permission checks

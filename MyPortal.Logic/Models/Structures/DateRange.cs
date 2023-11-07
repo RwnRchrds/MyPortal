@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
-using Org.BouncyCastle.Asn1.X509;
 
 namespace MyPortal.Logic.Models.Structures
 {
@@ -57,7 +54,7 @@ namespace MyPortal.Logic.Models.Structures
         private DateRange[] GetLeft()
         {
             var ranges = new List<DateRange>();
-            
+
             if (BeforeStart != null)
             {
                 ranges.Add(BeforeStart);
@@ -84,7 +81,7 @@ namespace MyPortal.Logic.Models.Structures
         {
             var overlaps = (Start < dateRange.End && End > dateRange.Start) ||
                            (includeAdjacent && IsAdjacentTo(dateRange));
-            
+
             return overlaps;
         }
 
@@ -101,7 +98,7 @@ namespace MyPortal.Logic.Models.Structures
 
                 return true;
             }
-            catch (ArgumentException e)
+            catch (ArgumentException)
             {
                 return false;
             }
@@ -155,7 +152,7 @@ namespace MyPortal.Logic.Models.Structures
         public void MoveToStart(DateTime newStart)
         {
             var timeSpan = newStart - Start;
-            
+
             Move(timeSpan);
         }
 
@@ -179,14 +176,14 @@ namespace MyPortal.Logic.Models.Structures
 
         private void MoveThis(TimeSpan timeSpan)
         {
-            Start = Start.Add(timeSpan);   
+            Start = Start.Add(timeSpan);
             End = End.Add(timeSpan);
         }
 
         public void Move(TimeSpan timeSpan)
         {
             MoveThis(timeSpan);
-            
+
             MoveLeft(timeSpan);
             MoveRight(timeSpan);
         }
@@ -197,7 +194,7 @@ namespace MyPortal.Logic.Models.Structures
             {
                 throw new ArgumentException("Cannot extend a date range by a negative amount", nameof(timeSpan));
             }
-            
+
             End = End.Add(timeSpan);
 
             MoveRight(timeSpan);

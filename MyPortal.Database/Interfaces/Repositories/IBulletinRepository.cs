@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Database.Models.Paging;
@@ -17,7 +16,7 @@ namespace MyPortal.Database.Interfaces.Repositories
         Task<IEnumerable<Bulletin>> GetOwn(Guid authorId);
 
         Task<IEnumerable<BulletinDetailModel>> GetBulletinDetails(BulletinSearchOptions searchOptions);
-        
+
         Task<BulletinMetadataPageResponse> GetBulletinDetails(BulletinSearchOptions searchOptions,
             PageFilter pageFilter);
     }

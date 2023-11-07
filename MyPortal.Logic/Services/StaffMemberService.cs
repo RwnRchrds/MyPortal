@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Services
         public async Task<bool> IsLineManager(Guid staffMemberId, Guid lineManagerId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var staffMember = await unitOfWork.StaffMembers.GetById(staffMemberId);
 
             if (staffMember == null)
@@ -43,7 +43,7 @@ namespace MyPortal.Logic.Services
         public async Task<StaffMemberModel> GetById(Guid staffMemberId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var staffMember = await unitOfWork.StaffMembers.GetById(staffMemberId);
 
             if (staffMember == null)
@@ -57,7 +57,7 @@ namespace MyPortal.Logic.Services
         public async Task<StaffMemberModel> GetByPersonId(Guid personId, bool throwIfNotFound = true)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var staffMember = await unitOfWork.StaffMembers.GetByPersonId(personId);
 
             if (staffMember == null && throwIfNotFound)
@@ -71,7 +71,7 @@ namespace MyPortal.Logic.Services
         public async Task<StaffMemberModel> GetByUserId(Guid userId, bool throwIfNotFound = true)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var staffMember = await unitOfWork.StaffMembers.GetByUserId(userId);
 
             if (staffMember == null && throwIfNotFound)
@@ -98,7 +98,7 @@ namespace MyPortal.Logic.Services
                 BankSortCode = model.BankSortCode,
                 NiNumber = model.NiNumber,
                 Qualifications = model.Qualifications,
-                TeachingStaff = model.TeachingStaff,        
+                TeachingStaff = model.TeachingStaff,
                 Person = PersonHelper.CreatePersonFromModel(model)
             };
 

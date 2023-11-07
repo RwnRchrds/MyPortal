@@ -54,7 +54,7 @@ namespace MyPortal.Logic.Models.Data.Behaviour.Achievements
         public Guid AchievementTypeId { get; set; }
 
         public Guid? LocationId { get; set; }
-        
+
         public Guid CreatedById { get; set; }
 
         public DateTime CreatedDate { get; set; }
@@ -70,7 +70,7 @@ namespace MyPortal.Logic.Models.Data.Behaviour.Achievements
         public AcademicYearModel AcademicYear { get; set; }
 
         public UserModel CreatedBy { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

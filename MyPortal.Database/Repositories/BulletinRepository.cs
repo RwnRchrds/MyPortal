@@ -23,7 +23,6 @@ namespace MyPortal.Database.Repositories
     {
         public BulletinRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-       
         }
 
         private void ApplySearch(Query query, BulletinSearchOptions searchOptions)
@@ -50,7 +49,7 @@ namespace MyPortal.Database.Repositories
             {
                 query.Where($"{TblAlias}.Approved", true);
             }
-            
+
             if (searchOptions.IncludeCreatedBy.HasValue)
             {
                 query.OrWhere($"{TblAlias}.CreatedById", searchOptions.IncludeCreatedBy.Value);
@@ -89,7 +88,8 @@ namespace MyPortal.Database.Repositories
             return bulletins;
         }
 
-        public async Task<BulletinMetadataPageResponse> GetBulletinDetails(BulletinSearchOptions searchOptions, PageFilter pageFilter)
+        public async Task<BulletinMetadataPageResponse> GetBulletinDetails(BulletinSearchOptions searchOptions,
+            PageFilter pageFilter)
         {
             var query = new Query();
 
@@ -109,7 +109,7 @@ namespace MyPortal.Database.Repositories
             query.ApplyName("D", "U.PersonId", NameFormat.FullNameAbbreviated);
 
             query.OrderByDesc($"{TblAlias}.CreatedDate");
-            
+
             ApplySearch(query, searchOptions);
 
             if (pageFilter != null)
@@ -120,7 +120,7 @@ namespace MyPortal.Database.Repositories
             var data = await ExecuteQuery<BulletinDetailModel>(query);
 
             var countQuery = GetEmptyQuery();
-            
+
             ApplySearch(countQuery, searchOptions);
 
             var count = await ExecuteQueryIntResult(countQuery.AsCount());
@@ -129,7 +129,7 @@ namespace MyPortal.Database.Repositories
 
             return response;
         }
-        
+
         public async Task<IEnumerable<BulletinDetailModel>> GetBulletinDetails(BulletinSearchOptions searchOptions)
         {
             var query = new Query();
@@ -137,7 +137,7 @@ namespace MyPortal.Database.Repositories
             query.Select($"{TblAlias}.Id");
             query.Select($"{TblAlias}.DirectoryId");
             query.Select($"{TblAlias}.CreatedById");
-            query.Select($"D.DisplayName as CreatedByName");
+            query.Select("D.DisplayName as CreatedByName");
             query.Select($"{TblAlias}.CreatedDate");
             query.Select($"{TblAlias}.ExpireDate");
             query.Select($"{TblAlias}.Title");
@@ -149,7 +149,7 @@ namespace MyPortal.Database.Repositories
 CROSS APPLY GetDisplayName({TblAlias}.CreatedById, 2, 1, 1) D");
 
             query.OrderByDesc($"{TblAlias}.CreatedDate");
-            
+
             ApplySearch(query, searchOptions);
 
             var metadata = await ExecuteQuery<BulletinDetailModel>(query);

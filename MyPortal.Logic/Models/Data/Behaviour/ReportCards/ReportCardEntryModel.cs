@@ -44,27 +44,26 @@ namespace MyPortal.Logic.Models.Data.Behaviour.ReportCards
                 Period = new AttendancePeriodModel(model.Period);
             }
         }
-        
+
         public Guid ReportCardId { get; set; }
         public Guid CreatedById { get; set; }
         public Guid WeekId { get; set; }
         public Guid PeriodId { get; set; }
 
-        [StringLength(256)]
-        public string Comments { get; set; }
+        [StringLength(256)] public string Comments { get; set; }
 
         public virtual ReportCardModel ReportCard { get; set; }
         public virtual UserModel CreatedBy { get; set; }
         public virtual AttendanceWeekModel AttendanceWeek { get; set; }
         public virtual AttendancePeriodModel Period { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ReportCardEntries.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

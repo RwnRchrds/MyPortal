@@ -31,7 +31,7 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 Candidate = new ExamCandidateModel(model.Candidate);
             }
         }
-        
+
         public Guid AwardId { get; set; }
         public Guid CandidateId { get; set; }
         public DateTime StartDate { get; set; }
@@ -40,13 +40,14 @@ namespace MyPortal.Logic.Models.Data.Examinations
 
         public virtual ExamAwardModel Award { get; set; }
         public virtual ExamCandidateModel Candidate { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamEnrolments.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

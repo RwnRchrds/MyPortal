@@ -41,39 +41,28 @@ namespace MyPortal.Logic.Models.Data.People
                 Directory = new DirectoryModel(model.Directory);
             }
         }
-        
+
         public Guid DirectoryId { get; set; }
 
-        [StringLength(128)]
-        public string Title { get; set; }
+        [StringLength(128)] public string Title { get; set; }
 
-        [Required]
-        [StringLength(256)]
-        public string FirstName { get; set; }
+        [Required] [StringLength(256)] public string FirstName { get; set; }
 
-        [StringLength(256)]
-        public string MiddleName { get; set; }
+        [StringLength(256)] public string MiddleName { get; set; }
 
-        [Required]
-        [StringLength(256)]
-        public string LastName { get; set; }
-        
-        [StringLength(256)] 
-        public string PreferredFirstName { get; set; }
-        
-        [StringLength(256)] 
-        public string PreferredLastName { get; set; }
-        
+        [Required] [StringLength(256)] public string LastName { get; set; }
+
+        [StringLength(256)] public string PreferredFirstName { get; set; }
+
+        [StringLength(256)] public string PreferredLastName { get; set; }
+
         public Guid? PhotoId { get; set; }
 
-        [StringLength(10)]
-        public string NhsNumber { get; set; }
+        [StringLength(10)] public string NhsNumber { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
-        [Required]
-        [StringLength(1)]
-        public string Gender { get; set; }
+        [Required] [StringLength(1)] public string Gender { get; set; }
 
         public DateTime? Dob { get; set; }
 
@@ -94,7 +83,7 @@ namespace MyPortal.Logic.Models.Data.People
             get
             {
                 var today = DateTime.Today;
-                
+
                 var age = today.Year - Dob?.Year;
 
                 if (age.HasValue)
@@ -109,7 +98,8 @@ namespace MyPortal.Logic.Models.Data.People
             }
         }
 
-        public string GetName(NameFormat format = NameFormat.Default, bool usePreferred = false, bool includeMiddleName = true)
+        public string GetName(NameFormat format = NameFormat.Default, bool usePreferred = false,
+            bool includeMiddleName = true)
         {
             string name;
 
@@ -122,7 +112,7 @@ namespace MyPortal.Logic.Models.Data.People
             var lastName = usePreferred
                 ? string.IsNullOrWhiteSpace(PreferredLastName) ? LastName : PreferredLastName
                 : LastName;
-            
+
             switch (format)
             {
                 case NameFormat.FullName:
@@ -166,7 +156,7 @@ namespace MyPortal.Logic.Models.Data.People
             PreferredLastName = null;
 
             await unitOfWork.Directories.DeleteWithChildren(DirectoryId);
-            
+
             if (PhotoId.HasValue)
             {
                 await unitOfWork.Photos.Delete(PhotoId.Value);

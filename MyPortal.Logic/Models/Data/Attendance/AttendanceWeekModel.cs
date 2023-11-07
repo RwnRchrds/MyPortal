@@ -31,7 +31,7 @@ namespace MyPortal.Logic.Models.Data.Attendance
                 AcademicTerm = new AcademicTermModel(model.AcademicTerm);
             }
         }
-        
+
         public Guid WeekPatternId { get; set; }
 
         public Guid AcademicTermId { get; set; }
@@ -42,6 +42,7 @@ namespace MyPortal.Logic.Models.Data.Attendance
 
         public AttendanceWeekPatternModel WeekPattern { get; set; }
         public AcademicTermModel AcademicTerm { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

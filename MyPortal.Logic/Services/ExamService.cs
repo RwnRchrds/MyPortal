@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Security.Claims;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Requests.Assessment;
@@ -20,11 +17,11 @@ public class ExamService : BaseService, IExamService
     public async Task CreateResultEmbargo(params ResultEmbargoRequestModel[] models)
     {
         await using var unitOfWork = await User.GetConnection();
-        
+
         foreach (var model in models)
         {
             Validate(model);
-                
+
             if (model.EndDate < DateTime.Now)
             {
                 throw new InvalidDataException("End date cannot be in the past.");
@@ -36,7 +33,7 @@ public class ExamService : BaseService, IExamService
                 ResultSetId = model.ResultSetId,
                 EndTime = model.EndDate
             };
-                
+
             unitOfWork.ExamResultEmbargoes.Create(embargo);
         }
 
@@ -46,7 +43,7 @@ public class ExamService : BaseService, IExamService
     public async Task UpdateResultEmbargo(params ResultEmbargoRequestModel[] models)
     {
         await using var unitOfWork = await User.GetConnection();
-        
+
         foreach (var model in models)
         {
             Validate(model);

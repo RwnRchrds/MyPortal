@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using MyPortal.Logic.Models.Requests.Documents;
 using File = MyPortal.Database.Models.Entity.File;

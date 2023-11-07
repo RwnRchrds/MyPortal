@@ -31,25 +31,25 @@ namespace MyPortal.Logic.Models.Data.Students.SEND
                 Type = new SenEventTypeModel(model.Type);
             }
         }
-        
+
         public Guid StudentId { get; set; }
-        
+
         public Guid EventTypeId { get; set; }
-        
+
         public DateTime Date { get; set; }
-        
-        [Required]
-        public string Note { get; set; }
+
+        [Required] public string Note { get; set; }
 
         public virtual StudentModel Student { get; set; }
 
         public virtual SenEventTypeModel Type { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.SenEvents.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

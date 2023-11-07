@@ -11,11 +11,10 @@ namespace MyPortal.Logic.Models.Data.Examinations
     public class ExamQualificationLevelModel : LookupItemModelWithLoad
     {
         public Guid QualificationId { get; set; }
-        
+
         public Guid? DefaultGradeSetId { get; set; }
-        
-        [StringLength(25)]
-        public string JcLevelCode { get; set; }
+
+        [StringLength(25)] public string JcLevelCode { get; set; }
 
         public virtual GradeSetModel DefaultGradeSet { get; set; }
         public virtual ExamQualificationModel Qualification { get; set; }
@@ -47,8 +46,8 @@ namespace MyPortal.Logic.Models.Data.Examinations
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamQualificationLevels.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

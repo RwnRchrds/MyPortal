@@ -12,7 +12,6 @@ namespace MyPortal.Database.Repositories
     {
         public MarksheetTemplateRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         public async Task Update(MarksheetTemplate entity)

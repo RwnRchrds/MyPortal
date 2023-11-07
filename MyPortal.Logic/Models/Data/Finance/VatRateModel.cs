@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Models.Data.Finance
         {
             Value = model.Value;
         }
-        
+
         public decimal Value { get; set; }
     }
 }

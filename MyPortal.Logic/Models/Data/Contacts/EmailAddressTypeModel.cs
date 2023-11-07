@@ -7,7 +7,6 @@ namespace MyPortal.Logic.Models.Data.Contacts
     {
         public EmailAddressTypeModel(EmailAddressType model) : base(model)
         {
-            
         }
     }
 }

@@ -13,8 +13,7 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(128)]
         public string Name { get; set; }
 
-        [Column(Order = 3)]
-        public int KeyStage { get; set; }
+        [Column(Order = 3)] public int KeyStage { get; set; }
 
         [Column(Order = 4)]
         [Required]

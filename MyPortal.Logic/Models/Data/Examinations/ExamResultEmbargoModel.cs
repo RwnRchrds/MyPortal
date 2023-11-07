@@ -24,18 +24,19 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 ResultSet = new ResultSetModel(model.ResultSet);
             }
         }
-        
+
         public Guid ResultSetId { get; set; }
         public DateTime EndTime { get; set; }
 
         public virtual ResultSetModel ResultSet { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamResultEmbargoes.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

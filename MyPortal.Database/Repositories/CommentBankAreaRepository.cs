@@ -36,14 +36,15 @@ public class CommentBankAreaRepository : BaseReadWriteRepository<CommentBankArea
     {
         var sql = Compiler.Compile(query);
 
-        var areas = await DbUser.Transaction.Connection.QueryAsync<CommentBankArea, CommentBank, Course, CommentBankArea>(sql.Sql,
-            (area, bank, course) =>
-            {
-                area.CommentBank = bank;
-                area.Course = course;
+        var areas = await DbUser.Transaction.Connection
+            .QueryAsync<CommentBankArea, CommentBank, Course, CommentBankArea>(sql.Sql,
+                (area, bank, course) =>
+                {
+                    area.CommentBank = bank;
+                    area.Course = course;
 
-                return area;
-            }, sql.NamedBindings, DbUser.Transaction);
+                    return area;
+                }, sql.NamedBindings, DbUser.Transaction);
 
         return areas;
     }

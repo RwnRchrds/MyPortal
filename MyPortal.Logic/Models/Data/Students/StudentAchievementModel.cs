@@ -38,22 +38,20 @@ public class StudentAchievementModel : BaseModelWithLoad
             Outcome = new AchievementOutcomeModel(model.Outcome);
         }
     }
-    
+
     public Guid StudentId { get; set; }
-    
+
     public Guid AchievementId { get; set; }
-    
+
     public Guid? OutcomeId { get; set; }
-    
+
     public int Points { get; set; }
 
-    [EagerLoad]
-    public virtual StudentModel Student { get; set; }
-    
-    [EagerLoad]
-    public virtual AchievementModel Achievement { get; set; }
+    [EagerLoad] public virtual StudentModel Student { get; set; }
+
+    [EagerLoad] public virtual AchievementModel Achievement { get; set; }
     public virtual AchievementOutcomeModel Outcome { get; set; }
-    
+
     protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
     {
         if (Id.HasValue)
@@ -64,7 +62,7 @@ public class StudentAchievementModel : BaseModelWithLoad
             {
                 throw new NotFoundException("Student achievement not found.");
             }
-            
+
             LoadFromModel(model);
         }
     }

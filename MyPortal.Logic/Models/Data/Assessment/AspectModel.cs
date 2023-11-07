@@ -34,7 +34,7 @@ namespace MyPortal.Logic.Models.Data.Assessment
                 GradeSet = new GradeSetModel(model.GradeSet);
             }
         }
-        
+
         public Guid TypeId { get; set; }
 
         public Guid? GradeSetId { get; set; }
@@ -43,19 +43,16 @@ namespace MyPortal.Logic.Models.Data.Assessment
 
         public decimal? MaxMark { get; set; }
 
-        [Required]
-        [StringLength(128)]
-        public string Name { get; set; }
+        [Required] [StringLength(128)] public string Name { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string ColumnHeading { get; set; }
+        [Required] [StringLength(50)] public string ColumnHeading { get; set; }
 
         public bool Private { get; set; }
 
         public virtual AspectTypeModel Type { get; set; }
 
         public virtual GradeSetModel GradeSet { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

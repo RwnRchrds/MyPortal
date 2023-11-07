@@ -16,7 +16,6 @@ namespace MyPortal.Database.Repositories
     {
         public AchievementTypeRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         public async Task<IEnumerable<AchievementType>> GetTypesWithRecordedAchievementsByYear(Guid academicYearId)
@@ -40,7 +39,7 @@ namespace MyPortal.Database.Repositories
             {
                 throw new EntityNotFoundException("Achievement type not found.");
             }
-            
+
             achievementType.Description = entity.Description;
             achievementType.DefaultPoints = entity.DefaultPoints;
             achievementType.Active = entity.Active;

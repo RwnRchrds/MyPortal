@@ -8,5 +8,5 @@ public class AttendanceRegisterColumnDataModel
     public Guid AttendanceWeekId { get; set; }
     public string Header { get; set; }
     public int Order { get; set; }
-    public bool IsReadOnly{ get; set; }
+    public bool IsReadOnly { get; set; }
 }

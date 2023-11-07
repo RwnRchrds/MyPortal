@@ -35,7 +35,7 @@ namespace MyPortal.Logic.Models.Data.StaffMembers
                 RelationshipType = new NextOfKinRelationshipTypeModel(model.RelationshipType);
             }
         }
-        
+
         public Guid StaffMemberId { get; set; }
         public Guid NextOfKinPersonId { get; set; }
         public Guid RelationshipTypeId { get; set; }
@@ -43,14 +43,14 @@ namespace MyPortal.Logic.Models.Data.StaffMembers
         public virtual StaffMemberModel StaffMember { get; set; }
         public virtual PersonModel NextOfKinPerson { get; set; }
         public virtual NextOfKinRelationshipTypeModel RelationshipType { get; set; }
-        
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.NextOfKin.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

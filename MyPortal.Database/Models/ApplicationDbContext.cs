@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Models
@@ -10,7 +9,6 @@ namespace MyPortal.Database.Models
     public class ApplicationDbContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole,
         UserLogin, RoleClaim, UserToken>
     {
-        
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
@@ -185,7 +183,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<SenProvision> SenProvisions { get; set; }
         public virtual DbSet<SenProvisionType> SenProvisionTypes { get; set; }
         public virtual DbSet<SenReview> SenReviews { get; set; }
-        public virtual DbSet<SenReviewStatus> SenReviewStatuses { get; set; } 
+        public virtual DbSet<SenReviewStatus> SenReviewStatuses { get; set; }
         public virtual DbSet<SenReviewType> SenReviewTypes { get; set; }
         public virtual DbSet<SenStatus> SenStatuses { get; set; }
         public virtual DbSet<SenType> SenTypes { get; set; }
@@ -282,10 +280,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Achievement>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<Achievement>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<AchievementOutcome>(e =>
                 {
@@ -320,20 +315,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Address>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<Address>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<AddressAgency>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<AddressAgency>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<AddressPerson>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<AddressPerson>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<AddressType>(e =>
                 {
@@ -385,10 +371,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<AgencyType>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<AgencyType>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<Agent>(e =>
                 {
@@ -462,10 +445,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<AttendanceMark>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<AttendanceMark>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<AttendancePeriod>(e =>
                 {
@@ -493,7 +473,7 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(am => am.WeekId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
-                    
+
                     e.HasMany(x => x.SessionExtraNames)
                         .WithOne(x => x.AttendanceWeek)
                         .HasForeignKey(x => x.AttendanceWeekId)
@@ -518,10 +498,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<AuditLog>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<AuditLog>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<AuditAction>(e =>
                 {
@@ -534,10 +511,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<BasketItem>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<BasketItem>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<BehaviourOutcome>(e =>
                 {
@@ -558,7 +532,7 @@ namespace MyPortal.Database.Models
                         .WithOne(x => x.RoleType)
                         .HasForeignKey(x => x.RoleTypeId)
                         .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<BehaviourStatus>(e =>
@@ -679,10 +653,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Bulletin>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<Charge>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<Charge>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<ChargeBillingPeriod>(e =>
                 {
@@ -774,10 +745,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<CommunicationLog>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<CommunicationLog>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<CommunicationType>(e =>
                 {
@@ -827,7 +795,7 @@ namespace MyPortal.Database.Models
                         .WithOne(x => x.Course)
                         .HasForeignKey(x => x.CourseId)
                         .OnDelete(DeleteBehavior.Restrict);
-                    
+
                     e.HasMany(x => x.CommentBankAreas)
                         .WithOne(x => x.Course)
                         .HasForeignKey(x => x.CourseId)
@@ -835,10 +803,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<CoverArrangement>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<CoverArrangement>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<CurriculumBand>(e =>
                 {
@@ -849,7 +814,7 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.StudentGroupId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
-                        
+
 
                     e.HasMany(x => x.AssignedBlocks)
                         .WithOne(x => x.Band)
@@ -858,10 +823,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<CurriculumBandBlockAssignment>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<CurriculumBandBlockAssignment>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<CurriculumBlock>(e =>
                 {
@@ -903,10 +865,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<CurriculumGroupSession>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<CurriculumGroupSession>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<CurriculumYearGroup>(e =>
                 {
@@ -976,10 +935,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<DiaryEventAttendee>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<DiaryEventAttendee>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<DiaryEventAttendeeResponse>(e =>
                 {
@@ -991,10 +947,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<DiaryEventTemplate>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<DiaryEventTemplate>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<DiaryEventType>(e =>
                 {
@@ -1066,10 +1019,7 @@ namespace MyPortal.Database.Models
 
                 modelBuilder.Entity<Discount>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<Document>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<Document>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<DocumentType>(e =>
                 {
@@ -1082,10 +1032,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<EmailAddress>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<EmailAddress>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<EmailAddressType>(e =>
                 {
@@ -1412,15 +1359,9 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<ExamElementComponent>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<ExamElementComponent>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<ExamEnrolment>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<ExamEnrolment>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<ExamQualification>(e =>
                 {
@@ -1488,25 +1429,13 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<ExamSeatAllocation>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<ExamSeatAllocation>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<ExamSeries>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<ExamSeries>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<ExamSession>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<ExamSession>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<ExamSpecialArrangement>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<ExamSpecialArrangement>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<Exclusion>(e =>
                 {
@@ -1536,20 +1465,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<ExclusionAppealResult>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<ExclusionAppealResult>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<ExclusionReason>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<ExclusionReason>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<ExclusionType>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<ExclusionType>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<File>(e =>
                 {
@@ -1561,10 +1481,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<GiftedTalented>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<GiftedTalented>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<GovernanceType>(e =>
                 {
@@ -1658,10 +1575,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<StudentDetention>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<StudentDetention>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<IncidentType>(e =>
                 {
@@ -1685,15 +1599,9 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Language>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<Language>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<LessonPlan>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<LessonPlan>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<LessonPlanHomeworkItem>(e =>
                 {
@@ -1712,10 +1620,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<LessonPlanTemplate>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<LessonPlanTemplate>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<LocalAuthority>(e =>
                 {
@@ -1756,10 +1661,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<MarksheetColumn>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<MarksheetColumn>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<MarksheetTemplate>(e =>
                 {
@@ -1800,10 +1702,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<MedicalEvent>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<MedicalEvent>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<NextOfKin>(e =>
                 {
@@ -1833,10 +1732,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<Observation>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<Observation>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<ObservationOutcome>(e =>
                 {
@@ -1860,20 +1756,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<ParentEveningAppointment>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<ParentEveningAppointment>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<ParentEveningBreak>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<ParentEveningBreak>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<ParentEveningGroup>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<ParentEveningGroup>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<ParentEveningStaffMember>(e =>
                 {
@@ -1911,7 +1798,7 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(pc => pc.PersonId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
-                    
+
                     e.HasMany(x => x.MedicalEvents)
                         .WithOne(x => x.Person)
                         .HasForeignKey(x => x.PersonId)
@@ -1939,20 +1826,11 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<PersonCondition>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<PersonCondition>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<PersonDietaryRequirement>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<PersonDietaryRequirement>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<PhoneNumber>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<PhoneNumber>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<PhoneNumberType>(e =>
                 {
@@ -2111,10 +1989,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<ReportCardTargetEntry>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<ReportCardTargetEntry>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<Result>(e => { ConfigureEntity(e); });
 
@@ -2145,10 +2020,7 @@ namespace MyPortal.Database.Models
                         .IsRequired();
                 });
 
-                modelBuilder.Entity<RoleClaim>(e =>
-                {
-                    e.ToTable("RoleClaims");
-                });
+                modelBuilder.Entity<RoleClaim>(e => { e.ToTable("RoleClaims"); });
 
                 modelBuilder.Entity<Room>(e =>
                 {
@@ -2176,10 +2048,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<RoomClosure>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<RoomClosure>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<RoomClosureReason>(e =>
                 {
@@ -2238,10 +2107,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<SenProvision>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<SenProvision>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<SenProvisionType>(e =>
                 {
@@ -2254,10 +2120,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<SenReview>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<SenReview>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<SenReviewStatus>(e =>
                 {
@@ -2284,7 +2147,7 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<SenStatus>(e =>
                 {
                     ConfigureEntity(e);
-                    
+
                     e.HasMany(x => x.Students)
                         .WithOne(x => x.SenStatus)
                         .HasForeignKey(x => x.SenStatusId)
@@ -2327,16 +2190,10 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<SessionExtraName>(e =>
-                {
-                    ConfigureEntity(e);
-                });
-                
-                modelBuilder.Entity<SessionPeriod>(e =>
-                {
-                    ConfigureEntity(e);
-                });
-                
+                modelBuilder.Entity<SessionExtraName>(e => { ConfigureEntity(e); });
+
+                modelBuilder.Entity<SessionPeriod>(e => { ConfigureEntity(e); });
+
                 modelBuilder.Entity<SessionType>(e =>
                 {
                     ConfigureEntity(e);
@@ -2348,10 +2205,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<StaffAbsence>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<StaffAbsence>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<StaffAbsenceType>(e =>
                 {
@@ -2441,7 +2295,7 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.StaffMemberId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
-                    
+
                     e.HasMany(x => x.SenReviews)
                         .WithOne(x => x.Senco)
                         .HasForeignKey(x => x.SencoId)
@@ -2449,10 +2303,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<StoreDiscount>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<StoreDiscount>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<Student>(e =>
                 {
@@ -2664,15 +2515,9 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<StudentGroupMembership>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<StudentGroupMembership>(e => { ConfigureEntity(e); });
 
-                modelBuilder.Entity<StudentGroupSupervisor>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<StudentGroupSupervisor>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<StudentIncident>(e =>
                 {
@@ -2730,10 +2575,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<SubjectCode>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<SubjectCode>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<SubjectCodeSet>(e =>
                 {
@@ -2746,10 +2588,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<SubjectStaffMember>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<SubjectStaffMember>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<SubjectStaffMemberRole>(e =>
                 {
@@ -2773,10 +2612,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<TaskReminder>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<TaskReminder>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<TaskType>(e =>
                 {
@@ -2789,10 +2625,7 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<TrainingCertificate>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<TrainingCertificate>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<TrainingCertificateStatus>(e =>
                 {
@@ -2819,7 +2652,7 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<User>(e =>
                 {
                     e.ToTable("Users");
-                    
+
                     e.HasMany(x => x.DiaryEvents)
                         .WithOne(x => x.CreatedBy)
                         .HasForeignKey(x => x.CreatedById)
@@ -2910,7 +2743,7 @@ namespace MyPortal.Database.Models
                         .HasForeignKey(x => x.UserId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
-                    
+
                     e.HasMany(x => x.AuditLogs)
                         .WithOne(x => x.User)
                         .HasForeignKey(x => x.UserId)
@@ -2918,30 +2751,15 @@ namespace MyPortal.Database.Models
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<UserClaim>(e =>
-                {
-                    e.ToTable("UserClaims");
-                });
+                modelBuilder.Entity<UserClaim>(e => { e.ToTable("UserClaims"); });
 
-                modelBuilder.Entity<UserLogin>(e =>
-                {
-                    e.ToTable("UserLogins");
-                });
+                modelBuilder.Entity<UserLogin>(e => { e.ToTable("UserLogins"); });
 
-                modelBuilder.Entity<UserRole>(e =>
-                {
-                    e.ToTable("UserRoles");
-                });
+                modelBuilder.Entity<UserRole>(e => { e.ToTable("UserRoles"); });
 
-                modelBuilder.Entity<UserToken>(e =>
-                {
-                    e.ToTable("UserTokens");
-                });
+                modelBuilder.Entity<UserToken>(e => { e.ToTable("UserTokens"); });
 
-                modelBuilder.Entity<VatRate>(e =>
-                {
-                    ConfigureEntity(e);
-                });
+                modelBuilder.Entity<VatRate>(e => { ConfigureEntity(e); });
 
                 modelBuilder.Entity<YearGroup>(e =>
                 {
@@ -2965,7 +2783,7 @@ namespace MyPortal.Database.Models
         private void ConfigureEntity(EntityTypeBuilder builder)
         {
             builder.HasKey("Id").IsClustered(false);
-            builder.Property("ClusterId").UseIdentityColumn(1, 1);
+            builder.Property("ClusterId").UseIdentityColumn(1);
             builder.HasIndex("ClusterId").IsClustered().IsUnique().HasDatabaseName("CIX_ClusterId");
         }
     }

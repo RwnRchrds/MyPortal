@@ -19,7 +19,6 @@ namespace MyPortal.Database.Repositories
     {
         public DetentionRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-
         }
 
         protected override Query JoinRelated(Query query)
@@ -45,16 +44,17 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var detentions =
-                await DbUser.Transaction.Connection.QueryAsync<Detention, DetentionType, DiaryEvent, StaffMember, Detention>(
-                    sql.Sql,
-                    (detention, type, diaryEvent, supervisor) =>
-                    {
-                        detention.Type = type;
-                        detention.Event = diaryEvent;
-                        detention.Supervisor = supervisor;
+                await DbUser.Transaction.Connection
+                    .QueryAsync<Detention, DetentionType, DiaryEvent, StaffMember, Detention>(
+                        sql.Sql,
+                        (detention, type, diaryEvent, supervisor) =>
+                        {
+                            detention.Type = type;
+                            detention.Event = diaryEvent;
+                            detention.Supervisor = supervisor;
 
-                        return detention;
-                    }, sql.NamedBindings, DbUser.Transaction);
+                            return detention;
+                        }, sql.NamedBindings, DbUser.Transaction);
 
             return detentions;
         }
@@ -62,7 +62,7 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<Detention>> GetByStudent(Guid studentId, DateTime dateFrom, DateTime dateTo)
         {
             var query = GetDefaultQuery();
-            
+
             query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", $"{TblAlias}.Id");
             query.LeftJoin("Incident", "Incident.Id", "IncidentDetention.IncidentId");
 
@@ -92,7 +92,7 @@ namespace MyPortal.Database.Repositories
         public async Task<Detention> GetByIncident(Guid incidentId)
         {
             var query = GetDefaultQuery();
-            
+
             query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", $"{TblAlias}.Id");
             query.LeftJoin("Incident", "Incident.Id", "IncidentDetention.IncidentId");
 

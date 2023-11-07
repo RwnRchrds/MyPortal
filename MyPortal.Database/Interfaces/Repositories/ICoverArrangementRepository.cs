@@ -2,8 +2,8 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface ICoverArrangementRepository : IReadWriteRepository<CoverArrangement>, IUpdateRepository<CoverArrangement>
+    public interface ICoverArrangementRepository : IReadWriteRepository<CoverArrangement>,
+        IUpdateRepository<CoverArrangement>
     {
-        
     }
 }

@@ -39,43 +39,37 @@ namespace MyPortal.Logic.Models.Data.StaffMembers
                 LineManager = new StaffMemberModel(model.LineManager);
             }
         }
-        
+
         public Guid? LineManagerId { get; set; }
-        
+
         public Guid PersonId { get; set; }
-        
-        [Required]
-        [StringLength(128)]
-        public string Code { get; set; }
-        
-        [StringLength(50)]
-        public string BankName { get; set; }
-        
-        [StringLength(15)]
-        public string BankAccount { get; set; }
-        
-        [StringLength(10)]
-        public string BankSortCode { get; set; }
-        
-        [StringLength(9)]
-        public string NiNumber { get; set; }
-        
-        [StringLength(128)]
-        public string Qualifications { get; set; }
-        
+
+        [Required] [StringLength(128)] public string Code { get; set; }
+
+        [StringLength(50)] public string BankName { get; set; }
+
+        [StringLength(15)] public string BankAccount { get; set; }
+
+        [StringLength(10)] public string BankSortCode { get; set; }
+
+        [StringLength(9)] public string NiNumber { get; set; }
+
+        [StringLength(128)] public string Qualifications { get; set; }
+
         public bool TeachingStaff { get; set; }
-        
+
         public bool Deleted { get; set; }
 
         public virtual PersonModel Person { get; set; }
 
         public virtual StaffMemberModel LineManager { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.StaffMembers.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

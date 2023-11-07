@@ -44,15 +44,15 @@ namespace MyPortal.Logic.Models.Data.Curriculum
                 Room = new RoomModel(model.Room);
             }
         }
-        
+
         public Guid WeekId { get; set; }
-        
+
         public Guid SessionId { get; set; }
-        
+
         public Guid? TeacherId { get; set; }
-        
+
         public Guid? RoomId { get; set; }
-        
+
         public string Comments { get; set; }
 
         public AttendanceWeekModel Week { get; set; }

@@ -9,7 +9,6 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Documents;
-
 using MyPortal.Logic.Models.Requests.Documents;
 using Task = System.Threading.Tasks.Task;
 
@@ -30,7 +29,7 @@ namespace MyPortal.Logic.Services
             if (userId != null)
             {
                 await using var unitOfWork = await User.GetConnection();
-            
+
                 var directory = await unitOfWork.Directories.GetById(document.DirectoryId);
 
                 if (directory == null)
@@ -71,9 +70,9 @@ namespace MyPortal.Logic.Services
         public async Task UpdateDocument(Guid documentId, DocumentRequestModel document)
         {
             Validate(document);
-            
+
             await using var unitOfWork = await User.GetConnection();
-            
+
             var documentInDb = await unitOfWork.Documents.GetById(documentId);
 
             documentInDb.Title = document.Title;
@@ -89,7 +88,7 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<DocumentTypeModel>> GetTypes(DocumentTypeFilter filter)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var documentTypes = await unitOfWork.DocumentTypes.Get(filter);
 
             return documentTypes.Select(t => new DocumentTypeModel(t)).ToList();
@@ -98,7 +97,7 @@ namespace MyPortal.Logic.Services
         public async Task DeleteDocument(Guid documentId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             await unitOfWork.Documents.Delete(documentId);
 
             await unitOfWork.SaveChangesAsync();
@@ -107,7 +106,7 @@ namespace MyPortal.Logic.Services
         public async Task<DocumentModel> GetDocumentById(Guid documentId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var document = await unitOfWork.Documents.GetById(documentId);
 
             if (document == null)
@@ -117,11 +116,11 @@ namespace MyPortal.Logic.Services
 
             return new DocumentModel(document);
         }
-        
+
         public async Task<DirectoryModel> GetDirectoryById(Guid directoryId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var directory = await unitOfWork.Directories.GetById(directoryId);
 
             if (directory == null)
@@ -135,14 +134,14 @@ namespace MyPortal.Logic.Services
         public async Task CreateDirectory(DirectoryRequestModel directory)
         {
             Validate(directory);
-            
+
             if (directory.ParentId == null)
             {
                 throw new LogicException("A parent directory was not provided.");
             }
-            
+
             await using var unitOfWork = await User.GetConnection();
-                
+
             var parentDirectory = await unitOfWork.Directories.GetById(directory.ParentId.Value);
 
             if (parentDirectory == null)
@@ -166,9 +165,9 @@ namespace MyPortal.Logic.Services
         public async Task UpdateDirectory(Guid directoryId, DirectoryRequestModel directory)
         {
             Validate(directory);
-            
+
             await using var unitOfWork = await User.GetConnection();
-            
+
             var dirInDb = await unitOfWork.Directories.GetById(directoryId);
 
             if (!string.IsNullOrWhiteSpace(directory.Name))
@@ -192,7 +191,7 @@ namespace MyPortal.Logic.Services
         public async Task DeleteDirectory(Guid directoryId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             await unitOfWork.Directories.Delete(directoryId);
 
             await unitOfWork.SaveChangesAsync();
@@ -201,7 +200,7 @@ namespace MyPortal.Logic.Services
         public async Task<DirectoryChildrenModel> GetDirectoryChildren(Guid directoryId, bool includeRestricted)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var directory = await unitOfWork.Directories.GetById(directoryId);
 
             if (directory == null)
@@ -225,14 +224,14 @@ namespace MyPortal.Logic.Services
         public async Task<bool> IsPrivateDirectory(Guid directoryId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             var dir = await unitOfWork.Directories.GetById(directoryId);
 
             if (dir == null)
             {
                 throw new NotFoundException("Directory not found.");
             }
-                
+
             if (dir.Private)
             {
                 return true;
@@ -249,14 +248,14 @@ namespace MyPortal.Logic.Services
         public async Task<bool> IsSchoolDirectory(Guid directoryId)
         {
             await using var unitOfWork = await User.GetConnection();
-        
+
             var dir = await unitOfWork.Directories.GetById(directoryId);
 
             if (dir == null)
             {
                 throw new NotFoundException("Directory not found.");
             }
-                
+
             if (dir.ParentId == Directories.School)
             {
                 return true;

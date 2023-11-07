@@ -14,8 +14,7 @@ namespace MyPortal.Database.Models.Entity
             Submissions = new HashSet<HomeworkSubmission>();
         }
 
-        [Column(Order = 2)]
-        public Guid DirectoryId { get; set; }
+        [Column(Order = 2)] public Guid DirectoryId { get; set; }
 
         [Column(Order = 3)]
         [Required]
@@ -26,11 +25,9 @@ namespace MyPortal.Database.Models.Entity
         [StringLength(256)]
         public string Description { get; set; }
 
-        [Column(Order = 5)]
-        public bool SubmitOnline { get; set; }
-        
-        [Column(Order = 6)] 
-        public int MaxPoints { get; set; }
+        [Column(Order = 5)] public bool SubmitOnline { get; set; }
+
+        [Column(Order = 6)] public int MaxPoints { get; set; }
 
         public virtual Directory Directory { get; set; }
         public virtual ICollection<HomeworkSubmission> Submissions { get; set; }

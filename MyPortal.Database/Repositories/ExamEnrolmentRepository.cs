@@ -40,7 +40,8 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             var enrolments =
-                await DbUser.Transaction.Connection.QueryAsync<ExamEnrolment, ExamAward, ExamCandidate, ExamEnrolment>(sql.Sql,
+                await DbUser.Transaction.Connection.QueryAsync<ExamEnrolment, ExamAward, ExamCandidate, ExamEnrolment>(
+                    sql.Sql,
                     (enrolment, award, candidate) =>
                     {
                         enrolment.Award = award;

@@ -31,26 +31,27 @@ namespace MyPortal.Logic.Models.Data.Examinations
                 ExamBoard = new ExamBoardModel(model.ExamBoard);
             }
         }
-        
+
         public Guid ExamBoardId { get; set; }
-        
+
         public Guid ExamSeasonId { get; set; }
-        
+
         public string SeriesCode { get; set; }
-        
+
         public string Code { get; set; }
-        
+
         public string Title { get; set; }
 
         public virtual ExamSeasonModel Season { get; set; }
         public virtual ExamBoardModel ExamBoard { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.ExamSeries.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

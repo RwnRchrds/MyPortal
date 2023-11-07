@@ -45,7 +45,7 @@ namespace MyPortal.Logic.Models.Data.Curriculum
                 SubmittedWork = new DocumentModel(model.SubmittedWork);
             }
         }
-        
+
         public Guid HomeworkId { get; set; }
         public Guid StudentId { get; set; }
         public Guid TaskId { get; set; }
@@ -57,13 +57,14 @@ namespace MyPortal.Logic.Models.Data.Curriculum
         public virtual StudentModel Student { get; set; }
         public virtual TaskModel Task { get; set; }
         public virtual DocumentModel SubmittedWork { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.HomeworkSubmissions.GetById(Id.Value);
-            
-                LoadFromModel(model);   
+
+                LoadFromModel(model);
             }
         }
     }

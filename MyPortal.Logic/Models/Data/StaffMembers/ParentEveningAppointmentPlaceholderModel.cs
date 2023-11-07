@@ -5,7 +5,8 @@ namespace MyPortal.Logic.Models.Data.StaffMembers
 {
     public class ParentEveningAppointmentPlaceholderModel
     {
-        public ParentEveningAppointmentPlaceholderModel(Guid parentEveningId, Guid staffMemberId, DateTime start, DateTime end)
+        public ParentEveningAppointmentPlaceholderModel(Guid parentEveningId, Guid staffMemberId, DateTime start,
+            DateTime end)
         {
             ParentEveningId = parentEveningId;
             StaffMemberId = staffMemberId;

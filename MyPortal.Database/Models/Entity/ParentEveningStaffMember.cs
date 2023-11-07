@@ -7,23 +7,17 @@ namespace MyPortal.Database.Models.Entity
     [Table("ParentEveningStaffMembers")]
     public class ParentEveningStaffMember : BaseTypes.Entity
     {
-        [Column(Order = 2)]
-        public Guid ParentEveningId { get; set; }
+        [Column(Order = 2)] public Guid ParentEveningId { get; set; }
 
-        [Column(Order = 3)]
-        public Guid StaffMemberId { get; set; }
+        [Column(Order = 3)] public Guid StaffMemberId { get; set; }
 
-        [Column(Order = 4)]
-        public DateTime? AvailableFrom { get; set; }
+        [Column(Order = 4)] public DateTime? AvailableFrom { get; set; }
 
-        [Column(Order = 5)]
-        public DateTime? AvailableTo { get; set; }
+        [Column(Order = 5)] public DateTime? AvailableTo { get; set; }
 
-        [Column(Order = 6)]
-        public int AppointmentLength { get; set; }
+        [Column(Order = 6)] public int AppointmentLength { get; set; }
 
-        [Column(Order = 7)]
-        public int BreakLimit { get; set; }
+        [Column(Order = 7)] public int BreakLimit { get; set; }
 
         public virtual ParentEvening ParentEvening { get; set; }
         public virtual StaffMember StaffMember { get; set; }

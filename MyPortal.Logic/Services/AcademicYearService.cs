@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using MyPortal.Database;
 using MyPortal.Database.Constants;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
@@ -14,7 +10,6 @@ using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Curriculum;
-
 using MyPortal.Logic.Models.Requests.Curriculum;
 using Task = System.Threading.Tasks.Task;
 
@@ -29,7 +24,7 @@ namespace MyPortal.Logic.Services
         public async Task<bool> IsAcademicYearLocked(Guid academicYearId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             return await unitOfWork.AcademicYears.IsYearLocked(academicYearId);
         }
 
@@ -40,12 +35,12 @@ namespace MyPortal.Logic.Services
                 throw new YearLockedException("This academic year is locked and cannot be modified.");
             }
         }
-        
+
         public async Task<bool> IsAcademicYearLockedByWeek(Guid attendanceWeekId)
         {
             await using var unitOfWork = await User.GetConnection();
             var academicYear = await unitOfWork.AcademicYears.GetAcademicYearByWeek(attendanceWeekId);
-            
+
             if (await IsAcademicYearLocked(academicYear.Id))
             {
                 return true;
@@ -98,13 +93,13 @@ namespace MyPortal.Logic.Services
         public async Task<AcademicYearModel> CreateAcademicYear(AcademicYearRequestModel model)
         {
             Validate(model);
-            
+
             var academicYear = new AcademicYear
             {
                 Id = Guid.NewGuid(),
                 Name = model.Name
             };
-            
+
             await using var unitOfWork = await User.GetConnection();
 
             foreach (var termModel in model.AcademicTerms)
@@ -127,7 +122,7 @@ namespace MyPortal.Logic.Services
                         IsNonTimetable = attendanceWeek.NonTimetable
                     });
                 }
-                
+
                 foreach (var schoolHoliday in termModel.Holidays)
                 {
                     unitOfWork.DiaryEvents.Create(new DiaryEvent
@@ -207,7 +202,7 @@ namespace MyPortal.Logic.Services
         public async Task UpdateAcademicYear(Guid academicYearId, AcademicYearRequestModel model)
         {
             Validate(model);
-            
+
             await using var unitOfWork = await User.GetConnection();
             var academicYearInDb = await unitOfWork.AcademicYears.GetById(academicYearId);
 
@@ -222,7 +217,7 @@ namespace MyPortal.Logic.Services
         public async Task DeleteAcademicYear(Guid academicYearId)
         {
             await using var unitOfWork = await User.GetConnection();
-            
+
             await unitOfWork.AcademicYears.Delete(academicYearId);
 
             await unitOfWork.SaveChangesAsync();

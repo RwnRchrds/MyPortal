@@ -15,11 +15,9 @@ namespace MyPortal.Database.Models.Entity
             StudyTopics = new HashSet<StudyTopic>();
         }
 
-        [Column(Order = 4)]
-        public Guid SubjectId { get; set; }
+        [Column(Order = 4)] public Guid SubjectId { get; set; }
 
-        [Column(Order = 5)]
-        public string Name { get; set; }
+        [Column(Order = 5)] public string Name { get; set; }
 
         public virtual Subject Subject { get; set; }
 
@@ -28,7 +26,7 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<Class> Classes { get; set; }
 
         public virtual ICollection<StudyTopic> StudyTopics { get; set; }
-        
+
         public virtual ICollection<CommentBankArea> CommentBankAreas { get; set; }
     }
 }

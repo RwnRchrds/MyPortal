@@ -18,7 +18,6 @@ namespace MyPortal.Database.Repositories
     {
         public CurriculumBandRepository(DbUserWithContext dbUser) : base(dbUser)
         {
-            
         }
 
         protected override Query JoinRelated(Query query)

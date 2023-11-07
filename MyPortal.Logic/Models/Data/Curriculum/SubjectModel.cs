@@ -26,26 +26,23 @@ namespace MyPortal.Logic.Models.Data.Curriculum
                 SubjectCode = new SubjectCodeModel(model.SubjectCode);
             }
         }
-        
+
         public Guid SubjectCodeId { get; set; }
 
-        [Required]
-        [StringLength(256)]
-        public string Name { get; set; }
+        [Required] [StringLength(256)] public string Name { get; set; }
 
-        [Required]
-        [StringLength(5)]
-        public string Code { get; set; }
+        [Required] [StringLength(5)] public string Code { get; set; }
 
         public bool Deleted { get; set; }
 
         public virtual SubjectCodeModel SubjectCode { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)
             {
                 var model = await unitOfWork.Subjects.GetById(Id.Value);
-                
+
                 LoadFromModel(model);
             }
         }

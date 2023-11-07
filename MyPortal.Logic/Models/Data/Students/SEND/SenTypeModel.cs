@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Models.Data.Students.SEND
         {
             Code = model.Code;
         }
-        
+
         public string Code { get; set; }
     }
 }

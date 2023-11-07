@@ -26,16 +26,17 @@ namespace MyPortal.Logic.Models.Data.Finance
                 Student = new StudentModel(model.Student);
             }
         }
-        
+
         public Guid StudentId { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
         public DateTime DueDate { get; set; }
 
-        public bool? Dispatched  { get; set; }
+        public bool? Dispatched { get; set; }
 
         public StudentModel Student { get; set; }
+
         protected override async Task LoadFromDatabase(IUnitOfWork unitOfWork)
         {
             if (Id.HasValue)

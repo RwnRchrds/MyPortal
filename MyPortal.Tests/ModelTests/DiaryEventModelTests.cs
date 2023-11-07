@@ -18,7 +18,7 @@ public class DiaryEventModelTests
     {
         var now = DateTime.Now;
         var endDate = now.AddDays(23);
-        
+
         var diaryEvent = new DiaryEvent
         {
             Subject = "Test Event",
@@ -29,7 +29,7 @@ public class DiaryEventModelTests
         var model = new DiaryEventModel(diaryEvent);
 
         var series = model.CreateSeries(frequency, endDate);
-        
+
         Assert.That(series, Has.Count.EqualTo(expectedResult));
     }
 
@@ -38,7 +38,7 @@ public class DiaryEventModelTests
     {
         var now = DateTime.Now;
         var endDate = now.AddDays(23);
-        
+
         var diaryEvent = new DiaryEvent
         {
             Subject = "Test Event",
@@ -49,7 +49,7 @@ public class DiaryEventModelTests
         var model = new DiaryEventModel(diaryEvent);
 
         var series = model.CreateSeries(EventFrequency.Daily, endDate);
-        
+
         Assert.That(series, Has.Count.EqualTo(24));
     }
 }

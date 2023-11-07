@@ -13,7 +13,8 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class StudentGroupMembershipRepository : BaseReadWriteRepository<StudentGroupMembership>, IStudentGroupMembershipRepository
+    public class StudentGroupMembershipRepository : BaseReadWriteRepository<StudentGroupMembership>,
+        IStudentGroupMembershipRepository
     {
         public StudentGroupMembershipRepository(DbUserWithContext dbUser) : base(dbUser)
         {
@@ -34,7 +35,7 @@ namespace MyPortal.Database.Repositories
 
             return query;
         }
-        
+
         protected override async Task<IEnumerable<StudentGroupMembership>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
@@ -60,7 +61,8 @@ namespace MyPortal.Database.Repositories
             membership.EndDate = entity.EndDate;
         }
 
-        public async Task<IEnumerable<StudentGroupMembership>> GetMembershipsByGroup(Guid studentGroupId, DateTime dateFrom, DateTime dateTo)
+        public async Task<IEnumerable<StudentGroupMembership>> GetMembershipsByGroup(Guid studentGroupId,
+            DateTime dateFrom, DateTime dateTo)
         {
             var query = GetDefaultQuery();
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
@@ -29,7 +28,7 @@ namespace MyPortal.Tests
         [Test]
         public async Task Encryption_Bytes()
         {
-            var plainData = new byte[] {32, 64, 51, 28, 133, 122};
+            var plainData = new byte[] { 32, 64, 51, 28, 133, 122 };
 
             var key = CryptoHelper.GenerateEncryptionKey();
 
@@ -47,7 +46,7 @@ namespace MyPortal.Tests
         public void ValidateNhsNumber_ReturnsCorrectResult(string nhsNumber, bool expectedResult)
         {
             var isValid = ValidationHelper.ValidateNhsNumber(nhsNumber);
-            
+
             Assert.That(isValid, Is.EqualTo(expectedResult));
         }
 
@@ -57,7 +56,7 @@ namespace MyPortal.Tests
         public void ValidateUpn_ReturnsCorrectResult(string upn, bool expectedResult)
         {
             var isValid = ValidationHelper.ValidateUpn(upn);
-            
+
             Assert.That(isValid, Is.EqualTo(expectedResult));
         }
 

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace MyPortal.Logic.Models.Requests.Curriculum
 {
     public class AcademicTermRequestModel
     {
-        [StringLength(128)]
-        public string Name { get; set; }
+        [StringLength(128)] public string Name { get; set; }
 
         public DateTime StartDate { get; set; }
 

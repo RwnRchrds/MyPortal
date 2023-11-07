@@ -1,6 +1,5 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
-using MyPortal.Logic.Exceptions;
 
 namespace MyPortal.Logic.Helpers
 {
