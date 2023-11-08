@@ -29,3 +29,4 @@ profile:
 linter: jetbrains/qodana-dotnet:latest
 exclude:
   - name: VirtualMemberCallInConstructor
+baseline: ./qodana.sarif.json
