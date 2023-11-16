@@ -1,4 +1,4 @@
-﻿#-------------------------------------------------------------------------------#
+#-------------------------------------------------------------------------------#
 #               Qodana analysis is configured by qodana.yaml file               #
 #             https://www.jetbrains.com/help/qodana/qodana-yaml.html            #
 #-------------------------------------------------------------------------------#
@@ -29,4 +29,3 @@ profile:
 linter: jetbrains/qodana-dotnet:latest
 exclude:
   - name: VirtualMemberCallInConstructor
-baseline: ./qodana.sarif.json
