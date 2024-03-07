@@ -135,8 +135,12 @@ namespace MyPortal.Logic.Services
             var possibleMarks =
                 await unitOfWork.AttendanceMarks.GetPossibleMarksByStudents(studentCollection, register.Periods);
 
+            var detentions =
+                await unitOfWork.StudentDetentions.GetStudentsWithDetentionByDate(studentCollection, DateTime.Today);
+
             register.PopulateMarks(existingMarks);
             register.PopulateMissingMarks(possibleMarks);
+            register.PopulateDetentions(detentions);
 
             return register;
         }
@@ -171,31 +175,12 @@ namespace MyPortal.Logic.Services
         {
             await using var unitOfWork = await User.GetConnection();
 
-            var studentGroup = await unitOfWork.StudentGroups.GetById(studentGroupId);
+            var studentGroupMembers =
+                await unitOfWork.StudentGroupMemberships.GetMembershipsByGroup(studentGroupId, dateFrom, dateTo);
 
-            if (studentGroup == null)
-            {
-                throw new NotFoundException("Student group not found.");
-            }
+            var studentIds = studentGroupMembers.Select(m => m.StudentId).ToArray();
 
-            var registerTitle = string.IsNullOrWhiteSpace(title)
-                ? $"{studentGroup.Description}, {dateFrom:dd/MM/yyyy}-{dateTo:dd/MM/yyyy}"
-                : title;
-
-            var register = await InitialiseRegister(dateFrom, dateTo, registerTitle, unlockedPeriods);
-
-            // Get any attendance marks that already exist
-            var existingMarks = await unitOfWork.AttendanceMarks
-                .GetRegisterMarks(studentGroupId, register.Periods);
-
-            // Get possible attendance mark "slots" (whether or not an actual mark exists yet in the system)
-            var possibleMarks =
-                await unitOfWork.AttendanceMarks.GetPossibleMarksByStudentGroup(studentGroupId, register.Periods);
-
-            register.PopulateMarks(existingMarks);
-            register.PopulateMissingMarks(possibleMarks);
-
-            return register;
+            return await GetRegisterByDateRange(studentIds, dateFrom, dateTo, title, unlockedPeriods);
         }
 
         public async Task UpdateAttendanceMarks(params AttendanceMarkSummaryModel[] marks)

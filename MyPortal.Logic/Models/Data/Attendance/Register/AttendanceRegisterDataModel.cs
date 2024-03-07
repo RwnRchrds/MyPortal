@@ -113,6 +113,19 @@ namespace MyPortal.Logic.Models.Data.Attendance.Register
             Students = data.OrderBy(d => d.StudentName).ToArray();
         }
 
+        public void PopulateDetentions(IEnumerable<StudentDetention> detentions)
+        {
+            detentions = detentions.ToArray();
+            
+            foreach (var student in Students)
+            {
+                if (detentions.Any(d => d.StudentId == student.StudentId))
+                {
+                    student.HasDetention = true;
+                }
+            }
+        }
+
         // Inserts blank marks for marks that should be recorded.
         // We need this because not all students will have a lesson on a given period (e.g. after school lessons)
         // This is therefore used to distinguish students that *should* have marks from those who should not

@@ -7,7 +7,8 @@ namespace MyPortal.Database.Interfaces.Repositories
 {
     public interface IStudentDetentionRepository : IReadWriteRepository<StudentDetention>
     {
-        Task<StudentDetention> GetSpecific(Guid detentionId, Guid studentId);
+        Task<StudentDetention> GetStudentDetention(Guid detentionId, Guid studentId);
         Task<IEnumerable<StudentDetention>> GetByStudentIncident(Guid studentIncidentId);
+        Task<IEnumerable<StudentDetention>> GetStudentsWithDetentionByDate(Guid[] studentIds, DateTime date);
     }
 }

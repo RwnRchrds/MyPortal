@@ -55,7 +55,7 @@ namespace MyPortal.Database.Repositories
             return incidentDetentions;
         }
 
-        public async Task<StudentDetention> GetSpecific(Guid detentionId, Guid studentId)
+        public async Task<StudentDetention> GetStudentDetention(Guid detentionId, Guid studentId)
         {
             var query = GetDefaultQuery();
 
@@ -70,6 +70,18 @@ namespace MyPortal.Database.Repositories
             var query = GetDefaultQuery();
 
             query.Where("SI.Id", studentIncidentId);
+
+            return await ExecuteQuery(query);
+        }
+
+        public async Task<IEnumerable<StudentDetention>> GetStudentsWithDetentionByDate(Guid[] studentIds, DateTime date)
+        {
+            var query = GetDefaultQuery();
+
+            query.LeftJoin("DiaryEvents as DE", "DE.Id", "D.EventId");
+
+            query.WhereIn($"{TblAlias}.StudentId", studentIds);
+            query.WhereDate("DE.StartTime", date);
 
             return await ExecuteQuery(query);
         }

@@ -550,7 +550,7 @@ namespace MyPortal.Logic.Services
             foreach (var detentionId in detentionIds)
             {
                 var relatedIncident =
-                    await unitOfWork.StudentDetentions.GetSpecific(detentionId, studentIncidentId);
+                    await unitOfWork.StudentDetentions.GetStudentDetention(detentionId, studentIncidentId);
 
                 if (relatedIncident == null)
                 {
