@@ -82,51 +82,6 @@ namespace MyPortal.Database.Repositories.Base
             return query;
         }
 
-        public async Task<IEnumerable<AuditLog>> GetAuditLogsById(Guid id)
-        {
-            var query = GetDefaultQuery(typeof(AuditLog));
-
-            query.LeftJoin("Users as U", "U.Id", "AL.UserId")
-                .LeftJoin("AuditActions as AA", "AA.Id", "AL.AuditActionId");
-
-            query.SelectAllColumns(typeof(User), "U");
-            query.SelectAllColumns(typeof(AuditAction), "AA");
-
-            query.Where("AL.TableName", TblName);
-            query.Where("AL.EntityId", id);
-
-            var sql = Compiler.Compile(query);
-
-            return await DbUser.Transaction.Connection.QueryAsync<AuditLog, User, AuditAction, AuditLog>(sql.Sql,
-                (auditLog, user, auditAction) =>
-                {
-                    auditLog.User = user;
-                    auditLog.Action = auditAction;
-                    return auditLog;
-                }, sql.NamedBindings, DbUser.Transaction);
-        }
-
-        public async Task<IEnumerable<AuditLog>> GetAllAuditLogs()
-        {
-            var query = GetDefaultQuery(typeof(AuditLog));
-
-            query.LeftJoin("Users as U", "U.Id", "AL.UserId")
-                .LeftJoin("AuditActions as AA", "AA.Id", "AL.AuditActionId");
-
-            query.SelectAllColumns(typeof(User), "U");
-            query.SelectAllColumns(typeof(AuditAction), "AA");
-
-            var sql = Compiler.Compile(query);
-
-            return await DbUser.Transaction.Connection.QueryAsync<AuditLog, User, AuditAction, AuditLog>(sql.Sql,
-                (auditLog, user, auditAction) =>
-                {
-                    auditLog.User = user;
-                    auditLog.Action = auditAction;
-                    return auditLog;
-                }, sql.NamedBindings, DbUser.Transaction);
-        }
-
         public async Task<IEnumerable<TEntity>> GetAll()
         {
             var sql = GetDefaultQuery();

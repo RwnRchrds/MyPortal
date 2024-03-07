@@ -38,8 +38,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<AttendancePeriod> AttendancePeriods { get; set; }
         public virtual DbSet<AttendanceWeek> AttendanceWeeks { get; set; }
         public virtual DbSet<AttendanceWeekPattern> AttendanceWeekPatterns { get; set; }
-        public virtual DbSet<AuditLog> AuditLogs { get; set; }
-        public virtual DbSet<AuditAction> AuditActions { get; set; }
         public virtual DbSet<BasketItem> BasketItems { get; set; }
         public virtual DbSet<BehaviourOutcome> BehaviourOutcomes { get; set; }
         public virtual DbSet<BehaviourRoleType> BehaviourRoleTypes { get; set; }
@@ -494,19 +492,6 @@ namespace MyPortal.Database.Models
                     e.HasMany(awp => awp.AttendanceWeeks)
                         .WithOne(aw => aw.WeekPattern)
                         .HasForeignKey(aw => aw.WeekPatternId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-                modelBuilder.Entity<AuditLog>(e => { ConfigureEntity(e); });
-
-                modelBuilder.Entity<AuditAction>(e =>
-                {
-                    ConfigureEntity(e);
-
-                    e.HasMany(x => x.AuditLogs)
-                        .WithOne(x => x.Action)
-                        .HasForeignKey(x => x.AuditActionId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -2739,12 +2724,6 @@ namespace MyPortal.Database.Models
                         .IsRequired();
 
                     e.HasMany(x => x.UserReminderSettings)
-                        .WithOne(x => x.User)
-                        .HasForeignKey(x => x.UserId)
-                        .IsRequired()
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    e.HasMany(x => x.AuditLogs)
                         .WithOne(x => x.User)
                         .HasForeignKey(x => x.UserId)
                         .IsRequired()

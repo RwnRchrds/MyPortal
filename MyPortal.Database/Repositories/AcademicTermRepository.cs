@@ -67,8 +67,6 @@ namespace MyPortal.Database.Repositories
             term.Name = entity.Name;
             term.StartDate = entity.StartDate;
             term.EndDate = entity.EndDate;
-
-            WriteAuditRaw(entity.Id, AuditActions.Update, oldValue);
         }
 
         public async Task<IEnumerable<AcademicTerm>> GetByAcademicYear(Guid academicYearId)

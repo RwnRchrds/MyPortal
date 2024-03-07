@@ -30,8 +30,6 @@ namespace MyPortal.Database.Repositories
 
             outcome.Description = entity.Description;
             outcome.Active = entity.Active;
-
-            WriteAuditRaw(entity.Id, AuditActions.Update, oldValue);
         }
     }
 }

@@ -97,8 +97,6 @@ namespace MyPortal.Database.Repositories
 
             academicYear.Name = entity.Name;
             academicYear.Locked = entity.Locked;
-
-            WriteAuditRaw(entity.Id, AuditActions.Update, oldValue);
         }
     }
 }

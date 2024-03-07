@@ -22,7 +22,6 @@ namespace MyPortal.Database.Models.Entity
             Bulletins = new HashSet<Bulletin>();
             CreatedTasks = new HashSet<Task>();
             ReportCardSubmissions = new HashSet<ReportCardEntry>();
-            AuditLogs = new HashSet<AuditLog>();
         }
 
         public DateTime CreatedDate { get; set; }
@@ -66,7 +65,5 @@ namespace MyPortal.Database.Models.Entity
         public virtual ICollection<DiaryEvent> DiaryEvents { get; set; }
 
         public virtual ICollection<UserReminderSetting> UserReminderSettings { get; set; }
-
-        public virtual ICollection<AuditLog> AuditLogs { get; set; }
     }
 }

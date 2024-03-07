@@ -9,7 +9,5 @@ namespace MyPortal.Database.Interfaces.Repositories
     {
         Task<IEnumerable<TEntity>> GetAll();
         Task<TEntity> GetById(Guid id);
-        Task<IEnumerable<AuditLog>> GetAuditLogsById(Guid id);
-        Task<IEnumerable<AuditLog>> GetAllAuditLogs();
     }
 }
