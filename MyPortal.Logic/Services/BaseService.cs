@@ -7,7 +7,6 @@ using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Audit;
 using MyPortal.Logic.Models.Data.Settings;
 
 namespace MyPortal.Logic.Services
