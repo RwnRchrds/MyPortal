@@ -94,6 +94,8 @@ namespace MyPortal.Logic.Models.Data.Attendance.Register
                     if (i == 0)
                     {
                         dataRow.StudentName = mark.StudentName;
+                        dataRow.ReportCardId = mark.ReportCardId;
+                        dataRow.DetentionId = mark.DetentionId;
                     }
 
                     dataRow.Marks.Add(new AttendanceMarkSummaryModel
@@ -111,19 +113,6 @@ namespace MyPortal.Logic.Models.Data.Attendance.Register
             }
 
             Students = data.OrderBy(d => d.StudentName).ToArray();
-        }
-
-        public void PopulateDetentions(IEnumerable<StudentDetention> detentions)
-        {
-            detentions = detentions.ToArray();
-            
-            foreach (var student in Students)
-            {
-                if (detentions.Any(d => d.StudentId == student.StudentId))
-                {
-                    student.HasDetention = true;
-                }
-            }
         }
 
         // Inserts blank marks for marks that should be recorded.

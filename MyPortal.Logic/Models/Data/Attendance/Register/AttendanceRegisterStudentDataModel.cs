@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Models.Data.Attendance.Register
         public Guid StudentId { get; set; }
         public Guid? ReportCardId { get; set; }
         public Guid? ExtraNameId { get; set; }
-        public bool HasDetention { get; set; }
+        public Guid? DetentionId { get; set; }
         public string StudentName { get; set; }
         public ICollection<AttendanceMarkSummaryModel> Marks { get; set; }
     }

@@ -135,12 +135,8 @@ namespace MyPortal.Logic.Services
             var possibleMarks =
                 await unitOfWork.AttendanceMarks.GetPossibleMarksByStudents(studentCollection, register.Periods);
 
-            var detentions =
-                await unitOfWork.StudentDetentions.GetStudentsWithDetentionByDate(studentCollection, DateTime.Today);
-
             register.PopulateMarks(existingMarks);
             register.PopulateMissingMarks(possibleMarks);
-            register.PopulateDetentions(detentions);
 
             return register;
         }

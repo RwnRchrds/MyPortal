@@ -3273,19 +3273,6 @@ WHEN NOT MATCHED THEN
     INSERT (Id, Description, Active)
     VALUES (Id, Description, Active);
 
-MERGE INTO [dbo].[AuditActions] AS Target
-USING (VALUES
-           ('041BA7B4-30F0-44D5-83D4-D9EEFF9A9A04', 'Create', 1),
-           ('0649E5D6-ADBE-4B31-885B-C91D987E897E', 'Update', 1),
-           ('1DB06C2E-4BB8-426A-A9B9-1A69AC45B46A', 'Delete', 1)
-           )
-AS Source (Id, Description, Active)
-ON Target.Id = Source.Id
-
-WHEN NOT MATCHED THEN
-    INSERT (Id, Description, Active)
-    VALUES (Id, Description, Active);
-
 MERGE INTO [dbo].[BehaviourRoleTypes] AS Target
 USING (VALUES
            ('3c487bc5-110a-4619-9ab3-be4005f2d1ef', 'Aggressor', 1, 1),

@@ -12,7 +12,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230907101334_InitialModel")]
+    [Migration("20240307165823_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1132,98 +1132,6 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("AttendanceWeekPatterns");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.AuditAction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(0);
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit")
-                        .HasColumnOrder(3);
-
-                    b.Property<int>("ClusterId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(1);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClusterId"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
-                        .HasColumnOrder(2);
-
-                    b.HasKey("Id");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
-
-                    b.HasIndex("ClusterId")
-                        .IsUnique()
-                        .HasDatabaseName("CIX_ClusterId");
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterId"));
-
-                    b.ToTable("AuditActions");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.AuditLog", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(0);
-
-                    b.Property<Guid>("AuditActionId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(5);
-
-                    b.Property<int>("ClusterId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(1);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClusterId"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnOrder(6);
-
-                    b.Property<Guid>("EntityId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(3);
-
-                    b.Property<string>("OldValue")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnOrder(7);
-
-                    b.Property<string>("TableName")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnOrder(2);
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnOrder(4);
-
-                    b.HasKey("Id");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
-
-                    b.HasIndex("AuditActionId");
-
-                    b.HasIndex("ClusterId")
-                        .IsUnique()
-                        .HasDatabaseName("CIX_ClusterId");
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterId"));
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AuditLogs");
-                });
-
             modelBuilder.Entity("MyPortal.Database.Models.Entity.BasketItem", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1320,8 +1228,11 @@ namespace MyPortal.Database.Migrations
                         .HasColumnOrder(3);
 
                     b.Property<int>("ClusterId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnOrder(1);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClusterId"), 1L, 1);
 
                     b.Property<int>("DefaultPoints")
                         .HasColumnType("int")
@@ -1334,6 +1245,14 @@ namespace MyPortal.Database.Migrations
                         .HasColumnOrder(2);
 
                     b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("ClusterId")
+                        .IsUnique()
+                        .HasDatabaseName("CIX_ClusterId");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterId"));
 
                     b.ToTable("BehaviourRoleTypes");
                 });
@@ -10444,25 +10363,6 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("WeekPattern");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.AuditLog", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Entity.AuditAction", "Action")
-                        .WithMany("AuditLogs")
-                        .HasForeignKey("AuditActionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Entity.User", "User")
-                        .WithMany("AuditLogs")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Action");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("MyPortal.Database.Models.Entity.BasketItem", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Entity.Product", "Product")
@@ -12744,9 +12644,9 @@ namespace MyPortal.Database.Migrations
                         .IsRequired();
 
                     b.HasOne("MyPortal.Database.Models.Entity.BehaviourRoleType", "RoleType")
-                        .WithMany()
+                        .WithMany("LinkedIncidents")
                         .HasForeignKey("RoleTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("MyPortal.Database.Models.Entity.BehaviourStatus", "Status")
@@ -13117,14 +13017,14 @@ namespace MyPortal.Database.Migrations
                     b.Navigation("Periods");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Entity.AuditAction", b =>
-                {
-                    b.Navigation("AuditLogs");
-                });
-
             modelBuilder.Entity("MyPortal.Database.Models.Entity.BehaviourOutcome", b =>
                 {
                     b.Navigation("StudentIncidents");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Entity.BehaviourRoleType", b =>
+                {
+                    b.Navigation("LinkedIncidents");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Entity.BehaviourStatus", b =>
@@ -13951,8 +13851,6 @@ namespace MyPortal.Database.Migrations
             modelBuilder.Entity("MyPortal.Database.Models.Entity.User", b =>
                 {
                     b.Navigation("Achievements");
-
-                    b.Navigation("AuditLogs");
 
                     b.Navigation("Bulletins");
 
