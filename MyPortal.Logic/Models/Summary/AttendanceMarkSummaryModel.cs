@@ -11,7 +11,8 @@ namespace MyPortal.Logic.Models.Summary
 
         public Guid PeriodId { get; set; }
 
-        [NotNull] public Guid? CodeId { get; set; }
+        [NotNull] 
+        public Guid? CodeId { get; set; }
 
         public string Comments { get; set; }
 

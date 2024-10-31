@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models.Search;
-using MyPortal.Logic.Models.Audit;
 using MyPortal.Logic.Models.Data.Students;
 using MyPortal.Logic.Models.Requests.Student;
 using MyPortal.Logic.Models.Summary;
@@ -16,8 +15,6 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IEnumerable<StudentSummaryModel>> SearchStudents(StudentSearchOptions searchOptions);
 
         Task<StudentStatsModel> GetStatsByStudentId(Guid studentId, Guid academicYearId);
-
-        Task<IEnumerable<HistoryItem>> GetHistoryByStudentId(Guid studentId);
 
         Task<StudentModel> GetStudentById(Guid studentId);
 

@@ -299,7 +299,6 @@
     <Build Include="dbo\Tables\CommentBankAreas.sql" />
     <Build Include="dbo\Tables\UserClaims.sql" />
     <Build Include="dbo\Views\AttendancePeriodInstances.sql" />
-    <Build Include="dbo\Views\SessionMetadata.sql" />
     <Build Include="dbo\Views\SessionPeriodMetadata.sql" />
     <Build Include="dbo\Functions\GetName.sql" />
     <Build Include="dbo\Functions\GetOverlappingEvents.sql" />

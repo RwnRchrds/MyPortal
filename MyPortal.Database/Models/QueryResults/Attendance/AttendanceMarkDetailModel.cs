@@ -9,8 +9,10 @@ namespace MyPortal.Database.Models.QueryResults.Attendance
         public string StudentName { get; set; }
         public Guid WeekId { get; set; }
         public Guid PeriodId { get; set; }
-        public Guid CodeId { get; set; }
-        public Guid CreatedById { get; set; }
+        public Guid? CodeId { get; set; }
+        public Guid? CreatedById { get; set; }
+        public Guid? ReportCardId { get; set; }
+        public Guid? DetentionId { get; set; }
         public string Comments { get; set; }
         public int MinutesLate { get; set; }
     }

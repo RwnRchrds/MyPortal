@@ -177,22 +177,6 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AuditActions",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClusterId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Active = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AuditActions", x => x.Id)
-                        .Annotation("SqlServer:Clustered", false);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "BehaviourOutcomes",
                 columns: table => new
                 {
@@ -214,14 +198,16 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClusterId = table.Column<int>(type: "int", nullable: false),
+                    ClusterId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false),
                     DefaultPoints = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BehaviourRoleTypes", x => x.Id);
+                    table.PrimaryKey("PK_BehaviourRoleTypes", x => x.Id)
+                        .Annotation("SqlServer:Clustered", false);
                 });
 
             migrationBuilder.CreateTable(
@@ -3326,38 +3312,6 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AuditLogs",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClusterId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TableName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AuditActionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OldValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AuditLogs", x => x.Id)
-                        .Annotation("SqlServer:Clustered", false);
-                    table.ForeignKey(
-                        name: "FK_AuditLogs_AuditActions_AuditActionId",
-                        column: x => x.AuditActionId,
-                        principalTable: "AuditActions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AuditLogs_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Bulletins",
                 columns: table => new
                 {
@@ -4525,7 +4479,7 @@ namespace MyPortal.Database.Migrations
                         column: x => x.RoleTypeId,
                         principalTable: "BehaviourRoleTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_StudentIncidents_BehaviourStatus_StatusId",
                         column: x => x.StatusId,
@@ -5964,30 +5918,6 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "CIX_ClusterId",
-                table: "AuditActions",
-                column: "ClusterId",
-                unique: true)
-                .Annotation("SqlServer:Clustered", true);
-
-            migrationBuilder.CreateIndex(
-                name: "CIX_ClusterId",
-                table: "AuditLogs",
-                column: "ClusterId",
-                unique: true)
-                .Annotation("SqlServer:Clustered", true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AuditLogs_AuditActionId",
-                table: "AuditLogs",
-                column: "AuditActionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AuditLogs_UserId",
-                table: "AuditLogs",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "CIX_ClusterId",
                 table: "BasketItems",
                 column: "ClusterId",
                 unique: true)
@@ -6006,6 +5936,13 @@ namespace MyPortal.Database.Migrations
             migrationBuilder.CreateIndex(
                 name: "CIX_ClusterId",
                 table: "BehaviourOutcomes",
+                column: "ClusterId",
+                unique: true)
+                .Annotation("SqlServer:Clustered", true);
+
+            migrationBuilder.CreateIndex(
+                name: "CIX_ClusterId",
+                table: "BehaviourRoleTypes",
                 column: "ClusterId",
                 unique: true)
                 .Annotation("SqlServer:Clustered", true);
@@ -8742,9 +8679,6 @@ namespace MyPortal.Database.Migrations
                 name: "AttendanceMarks");
 
             migrationBuilder.DropTable(
-                name: "AuditLogs");
-
-            migrationBuilder.DropTable(
                 name: "BasketItems");
 
             migrationBuilder.DropTable(
@@ -8965,9 +8899,6 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "AttendanceCodes");
-
-            migrationBuilder.DropTable(
-                name: "AuditActions");
 
             migrationBuilder.DropTable(
                 name: "AccountTransactions");
