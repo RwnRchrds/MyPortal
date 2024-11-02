@@ -9,11 +9,13 @@
     [Points]     INT              NOT NULL,
     CONSTRAINT [PK_StudentIncidents] PRIMARY KEY NONCLUSTERED ([Id] ASC),
     CONSTRAINT [FK_StudentIncidents_BehaviourOutcomes_OutcomeId] FOREIGN KEY ([OutcomeId]) REFERENCES [dbo].[BehaviourOutcomes] ([Id]),
-    CONSTRAINT [FK_StudentIncidents_BehaviourRoleTypes_RoleTypeId] FOREIGN KEY ([RoleTypeId]) REFERENCES [dbo].[BehaviourRoleTypes] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_StudentIncidents_BehaviourRoleTypes_RoleTypeId] FOREIGN KEY ([RoleTypeId]) REFERENCES [dbo].[BehaviourRoleTypes] ([Id]),
     CONSTRAINT [FK_StudentIncidents_BehaviourStatus_StatusId] FOREIGN KEY ([StatusId]) REFERENCES [dbo].[BehaviourStatus] ([Id]),
     CONSTRAINT [FK_StudentIncidents_Incidents_IncidentId] FOREIGN KEY ([IncidentId]) REFERENCES [dbo].[Incidents] ([Id]),
     CONSTRAINT [FK_StudentIncidents_Students_StudentId] FOREIGN KEY ([StudentId]) REFERENCES [dbo].[Students] ([Id])
 );
+
+
 
 
 GO

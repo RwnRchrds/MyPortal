@@ -216,7 +216,6 @@
     <Build Include="dbo\Tables\AddressTypes.sql" />
     <Build Include="dbo\Tables\Schools.sql" />
     <Build Include="dbo\Tables\StaffAbsenceTypes.sql" />
-    <Build Include="dbo\Tables\AuditLogs.sql" />
     <Build Include="dbo\Tables\AgencyTypes.sql" />
     <Build Include="dbo\Tables\StaffIllnessTypes.sql" />
     <Build Include="dbo\Tables\Detentions.sql" />
@@ -235,7 +234,6 @@
     <Build Include="dbo\Tables\AttendanceWeekPatterns.sql" />
     <Build Include="dbo\Tables\TaskTypes.sql" />
     <Build Include="dbo\Tables\CurriculumGroups.sql" />
-    <Build Include="dbo\Tables\AuditActions.sql" />
     <Build Include="dbo\Tables\TrainingCertificateStatus.sql" />
     <Build Include="dbo\Tables\ParentEvenings.sql" />
     <Build Include="dbo\Tables\Students.sql" />

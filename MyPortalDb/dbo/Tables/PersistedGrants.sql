@@ -1,4 +1,5 @@
 ﻿CREATE TABLE [dbo].[PersistedGrants] (
+    [Id]           BIGINT         NOT NULL IDENTITY,
     [Key]          NVARCHAR (200) NOT NULL,
     [Type]         NVARCHAR (50)  NOT NULL,
     [SubjectId]    NVARCHAR (200) NULL,

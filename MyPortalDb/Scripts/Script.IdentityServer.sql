@@ -39,6 +39,7 @@ CREATE TABLE [Keys] (
 GO
 
 CREATE TABLE [PersistedGrants] (
+                                   [Id] bigint IDENTITY NOT NULL,
                                    [Key] nvarchar(200) NOT NULL,
                                    [Type] nvarchar(50) NOT NULL,
                                    [SubjectId] nvarchar(200) NULL,

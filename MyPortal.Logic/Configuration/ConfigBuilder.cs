@@ -45,7 +45,7 @@ public class ConfigBuilder
             var connectionStringSource = config.GetSection(Keys.ConfigConnectionStringSourceKey);
             if (connectionStringSource.Exists())
             {
-                ConnectionString = GetSecret(config, connectionStringSource.Value, "cs");
+                ConnectionString = GetSecret(config, connectionStringSource.Value, Secrets.ConnectionString);
             }
         }
 
@@ -75,7 +75,7 @@ public class ConfigBuilder
             var fileEncryptionKeySource = config.GetSection(Keys.ConfigFileEncryptionKeySourceKey);
             if (fileEncryptionKeySource.Exists())
             {
-                FileEncryptionKey = GetSecret(config, fileEncryptionKeySource.Value, "fek");
+                FileEncryptionKey = GetSecret(config, fileEncryptionKeySource.Value, Secrets.FileEncryptionKey);
             }
         }
 
@@ -86,10 +86,8 @@ public class ConfigBuilder
         }
     }
 
-    private static string GetSecret(IConfiguration config, string configKey, string secretName)
+    private static string GetSecret(IConfiguration config, string secretSource, string secretName)
     {
-        var secretSource = config[configKey];
-
         if (secretSource.ToLower() == "azure")
         {
             var keyVaultName = Environment.GetEnvironmentVariable("MYPORTAL_KEYVAULT");
@@ -107,7 +105,7 @@ public class ConfigBuilder
             return secret;
         }
 
-        return secretSource;
+        return "";
     }
 
     public DatabaseProvider DatabaseProvider { get; set; }
