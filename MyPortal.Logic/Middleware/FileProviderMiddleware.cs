@@ -38,5 +38,7 @@ public class FileProviderMiddleware
             context.Response.ContentLength = context.Response.Body.Length;
             await context.Response.CompleteAsync();
         }
+
+        await _next(context);
     }
 }

@@ -54,7 +54,7 @@ namespace MyPortalWeb
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyPortal API v1");
-                c.RoutePrefix = "api";
+                c.RoutePrefix = "swagger";
             });
 #endif
             if (env.IsDevelopment())
@@ -71,9 +71,7 @@ namespace MyPortalWeb
             app.UseAuthentication();
             app.UseIdentityServer();
             app.UseAuthorization();
-
             app.UseMyPortal();
-
             //app.UseDefaultFiles();
             //app.UseStaticFiles();
 
