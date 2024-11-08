@@ -19,18 +19,13 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/users")]
     public class UsersController : BaseApiController
     {
-        public UsersController(IUserService userService) : base(userService)
+        private readonly IUserService _userService;
+        
+        public UsersController(IUserService userService)
         {
+            _userService = userService;
         }
-
-        private async Task<bool> AuthoriseUser(Guid requestedUserId, bool requireEdit = false)
-        {
-            // Users do not require extra permission to access resources related to themselves
-            return await UserHasPermission(requireEdit
-                       ? PermissionValue.SystemEditUsers
-                       : PermissionValue.SystemViewUsers) ||
-                   User.GetUserId() == requestedUserId;
-        }
+        
 
         [HttpPost]
         [Route("")]
@@ -40,7 +35,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var userId = (await UserService.CreateUser(model)).FirstOrDefault();
+                var userId = (await _userService.CreateUser(model)).FirstOrDefault();
 
                 return Ok(new NewEntityResponseModel { Id = userId });
             }
@@ -58,7 +53,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var users = await UserService.GetUsers(username);
+                var users = await _userService.GetUsers(username);
 
                 return Ok(users);
             }
@@ -76,7 +71,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var user = await UserService.GetUserById(userId);
+                var user = await _userService.GetUserById(userId);
 
                 return Ok(user);
             }
@@ -93,14 +88,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (await AuthoriseUser(userId))
-                {
-                    var roles = await UserService.GetUserRoles(userId);
+                var roles = await _userService.GetUserRoles(userId);
 
-                    return Ok(roles);
-                }
-
-                return PermissionError();
+                return Ok(roles);
             }
             catch (Exception e)
             {
@@ -116,7 +106,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                await UserService.UpdateUser(userId, model);
+                await _userService.UpdateUser(userId, model);
 
                 return Ok();
             }
@@ -134,7 +124,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                await UserService.DeleteUser(userId);
+                await _userService.DeleteUser(userId);
 
                 return Ok();
             }
@@ -153,7 +143,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                await UserService.SetPassword(userId, request.NewPassword);
+                await _userService.SetPassword(userId, request.NewPassword);
 
                 return Ok();
             }
@@ -172,7 +162,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                await UserService.SetUserEnabled(userId, model.Enabled);
+                await _userService.SetUserEnabled(userId, model.Enabled);
 
                 return Ok(model.Enabled);
             }

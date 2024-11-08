@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Attributes;
@@ -20,15 +21,13 @@ namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
     [Route("api/behaviour")]
-    public class BehaviourController : PersonalDataController
+    public class BehaviourController : BaseApiController
     {
         private readonly IBehaviourService _behaviourService;
         private readonly IAcademicYearService _academicYearService;
 
-        public BehaviourController(IUserService userService, IPersonService personService,
-            IStudentService studentService, IBehaviourService behaviourService,
+        public BehaviourController(IBehaviourService behaviourService,
             IAcademicYearService academicYearService)
-            : base(userService, personService, studentService)
         {
             _academicYearService = academicYearService;
             _behaviourService = behaviourService;
@@ -44,14 +43,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var achievement = await _behaviourService.GetStudentAchievementById(achievementId);
 
-                var student = await StudentService.GetStudentById(achievement.StudentId);
-
-                if (await CanAccessPerson(student.PersonId))
-                {
-                    return Ok(achievement);
-                }
-
-                return PermissionError();
+                return Ok(achievement);
             }
             catch (Exception e)
             {
@@ -68,25 +60,18 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var student = await StudentService.GetStudentById(studentId);
+                var fromAcademicYearId = academicYearId
+                                         ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id;
 
-                if (await CanAccessPerson(student.PersonId))
+                if (fromAcademicYearId == null)
                 {
-                    var fromAcademicYearId = academicYearId
-                                             ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id;
-
-                    if (fromAcademicYearId == null)
-                    {
-                        return Error(HttpStatusCode.BadRequest, "No academic year is currently selected.");
-                    }
-
-                    var achievements =
-                        await _behaviourService.GetAchievementsByStudent(studentId, fromAcademicYearId.Value);
-
-                    return Ok(achievements);
+                    return Error(HttpStatusCode.BadRequest, "No academic year is currently selected.");
                 }
 
-                return PermissionError();
+                var achievements =
+                    await _behaviourService.GetAchievementsByStudent(studentId, fromAcademicYearId.Value);
+
+                return Ok(achievements);
             }
             catch (Exception e)
             {
@@ -163,14 +148,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var incident = await _behaviourService.GetIncidentById(incidentId);
 
-                var student = await StudentService.GetStudentById(incident.StudentId);
-
-                if (await CanAccessPerson(student.PersonId))
-                {
-                    return Ok(incident);
-                }
-
-                return PermissionError();
+                return Ok(incident);
             }
             catch (Exception e)
             {
@@ -187,25 +165,18 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var student = await StudentService.GetStudentById(studentId);
+                var fromAcademicYearId = academicYearId
+                                         ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id;
 
-                if (await CanAccessPerson(student.PersonId))
+                if (fromAcademicYearId == null)
                 {
-                    var fromAcademicYearId = academicYearId
-                                             ?? (await _academicYearService.GetCurrentAcademicYear(true)).Id;
-
-                    if (fromAcademicYearId == null)
-                    {
-                        return Error(HttpStatusCode.BadRequest, "No academic year is currently selected.");
-                    }
-
-                    var incidents =
-                        (await _behaviourService.GetIncidentsByStudent(studentId, fromAcademicYearId.Value)).ToList();
-
-                    return Ok(incidents);
+                    return Error(HttpStatusCode.BadRequest, "No academic year is currently selected.");
                 }
 
-                return PermissionError();
+                var incidents =
+                    (await _behaviourService.GetIncidentsByStudent(studentId, fromAcademicYearId.Value)).ToList();
+
+                return Ok(incidents);
             }
             catch (Exception e)
             {

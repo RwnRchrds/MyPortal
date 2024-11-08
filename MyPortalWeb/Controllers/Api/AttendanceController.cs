@@ -21,7 +21,7 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly IAttendanceService _attendanceService;
 
-        public AttendanceController(IUserService userService, IAttendanceService attendanceService) : base(userService)
+        public AttendanceController(IAttendanceService attendanceService)
         {
             _attendanceService = attendanceService;
         }

@@ -10,13 +10,11 @@ using MyPortalWeb.Controllers.BaseControllers;
 namespace MyPortalWeb.Controllers.Api;
 
 [Microsoft.AspNetCore.Components.Route("api/assessment")]
-public sealed class AssessmentController : PersonalDataController
+public sealed class AssessmentController : BaseApiController
 {
     private readonly IAssessmentService _assessmentService;
 
-    public AssessmentController(IUserService userService, IPersonService personService, IStudentService studentService,
-        IAssessmentService assessmentService)
-        : base(userService, personService, studentService)
+    public AssessmentController(IAssessmentService assessmentService)
     {
         _assessmentService = assessmentService;
     }
@@ -28,17 +26,10 @@ public sealed class AssessmentController : PersonalDataController
     {
         try
         {
-            var student = await StudentService.GetStudentById(model.StudentId);
+            var resultHistory =
+                await _assessmentService.GetPreviousResults(model.StudentId, model.AspectId, model.DateTo);
 
-            if (await CanAccessPerson(student.PersonId))
-            {
-                var resultHistory =
-                    await _assessmentService.GetPreviousResults(model.StudentId, model.AspectId, model.DateTo);
-
-                return Ok(resultHistory);
-            }
-
-            return PermissionError();
+            return Ok(resultHistory);
         }
         catch (Exception e)
         {

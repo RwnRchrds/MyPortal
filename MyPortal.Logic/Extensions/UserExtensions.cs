@@ -54,6 +54,20 @@ namespace MyPortal.Logic.Extensions
 
             return false;
         }
+        
+        public static async Task<bool> HasPermission(this ClaimsPrincipal principal, IUserService userService,
+            params PermissionValue[] permissionValues)
+        {
+            var userId = principal.GetUserId();
+
+            if (userId.HasValue)
+            {
+                return await PermissionHelper.UserHasPermission(userId.Value, userService, PermissionRequirement.RequireAny,
+                    permissionValues);
+            }
+
+            return false;
+        }
 
         public static bool IsAuthenticated(this IPrincipal principal)
         {

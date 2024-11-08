@@ -14,7 +14,7 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly ISenService _senService;
 
-        public SenController(IUserService userService, ISenService senService) : base(userService)
+        public SenController(IUserService userService, ISenService senService)
         {
             _senService = senService;
         }

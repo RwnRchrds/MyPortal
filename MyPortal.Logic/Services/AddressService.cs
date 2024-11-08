@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Addresses;
@@ -14,9 +15,10 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class AddressService : BaseService, IAddressService
+    public class AddressService : BaseServiceWithAccessControl, IAddressService
     {
-        public AddressService(ISessionUser user) : base(user)
+        public AddressService(ISessionUser user, IUserService userService, IPersonService personService,
+            IStudentService studentService) : base(user, userService, personService, studentService)
         {
         }
 
@@ -51,6 +53,8 @@ namespace MyPortal.Logic.Services
         public async Task CreateAddressForPerson(Guid personId, EntityAddressRequestModel model)
         {
             Validate(model);
+
+            await VerifyAccessToPerson(personId);
 
             await using var unitOfWork = await User.GetConnection();
 
@@ -121,6 +125,8 @@ namespace MyPortal.Logic.Services
         public async Task UpdateAddressLinkForPerson(Guid addressPersonId, LinkAddressRequestModel model)
         {
             Validate(model);
+
+            await VerifyAccessToPerson(addressPersonId);
 
             await using var unitOfWork = await User.GetConnection();
             var addressPerson = await unitOfWork.AddressPeople.GetById(addressPersonId);
@@ -258,6 +264,8 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<AddressLinkDataModel>> GetAddressLinksByPerson(Guid personId)
         {
+            await VerifyAccessToPerson(personId);
+            
             await using var unitOfWork = await User.GetConnection();
             var addressPeople = await unitOfWork.AddressPeople.GetByPerson(personId);
             var results = addressPeople.Select(ap => new AddressLinkDataModel(ap)).ToArray();

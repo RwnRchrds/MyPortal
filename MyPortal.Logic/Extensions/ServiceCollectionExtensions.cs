@@ -17,18 +17,6 @@ namespace MyPortal.Logic.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddMyPortal(this IServiceCollection services, string connectionString)
-        {
-            var builder = new ConfigBuilder(connectionString);
-
-            builder.Build();
-
-            services.AddApplicationDbContext();
-            services.AddBusinessServices();
-
-            return services;
-        }
-
         public static IServiceCollection AddMyPortal(this IServiceCollection services,
             Action<ConfigBuilder> configBuilder)
         {
@@ -44,7 +32,7 @@ namespace MyPortal.Logic.Extensions
             return services;
         }
 
-        private static IServiceCollection AddApplicationDbContext(this IServiceCollection services)
+        private static void AddApplicationDbContext(this IServiceCollection services)
         {
             Configuration.Configuration.CheckConfiguration();
 
@@ -62,15 +50,21 @@ namespace MyPortal.Logic.Extensions
                         throw new ConfigurationException("A database provider has not been set.");
                 }
             });
-
-            return services;
         }
 
         private static IServiceCollection AddBusinessServices(this IServiceCollection services)
         {
             services.AddTransient(s => s.GetService<HttpContext>()?.User);
             services.AddHttpContextAccessor();
+            
+            // These services are dependencies and must be defined first, in this order
             services.AddScoped<ISessionUser, HttpSessionUser>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPersonService, PersonService>();
+            services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IDocumentAccessController, DocumentService>();
+            
+            // These application services are independent of each other and can be created in any order
             services.AddScoped<IAcademicYearService, AcademicYearService>();
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IAddressService, AddressService>();
@@ -86,15 +80,12 @@ namespace MyPortal.Logic.Extensions
             services.AddScoped<ILogNoteService, LogNoteService>();
             services.AddScoped<IParentEveningService, ParentEveningService>();
             services.AddScoped<IPastoralService, PastoralService>();
-            services.AddScoped<IPersonService, PersonService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<ISchoolService, SchoolService>();
             services.AddScoped<ISenService, SenService>();
             services.AddScoped<IStaffMemberService, StaffMemberService>();
-            services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<ISystemSettingService, SystemSettingService>();
             services.AddScoped<ITaskService, TaskService>();
-            services.AddScoped<IUserService, UserService>();
 
             if (Configuration.Configuration.Instance.FileProvider == FileProvider.GoogleDrive)
             {

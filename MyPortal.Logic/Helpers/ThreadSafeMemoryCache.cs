@@ -8,8 +8,8 @@ namespace MyPortal.Logic.Helpers
 {
     internal class ThreadSafeMemoryCache<TItem>
     {
-        private MemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
-        private ConcurrentDictionary<object, SemaphoreSlim> _locks = new ConcurrentDictionary<object, SemaphoreSlim>();
+        private MemoryCache _cache = new(new MemoryCacheOptions());
+        private ConcurrentDictionary<object, SemaphoreSlim> _locks = new();
 
         public TItem Get(object key)
         {

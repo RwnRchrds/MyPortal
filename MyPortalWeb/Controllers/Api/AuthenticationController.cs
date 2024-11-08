@@ -13,8 +13,11 @@ namespace MyPortalWeb.Controllers.Api
     [Route("api/auth")]
     public class AuthenticationController : BaseApiController
     {
-        public AuthenticationController(IUserService userService) : base(userService)
+        private readonly IUserService _userService;
+        
+        public AuthenticationController(IUserService userService)
         {
+            _userService = userService;
         }
 
         [HttpGet]
@@ -25,7 +28,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var userInfo = await UserService.GetUserInfo();
+                var userInfo = await _userService.GetUserInfo();
 
                 return Ok(userInfo);
             }
@@ -47,7 +50,7 @@ namespace MyPortalWeb.Controllers.Api
 
                 if (userId != null)
                 {
-                    await UserService.ChangePassword(userId.Value, model.CurrentPassword, model.NewPassword);
+                    await _userService.ChangePassword(userId.Value, model.CurrentPassword, model.NewPassword);
                     return Ok();
                 }
 

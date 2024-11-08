@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Interfaces.Services
     public interface ILogNoteService : IService
     {
         Task<LogNoteModel> GetLogNoteById(Guid logNoteId);
-        Task<IEnumerable<LogNoteModel>> GetLogNotesByStudent(Guid studentId, Guid academicYearId, bool includePrivate);
+        Task<IEnumerable<LogNoteModel>> GetLogNotesByStudent(Guid studentId, Guid academicYearId);
         Task<IEnumerable<LogNoteTypeModel>> GetLogNoteTypes();
         Task CreateLogNote(LogNoteRequestModel logNote);
         Task UpdateLogNote(Guid logNoteId, LogNoteRequestModel logNote);

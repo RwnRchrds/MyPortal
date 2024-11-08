@@ -11,14 +11,19 @@ namespace MyPortal.Logic.Services
     public class LocalFileService : BaseService, IFileService
     {
         private readonly ILocalFileProvider _fileProvider;
+        private readonly IDocumentAccessController _documentAccessController;
 
-        public LocalFileService(ISessionUser sessionUser, ILocalFileProvider fileProvider) : base(sessionUser)
+        public LocalFileService(ISessionUser sessionUser, ILocalFileProvider fileProvider,
+            IDocumentAccessController documentAccessController) : base(sessionUser)
         {
             _fileProvider = fileProvider;
+            _documentAccessController = documentAccessController;
         }
 
         public async Task UploadFileToDocument(FileUploadRequestModel upload)
         {
+            await _documentAccessController.VerifyDocumentAccess(upload.DocumentId, true);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var document = await unitOfWork.Documents.GetById(upload.DocumentId);
@@ -44,6 +49,8 @@ namespace MyPortal.Logic.Services
 
         public async Task<FileDownload> GetDownloadByDocument(Guid documentId)
         {
+            await _documentAccessController.VerifyDocumentAccess(documentId, false);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var file = await unitOfWork.Files.GetByDocumentId(documentId);
@@ -55,6 +62,8 @@ namespace MyPortal.Logic.Services
 
         public async Task RemoveFileFromDocument(Guid documentId)
         {
+            await _documentAccessController.VerifyDocumentAccess(documentId, true);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var file = await unitOfWork.Files.GetByDocumentId(documentId);

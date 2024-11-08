@@ -21,9 +21,10 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class BehaviourService : BaseService, IBehaviourService
+    public class BehaviourService : BaseServiceWithAccessControl, IBehaviourService
     {
-        public BehaviourService(ISessionUser user) : base(user)
+        public BehaviourService(ISessionUser user, IUserService userService, IPersonService personService,
+            IStudentService studentService) : base(user, userService, personService, studentService)
         {
         }
 
@@ -31,6 +32,10 @@ namespace MyPortal.Logic.Services
             Guid academicYearId)
         {
             await using var unitOfWork = await User.GetConnection();
+
+            var student = await unitOfWork.Students.GetById(studentId);
+
+            await VerifyAccessToPerson(student.PersonId);
 
             var achievements =
                 (await unitOfWork.StudentAchievements.GetByStudent(studentId, academicYearId)).Select(a =>
@@ -51,6 +56,10 @@ namespace MyPortal.Logic.Services
             await using var unitOfWork = await User.GetConnection();
 
             var achievement = await unitOfWork.StudentAchievements.GetById(achievementId);
+
+            var student = await unitOfWork.Students.GetById(achievement.StudentId);
+
+            await VerifyAccessToPerson(student.PersonId);
 
             return new StudentAchievementModel(achievement);
         }
@@ -177,6 +186,11 @@ namespace MyPortal.Logic.Services
             Guid academicYearId)
         {
             await using var unitOfWork = await User.GetConnection();
+
+            var student = await unitOfWork.Students.GetById(studentId);
+
+            await VerifyAccessToPerson(student.PersonId);
+            
             var incidents = await unitOfWork.StudentIncidents.GetByStudent(studentId, academicYearId);
 
             var models = incidents.Select(i => new StudentIncidentModel(i));
@@ -195,6 +209,10 @@ namespace MyPortal.Logic.Services
         {
             await using var unitOfWork = await User.GetConnection();
             var incident = await unitOfWork.StudentIncidents.GetById(incidentId);
+
+            var student = await unitOfWork.Students.GetById(incident.StudentId);
+
+            await VerifyAccessToPerson(student.PersonId);
 
             return new StudentIncidentModel(incident);
         }

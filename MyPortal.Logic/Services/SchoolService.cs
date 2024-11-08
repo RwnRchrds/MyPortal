@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.Database.Constants;
+using MyPortal.Database.Enums;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Database.Models.Search;
@@ -18,8 +20,34 @@ namespace MyPortal.Logic.Services
 {
     public class SchoolService : BaseService, ISchoolService
     {
-        public SchoolService(ISessionUser user) : base(user)
+        private readonly IUserService _userService;
+        
+        public SchoolService(ISessionUser user, IUserService userService) : base(user)
         {
+            _userService = userService;
+        }
+        
+        private async Task SetBulletinSearchOptions(BulletinSearchOptions searchOptions)
+        {
+            if (!User.IsType(UserTypes.Staff))
+            {
+                searchOptions.IncludeStaffOnly = false;
+                searchOptions.IncludeUnapproved = false;
+                searchOptions.IncludeExpired = false;
+            }
+
+            if (searchOptions.IncludeUnapproved)
+            {
+                var userId = User.GetUserId();
+                searchOptions.IncludeCreatedBy = userId;
+            }
+
+            if (!await User.HasPermission(_userService, 
+                    PermissionValue.SchoolApproveSchoolBulletins))
+            {
+                searchOptions.IncludeUnapproved = false;
+                searchOptions.IncludeExpired = false;
+            }
         }
 
         private async Task<string> GetLocalSchoolNameFromDb()
@@ -42,6 +70,8 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<BulletinModel>> GetBulletins(BulletinSearchOptions searchOptions)
         {
+            await SetBulletinSearchOptions(searchOptions);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var bulletins = await unitOfWork.Bulletins.GetBulletins(searchOptions);
@@ -51,6 +81,8 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<BulletinSummaryModel>> GetBulletinSummaries(BulletinSearchOptions searchOptions)
         {
+            await SetBulletinSearchOptions(searchOptions);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var bulletins = await unitOfWork.Bulletins.GetBulletinDetails(searchOptions);
@@ -61,6 +93,8 @@ namespace MyPortal.Logic.Services
         public async Task<BulletinPageResponse> GetBulletinSummaries(BulletinSearchOptions searchOptions,
             PageFilter filter)
         {
+            await SetBulletinSearchOptions(searchOptions);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var bulletins = await unitOfWork.Bulletins.GetBulletinDetails(searchOptions, filter);

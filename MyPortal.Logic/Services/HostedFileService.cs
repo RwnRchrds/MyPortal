@@ -11,15 +11,20 @@ namespace MyPortal.Logic.Services
     public class HostedFileService : BaseService, IFileService
     {
         private readonly IHostedFileProvider _fileProvider;
+        private readonly IDocumentAccessController _documentAccessController;
 
-        public HostedFileService(ISessionUser sessionUser, IHostedFileProviderFactory fileProviderFactory) : base(
+        public HostedFileService(ISessionUser sessionUser, IHostedFileProviderFactory fileProviderFactory,
+            IDocumentAccessController documentAccessController) : base(
             sessionUser)
         {
             _fileProvider = fileProviderFactory.CreateHostedFileProvider();
+            _documentAccessController = documentAccessController;
         }
 
         public async Task AttachFileToDocument(Guid documentId, string fileId)
         {
+            await _documentAccessController.VerifyDocumentAccess(documentId, true);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var document = await unitOfWork.Documents.GetById(documentId);
@@ -40,6 +45,8 @@ namespace MyPortal.Logic.Services
 
         public async Task RemoveFileFromDocument(Guid documentId)
         {
+            await _documentAccessController.VerifyDocumentAccess(documentId, true);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var file = await unitOfWork.Files.GetByDocumentId(documentId);
@@ -56,6 +63,8 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<WebAction>> GetWebActionsByDocument(Guid documentId)
         {
+            await _documentAccessController.VerifyDocumentAccess(documentId, false);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var file = await unitOfWork.Files.GetByDocumentId(documentId);

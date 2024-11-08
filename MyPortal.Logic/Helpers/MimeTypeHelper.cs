@@ -7,8 +7,7 @@ namespace MyPortal.Logic.Helpers
 {
     internal class MimeTypeHelper
     {
-        private static readonly Lazy<IDictionary<string, string>> Mappings =
-            new Lazy<IDictionary<string, string>>(BuildMappings);
+        private static readonly Lazy<IDictionary<string, string>> Mappings = new(BuildMappings);
 
         private static IDictionary<string, string> BuildMappings()
         {
@@ -672,8 +671,6 @@ namespace MyPortal.Logic.Helpers
             string mime;
 
             var typeProvider = new FileExtensionContentTypeProvider();
-
-            //return typeProvider.TryGetContentType(extension, out mime) ? mime : "application/octet-stream";
 
             return Mappings.Value.TryGetValue(extension, out mime) ? mime : "application/octet-stream";
         }

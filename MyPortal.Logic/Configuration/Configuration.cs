@@ -12,11 +12,7 @@ namespace MyPortal.Logic.Configuration
     {
         public static Configuration Instance;
 
-        private string _installLocation;
         private string _connectionString;
-        private string _fileEncryptionKey;
-        private FileProvider _fileProvider;
-        private DatabaseProvider _databaseProvider;
 
         internal static bool CheckConfiguration(bool testConnection = false)
         {
@@ -62,11 +58,12 @@ namespace MyPortal.Logic.Configuration
 
             TestConnection(builder.ConnectionString);
 
-            Instance = new Configuration();
-
-            Instance.DatabaseProvider = builder.DatabaseProvider;
-            Instance.FileProvider = builder.FileProvider;
-            Instance.ConnectionString = builder.ConnectionString;
+            Instance = new Configuration
+            {
+                DatabaseProvider = builder.DatabaseProvider,
+                FileProvider = builder.FileProvider,
+                ConnectionString = builder.ConnectionString
+            };
         }
 
         private static void TestConnection(string connectionString)
@@ -77,21 +74,13 @@ namespace MyPortal.Logic.Configuration
             conn.Close();
         }
 
-        internal string InstallLocation
-        {
-            get { return _installLocation; }
-            set { _installLocation = value; }
-        }
+        internal string InstallLocation { get; private set; }
 
-        public DatabaseProvider DatabaseProvider
-        {
-            get { return _databaseProvider; }
-            private set { _databaseProvider = value; }
-        }
+        public DatabaseProvider DatabaseProvider { get; private set; }
 
         public string ConnectionString
         {
-            get { return _connectionString; }
+            get => _connectionString;
             private set
             {
                 TestConnection(value);
@@ -99,16 +88,8 @@ namespace MyPortal.Logic.Configuration
             }
         }
 
-        public string FileEncryptionKey
-        {
-            get { return _fileEncryptionKey; }
-            internal set { _fileEncryptionKey = value; }
-        }
+        public string FileEncryptionKey { get; private set; }
 
-        public FileProvider FileProvider
-        {
-            get { return _fileProvider; }
-            internal set { _fileProvider = value; }
-        }
+        public FileProvider FileProvider { get; private set; }
     }
 }

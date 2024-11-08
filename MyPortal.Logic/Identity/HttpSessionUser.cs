@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using MyPortal.Database.Enums;
-using MyPortal.Database.Interfaces;
-using MyPortal.Logic.Enums;
 using MyPortal.Logic.Extensions;
-using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Interfaces.Services;
 
 namespace MyPortal.Logic.Identity;
 
-public class HttpSessionUser : ISessionUser
+public class HttpSessionUser : BaseSessionUser, ISessionUser
 {
     private readonly IHttpContextAccessor _contextAccessor;
 
@@ -21,32 +15,14 @@ public class HttpSessionUser : ISessionUser
         _contextAccessor = contextAccessor;
     }
 
-    public async Task<IUnitOfWork> GetConnection()
+    public override bool IsType(int userType)
     {
-        var userId = GetUserId();
+        var principal = GetPrincipal();
 
-        if (userId.HasValue)
-        {
-            return await DataConnectionFactory.CreateUnitOfWork(userId.Value);
-        }
-
-        return null;
+        return principal.IsType(userType);
     }
 
-    public async Task<bool> HasPermission(IUserService userService, PermissionRequirement requirement,
-        params PermissionValue[] permissionValues)
-    {
-        var userId = GetUserId();
-
-        if (userId.HasValue)
-        {
-            return await PermissionHelper.UserHasPermission(userId.Value, userService, requirement, permissionValues);
-        }
-
-        return false;
-    }
-
-    public Guid? GetUserId()
+    public override Guid? GetUserId()
     {
         var principal = GetPrincipal();
 

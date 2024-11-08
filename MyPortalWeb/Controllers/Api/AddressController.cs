@@ -12,13 +12,11 @@ using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
 {
-    public class AddressController : PersonalDataController
+    public class AddressController : BaseApiController
     {
         private readonly IAddressService _addressService;
 
-        public AddressController(IUserService userService, IPersonService personService,
-            IStudentService studentService, IAddressService addressService)
-            : base(userService, personService, studentService)
+        public AddressController(IAddressService addressService)
         {
             _addressService = addressService;
         }
@@ -71,14 +69,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (await CanAccessPerson(personId))
-                {
-                    await _addressService.CreateAddressForPerson(personId, personAddress);
+                await _addressService.CreateAddressForPerson(personId, personAddress);
 
-                    return Ok();
-                }
-
-                return PermissionError();
+                return Ok();
             }
             catch (Exception e)
             {
@@ -116,14 +109,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (await CanAccessPerson(personId))
-                {
-                    var addresses = await _addressService.GetAddressLinksByPerson(personId);
+                var addresses = await _addressService.GetAddressLinksByPerson(personId);
 
-                    return Ok(addresses);
-                }
-
-                return PermissionError();
+                return Ok(addresses);
             }
             catch (Exception e)
             {

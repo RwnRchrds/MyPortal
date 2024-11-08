@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Database.Enums;
+using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortalWeb.Controllers.BaseControllers;
 
@@ -11,8 +13,7 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly IParentEveningService _parentEveningService;
 
-        public ParentEveningsController(IUserService userService, IParentEveningService parentEveningService)
-            : base(userService)
+        public ParentEveningsController(IParentEveningService parentEveningService)
         {
             _parentEveningService = parentEveningService;
         }

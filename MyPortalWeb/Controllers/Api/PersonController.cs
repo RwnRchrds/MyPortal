@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +12,14 @@ using MyPortalWeb.Controllers.BaseControllers;
 namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
-    public class PersonController : PersonalDataController
+    public class PersonController : BaseApiController
     {
-        public PersonController(IUserService userService, IPersonService personService, IStudentService studentService)
-            : base(userService, personService, studentService)
+        
+        private readonly IPersonService _personService;
+        
+        public PersonController(IPersonService personService)
         {
+            _personService = personService;
         }
 
         [HttpGet]
@@ -28,7 +30,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var people = await PersonService.GetPeopleWithTypes(searchModel);
+                var people = await _personService.GetPeopleWithTypes(searchModel);
 
                 return Ok(people);
             }
@@ -45,19 +47,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var person = await PersonService.GetPersonByUserId(userId, false);
+                var person = await _personService.GetPersonByUserId(userId, false);
 
-                if (person == null)
-                {
-                    return Ok();
-                }
-
-                if (person.Id.HasValue && await CanAccessPerson(person.Id.Value))
-                {
-                    return Ok(person);
-                }
-
-                return Error(HttpStatusCode.Forbidden, PermissionMessage);
+                return Ok(person);
             }
             catch (Exception e)
             {

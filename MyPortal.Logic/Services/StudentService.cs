@@ -20,8 +20,22 @@ namespace MyPortal.Logic.Services
 {
     public class StudentService : BaseService, IStudentService
     {
-        public StudentService(ISessionUser user) : base(user)
+        private readonly IUserService _userService;
+        
+        public StudentService(ISessionUser user, IUserService userService) : base(user)
         {
+            _userService = userService;
+        }
+        
+        private async Task VerifyAccessToPerson(Guid personId)
+        {
+            var personService = new PersonService(User, _userService);
+            
+            if (!await AccessControlHelper.CanAccessPerson(User, _userService, personService,
+                    this, personId))
+            {
+                throw new PermissionException("You do not have permission to access this person.");
+            }
         }
 
         public async Task<StudentModel> GetStudentById(Guid studentId)
@@ -33,15 +47,21 @@ namespace MyPortal.Logic.Services
             {
                 throw new NotFoundException("Student not found.");
             }
+            
+            await VerifyAccessToPerson(student.PersonId);
 
             return new StudentModel(student);
         }
 
         public async Task<StudentStatsModel> GetStatsByStudentId(Guid studentId, Guid academicYearId)
         {
-            var stats = new StudentStatsModel();
-
             await using var unitOfWork = await User.GetConnection();
+
+            var student = await unitOfWork.Students.GetById(studentId);
+            
+            await VerifyAccessToPerson(student.PersonId);
+            
+            var stats = new StudentStatsModel();
 
             var achievements = await unitOfWork.StudentAchievements.GetPointsByStudent(studentId, academicYearId);
             var incidents = await unitOfWork.StudentIncidents.GetPointsByStudent(studentId, academicYearId);

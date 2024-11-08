@@ -45,7 +45,7 @@ public class ConfigBuilder
             var connectionStringSource = config.GetSection(Keys.ConfigConnectionStringSourceKey);
             if (connectionStringSource.Exists())
             {
-                ConnectionString = GetSecret(config, connectionStringSource.Value, Secrets.ConnectionString);
+                ConnectionString = GetSecret(connectionStringSource.Value, Secrets.ConnectionString);
             }
         }
 
@@ -75,7 +75,7 @@ public class ConfigBuilder
             var fileEncryptionKeySource = config.GetSection(Keys.ConfigFileEncryptionKeySourceKey);
             if (fileEncryptionKeySource.Exists())
             {
-                FileEncryptionKey = GetSecret(config, fileEncryptionKeySource.Value, Secrets.FileEncryptionKey);
+                FileEncryptionKey = GetSecret(fileEncryptionKeySource.Value, Secrets.FileEncryptionKey);
             }
         }
 
@@ -86,7 +86,7 @@ public class ConfigBuilder
         }
     }
 
-    private static string GetSecret(IConfiguration config, string secretSource, string secretName)
+    private static string GetSecret(string secretSource, string secretName)
     {
         if (secretSource.ToLower() == "azure")
         {

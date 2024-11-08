@@ -17,7 +17,7 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly IBillService _billService;
 
-        public BillsController(IUserService userService, IBillService billService) : base(userService)
+        public BillsController(IBillService billService)
         {
             _billService = billService;
         }

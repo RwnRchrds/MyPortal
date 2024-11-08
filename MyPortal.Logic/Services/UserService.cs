@@ -36,6 +36,15 @@ namespace MyPortal.Logic.Services
             _signInManager = signInManager;
             _claimsPrincipalFactory = claimsPrincipalFactory;
         }
+        
+        private async Task<bool> VerifyUserAccess(Guid requestedUserId, bool edit)
+        {
+            // Users do not require extra permission to access resources related to themselves
+            return await User.HasPermission(this, edit
+                       ? PermissionValue.SystemEditUsers
+                       : PermissionValue.SystemViewUsers) ||
+                   User.GetUserId() == requestedUserId;
+        }
 
         public async Task<bool> UserHasPermission(Guid userId, PermissionRequirement requirement,
             params PermissionValue[] permissionValues)
@@ -278,6 +287,8 @@ namespace MyPortal.Logic.Services
 
         public async Task ChangePassword(Guid userId, string oldPassword, string newPassword)
         {
+            await VerifyUserAccess(userId, true);
+            
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
             List<IdentityError> errors = new List<IdentityError>();
@@ -374,8 +385,29 @@ namespace MyPortal.Logic.Services
             }
         }
 
+        public async Task<UserModel> GetCurrentUser()
+        {
+            var userId = User.GetUserId();
+
+            if (userId != null)
+            {
+                await using var unitOfWork = await User.GetConnection();
+                var user = await unitOfWork.Users.GetById(userId.Value);
+                
+                var userModel = new UserModel(user);
+                
+                return userModel;
+            }
+            else
+            {
+                throw Unauthenticated();
+            }
+        }
+
         public async Task<IEnumerable<RoleModel>> GetUserRoles(Guid userId)
         {
+            await VerifyUserAccess(userId, false);
+            
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             var roleNames = await _userManager.GetRolesAsync(user);

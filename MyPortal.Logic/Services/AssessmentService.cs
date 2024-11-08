@@ -16,15 +16,20 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services;
 
-public class AssessmentService : BaseService, IAssessmentService
+public class AssessmentService : BaseServiceWithAccessControl, IAssessmentService
 {
-    public AssessmentService(ISessionUser user) : base(user)
+    public AssessmentService(ISessionUser user, IUserService userService, IPersonService personService,
+        IStudentService studentService) : base(user, userService, personService, studentService)
     {
     }
 
     public async Task<IEnumerable<ResultModel>> GetPreviousResults(Guid studentId, Guid aspectId, DateTime dateTo)
     {
         await using var unitOfWork = await User.GetConnection();
+
+        var student = await unitOfWork.Students.GetById(studentId);
+
+        await VerifyAccessToPerson(student.PersonId);
 
         var results = await unitOfWork.Results.GetPreviousResults(studentId, aspectId, dateTo);
 
@@ -61,6 +66,10 @@ public class AssessmentService : BaseService, IAssessmentService
     {
         await using var unitOfWork = await User.GetConnection();
         var result = await unitOfWork.Results.GetById(resultId);
+
+        var student = await unitOfWork.Students.GetById(result.StudentId);
+
+        await VerifyAccessToPerson(student.PersonId);
 
         if (result == null)
         {

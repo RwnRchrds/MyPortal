@@ -3,40 +3,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
-using MyPortal.Logic.Extensions;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
+using MyPortal.Logic.Models.Permissions;
+using MyPortal.Logic.Services;
 
-namespace MyPortalWeb.Controllers.BaseControllers
+namespace MyPortal.Logic.Helpers;
+
+public class AccessControlHelper
 {
-    public abstract class PersonalDataController : BaseApiController
+    internal static async Task<bool> CanAccessPerson(ISessionUser user, IUserService userService, IPersonService personService,
+        IStudentService studentService, Guid requestedPersonId)
     {
-        protected readonly IPersonService PersonService;
-        protected readonly IStudentService StudentService;
-
-        protected PersonalDataController(IUserService userService, IPersonService personService,
-            IStudentService studentService) : base(userService)
-        {
-            PersonService = personService;
-            StudentService = studentService;
-        }
-
-        protected async Task<bool> CanAccessPerson(Guid requestedPersonId)
-        {
-            var person = await PersonService.GetPersonWithTypesById(requestedPersonId);
+        var person = await personService.GetPersonWithTypesById(requestedPersonId);
 
             if (person == null)
             {
                 return false;
             }
 
-            if (User.IsType(UserTypes.Student))
+            if (user.IsType(UserTypes.Student))
             {
                 // Students can only access resources involving themselves
-                var userId = User.GetUserId();
+                var userId = user.GetUserId();
 
                 if (userId != null)
                 {
-                    var student = await StudentService.GetStudentByUserId(userId.Value);
+                    var student = await studentService.GetStudentByUserId(userId.Value);
 
                     if (student.PersonId == requestedPersonId)
                     {
@@ -44,39 +37,39 @@ namespace MyPortalWeb.Controllers.BaseControllers
                     }
                 }
             }
-            else if (User.IsType(UserTypes.Staff))
+            else if (user.IsType(UserTypes.Staff))
             {
                 if (person.PersonTypes.StudentId.HasValue)
                 {
                     // Staff members can access resources for all students if they have ViewStudentDetails permission
-                    return await UserHasPermission(PermissionValue.StudentViewStudentDetails);
+                    return await user.HasPermission(userService, PermissionValue.StudentViewStudentDetails);
                 }
 
                 if (person.PersonTypes.StaffId.HasValue)
                 {
                     // Staff members can access other basic staff information if they have the ViewBasicDetails permission
                     // Non basic details (e.g employment details) should require further permission checks
-                    return await UserHasPermission(PermissionValue.PeopleViewStaffBasicDetails);
+                    return await user.HasPermission(userService, PermissionValue.PeopleViewStaffBasicDetails);
                 }
 
                 if (person.PersonTypes.ContactId.HasValue)
                 {
                     // Staff members can access all contacts if they have ViewContactDetails permission
-                    return await UserHasPermission(PermissionValue.PeopleViewContactDetails);
+                    return await user.HasPermission(userService, PermissionValue.PeopleViewContactDetails);
                 }
             }
-            else if (User.IsType(UserTypes.Parent))
+            else if (user.IsType(UserTypes.Parent))
             {
                 // Parents can only access resources involving students that they have parental responsibility for
-                var userId = User.GetUserId();
+                var userId = user.GetUserId();
 
                 if (userId != null)
                 {
-                    var userPerson = await PersonService.GetPersonWithTypesByUser(userId.Value);
+                    var userPerson = await personService.GetPersonWithTypesByUser(userId.Value);
                     if (userPerson.PersonTypes.ContactId.HasValue)
                     {
                         var students =
-                            await StudentService.GetStudentsByContact(userPerson.PersonTypes.ContactId.Value, true);
+                            await studentService.GetStudentsByContact(userPerson.PersonTypes.ContactId.Value, true);
 
                         return students.Any(s =>
                         {
@@ -92,6 +85,5 @@ namespace MyPortalWeb.Controllers.BaseControllers
             }
 
             return false;
-        }
     }
 }

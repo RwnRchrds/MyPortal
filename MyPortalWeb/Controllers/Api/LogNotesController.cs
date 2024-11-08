@@ -7,7 +7,6 @@ using MyPortal.Database.Constants;
 using MyPortal.Database.Enums;
 using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Constants;
-using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Students;
 using MyPortal.Logic.Models.Requests.Student.LogNotes;
@@ -16,14 +15,12 @@ using MyPortalWeb.Controllers.BaseControllers;
 namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
-    public class LogNotesController : PersonalDataController
+    public class LogNotesController : BaseApiController
     {
         private readonly ILogNoteService _logNoteService;
         private readonly IAcademicYearService _academicYearService;
 
-        public LogNotesController(IUserService userService, IPersonService personService,
-            IStudentService studentService, ILogNoteService logNoteService, IAcademicYearService academicYearService)
-            : base(userService, personService, studentService)
+        public LogNotesController(ILogNoteService logNoteService, IAcademicYearService academicYearService)
         {
             _academicYearService = academicYearService;
             _logNoteService = logNoteService;
@@ -39,24 +36,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var logNote = await _logNoteService.GetLogNoteById(logNoteId);
 
-                if (logNote.Private)
-                {
-                    var viewRestricted = User.IsType(UserTypes.Staff);
-
-                    if (!viewRestricted)
-                    {
-                        return PermissionError();
-                    }
-                }
-
-                var student = await StudentService.GetStudentById(logNote.StudentId);
-
-                if (await CanAccessPerson(student.PersonId))
-                {
-                    return Ok(logNote);
-                }
-
-                return PermissionError();
+                return Ok(logNote);
             }
             catch (Exception e)
             {
@@ -89,31 +69,22 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var student = await StudentService.GetStudentById(studentId);
-
-                if (await CanAccessPerson(student.PersonId))
+                if (academicYearId == null || academicYearId == Guid.Empty)
                 {
-                    if (academicYearId == null || academicYearId == Guid.Empty)
-                    {
-                        academicYearId = (await _academicYearService.GetCurrentAcademicYear(true)).Id;
-                    }
-
-                    if (academicYearId.HasValue)
-                    {
-                        var viewRestricted = User.IsType(UserTypes.Staff);
-
-                        var logNotes =
-                            await _logNoteService.GetLogNotesByStudent(studentId, academicYearId.Value, viewRestricted);
-
-                        var result = logNotes;
-
-                        return Ok(result);
-                    }
-
-                    return BadRequest("Academic year not found.");
+                    academicYearId = (await _academicYearService.GetCurrentAcademicYear(true))?.Id;
                 }
 
-                return PermissionError();
+                if (academicYearId.HasValue)
+                {
+                    var logNotes =
+                        await _logNoteService.GetLogNotesByStudent(studentId, academicYearId.Value);
+
+                    var result = logNotes;
+
+                    return Ok(result);
+                }
+
+                return BadRequest("Academic year not found.");
             }
             catch (Exception e)
             {

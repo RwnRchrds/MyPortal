@@ -13,13 +13,11 @@ using MyPortalWeb.Models.Requests;
 
 namespace MyPortalWeb.Controllers.Api
 {
-    public class TasksController : PersonalDataController
+    public class TasksController : BaseApiController
     {
         private readonly ITaskService _taskService;
 
-        public TasksController(IUserService userService, IPersonService personService, IStudentService studentService,
-            ITaskService taskService)
-            : base(userService, personService, studentService)
+        public TasksController(ITaskService taskService)
         {
             _taskService = taskService;
         }

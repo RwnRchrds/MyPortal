@@ -3,24 +3,84 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Enums;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.QueryResults.Curriculum;
+using MyPortal.Logic.Enums;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.Calendar;
+using MyPortal.Logic.Models.Permissions;
 using MyPortal.Logic.Models.Requests.Calendar;
 using MyPortal.Logic.Models.Structures;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class CalendarService : BaseService, ICalendarService
+    public class CalendarService : BaseServiceWithAccessControl, ICalendarService
     {
-        public CalendarService(ISessionUser user) : base(user)
+        public CalendarService(ISessionUser user, IUserService userService, IPersonService personService,
+            IStudentService studentService) : base(user, userService, personService, studentService)
         {
+        }
+
+        private async Task<EventAccessModel> GetEventPermissions(Guid eventId)
+        {
+            await using var unitOfWork = await User.GetConnection();
+            
+            var response = new EventAccessModel();
+
+            var userId = User.GetUserId();
+            var diaryEvent = await GetEvent(eventId);
+
+            if (diaryEvent.CreatedById == userId)
+            {
+                response.CanView = true;
+                response.CanEdit = true;
+            }
+
+            if (diaryEvent.Public)
+            {
+                if (await User.HasPermission(UserService,
+                        PermissionValue.SchoolViewSchoolDiary))
+                {
+                    response.CanView = true;
+                }
+
+                if (await User.HasPermission(UserService, PermissionRequirement.RequireAll,
+                        PermissionValue.SchoolEditSchoolDiary))
+                {
+                    response.CanEdit = true;
+                }
+            }
+
+            var user = await UserService.GetCurrentUser();
+            
+            if (user.PersonId.HasValue)
+            {
+                var attendee = await GetEventAttendee(eventId, user.PersonId.Value);
+
+                if (attendee != null)
+                {
+                    response.CanView = true;
+                    response.CanEdit = attendee.CanEdit;
+                }
+            }
+
+            return response;
+        }
+
+        private async Task VerifyEditAccessForEvent(Guid eventId)
+        {
+            var eventPermissions = await GetEventPermissions(eventId);
+
+            if (!eventPermissions.CanEdit)
+            {
+                throw new PermissionException("You do not have permission to edit this event.");
+            }
         }
 
         public async Task<IEnumerable<DiaryEventTypeModel>> GetEventTypes(bool includeReserved = false)
@@ -35,6 +95,8 @@ namespace MyPortal.Logic.Services
         public async Task<IEnumerable<CalendarEventModel>> GetCalendarEventsByPerson(Guid personId, DateTime dateFrom,
             DateTime dateTo)
         {
+            await VerifyAccessToPerson(personId);
+            
             var calendarEvents = new List<CalendarEventModel>();
 
             await using var unitOfWork = await User.GetConnection();
@@ -42,9 +104,7 @@ namespace MyPortal.Logic.Services
             // Get event type data so events can be coloured correctly
             var eventTypes = (await unitOfWork.DiaryEventTypes.GetAll(true)).ToList();
 
-            // Verify person exists
-            var personService = new PersonService(User);
-            var person = await personService.GetPersonWithTypesById(personId);
+            var person = await PersonService.GetPersonWithTypesById(personId);
 
             var publicEvents = (await unitOfWork.DiaryEvents.GetPublicEvents(dateFrom, dateTo))
                 .Select(e => new DiaryEventModel(e)).ToList();
@@ -133,6 +193,12 @@ namespace MyPortal.Logic.Services
         {
             Validate(model);
 
+            if (model.IsPublic && !await User.HasPermission(UserService,
+                    PermissionValue.SchoolEditSchoolDiary))
+            {
+                throw new PermissionException("You do not have permission to edit the school diary.");
+            }
+
             var userId = User.GetUserId();
 
             if (userId != null)
@@ -207,6 +273,8 @@ namespace MyPortal.Logic.Services
         {
             Validate(model);
 
+            await VerifyEditAccessForEvent(eventId);
+
             await using var unitOfWork = await User.GetConnection();
 
             var eventTypes = (await GetEventTypes()).ToArray();
@@ -242,6 +310,8 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteEvent(Guid eventId)
         {
+            await VerifyEditAccessForEvent(eventId);
+            
             await using var unitOfWork = await User.GetConnection();
 
             await unitOfWork.DiaryEvents.Delete(eventId);
@@ -251,6 +321,8 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateOrUpdateEventAttendees(Guid eventId, EventAttendeesRequestModel model)
         {
+            await VerifyEditAccessForEvent(eventId);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var attendees = (await unitOfWork.DiaryEventAttendees.GetByEvent(eventId)).ToArray();
@@ -292,6 +364,8 @@ namespace MyPortal.Logic.Services
 
         public async Task DeleteEventAttendee(Guid eventId, Guid personId)
         {
+            await VerifyEditAccessForEvent(eventId);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var attendees = await unitOfWork.DiaryEventAttendees.GetByEvent(eventId);

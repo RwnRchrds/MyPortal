@@ -29,9 +29,6 @@ namespace MyPortal.Logic.Helpers
 
             foreach (var role in roles)
             {
-                // Use cached role here to improve performance
-                //var role = await roleService.GetRoleById(roleId, true);
-
                 var rolePermissions = new BitArray(role.Permissions);
 
                 foreach (var permissionValue in permissionValues)
@@ -45,11 +42,13 @@ namespace MyPortal.Logic.Helpers
                     }
                     else if (requirement == PermissionRequirement.RequireAll)
                     {
+                        // User is missing one of the permissions
                         return false;
                     }
                 }
             }
 
+            // User has all permissions
             return requirement == PermissionRequirement.RequireAll;
         }
     }

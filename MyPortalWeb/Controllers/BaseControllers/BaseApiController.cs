@@ -18,29 +18,9 @@ namespace MyPortalWeb.Controllers.BaseControllers
     [ApiController]
     public abstract class BaseApiController : ControllerBase
     {
-        protected readonly IUserService UserService;
-
-        protected BaseApiController(IUserService userService)
+        protected BaseApiController()
         {
-            UserService = userService;
-        }
-
-        protected async Task<UserModel> GetLoggedInUser()
-        {
-            return await UserService.GetUserByPrincipal(User);
-        }
-
-        protected string PermissionMessage => "You do not have permission to access this resource.";
-
-        protected async Task<bool> UserHasPermission(PermissionRequirement requirement,
-            params PermissionValue[] permissionValues)
-        {
-            return await User.HasPermission(UserService, requirement, permissionValues);
-        }
-
-        protected async Task<bool> UserHasPermission(params PermissionValue[] permissionValues)
-        {
-            return await User.HasPermission(UserService, PermissionRequirement.RequireAny, permissionValues);
+            
         }
 
         protected IActionResult HandleException(Exception ex)
@@ -73,11 +53,6 @@ namespace MyPortalWeb.Controllers.BaseControllers
             }
 
             return Error((int)statusCode, message);
-        }
-
-        protected IActionResult PermissionError()
-        {
-            return Error(HttpStatusCode.Forbidden, PermissionMessage);
         }
 
         protected IActionResult Error(int statusCode, string errorMessage)

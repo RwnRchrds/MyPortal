@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Interfaces.Services;
 using MyPortal.Logic.Models.Data.People;
@@ -12,12 +14,28 @@ namespace MyPortal.Logic.Services
 {
     public class PersonService : BaseService, IPersonService
     {
-        public PersonService(ISessionUser user) : base(user)
+        private readonly IUserService _userService;
+        
+        public PersonService(ISessionUser user, IUserService userService) : base(user)
         {
+            _userService = userService;
+        }
+        
+        private async Task VerifyAccessToPerson(Guid personId)
+        {
+            var studentService = new StudentService(User, _userService);
+            
+            if (!await AccessControlHelper.CanAccessPerson(User, _userService, this,
+                    studentService, personId))
+            {
+                throw new PermissionException("You do not have permission to access this person.");
+            }
         }
 
         public async Task<PersonModel> GetPersonById(Guid personId)
         {
+            await VerifyAccessToPerson(personId);
+            
             await using var unitOfWork = await User.GetConnection();
 
             var person = await unitOfWork.People.GetById(personId);
@@ -93,12 +111,19 @@ namespace MyPortal.Logic.Services
 
             var person = await unitOfWork.People.GetByUserId(userId);
 
-            if (person == null && throwIfNotFound)
+            if (person == null)
             {
-                throw new NotFoundException("Person not found.");
-            }
+                if (throwIfNotFound)
+                {
+                    throw new NotFoundException("Person not found.");
+                }
 
-            return person != null ? new PersonModel(person) : null;
+                return null;
+            }
+            
+            await VerifyAccessToPerson(person.Id);
+
+            return new PersonModel(person);
         }
     }
 }

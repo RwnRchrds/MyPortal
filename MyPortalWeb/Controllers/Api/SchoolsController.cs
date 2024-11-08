@@ -24,32 +24,11 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly ISchoolService _schoolService;
 
-        public SchoolsController(IUserService userService, ISchoolService schoolService) : base(userService)
+        public SchoolsController(ISchoolService schoolService)
         {
             _schoolService = schoolService;
         }
 
-        private async Task SetBulletinSearchOptions(BulletinSearchOptions searchOptions)
-        {
-            if (!User.IsType(UserTypes.Staff))
-            {
-                searchOptions.IncludeStaffOnly = false;
-                searchOptions.IncludeUnapproved = false;
-                searchOptions.IncludeExpired = false;
-            }
-
-            if (searchOptions.IncludeUnapproved)
-            {
-                var userId = User.GetUserId();
-                searchOptions.IncludeCreatedBy = userId;
-            }
-
-            if (!await UserHasPermission(PermissionValue.SchoolApproveSchoolBulletins))
-            {
-                searchOptions.IncludeUnapproved = false;
-                searchOptions.IncludeExpired = false;
-            }
-        }
 
         [HttpGet]
         [AllowAnonymous]
@@ -59,12 +38,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                // MyPortal services require a user to be set in the session
-                // Use system user for anonymous requests
-                // This should be fine as anonymous users should only be able to access public data
-                var schoolService = new SchoolService(SessionUser.System);
-
-                var schoolName = await schoolService.GetLocalSchoolName();
+                var schoolName = await _schoolService.GetLocalSchoolName();
 
                 return Ok(new StringResponseModel(schoolName));
             }
@@ -82,8 +56,6 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                await SetBulletinSearchOptions(searchOptions);
-
                 var bulletins = await _schoolService.GetBulletinSummaries(searchOptions, filter);
 
                 return Ok(bulletins);

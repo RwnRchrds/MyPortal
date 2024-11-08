@@ -18,14 +18,14 @@ namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
     [Route("api/students")]
-    public class StudentsController : PersonalDataController
+    public class StudentsController : BaseApiController
     {
         private readonly IAcademicYearService _academicYearService;
+        private readonly IStudentService _studentService;
 
-        public StudentsController(IUserService userService, IPersonService personService,
-            IStudentService studentService, IAcademicYearService academicYearService)
-            : base(userService, personService, studentService)
+        public StudentsController(IStudentService studentService, IAcademicYearService academicYearService)
         {
+            _studentService = studentService;
             _academicYearService = academicYearService;
         }
 
@@ -36,7 +36,7 @@ namespace MyPortalWeb.Controllers.Api
         [ProducesResponseType(typeof(IEnumerable<StudentSummaryModel>), 200)]
         public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchOptions searchModel)
         {
-            var students = (await StudentService.SearchStudents(searchModel)).ToList();
+            var students = (await _studentService.SearchStudents(searchModel)).ToList();
 
             return Ok(students);
         }
@@ -49,14 +49,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var student = await StudentService.GetStudentById(studentId);
+                var student = await _studentService.GetStudentById(studentId);
 
-                if (await CanAccessPerson(student.PersonId))
-                {
-                    return Ok(student);
-                }
-
-                return PermissionError();
+                return Ok(student);
             }
             catch (Exception e)
             {
@@ -72,26 +67,19 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var student = await StudentService.GetStudentById(studentId);
-
-                if (await CanAccessPerson(student.PersonId))
+                if (academicYearId == null || academicYearId == Guid.Empty)
                 {
-                    if (academicYearId == null || academicYearId == Guid.Empty)
-                    {
-                        academicYearId = (await _academicYearService.GetCurrentAcademicYear(true)).Id;
-                    }
-
-                    if (!academicYearId.HasValue)
-                    {
-                        return Error(HttpStatusCode.NotFound, "No academic year was found.");
-                    }
-
-                    var studentStats = await StudentService.GetStatsByStudentId(studentId, academicYearId.Value);
-
-                    return Ok(studentStats);
+                    academicYearId = (await _academicYearService.GetCurrentAcademicYear(true)).Id;
                 }
 
-                return PermissionError();
+                if (!academicYearId.HasValue)
+                {
+                    return Error(HttpStatusCode.NotFound, "No academic year was found.");
+                }
+
+                var studentStats = await _studentService.GetStatsByStudentId(studentId, academicYearId.Value);
+
+                return Ok(studentStats);
             }
             catch (Exception e)
             {

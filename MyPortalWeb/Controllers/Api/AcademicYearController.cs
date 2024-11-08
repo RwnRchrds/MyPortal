@@ -16,8 +16,7 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly IAcademicYearService _academicYearService;
 
-        public AcademicYearController(IUserService userService, IAcademicYearService academicYearService) : base(
-            userService)
+        public AcademicYearController(IAcademicYearService academicYearService)
         {
             _academicYearService = academicYearService;
         }

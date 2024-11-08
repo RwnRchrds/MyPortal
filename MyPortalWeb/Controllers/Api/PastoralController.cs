@@ -15,7 +15,7 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly IPastoralService _pastoralService;
 
-        public PastoralController(IUserService userService, IPastoralService pastoralService) : base(userService)
+        public PastoralController(IPastoralService pastoralService)
         {
             _pastoralService = pastoralService;
         }

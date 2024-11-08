@@ -27,6 +27,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task SetUserEnabled(Guid userId, bool enabled);
         Task<UserModel> GetUserById(Guid userId);
         Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal);
+        Task<UserModel> GetCurrentUser();
         Task<IEnumerable<RoleModel>> GetUserRoles(Guid userId);
         Task<IEnumerable<UserModel>> GetUsers(string usernameSearch);
         Task<IEnumerable<int>> GetPermissionValuesByUser(Guid userId);

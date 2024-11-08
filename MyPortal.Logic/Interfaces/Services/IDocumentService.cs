@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Interfaces.Services
         Task<IEnumerable<DocumentTypeModel>> GetTypes(DocumentTypeFilter filter);
         Task<DocumentModel> GetDocumentById(Guid documentId);
         Task DeleteDocument(Guid documentId);
-        Task<DirectoryChildrenModel> GetDirectoryChildren(Guid directoryId, bool includeRestricted);
+        Task<DirectoryChildrenModel> GetDirectoryChildren(Guid directoryId);
         Task<DirectoryModel> GetDirectoryById(Guid directoryId);
         Task CreateDirectory(DirectoryRequestModel directory);
         Task UpdateDirectory(Guid directoryId, DirectoryRequestModel directory);

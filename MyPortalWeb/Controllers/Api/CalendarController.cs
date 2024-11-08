@@ -3,11 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Database.Enums;
-using MyPortal.Logic.Enums;
-using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces.Services;
-using MyPortal.Logic.Models.Permissions;
 using MyPortal.Logic.Models.Requests.Calendar;
 using MyPortal.Logic.Models.Structures;
 using MyPortalWeb.Controllers.BaseControllers;
@@ -15,58 +11,13 @@ using MyPortalWeb.Controllers.BaseControllers;
 namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
-    public class CalendarController : PersonalDataController
+    public class CalendarController : BaseApiController
     {
         private readonly ICalendarService _calendarService;
 
-        public CalendarController(IUserService userService, IPersonService personService,
-            IStudentService studentService, ICalendarService calendarService)
-            : base(userService, personService, studentService)
+        public CalendarController(ICalendarService calendarService)
         {
             _calendarService = calendarService;
-        }
-
-        private async Task<EventAccessModel> GetEventAccess(Guid eventId)
-        {
-            var response = new EventAccessModel();
-
-            var userId = User.GetUserId();
-            var diaryEvent = await _calendarService.GetEvent(eventId);
-
-            if (diaryEvent.CreatedById == userId)
-            {
-                response.CanView = true;
-                response.CanEdit = true;
-            }
-
-            if (diaryEvent.Public)
-            {
-                if (await User.HasPermission(UserService, PermissionRequirement.RequireAll,
-                        PermissionValue.SchoolViewSchoolDiary))
-                {
-                    response.CanView = true;
-                }
-
-                if (await User.HasPermission(UserService, PermissionRequirement.RequireAll,
-                        PermissionValue.SchoolEditSchoolDiary))
-                {
-                    response.CanEdit = true;
-                }
-            }
-
-            var user = await GetLoggedInUser();
-            if (user.PersonId.HasValue)
-            {
-                var attendee = await _calendarService.GetEventAttendee(eventId, user.PersonId.Value);
-
-                if (attendee != null)
-                {
-                    response.CanView = true;
-                    response.CanEdit = attendee.CanEdit;
-                }
-            }
-
-            return response;
         }
 
         [HttpGet]
@@ -77,26 +28,21 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (await CanAccessPerson(personId))
+                DateRange dateRange;
+
+                if (dateFrom == null || dateTo == null)
                 {
-                    DateRange dateRange;
-
-                    if (dateFrom == null || dateTo == null)
-                    {
-                        dateRange = DateRange.CurrentWeek;
-                    }
-                    else
-                    {
-                        dateRange = new DateRange(dateFrom.Value, dateTo.Value);
-                    }
-
-                    var events =
-                        await _calendarService.GetCalendarEventsByPerson(personId, dateRange.Start, dateRange.End);
-
-                    return Ok(events);
+                    dateRange = DateRange.CurrentWeek;
+                }
+                else
+                {
+                    dateRange = new DateRange(dateFrom.Value, dateTo.Value);
                 }
 
-                return PermissionError();
+                var events =
+                    await _calendarService.GetCalendarEventsByPerson(personId, dateRange.Start, dateRange.End);
+
+                return Ok(events);
             }
             catch (Exception e)
             {
@@ -111,12 +57,6 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                if (model.IsPublic && !await User.HasPermission(UserService, PermissionRequirement.RequireAll,
-                        PermissionValue.SchoolEditSchoolDiary))
-                {
-                    return Error(403, "You do not have permission to edit the school diary.");
-                }
-
                 await _calendarService.CreateEvent(model);
 
                 return Ok();
@@ -134,16 +74,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var access = await GetEventAccess(eventId);
+                await _calendarService.UpdateEvent(eventId, model);
 
-                if (access.CanEdit)
-                {
-                    await _calendarService.UpdateEvent(eventId, model);
-
-                    return Ok();
-                }
-
-                return Error(403, "You do not have permission to edit this event.");
+                return Ok();
             }
             catch (Exception e)
             {
@@ -158,16 +91,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var access = await GetEventAccess(eventId);
+                await _calendarService.DeleteEvent(eventId);
 
-                if (access.CanEdit)
-                {
-                    await _calendarService.DeleteEvent(eventId);
-
-                    return Ok();
-                }
-
-                return Error(403, "You do not have permission to delete this event.");
+                return Ok();
             }
             catch (Exception e)
             {
@@ -183,16 +109,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var access = await GetEventAccess(eventId);
+                await _calendarService.CreateOrUpdateEventAttendees(eventId, model);
 
-                if (access.CanEdit)
-                {
-                    await _calendarService.CreateOrUpdateEventAttendees(eventId, model);
-
-                    return Ok();
-                }
-
-                return Error(403, "You do not have permission to edit this event.");
+                return Ok();
             }
             catch (Exception e)
             {
@@ -207,16 +126,9 @@ namespace MyPortalWeb.Controllers.Api
         {
             try
             {
-                var access = await GetEventAccess(eventId);
+                await _calendarService.DeleteEventAttendee(eventId, personId);
 
-                if (access.CanEdit)
-                {
-                    await _calendarService.DeleteEventAttendee(eventId, personId);
-
-                    return Ok();
-                }
-
-                return Error(403, "You do not have permission to edit this event.");
+                return Ok();
             }
             catch (Exception e)
             {

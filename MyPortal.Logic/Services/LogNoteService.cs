@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
@@ -12,9 +13,10 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class LogNoteService : BaseService, ILogNoteService
+    public class LogNoteService : BaseServiceWithAccessControl, ILogNoteService
     {
-        public LogNoteService(ISessionUser user) : base(user)
+        public LogNoteService(ISessionUser user, IUserService userService, IPersonService personService,
+            IStudentService studentService) : base(user, userService, personService, studentService)
         {
         }
 
@@ -29,17 +31,33 @@ namespace MyPortal.Logic.Services
                 throw new NotFoundException("Log note not found.");
             }
 
+            if (logNote.Private && !User.IsType(UserTypes.Staff))
+            {
+                throw new PermissionException("You do not have access to this log note.");
+            }
+            
+            var student = await unitOfWork.Students.GetById(logNote.StudentId);
+
+            await VerifyAccessToPerson(student.PersonId);
+
             return new LogNoteModel(logNote);
         }
 
-        public async Task<IEnumerable<LogNoteModel>> GetLogNotesByStudent(Guid studentId, Guid academicYearId,
-            bool includePrivate)
+        public async Task<IEnumerable<LogNoteModel>> GetLogNotesByStudent(Guid studentId, Guid academicYearId)
         {
             await using var unitOfWork = await User.GetConnection();
+            
+            var student = await unitOfWork.Students.GetById(studentId);
+            
+            await VerifyAccessToPerson(student.PersonId);
+            
+            var includePrivate = User.IsType(UserTypes.Staff);
 
-            var logNotes = await unitOfWork.LogNotes.GetByStudent(studentId, academicYearId, includePrivate);
+            var logNotes = 
+                await unitOfWork.LogNotes.GetByStudent(studentId, academicYearId, includePrivate);
 
-            return logNotes.OrderByDescending(n => n.CreatedDate).Select(l => new LogNoteModel(l)).ToList();
+            return logNotes.OrderByDescending(n => n.CreatedDate)
+                .Select(l => new LogNoteModel(l)).ToList();
         }
 
         public async Task<IEnumerable<LogNoteTypeModel>> GetLogNoteTypes()
